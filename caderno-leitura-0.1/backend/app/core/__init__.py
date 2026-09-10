@@ -1,0 +1,1 @@
+"""Configuracao da aplicacao local."""

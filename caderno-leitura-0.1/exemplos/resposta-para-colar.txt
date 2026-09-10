@@ -1,0 +1,12 @@
+## Resumo
+O trecho apresenta uma ideia principal e desenvolve suas consequências.
+
+## Explicação
+O argumento parte de uma observação e propõe uma interpretação. Esta é uma resposta de exemplo para testar a importação.
+
+## Conceitos
+- Observação: o que está expresso no trecho.
+- Interpretação: uma leitura possível do significado.
+
+## Referências
+Nenhuma referência externa verificada.

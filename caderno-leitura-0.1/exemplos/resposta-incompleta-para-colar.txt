@@ -1,0 +1,10 @@
+Esta introdução ficou fora das quatro seções.
+
+## Resumo
+Primeira parte do resumo.
+
+## RESUMO
+Segunda parte do resumo, que deve ser preservada junto da primeira.
+
+## Referências
+Nenhuma referência externa verificada.

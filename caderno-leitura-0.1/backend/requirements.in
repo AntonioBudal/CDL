@@ -1,0 +1,7 @@
+# Dependencias diretas da Alpha 0.1. O arquivo .txt fixa tambem as transitivas.
+fastapi==0.141.1
+starlette==1.6.0
+pydantic==2.13.5
+uvicorn==0.52.4
+SQLAlchemy==2.0.52
+alembic==1.19.2
