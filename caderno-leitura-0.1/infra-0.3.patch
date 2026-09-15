@@ -1,0 +1,1957 @@
+diff --git a/backend/app/__init__.py b/backend/app/__init__.py
+--- a/backend/app/__init__.py
++++ b/backend/app/__init__.py
+@@ -1,3 +1,3 @@
+ """Aplicacao local do Caderno de Leitura."""
+ 
+-__version__ = "0.2.0-alpha.1"
++__version__ = "0.3.0-alpha.1"
+diff --git a/backend/app/db/session.py b/backend/app/db/session.py
+--- a/backend/app/db/session.py
++++ b/backend/app/db/session.py
+@@ -1,3 +1,4 @@
+ from collections.abc import Iterator
++from contextlib import nullcontext
+ from functools import lru_cache
+ from pathlib import Path
+@@ -6,6 +7,8 @@
+ from sqlalchemy import URL, Engine, create_engine, event
+ from sqlalchemy.orm import Session
++from fastapi import Request
+ 
+ from app.core.config import get_database_path
++from app.services.storage import data_guard
+ 
+ 
+@@ -49,6 +52,7 @@
+ 
+ 
+-def get_session() -> Iterator[Session]:
++def get_session(request: Request = None) -> Iterator[Session]:
+     """Uma sessao por requisicao; a operacao de escrita deve confirmar seu commit."""
+-    with Session(get_engine(), expire_on_commit=False) as session:
++    writing = request is not None and request.method not in {"GET", "HEAD", "OPTIONS"}
++    with (data_guard() if writing else nullcontext()), Session(get_engine(), expire_on_commit=False) as session:
+         yield session
+diff --git a/backend/app/errors.py b/backend/app/errors.py
+--- a/backend/app/errors.py
++++ b/backend/app/errors.py
+@@ -5,4 +5,9 @@
+ 
+ def register_database_error_handlers(application: FastAPI) -> None:
++    @application.exception_handler(TimeoutError)
++    async def storage_busy(_request: Request, _error: TimeoutError) -> JSONResponse:
++        return JSONResponse(status_code=503, headers={"Retry-After": "5"},
++                            content={"detail": "O acervo está ocupado. Aguarde o backup e tente novamente."})
++
+     @application.exception_handler(IntegrityError)
+     async def integrity_error(_request: Request, _error: IntegrityError) -> JSONResponse:
+diff --git a/backend/app/main.py b/backend/app/main.py
+--- a/backend/app/main.py
++++ b/backend/app/main.py
+@@ -8,11 +8,13 @@
+ from app.routers import books, chapters, health, imports, studies
+ from app.routers import backups
++from app.services.runtime import runtime_lifespan
+ 
+ 
+-def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
++def create_app(*, frontend_dist: Path | None = None, managed_runtime: bool = True) -> FastAPI:
+     application = FastAPI(
+         title="Caderno de Leitura",
+         version=__version__,
+         description="API local do caderno pessoal de leitura.",
++        lifespan=runtime_lifespan if managed_runtime else None,
+     )
+     application.include_router(health.router, prefix="/api")
+diff --git a/backend/app/models/book.py b/backend/app/models/book.py
+--- a/backend/app/models/book.py
++++ b/backend/app/models/book.py
+@@ -7,4 +7,5 @@
+ 
+ from app.db.base import Base
++from app.models.versioned import Versioned
+ 
+ if TYPE_CHECKING:
+@@ -12,5 +13,5 @@
+ 
+ 
+-class Book(Base):
++class Book(Versioned, Base):
+     __tablename__ = "books"
+     __table_args__ = (CheckConstraint("length(trim(title)) > 0", name="title_not_blank"),)
+@@ -19,4 +20,6 @@
+     title: Mapped[str] = mapped_column(Text, nullable=False)
+     author: Mapped[str | None] = mapped_column(Text, nullable=True)
++    # Nome local gerado pelo servidor; a interface de capas virá na Tarefa 3.
++    cover_path: Mapped[str | None] = mapped_column(Text, nullable=True)
+ 
+     chapters: Mapped[list[Chapter]] = relationship(
+diff --git a/backend/app/models/chapter.py b/backend/app/models/chapter.py
+--- a/backend/app/models/chapter.py
++++ b/backend/app/models/chapter.py
+@@ -7,4 +7,5 @@
+ 
+ from app.db.base import Base
++from app.models.versioned import Versioned
+ 
+ if TYPE_CHECKING:
+@@ -13,5 +14,5 @@
+ 
+ 
+-class Chapter(Base):
++class Chapter(Versioned, Base):
+     __tablename__ = "chapters"
+     __table_args__ = (
+diff --git a/backend/app/models/study.py b/backend/app/models/study.py
+--- a/backend/app/models/study.py
++++ b/backend/app/models/study.py
+@@ -8,4 +8,5 @@
+ 
+ from app.db.base import Base
++from app.models.versioned import Versioned
+ from app.db.types import UTCDateTime, utc_now
+ 
+@@ -14,5 +15,5 @@
+ 
+ 
+-class Study(Base):
++class Study(Versioned, Base):
+     __tablename__ = "studies"
+     __table_args__ = (
+diff --git a/backend/app/models/versioned.py b/backend/app/models/versioned.py
+new file mode 100644
+--- /dev/null
++++ b/backend/app/models/versioned.py
+@@ -0,0 +1,12 @@
++from sqlalchemy import Integer, text
++from sqlalchemy.orm import Mapped, declared_attr, mapped_column
++
++
++class Versioned:
++    version: Mapped[int] = mapped_column(
++        Integer, nullable=False, default=1, server_default=text("1")
++    )
++
++    @declared_attr.directive
++    def __mapper_args__(cls):
++        return {"version_id_col": cls.version}
+diff --git a/backend/app/routers/backups.py b/backend/app/routers/backups.py
+--- a/backend/app/routers/backups.py
++++ b/backend/app/routers/backups.py
+@@ -11,4 +11,5 @@
+ 
+ from app.services.backups import create_database_backup
++from app.services.archives import create_archive
+ 
+ router = APIRouter(tags=["Backup"])
+@@ -30,6 +31,10 @@
+         try:
+             directory = TemporaryDirectory(prefix="caderno-backup-")
+-            path = Path(directory.name) / "caderno.db"
+-            create_database_backup(path)
++            complete = request.url.path.endswith("/complete")
++            path = Path(directory.name) / ("caderno.zip" if complete else "caderno.db")
++            if complete:
++                create_archive(path)
++            else:
++                create_database_backup(path)
+         except FileNotFoundError as exc:
+             raise HTTPException(
+@@ -44,5 +49,5 @@
+                 headers={**DOWNLOAD_HEADERS, "Retry-After": "5"},
+             ) from exc
+-        except (OSError, sqlite3.Error) as exc:
++        except (OSError, sqlite3.Error, ValueError) as exc:
+             logger.exception("Não foi possível preparar o backup do caderno.")
+             raise HTTPException(
+@@ -69,2 +74,11 @@
+         headers={**DOWNLOAD_HEADERS, "Accept-Ranges": "none"},
+     )
++
++
++@router.get("/backup/complete", response_class=FileResponse, summary="Baixar banco e capas")
++def download_complete_backup(
++    path: Annotated[Path, Depends(temporary_backup, scope="request")],
++) -> FileResponse:
++    timestamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S-%fZ")
++    return FileResponse(path=path, filename=f"caderno-{timestamp}.zip", media_type="application/zip",
++                        headers={**DOWNLOAD_HEADERS, "Accept-Ranges": "none"})
+diff --git a/backend/app/routers/studies.py b/backend/app/routers/studies.py
+--- a/backend/app/routers/studies.py
++++ b/backend/app/routers/studies.py
+@@ -5,5 +5,5 @@
+ from app.models import Chapter, Study
+ from app.schemas.study import ANALYSIS_FIELDS, ANALYSIS_REQUIRED_MESSAGE, StudyCreate, StudyPatch, StudyRead, StudySummary
+-from app.services.persistence import commit_changes, get_or_404
++from app.services.persistence import commit_changes, get_or_404, require_version
+ 
+ router = APIRouter(tags=["Estudos"])
+@@ -15,5 +15,5 @@
+     # A listagem nao precisa carregar as analises e a resposta original completas.
+     statement = select(
+-        Study.id, Study.chapter_id, Study.title, Study.location, Study.created_at, Study.updated_at
++        Study.id, Study.version, Study.chapter_id, Study.title, Study.location, Study.created_at, Study.updated_at
+     ).where(Study.chapter_id == chapter_id).order_by(Study.id)
+     return session.execute(statement).mappings().all()
+@@ -41,5 +41,6 @@
+ def update_study(study_id: Identifier, payload: StudyPatch, session: DatabaseSession):
+     study = get_or_404(session, Study, study_id, "Estudo")
+-    changes = payload.model_dump(exclude_unset=True)
++    require_version(study, payload.version)
++    changes = payload.model_dump(exclude_unset=True, exclude={"version"})
+     candidate = {name: changes.get(name, getattr(study, name)) for name in ANALYSIS_FIELDS}
+     if not any(value.strip() for value in candidate.values()):
+diff --git a/backend/app/schemas/book.py b/backend/app/schemas/book.py
+--- a/backend/app/schemas/book.py
++++ b/backend/app/schemas/book.py
+@@ -16,4 +16,5 @@
+ class BookRead(OutputModel):
+     id: int
++    version: int
+     title: str
+     author: str | None
+diff --git a/backend/app/schemas/chapter.py b/backend/app/schemas/chapter.py
+--- a/backend/app/schemas/chapter.py
++++ b/backend/app/schemas/chapter.py
+@@ -13,4 +13,5 @@
+ class ChapterRead(OutputModel):
+     id: int
++    version: int
+     book_id: int
+     name: str
+diff --git a/backend/app/schemas/study.py b/backend/app/schemas/study.py
+--- a/backend/app/schemas/study.py
++++ b/backend/app/schemas/study.py
+@@ -36,6 +36,7 @@
+     """Omitir conserva o valor atual; usar string vazia limpa um campo opcional."""
+ 
+-    model_config = ConfigDict(json_schema_extra={"examples": [{"explanation": "Explicação revisada."}]})
++    model_config = ConfigDict(json_schema_extra={"examples": [{"version": 1, "explanation": "Explicação revisada."}]})
+ 
++    version: int = Field(gt=0, strict=True)
+     title: NonBlankText | None = None
+     location: str | None = None
+@@ -48,5 +49,5 @@
+     @model_validator(mode="after")
+     def require_changes_without_null(self) -> Self:
+-        if not self.model_fields_set:
++        if not (self.model_fields_set - {"version"}):
+             raise ValueError("Envie pelo menos um campo para alterar.")
+         for name in self.model_fields_set:
+@@ -58,4 +59,5 @@
+ class StudySummary(OutputModel):
+     id: int
++    version: int
+     chapter_id: int
+     title: str
+diff --git a/backend/app/services/archives.py b/backend/app/services/archives.py
+new file mode 100644
+--- /dev/null
++++ b/backend/app/services/archives.py
+@@ -0,0 +1,230 @@
++"""Backup portátil do banco e das capas; sem extração de caminhos arbitrários."""
++from contextlib import closing
++from datetime import UTC, datetime
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import sqlite3
++import stat
++from tempfile import TemporaryDirectory
++from uuid import uuid4
++from zipfile import BadZipFile, ZIP_DEFLATED, ZIP_STORED, ZipFile
++
++from alembic.config import Config
++from alembic.script import ScriptDirectory
++
++from app import __version__
++from app.core.config import BACKEND_DIR, get_database_path
++from app.services.backups import create_database_backup
++from app.services.storage import backup_directory, covers_path, data_guard, private_path
++
++TABLES = ("books", "chapters", "studies")
++COVER_NAME = re.compile(r"[0-9a-f]{32}\.(?:png|jpg|jpeg|webp)")
++MAX_BYTES = 4 * 1024**3
++MAX_FILES = 20_002
++MAX_MANIFEST = 8 * 1024**2
++CHUNK = 1024**2
++
++
++def migration_scripts() -> ScriptDirectory:
++    return ScriptDirectory.from_config(Config(str(BACKEND_DIR / "alembic.ini")))
++
++
++def inspect_database(path: Path) -> dict:
++    if not path.is_file() or path.stat().st_size == 0:
++        raise ValueError("Banco ausente ou vazio.")
++    with closing(sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True, autocommit=True)) as db:
++        db.execute("PRAGMA trusted_schema=OFF")
++        if db.execute("PRAGMA integrity_check").fetchall() != [("ok",)]:
++            raise ValueError("O banco falhou na verificação de integridade.")
++        if db.execute("PRAGMA foreign_key_check").fetchone() is not None:
++            raise ValueError("O banco contém relacionamentos inválidos.")
++        revisions = db.execute("SELECT version_num FROM alembic_version").fetchall()
++        known = {item.revision for item in migration_scripts().walk_revisions()}
++        if len(revisions) != 1 or revisions[0][0] not in known:
++            raise ValueError("A versão do banco é desconhecida ou exige outra versão do aplicativo.")
++        revision = revisions[0][0]
++        required = {
++            "books": {"id", "title", "author"},
++            "chapters": {"id", "book_id", "name", "position"},
++            "studies": {"id", "chapter_id", "title", "location", "source_response", "summary",
++                        "explanation", "concepts", "references", "notes", "created_at", "updated_at"},
++        }
++        for table, columns in required.items():
++            found = {row[1] for row in db.execute(f'PRAGMA table_info("{table}")')}
++            if revision != "0001_initial":
++                columns = columns | {"version"} | ({"cover_path"} if table == "books" else set())
++            if not columns <= found:
++                raise ValueError(f"Estrutura incompleta na tabela {table}.")
++            if "version" in found and db.execute(
++                f'SELECT 1 FROM "{table}" WHERE typeof(version) != \'integer\' OR version < 1 LIMIT 1'
++            ).fetchone():
++                raise ValueError("O banco contém uma versão de registro inválida.")
++        for table, parent, column in (("chapters", "books", "book_id"), ("studies", "chapters", "chapter_id")):
++            foreign_keys = {(row[2], row[3], row[4]) for row in db.execute(f'PRAGMA foreign_key_list("{table}")')}
++            if (parent, column, "id") not in foreign_keys:
++                raise ValueError(f"A chave estrangeira de {table} está ausente.")
++        covers = [] if revision == "0001_initial" else [row[0] for row in db.execute(
++            "SELECT cover_path FROM books WHERE cover_path IS NOT NULL"
++        )]
++        if any(not isinstance(name, str) or not COVER_NAME.fullmatch(name) for name in covers):
++            raise ValueError("O banco contém uma referência de capa inválida.")
++        return {
++            "schema_revision": revision,
++            "counts": {table: db.execute(f'SELECT count(*) FROM "{table}"').fetchone()[0] for table in TABLES},
++            "covers": sorted(set(covers)),
++        }
++
++
++def archive_name(kind: str = "manual", database: Path | None = None) -> str:
++    database = private_path(database or get_database_path())
++    identity = hashlib.sha256(os.path.normcase(str(database)).encode()).hexdigest()[:12]
++    stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S-%fZ")
++    return f"caderno-{kind}-{identity}-{stamp}-{uuid4().hex[:8]}.zip"
++
++
++def _linked(path: Path) -> bool:
++    return path.is_symlink() or path.is_junction()
++
++
++def create_archive(destination: Path, *, database: Path | None = None, kind: str = "manual") -> dict:
++    database = private_path(database or get_database_path())
++    destination = private_path(destination)
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    if destination.exists():
++        raise FileExistsError("O arquivo de destino já existe.")
++    with data_guard(), TemporaryDirectory(prefix=".caderno-backup-", dir=destination.parent) as work:
++        snapshot = Path(work) / "caderno.db"
++        create_database_backup(snapshot, source=database)
++        info = inspect_database(snapshot)
++        folder = covers_path(database)
++        if _linked(folder):
++            raise ValueError("A pasta de capas não pode ser um link ou junção.")
++        covers = sorted(folder.iterdir()) if folder.exists() else []
++        for cover in covers:
++            if _linked(cover) or not cover.is_file() or not COVER_NAME.fullmatch(cover.name):
++                raise ValueError(f"Arquivo não permitido na pasta de capas: {cover.name}")
++        if not set(info["covers"]) <= {item.name for item in covers}:
++            raise ValueError("Há capas referenciadas no banco que não foram encontradas no disco.")
++        sources = [("caderno.db", snapshot)] + [(f"covers/{cover.name}", cover) for cover in covers]
++        if len(sources) + 1 > MAX_FILES or sum(path.stat().st_size for _, path in sources) > MAX_BYTES:
++            raise ValueError("O acervo excede os limites configurados para o pacote de backup.")
++        manifest = {"format": 1, "application_version": __version__, "kind": kind,
++                    "created_at": datetime.now(UTC).isoformat(), **info, "files": {}}
++        temporary = Path(work) / "backup.zip"
++        with ZipFile(temporary, "w", compression=ZIP_DEFLATED, compresslevel=6) as archive:
++            for name, path in sources:
++                digest, size = hashlib.sha256(), 0
++                with path.open("rb") as original, archive.open(name, "w", force_zip64=True) as output:
++                    while chunk := original.read(CHUNK):
++                        size += len(chunk)
++                        digest.update(chunk)
++                        output.write(chunk)
++                manifest["files"][name] = {"size": size, "sha256": digest.hexdigest()}
++            archive.writestr("manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2).encode("utf-8"))
++        with temporary.open("rb") as handle:
++            os.fsync(handle.fileno())
++        temporary.replace(destination)
++        return manifest
++
++
++def _unique_object(pairs):
++    result = {}
++    for key, value in pairs:
++        if key in result:
++            raise ValueError("O manifesto contém campos duplicados.")
++        result[key] = value
++    return result
++
++
++def unpack_archive(archive_path: Path, destination: Path) -> dict:
++    """destination deve ser uma pasta temporária nova, nunca a pasta do acervo."""
++    destination.mkdir(parents=True, exist_ok=False)
++    with ZipFile(archive_path) as archive:
++        entries = archive.infolist()
++        names = [entry.filename for entry in entries]
++        if len(entries) > MAX_FILES or len(set(names)) != len(names):
++            raise ValueError("Quantidade excessiva ou entradas duplicadas no ZIP.")
++        if "manifest.json" not in names or "caderno.db" not in names:
++            raise ValueError("O pacote precisa conter manifest.json e caderno.db.")
++        if sum(entry.file_size for entry in entries) > MAX_BYTES + MAX_MANIFEST:
++            raise ValueError("O tamanho descompactado ultrapassa o limite permitido.")
++        for entry in entries:
++            valid = entry.filename in {"manifest.json", "caderno.db"} or (
++                entry.filename.startswith("covers/") and COVER_NAME.fullmatch(entry.filename[7:])
++            )
++            mode = stat.S_IFMT(entry.external_attr >> 16)
++            if not valid or mode not in {0, stat.S_IFREG} or entry.flag_bits & 1:
++                raise ValueError("O ZIP contém um caminho, link ou tipo de arquivo não permitido.")
++            if entry.compress_type not in {ZIP_STORED, ZIP_DEFLATED}:
++                raise ValueError("O método de compressão do ZIP não é suportado.")
++        if archive.getinfo("manifest.json").file_size > MAX_MANIFEST:
++            raise ValueError("Manifesto excessivamente grande.")
++        manifest = json.loads(archive.read("manifest.json"), object_pairs_hook=_unique_object)
++        if not isinstance(manifest, dict) or type(manifest.get("format")) is not int or manifest["format"] != 1:
++            raise ValueError("Formato de backup incompatível.")
++        if not isinstance(manifest.get("application_version"), str) or not isinstance(manifest.get("created_at"), str):
++            raise ValueError("O manifesto não informa versão e data válidas.")
++        if datetime.fromisoformat(manifest["created_at"]).tzinfo is None:
++            raise ValueError("A data do backup deve incluir o fuso horário.")
++        counts = manifest.get("counts")
++        if not isinstance(counts, dict) or set(counts) != set(TABLES) or any(type(n) is not int or n < 0 for n in counts.values()):
++            raise ValueError("O manifesto contém contagens inválidas.")
++        files = manifest.get("files")
++        if not isinstance(files, dict) or set(files) != set(names) - {"manifest.json"}:
++            raise ValueError("A lista de arquivos diverge do manifesto.")
++        for name, expected in files.items():
++            if not isinstance(expected, dict) or type(expected.get("size")) is not int or expected["size"] < 0:
++                raise ValueError("Tamanho inválido no manifesto.")
++            if not isinstance(expected.get("sha256"), str) or not re.fullmatch(r"[0-9a-f]{64}", expected["sha256"]):
++                raise ValueError("Hash inválido no manifesto.")
++            if archive.getinfo(name).file_size != expected["size"]:
++                raise ValueError("O tamanho de um arquivo diverge do manifesto.")
++            target = destination / name
++            target.parent.mkdir(parents=True, exist_ok=True)
++            digest, size = hashlib.sha256(), 0
++            with archive.open(name) as original, target.open("xb") as output:
++                while chunk := original.read(CHUNK):
++                    size += len(chunk)
++                    if size > expected["size"]:
++                        raise ValueError("O conteúdo excede o tamanho declarado.")
++                    digest.update(chunk)
++                    output.write(chunk)
++            if size != expected["size"] or digest.hexdigest() != expected["sha256"]:
++                raise ValueError(f"O arquivo {name} está incompleto ou corrompido.")
++        info = inspect_database(destination / "caderno.db")
++        if any(manifest.get(key) != value for key, value in info.items()):
++            raise ValueError("Os dados do banco divergem do manifesto.")
++        if any(f"covers/{name}" not in files for name in info["covers"]):
++            raise ValueError("O pacote não contém todas as capas referenciadas pelo banco.")
++        (destination / "covers").mkdir(exist_ok=True)
++        return manifest
++
++
++def daily_backup() -> Path:
++    database = private_path(get_database_path())
++    directory = backup_directory(database)
++    keep = int(os.environ.get("CADERNO_BACKUP_KEEP", "7"))
++    if not 1 <= keep <= 365:
++        raise ValueError("CADERNO_BACKUP_KEEP deve estar entre 1 e 365.")
++    example = archive_name("daily", database)
++    prefix = example.rsplit("-", 4)[0]
++    today = datetime.now(UTC).strftime("%Y%m%d")
++    existing = sorted(directory.glob(f"{prefix}-{today}-*.zip"), reverse=True)
++    for path in existing:
++        try:
++            with TemporaryDirectory(prefix="caderno-verificar-") as work:
++                unpack_archive(path, Path(work) / "check")
++            return path
++        except (OSError, ValueError, sqlite3.Error, BadZipFile):
++            continue
++    target = directory / example
++    create_archive(target, database=database, kind="daily")
++    # Só arquivos automáticos deste banco; exports e cópias de migração são preservados.
++    owned = re.compile(re.escape(prefix) + r"-\d{8}-\d{6}-\d{6}Z-[0-9a-f]{8}\.zip")
++    previous = sorted((path for path in directory.glob(f"{prefix}-*.zip") if owned.fullmatch(path.name)), reverse=True)
++    for path in previous[keep:]:
++        path.unlink()
++    return target
+diff --git a/backend/app/services/backups.py b/backend/app/services/backups.py
+--- a/backend/app/services/backups.py
++++ b/backend/app/services/backups.py
+@@ -8,7 +8,7 @@
+ 
+ def create_database_backup(
+-    destination: Path, *, timeout_seconds: float = 30.0
++    destination: Path, *, timeout_seconds: float = 30.0, source: Path | None = None
+ ) -> None:
+-    source = get_database_path()
++    source = source or get_database_path()
+     if not source.is_file():
+         raise FileNotFoundError("Banco de dados não encontrado.")
+diff --git a/backend/app/services/maintenance.py b/backend/app/services/maintenance.py
+new file mode 100644
+--- /dev/null
++++ b/backend/app/services/maintenance.py
+@@ -0,0 +1,136 @@
++from contextlib import contextmanager
++import json
++import os
++from pathlib import Path
++import re
++import shutil
++from uuid import uuid4
++
++from alembic import command
++from alembic.config import Config
++
++from app.core.config import BACKEND_DIR, get_database_path
++from app.services.archives import archive_name, create_archive, inspect_database, migration_scripts, unpack_archive
++from app.services.storage import backup_directory, ensure_no_restore, private_path, restore_marker, runtime_lease
++
++
++@contextmanager
++def migration_guard(database: Path):
++    with runtime_lease(database):
++        ensure_no_restore(database)
++        if database.exists():
++            info = inspect_database(database)
++            if info["schema_revision"] != migration_scripts().get_current_head():
++                target = backup_directory(database) / archive_name("before-migration", database)
++                create_archive(target, database=database, kind="before-migration")
++                print(f"Backup anterior à migração: {target}", flush=True)
++        yield
++
++
++def _components(database: Path) -> list[str]:
++    return [database.name, database.name + "-wal", database.name + "-shm", database.name + "-journal", "covers"]
++
++
++def _remove(path: Path) -> None:
++    if path.is_symlink() or path.is_junction():
++        raise ValueError("A restauração não permite links ou junções no destino.")
++    if path.is_dir():
++        shutil.rmtree(path)
++    elif path.exists():
++        path.unlink()
++
++
++def _write_marker(database: Path, state: dict) -> None:
++    marker = restore_marker(database)
++    temporary = marker.with_suffix(".tmp")
++    with temporary.open("w", encoding="utf-8") as file:
++        json.dump(state, file)
++        file.flush()
++        os.fsync(file.fileno())
++    temporary.replace(marker)
++
++
++def _recover(database: Path) -> Path:
++    marker = restore_marker(database)
++    state = json.loads(marker.read_text(encoding="utf-8"))
++    if (not isinstance(state, dict) or not isinstance(state.get("job"), str)
++            or not re.fullmatch(r"\.caderno-restore-[0-9a-f]{32}", state["job"])
++            or not isinstance(state.get("present"), dict)
++            or set(state["present"]) != set(_components(database))
++            or any(type(value) is not bool for value in state["present"].values())):
++        raise ValueError("O registro de recuperação é inválido. Preserve os arquivos e confira a pasta de restauração.")
++    job = database.parent / state["job"]
++    if job.is_symlink() or job.is_junction() or not (job / "previous").is_dir():
++        raise ValueError("A pasta com o acervo anterior não foi encontrada.")
++    for name, was_present in state["present"].items():
++        saved, current = job / "previous" / name, database.parent / name
++        if saved.exists():
++            _remove(current)
++            saved.replace(current)
++        elif not was_present:
++            _remove(current)
++    marker.unlink()
++    return job
++
++
++def recover_restore() -> Path:
++    with runtime_lease() as database:
++        if not restore_marker(database).exists():
++            raise ValueError("Não há restauração interrompida para recuperar.")
++        return _recover(database)
++
++
++def restore_archive(archive: Path) -> tuple[dict, Path]:
++    with runtime_lease() as database:
++        ensure_no_restore(database)
++        # Evita colisões dos nomes reservados da pasta persistente.
++        if database.name in {"covers", "caderno.db-wal", "caderno.db-shm", "caderno.db-journal"}:
++            raise ValueError("O nome configurado para o banco conflita com um nome reservado.")
++        for name in _components(database):
++            current = database.parent / name
++            if current.is_symlink() or current.is_junction():
++                raise ValueError("O destino contém um link ou junção.")
++        job = database.parent / f".caderno-restore-{uuid4().hex}"
++        job.mkdir()
++        try:
++            manifest = unpack_archive(archive, job / "new")
++            staged = job / "new" / "caderno.db"
++            # Backups antigos conhecidos são migrados apenas na cópia temporária.
++            config = Config(str(BACKEND_DIR / "alembic.ini"))
++            config.attributes.update(database_path=staged, maintenance_lock=True)
++            command.upgrade(config, "head")
++            current_info = inspect_database(staged)
++            if current_info["counts"] != manifest["counts"]:
++                raise ValueError("A migração alterou a contagem de registros do backup.")
++            for path in (job / "new").rglob("*"):
++                if path.is_file():
++                    with path.open("rb") as file:
++                        os.fsync(file.fileno())
++            (job / "previous").mkdir()
++            state = {"job": job.name, "present": {
++                name: (database.parent / name).exists() for name in _components(database)
++            }}
++            _write_marker(database, state)
++        except BaseException:
++            if restore_marker(database).exists():
++                _recover(database)
++            else:
++                shutil.rmtree(job)
++            raise
++
++        try:
++            for name, exists in state["present"].items():
++                if exists:
++                    (database.parent / name).replace(job / "previous" / name)
++            (job / "new" / "covers").replace(database.parent / "covers")
++            staged.replace(database)
++            restore_marker(database).unlink()
++        except BaseException:
++            # Se o processo for encerrado à força, o marcador permite repetir
++            # esta recuperação no próximo comando, antes de abrir o servidor.
++            try:
++                _recover(database)
++            except Exception as error:
++                raise RuntimeError("A restauração foi interrompida. Os originais foram preservados; execute manutencao.py recuperar --confirmar.") from error
++            raise
++        return current_info, job / "previous"
+diff --git a/backend/app/services/persistence.py b/backend/app/services/persistence.py
+--- a/backend/app/services/persistence.py
++++ b/backend/app/services/persistence.py
+@@ -4,8 +4,15 @@
+ from sqlalchemy.exc import SQLAlchemyError
+ from sqlalchemy.orm import Session
++from sqlalchemy.orm.exc import StaleDataError
+ 
+ from app.db.base import Base
+ 
+ Record = TypeVar("Record", bound=Base)
++CONFLICT_MESSAGE = "Este registro foi alterado em outro acesso. Consulte a versão atual antes de salvar novamente."
++
++
++def require_version(record, expected: int) -> None:
++    if record.version != expected:
++        raise HTTPException(status_code=409, detail=CONFLICT_MESSAGE)
+ 
+ 
+@@ -20,4 +27,7 @@
+     try:
+         session.commit()
++    except StaleDataError as error:
++        session.rollback()
++        raise HTTPException(status_code=409, detail=CONFLICT_MESSAGE) from error
+     except SQLAlchemyError:
+         session.rollback()
+diff --git a/backend/app/services/runtime.py b/backend/app/services/runtime.py
+new file mode 100644
+--- /dev/null
++++ b/backend/app/services/runtime.py
+@@ -0,0 +1,45 @@
++from contextlib import asynccontextmanager
++from datetime import UTC, datetime
++import logging
++
++import anyio
++
++from app.db.session import get_engine
++from app.services.archives import daily_backup, inspect_database, migration_scripts
++from app.services.storage import ensure_no_restore, runtime_lease
++
++logger = logging.getLogger(__name__)
++
++
++async def scheduled_backups():
++    last_day = None
++    while True:
++        today = datetime.now(UTC).date()
++        if last_day != today:
++            try:
++                path = await anyio.to_thread.run_sync(daily_backup)
++                logger.info("Backup automático disponível: %s", path)
++                last_day = today
++            except Exception:
++                logger.exception("Backup automático falhou; nova tentativa em cinco minutos.")
++        await anyio.sleep(300)
++
++
++@asynccontextmanager
++async def runtime_lifespan(_application):
++    with runtime_lease() as database:
++        ensure_no_restore(database)
++        info = inspect_database(database)
++        if info["schema_revision"] != migration_scripts().get_current_head():
++            raise RuntimeError("Migração pendente. Feche o servidor e execute manutencao.py atualizar.")
++        try:
++            async with anyio.create_task_group() as group:
++                group.start_soon(scheduled_backups)
++                try:
++                    yield
++                finally:
++                    group.cancel_scope.cancel()
++        finally:
++            if get_engine.cache_info().currsize:
++                get_engine().dispose()
++                get_engine.cache_clear()
+diff --git a/backend/app/services/storage.py b/backend/app/services/storage.py
+new file mode 100644
+--- /dev/null
++++ b/backend/app/services/storage.py
+@@ -0,0 +1,83 @@
++"""Coordenação local do acervo. Um processo de servidor por banco."""
++from contextlib import contextmanager
++import os
++from pathlib import Path
++from threading import Lock
++
++from app.core.config import BACKEND_DIR, get_database_path
++
++_data_lock = Lock()
++
++
++def private_path(path: Path) -> Path:
++    if not path.is_absolute():
++        raise ValueError("Os caminhos de armazenamento devem ser absolutos.")
++    path = path.resolve()
++    frontend = (BACKEND_DIR.parent / "frontend").resolve()
++    if path == frontend or path.is_relative_to(frontend):
++        raise ValueError("Guarde os dados e backups fora da pasta frontend.")
++    return path
++
++
++def covers_path(database: Path | None = None) -> Path:
++    return private_path(database or get_database_path()).parent / "covers"
++
++
++def backup_directory(database: Path | None = None) -> Path:
++    database = private_path(database or get_database_path())
++    configured = os.environ.get("CADERNO_BACKUP_DIR")
++    result = private_path(Path(configured).expanduser()) if configured else database.parent / "backups"
++    covers = covers_path(database)
++    if result == covers or result.is_relative_to(covers):
++        raise ValueError("A pasta de backups deve ficar fora da pasta de capas.")
++    return result
++
++
++def restore_marker(database: Path) -> Path:
++    return database.parent / f".{database.name}.restore.json"
++
++
++def ensure_no_restore(database: Path) -> None:
++    if restore_marker(database).exists():
++        raise RuntimeError("Há uma restauração interrompida. Execute manutencao.py recuperar --confirmar.")
++
++
++@contextmanager
++def data_guard():
++    # Lock simples: o FastAPI pode entrar e sair da dependência em threads distintas.
++    if not _data_lock.acquire(timeout=30):
++        raise TimeoutError("O acervo está ocupado. Aguarde o backup e tente novamente.")
++    try:
++        yield
++    finally:
++        _data_lock.release()
++
++
++@contextmanager
++def runtime_lease(database: Path | None = None):
++    database = private_path(database or get_database_path())
++    database.parent.mkdir(parents=True, exist_ok=True)
++    # Nunca apague este arquivo: o bloqueio pertence ao descritor aberto no SO.
++    with (database.parent / f".{database.name}.lock").open("a+b") as handle:
++        handle.seek(0, os.SEEK_END)
++        if handle.tell() == 0:
++            handle.write(b"0")
++            handle.flush()
++        handle.seek(0)
++        try:
++            if os.name == "nt":
++                import msvcrt
++                msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
++            else:
++                import fcntl
++                fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
++        except OSError as error:
++            raise RuntimeError("O acervo está em uso. Feche o servidor e outras manutenções antes de continuar.") from error
++        try:
++            yield database
++        finally:
++            handle.seek(0)
++            if os.name == "nt":
++                msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
++            else:
++                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+diff --git a/backend/migrations/env.py b/backend/migrations/env.py
+--- a/backend/migrations/env.py
++++ b/backend/migrations/env.py
+@@ -44,5 +44,5 @@
+ 
+ 
+-def run_migrations_online() -> None:
++def _run_migrations_online() -> None:
+     engine = create_sqlite_engine(database_path())
+     try:
+@@ -63,4 +63,13 @@
+ 
+ 
++def run_migrations_online() -> None:
++    from app.services.maintenance import migration_guard
++    if config.attributes.get("maintenance_lock"):
++        _run_migrations_online()
++    else:
++        with migration_guard(database_path()):
++            _run_migrations_online()
++
++
+ if context.is_offline_mode():
+     run_migrations_offline()
+diff --git a/backend/migrations/versions/0002_integrity.py b/backend/migrations/versions/0002_integrity.py
+new file mode 100644
+--- /dev/null
++++ b/backend/migrations/versions/0002_integrity.py
+@@ -0,0 +1,20 @@
++"""Versionar registros e reservar a referência persistente de capa."""
++from alembic import op
++import sqlalchemy as sa
++
++revision = "0002_integrity"
++down_revision = "0001_initial"
++branch_labels = None
++depends_on = None
++
++
++def upgrade() -> None:
++    for table in ("books", "chapters", "studies"):
++        op.add_column(table, sa.Column(
++            "version", sa.Integer(), nullable=False, server_default=sa.text("1")
++        ))
++    op.add_column("books", sa.Column("cover_path", sa.Text(), nullable=True))
++
++
++def downgrade() -> None:
++    raise RuntimeError("Para voltar de versão, restaure o backup anterior à atualização.")
+diff --git a/backend/tests/test_api.py b/backend/tests/test_api.py
+--- a/backend/tests/test_api.py
++++ b/backend/tests/test_api.py
+@@ -16,5 +16,5 @@
+ 
+ def make_client(engine):
+-    application = create_app()
++    application = create_app(managed_runtime=False)
+ 
+     def test_session():
+@@ -79,5 +79,5 @@
+     assert 'notes' not in listed[0]
+ 
+-    response = client.patch(f'/api/studies/{study["id"]}', json={"explanation": "Explicação corrigida.\nOutra linha."})
++    response = client.patch(f'/api/studies/{study["id"]}', json={"version": study["version"], "explanation": "Explicação corrigida.\nOutra linha."})
+     assert response.status_code == 200, response.text
+     edited = response.json()
+@@ -99,5 +99,5 @@
+ from app.main import create_app
+ from app.db.session import get_engine
+-with TestClient(create_app()) as client:
++with TestClient(create_app(managed_runtime=False)) as client:
+     response = client.get('/api/studies/' + sys.argv[1])
+     assert response.status_code == 200, response.text
+@@ -137,5 +137,5 @@
+         ('POST', '/api/studies', {'chapter_id': 99999, 'summary': 'Texto'}),
+         ('GET', '/api/studies/99999', None),
+-        ('PATCH', '/api/studies/99999', {'notes': 'Anotação'}),
++        ('PATCH', '/api/studies/99999', {'version': 1, 'notes': 'Anotação'}),
+     )
+     for method, url, payload in requests:
+@@ -196,5 +196,5 @@
+     payloads = ({}, {'notes': None}, {'title': '\t '}, {'source_response': 'Substituição'}, {'chapter_id': chapter['id']}, {'id': 45})
+     for payload in payloads:
+-        response = client.patch(url, json=payload)
++        response = client.patch(url, json={"version": original["version"], **payload})
+         assert response.status_code == 422, response.text
+         assert client.get(url).json() == original
+@@ -208,5 +208,5 @@
+     changes = {name: ' \n\t ' for name in ('summary', 'explanation', 'concepts', 'references')}
+     changes['notes'] = 'Também não deve ser gravado'
+-    response = client.patch(url, json=changes)
++    response = client.patch(url, json={"version": original["version"], **changes})
+     assert response.status_code == 422, response.text
+     assert client.get(url).json() == original
+@@ -217,5 +217,5 @@
+     _, chapter = create_parents(client)
+     original = create_study(client, chapter['id'])
+-    response = client.patch(f'/api/studies/{original["id"]}', json={'notes': '', 'location': '', 'summary': ''})
++    response = client.patch(f'/api/studies/{original["id"]}', json={'version': original['version'], 'notes': '', 'location': '', 'summary': ''})
+     assert response.status_code == 200, response.text
+     changed = response.json()
+diff --git a/backend/tests/test_backup.py b/backend/tests/test_backup.py
+--- a/backend/tests/test_backup.py
++++ b/backend/tests/test_backup.py
+@@ -28,6 +28,6 @@
+     with closing(sqlite3.connect(path, autocommit=True)) as connection:
+         connection.execute("PRAGMA foreign_keys=ON")
+-        connection.execute("INSERT INTO books VALUES (11, 'Livro — reflexão', 'Autora')")
+-        connection.execute("INSERT INTO chapters VALUES (22, 11, 'Capítulo de teste', 2)")
++        connection.execute("INSERT INTO books (id, title, author) VALUES (11, 'Livro — reflexão', 'Autora')")
++        connection.execute("INSERT INTO chapters (id, book_id, name, position) VALUES (22, 11, 'Capítulo de teste', 2)")
+         connection.execute(
+             '''INSERT INTO studies
+@@ -72,5 +72,5 @@
+         writer.execute("BEGIN IMMEDIATE")
+         writer.execute("UPDATE studies SET notes='Alteração ainda não salva' WHERE id=33")
+-        with TestClient(create_app()) as client:
++        with TestClient(create_app(managed_runtime=False)) as client:
+             response = client.get("/api/backup")
+             assert client.get("/api/health").status_code == 200
+@@ -100,5 +100,5 @@
+ 
+     engine = create_sqlite_engine(downloaded)
+-    application = create_app()
++    application = create_app(managed_runtime=False)
+ 
+     def restored_session():
+@@ -120,5 +120,5 @@
+     source = tmp_path / "inexistente" / "caderno.db"
+     monkeypatch.setenv("CADERNO_DATABASE_PATH", str(source))
+-    with TestClient(create_app()) as client:
++    with TestClient(create_app(managed_runtime=False)) as client:
+         response = client.get("/api/backup")
+     assert response.status_code == 404
+@@ -131,5 +131,5 @@
+ def test_invalid_source_is_not_offered_as_backup(source, contents, temporary_paths):
+     source.write_bytes(contents)
+-    with TestClient(create_app()) as client:
++    with TestClient(create_app(managed_runtime=False)) as client:
+         response = client.get("/api/backup")
+     assert response.status_code == 503
+@@ -145,5 +145,5 @@
+         writer.execute("BEGIN EXCLUSIVE")
+         try:
+-            with TestClient(create_app()) as client:
++            with TestClient(create_app(managed_runtime=False)) as client:
+                 response = client.get("/api/backup")
+         finally:
+@@ -160,5 +160,5 @@
+ 
+     monkeypatch.setattr(routes, "create_database_backup", failed_copy)
+-    with TestClient(create_app()) as client:
++    with TestClient(create_app(managed_runtime=False)) as client:
+         response = client.get("/api/backup")
+     assert response.status_code == 503
+@@ -169,5 +169,5 @@
+     with closing(sqlite3.connect(source, autocommit=True)) as writer:
+         writer.execute("UPDATE chapters SET book_id=999 WHERE id=22")
+-    with TestClient(create_app()) as client:
++    with TestClient(create_app(managed_runtime=False)) as client:
+         response = client.get("/api/backup")
+     assert response.status_code == 503
+@@ -176,5 +176,5 @@
+ 
+ def test_download_stays_available_until_send_and_cleans_on_disconnect(source, temporary_paths):
+-    application = create_app()
++    application = create_app(managed_runtime=False)
+ 
+     async def run():
+@@ -203,5 +203,5 @@
+ 
+ def test_range_does_not_create_a_new_partial_snapshot(source, temporary_paths):
+-    with TestClient(create_app()) as client:
++    with TestClient(create_app(managed_runtime=False)) as client:
+         response = client.get("/api/backup", headers={"Range": "bytes=10-"})
+     assert response.status_code == 416
+diff --git a/backend/tests/test_frontend.py b/backend/tests/test_frontend.py
+--- a/backend/tests/test_frontend.py
++++ b/backend/tests/test_frontend.py
+@@ -23,5 +23,5 @@
+ @pytest.fixture
+ def client(public_dir):
+-    with TestClient(create_app(frontend_dist=public_dir)) as client:
++    with TestClient(create_app(managed_runtime=False, frontend_dist=public_dir)) as client:
+         yield client
+ 
+@@ -104,5 +104,5 @@
+ def test_server_starts_without_build_and_api_still_works(tmp_path):
+     directory = tmp_path / 'frontend' / 'dist'
+-    with TestClient(create_app(frontend_dist=directory)) as client:
++    with TestClient(create_app(managed_runtime=False, frontend_dist=directory)) as client:
+         assert client.get('/api/health').status_code == 200
+         assert client.get('/docs').status_code == 200
+@@ -121,5 +121,5 @@
+ def test_missing_index_in_incomplete_build_is_a_controlled_error(public_dir):
+     (public_dir / 'index.html').unlink()
+-    with TestClient(create_app(frontend_dist=public_dir)) as client:
++    with TestClient(create_app(managed_runtime=False, frontend_dist=public_dir)) as client:
+         assert client.get('/').status_code == 503
+         assert client.get('/api/health').status_code == 200
+@@ -157,5 +157,5 @@
+     monkeypatch.setenv('CADERNO_DATABASE_PATH', str(public_dir / 'acervo.db'))
+     with pytest.raises(ValueError, match='fora de frontend/dist'):
+-        create_app(frontend_dist=public_dir)
++        create_app(managed_runtime=False, frontend_dist=public_dir)
+ 
+ 
+diff --git a/backend/tests/test_import_api.py b/backend/tests/test_import_api.py
+--- a/backend/tests/test_import_api.py
++++ b/backend/tests/test_import_api.py
+@@ -13,5 +13,5 @@
+ 
+     monkeypatch.setattr(database_session, "get_engine", forbidden_database_access)
+-    application = create_app()
++    application = create_app(managed_runtime=False)
+     application.dependency_overrides[database_session.get_session] = forbidden_database_access
+     source = "Introdução.\r\n## Resumo\r\nPrimeiro.\r\n## RESUMO\r\nSegundo.\r\n"
+@@ -43,5 +43,5 @@
+ 
+ def test_invalid_preview_requests_return_422_but_incomplete_format_can_be_reviewed():
+-    with TestClient(create_app()) as client:
++    with TestClient(create_app(managed_runtime=False)) as client:
+         for payload in (
+             {}, {"source_response": ""}, {"source_response": " \n\t "},
+diff --git a/backend/tests/test_infrastructure03.py b/backend/tests/test_infrastructure03.py
+new file mode 100644
+--- /dev/null
++++ b/backend/tests/test_infrastructure03.py
+@@ -0,0 +1,366 @@
++from concurrent.futures import ThreadPoolExecutor
++from contextlib import closing
++from datetime import UTC, datetime, timedelta
++import hashlib
++import json
++import os
++from pathlib import Path
++import sqlite3
++import subprocess
++import sys
++from zipfile import BadZipFile, ZipFile, ZipInfo
++
++from alembic import command
++from alembic.config import Config
++from fastapi.testclient import TestClient
++import pytest
++from sqlalchemy.orm import Session
++
++from app.core.config import BACKEND_DIR
++from app.db.session import create_sqlite_engine, get_engine
++from app.main import create_app
++from app.models import Book, Chapter
++from app.services import archives, maintenance
++from app.services.archives import create_archive, daily_backup, inspect_database, unpack_archive
++from app.services.maintenance import recover_restore, restore_archive
++from app.services.storage import backup_directory, covers_path, data_guard, restore_marker, runtime_lease
++
++COVER = 'a' * 32 + '.png'
++
++
++def migrate(path, revision='head'):
++    config = Config(str(BACKEND_DIR / 'alembic.ini'))
++    config.attributes['database_path'] = path
++    command.upgrade(config, revision)
++    return config
++
++
++@pytest.fixture
++def acervo(tmp_path, monkeypatch):
++    database = tmp_path / 'dados ação 100% # ?' / 'caderno.db'
++    monkeypatch.setenv('CADERNO_DATABASE_PATH', str(database))
++    monkeypatch.delenv('CADERNO_BACKUP_DIR', raising=False)
++    monkeypatch.delenv('CADERNO_BACKUP_KEEP', raising=False)
++    get_engine.cache_clear()
++    migrate(database)
++    with closing(sqlite3.connect(database, autocommit=True)) as db:
++        db.execute('PRAGMA foreign_keys=ON')
++        db.execute('INSERT INTO books (id,title,author,cover_path) VALUES (1,?,?,?)', ('Livro 📚', 'Autora', COVER))
++        db.execute("INSERT INTO chapters (id,book_id,name,position) VALUES (2,1,'Capítulo',0)")
++        db.execute("INSERT INTO studies (id,chapter_id,title,summary,notes) VALUES (3,2,'Estudo','Resumo','Nota original')")
++    covers_path().mkdir()
++    (covers_path() / COVER).write_bytes(b'\x89PNG\r\n\x1a\n' + b'imagem de teste' * 100)
++    yield database
++    if get_engine.cache_info().currsize:
++        get_engine().dispose()
++        get_engine.cache_clear()
++
++
++def rows(path):
++    with closing(sqlite3.connect(path, autocommit=True)) as db:
++        return {table: db.execute(f'SELECT * FROM "{table}"').fetchall()
++                for table in ('books', 'chapters', 'studies', 'alembic_version')}
++
++
++def rewrite_zip(source, target, transform):
++    with ZipFile(source) as archive:
++        contents = {name: archive.read(name) for name in archive.namelist()}
++    transform(contents)
++    with ZipFile(target, 'w') as archive:
++        for name, data in contents.items():
++            archive.writestr(name, data)
++
++
++def test_legacy_migration_preserves_values_and_creates_pre_migration_backup(tmp_path, monkeypatch):
++    path = tmp_path / 'legado' / 'caderno.db'
++    monkeypatch.setenv('CADERNO_DATABASE_PATH', str(path))
++    config = migrate(path, '0001_initial')
++    with closing(sqlite3.connect(path, autocommit=True)) as db:
++        db.execute("INSERT INTO books VALUES (10,'Livro antigo','Autor')")
++        db.execute("INSERT INTO chapters VALUES (20,10,'Capítulo antigo',3)")
++        db.execute("INSERT INTO studies (id,chapter_id,title,summary,notes) VALUES (30,20,'Estudo antigo','Ação','Texto 📚')")
++    old = rows(path)
++    command.upgrade(config, 'head')
++    with closing(sqlite3.connect(path, autocommit=True)) as db:
++        assert db.execute('SELECT version, cover_path FROM books').fetchone() == (1, None)
++        assert db.execute('SELECT notes,version FROM studies').fetchone() == ('Texto 📚', 1)
++    backups = list(backup_directory(path).glob('*.zip'))
++    assert len(backups) == 1
++    unpack_archive(backups[0], tmp_path / 'old-copy')
++    assert rows(tmp_path / 'old-copy/caderno.db') == old
++    command.upgrade(config, 'head')
++    command.check(config)
++    assert list(backup_directory(path).glob('*.zip')) == backups
++
++
++def test_backup_failure_aborts_migration_and_ddl_failure_rolls_back(tmp_path, monkeypatch):
++    from alembic.operations import Operations
++    path = tmp_path / 'legacy.db'
++    config = migrate(path, '0001_initial')
++    before = rows(path)
++    real_backup = maintenance.create_archive
++    monkeypatch.setattr(maintenance, 'create_archive', lambda *a, **k: (_ for _ in ()).throw(OSError('disco cheio')))
++    with pytest.raises(OSError):
++        command.upgrade(config, 'head')
++    assert rows(path) == before
++    monkeypatch.setattr(maintenance, 'create_archive', real_backup)
++    original_add = Operations.add_column
++
++    def fail_second(self, table, *args, **kwargs):
++        if table == 'chapters':
++            raise RuntimeError('falha simulada na segunda alteração')
++        return original_add(self, table, *args, **kwargs)
++
++    monkeypatch.setattr(Operations, 'add_column', fail_second)
++    with pytest.raises(RuntimeError, match='segunda'):
++        command.upgrade(config, 'head')
++    assert rows(path) == before
++    with closing(sqlite3.connect(path, autocommit=True)) as db:
++        assert 'version' not in {column[1] for column in db.execute('PRAGMA table_info(books)')}
++
++
++def test_conflict_requires_version_and_preserves_saved_data(acervo):
++    with TestClient(create_app()) as client:
++        for version in (None, 0, -1, True, '1'):
++            payload = {'notes': 'Inválido'}
++            if version is not None:
++                payload['version'] = version
++            assert client.patch('/api/studies/3', json=payload).status_code == 422
++        first = client.get('/api/studies/3').json()
++        saved = client.patch('/api/studies/3', json={'version': first['version'], 'notes': 'Celular'}).json()
++        assert saved['version'] == first['version'] + 1
++        conflict = client.patch('/api/studies/3', json={'version': first['version'], 'summary': 'PC antigo'})
++        assert conflict.status_code == 409
++        assert client.get('/api/studies/3').json() == saved
++        combined = client.patch('/api/studies/3', json={'version': saved['version'], 'summary': 'PC revisado'})
++        assert combined.status_code == 200
++        assert combined.json()['notes'] == 'Celular'
++
++
++def test_two_simultaneous_requests_have_one_winner(acervo):
++    with TestClient(create_app()) as client, ThreadPoolExecutor(max_workers=2) as pool:
++        version = client.get('/api/studies/3').json()['version']
++        def save(text):
++            return client.patch('/api/studies/3', json={'version': version, 'notes': text})
++        results = list(pool.map(save, ['PC', 'Celular']))
++        assert sorted(response.status_code for response in results) == [200, 409]
++        winner = next(response.json() for response in results if response.status_code == 200)
++        assert client.get('/api/studies/3').json() == winner
++
++
++def test_model_versions_advance_for_books_and_chapters(acervo):
++    engine = create_sqlite_engine(acervo)
++    try:
++        with Session(engine) as session:
++            book, chapter = session.get(Book, 1), session.get(Chapter, 2)
++            book.title = 'Revisado'; chapter.name = 'Revisado'
++            session.commit()
++            assert book.version == chapter.version == 2
++    finally:
++        engine.dispose()
++
++
++@pytest.mark.parametrize('journal', ['DELETE', 'WAL'])
++def test_archive_is_complete_and_does_not_change_source(acervo, tmp_path, journal):
++    with closing(sqlite3.connect(acervo, autocommit=True)) as writer:
++        writer.execute(f'PRAGMA journal_mode={journal}')
++        writer.execute('PRAGMA wal_autocheckpoint=0')
++        writer.execute("UPDATE studies SET notes='Última nota 📚' WHERE id=3")
++        before = rows(acervo)
++        archive = tmp_path / 'complete.zip'
++        manifest = create_archive(archive)
++        assert rows(acervo) == before
++        unpack_archive(archive, tmp_path / 'unpacked')
++        assert rows(tmp_path / 'unpacked/caderno.db') == before
++        assert (tmp_path / 'unpacked/covers' / COVER).read_bytes() == (covers_path() / COVER).read_bytes()
++        assert manifest['counts'] == {'books': 1, 'chapters': 1, 'studies': 1}
++        assert set(manifest['files']) == {'caderno.db', f'covers/{COVER}'}
++
++
++def test_missing_cover_aborts_backup(acervo, tmp_path):
++    cover = covers_path() / COVER
++    cover.unlink()
++    with pytest.raises(ValueError, match='capas referenciadas'):
++        create_archive(tmp_path / 'missing.zip')
++    assert not (tmp_path / 'missing.zip').exists()
++
++
++def test_links_abort_backup(acervo, tmp_path):
++    cover = covers_path() / COVER
++    cover.unlink()
++    outside = tmp_path / 'outside.txt'; outside.write_text('Privado')
++    try:
++        cover.symlink_to(outside)
++    except OSError as error:
++        if os.name == 'nt' and getattr(error, 'winerror', None) == 1314:
++            pytest.skip('Este Windows não permite criar symlinks sem modo de desenvolvedor.')
++        raise
++    with pytest.raises(ValueError, match='não permitido'):
++        create_archive(tmp_path / 'linked.zip')
++
++
++def test_complete_endpoint_and_range(acervo, tmp_path):
++    with TestClient(create_app()) as client:
++        response = client.get('/api/backup/complete')
++        assert response.status_code == 200
++        assert response.headers['content-type'] == 'application/zip'
++        assert response.headers['cache-control'] == 'no-store'
++        assert '.zip' in response.headers['content-disposition']
++        assert client.get('/api/backup/complete', headers={'Range': 'bytes=0-10'}).status_code == 416
++    target = tmp_path / 'download.zip'; target.write_bytes(response.content)
++    unpack_archive(target, tmp_path / 'download-unpacked')
++
++
++@pytest.mark.parametrize('damage', ['hash', 'path', 'missing', 'future', 'counts', 'invalid-db'])
++def test_invalid_packages_never_modify_current_acervo(acervo, tmp_path, damage):
++    source = tmp_path / 'good.zip'; create_archive(source)
++    current = rows(acervo)
++
++    def corrupt(contents):
++        manifest = json.loads(contents['manifest.json'])
++        if damage == 'hash': manifest['files']['caderno.db']['sha256'] = '0' * 64
++        elif damage == 'path': contents['../escape.txt'] = b'bad'
++        elif damage == 'missing': del contents[f'covers/{COVER}']
++        elif damage == 'future': manifest['format'] = 999
++        elif damage == 'counts': manifest['counts']['studies'] = 999
++        elif damage == 'invalid-db':
++            contents['caderno.db'] = b'not a database'
++            manifest['files']['caderno.db'] = {'size': len(contents['caderno.db']), 'sha256': hashlib.sha256(contents['caderno.db']).hexdigest()}
++        contents['manifest.json'] = json.dumps(manifest).encode()
++
++    damaged = tmp_path / 'damaged.zip'; rewrite_zip(source, damaged, corrupt)
++    with pytest.raises((ValueError, sqlite3.Error, BadZipFile)):
++        restore_archive(damaged)
++    assert rows(acervo) == current
++    assert not restore_marker(acervo).exists()
++    assert not (tmp_path / 'escape.txt').exists()
++
++
++def test_restore_in_new_installation_and_preserve_previous(acervo, tmp_path, monkeypatch):
++    source = tmp_path / 'portable.zip'; create_archive(source)
++    expected = rows(acervo)
++    target = tmp_path / 'pc novo' / 'meu-banco.db'
++    monkeypatch.setenv('CADERNO_DATABASE_PATH', str(target))
++    info, previous = restore_archive(source)
++    assert info['counts']['studies'] == 1
++    assert rows(target) == expected
++    assert (covers_path() / COVER).exists()
++    with closing(sqlite3.connect(target, autocommit=True)) as db:
++        db.execute("UPDATE studies SET notes='Acervo atual diferente'")
++    old = rows(target)
++    _, previous = restore_archive(source)
++    assert rows(previous / target.name) == old
++    assert rows(target) == expected
++
++
++def test_restore_failure_recovers_both_database_and_covers(acervo, tmp_path, monkeypatch):
++    source = tmp_path / 'good.zip'; create_archive(source)
++    expected = rows(acervo)
++    replace = Path.replace
++
++    def fail_install(path, target):
++        if path.parent.name == 'new' and path.name == 'caderno.db' and target == acervo:
++            raise OSError('Falha ao instalar o banco')
++        return replace(path, target)
++
++    monkeypatch.setattr(Path, 'replace', fail_install)
++    with pytest.raises(OSError): restore_archive(source)
++    assert rows(acervo) == expected
++    assert (covers_path() / COVER).exists()
++    assert not restore_marker(acervo).exists()
++
++
++def test_forced_process_exit_can_be_recovered(acervo, tmp_path):
++    source = tmp_path / 'good.zip'; create_archive(source)
++    expected = rows(acervo)
++    script = '''
++import os, sys
++from pathlib import Path
++from app.services.maintenance import restore_archive
++original = Path.replace
++def terminate(path, target):
++    if path.parent.name == 'new' and path.name == 'caderno.db': os._exit(9)
++    return original(path, target)
++Path.replace = terminate
++restore_archive(Path(sys.argv[1]))
++'''
++    environment = {**os.environ, 'PYTHONPATH': str(BACKEND_DIR)}
++    result = subprocess.run([sys.executable, '-c', script, str(source)], env=environment, timeout=20)
++    assert result.returncode == 9
++    assert restore_marker(acervo).exists()
++    with pytest.raises(RuntimeError, match='interrompida'):
++        with TestClient(create_app()): pass
++    recover_restore()
++    assert rows(acervo) == expected
++    assert (covers_path() / COVER).exists()
++    assert not restore_marker(acervo).exists()
++
++
++def test_active_server_blocks_migrations_and_restore(acervo, tmp_path):
++    source = tmp_path / 'good.zip'; create_archive(source)
++    with TestClient(create_app()):
++        with pytest.raises(RuntimeError, match='em uso'): restore_archive(source)
++        with pytest.raises(RuntimeError, match='em uso'): migrate(acervo)
++        with pytest.raises(RuntimeError, match='em uso'):
++            with TestClient(create_app()): pass
++
++
++def test_daily_retention_is_scoped_and_corrupt_today_is_replaced(acervo, tmp_path, monkeypatch):
++    monkeypatch.setenv('CADERNO_BACKUP_KEEP', '2')
++    monkeypatch.setenv('CADERNO_BACKUP_DIR', str(tmp_path / 'externo'))
++    actual_datetime = datetime
++    class Clock(datetime):
++        day = actual_datetime.now(UTC)
++        @classmethod
++        def now(cls, tz=None): return cls.day.astimezone(tz)
++    monkeypatch.setattr(archives, 'datetime', Clock)
++    manual = backup_directory() / 'meu-backup.zip'; create_archive(manual)
++    first = daily_backup()
++    assert daily_backup() == first
++    first.write_bytes(b'corrompido')
++    replacement = daily_backup()
++    assert replacement != first
++    for _ in range(3):
++        Clock.day += timedelta(days=1)
++        daily_backup()
++    assert manual.exists()
++    assert len(list(backup_directory().glob('caderno-daily-*.zip'))) == 2
++
++
++def test_legacy_archive_restores_and_migrates_only_in_staging(tmp_path, monkeypatch):
++    source = tmp_path / 'antigo/caderno.db'
++    migrate(source, '0001_initial')
++    with closing(sqlite3.connect(source, autocommit=True)) as db:
++        db.execute("INSERT INTO books VALUES (10,'Legado','Autora')")
++    backup = tmp_path / 'legado.zip'
++    create_archive(backup, database=source)
++    target = tmp_path / 'novo/caderno.db'
++    monkeypatch.setenv('CADERNO_DATABASE_PATH', str(target))
++    info, _ = restore_archive(backup)
++    assert info['schema_revision'] == '0002_integrity'
++    assert info['counts']['books'] == 1
++    with closing(sqlite3.connect(target, autocommit=True)) as db:
++        assert db.execute('SELECT id,title,version,cover_path FROM books').fetchone() == (10,'Legado',1,None)
++    assert inspect_database(source)['schema_revision'] == '0001_initial'
++
++
++def test_marker_write_failure_preserves_recoverability(acervo, tmp_path, monkeypatch):
++    source = tmp_path / 'good.zip'; create_archive(source)
++    before = rows(acervo)
++    real_write = maintenance._write_marker
++    def failed_after_write(*args):
++        real_write(*args)
++        raise OSError('Falha logo após gravar o marcador')
++    monkeypatch.setattr(maintenance, '_write_marker', failed_after_write)
++    with pytest.raises(OSError): restore_archive(source)
++    assert rows(acervo) == before
++    assert not restore_marker(acervo).exists()
++
++
++def test_startup_refuses_pending_migration(tmp_path, monkeypatch):
++    target = tmp_path / 'legado.db'
++    migrate(target, '0001_initial')
++    monkeypatch.setenv('CADERNO_DATABASE_PATH', str(target))
++    with pytest.raises(RuntimeError, match='Migração pendente'):
++        with TestClient(create_app()): pass
++    assert inspect_database(target)['schema_revision'] == '0001_initial'
+diff --git a/backend/tests/test_local_server.py b/backend/tests/test_local_server.py
+--- a/backend/tests/test_local_server.py
++++ b/backend/tests/test_local_server.py
+@@ -119,5 +119,5 @@
+         assert client.get(reader_url, headers=navigation).content == page.content
+         assert client.get(reader_url + '/editar', headers=navigation).content == page.content
+-        changed = client.patch(study_url, json={'explanation': 'Explicação revisada.\nOutro parágrafo.'})
++        changed = client.patch(study_url, json={'version': client.get(study_url).json()['version'], 'explanation': 'Explicação revisada.\nOutro parágrafo.'})
+         assert changed.status_code == 200
+         saved = changed.json()
+diff --git a/backend/tests/test_release02.py b/backend/tests/test_release02.py
+--- a/backend/tests/test_release02.py
++++ b/backend/tests/test_release02.py
+@@ -79,4 +79,7 @@
+     environment = os.environ.copy()
+     environment['CADERNO_DATABASE_PATH'] = str(tmp_path / 'isolated-network.db')
++    config = Config(str(BACKEND_DIR / 'alembic.ini'))
++    config.attributes['database_path'] = tmp_path / 'isolated-network.db'
++    command.upgrade(config, 'head')
+     log_path = tmp_path / 'network-startup.log'
+     with log_path.open('w', encoding='utf-8') as log:
+@@ -99,10 +102,10 @@
+                     pytest.fail('O inicializador não aceitou conexões no modo de rede.')
+                 assert result.status_code == 200
+-                assert result.json()['version'] == '0.2.0-alpha.1'
++                assert result.json()['version'] == '0.3.0-alpha.1'
+                 assert client.get('/').status_code == 200
+             contents = log_path.read_text(encoding='utf-8')
+             assert '100.x.x.x' in contents
+             assert str(tmp_path / 'isolated-network.db') in contents
+-            assert not (tmp_path / 'isolated-network.db').exists()
++            assert (tmp_path / 'isolated-network.db').exists()
+         finally:
+             process.terminate()
+@@ -123,6 +126,8 @@
+         connection.execute("INSERT INTO chapters VALUES (102, 101, 'Capítulo existente', 0)")
+         connection.execute("INSERT INTO studies (id, chapter_id, title, summary, notes) VALUES (103, 102, 'Estudo anterior', 'Resumo anterior', 'Minha nota antiga 📚')")
++        old_columns = {table: [row[1] for row in connection.execute(f'PRAGMA table_info("{table}")')]
++                       for table in ("books", "chapters", "studies")}
+         old_rows = {table: connection.execute(f'SELECT * FROM "{table}"').fetchall()
+-                    for table in ("books", "chapters", "studies", "alembic_version")}
++                    for table in ("books", "chapters", "studies")}
+ 
+     # Atualização reaplica a mesma migração sem recriar as tabelas existentes.
+@@ -130,8 +135,9 @@
+     with closing(sqlite3.connect(database, autocommit=True)) as connection:
+         for table, rows in old_rows.items():
+-            assert connection.execute(f'SELECT * FROM "{table}"').fetchall() == rows
++            columns = ",".join(f'"{name}"' for name in old_columns[table])
++            assert connection.execute(f'SELECT {columns} FROM "{table}"').fetchall() == rows
+ 
+     with python_server(database, tmp_path) as pc:
+-        assert pc.get('/api/health').json()['version'] == '0.2.0-alpha.1'
++        assert pc.get('/api/health').json()['version'] == '0.3.0-alpha.1'
+         # Dois clientes HTTP independentes. O Host remoto simula outra origem,
+         # sem fingir uma conexão física com Tailscale ou rede celular.
+@@ -152,8 +158,8 @@
+             url = f'/api/studies/{study_id}'
+             assert pc.get(url).json() == created.json()
+-            updated = mobile.patch(url, json={"explanation": "Explicação editada no segundo cliente."})
++            updated = mobile.patch(url, json={"version": created.json()["version"], "explanation": "Explicação editada no segundo cliente."})
+             assert updated.status_code == 200
+             assert pc.get(url).json()['explanation'] == updated.json()['explanation']
+-            changed_pc = pc.patch(url, json={"notes": "Nota editada no PC."})
++            changed_pc = pc.patch(url, json={"version": updated.json()["version"], "notes": "Nota editada no PC."})
+             assert changed_pc.status_code == 200
+             assert mobile.get(url).json() == changed_pc.json()
+diff --git a/frontend/index.html b/frontend/index.html
+--- a/frontend/index.html
++++ b/frontend/index.html
+@@ -14,6 +14,6 @@
+     <link rel="stylesheet" href="/src/fonts.css" />
+     <link rel="stylesheet" href="/src/font-picker.css" />
+-    <meta name="description" content="Caderno pessoal de leitura. Alpha 0.2 com acesso pelo PC e celular." />
+-    <title>Caderno de Leitura — Alpha 0.2</title>
++    <meta name="description" content="Caderno pessoal de leitura. Alpha 0.3 com acesso pelo PC e celular." />
++    <title>Caderno de Leitura — Alpha 0.3</title>
+   </head>
+   <body>
+diff --git a/frontend/package-lock.json b/frontend/package-lock.json
+--- a/frontend/package-lock.json
++++ b/frontend/package-lock.json
+@@ -1,5 +1,5 @@
+ {
+   "name": "caderno-leitura",
+-  "version": "0.2.0-alpha.1",
++  "version": "0.3.0-alpha.1",
+   "lockfileVersion": 3,
+   "requires": true,
+@@ -7,5 +7,5 @@
+     "": {
+       "name": "caderno-leitura",
+-      "version": "0.2.0-alpha.1",
++      "version": "0.3.0-alpha.1",
+       "dependencies": {
+         "@fontsource/opendyslexic": "5.3.0",
+diff --git a/frontend/package.json b/frontend/package.json
+--- a/frontend/package.json
++++ b/frontend/package.json
+@@ -2,5 +2,5 @@
+   "name": "caderno-leitura",
+   "private": true,
+-  "version": "0.2.0-alpha.1",
++  "version": "0.3.0-alpha.1",
+   "type": "module",
+   "scripts": {
+diff --git a/frontend/src/App.vue b/frontend/src/App.vue
+--- a/frontend/src/App.vue
++++ b/frontend/src/App.vue
+@@ -54,4 +54,4 @@
+     <RouterView />
+   </main>
+-  <footer class="app-footer">Caderno pessoal · Alpha 0.2</footer>
++  <footer class="app-footer">Caderno pessoal · Alpha 0.3</footer>
+ </template>
+diff --git a/frontend/src/components/DatabaseBackup.vue b/frontend/src/components/DatabaseBackup.vue
+--- a/frontend/src/components/DatabaseBackup.vue
++++ b/frontend/src/components/DatabaseBackup.vue
+@@ -18,11 +18,11 @@
+   busy.value = true
+   error.value = ''
+-  status.value = 'Preparando uma cópia do banco…'
++  status.value = 'Preparando uma cópia do banco e das capas…'
+   const request = new AbortController()
+   controller = request
+ 
+   try {
+-    const response = await fetch('/api/backup', {
+-      headers: { Accept: 'application/octet-stream' },
++    const response = await fetch('/api/backup/complete', {
++      headers: { Accept: 'application/zip' },
+       cache: 'no-store',
+       signal: request.signal,
+@@ -40,8 +40,8 @@
+     status.value = 'Recebendo o arquivo…'
+     const file = await response.blob()
+-    const signature = await file.slice(0, 16).text()
++    const signature = new Uint8Array(await file.slice(0, 4).arrayBuffer())
+ 
+-    if (signature !== 'SQLite format 3\0') {
+-      throw new Error('A resposta recebida não é um banco SQLite. Verifique o servidor.')
++    if (signature.join(',') !== '80,75,3,4') {
++      throw new Error('A resposta recebida não é um pacote ZIP de backup. Verifique o servidor.')
+     }
+ 
+@@ -49,6 +49,6 @@
+ 
+     const disposition = response.headers.get('Content-Disposition') ?? ''
+-    const filename = disposition.match(/filename="(caderno-[0-9TZ-]+\.db)"/i)?.[1]
+-      ?? `caderno-${new Date().toISOString().replace(/[:.]/g, '-')}.db`
++    const filename = disposition.match(/filename="(caderno-[0-9TZ-]+\.zip)"/i)?.[1]
++      ?? `caderno-${new Date().toISOString().replace(/[:.]/g, '-')}.zip`
+ 
+     const url = URL.createObjectURL(file)
+@@ -87,5 +87,5 @@
+     <h2 id="backup-title">Backup dos estudos</h2>
+     <p id="backup-description">
+-      Baixe uma cópia com seus livros, capítulos, estudos e anotações.
++      Baixe um pacote com seus livros, capítulos, estudos, anotações e capas locais.
+       O download é feito no dispositivo que você está usando.
+     </p>
+@@ -103,5 +103,5 @@
+         @click="downloadBackup"
+       >
+-        {{ busy ? 'Preparando download…' : 'Baixar backup (.db)' }}
++        {{ busy ? 'Preparando download…' : 'Baixar backup completo (.zip)' }}
+       </button>
+       <button v-if="busy" type="button" class="secondary" @click="cancelBackup">
+@@ -117,27 +117,24 @@
+       <p>
+         A restauração troca o acervo atual pelo conteúdo do backup escolhido.
+-        Guarde o acervo atual antes de fazer a troca.
++        O comando de restauração valida o pacote e preserva os arquivos do acervo atual.
+       </p>
+       <ol>
+         <li>Encerre o servidor no PC com <kbd>Ctrl+C</kbd>.</li>
+         <li>
+-          Na pasta <code>backend</code> do projeto, renomeie <code>data</code>
+-          para <code>data-antes-da-restauracao</code>. Se esse nome já existir,
+-          use outro nome para preservar as duas pastas.
++          Na raiz do projeto, abra o PowerShell e execute
++          <code>.\backend\.venv\Scripts\python.exe .\manutencao.py verificar "CAMINHO-DO-BACKUP.zip"</code>.
+         </li>
+         <li>
+-          Crie uma nova pasta <code>data</code> dentro de <code>backend</code>.
+-          Copie o backup escolhido para ela e renomeie o arquivo para
+-          <code>caderno.db</code>.
++          Confira as contagens. Para aplicar, execute
++          <code>.\backend\.venv\Scripts\python.exe .\manutencao.py restaurar "CAMINHO-DO-BACKUP.zip" --confirmar</code>.
+         </li>
+         <li>
+           Execute <code>INICIAR-REDE.cmd</code>, recarregue o site e confira
+-          seus livros e estudos antes de descartar a pasta anterior.
++          seus livros, estudos e capas. O terminal informa onde o acervo anterior foi preservado.
+         </li>
+       </ol>
+       <p class="muted">
+-        Estas instruções usam a pasta padrão do projeto. Se você configurou
+-        outro local para o banco, faça a troca nesse local, preservando
+-        o banco anterior e seus arquivos auxiliares.
++        A manutenção usa o mesmo local configurado para o banco do servidor.
++        Mantenha as mesmas configurações ao executar os comandos.
+       </p>
+     </details>
+diff --git a/frontend/src/composables/useStudyEdit.ts b/frontend/src/composables/useStudyEdit.ts
+--- a/frontend/src/composables/useStudyEdit.ts
++++ b/frontend/src/composables/useStudyEdit.ts
+@@ -1,7 +1,10 @@
+ import { computed, reactive } from 'vue'
+ import { ApiError, errorMessage } from '../services/api.ts'
+-import { SECTION_LABELS, type AnalysisSections, type Study, type StudyPatch } from '../types.ts'
++import { SECTION_LABELS, type AnalysisSections, type Study, type StudyChanges, type StudyPatch } from '../types.ts'
+ 
+-interface EditGateway { updateStudy: (id: number, patch: StudyPatch) => Promise<Study> }
++interface EditGateway {
++  updateStudy: (id: number, patch: StudyPatch) => Promise<Study>
++  getStudy: (id: number) => Promise<Study>
++}
+ const emptySections = (): AnalysisSections => ({ summary: '', explanation: '', concepts: '', references: '' })
+ 
+@@ -10,4 +13,5 @@
+     original: null as Study | null, title: '', location: '', notes: '',
+     sections: emptySections(), saving: false, error: '',
++    conflict: false, reviewing: false, latest: null as Study | null,
+   })
+ 
+@@ -19,4 +23,6 @@
+     for (const { key } of SECTION_LABELS) state.sections[key] = study[key]
+     state.error = ''
++    state.conflict = false; state.latest = null
++    state.saving = false; state.reviewing = false
+   }
+ 
+@@ -25,10 +31,12 @@
+     state.title = ''; state.location = ''; state.notes = ''
+     state.sections = emptySections(); state.error = ''
++    state.conflict = false; state.latest = null
++    state.saving = false; state.reviewing = false
+   }
+ 
+-  const patch = computed<StudyPatch>(() => {
++  const patch = computed<StudyChanges>(() => {
+     const original = state.original
+     if (!original) return {}
+-    const changes: StudyPatch = {}
++    const changes: StudyChanges = {}
+     if (state.title.trim() !== original.title) changes.title = state.title.trim()
+     if (state.location !== original.location) changes.location = state.location
+@@ -41,8 +49,37 @@
+   const dirty = computed(() => Object.keys(patch.value).length > 0)
+   const hasAnalysis = computed(() => SECTION_LABELS.some(({ key }) => state.sections[key].trim()))
+-  const canSave = computed(() => dirty.value && !!state.title.trim() && hasAnalysis.value && !state.saving)
++  const canSave = computed(() => dirty.value && !!state.title.trim() && hasAnalysis.value && !state.saving && !state.conflict)
++
++  async function reviewConflict() {
++    const original = state.original
++    if (!original || state.reviewing || state.saving) return
++    state.reviewing = true
++    state.error = ''
++    try {
++      const latest = await gateway.getStudy(original.id)
++      if (state.original === original) state.latest = latest
++    } catch (error) {
++      if (state.original === original) state.error = errorMessage(error)
++    } finally {
++      if (state.original === original) state.reviewing = false
++    }
++  }
++
++  function acceptLatestBase() {
++    if (!state.latest || state.saving || state.reviewing) return
++    const changes = { ...patch.value }
++    const latest = { ...state.latest }
++    load(latest)
++    // Só reaplica os campos que você alterou; os demais vêm do servidor.
++    for (const key of ['title', 'location', 'notes'] as const) {
++      if (key in changes) state[key] = changes[key]!
++    }
++    for (const { key } of SECTION_LABELS) {
++      if (key in changes) state.sections[key] = changes[key]!
++    }
++  }
+ 
+   async function save(): Promise<Study | null> {
+-    if (!state.original || state.saving || !dirty.value) return null
++    if (!state.original || state.saving || state.conflict || !dirty.value) return null
+     if (!canSave.value) {
+       state.error = 'Preencha o título e ao menos uma das quatro seções.'
+@@ -50,19 +87,23 @@
+     }
+     const id = state.original.id
+-    const changes = { ...patch.value }
++    const original = state.original
++    const changes = { ...patch.value, version: original.version }
+     state.saving = true
+     state.error = ''
+     try {
+       const saved = await gateway.updateStudy(id, changes)
++      if (state.original !== original) return null
+       load(saved)
+       return saved
+     } catch (error) {
++      if (state.original !== original) return null
++      state.conflict = error instanceof ApiError && error.status === 409
+       state.error = error instanceof ApiError && error.status === 0
+         ? 'Não foi possível confirmar o salvamento. Suas alterações continuam aqui. Você pode tentar salvar novamente.'
+         : errorMessage(error)
+       return null
+-    } finally { state.saving = false }
++    } finally { if (state.original === original) state.saving = false }
+   }
+ 
+-  return { state, dirty, hasAnalysis, canSave, load, clear, save }
++  return { state, dirty, hasAnalysis, canSave, load, clear, save, reviewConflict, acceptLatestBase }
+ }
+diff --git a/frontend/src/types.ts b/frontend/src/types.ts
+--- a/frontend/src/types.ts
++++ b/frontend/src/types.ts
+@@ -1,6 +1,7 @@
+-export interface Book { id: number; title: string; author: string | null }
+-export interface Chapter { id: number; book_id: number; name: string; position: number }
++export interface Book { id: number; version: number; title: string; author: string | null }
++export interface Chapter { id: number; version: number; book_id: number; name: string; position: number }
+ export interface StudySummary {
+   id: number
++  version: number
+   chapter_id: number
+   title: string
+@@ -11,5 +12,6 @@
+ export interface AnalysisSections { summary: string; explanation: string; concepts: string; references: string }
+ export interface Study extends StudySummary, AnalysisSections { source_response: string; notes: string }
+-export type StudyPatch = Partial<AnalysisSections & Pick<Study, 'title' | 'location' | 'notes'>>
++export type StudyChanges = Partial<AnalysisSections & Pick<Study, 'title' | 'location' | 'notes'>>
++export type StudyPatch = StudyChanges & { version: number }
+ export interface StudyContext { book: Book; chapter: Chapter; study: Study }
+ export interface StudyCreate extends AnalysisSections {
+diff --git a/frontend/src/views/StudyEditView.vue b/frontend/src/views/StudyEditView.vue
+--- a/frontend/src/views/StudyEditView.vue
++++ b/frontend/src/views/StudyEditView.vue
+@@ -7,4 +7,10 @@
+ import { useUnsavedChanges } from '../composables/useUnsavedChanges'
+ import StudyEditorFields from '../components/StudyEditorFields.vue'
++import { SECTION_LABELS } from '../types'
++
++const conflictFields = [
++  { key: 'title', label: 'Título' }, { key: 'location', label: 'Localização' },
++  ...SECTION_LABELS, { key: 'notes', label: 'Minhas anotações' },
++] as const
+ 
+ const route = useRoute()
+@@ -49,4 +55,21 @@
+         <p v-if="!hasAnalysis" class="notice warning">Preencha ao menos uma das quatro seções para salvar.</p>
+         <p v-if="state.error" class="notice error" role="alert">{{ state.error }}</p>
++        <section v-if="state.conflict" class="notice warning" aria-label="Revisar conflito de edição">
++          <h2>Há uma versão mais recente</h2>
++          <p>Seu texto continua no formulário. Consulte os valores salvos para decidir como combinar as alterações.</p>
++          <button type="button" class="secondary" :disabled="state.reviewing" @click="editor.reviewConflict">
++            {{ state.reviewing ? 'Consultando…' : 'Consultar versão salva' }}
++          </button>
++          <template v-if="state.latest">
++            <details v-for="field in conflictFields" :key="field.key">
++              <summary>{{ field.label }} — valor salvo</summary>
++              <pre style="white-space: pre-wrap; overflow-wrap: anywhere; font: inherit">{{ state.latest[field.key] || '(vazio)' }}</pre>
++            </details>
++            <p>Ao continuar, os campos que você editou permanecem no formulário; os demais recebem os valores acima. Revise e depois clique em Salvar alterações.</p>
++            <button type="button" class="secondary" :disabled="state.reviewing" @click="editor.acceptLatestBase">
++              Combinar com minhas alterações
++            </button>
++          </template>
++        </section>
+         <div class="save-bar">
+           <p class="muted" role="status">{{ state.saving ? 'Salvando alterações…' : dirty ? 'Você tem alterações não salvas.' : 'Nenhuma alteração pendente.' }}</p>
+diff --git a/frontend/tests/conflicts.test.mjs b/frontend/tests/conflicts.test.mjs
+new file mode 100644
+--- /dev/null
++++ b/frontend/tests/conflicts.test.mjs
+@@ -0,0 +1,67 @@
++import test from 'node:test'
++import assert from 'node:assert/strict'
++import { useStudyEdit } from '../src/composables/useStudyEdit.ts'
++import { ApiError } from '../src/services/api.ts'
++
++const initial = { id: 1, version: 1, chapter_id: 2, title: 'Estudo', location: '',
++  summary: 'Resumo', explanation: '', concepts: '', references: '', notes: 'Original',
++  source_response: 'Fonte', created_at: '', updated_at: '' }
++
++test('conflito conserva o rascunho e combina somente após revisão explícita', async () => {
++  let saved = { ...initial, version: 2, notes: 'Celular' }
++  const requests = []
++  const editor = useStudyEdit({
++    getStudy: async () => ({ ...saved }),
++    updateStudy: async (_id, patch) => {
++      requests.push(patch)
++      if (patch.version !== saved.version) throw new ApiError('Conflito', 409)
++      saved = { ...saved, ...patch, version: saved.version + 1 }
++      return saved
++    },
++  })
++  editor.load(initial)
++  editor.state.sections.summary = 'Resumo do PC'
++  assert.equal(await editor.save(), null)
++  assert.equal(editor.state.conflict, true)
++  assert.equal(editor.dirty.value, true)
++  assert.equal(editor.state.sections.summary, 'Resumo do PC')
++  assert.equal(editor.canSave.value, false)
++  await editor.reviewConflict()
++  assert.equal(editor.state.notes, 'Original')
++  editor.acceptLatestBase()
++  assert.equal(editor.state.notes, 'Celular')
++  assert.equal(editor.state.sections.summary, 'Resumo do PC')
++  assert.equal(requests.length, 1)
++  await editor.save()
++  assert.deepEqual(requests[1], { summary: 'Resumo do PC', version: 2 })
++  assert.equal(editor.state.saving, false)
++  assert.equal(editor.dirty.value, false)
++})
++
++test('nova alteração depois da revisão causa novo conflito sem apagar o texto', async () => {
++  let version = 2
++  const editor = useStudyEdit({
++    getStudy: async () => ({ ...initial, version, notes: 'Celular' }),
++    updateStudy: async () => { throw new ApiError('Conflito', 409) },
++  })
++  editor.load(initial)
++  editor.state.notes = 'Meu texto'
++  await editor.save(); await editor.reviewConflict(); editor.acceptLatestBase()
++  version++
++  await editor.save()
++  assert.equal(editor.state.conflict, true)
++  assert.equal(editor.state.notes, 'Meu texto')
++})
++
++test('falha de consulta mantém rascunho e bloqueio de conflito', async () => {
++  const editor = useStudyEdit({
++    getStudy: async () => { throw new ApiError('Sem rede', 0) },
++    updateStudy: async () => { throw new ApiError('Conflito', 409) },
++  })
++  editor.load(initial); editor.state.notes = 'Preservar'
++  await editor.save(); await editor.reviewConflict()
++  assert.equal(editor.state.notes, 'Preservar')
++  assert.equal(editor.state.conflict, true)
++  assert.equal(editor.state.latest, null)
++  assert.equal(editor.state.reviewing, false)
++})
+diff --git a/frontend/tests/study-edit.test.mjs b/frontend/tests/study-edit.test.mjs
+--- a/frontend/tests/study-edit.test.mjs
++++ b/frontend/tests/study-edit.test.mjs
+@@ -6,5 +6,5 @@
+ 
+ const original = {
+-  id: 7, chapter_id: 2, title: 'A leitura atenta', location: 'p. 20–22',
++  id: 7, version: 1, chapter_id: 2, title: 'A leitura atenta', location: 'p. 20–22',
+   source_response: '## Resumo\r\nTexto **original**.\r\n',
+   summary: 'Texto **original**.\r\n', explanation: 'Explicação.', concepts: '- Atenção',
+@@ -25,5 +25,5 @@
+   assert.equal(editor.dirty.value, true)
+   const saved = await editor.save()
+-  assert.deepEqual(sent, { id: 7, patch: { explanation: '**Explicação revisada.**\n\nOutro parágrafo.' } })
++  assert.deepEqual(sent, { id: 7, patch: { version: 1, explanation: '**Explicação revisada.**\n\nOutro parágrafo.' } })
+   assert.equal(saved.source_response, original.source_response)
+   assert.equal(saved.summary, original.summary)
+@@ -41,5 +41,5 @@
+   editor.state.location = 'Loc. 320'
+   await editor.save()
+-  assert.deepEqual(sent, { title: 'Novo título', location: 'Loc. 320', notes: '', concepts: '' })
++  assert.deepEqual(sent, { version: 1, title: 'Novo título', location: 'Loc. 320', notes: '', concepts: '' })
+ })
+ 
+@@ -126,9 +126,9 @@
+   const controller = new AbortController()
+   await api.getStudy(7, controller.signal)
+-  await api.updateStudy(7, { notes: '' })
++  await api.updateStudy(7, { version: 1, notes: '' })
+   assert.equal(calls[0].url, '/api/studies/7')
+   assert.equal(calls[0].options.signal, controller.signal)
+   assert.equal(calls[1].url, '/api/studies/7')
+   assert.equal(calls[1].options.method, 'PATCH')
+-  assert.deepEqual(JSON.parse(calls[1].options.body), { notes: '' })
++  assert.deepEqual(JSON.parse(calls[1].options.body), { version: 1, notes: '' })
+ })
+diff --git a/iniciar.py b/iniciar.py
+--- a/iniciar.py
++++ b/iniciar.py
+@@ -13,5 +13,5 @@
+     from pathlib import Path
+ 
+-    parser = argparse.ArgumentParser(description="Caderno de Leitura Alpha 0.2")
++    parser = argparse.ArgumentParser(description="Caderno de Leitura Alpha 0.3")
+     parser.add_argument("--host", choices=("127.0.0.1", "0.0.0.0"), default="127.0.0.1")
+     parser.add_argument("--port", type=int, default=8000)
+diff --git a/instalar.py b/instalar.py
+--- a/instalar.py
++++ b/instalar.py
+@@ -15,5 +15,5 @@
+ 
+ def main() -> int:
+-    parser = argparse.ArgumentParser(description="Instalar o Caderno de Leitura Alpha 0.2.")
++    parser = argparse.ArgumentParser(description="Instalar o Caderno de Leitura Alpha 0.3.")
+     parser.add_argument("--dev", action="store_true", help="Instalar também as dependências dos testes Python.")
+     args = parser.parse_args()
+diff --git a/manutencao.py b/manutencao.py
+new file mode 100644
+--- /dev/null
++++ b/manutencao.py
+@@ -0,0 +1,56 @@
++"""Execute com backend/.venv/Scripts/python.exe no Windows."""
++import argparse
++import json
++from pathlib import Path
++import sys
++from tempfile import TemporaryDirectory
++
++ROOT = Path(__file__).resolve().parent
++sys.path.insert(0, str(ROOT / "backend"))
++
++
++def main() -> int:
++    from alembic import command
++    from alembic.config import Config
++    from app.services.archives import archive_name, create_archive, unpack_archive
++    from app.services.maintenance import recover_restore, restore_archive
++    from app.services.storage import backup_directory, ensure_no_restore, runtime_lease
++
++    parser = argparse.ArgumentParser(description="Manutenção do Caderno de Leitura")
++    parser.add_argument("acao", choices=("atualizar", "backup", "verificar", "restaurar", "recuperar"))
++    parser.add_argument("arquivo", nargs="?", type=Path)
++    parser.add_argument("--confirmar", action="store_true", help="Aplicar a restauração/recuperação no acervo configurado.")
++    args = parser.parse_args()
++    if args.acao in {"verificar", "restaurar"} and args.arquivo is None:
++        parser.error("Informe o caminho do backup ZIP.")
++    if args.acao == "recuperar" and not args.confirmar:
++        parser.error("Use --confirmar para recuperar o acervo anterior à restauração interrompida.")
++    try:
++        if args.acao == "atualizar":
++            command.upgrade(Config(str(ROOT / "backend" / "alembic.ini")), "head")
++            print("Banco atualizado.")
++        elif args.acao == "backup":
++            with runtime_lease() as database:
++                ensure_no_restore(database)
++                destination = args.arquivo.resolve() if args.arquivo else backup_directory(database) / archive_name()
++                create_archive(destination, database=database)
++                print(f"Backup criado: {destination}")
++        elif args.acao == "recuperar":
++            print(f"Acervo anterior recuperado. Pasta da operação: {recover_restore()}")
++        elif args.acao == "restaurar" and args.confirmar:
++            info, previous = restore_archive(args.arquivo.resolve())
++            print(json.dumps(info, ensure_ascii=False, indent=2))
++            print(f"Restauração concluída. Acervo anterior preservado em: {previous}")
++        else:
++            with TemporaryDirectory(prefix="caderno-verificar-") as work:
++                info = unpack_archive(args.arquivo.resolve(), Path(work) / "check")
++            print(json.dumps({key: info[key] for key in ("created_at", "schema_revision", "counts")}, ensure_ascii=False, indent=2))
++            print("Backup válido. Para substituir o acervo, use restaurar com --confirmar e o servidor fechado.")
++        return 0
++    except Exception as error:
++        print(f"Manutenção interrompida: {error}", file=sys.stderr)
++        return 1
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())

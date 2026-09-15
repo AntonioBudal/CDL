@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# SQLite e Dados Locais Privados
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.zip
+backend/data/*.db
+backend/data/backups/
+backend/data/covers/
+
+# Node / Frontend
+node_modules/
+dist/
+.npm
+
+# IDE e Sistema
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
