@@ -1,0 +1,302 @@
+/* ==========================================================================
+   Superclasse 008 — Mecânica: Tátil & Responsiva
+   Motor físico dinâmico: resposta imediata, cantos secos, push-down de chave mecânica.
+   O visual estático (cores, 24 fontes, densidade de layout e tipografia) permanece intocado.
+   Escopo nominal: :is(:root[data-superclass="mecanica"], .superclass-mecanica)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Fator Multiplicador e Tokens Centrais da Mecânica
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) {
+  --sc-border-radius: 2px;
+  --sc-shadow-idle: 0 calc(3px * var(--sc-intensity)) 0 var(--color-shadow, rgba(0, 0, 0, 0.35));
+  --sc-shadow-hover: 0 calc(4px * var(--sc-intensity)) 0 var(--color-shadow, rgba(0, 0, 0, 0.45));
+  --sc-shadow-active: 0 0 0 transparent;
+  --sc-transition-duration: 100ms;
+  --sc-transition-easing: linear;
+}
+
+/* --------------------------------------------------------------------------
+   2. Supressão Absoluta de Respiração de Repouso e Magnetismo
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  .book-grid > li,
+  .book-list-compact > li
+) {
+  animation: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. Botões Globais e Elementos Interativos (Push-Down Batente Mecânico)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  button,
+  .button,
+  .btn,
+  .tag-chip,
+  .filter-chip
+) {
+  border-radius: var(--sc-border-radius);
+  box-shadow: var(--sc-shadow-idle);
+  transform: translateY(0);
+  transition:
+    transform var(--sc-transition-duration) var(--sc-transition-easing),
+    box-shadow var(--sc-transition-duration) var(--sc-transition-easing),
+    border-color var(--sc-transition-duration) var(--sc-transition-easing);
+  will-change: transform, box-shadow;
+}
+
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  button,
+  .button,
+  .btn,
+  .tag-chip,
+  .filter-chip
+):hover:not(:disabled) {
+  transform: translateY(calc(-1px * var(--sc-intensity)));
+  box-shadow: var(--sc-shadow-hover);
+}
+
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  button,
+  .button,
+  .btn,
+  .tag-chip,
+  .filter-chip
+):active:not(:disabled) {
+  transform: translateY(calc(3px * var(--sc-intensity)));
+  box-shadow: var(--sc-shadow-active);
+  transition-duration: calc(var(--sc-transition-duration) * 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   4. Cartões do Acervo e Itens de Lista
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  .book-card,
+  .book-list-item
+) {
+  border-radius: var(--sc-border-radius);
+  box-shadow: var(--sc-shadow-idle);
+  transform: translateY(0);
+  transition:
+    transform var(--sc-transition-duration) var(--sc-transition-easing),
+    box-shadow var(--sc-transition-duration) var(--sc-transition-easing),
+    border-color var(--sc-transition-duration) var(--sc-transition-easing);
+  will-change: transform, box-shadow;
+}
+
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  .book-card,
+  .book-list-item
+):hover {
+  transform: translateY(calc(-1px * var(--sc-intensity)));
+  box-shadow: var(--sc-shadow-hover);
+}
+
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  .book-card,
+  .book-list-item
+):active {
+  transform: translateY(calc(3px * var(--sc-intensity)));
+  box-shadow: var(--sc-shadow-active);
+  transition-duration: calc(var(--sc-transition-duration) * 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   5. Campos de Formulário e Entradas (Cavidades Escavadas com Sombra Inset)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  input[type="text"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="password"],
+  input:not([type]),
+  textarea,
+  select
+) {
+  border-radius: var(--sc-border-radius);
+  border: 1px solid var(--color-border);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+  transform: none;
+  transition:
+    border-color var(--sc-transition-duration) var(--sc-transition-easing),
+    box-shadow var(--sc-transition-duration) var(--sc-transition-easing);
+}
+
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  input[type="text"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="password"],
+  input:not([type]),
+  textarea,
+  select
+):focus {
+  outline: none;
+  transform: none;
+  border-color: var(--color-accent);
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.12),
+    0 0 0 1px var(--color-accent);
+}
+
+/* --------------------------------------------------------------------------
+   6. Caixas de Agrupamento, Painéis de Ajustes e Modais (Chapa Parafusada)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  .appearance-group,
+  .panel,
+  .form-panel,
+  .empty-state,
+  .state-panel,
+  .connection-panel,
+  .modal-content,
+  dialog
+) {
+  border-radius: var(--sc-border-radius);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 calc(2px * var(--sc-intensity)) 0 var(--color-shadow, rgba(0, 0, 0, 0.25));
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   7. Controles Booleanos e Switches (Estalo de Relé Mecânico 60ms)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) input[type="checkbox"],
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) input[type="radio"] {
+  border-radius: var(--sc-border-radius);
+  border: 1px solid var(--color-border);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 60ms linear,
+    border-color 60ms linear;
+  cursor: pointer;
+}
+
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) input[type="checkbox"]:active,
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) input[type="radio"]:active {
+  transform: translateY(calc(1px * var(--sc-intensity)));
+}
+
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  .switch,
+  .toggle,
+  [role="switch"]
+) {
+  border-radius: var(--sc-border-radius);
+  border: 1px solid var(--color-border);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  .switch,
+  .toggle,
+  [role="switch"]
+) :is(
+  .knob,
+  .thumb,
+  .switch-thumb,
+  .toggle-knob,
+  .slider::before,
+  input:checked + .slider::before,
+  .switch-handle
+) {
+  border-radius: var(--sc-border-radius);
+  transition: transform 60ms linear, background-color 60ms linear, box-shadow 60ms linear;
+}
+
+/* --------------------------------------------------------------------------
+   8. Transição de Rota Vue Router (Corte Seco Rápido 100ms)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) .page-enter-active,
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) .page-leave-active {
+  transition: opacity 100ms linear !important;
+}
+
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) .page-enter-from,
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) .page-leave-to {
+  opacity: 0;
+  transform: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. Blindagem do Modo de Leitura (Estabilidade e Imobilidade Absoluta)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+  .markdown-content,
+  .markdown-content *,
+  .study-section,
+  .reader-tools,
+  .reading-page
+) {
+  transform: none !important;
+  animation: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   10. Acessibilidade e Neutralização sob Redução de Movimento
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :is(:root[data-superclass="mecanica"], .superclass-mecanica) {
+    --sc-intensity: 0.0 !important;
+  }
+  :is(:root[data-superclass="mecanica"], .superclass-mecanica) :is(
+    button,
+    .button,
+    .btn,
+    .book-card,
+    .book-list-item,
+    input,
+    textarea,
+    select,
+    .appearance-group,
+    .panel,
+    .form-panel,
+    .empty-state,
+    .state-panel,
+    .connection-panel,
+    .modal-content,
+    .page-enter-active,
+    .page-leave-active
+  ) {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+:root[data-motion="off"][data-superclass="mecanica"],
+:root[data-motion="off"] .superclass-mecanica {
+  --sc-intensity: 0.0 !important;
+}
+
+:is(
+  :root[data-motion="off"][data-superclass="mecanica"],
+  :root[data-motion="off"] .superclass-mecanica
+) :is(
+  button,
+  .button,
+  .btn,
+  .book-card,
+  .book-list-item,
+  input,
+  textarea,
+  select,
+  .appearance-group,
+  .panel,
+  .form-panel,
+  .empty-state,
+  .state-panel,
+  .connection-panel,
+  .modal-content,
+  .page-enter-active,
+  .page-leave-active
+) {
+  animation: none !important;
+  transform: none !important;
+  transition: none !important;
+}

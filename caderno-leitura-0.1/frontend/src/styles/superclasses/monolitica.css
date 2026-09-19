@@ -1,0 +1,244 @@
+/* ==========================================================================
+   Superclasse 011 — Monolítica: Pesada & Solene (Brutalista & Arquitetura em Pedra)
+   Motor físico brutalista: prismas retangulares maciços, cantos estritamente retos
+   (border-radius: 0px !important), supressão total de sombras difusas (box-shadow: none !important),
+   relevo demarcado por peso de bordas estruturais sólidas, microinterações solenes
+   de contraste (~380ms), inversão brutalista no clique (:active) e transições
+   de rota por dissolução lapidar em opacidade (~380ms).
+   O visual estático (cores, 24 fontes, densidade de layout e tipografia) permanece intocado.
+   Escopo nominal: :is(:root[data-superclass="monolitica"], .superclass-monolitica)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens Fundamentais da Monolítica
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) {
+  --sc-border-radius: 0px !important;
+  --sc-border-width: calc(var(--border-width, 1px) + 1px);
+  --sc-shadow-idle: none !important;
+  --sc-shadow-hover: none !important;
+  --sc-shadow-active: none !important;
+  --sc-transition-duration: 380ms;
+  --sc-transition-easing: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. Cartões do Acervo e Itens de Lista (Prismas Retangulares Maciços)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  .book-card,
+  .book-list-item
+) {
+  border-radius: var(--sc-border-radius);
+  border: var(--sc-border-width) solid var(--color-border-strong);
+  box-shadow: var(--sc-shadow-idle);
+  transform: none !important;
+  transition:
+    background-color var(--sc-transition-duration) var(--sc-transition-easing),
+    border-color var(--sc-transition-duration) var(--sc-transition-easing);
+  will-change: background-color, border-color;
+}
+
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  .book-card,
+  .book-list-item
+):hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-text);
+  box-shadow: var(--sc-shadow-hover);
+  transform: none !important;
+}
+
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  .book-card,
+  .book-list-item
+):active {
+  background-color: var(--color-surface-soft);
+  border-color: var(--color-text);
+  box-shadow: var(--sc-shadow-active);
+  transform: none !important;
+}
+
+/* Supressão de oscilação contínua e imobilidade de capas e títulos */
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  .book-card .book-card-cover-wrapper,
+  .book-card h2,
+  .book-number,
+  .card-action,
+  .category-badge
+) {
+  border-radius: 0px !important;
+  box-shadow: none !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. Painéis Estruturais e Grupos de Ajustes
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  .panel,
+  .appearance-group,
+  .category-sidebar,
+  .detail-panel,
+  .modal-dialog
+) {
+  border-radius: var(--sc-border-radius);
+  border: var(--sc-border-width) solid var(--color-border-strong);
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. Elementos de Formulário e Controles de Entrada
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  input[type="text"],
+  input[type="number"],
+  textarea,
+  select
+) {
+  border-radius: var(--sc-border-radius);
+  border: var(--sc-border-width) solid var(--color-border-strong);
+  box-shadow: none !important;
+  transform: none !important;
+  transition: border-color var(--sc-transition-duration) var(--sc-transition-easing);
+}
+
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  input:focus,
+  textarea:focus,
+  select:focus
+) {
+  outline: calc(var(--focus-width, 2px) + 1px) solid var(--color-text);
+  outline-offset: 1px;
+  border-color: var(--color-text);
+  box-shadow: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Botões Globais (Blocos Sólidos com Inversão no Active)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  button,
+  .button,
+  .btn
+) {
+  border-radius: var(--sc-border-radius);
+  border: var(--sc-border-width) solid currentColor;
+  box-shadow: var(--sc-shadow-idle);
+  transform: none !important;
+  transition:
+    background-color var(--sc-transition-duration) var(--sc-transition-easing),
+    color var(--sc-transition-duration) var(--sc-transition-easing),
+    border-color var(--sc-transition-duration) var(--sc-transition-easing);
+}
+
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  button,
+  .button,
+  .btn
+):hover:not(:disabled) {
+  transform: none !important;
+  box-shadow: none !important;
+  border-color: var(--color-text);
+}
+
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  button,
+  .button,
+  .btn
+):active:not(:disabled) {
+  transform: none !important;
+  box-shadow: none !important;
+  background-color: var(--color-text);
+  color: var(--color-page);
+}
+
+/* --------------------------------------------------------------------------
+   6. Transição de Rota Solene (Dissolução Lapidar)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) .page-enter-active {
+  transition: opacity 380ms cubic-bezier(0.25, 1, 0.5, 1) !important;
+  transform: none !important;
+}
+
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) .page-leave-active {
+  transition: opacity 220ms ease !important;
+  transform: none !important;
+}
+
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  .page-enter-from,
+  .page-leave-to
+) {
+  opacity: 0 !important;
+  transform: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   7. Blindagem do Modo de Leitura (Estabilidade e Imobilidade Absoluta)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+  .markdown-content,
+  .markdown-content *,
+  .study-section,
+  .reader-tools,
+  .reading-page
+) {
+  transform: none !important;
+  animation: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. Acessibilidade e Neutralização sob Redução de Movimento
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :is(:root[data-superclass="monolitica"], .superclass-monolitica) {
+    --sc-intensity: 0.0 !important;
+  }
+
+  :is(:root[data-superclass="monolitica"], .superclass-monolitica) :is(
+    .book-card,
+    .book-list-item,
+    button,
+    .button,
+    .btn,
+    .panel,
+    .appearance-group,
+    input,
+    textarea,
+    select,
+    .page-enter-active,
+    .page-leave-active
+  ) {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+:root[data-motion="off"][data-superclass="monolitica"],
+:root[data-motion="off"] .superclass-monolitica {
+  --sc-intensity: 0.0 !important;
+}
+
+:is(
+  :root[data-motion="off"][data-superclass="monolitica"],
+  :root[data-motion="off"] .superclass-monolitica
+) :is(
+  .book-card,
+  .book-list-item,
+  button,
+  .button,
+  .btn,
+  .panel,
+  .appearance-group,
+  input,
+  textarea,
+  select,
+  .page-enter-active,
+  .page-leave-active
+) {
+  transition: none !important;
+  animation: none !important;
+}

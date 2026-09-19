@@ -1,0 +1,392 @@
+/* ==========================================================================
+   Superclasse 007 — Zero-G: Flutuante & Magnética
+   Motor físico dinâmico: elevação suave, respiração de repouso e atração magnética.
+   O visual estático (cores, 24 fontes, densidade de layout e tipografia) permanece intocado.
+   Escopo nominal: :root[data-superclass="zero-g"] e .superclass-zero-g
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Fator Multiplicador de Intensidade Paramétrica (--sc-intensity)
+   -------------------------------------------------------------------------- */
+:root {
+  --sc-intensity: 1.0;
+  --sc-border-radius: calc(var(--radius-card, 8px) + 2px);
+  --sc-shadow-idle: 0 6px 20px -3px rgba(0, 0, 0, 0.05), 0 14px 38px -6px rgba(0, 0, 0, 0.04);
+}
+
+:root[data-superclass-intensity="subtle"] {
+  --sc-intensity: 0.5;
+}
+
+:root[data-superclass-intensity="standard"] {
+  --sc-intensity: 1.0;
+}
+
+:root[data-superclass-intensity="high"] {
+  --sc-intensity: 1.5;
+}
+
+:root[data-superclass-intensity="off"] {
+  --sc-intensity: 0.0;
+}
+
+/* --------------------------------------------------------------------------
+   2. Cartões do Acervo (Geometria, Sombras e Magnetismo)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) .book-card {
+  border: 1px solid color-mix(in srgb, var(--color-border) 45%, transparent);
+  border-left-width: 1px;
+  border-radius: var(--sc-border-radius);
+  box-shadow:
+    0 4px 14px -2px rgba(0, 0, 0, 0.04),
+    0 10px 28px -4px rgba(0, 0, 0, 0.06);
+  transform: translate3d(
+    calc(var(--sc-magnetic-x, 0) * 4px * var(--sc-intensity)),
+    calc(var(--sc-magnetic-y, 0) * 4px * var(--sc-intensity)),
+    0
+  );
+  transition:
+    transform 650ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 650ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms ease,
+    background 300ms ease;
+  will-change: transform, box-shadow;
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) .book-card:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 30%, var(--color-border));
+  box-shadow:
+    0 12px 36px -4px rgba(0, 0, 0, 0.12),
+    0 24px 60px -8px rgba(0, 0, 0, 0.08);
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) .book-card[data-magnetic="active"] {
+  transition:
+    transform 90ms ease-out,
+    box-shadow 250ms ease-out;
+}
+
+/* Modo Lista Compacta */
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) .book-list-item {
+  border: 1px solid color-mix(in srgb, var(--color-border) 45%, transparent);
+  border-radius: var(--sc-border-radius);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+  transform: translate3d(
+    calc(var(--sc-magnetic-x, 0) * 3px * var(--sc-intensity)),
+    calc(var(--sc-magnetic-y, 0) * 3px * var(--sc-intensity)),
+    0
+  );
+  transition:
+    transform 650ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 650ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms ease;
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) .book-list-item:hover {
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) .book-list-item[data-magnetic="active"] {
+  transition:
+    transform 90ms ease-out,
+    box-shadow 250ms ease-out;
+}
+
+/* --------------------------------------------------------------------------
+   3. Respiração de Repouso (Idle Breathing)
+   -------------------------------------------------------------------------- */
+@keyframes sc-zero-g-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(calc(-1px * var(--sc-intensity)));
+  }
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) .book-grid > li {
+  animation: sc-zero-g-float 5.4s ease-in-out infinite;
+  animation-delay: calc(var(--card-index, 0) * 240ms);
+  will-change: transform;
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) .book-list-compact > li {
+  animation: sc-zero-g-float 5.4s ease-in-out infinite;
+  animation-delay: calc(var(--card-index, 0) * 200ms);
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------
+   4. Campos de Entrada (input[type="text"], input[type="number"], textarea)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) :is(
+  input[type="text"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="password"],
+  input:not([type]),
+  textarea
+) {
+  border-color: transparent;
+  border-radius: calc(var(--radius-control, 6px) + 2px);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.04),
+    0 2px 8px -2px rgba(0, 0, 0, 0.03);
+  transition:
+    transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms ease,
+    background-color 300ms ease;
+  will-change: transform, box-shadow;
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) :is(
+  input[type="text"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="password"],
+  input:not([type]),
+  textarea
+):focus {
+  outline: none;
+  transform: translateY(calc(-1px * var(--sc-intensity)));
+  border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  box-shadow:
+    0 8px 24px -4px color-mix(in srgb, var(--color-accent) 26%, transparent),
+    0 2px 6px -1px rgba(0, 0, 0, 0.04),
+    inset 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* --------------------------------------------------------------------------
+   5. Caixas de Seleção e Dropdowns (select e menus de opções)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) select {
+  border-color: color-mix(in srgb, var(--color-border) 35%, transparent);
+  border-radius: calc(var(--radius-control, 6px) + 3px);
+  box-shadow:
+    0 2px 6px -1px rgba(0, 0, 0, 0.04),
+    0 4px 12px -2px rgba(0, 0, 0, 0.02);
+  transition:
+    transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms ease;
+  will-change: transform, box-shadow;
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) select:focus {
+  outline: none;
+  transform: translateY(calc(-1px * var(--sc-intensity)));
+  border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+  box-shadow:
+    0 8px 22px -3px color-mix(in srgb, var(--color-accent) 24%, transparent),
+    0 2px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Listas flutuantes e menus suspensos com elevação profunda */
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) :is(
+  .category-dropdown,
+  .font-picker-menu,
+  .dropdown-menu,
+  .popover,
+  dialog,
+  .modal-content
+) {
+  border: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+  border-radius: calc(var(--radius-control, 6px) + 4px);
+  box-shadow:
+    0 15px 40px -4px rgba(0, 0, 0, 0.18),
+    0 6px 18px -2px rgba(0, 0, 0, 0.08);
+  animation: sc-zero-g-dropdown-enter 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sc-zero-g-dropdown-enter {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-4px * var(--sc-intensity))) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. Controles Booleanos (checkbox, radio, toggles/switches)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) input[type="checkbox"],
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) input[type="radio"] {
+  border-radius: 6px;
+  border: 1.5px solid color-mix(in srgb, var(--color-border) 50%, transparent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition:
+    transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 200ms ease;
+  cursor: pointer;
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) input[type="radio"] {
+  border-radius: 9999px;
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) input[type="checkbox"]:hover,
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) input[type="radio"]:hover {
+  transform: translateY(calc(-1px * var(--sc-intensity)));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Switches & Toggles: deslize suave sem atrito do pino */
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) :is(.switch, .toggle, [role="switch"]) {
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 35%, transparent);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) :is(.switch, .toggle, [role="switch"]) :is(
+  .knob,
+  .thumb,
+  .switch-thumb,
+  .toggle-knob,
+  .slider::before,
+  input:checked + .slider::before
+) {
+  border-radius: 9999px;
+  box-shadow:
+    0 4px 10px -1px rgba(0, 0, 0, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 300ms ease,
+    box-shadow 300ms ease;
+}
+
+/* --------------------------------------------------------------------------
+   7. Botões Globais (button, .button, .btn)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) :is(button, .button, .btn) {
+  border-radius: calc(var(--radius-button, 8px) + 2px);
+  border: 1px solid color-mix(in srgb, var(--color-border) 30%, transparent);
+  box-shadow:
+    0 2px 6px -1px rgba(0, 0, 0, 0.05),
+    0 4px 12px -2px rgba(0, 0, 0, 0.03);
+  transition:
+    transform 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms ease,
+    background-color 250ms ease;
+  will-change: transform, box-shadow;
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) :is(button, .button, .btn):hover:not(:disabled) {
+  transform: translateY(calc(-2px * var(--sc-intensity)));
+  box-shadow:
+    0 10px 24px -4px rgba(0, 0, 0, 0.12),
+    0 4px 10px -2px rgba(0, 0, 0, 0.06);
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) :is(button, .button, .btn):active:not(:disabled) {
+  transform: translateY(calc(0.5px * var(--sc-intensity)));
+  box-shadow:
+    0 2px 6px -1px rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.04);
+  transition-duration: 150ms;
+}
+
+/* --------------------------------------------------------------------------
+   8. Painéis e Caixas de Agrupamento (Contêineres de Ajustes & Cards)
+   -------------------------------------------------------------------------- */
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) :is(
+  .appearance-group,
+  .panel,
+  .form-panel,
+  .empty-state,
+  .state-panel,
+  .connection-panel
+) {
+  border: 1px solid color-mix(in srgb, var(--color-border) 35%, transparent);
+  border-radius: calc(var(--radius-card, 8px) + 4px);
+  box-shadow: var(--sc-shadow-idle);
+  transition:
+    box-shadow 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms ease;
+  will-change: transform, box-shadow;
+}
+
+:is(:root[data-superclass="zero-g"], .superclass-zero-g) .appearance-group legend {
+  letter-spacing: -0.01em;
+  padding: 0 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   9. Blindagem do Modo de Leitura (Estabilidade Absoluta)
+   Texto de capítulos, anotações e controles de leitura 100% imóveis.
+   -------------------------------------------------------------------------- */
+.markdown-content,
+.markdown-content *,
+.study-section,
+.reader-tools,
+.reading-page {
+  transform: none !important;
+  animation: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   10. Acessibilidade & Neutralização sob Redução de Movimento
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --sc-intensity: 0.0 !important;
+  }
+  :is(:root[data-superclass="zero-g"], .superclass-zero-g) :is(
+    .book-grid > li,
+    .book-list-compact > li,
+    .book-card,
+    .book-list-item,
+    input,
+    textarea,
+    select,
+    button,
+    .button,
+    .btn,
+    .appearance-group,
+    .panel,
+    .form-panel,
+    .empty-state,
+    .state-panel,
+    .connection-panel
+  ) {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+:root[data-motion="off"] {
+  --sc-intensity: 0.0 !important;
+}
+
+:is(:root[data-motion="off"][data-superclass="zero-g"], :root[data-motion="off"] .superclass-zero-g) :is(
+  .book-grid > li,
+  .book-list-compact > li,
+  .book-card,
+  .book-list-item,
+  input,
+  textarea,
+  select,
+  button,
+  .button,
+  .btn,
+  .appearance-group,
+  .panel,
+  .form-panel,
+  .empty-state,
+  .state-panel,
+  .connection-panel
+) {
+  animation: none !important;
+  transform: none !important;
+  transition: none !important;
+}
