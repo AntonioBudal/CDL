@@ -12,10 +12,10 @@ Este arquivo define regras estritas para qualquer agente de IA que atue neste re
 - Todo teste automatizado ou script de validação DEVE utilizar bancos descartáveis em diretórios temporários (`tmp_path`).
 - Scripts e instaladores nunca devem ser executados sem antes auditar o código e garantir o isolamento total dos dados de produção.
 
-## 3. Estado do Roadmap e Versão 0.3
-- **REGRA DE ESTADO:** As dez tarefas (T01 a T10) da versão 0.3 estão **NÃO INICIADAS**.
-- A presença de patches, rascunhos, código preliminar ou arquivos de contexto NÃO altera o status de nenhuma tarefa.
-- Nenhuma tarefa pode ser marcada como iniciada ou concluída sem a execução delimitada e autorizada pelo usuário.
+## 3. Estado do Roadmap e Versão 0.5
+- **REGRA DE ESTADO:** Todas as dez features (F01 a F10) da versão 0.5 estão estritamente **NÃO INICIADAS**.
+- A presença de patches, rascunhos, código preliminar ou arquivos de contexto NÃO altera o status de nenhuma feature.
+- Nenhuma feature pode ser marcada como iniciada ou concluída sem a execução delimitada e autorizada pelo usuário através do ciclo Spec Kit.
 
 ## 4. Fluxo de Trabalho (Spec-Driven Development)
 - O fluxo oficial de desenvolvimento utiliza o GitHub Spec Kit integrado ao Antigravity (`agy`).

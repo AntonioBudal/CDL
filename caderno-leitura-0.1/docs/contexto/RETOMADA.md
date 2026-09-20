@@ -352,9 +352,63 @@ Este documento registra as evidências consolidadas em cada ciclo de trabalho e 
 
 ---
 
+## Sessão: Conclusão do Roadmap 0.4 e Reorganização do Histórico Git (19/09/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Homologação Integral do Roadmap 0.4:**
+   - 10 features (F01 a F10) implementadas através do ciclo Spec Kit com 100% de conformidade.
+   - Suíte frontend: 223 testes passando (`npm test`).
+   - Suíte backend: 199 testes passando, 1 ignorado intencionalmente (`pytest`).
+   - Compilação de produção Vite: 0 erros (`npm run build` em 3.07s).
+2. **Reconstrução do Histórico Git por Marcos de Roadmap (0.1 a 0.4):**
+   - Repositório local inicializado e isolado em `c:\Users\User\caderno\.git`, configurado na branch `main`.
+   - Remote oficial configurado: `https://github.com/AntonioBudal/CDL.git`.
+   - Cadeia linear de 4 commits autênticos:
+     - `485b29a`: `versão 0.1 — base inicial do acervo e estudos` (10/09/2026)
+     - `bad8099`: `versão 0.2 — acesso em rede e personalização` (15/09/2026)
+     - `3d7fb06`: `versão 0.3 — gestão, visualização e produtividade` (19/09/2026 12:00)
+     - `89dc0cd`: `versão 0.4 — navegação espacial, relações e movimento` (19/09/2026 23:20)
+   - Zero dados privados ou arquivos `.db`/`.zip` rastreados (`git ls-files` auditado).
+3. **Nova Convenção de Versionamento Estabelecida (Roadmap 0.5+):**
+   - A partir da versão 0.5: **1 Feature Implementada e Validada = 1 Commit Atômico**.
+   - Regra registrada em `docs/HISTORICO-ROADMAPS.md`, `docs/contexto/CONVENCAO-GIT.md` e `AGENTS.md`.
+
+---
+
+## Sessão: Planejamento Arquitetural e Emissão do Roadmap 0.5 (20/09/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Emissão Oficial do Roadmap 0.5 (`ROADMAP-0.5.md`):**
+   - Documento oficial criado e espelhado em:
+     - `ROADMAP-0.5.md` (raiz do workspace)
+     - `docs/contexto/ROADMAP-0.5.md`
+     - `caderno-leitura-0.1/docs/contexto/ROADMAP-0.5.md`
+   - Definição completa das 10 features estruturantes (**F01 a F10**):
+     - `F01` — Fundação Multiusuário e CRUD Geral (Propriedade dos dados `user_id`, migração sem perdas do acervo existente e autorização server-side)
+     - `F02` — Autenticação e Sessões (Identidade local, hash adaptativo Argon2id, sessões em cookies HttpOnly/SameSite e controle de dispositivos)
+     - `F03` — Conta Google e Vinculação de Identidade (Google Identity Services GIS, claim `sub` estável, ExternalIdentity e suporte a HTTPS Tailscale *.ts.net)
+     - `F04` — Sincronização Multidispositivo (PC e celular sincronizados com estado remoto como fonte da verdade e detecção explícita de conflitos HTTP 409)
+     - `F05` — Perfil e Privacidade (Identidade pública com `@username` sem vazar e-mails e controles granulares de exposição: Público, Amigos, Privado)
+     - `F06` — Sistema de Amizades (Ciclo de vida social completo: solicitar, aceitar, recusar, cancelar, remover, bloquear e busca de descobríveis)
+     - `F07` — Compartilhamento e Permissões por Recurso (ACL granular somente-leitura por livro, estudo e dashboard)
+     - `F08` — Administração e RBAC (Controle de papéis `ADMIN` vs `USER` validado no servidor e painel administrativo central)
+     - `F09` — Notificações e Atividade Social (Feed desacoplado de eventos, solicitações e compartilhamentos com rastreamento de leitura)
+     - `F10` — Segurança, Auditoria e Ciclo de Vida da Conta (Rate limiting, audit log sem segredos, desativação/exclusão e portabilidade LGPD/ANPD em ZIP)
+2. **Princípios de Arquitetura e Decisões de Engenharia:**
+   - O servidor permanece no PC local via `iniciar.py`, atendendo PC e dispositivos móveis (Tailscale).
+   - SQLite WAL continua viável para baixa concorrência; camada de dados preparada para eventual migração para PostgreSQL sem refatorar regras de negócio.
+   - Compartilhamento é estritamente **Read-Only** nesta versão (edição colaborativa/CRDTs fora de escopo).
+3. **Governança e Estado das Features:**
+   - **REGRA DE ESTADO: Todas as 10 features (F01 a F10) do Roadmap 0.5 estão estritamente NÃO INICIADAS.**
+   - O acervo ativo (`backend/data/caderno.db`) permanece 100% isolado, protegido e intacto.
+4. **Grafo de Dependências e Ordem Técnica Sequencial:**
+   - Ordem estrita: `F01` → `F02` → `F03` → `F04` → `F05` → `F06` → `F07` → `F08` → `F09` → `F10`.
+
+---
+
 ## Próximo Passo Recomendado
 
-Iniciar o ciclo Spec Kit para a primeira fatia do Roadmap 0.4 executando:
+Iniciar o ciclo Spec Kit para a primeira fatia do Roadmap 0.5 executando:
 ```bash
-/speckit-specify F09 - Sistema Visual Profissional
+/speckit-specify F01 - Fundação Multiusuário e CRUD Geral
 ```
