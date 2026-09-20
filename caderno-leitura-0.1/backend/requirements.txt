@@ -49,3 +49,7 @@ typing-inspection==0.4.4
     #   pydantic
 uvicorn==0.52.4
     # via -r requirements.in
+qrcode==8.2
+colorama==0.4.6 ; sys_platform == "win32"
+pillow==12.3.0
+python-multipart==0.0.32

@@ -1,0 +1,119 @@
+:root {
+  /* Cores: paleta clara atual */
+  
+  --color-muted: #475569;
+  --color-subtle: #58677a;
+  --color-placeholder: #64748b;
+  --color-meta: #556984;
+  --color-page: #f1f5f9;
+  --color-surface: #fff;
+  --color-surface-soft: #eaf0f8;
+  --color-surface-inset: #edf2f7;
+  --color-surface-readonly: #f8fafc;
+  --color-surface-disabled: #eaf0f6;
+  --color-card-hover: #fbfdff;
+  --color-surface-hover: #f1f5f9;
+  --color-accent: #1d4ed8;
+  --color-accent-hover: #1e40af;
+  --color-on-accent: #fff;
+  --color-selected-text: #163ba6;
+  --color-selected-bg: #eaf0ff;
+  --color-tab-hover: #eff4ff;
+  --color-inverse-bg: #17263b;
+  --color-on-inverse: #fff;
+  --color-border: #cbd5e1;
+  --color-border-strong: #94a3b8;
+  --color-border-hover: #7992b5;
+  --color-border-list: #dce4ed;
+  --color-border-divider: #e2e8f0;
+  --color-border-step: #9cacc4;
+  --color-book-marker: #243c60;
+  --color-info-bg: #eff4fa;
+  --color-info-border: #c5d2e3;
+  --color-error-bg: #fff4f3;
+  --color-error-text: #8b241d;
+  --color-error-border: #e8b1ad;
+  --color-error-detail: #9f231a;
+  --color-error-marker: #b42318;
+  --color-warning-bg: #fff9e9;
+  --color-warning-text: #684608;
+  --color-warning-border: #ddc585;
+  --color-warning-marker: #b98722;
+  --color-success-text: #086543;
+  
+  /* Esqueletos e Shimmer adaptativo */
+  --skeleton-base: color-mix(in srgb, var(--color-border) 45%, transparent);
+  --skeleton-shimmer: color-mix(in srgb, var(--color-surface) 40%, transparent);
+  /* Geometria: escala 0 deixa todas as caixas retas */
+  --radius-scale: 1;
+  --radius-panel: calc(.65rem * var(--radius-scale));
+  --radius-card: calc(.5rem * var(--radius-scale));
+  --radius-button: calc(.4rem * var(--radius-scale));
+  --radius-control: calc(.35rem * var(--radius-scale));
+  --radius-badge: calc(.3rem * var(--radius-scale));
+  --radius-small: calc(.25rem * var(--radius-scale));
+  --radius-code: calc(.2rem * var(--radius-scale));
+  --border-width: 1px;
+  --edge-thin: .2rem;
+  --edge-medium: .25rem;
+  --edge-strong: .3rem;
+  --tab-indicator-width: 3px;
+  --focus-width: 3px;
+  --focus-offset: 3px;
+  --shadow-panel: none;
+  --shadow-control: none;
+
+  /* Tipografia: interface e componentes herdam dinamicamente a fonte selecionada */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: Georgia, 'Times New Roman', serif;
+  --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+  --font-reading: var(--font-sans);
+  --font-ui: var(--font-reading);
+  --base-font-size: 100%;
+  --reader-font-size: 1rem;
+  --line-height-ui: 1.6;
+  --line-height-reading: 1.85;
+
+  /* Espacamento: 1 conserva a densidade atual */
+  --density: 1;
+  --space-unit: calc(1rem * var(--density));
+  --page-gutter: calc(var(--space-unit) * 3);
+  --page-gutter-mobile: calc(var(--space-unit) * 2);
+  --workspace-max-width: 74rem;
+
+  /* Painéis Redimensionáveis (F06) */
+  --pane-left-width: 300px;
+  --pane-right-width: 300px;
+  --gutter-width: 8px;
+  --pane-min-width: 240px;
+  --pane-max-width: 600px;
+  --pane-main-min-width: 360px;
+
+  /* Sistema de Visualizações (F01) */
+  --view-switcher-height: 2.75rem;
+  --view-switcher-radius: calc(.45rem * var(--radius-scale));
+  --view-transition-speed: 0.18s;
+}
+
+/* Transição de Renderers de Estudo (F01) */
+.view-fade-enter-active,
+.view-fade-leave-active {
+  transition: opacity var(--view-transition-speed, 0.18s) ease, transform var(--view-transition-speed, 0.18s) ease;
+}
+
+.view-fade-enter-from {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.view-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view-fade-enter-active,
+  .view-fade-leave-active {
+    transition: none !important;
+  }
+}

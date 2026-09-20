@@ -1,7 +1,10 @@
+import mark from 'markdown-it-mark'
 import MarkdownIt from 'markdown-it'
 
 // Only this renderer may supply HTML to MarkdownContent. Raw source is never HTML.
+
 const markdown = new MarkdownIt({ html: false, linkify: false, typographer: false })
+markdown.use(mark)
 markdown.disable('image')
 const renderLink = markdown.renderer.rules.link_open
 markdown.renderer.rules.link_open = (tokens, index, options, env, renderer) => {

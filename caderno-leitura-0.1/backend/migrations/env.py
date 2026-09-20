@@ -8,6 +8,7 @@ from app.core.config import get_database_path
 from app.db.base import Base
 from app.db.session import create_sqlite_engine, sqlite_url
 from app.db.types import UTCDateTime
+from app.services.maintenance import ensure_pre_upgrade_snapshot
 
 config = context.config
 if config.config_file_name is not None:
@@ -30,8 +31,11 @@ def database_path() -> Path:
 
 
 def run_migrations_offline() -> None:
+    target_db = database_path()
+    ensure_pre_upgrade_snapshot(target_db)
+
     context.configure(
-        url=sqlite_url(database_path()),
+        url=sqlite_url(target_db),
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -44,7 +48,10 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    engine = create_sqlite_engine(database_path())
+    target_db = database_path()
+    ensure_pre_upgrade_snapshot(target_db)
+
+    engine = create_sqlite_engine(target_db, enable_foreign_keys=False)
     try:
         with engine.connect() as connection:
             context.configure(
@@ -58,8 +65,14 @@ def run_migrations_online() -> None:
             )
             with context.begin_transaction():
                 context.run_migrations()
+
+            # Valida integridade referencial completa após recriação de tabelas em lote
+            violations = connection.exec_driver_sql("PRAGMA foreign_key_check").fetchall()
+            if violations:
+                raise RuntimeError(f"Violação de chave estrangeira detectada pós-migração: {violations}")
     finally:
         engine.dispose()
+
 
 
 if context.is_offline_mode():

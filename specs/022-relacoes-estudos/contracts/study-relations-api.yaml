@@ -1,0 +1,306 @@
+openapi: 3.0.3
+info:
+  title: API de Relações entre Estudos (Caderno de Leitura - F04)
+  description: Endpoints REST para criação, consulta bidirecional, edição e remoção de vínculos semânticos entre estudos.
+  version: 1.0.0
+paths:
+  /api/studies/{study_id}/relations:
+    get:
+      summary: Listar relações ativas de saída e backlinks recebidos do estudo
+      operationId: getStudyRelations
+      parameters:
+        - name: study_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Coleção de relações de saída e backlinks recebidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyRelationsResponse'
+        '404':
+          description: Estudo não encontrado
+    post:
+      summary: Criar um vínculo semântico direcionado a partir do estudo
+      operationId: createStudyRelation
+      parameters:
+        - name: study_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyRelationCreate'
+      responses:
+        '201':
+          description: Relação criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyRelationItem'
+        '400':
+          description: Auto-relacionamento ou relação já existente
+        '404':
+          description: Estudo de origem ou destino não encontrado
+        '422':
+          description: Tipo de relação inválido ou dados malformados
+
+  /api/relations/{relation_id}:
+    patch:
+      summary: Atualizar tipo ou nota descritiva de uma relação existente
+      operationId: updateStudyRelation
+      parameters:
+        - name: relation_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyRelationUpdate'
+      responses:
+        '200':
+          description: Relação atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyRelationItem'
+        '404':
+          description: Relação não encontrada
+    delete:
+      summary: Remover individualmente uma relação semântica
+      operationId: deleteStudyRelation
+      parameters:
+        - name: relation_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Relação removida com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Relação removida com sucesso.
+        '404':
+          description: Relação não encontrada
+
+  /api/studies/search-candidates:
+    get:
+      summary: Buscar estudos candidatos em todo o acervo para vinculação semântica rápida
+      operationId: searchCandidateStudies
+      parameters:
+        - name: query
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Termo de busca para título ou capítulo
+        - name: exclude_study_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID do estudo de origem a ser excluído dos resultados
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Lista de estudos candidatos filtrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CandidateStudyItem'
+
+  /api/books/{book_id}/relations:
+    get:
+      summary: Listar todas as relações ativas entre estudos de um livro para projeção no Canvas e Mapa
+      operationId: getBookCanvasRelations
+      parameters:
+        - name: book_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Relações ativas entre os estudos do livro
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookCanvasRelationItem'
+        '404':
+          description: Livro não encontrado
+
+components:
+  schemas:
+    RelationTypeEnum:
+      type: string
+      enum:
+        - relacionado_com
+        - complementa
+        - contradiz
+        - depende_de
+        - mesmo_tema
+        - desdobramento_de
+
+    ConnectedStudySummary:
+      type: object
+      required:
+        - id
+        - title
+        - book_id
+        - book_title
+        - chapter_id
+        - chapter_title
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        book_id:
+          type: integer
+        book_title:
+          type: string
+        chapter_id:
+          type: integer
+        chapter_title:
+          type: string
+
+    StudyRelationItem:
+      type: object
+      required:
+        - id
+        - source_study_id
+        - target_study_id
+        - relation_type
+        - description
+        - created_at
+        - connected_study
+      properties:
+        id:
+          type: integer
+        source_study_id:
+          type: integer
+        target_study_id:
+          type: integer
+        relation_type:
+          $ref: '#/components/schemas/RelationTypeEnum'
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        connected_study:
+          $ref: '#/components/schemas/ConnectedStudySummary'
+
+    StudyRelationsResponse:
+      type: object
+      required:
+        - study_id
+        - outbound
+        - inbound
+      properties:
+        study_id:
+          type: integer
+        outbound:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudyRelationItem'
+        inbound:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudyRelationItem'
+
+    StudyRelationCreate:
+      type: object
+      required:
+        - target_study_id
+        - relation_type
+      properties:
+        target_study_id:
+          type: integer
+        relation_type:
+          $ref: '#/components/schemas/RelationTypeEnum'
+        description:
+          type: string
+          maxLength: 500
+          default: ''
+
+    StudyRelationUpdate:
+      type: object
+      properties:
+        relation_type:
+          $ref: '#/components/schemas/RelationTypeEnum'
+        description:
+          type: string
+          maxLength: 500
+
+    CandidateStudyItem:
+      type: object
+      required:
+        - id
+        - title
+        - book_id
+        - book_title
+        - chapter_id
+        - chapter_title
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        book_id:
+          type: integer
+        book_title:
+          type: string
+        chapter_id:
+          type: integer
+        chapter_title:
+          type: string
+
+    BookCanvasRelationItem:
+      type: object
+      required:
+        - id
+        - source_study_id
+        - target_study_id
+        - relation_type
+        - description
+      properties:
+        id:
+          type: integer
+        source_study_id:
+          type: integer
+        target_study_id:
+          type: integer
+        relation_type:
+          $ref: '#/components/schemas/RelationTypeEnum'
+        description:
+          type: string

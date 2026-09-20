@@ -2,7 +2,7 @@
 setlocal
 cd /d "%~dp0"
 if not exist "backend\.venv\Scripts\python.exe" goto not_installed
-"backend\.venv\Scripts\python.exe" iniciar.py
+"backend\.venv\Scripts\python.exe" iniciar.py %*
 if errorlevel 1 goto failed
 exit /b 0
 :not_installed

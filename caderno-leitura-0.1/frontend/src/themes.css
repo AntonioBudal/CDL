@@ -1,0 +1,75 @@
+/*
+ * Caderno de Leitura — Tarefa 5.5
+ * Paletas: palettes.css
+ * Fontes locais: fonts.css
+ */
+
+/* Formato das bordas, independente da paleta. */
+:root[data-style='rounded'] {
+  --radius-scale: 1;
+}
+
+:root[data-style='square'] {
+  --radius-scale: 0;
+}
+
+/* Mantém a seleção visível ao passar o mouse. */
+.app-header nav a.selected:hover,
+.chapter-list a.selected:hover {
+  color: var(--color-selected-text);
+  background: var(--color-selected-bg);
+}
+
+/* E-Ink: sem sombras, gradientes ou animações. */
+:root[data-theme='e-ink'],
+:root[data-theme='e-ink'] *,
+:root[data-theme='e-ink'] *::before,
+:root[data-theme='e-ink'] *::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  background-image: none !important;
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* Controles desativados continuam legíveis no E-Ink. */
+:root[data-theme='e-ink'] :disabled {
+  opacity: 1;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+  border-style: dashed;
+}
+
+/* Identificação da aba selecionada no E-Ink. */
+:root[data-theme='e-ink'] .study-tabs [aria-selected='true'] {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+/* Foco visível sobre o fundo preto das abas. */
+:root[data-theme='e-ink']
+.study-tabs [role='tab']:is([aria-selected='true'], :hover):focus-visible {
+  outline-color: var(--color-on-accent);
+}
+
+/* Tela de ajustes. */
+.settings-page {
+  max-width: 52rem;
+}
+
+.notes-content {
+  line-height: var(--line-height-reading);
+}
+
+.settings-preview {
+  padding: var(--space-unit);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-readonly);
+}
+
+.settings-status {
+  min-height: 1.6em;
+}

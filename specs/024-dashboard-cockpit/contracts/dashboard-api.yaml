@@ -1,0 +1,271 @@
+openapi: 3.0.3
+info:
+  title: Caderno de Leitura - Dashboard 2.0 API
+  version: 0.4.0
+  description: Endpoints para consolidação de indicadores, retoma imediata de estudos, grafo recente e métricas do acervo.
+
+paths:
+  /api/dashboard/summary:
+    get:
+      summary: Obter resumo consolidado do Dashboard 2.0
+      operationId: getDashboardSummary
+      tags:
+        - Dashboard
+      parameters:
+        - name: tz_offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+          description: Deslocamento de fuso horário local em minutos em relação ao UTC.
+        - name: days
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 365
+          description: Número de dias para compor o mapa de calor histórico.
+        - name: filter_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filtrar atividades da linha do tempo por uma data civil específica (YYYY-MM-DD).
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 30
+          description: Limite de registros retornados na linha do tempo.
+      responses:
+        '200':
+          description: Resumo consolidado do dashboard retornado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardResponse'
+        '500':
+          description: Erro interno de processamento no servidor.
+
+components:
+  schemas:
+    DashboardSummary:
+      type: object
+      required:
+        - total_books
+        - total_studies
+        - total_reading_days
+        - current_streak
+        - avg_studies_per_book
+        - total_relations
+        - total_categories
+        - unlinked_studies_count
+      properties:
+        total_books:
+          type: integer
+        total_studies:
+          type: integer
+        total_reading_days:
+          type: integer
+        current_streak:
+          type: integer
+        avg_studies_per_book:
+          type: number
+          format: float
+        total_relations:
+          type: integer
+        total_categories:
+          type: integer
+        unlinked_studies_count:
+          type: integer
+
+    RecentStudyActivityItem:
+      type: object
+      required:
+        - study_id
+        - title
+        - book_id
+        - book_title
+        - reading_status
+        - updated_at
+      properties:
+        study_id:
+          type: integer
+        title:
+          type: string
+        book_id:
+          type: integer
+        book_title:
+          type: string
+        chapter_id:
+          type: integer
+          nullable: true
+        chapter_title:
+          type: string
+          nullable: true
+        reading_status:
+          type: string
+          enum: [rascunho, em_estudo, revisado, concluido]
+        updated_at:
+          type: string
+          format: date-time
+
+    UnlinkedStudyItem:
+      type: object
+      required:
+        - study_id
+        - title
+        - book_id
+        - book_title
+        - reading_status
+        - created_at
+      properties:
+        study_id:
+          type: integer
+        title:
+          type: string
+        book_id:
+          type: integer
+        book_title:
+          type: string
+        chapter_id:
+          type: integer
+          nullable: true
+        chapter_title:
+          type: string
+          nullable: true
+        reading_status:
+          type: string
+          enum: [rascunho, em_estudo, revisado, concluido]
+        created_at:
+          type: string
+          format: date-time
+
+    RecentRelationItem:
+      type: object
+      required:
+        - relation_id
+        - relation_type
+        - source_study_id
+        - source_study_title
+        - source_book_id
+        - source_book_title
+        - target_study_id
+        - target_study_title
+        - target_book_id
+        - target_book_title
+        - created_at
+      properties:
+        relation_id:
+          type: integer
+        relation_type:
+          type: string
+          enum: [relacionado_com, complementa, contradiz, depende_de, mesmo_tema, desdobramento_de]
+        description:
+          type: string
+          nullable: true
+        source_study_id:
+          type: integer
+        source_study_title:
+          type: string
+        source_book_id:
+          type: integer
+        source_book_title:
+          type: string
+        target_study_id:
+          type: integer
+        target_study_title:
+          type: string
+        target_book_id:
+          type: integer
+        target_book_title:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    HeatmapPoint:
+      type: object
+      required:
+        - date
+        - count
+        - level
+      properties:
+        date:
+          type: string
+        count:
+          type: integer
+        level:
+          type: integer
+
+    TimelineItem:
+      type: object
+      required:
+        - id
+        - entity_type
+        - action
+        - timestamp
+        - title
+        - book_id
+        - book_title
+      properties:
+        id:
+          type: string
+        entity_type:
+          type: string
+        action:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        title:
+          type: string
+        book_id:
+          type: integer
+        book_title:
+          type: string
+        chapter_id:
+          type: integer
+          nullable: true
+        chapter_title:
+          type: string
+          nullable: true
+        study_id:
+          type: integer
+          nullable: true
+
+    DashboardResponse:
+      type: object
+      required:
+        - summary
+        - heatmap
+        - timeline
+        - recent_studies
+        - unlinked_studies
+        - latest_relations
+      properties:
+        summary:
+          $ref: '#/components/schemas/DashboardSummary'
+        heatmap:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeatmapPoint'
+        timeline:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimelineItem'
+        recent_studies:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecentStudyActivityItem'
+        unlinked_studies:
+          type: array
+          items:
+            $ref: '#/components/schemas/UnlinkedStudyItem'
+        latest_relations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecentRelationItem'

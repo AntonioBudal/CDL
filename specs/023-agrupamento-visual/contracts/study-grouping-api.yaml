@@ -1,0 +1,261 @@
+openapi: 3.0.3
+info:
+  title: Caderno de Leitura - API de Agrupamento Visual e Molduras
+  description: Endpoints para gestão rápida de status de leitura de estudos e molduras manuais espaciais do Canvas 2D.
+  version: 0.4.0
+paths:
+  /api/studies/{study_id}/status:
+    patch:
+      tags:
+        - Agrupamento e Status de Estudos
+      summary: Atualizar status de maturação/leitura de um estudo
+      parameters:
+        - name: study_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyStatusUpdate'
+      responses:
+        '200':
+          description: Status de leitura atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyStatusResponse'
+        '404':
+          description: Estudo não encontrado ou está na lixeira
+        '409':
+          description: Conflito de concorrência otimista (registro alterado em outro dispositivo)
+        '422':
+          description: Status inválido
+
+  /api/books/{book_id}/canvas/frames:
+    get:
+      tags:
+        - Molduras do Canvas
+      summary: Listar todas as molduras manuais do Canvas de um livro
+      parameters:
+        - name: book_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de molduras espaciais
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CanvasFrameItem'
+        '404':
+          description: Livro não encontrado
+
+    post:
+      tags:
+        - Molduras do Canvas
+      summary: Criar nova moldura manual delimitadora no Canvas do livro
+      parameters:
+        - name: book_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanvasFrameCreate'
+      responses:
+        '201':
+          description: Moldura criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanvasFrameItem'
+        '404':
+          description: Livro não encontrado
+        '422':
+          description: Dados de entrada inválidos
+
+  /api/canvas/frames/{frame_id}:
+    patch:
+      tags:
+        - Molduras do Canvas
+      summary: Atualizar título, cor ou dimensões de uma moldura
+      parameters:
+        - name: frame_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanvasFrameUpdate'
+      responses:
+        '200':
+          description: Moldura atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanvasFrameItem'
+        '404':
+          description: Moldura não encontrada
+
+    delete:
+      tags:
+        - Molduras do Canvas
+      summary: Remover individualmente uma moldura manual do Canvas
+      parameters:
+        - name: frame_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Moldura removida com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '404':
+          description: Moldura não encontrada
+
+components:
+  schemas:
+    ReadingStatus:
+      type: string
+      enum:
+        - rascunho
+        - em_estudo
+        - revisado
+        - concluido
+      description: Ciclo editorial oficial de 4 estados de maturação do estudo
+
+    StudyStatusUpdate:
+      type: object
+      required:
+        - reading_status
+      properties:
+        reading_status:
+          $ref: '#/components/schemas/ReadingStatus'
+        expected_updated_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    StudyStatusResponse:
+      type: object
+      required:
+        - id
+        - reading_status
+        - updated_at
+      properties:
+        id:
+          type: integer
+        reading_status:
+          $ref: '#/components/schemas/ReadingStatus'
+        updated_at:
+          type: string
+          format: date-time
+
+    CanvasFrameCreate:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+        color:
+          type: string
+          default: neutral
+        pos_x:
+          type: number
+          default: 0.0
+        pos_y:
+          type: number
+          default: 0.0
+        width:
+          type: number
+          default: 400.0
+          minimum: 100.0
+        height:
+          type: number
+          default: 300.0
+          minimum: 80.0
+
+    CanvasFrameUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+        color:
+          type: string
+        pos_x:
+          type: number
+        pos_y:
+          type: number
+        width:
+          type: number
+          minimum: 100.0
+        height:
+          type: number
+          minimum: 80.0
+
+    CanvasFrameItem:
+      type: object
+      required:
+        - id
+        - book_id
+        - title
+        - color
+        - pos_x
+        - pos_y
+        - width
+        - height
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: integer
+        book_id:
+          type: integer
+        title:
+          type: string
+        color:
+          type: string
+        pos_x:
+          type: number
+        pos_y:
+          type: number
+        width:
+          type: number
+        height:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time

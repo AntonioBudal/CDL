@@ -44,15 +44,23 @@ class StudyPatch(InputModel):
     concepts: str | None = None
     references: str | None = None
     notes: str | None = None
+    expected_updated_at: datetime | None = Field(default=None, strict=False)
 
     @model_validator(mode="after")
     def require_changes_without_null(self) -> Self:
-        if not self.model_fields_set:
+        payload_fields = self.model_fields_set - {"expected_updated_at"}
+        if not payload_fields:
             raise ValueError("Envie pelo menos um campo para alterar.")
-        for name in self.model_fields_set:
+        for name in payload_fields:
             if getattr(self, name) is None:
                 raise ValueError(f"O campo '{name}' não aceita null. Omita-o para preservar o valor atual.")
         return self
+
+
+class StudyMoveRequest(InputModel):
+    parent_study_id: RecordId | None = Field(default=None, description="ID do estudo pai ou None para nó raiz.")
+    target_position: int = Field(default=0, ge=0, description="Posição ordinal desejada entre os irmãos.")
+    expected_updated_at: datetime | None = Field(default=None, strict=False)
 
 
 class StudySummary(OutputModel):
@@ -60,8 +68,12 @@ class StudySummary(OutputModel):
     chapter_id: int
     title: str
     location: str
+    parent_study_id: int | None = None
+    position: int = 0
+    reading_status: str = "rascunho"
     created_at: datetime
     updated_at: datetime
+    deleted_at: datetime | None = None
 
 
 class StudyRead(StudySummary):
@@ -71,3 +83,4 @@ class StudyRead(StudySummary):
     concepts: str
     references: str
     notes: str
+

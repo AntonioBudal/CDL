@@ -27,7 +27,7 @@ export function useImportDraft(gateway: ImportGateway) {
 
   async function prepare(): Promise<boolean> {
     if (state.preparing || state.saving || state.saved) return false
-    if (!state.sourceResponse.trim()) { state.previewError = 'Cole a resposta do ChatGPT.'; return false }
+    if (!state.sourceResponse.trim()) { state.previewError = 'Cole o texto-base do fichamento.'; return false }
     const source = state.sourceResponse
     state.preparing = true
     state.previewError = ''
@@ -51,7 +51,7 @@ export function useImportDraft(gateway: ImportGateway) {
     if (state.saving || state.preparing || state.saved) return null
     if (!canSave.value || !state.preview) {
       state.saveError = stale.value
-        ? 'A resposta foi alterada. Prepare uma nova prévia antes de salvar.'
+        ? 'O fichamento da fonte foi alterado. Prepare uma nova prévia antes de salvar.'
         : 'Escolha o livro e o capítulo, prepare a prévia e preencha ao menos uma seção.'
       return null
     }

@@ -1,0 +1,557 @@
+[
+  {
+    "id": "literatura",
+    "name": "Literatura e Linguística",
+    "parent_id": null
+  },
+  {
+    "id": "literatura-teoria",
+    "name": "Teoria e Crítica Literária",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "literatura-brasileira",
+    "name": "Literatura Brasileira",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "literatura-portuguesa",
+    "name": "Literatura Portuguesa",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "literatura-estrangeira",
+    "name": "Literatura Estrangeira",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "literatura-classica",
+    "name": "Literatura Clássica",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "literatura-poesia",
+    "name": "Poesia",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "literatura-drama",
+    "name": "Teatro e Dramaturgia",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "literatura-ficcao-cientifica",
+    "name": "Ficção Científica",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "literatura-fantasia",
+    "name": "Fantasia",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "literatura-conto-cronica",
+    "name": "Contos e Crônicas",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "literatura-ensaio",
+    "name": "Ensaios Literários",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "linguistica",
+    "name": "Linguística e Semiótica",
+    "parent_id": "literatura"
+  },
+  {
+    "id": "linguistica-gramatica",
+    "name": "Gramática e Filologia",
+    "parent_id": "linguistica"
+  },
+  {
+    "id": "filosofia",
+    "name": "Filosofia",
+    "parent_id": null
+  },
+  {
+    "id": "filosofia-antiga",
+    "name": "Filosofia Antiga",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-medieval",
+    "name": "Filosofia Medieval",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-moderna",
+    "name": "Filosofia Moderna",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-contemporanea",
+    "name": "Filosofia Contemporânea",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-etica",
+    "name": "Ética e Filosofia Moral",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-politica",
+    "name": "Filosofia Política",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-epistemologia",
+    "name": "Epistemologia e Teoria do Conhecimento",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-metafisica",
+    "name": "Metafísica e Ontologia",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-logica",
+    "name": "Lógica",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-estetica",
+    "name": "Estética e Filosofia da Arte",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-fenomenologia",
+    "name": "Fenomenologia e Existencialismo",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-linguagem",
+    "name": "Filosofia da Linguagem",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "filosofia-mente",
+    "name": "Filosofia da Mente",
+    "parent_id": "filosofia"
+  },
+  {
+    "id": "historia",
+    "name": "História",
+    "parent_id": null
+  },
+  {
+    "id": "historia-antiga",
+    "name": "História Antiga",
+    "parent_id": "historia"
+  },
+  {
+    "id": "historia-medieval",
+    "name": "História Medieval",
+    "parent_id": "historia"
+  },
+  {
+    "id": "historia-moderna",
+    "name": "História Moderna",
+    "parent_id": "historia"
+  },
+  {
+    "id": "historia-contemporanea",
+    "name": "História Contemporânea",
+    "parent_id": "historia"
+  },
+  {
+    "id": "historia-brasil",
+    "name": "História do Brasil",
+    "parent_id": "historia"
+  },
+  {
+    "id": "historia-brasil-colonia",
+    "name": "Brasil Colônia",
+    "parent_id": "historia-brasil"
+  },
+  {
+    "id": "historia-brasil-imperio",
+    "name": "Brasil Império",
+    "parent_id": "historia-brasil"
+  },
+  {
+    "id": "historia-brasil-republica",
+    "name": "Brasil República",
+    "parent_id": "historia-brasil"
+  },
+  {
+    "id": "historia-america-latina",
+    "name": "História da América Latina",
+    "parent_id": "historia"
+  },
+  {
+    "id": "historia-historiografia",
+    "name": "Teoria da História e Historiografia",
+    "parent_id": "historia"
+  },
+  {
+    "id": "historia-arte",
+    "name": "História da Arte",
+    "parent_id": "historia"
+  },
+  {
+    "id": "historia-ciencias",
+    "name": "História das Ciências",
+    "parent_id": "historia"
+  },
+  {
+    "id": "ciencias-sociais",
+    "name": "Ciências Sociais e Humanas",
+    "parent_id": null
+  },
+  {
+    "id": "sociologia",
+    "name": "Sociologia",
+    "parent_id": "ciencias-sociais"
+  },
+  {
+    "id": "sociologia-teoria",
+    "name": "Teoria Sociológica",
+    "parent_id": "sociologia"
+  },
+  {
+    "id": "sociologia-cultura",
+    "name": "Sociologia da Cultura",
+    "parent_id": "sociologia"
+  },
+  {
+    "id": "antropologia",
+    "name": "Antropologia",
+    "parent_id": "ciencias-sociais"
+  },
+  {
+    "id": "antropologia-cultural",
+    "name": "Antropologia Cultural",
+    "parent_id": "antropologia"
+  },
+  {
+    "id": "ciencia-politica",
+    "name": "Ciência Política",
+    "parent_id": "ciencias-sociais"
+  },
+  {
+    "id": "ciencia-politica-teoria",
+    "name": "Teoria Política e do Estado",
+    "parent_id": "ciencia-politica"
+  },
+  {
+    "id": "relacoes-internacionais",
+    "name": "Relações Internacionais e Geopolítica",
+    "parent_id": "ciencias-sociais"
+  },
+  {
+    "id": "economia",
+    "name": "Economia",
+    "parent_id": "ciencias-sociais"
+  },
+  {
+    "id": "economia-micro",
+    "name": "Microeconomia",
+    "parent_id": "economia"
+  },
+  {
+    "id": "economia-macro",
+    "name": "Macroeconomia",
+    "parent_id": "economia"
+  },
+  {
+    "id": "economia-comportamental",
+    "name": "Economia Comportamental",
+    "parent_id": "economia"
+  },
+  {
+    "id": "economia-politica",
+    "name": "Economia Política e História Econômica",
+    "parent_id": "economia"
+  },
+  {
+    "id": "geografia",
+    "name": "Geografia Humana",
+    "parent_id": "ciencias-sociais"
+  },
+  {
+    "id": "educacao",
+    "name": "Educação e Pedagogia",
+    "parent_id": "ciencias-sociais"
+  },
+  {
+    "id": "direito",
+    "name": "Direito e Teoria Jurídica",
+    "parent_id": "ciencias-sociais"
+  },
+  {
+    "id": "comunicacao-midia",
+    "name": "Comunicação, Mídia e Jornalismo",
+    "parent_id": "ciencias-sociais"
+  },
+  {
+    "id": "psicologia",
+    "name": "Psicologia e Psicanálise",
+    "parent_id": null
+  },
+  {
+    "id": "psicologia-cognitiva",
+    "name": "Psicologia Cognitiva",
+    "parent_id": "psicologia"
+  },
+  {
+    "id": "psicanalise",
+    "name": "Psicanálise",
+    "parent_id": "psicologia"
+  },
+  {
+    "id": "psicanalise-freud",
+    "name": "Teoria Freudiana",
+    "parent_id": "psicanalise"
+  },
+  {
+    "id": "psicanalise-lacan",
+    "name": "Teoria Lacaniana",
+    "parent_id": "psicanalise"
+  },
+  {
+    "id": "psicologia-desenvolvimento",
+    "name": "Psicologia do Desenvolvimento",
+    "parent_id": "psicologia"
+  },
+  {
+    "id": "psicologia-social",
+    "name": "Psicologia Social",
+    "parent_id": "psicologia"
+  },
+  {
+    "id": "neuropsicologia",
+    "name": "Neuropsicologia e Neurociência Cognitiva",
+    "parent_id": "psicologia"
+  },
+  {
+    "id": "psicoterapia",
+    "name": "Psicoterapia e Prática Clínica",
+    "parent_id": "psicologia"
+  },
+  {
+    "id": "ciencias-exatas-natureza",
+    "name": "Ciências Exatas e da Natureza",
+    "parent_id": null
+  },
+  {
+    "id": "matematica",
+    "name": "Matemática",
+    "parent_id": "ciencias-exatas-natureza"
+  },
+  {
+    "id": "matematica-pura",
+    "name": "Álgebra, Geometria e Análise",
+    "parent_id": "matematica"
+  },
+  {
+    "id": "estatistica",
+    "name": "Estatística e Probabilidade",
+    "parent_id": "ciencias-exatas-natureza"
+  },
+  {
+    "id": "fisica",
+    "name": "Física",
+    "parent_id": "ciencias-exatas-natureza"
+  },
+  {
+    "id": "fisica-classica",
+    "name": "Mecânica e Termodinâmica",
+    "parent_id": "fisica"
+  },
+  {
+    "id": "fisica-moderna",
+    "name": "Relatividade e Mecânica Quântica",
+    "parent_id": "fisica"
+  },
+  {
+    "id": "astronomia",
+    "name": "Astronomia e Cosmologia",
+    "parent_id": "ciencias-exatas-natureza"
+  },
+  {
+    "id": "quimica",
+    "name": "Química",
+    "parent_id": "ciencias-exatas-natureza"
+  },
+  {
+    "id": "biologia",
+    "name": "Biologia",
+    "parent_id": "ciencias-exatas-natureza"
+  },
+  {
+    "id": "biologia-evolutiva",
+    "name": "Evolução e Genética",
+    "parent_id": "biologia"
+  },
+  {
+    "id": "ecologia",
+    "name": "Ecologia e Meio Ambiente",
+    "parent_id": "biologia"
+  },
+  {
+    "id": "computacao-tecnologia",
+    "name": "Computação e Tecnologia",
+    "parent_id": null
+  },
+  {
+    "id": "ciencia-computacao",
+    "name": "Ciência da Computação",
+    "parent_id": "computacao-tecnologia"
+  },
+  {
+    "id": "engenharia-software",
+    "name": "Engenharia de Software e Arquitetura",
+    "parent_id": "computacao-tecnologia"
+  },
+  {
+    "id": "algoritmos",
+    "name": "Algoritmos e Estruturas de Dados",
+    "parent_id": "computacao-tecnologia"
+  },
+  {
+    "id": "linguagens-programacao",
+    "name": "Linguagens de Programação",
+    "parent_id": "computacao-tecnologia"
+  },
+  {
+    "id": "inteligencia-artificial",
+    "name": "Inteligência Artificial e Aprendizado de Máquina",
+    "parent_id": "computacao-tecnologia"
+  },
+  {
+    "id": "banco-dados",
+    "name": "Bancos de Dados e Armazenamento",
+    "parent_id": "computacao-tecnologia"
+  },
+  {
+    "id": "sistemas-operacionais",
+    "name": "Sistemas Operacionais e Redes",
+    "parent_id": "computacao-tecnologia"
+  },
+  {
+    "id": "seguranca-informacao",
+    "name": "Segurança da Informação e Criptografia",
+    "parent_id": "computacao-tecnologia"
+  },
+  {
+    "id": "teoria-computacao",
+    "name": "Teoria da Computação e Complexidade",
+    "parent_id": "computacao-tecnologia"
+  },
+  {
+    "id": "computacao-sociedade",
+    "name": "Tecnologia, Ética e Sociedade",
+    "parent_id": "computacao-tecnologia"
+  },
+  {
+    "id": "artes-design",
+    "name": "Artes, Arquitetura e Design",
+    "parent_id": null
+  },
+  {
+    "id": "artes-visuais",
+    "name": "Artes Visuais e Pintura",
+    "parent_id": "artes-design"
+  },
+  {
+    "id": "musica",
+    "name": "Música e Musicologia",
+    "parent_id": "artes-design"
+  },
+  {
+    "id": "musica-teoria",
+    "name": "Teoria Musical e Composição",
+    "parent_id": "musica"
+  },
+  {
+    "id": "cinema",
+    "name": "Cinema e Teoria Fílmica",
+    "parent_id": "artes-design"
+  },
+  {
+    "id": "fotografia",
+    "name": "Fotografia",
+    "parent_id": "artes-design"
+  },
+  {
+    "id": "arquitetura",
+    "name": "Arquitetura e Urbanismo",
+    "parent_id": "artes-design"
+  },
+  {
+    "id": "design",
+    "name": "Design Gráfico e de Produto",
+    "parent_id": "artes-design"
+  },
+  {
+    "id": "religiao-espiritualidade",
+    "name": "Religião e Espiritualidade",
+    "parent_id": null
+  },
+  {
+    "id": "historia-religioes",
+    "name": "História das Religiões",
+    "parent_id": "religiao-espiritualidade"
+  },
+  {
+    "id": "teologia",
+    "name": "Teologia e Tradição Cristã",
+    "parent_id": "religiao-espiritualidade"
+  },
+  {
+    "id": "filosofia-religiao",
+    "name": "Filosofia da Religião",
+    "parent_id": "religiao-espiritualidade"
+  },
+  {
+    "id": "mitologia",
+    "name": "Mitologia Comparada",
+    "parent_id": "religiao-espiritualidade"
+  },
+  {
+    "id": "espiritualidade",
+    "name": "Tradições Orientais e Espiritualidade",
+    "parent_id": "religiao-espiritualidade"
+  },
+  {
+    "id": "estudos-pratica",
+    "name": "Desenvolvimento Pessoal e Prática de Estudos",
+    "parent_id": null
+  },
+  {
+    "id": "metodologia-estudos",
+    "name": "Metodologia de Leitura e Estudos",
+    "parent_id": "estudos-pratica"
+  },
+  {
+    "id": "escrita-redacao",
+    "name": "Escrita, Redação e Retórica",
+    "parent_id": "estudos-pratica"
+  },
+  {
+    "id": "produtividade-organizacao",
+    "name": "Produtividade e Organização Pessoal",
+    "parent_id": "estudos-pratica"
+  },
+  {
+    "id": "biografias",
+    "name": "Biografias e Memórias",
+    "parent_id": "estudos-pratica"
+  },
+  {
+    "id": "divulgacao-cientifica",
+    "name": "Divulgação Científica",
+    "parent_id": "estudos-pratica"
+  }
+]

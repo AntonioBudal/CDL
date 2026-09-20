@@ -1,0 +1,109 @@
+/* ==========================================================================
+   Superclasses — Cinemática, Física Inercial e Feedback Háptico Visual (F10)
+   ========================================================================== */
+
+:root {
+  --sc-physics-friction: 0.96;
+  --sc-spring-stiffness: 0.05;
+  --sc-parallax-depth: 1.0;
+  --sc-proximity-reveal: 0px;
+}
+
+/* 1. Zero-G: Flutuação Inercial Cósmica e Deriva Suave */
+:root[data-superclass="zero-g"],
+.superclass-zero-g {
+  --sc-physics-friction: calc(0.96 * var(--sc-intensity, 1));
+  --sc-spring-stiffness: 0.05;
+  --sc-parallax-depth: calc(1.0 * var(--sc-intensity, 1));
+  --sc-proximity-reveal: 0px;
+}
+
+/* 2. Mecânica: Snap-to-Grid Rígido e Amortecimento Rápido */
+:root[data-superclass="mecanica"],
+.superclass-mecanica {
+  --sc-physics-friction: calc(0.82 * var(--sc-intensity, 1));
+  --sc-spring-stiffness: 0.28;
+  --sc-parallax-depth: 0.0;
+  --sc-proximity-reveal: 0px;
+}
+
+/* 3. Invisível: Quiescência Visual e Revelação por Proximidade */
+:root[data-superclass="invisivel"],
+.superclass-invisivel {
+  --sc-physics-friction: calc(0.90 * var(--sc-intensity, 1));
+  --sc-spring-stiffness: 0.10;
+  --sc-parallax-depth: calc(0.2 * var(--sc-intensity, 1));
+  --sc-proximity-reveal: 140px;
+}
+
+/* 4. Dimensional: Profundidade Espacial 2.5D e Paralaxe Multi-camada */
+:root[data-superclass="dimensional"],
+.superclass-dimensional {
+  --sc-physics-friction: calc(0.92 * var(--sc-intensity, 1));
+  --sc-spring-stiffness: 0.12;
+  --sc-parallax-depth: calc(1.6 * var(--sc-intensity, 1));
+  --sc-proximity-reveal: 0px;
+}
+
+/* 5. Monolítica: Estabilidade Brutalista e Parada Imediata */
+:root[data-superclass="monolitica"],
+.superclass-monolitica {
+  --sc-physics-friction: 0.0;
+  --sc-spring-stiffness: 1.0;
+  --sc-parallax-depth: 0.0;
+  --sc-proximity-reveal: 0px;
+}
+
+/* ==========================================================================
+   Micro-respostas Táteis e Feedback Háptico Visual (80ms)
+   ========================================================================== */
+
+@keyframes sc-haptic-snap {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.025); }
+  100% { transform: scale(1); }
+}
+
+@keyframes sc-haptic-connect {
+  0% { filter: drop-shadow(0 0 0px var(--color-accent, #2563eb)); }
+  50% { filter: drop-shadow(0 0 6px var(--color-accent, #2563eb)); }
+  100% { filter: drop-shadow(0 0 0px var(--color-accent, #2563eb)); }
+}
+
+@keyframes sc-haptic-step {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+[data-haptic-pulse="snap"] {
+  animation: sc-haptic-snap 80ms cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+}
+
+[data-haptic-pulse="connect"] {
+  animation: sc-haptic-connect 80ms cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+}
+
+[data-haptic-pulse="step"] {
+  animation: sc-haptic-step 80ms ease-out forwards;
+}
+
+/* ==========================================================================
+   Acessibilidade e Redução de Movimento
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  :root[data-superclass],
+  [class*="superclass-"] {
+    --sc-physics-friction: 0.0 !important;
+    --sc-spring-stiffness: 1.0 !important;
+    --sc-parallax-depth: 0.0 !important;
+    --sc-proximity-reveal: 0px !important;
+  }
+
+  [data-haptic-pulse] {
+    animation: none !important;
+    transform: none !important;
+  }
+}

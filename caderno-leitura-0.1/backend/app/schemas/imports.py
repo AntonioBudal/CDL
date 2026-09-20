@@ -13,13 +13,13 @@ class ImportPreviewRequest(InputModel):
         ),
     }]})
 
-    source_response: str = Field(description="Resposta inteira colada do ChatGPT, sem alterações.")
+    source_response: str = Field(description="Texto-base do fichamento da fonte, sem alterações.")
 
     @field_validator("source_response")
     @classmethod
     def require_text(cls, value: str) -> str:
         if not value.strip():
-            raise ValueError("Cole a resposta do ChatGPT para preparar a prévia.")
+            raise ValueError("Cole o texto-base do fichamento para preparar a prévia.")
         return value
 
 
@@ -27,7 +27,7 @@ class ImportWarningRead(OutputModel):
     code: str
     message: str
     section: str | None
-    line: int | None = Field(description="Linha da resposta original, começando em 1, quando aplicável.")
+    line: int | None = Field(description="Linha do fichamento da fonte, começando em 1, quando aplicável.")
 
 
 class ImportPreviewRead(OutputModel):

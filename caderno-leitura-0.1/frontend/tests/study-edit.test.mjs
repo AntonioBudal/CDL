@@ -24,7 +24,7 @@ test('edição de uma seção envia apenas a alteração e preserva origem, outr
   editor.state.sections.explanation = '**Explicação revisada.**\n\nOutro parágrafo.'
   assert.equal(editor.dirty.value, true)
   const saved = await editor.save()
-  assert.deepEqual(sent, { id: 7, patch: { explanation: '**Explicação revisada.**\n\nOutro parágrafo.' } })
+  assert.deepEqual(sent, { id: 7, patch: { explanation: '**Explicação revisada.**\n\nOutro parágrafo.', expected_updated_at: '2026-09-08T12:00:00Z' } })
   assert.equal(saved.source_response, original.source_response)
   assert.equal(saved.summary, original.summary)
   assert.equal(saved.concepts, original.concepts)
@@ -40,8 +40,25 @@ test('limpar notas e referências é uma alteração explícita; metadados tamb�
   editor.state.title = '  Novo título  '
   editor.state.location = 'Loc. 320'
   await editor.save()
-  assert.deepEqual(sent, { title: 'Novo título', location: 'Loc. 320', notes: '', concepts: '' })
+  assert.deepEqual(sent, { title: 'Novo título', location: 'Loc. 320', notes: '', concepts: '', expected_updated_at: '2026-09-08T12:00:00Z' })
 })
+
+test('conflito de concorrência 409 preserva o formulário intacto e exibe mensagem de alerta', async () => {
+  const editor = makeEditor({
+    updateStudy: async () => {
+      throw new ApiError('Conflito de concorrência: este estudo foi modificado em outro dispositivo.', 409)
+    },
+  })
+  editor.state.notes = 'Reflexão que não pode ser perdida.'
+  editor.state.title = 'Título mantido'
+  const result = await editor.save()
+  assert.equal(result, null)
+  assert.equal(editor.dirty.value, true)
+  assert.equal(editor.state.notes, 'Reflexão que não pode ser perdida.')
+  assert.equal(editor.state.title, 'Título mantido')
+  assert.match(editor.state.error, /conflito/i)
+})
+
 
 test('sem alterações ou ao desfazer a edição, nenhum PATCH é enviado', async () => {
   let calls = 0

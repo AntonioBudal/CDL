@@ -1,0 +1,117 @@
+openapi: 3.0.3
+info:
+  title: Caderno de Leitura - API de Hierarquia e Reordenação de Estudos
+  description: Endpoints para consulta, aninhamento, reordenação e gestão hierárquica de estudos.
+  version: 1.0.0
+paths:
+  /api/chapters/{chapter_id}/studies:
+    get:
+      summary: Listar estudos de um capítulo com metadados hierárquicos
+      parameters:
+        - name: chapter_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de resumos de estudos com parent_study_id e position
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudySummary'
+
+  /api/studies/{study_id}/move:
+    post:
+      summary: Mover e reorganizar estudo na hierarquia ou posição
+      description: Permite alterar o pai do estudo e sua posição ordinal entre irmãos, com validação estrita de ciclos (DAG), limite de 5 níveis e concorrência otimista.
+      parameters:
+        - name: study_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyMoveRequest'
+      responses:
+        '200':
+          description: Hierarquia atualizada do capítulo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudySummary'
+        '400':
+          description: Requisição inválida (parâmetros inconsistentes)
+        '404':
+          description: Estudo ou novo estudo pai não encontrado
+        '409':
+          description: Conflito de concorrência otimista (registro alterado em outro dispositivo)
+        '422':
+          description: Violação de integridade hierárquica (ciclo detectado ou profundidade > 5)
+
+components:
+  schemas:
+    StudySummary:
+      type: object
+      required:
+        - id
+        - chapter_id
+        - title
+        - location
+        - parent_study_id
+        - position
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: integer
+        chapter_id:
+          type: integer
+        title:
+          type: string
+        location:
+          type: string
+        parent_study_id:
+          type: integer
+          nullable: true
+          description: ID do estudo pai ou null se for nó raiz
+        position:
+          type: integer
+          description: Índice ordinal de ordenação entre irmãos
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    StudyMoveRequest:
+      type: object
+      required:
+        - target_position
+      properties:
+        parent_study_id:
+          type: integer
+          nullable: true
+          description: Novo pai hierárquico (null para mover à raiz)
+        target_position:
+          type: integer
+          minimum: 0
+          description: Nova posição ordinal desejada entre os irmãos
+        expected_updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Timestamp ISO para verificação de concorrência otimista

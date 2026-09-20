@@ -1,0 +1,101 @@
+{
+  "version": "5.3.0",
+  "options": [
+    [
+      "inter",
+      "Inter"
+    ],
+    [
+      "merriweather",
+      "Merriweather"
+    ],
+    [
+      "lora",
+      "Lora"
+    ],
+    [
+      "roboto-serif",
+      "Roboto Serif"
+    ],
+    [
+      "source-serif-4",
+      "Source Serif 4"
+    ],
+    [
+      "literata",
+      "Literata"
+    ],
+    [
+      "eb-garamond",
+      "EB Garamond"
+    ],
+    [
+      "libre-baskerville",
+      "Libre Baskerville"
+    ],
+    [
+      "crimson-pro",
+      "Crimson Pro"
+    ],
+    [
+      "noto-serif",
+      "Noto Serif"
+    ],
+    [
+      "bitter",
+      "Bitter"
+    ],
+    [
+      "fira-sans",
+      "Fira Sans"
+    ],
+    [
+      "source-sans-3",
+      "Source Sans 3"
+    ],
+    [
+      "noto-sans",
+      "Noto Sans"
+    ],
+    [
+      "atkinson-hyperlegible",
+      "Atkinson Hyperlegible"
+    ],
+    [
+      "opendyslexic",
+      "OpenDyslexic"
+    ],
+    [
+      "nunito-sans",
+      "Nunito Sans"
+    ],
+    [
+      "ibm-plex-sans",
+      "IBM Plex Sans"
+    ],
+    [
+      "ibm-plex-serif",
+      "IBM Plex Serif"
+    ],
+    [
+      "jetbrains-mono",
+      "JetBrains Mono"
+    ],
+    [
+      "victor-mono",
+      "Victor Mono"
+    ],
+    [
+      "ibm-plex-mono",
+      "IBM Plex Mono"
+    ],
+    [
+      "source-code-pro",
+      "Source Code Pro"
+    ],
+    [
+      "roboto-mono",
+      "Roboto Mono"
+    ]
+  ]
+}

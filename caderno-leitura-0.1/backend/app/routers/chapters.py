@@ -3,16 +3,18 @@ from sqlalchemy import func, select
 
 from app.dependencies import DatabaseSession, Identifier
 from app.models import Book, Chapter
-from app.schemas.chapter import ChapterCreate, ChapterRead
+from app.schemas.chapter import ChapterCreate, ChapterMove, ChapterPatch, ChapterRead
 from app.schemas.common import SQLITE_MAX_INTEGER
-from app.services.persistence import commit_changes, get_or_404
+from app.services.persistence import check_optimistic_lock, commit_changes, get_or_404
 
 router = APIRouter(prefix="/books/{book_id}/chapters", tags=["Capítulos"])
 
 
 @router.get("", response_model=list[ChapterRead], summary="Listar capítulos de um livro")
 def list_chapters(book_id: Identifier, session: DatabaseSession):
-    get_or_404(session, Book, book_id, "Livro")
+    book = get_or_404(session, Book, book_id, "Livro")
+    if book.deleted_at is not None:
+        raise HTTPException(status_code=404, detail="Livro não encontrado.")
     return session.scalars(
         select(Chapter).where(Chapter.book_id == book_id).order_by(Chapter.position, Chapter.id)
     ).all()
@@ -31,3 +33,64 @@ def create_chapter(book_id: Identifier, payload: ChapterCreate, session: Databas
     session.add(chapter)
     commit_changes(session)
     return chapter
+
+
+@router.patch("/{chapter_id}", response_model=ChapterRead, summary="Renomear capítulo")
+def update_chapter(
+    book_id: Identifier,
+    chapter_id: Identifier,
+    payload: ChapterPatch,
+    session: DatabaseSession,
+):
+    get_or_404(session, Book, book_id, "Livro")
+    chapter = session.scalar(
+        select(Chapter).where(Chapter.id == chapter_id, Chapter.book_id == book_id)
+    )
+    if chapter is None:
+        raise HTTPException(status_code=404, detail="Capítulo não encontrado.")
+
+    check_optimistic_lock(chapter.updated_at, payload.expected_updated_at, "Capítulo")
+
+    if payload.name is not None:
+        chapter.name = payload.name
+
+    commit_changes(session)
+    session.refresh(chapter)
+    return chapter
+
+
+@router.post("/{chapter_id}/move", response_model=list[ChapterRead], summary="Mover posição do capítulo")
+def move_chapter(
+    book_id: Identifier,
+    chapter_id: Identifier,
+    payload: ChapterMove,
+    session: DatabaseSession,
+):
+    get_or_404(session, Book, book_id, "Livro")
+    chapters = list(
+        session.scalars(
+            select(Chapter).where(Chapter.book_id == book_id).order_by(Chapter.position, Chapter.id)
+        ).all()
+    )
+    current_idx = next((i for i, ch in enumerate(chapters) if ch.id == chapter_id), None)
+    if current_idx is None:
+        raise HTTPException(status_code=404, detail="Capítulo não encontrado.")
+
+    if payload.direction == "up":
+        if current_idx == 0:
+            raise HTTPException(status_code=400, detail="Capítulo já está no topo da lista.")
+        target_idx = current_idx - 1
+    elif payload.direction == "down":
+        if current_idx == len(chapters) - 1:
+            raise HTTPException(status_code=400, detail="Capítulo já está no final da lista.")
+        target_idx = current_idx + 1
+    else:
+        raise HTTPException(status_code=400, detail="Direção inválida.")
+
+    chapters[current_idx], chapters[target_idx] = chapters[target_idx], chapters[current_idx]
+    for pos, ch in enumerate(chapters):
+        ch.position = pos
+
+    commit_changes(session)
+    return chapters
+

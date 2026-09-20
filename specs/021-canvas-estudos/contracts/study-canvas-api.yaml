@@ -1,0 +1,188 @@
+openapi: 3.0.3
+info:
+  title: Caderno de Leitura - API do Canvas de Estudos (Espaço 2D)
+  description: Endpoints para consulta, persistência e atualização em lote de coordenadas espaciais de estudos no Canvas.
+  version: 1.0.0
+paths:
+  /api/books/{book_id}/canvas:
+    get:
+      summary: Obter layout espacial do Canvas de um livro
+      description: Retorna a lista de nós posicionados no Canvas para a obra informada, com coordenadas mundiais (x, y), dimensões e z-index.
+      parameters:
+        - name: book_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Layout do Canvas obtido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCanvasResponse'
+        '404':
+          description: Livro não encontrado
+
+    put:
+      summary: Atualizar ou criar em lote coordenadas espaciais de estudos
+      description: Sincroniza em uma única transação atômica as posições (x, y), dimensões, z-index e tags de cor de múltiplos estudos no Canvas do livro.
+      parameters:
+        - name: book_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanvasBatchUpdateRequest'
+      responses:
+        '200':
+          description: Coordenadas espaciais sincronizadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCanvasResponse'
+        '400':
+          description: Requisição inválida (estudo não pertence a este livro ou dados corrompidos)
+        '404':
+          description: Livro ou estudo não encontrado
+        '422':
+          description: Coordenadas não numéricas ou inválidas (NaN/Infinity)
+
+  /api/studies/{study_id}/canvas:
+    patch:
+      summary: Atualizar coordenadas espaciais de um único estudo
+      description: Atualiza a posição, z-index ou tag de cor de um estudo específico no Canvas.
+      parameters:
+        - name: study_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CanvasNodePatchRequest'
+      responses:
+        '200':
+          description: Coordenada do estudo atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanvasNodeRead'
+        '404':
+          description: Estudo não encontrado
+        '422':
+          description: Coordenadas inválidas
+
+components:
+  schemas:
+    CanvasNodeItem:
+      type: object
+      required:
+        - study_id
+        - pos_x
+        - pos_y
+      properties:
+        study_id:
+          type: integer
+          description: ID do estudo
+        pos_x:
+          type: number
+          format: float
+          description: Coordenada horizontal no mundo 2D
+        pos_y:
+          type: number
+          format: float
+          description: Coordenada vertical no mundo 2D
+        width:
+          type: number
+          format: float
+          nullable: true
+          description: Largura customizada do card em pixels
+        height:
+          type: number
+          format: float
+          nullable: true
+          description: Altura customizada do card em pixels
+        z_index:
+          type: integer
+          default: 0
+          description: Ordem de empilhamento visual
+        color_tag:
+          type: string
+          nullable: true
+          description: Identificador cromático para diferenciação visual
+
+    CanvasNodeRead:
+      allOf:
+        - $ref: '#/components/schemas/CanvasNodeItem'
+        - type: object
+          required:
+            - id
+            - book_id
+            - updated_at
+          properties:
+            id:
+              type: integer
+              description: ID do registro de layout espacial
+            book_id:
+              type: integer
+              description: ID do livro associado
+            updated_at:
+              type: string
+              format: date-time
+              description: Timestamp da última atualização
+
+    CanvasBatchUpdateRequest:
+      type: object
+      required:
+        - nodes
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CanvasNodeItem'
+          minItems: 1
+
+    CanvasNodePatchRequest:
+      type: object
+      properties:
+        pos_x:
+          type: number
+          format: float
+        pos_y:
+          type: number
+          format: float
+        width:
+          type: number
+          format: float
+          nullable: true
+        height:
+          type: number
+          format: float
+          nullable: true
+        z_index:
+          type: integer
+        color_tag:
+          type: string
+          nullable: true
+
+    BookCanvasResponse:
+      type: object
+      required:
+        - book_id
+        - nodes
+      properties:
+        book_id:
+          type: integer
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CanvasNodeRead'

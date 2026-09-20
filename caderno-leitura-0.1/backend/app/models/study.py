@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, ForeignKey, Index, Text, text
+from sqlalchemy import CheckConstraint, ForeignKey, Index, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -22,10 +22,17 @@ class Study(Base):
             name="analysis_not_blank",
         ),
         Index("ix_studies_chapter_id", "chapter_id"),
+        Index("ix_studies_deleted_at", "deleted_at"),
+        Index("ix_studies_parent_study_id", "parent_study_id"),
+        Index("ix_studies_chapter_parent_position", "chapter_id", "parent_study_id", "position"),
+        Index("ix_studies_reading_status", "reading_status"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     chapter_id: Mapped[int] = mapped_column(ForeignKey("chapters.id", ondelete="RESTRICT"), nullable=False)
+    parent_study_id: Mapped[int | None] = mapped_column(ForeignKey("studies.id", ondelete="SET NULL"), nullable=True)
+    position: Mapped[int] = mapped_column(default=0, server_default=text("0"), nullable=False)
+    reading_status: Mapped[str] = mapped_column(String(20), default="rascunho", server_default=text("'rascunho'"), nullable=False)
     title: Mapped[str] = mapped_column(Text, nullable=False)
     location: Mapped[str] = mapped_column(Text, default="", server_default=text("''"), nullable=False)
     source_response: Mapped[str] = mapped_column(Text, default="", server_default=text("''"), nullable=False)
@@ -41,5 +48,10 @@ class Study(Base):
         UTCDateTime(), default=utc_now, onupdate=utc_now,
         server_default=text("CURRENT_TIMESTAMP"), nullable=False,
     )
+    deleted_at: Mapped[datetime | None] = mapped_column(
+        UTCDateTime(), default=None, server_default=None, nullable=True
+    )
 
     chapter: Mapped[Chapter] = relationship(back_populates="studies")
+    parent: Mapped[Study | None] = relationship("Study", remote_side="Study.id", back_populates="children")
+    children: Mapped[list[Study]] = relationship("Study", back_populates="parent", order_by="Study.position")

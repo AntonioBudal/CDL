@@ -90,7 +90,8 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
 </script>
 
 <template>
-  <header class="page-header"><p class="eyebrow">Novo estudo</p><h1>Importar resposta</h1></header>
+  <div class="import-view">
+    <header class="page-header"><p class="eyebrow">Novo estudo</p><h1>Importar Fichamento</h1></header>
   <section v-if="state.saved" class="panel saved-panel" aria-labelledby="saved-heading">
     <p class="success-label" role="status">Salvamento concluído</p>
     <h2 id="saved-heading" ref="successHeading" tabindex="-1">{{ state.saved.title }}</h2>
@@ -131,12 +132,12 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
           <div class="field"><label for="import-title">Título do estudo <span class="optional">opcional</span></label><input id="import-title" v-model="state.title" placeholder="Se vazio, será criado a partir do capítulo" /></div>
         </div>
         <div class="field">
-          <label for="source-response">Resposta inteira do ChatGPT</label>
+          <label for="source-response">Fichamento da Fonte</label>
           <p id="source-hint" class="field-hint">Use os títulos Resumo, Explicação, Conceitos e Referências em linhas próprias.</p>
-          <textarea id="source-response" ref="sourceInput" v-model="state.sourceResponse" class="source-text" rows="10" aria-describedby="source-hint" placeholder="Cole a resposta aqui…" spellcheck="false"></textarea>
+          <textarea id="source-response" ref="sourceInput" v-model="state.sourceResponse" class="source-text" rows="10" aria-describedby="source-hint" placeholder="Cole o texto-base do fichamento aqui…" spellcheck="false"></textarea>
         </div>
         <p v-if="state.previewError" class="notice error" role="alert">{{ state.previewError }}</p>
-        <p v-if="stale" class="notice warning" role="status">A resposta mudou. A prévia abaixo ainda corresponde ao texto anterior; prepare-a novamente antes de salvar.</p>
+        <p v-if="stale" class="notice warning" role="status">O fichamento da fonte mudou. A prévia abaixo ainda corresponde ao texto anterior; prepare-a novamente antes de salvar.</p>
         <div class="actions wrap"><button type="button" class="primary" :disabled="!state.sourceResponse.trim() || state.preparing" @click="prepare">{{ state.preparing ? 'Preparando prévia…' : state.preview ? 'Preparar novamente' : 'Preparar prévia' }}</button><span class="muted">Você poderá corrigir as seções antes de salvar.</span></div>
       </section>
 
@@ -145,19 +146,20 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
         <div v-if="state.preview.warnings.length" class="notice warning" role="status">
           <h3>Avisos da divisão inicial</h3>
           <ul><li v-for="(warning, index) in state.preview.warnings" :key="index">{{ warning.message }}<span v-if="warning.line !== null" class="warning-line"> Linha {{ warning.line }}.</span></li></ul>
-          <p>Os avisos descrevem a resposta colada. Confira abaixo o resultado das suas correções.</p>
+          <p>Os avisos descrevem o texto-base colado. Confira abaixo o resultado das suas correções.</p>
         </div>
         <div v-if="state.preview.unassigned_text.trim()" class="unassigned field">
           <label for="unassigned-text">Texto não associado</label>
-          <p id="unassigned-hint" class="field-hint">Copie para a seção adequada. Este texto também será preservado na resposta original.</p>
+          <p id="unassigned-hint" class="field-hint">Copie para a seção adequada. Este texto também será preservado no fichamento da fonte.</p>
           <textarea id="unassigned-text" :value="state.preview.unassigned_text" readonly rows="5" aria-describedby="unassigned-hint"></textarea>
         </div>
         <StudyEditorFields id-prefix="import" v-model:title="state.title" v-model:location="state.location" v-model:sections="state.sections" v-model:notes="state.notes" />
         <p v-if="!hasAnalysis" class="notice warning">Preencha ao menos uma das quatro seções para salvar.</p>
         <p v-if="!selectedBook || !selectedChapter" class="notice">Escolha o livro e o capítulo no início do formulário.</p>
         <p v-if="state.saveError" class="notice error" role="alert">{{ state.saveError }}</p>
-        <div class="save-bar"><p class="muted">A resposta original será guardada junto das seções revisadas.</p><button class="primary" :disabled="!canSave || !selectedBook || !selectedChapter || chaptersLoading">{{ state.saving ? 'Salvando estudo…' : 'Salvar estudo' }}</button></div>
+        <div class="save-bar"><p class="muted">O fichamento da fonte será guardado junto das seções revisadas.</p><button class="primary" :disabled="!canSave || !selectedBook || !selectedChapter || chaptersLoading">{{ state.saving ? 'Salvando estudo…' : 'Salvar estudo' }}</button></div>
       </section>
     </fieldset>
   </form>
+  </div>
 </template>

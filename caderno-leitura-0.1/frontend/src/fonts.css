@@ -1,0 +1,121 @@
+/* Gerado por scripts/instalar-fontes.py. */
+@font-face { font-family: "Caderno Inter"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/inter/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Inter"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/inter/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Inter"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/inter/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Inter"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/inter/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="inter"] { --font-reading: "Caderno Inter", sans-serif; }
+@font-face { font-family: "Caderno Merriweather"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/merriweather/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Merriweather"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/merriweather/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Merriweather"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/merriweather/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Merriweather"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/merriweather/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="merriweather"] { --font-reading: "Caderno Merriweather", serif; }
+@font-face { font-family: "Caderno Lora"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/lora/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Lora"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/lora/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Lora"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/lora/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Lora"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/lora/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="lora"] { --font-reading: "Caderno Lora", serif; }
+@font-face { font-family: "Caderno Roboto Serif"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/roboto-serif/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Roboto Serif"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/roboto-serif/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Roboto Serif"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/roboto-serif/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Roboto Serif"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/roboto-serif/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="roboto-serif"] { --font-reading: "Caderno Roboto Serif", serif; }
+@font-face { font-family: "Caderno Source Serif 4"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/source-serif-4/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Source Serif 4"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/source-serif-4/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Source Serif 4"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/source-serif-4/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Source Serif 4"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/source-serif-4/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="source-serif-4"] { --font-reading: "Caderno Source Serif 4", serif; }
+@font-face { font-family: "Caderno Literata"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/literata/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Literata"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/literata/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Literata"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/literata/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Literata"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/literata/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="literata"] { --font-reading: "Caderno Literata", serif; }
+@font-face { font-family: "Caderno EB Garamond"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/eb-garamond/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno EB Garamond"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/eb-garamond/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno EB Garamond"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/eb-garamond/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno EB Garamond"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/eb-garamond/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="eb-garamond"] { --font-reading: "Caderno EB Garamond", serif; }
+@font-face { font-family: "Caderno Libre Baskerville"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/libre-baskerville/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Libre Baskerville"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/libre-baskerville/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Libre Baskerville"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/libre-baskerville/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Libre Baskerville"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/libre-baskerville/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="libre-baskerville"] { --font-reading: "Caderno Libre Baskerville", serif; }
+@font-face { font-family: "Caderno Crimson Pro"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/crimson-pro/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Crimson Pro"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/crimson-pro/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Crimson Pro"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/crimson-pro/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Crimson Pro"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/crimson-pro/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="crimson-pro"] { --font-reading: "Caderno Crimson Pro", serif; }
+@font-face { font-family: "Caderno Noto Serif"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/noto-serif/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Noto Serif"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/noto-serif/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Noto Serif"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/noto-serif/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Noto Serif"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/noto-serif/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="noto-serif"] { --font-reading: "Caderno Noto Serif", serif; }
+@font-face { font-family: "Caderno Bitter"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/bitter/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Bitter"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/bitter/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Bitter"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/bitter/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Bitter"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/bitter/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="bitter"] { --font-reading: "Caderno Bitter", serif; }
+@font-face { font-family: "Caderno Fira Sans"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/fira-sans/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Fira Sans"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/fira-sans/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Fira Sans"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/fira-sans/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Fira Sans"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/fira-sans/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="fira-sans"] { --font-reading: "Caderno Fira Sans", sans-serif; }
+@font-face { font-family: "Caderno Source Sans 3"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/source-sans-3/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Source Sans 3"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/source-sans-3/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Source Sans 3"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/source-sans-3/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Source Sans 3"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/source-sans-3/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="source-sans-3"] { --font-reading: "Caderno Source Sans 3", sans-serif; }
+@font-face { font-family: "Caderno Noto Sans"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/noto-sans/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Noto Sans"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/noto-sans/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Noto Sans"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/noto-sans/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Noto Sans"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/noto-sans/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="noto-sans"] { --font-reading: "Caderno Noto Sans", sans-serif; }
+@font-face { font-family: "Caderno Atkinson Hyperlegible"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/atkinson-hyperlegible/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Atkinson Hyperlegible"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/atkinson-hyperlegible/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Atkinson Hyperlegible"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/atkinson-hyperlegible/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Atkinson Hyperlegible"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/atkinson-hyperlegible/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="atkinson-hyperlegible"] { --font-reading: "Caderno Atkinson Hyperlegible", sans-serif; }
+@font-face { font-family: "Caderno OpenDyslexic"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/opendyslexic/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno OpenDyslexic"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/opendyslexic/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno OpenDyslexic"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/opendyslexic/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno OpenDyslexic"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/opendyslexic/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="opendyslexic"] { --font-reading: "Caderno OpenDyslexic", sans-serif; }
+@font-face { font-family: "Caderno Nunito Sans"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/nunito-sans/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Nunito Sans"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/nunito-sans/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Nunito Sans"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/nunito-sans/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Nunito Sans"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/nunito-sans/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="nunito-sans"] { --font-reading: "Caderno Nunito Sans", sans-serif; }
+@font-face { font-family: "Caderno IBM Plex Sans"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/ibm-plex-sans/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno IBM Plex Sans"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/ibm-plex-sans/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno IBM Plex Sans"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/ibm-plex-sans/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno IBM Plex Sans"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/ibm-plex-sans/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="ibm-plex-sans"] { --font-reading: "Caderno IBM Plex Sans", sans-serif; }
+@font-face { font-family: "Caderno IBM Plex Serif"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/ibm-plex-serif/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno IBM Plex Serif"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/ibm-plex-serif/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno IBM Plex Serif"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/ibm-plex-serif/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno IBM Plex Serif"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/ibm-plex-serif/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="ibm-plex-serif"] { --font-reading: "Caderno IBM Plex Serif", serif; }
+@font-face { font-family: "Caderno JetBrains Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/jetbrains-mono/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno JetBrains Mono"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/jetbrains-mono/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno JetBrains Mono"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/jetbrains-mono/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno JetBrains Mono"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/jetbrains-mono/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="jetbrains-mono"] { --font-reading: "Caderno JetBrains Mono", monospace; --font-mono: "Caderno JetBrains Mono", monospace; }
+@font-face { font-family: "Caderno Victor Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/victor-mono/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Victor Mono"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/victor-mono/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Victor Mono"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/victor-mono/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Victor Mono"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/victor-mono/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="victor-mono"] { --font-reading: "Caderno Victor Mono", monospace; --font-mono: "Caderno Victor Mono", monospace; }
+@font-face { font-family: "Caderno IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/ibm-plex-mono/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno IBM Plex Mono"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/ibm-plex-mono/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno IBM Plex Mono"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/ibm-plex-mono/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno IBM Plex Mono"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/ibm-plex-mono/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="ibm-plex-mono"] { --font-reading: "Caderno IBM Plex Mono", monospace; --font-mono: "Caderno IBM Plex Mono", monospace; }
+@font-face { font-family: "Caderno Source Code Pro"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/source-code-pro/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Source Code Pro"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/source-code-pro/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Source Code Pro"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/source-code-pro/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Source Code Pro"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/source-code-pro/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="source-code-pro"] { --font-reading: "Caderno Source Code Pro", monospace; --font-mono: "Caderno Source Code Pro", monospace; }
+@font-face { font-family: "Caderno Roboto Mono"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/roboto-mono/5.3.0/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Roboto Mono"; font-weight: 400; font-style: italic; font-display: block; src: url("/fonts/roboto-mono/5.3.0/latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Roboto Mono"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/roboto-mono/5.3.0/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caderno Roboto Mono"; font-weight: 700; font-style: italic; font-display: block; src: url("/fonts/roboto-mono/5.3.0/latin-700-italic.woff2") format("woff2"); }
+:root[data-font="roboto-mono"] { --font-reading: "Caderno Roboto Mono", monospace; --font-mono: "Caderno Roboto Mono", monospace; }

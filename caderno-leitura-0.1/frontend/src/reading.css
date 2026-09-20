@@ -1,0 +1,163 @@
+/* O tamanho de leitura não altera o tamanho dos menus. */
+:root[data-reader-size='100'] { --reader-font-size: 1rem; }
+:root[data-reader-size='110'] { --reader-font-size: 1.1rem; }
+:root[data-reader-size='120'] { --reader-font-size: 1.2rem; }
+:root[data-reader-size='130'] { --reader-font-size: 1.3rem; }
+:root[data-reader-size='140'] { --reader-font-size: 1.4rem; }
+:root[data-reader-size='150'] { --reader-font-size: 1.5rem; }
+:root[data-reader-size='160'] { --reader-font-size: 1.6rem; }
+:root[data-reader-size='170'] { --reader-font-size: 1.7rem; }
+:root[data-reader-size='180'] { --reader-font-size: 1.8rem; }
+:root[data-reader-size='190'] { --reader-font-size: 1.9rem; }
+:root[data-reader-size='200'] { --reader-font-size: 2rem; }
+
+.markdown-content :is(h1, h2, h3, h4, h5, h6) {
+  font-size: 1.25em;
+}
+
+.markdown-content pre { font-size: .9em; }
+.markdown-content pre code { font-size: 1em; }
+.notes-content { line-height: var(--line-height-reading); }
+
+.reader-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-unit);
+  margin-bottom: var(--space-unit);
+  padding: var(--space-unit);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+}
+
+.reader-tools > .reading-size-control {
+  flex: 1 1 16rem;
+}
+
+.reader-tools-status {
+  flex: 0 0 100%;
+  margin: 0;
+}
+
+.reading-size-control {
+  min-width: 0;
+}
+
+.reading-size-control label {
+  display: flex;
+  justify-content: space-between;
+  gap: .75em;
+  font-weight: 650;
+  font-size: .9375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.reading-size-control input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2.875rem;
+  margin: 0;
+  padding: 0 .75rem;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border-strong);
+  cursor: pointer;
+}
+
+.reading-size-control input::-webkit-slider-runnable-track {
+  height: .375rem;
+  background: var(--color-muted);
+  border-radius: var(--radius-small);
+}
+
+.reading-size-control input::-moz-range-track,
+.reading-size-control input::-moz-range-progress {
+  height: .375rem;
+  background: var(--color-muted);
+  border-radius: var(--radius-small);
+}
+
+.reading-size-control input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: -.5625rem;
+  border: var(--border-width) solid var(--color-text);
+  border-radius: var(--radius-control);
+  background: var(--color-accent);
+}
+
+.reading-size-control input::-moz-range-thumb {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: var(--border-width) solid var(--color-text);
+  border-radius: var(--radius-control);
+  background: var(--color-accent);
+}
+
+/* O atributo existe somente enquanto esta tela está em modo foco. */
+:root[data-reading-focus='on'] {
+  --mobile-nav-offset: 0px;
+  scroll-padding-bottom: var(--space-unit);
+}
+
+:root[data-reading-focus='on'] :is(
+  .app-header,
+  .app-footer,
+  .breadcrumb,
+  .reader-heading,
+  .reader-notes,
+  .original-response
+) {
+  display: none;
+}
+
+:root[data-reading-focus='on'] #app {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+:root[data-reading-focus='on'] .workspace {
+  font-family: var(--font-reading);
+  font-size: var(--reader-font-size);
+  width: min(
+    calc(100% - var(--page-gutter-mobile)),
+    calc(70ch + var(--space-unit) * 4)
+  );
+  margin: var(--space-unit) auto;
+}
+
+:root[data-reading-focus='on'] .reader-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+:root[data-reading-focus='on'] .reader-tools {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 25;
+}
+
+:root[data-reading-focus='on'] .study-tabs {
+  font-family: var(--font-ui);
+}
+
+:root[data-reading-focus='on'] .markdown-content {
+  max-width: 70ch;
+  margin-inline: auto;
+}
+
+@media (max-width: 767px) {
+  .reader-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Em telas muito baixas, deixe todo o espaço disponível para o texto. */
+@media (max-height: 480px) {
+  :root[data-reading-focus='on'] .reader-tools {
+    position: static;
+  }
+}

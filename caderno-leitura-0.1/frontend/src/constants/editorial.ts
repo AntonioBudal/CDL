@@ -1,0 +1,15 @@
+export const EDITORIAL_TERMS = {
+  SOURCE_STUDY_LABEL: 'Fichamento da Fonte',
+  SOURCE_STUDY_HINT: 'Texto-base de apoio, extraído e preservado para consulta e aprofundamento analítico.',
+  SOURCE_STUDY_PLACEHOLDER: 'Cole o texto-base ou fichamento analítico aqui…',
+  IMPORT_TITLE: 'Importar Fichamento',
+  IMPORT_EYEBROW: 'Novo fichamento de leitura',
+  EMPTY_TRASH_TITLE: 'Lixeira vazia',
+  EMPTY_TRASH_DESC: 'Nenhum livro ou estudo excluído no momento.',
+  EMPTY_LIBRARY_TITLE: 'Nenhum livro cadastrado',
+  EMPTY_LIBRARY_DESC: 'Inicie adicionando seu primeiro livro ou importando anotações de leitura.',
+  EMPTY_CHAPTER_TITLE: 'Selecione um capítulo',
+  EMPTY_CHAPTER_DESC: 'Escolha um capítulo na lista para consultar os estudos correspondentes.',
+  EMPTY_STUDIES_TITLE: 'Organize seu primeiro estudo',
+  EMPTY_STUDIES_DESC: 'Cadastre um capítulo e depois importe ou redija o fichamento que deseja estudar.',
+} as const

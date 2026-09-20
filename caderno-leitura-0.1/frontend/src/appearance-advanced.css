@@ -1,0 +1,629 @@
+/* Fonte local: regular, negrito e itálicos. */
+:root {
+  --reading-align: left;
+  --reading-hyphens: manual;
+  --motion-duration: 0ms;
+}
+
+:root[data-accent='blue'] {
+  --accent-light: #1642BB;
+  --accent-light-hover: #10328F;
+  --accent-light-bg: #EAF0FF;
+  --accent-dark: #A8C7FA;
+  --accent-dark-hover: #C6DCFF;
+  --accent-dark-bg: #1C3558;
+}
+
+:root[data-accent='green'] {
+  --accent-light: #12542D;
+  --accent-light-hover: #0B4221;
+  --accent-light-bg: #DCFCE7;
+  --accent-dark: #86EFAC;
+  --accent-dark-hover: #BBF7D0;
+  --accent-dark-bg: #183C2C;
+}
+
+:root[data-accent='purple'] {
+  --accent-light: #6B21A8;
+  --accent-light-hover: #581C87;
+  --accent-light-bg: #F3E8FF;
+  --accent-dark: #D8B4FE;
+  --accent-dark-hover: #E9D5FF;
+  --accent-dark-bg: #35234F;
+}
+
+:root[data-accent='orange'] {
+  --accent-light: #812C0D;
+  --accent-light-hover: #622009;
+  --accent-light-bg: #FFEDD5;
+  --accent-dark: #FDBA74;
+  --accent-dark-hover: #FED7AA;
+  --accent-dark-bg: #482B18;
+}
+
+:root:not([data-theme='e-ink']):is(
+  [data-accent='blue'],
+  [data-accent='green'],
+  [data-accent='purple'],
+  [data-accent='orange']
+) {
+  --color-accent: var(--accent-light);
+  --color-accent-hover: var(--accent-light-hover);
+  --color-on-accent: #FFFFFF;
+  --color-selected-text: var(--color-accent);
+  --color-selected-bg: var(--accent-light-bg);
+  --color-tab-hover: var(--color-selected-bg);
+  --color-border-hover: var(--color-accent);
+  --color-book-marker: var(--color-accent);
+}
+
+:root:is(
+  [data-theme='breu'],
+  [data-theme='vespera'],
+  [data-theme='fiorde'],
+  [data-theme='vinil'],
+  [data-theme='sequoia'],
+  [data-theme='voltagem']
+):is(
+  [data-accent='blue'],
+  [data-accent='green'],
+  [data-accent='purple'],
+  [data-accent='orange']
+) {
+  --color-accent: var(--accent-dark);
+  --color-accent-hover: var(--accent-dark-hover);
+  --color-selected-bg: var(--accent-dark-bg);
+  --color-on-accent: #111827;
+}
+
+/* Tokens adicionais. */
+:root {
+  --reading-align: left;
+  --reading-hyphens: manual;
+  --motion-duration: 0ms;
+}
+
+/* 1. Destaque: variantes para fundos claros e escuros. */
+:root[data-accent='blue'] {
+  --accent-light: #1d4ed8;
+  --accent-light-hover: #1e40af;
+  --accent-light-bg: #eaf0ff;
+  --accent-dark: #a8c7fa;
+  --accent-dark-hover: #c6dcff;
+  --accent-dark-bg: #1c3558;
+}
+
+:root[data-accent='green'] {
+  --accent-light: #166534;
+  --accent-light-hover: #14532d;
+  --accent-light-bg: #dcfce7;
+  --accent-dark: #86efac;
+  --accent-dark-hover: #bbf7d0;
+  --accent-dark-bg: #183c2c;
+}
+
+:root[data-accent='purple'] {
+  --accent-light: #6b21a8;
+  --accent-light-hover: #581c87;
+  --accent-light-bg: #f3e8ff;
+  --accent-dark: #d8b4fe;
+  --accent-dark-hover: #e9d5ff;
+  --accent-dark-bg: #35234f;
+}
+
+:root[data-accent='orange'] {
+  --accent-light: #9a3412;
+  --accent-light-hover: #7c2d12;
+  --accent-light-bg: #ffedd5;
+  --accent-dark: #fdba74;
+  --accent-dark-hover: #fed7aa;
+  --accent-dark-bg: #482b18;
+}
+
+:root:not([data-theme='e-ink']):is(
+  [data-accent='blue'],
+  [data-accent='green'],
+  [data-accent='purple'],
+  [data-accent='orange']
+) {
+  --color-accent: var(--accent-light);
+  --color-accent-hover: var(--accent-light-hover);
+  --color-on-accent: #fff;
+  --color-selected-text: var(--color-accent);
+  --color-selected-bg: var(--accent-light-bg);
+  --color-tab-hover: var(--color-selected-bg);
+  --color-border-hover: var(--color-accent);
+  --color-book-marker: var(--color-accent);
+}
+
+:root[data-theme='dark']:is(
+  [data-accent='blue'],
+  [data-accent='green'],
+  [data-accent='purple'],
+  [data-accent='orange']
+) {
+  --color-accent: var(--accent-dark);
+  --color-accent-hover: var(--accent-dark-hover);
+  --color-selected-bg: var(--accent-dark-bg);
+  --color-on-accent: #111827;
+}
+
+/* 2. Densidade: aproveita os espaçamentos da Tarefa 2. */
+:root[data-density='compact'] { --density: .8; }
+:root[data-density='standard'] { --density: 1; }
+:root[data-density='comfortable'] { --density: 1.2; }
+
+/* 3. Leitura. */
+:root[data-align='justify'] {
+  --reading-align: justify;
+  --reading-hyphens: auto;
+}
+
+:root[data-font='opendyslexic'] {
+  --line-height-reading: 1.9;
+}
+
+.markdown-content :is(p, li),
+.notes-content {
+  text-align: var(--reading-align);
+  text-align-last: left;
+  hyphens: var(--reading-hyphens);
+}
+
+.markdown-content :is(pre, code, table) {
+  text-align: left;
+  hyphens: none;
+}
+
+::selection {
+  color: var(--color-selected-text);
+  background: var(--color-selected-bg);
+}
+
+/* 4. Marcação persistida como ==texto==. */
+.markdown-content mark {
+  color: var(--color-selected-text);
+  background: var(--color-selected-bg);
+  font-weight: inherit;
+  padding: .08em .12em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.markdown-content mark a { color: inherit; }
+
+.markdown-content mark code {
+  color: inherit;
+  background: transparent;
+}
+
+:root[data-highlight='underline'] .markdown-content mark {
+  color: inherit;
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: .12em;
+  text-underline-offset: .18em;
+}
+
+:root[data-highlight='bold'] .markdown-content mark {
+  color: var(--color-accent);
+  background: transparent;
+  font-weight: 700;
+}
+
+/* 5. Movimento: sem transições de largura ou posição. */
+:root[data-motion='on'] { --motion-duration: 140ms; }
+
+:is(button, .button, .book-card, .chapter-list a, .app-header nav a) {
+  transition:
+    color var(--motion-duration),
+    background-color var(--motion-duration),
+    border-color var(--motion-duration);
+}
+
+:root[data-motion='off'],
+:root[data-motion='off'] *,
+:root[data-motion='off'] *::before,
+:root[data-motion='off'] *::after {
+  transition: none !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root, *, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* O bloqueio de movimento do E-Ink continua em themes.css. */
+
+/* 6. Superfícies. */
+:root[data-surface='flat'] {
+  --color-surface: var(--color-page);
+  --color-card-hover: var(--color-page);
+  --color-placeholder: var(--color-muted);
+  --shadow-panel: none;
+}
+
+/* 7. Botões de ação. As abas ficam fora destes seletores. */
+:root :is(button, .button):not([role='tab']) {
+  --button-bg: var(--color-accent);
+  --button-fg: var(--color-on-accent);
+  --button-border: var(--color-accent);
+  --button-hover-bg: var(--color-accent-hover);
+  --button-hover-fg: var(--color-on-accent);
+
+  background: var(--button-bg);
+  color: var(--button-fg);
+  border: var(--border-width) solid var(--button-border);
+  min-height: 2.875rem;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+:root :is(button, .button).secondary:not([role='tab']) {
+  --button-bg: var(--color-surface);
+  --button-fg: var(--color-text);
+  --button-border: var(--color-border-strong);
+  --button-hover-bg: var(--color-surface-soft);
+  --button-hover-fg: var(--color-text);
+}
+
+:root[data-button-style='outline'] :is(button, .button):not([role='tab']),
+:root[data-button-style='ghost'] :is(button, .button):not([role='tab']) {
+  --button-bg: transparent;
+  --button-fg: var(--color-accent);
+  --button-border: var(--color-accent);
+  --button-hover-bg: var(--color-selected-bg);
+  --button-hover-fg: var(--color-selected-text);
+}
+
+:root[data-button-style='ghost'] :is(button, .button):not([role='tab']) {
+  --button-border: transparent;
+}
+
+:root :is(button, .button):not([role='tab']):hover:not(:disabled) {
+  background: var(--button-hover-bg);
+  color: var(--button-hover-fg);
+}
+
+:root :is(button, .button):not([role='tab']):disabled {
+  opacity: 1;
+  cursor: not-allowed;
+  background: var(--color-surface-disabled);
+  color: var(--color-muted);
+  border-color: var(--color-border-strong);
+  border-style: dashed;
+}
+
+:root[data-button-width='auto'] :is(button, .button):not([role='tab']) {
+  width: auto;
+  flex: 0 1 auto;
+}
+
+:root[data-button-width='block'] :is(button, .button):not([role='tab']) {
+  width: 100%;
+  flex: 0 0 100%;
+}
+
+:root[data-button-width='block'] .actions {
+  flex-wrap: wrap;
+}
+
+/* 8. Abas: a estrutura HTML é compartilhada pelos três estilos. */
+:root[data-tabs] .study-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: calc(var(--space-unit) * .25);
+  padding: calc(var(--space-unit) * .5);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+:root[data-tabs] .study-tabs [role='tab'] {
+  flex: 1 0 auto;
+  width: auto;
+  min-height: 2.875rem;
+  padding: calc(var(--space-unit) * .65) calc(var(--space-unit) * .7);
+  border: var(--border-width) solid transparent;
+  border-bottom: var(--tab-indicator-width) solid transparent;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--color-muted);
+}
+
+:root[data-tabs] .study-tabs [role='tab']:hover {
+  color: var(--color-selected-text);
+  background: var(--color-tab-hover);
+}
+
+:root[data-tabs] .study-tabs [role='tab'][aria-selected='true'] {
+  color: var(--color-selected-text);
+  background: var(--color-selected-bg);
+  border-bottom-color: var(--color-accent);
+  font-weight: 750;
+}
+
+:root[data-tabs='segmented'] .study-tabs {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(max-content, 1fr);
+  margin: calc(var(--space-unit) * .5);
+  padding: calc(var(--space-unit) * .25);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-inset);
+}
+
+:root[data-tabs='segmented'] .study-tabs [role='tab'] {
+  border: var(--border-width) solid transparent;
+}
+
+:root[data-tabs='segmented'] .study-tabs [role='tab'][aria-selected='true'] {
+  border-color: var(--color-accent);
+}
+
+:root[data-tabs='folders'] .study-tabs {
+  padding-bottom: 0;
+}
+
+:root[data-tabs='folders'] .study-tabs [role='tab'] {
+  flex: 0 0 auto;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-bottom: 0;
+  border-radius: var(--radius-control) var(--radius-control) 0 0;
+  background: var(--color-surface-inset);
+}
+
+:root[data-tabs='folders'] .study-tabs [role='tab'][aria-selected='true'] {
+  border-color: var(--color-accent);
+  border-top-width: var(--tab-indicator-width);
+}
+
+/* 9. Acervo: mesmos elementos, outra disposição. */
+:root[data-library='grid'] .book-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+:root[data-library='list'] .book-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+:root[data-library='list'] .book-card {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  grid-template-areas:
+    'number title action'
+    'number meta action';
+  align-items: center;
+  gap: calc(var(--space-unit) * .25) var(--space-unit);
+  min-height: 0;
+  padding: var(--space-unit);
+}
+
+:root[data-library='list'] .book-number {
+  grid-area: number;
+  margin: 0;
+}
+
+:root[data-library='list'] .book-card h2 {
+  grid-area: title;
+  min-width: 0;
+}
+
+:root[data-library='list'] .book-card p {
+  grid-area: meta;
+  margin: 0;
+}
+
+:root[data-library='list'] .card-action {
+  grid-area: action;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 720px) {
+  :root[data-library='list'] .book-card {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'title action'
+      'meta action';
+  }
+
+  :root[data-library='list'] .book-number {
+    display: none;
+  }
+}
+
+/* 10. Largura. O modo fluido conserva as margens de respiro. */
+:root[data-container='contained'] { --workspace-max-width: 74rem; }
+:root[data-container='fluid'] { --workspace-max-width: 100%; }
+
+/* Tela de Ajustes Reorganizada */
+.settings-page {
+  max-width: none;
+}
+
+.settings-tabs {
+  display: flex;
+  gap: calc(var(--space-unit) * 0.5);
+  border-bottom: var(--border-width) solid var(--color-border);
+  margin-bottom: calc(var(--space-unit) * 1.5);
+  padding-bottom: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.settings-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  min-height: 44px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: transparent;
+  color: var(--color-text-muted, inherit);
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.settings-tab:hover:not(:disabled) {
+  color: var(--color-text);
+  border-bottom-color: var(--color-border-hover, var(--color-border));
+}
+
+.settings-tab[aria-selected='true'] {
+  color: var(--color-selected-text, var(--color-accent, currentColor));
+  border-bottom-color: var(--color-accent, currentColor);
+}
+
+.settings-tab:focus-visible {
+  outline: 2px solid var(--color-accent, currentColor);
+  outline-offset: -2px;
+}
+
+.settings-layout {
+  display: grid;
+  gap: calc(var(--space-unit) * 1.5);
+  align-items: start;
+}
+
+@media (min-width: 1025px) {
+  .settings-layout {
+    grid-template-columns: minmax(0, 1.25fr) minmax(360px, 460px);
+  }
+
+  .settings-sidebar {
+    position: sticky;
+    top: 1.5rem;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+  }
+}
+
+.appearance-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--space-unit);
+}
+
+.appearance-group {
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-unit);
+}
+
+.appearance-group legend {
+  padding: 0 .35em;
+  font-weight: 700;
+}
+
+.appearance-group .form-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.appearance-group .field:last-child {
+  margin-bottom: 0;
+}
+
+.appearance-preview {
+  display: grid;
+  gap: var(--space-unit);
+  min-width: 0;
+}
+
+.appearance-preview-actions {
+  margin: calc(var(--space-unit) * .5) 0;
+}
+
+/* Central de Diagnóstico do Sistema */
+.system-panel {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-unit) * 1.5);
+}
+
+.system-card {
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-card, 8px);
+  padding: var(--space-unit);
+  background-color: var(--color-surface, inherit);
+}
+
+.system-card h3 {
+  margin-top: 0;
+  margin-bottom: calc(var(--space-unit) * 0.5);
+  font-size: 1.1rem;
+}
+
+.system-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-unit);
+  margin-top: calc(var(--space-unit) * 0.75);
+}
+
+.system-stat {
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--space-unit) * 0.75);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm, 4px);
+  background-color: var(--color-bg-subtle, rgba(0, 0, 0, 0.02));
+}
+
+.system-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.system-stat-label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted, inherit);
+  margin-top: 0.25rem;
+}
+
+.connection-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm, 4px);
+}
+
+.connection-status-badge.ok {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #166534;
+}
+
+:root[data-theme='breu'] .connection-status-badge.ok,
+:root[data-theme='vespera'] .connection-status-badge.ok {
+  color: #86efac;
+}
+
+.connection-status-badge.error {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #991b1b;
+}
+
+:root[data-theme='breu'] .connection-status-badge.error,
+:root[data-theme='vespera'] .connection-status-badge.error {
+  color: #fca5a5;
+}
+
+.connection-status-badge.loading {
+  background-color: rgba(156, 163, 175, 0.15);
+  color: var(--color-text-muted, inherit);
+}
