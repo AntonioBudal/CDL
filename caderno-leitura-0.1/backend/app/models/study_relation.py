@@ -6,11 +6,13 @@ from typing import TYPE_CHECKING
 from sqlalchemy import CheckConstraint, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 
+from app.core.config import DEFAULT_OWNER_ID
 from app.db.base import Base
 from app.db.types import UTCDateTime, utc_now
 
 if TYPE_CHECKING:
     from app.models.study import Study
+    from app.models.user import User
 
 
 class StudyRelation(Base):
@@ -24,9 +26,17 @@ class StudyRelation(Base):
         UniqueConstraint("source_study_id", "target_study_id", "relation_type", name="uq_study_relations_src_tgt_type"),
         Index("ix_study_relations_source", "source_study_id"),
         Index("ix_study_relations_target", "target_study_id"),
+        Index("ix_study_relations_user_id", "user_id"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(
+        String(36),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        default=DEFAULT_OWNER_ID,
+        server_default=text(f"'{DEFAULT_OWNER_ID}'"),
+        nullable=False,
+    )
     source_study_id: Mapped[int] = mapped_column(
         Integer,
         ForeignKey("studies.id", ondelete="CASCADE"),

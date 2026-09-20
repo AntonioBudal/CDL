@@ -223,7 +223,7 @@ function formatDate(isoStr: string): string {
 }
 
 .card-title-link {
-  color: var(--color-inverse-bg, #0f172a);
+  color: var(--color-text);
   text-decoration: none;
 }
 

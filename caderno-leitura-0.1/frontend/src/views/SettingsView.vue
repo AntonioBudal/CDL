@@ -241,6 +241,7 @@ function setHomeViewPreference(val: HomeViewPreference) {
   homeViewPreference.value = val
   try {
     window.localStorage?.setItem('caderno_home_view', val)
+    window.dispatchEvent(new CustomEvent('caderno_home_view_changed', { detail: val }))
     systemActionFeedback.value = `Tela inicial padrão definida como: ${val === 'dashboard' ? 'Dashboard 2.0' : 'Acervo de Livros'}.`
   } catch {
     // ignore
@@ -370,8 +371,8 @@ onBeforeUnmount(() => {
             <p class="muted">
               Escolha qual tela deve ser carregada por padrão ao abrir o Caderno de Leitura na rota inicial.
             </p>
-            <div class="home-view-options" role="radiogroup" aria-label="Tela inicial padrão" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.75rem;">
-              <label class="radio-option" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.625rem 0.875rem; min-height: 44px; border: 1px solid var(--color-border); border-radius: var(--radius-md, 0.5rem); cursor: pointer;">
+            <div class="home-view-options" role="radiogroup" aria-label="Tela inicial padrão">
+              <label class="radio-option">
                 <input
                   type="radio"
                   name="homeViewPreference"
@@ -383,7 +384,7 @@ onBeforeUnmount(() => {
                   <strong>Dashboard 2.0</strong> (Cockpit de Estudos e Retoma)
                 </span>
               </label>
-              <label class="radio-option" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.625rem 0.875rem; min-height: 44px; border: 1px solid var(--color-border); border-radius: var(--radius-md, 0.5rem); cursor: pointer;">
+              <label class="radio-option">
                 <input
                   type="radio"
                   name="homeViewPreference"
@@ -524,3 +525,52 @@ onBeforeUnmount(() => {
     />
   </section>
 </template>
+
+<style scoped>
+.home-view-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-top: 0.75rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.625rem 0.875rem;
+  min-height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control, 0.5rem);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  user-select: none;
+}
+
+.radio-option:hover {
+  border-color: var(--color-border-hover, var(--color-accent));
+  background-color: var(--color-surface-hover);
+}
+
+.radio-option input[type="radio"] {
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.radio-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+</style>

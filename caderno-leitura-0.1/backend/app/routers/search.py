@@ -1,9 +1,8 @@
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException, Query, status
 
-from app.db.session import get_session
+from app.dependencies import CurrentUser, DatabaseSession
 from app.schemas.search import SearchHistoryResponse, SearchResponse
 from app.services.search_service import SearchService
 
@@ -13,11 +12,12 @@ router = APIRouter(prefix="/search", tags=["search"])
 @router.get("", response_model=SearchResponse, summary="Busca transversal de estudos e anotações")
 def search_studies(
     q: Annotated[str, Query(min_length=2, description="Termo de busca com no mínimo 2 caracteres")],
+    session: DatabaseSession,
+    current_user: CurrentUser,
     mode: Annotated[Literal["and", "or"], Query(description="Modo de combinação de termos")] = "and",
     book_id: Annotated[int | None, Query(description="Filtrar por livro específico")] = None,
     category_id: Annotated[str | None, Query(description="Filtrar por categoria temática")] = None,
     limit: Annotated[int, Query(ge=1, le=100, description="Quantidade máxima de resultados")] = 20,
-    session: Session = Depends(get_session),
 ) -> SearchResponse:
     return SearchService.search_studies(
         session=session,
@@ -26,23 +26,27 @@ def search_studies(
         book_id=book_id,
         category_id=category_id,
         limit=limit,
+        user_id=current_user.id,
     )
 
 
 @router.get("/history", response_model=SearchHistoryResponse, summary="Listar buscas recentes")
+@router.get("/recent", response_model=SearchHistoryResponse, summary="Listar buscas recentes (alias)")
 def get_search_history(
+    session: DatabaseSession,
+    current_user: CurrentUser,
     limit: Annotated[int, Query(ge=1, le=20)] = 10,
-    session: Session = Depends(get_session),
 ) -> SearchHistoryResponse:
-    return SearchService.get_recent_searches(session=session, limit=limit)
+    return SearchService.get_recent_searches(session=session, limit=limit, user_id=current_user.id)
 
 
 @router.delete("/history/{history_id}", summary="Remover termo do histórico")
 def delete_search_history_item(
     history_id: int,
-    session: Session = Depends(get_session),
+    session: DatabaseSession,
+    current_user: CurrentUser,
 ):
-    deleted = SearchService.delete_search_query(session, history_id)
+    deleted = SearchService.delete_search_query(session, history_id, user_id=current_user.id)
     if not deleted:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -53,7 +57,8 @@ def delete_search_history_item(
 
 @router.delete("/history", summary="Limpar todo o histórico de buscas")
 def clear_search_history(
-    session: Session = Depends(get_session),
+    session: DatabaseSession,
+    current_user: CurrentUser,
 ):
-    count = SearchService.clear_all_searches(session)
+    count = SearchService.clear_all_searches(session, user_id=current_user.id)
     return {"success": True, "message": f"Histórico limpo com sucesso ({count} registros removidos)."}

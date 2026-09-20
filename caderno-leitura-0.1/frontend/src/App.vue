@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import type { IconName } from './types'
 import Icon from './components/ui/Icon.vue'
@@ -7,6 +8,36 @@ import { useGlobalSearch } from './composables/useGlobalSearch.ts'
 
 const route = useRoute()
 const { openSearch } = useGlobalSearch()
+
+const homeViewPreference = ref<string>('dashboard')
+
+function readHomeViewPreference() {
+  try {
+    const val = window.localStorage?.getItem('caderno_home_view')
+    if (val === 'books' || val === 'dashboard') {
+      homeViewPreference.value = val
+    } else {
+      homeViewPreference.value = 'dashboard'
+    }
+  } catch {
+    homeViewPreference.value = 'dashboard'
+  }
+}
+
+function handleStorageChange() {
+  readHomeViewPreference()
+}
+
+onMounted(() => {
+  readHomeViewPreference()
+  window.addEventListener('storage', handleStorageChange)
+  window.addEventListener('caderno_home_view_changed', handleStorageChange)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('storage', handleStorageChange)
+  window.removeEventListener('caderno_home_view_changed', handleStorageChange)
+})
 
 interface NavLinkItem {
   to: string
@@ -47,6 +78,20 @@ const mainLinks: NavLinkItem[] = [
     icon: 'trash',
   },
 ]
+
+const visibleMainLinks = computed(() => {
+  return mainLinks.filter(item => {
+    // Se a preferência for 'books', oculta a aba 'Dashboard'
+    if (homeViewPreference.value === 'books' && item.label === 'Dashboard') {
+      return false
+    }
+    // Se a preferência for 'dashboard' (padrão), oculta a aba 'Livros'
+    if (homeViewPreference.value === 'dashboard' && item.label === 'Livros') {
+      return false
+    }
+    return true
+  })
+})
 </script>
 
 <template>
@@ -56,7 +101,7 @@ const mainLinks: NavLinkItem[] = [
       <RouterLink class="brand" to="/">Caderno de Leitura</RouterLink>
       <nav class="main-nav" aria-label="Navegação principal">
         <RouterLink
-          v-for="item in mainLinks"
+          v-for="item in visibleMainLinks"
           :key="item.to"
           :to="item.to"
           :class="{
@@ -72,16 +117,16 @@ const mainLinks: NavLinkItem[] = [
           <span>{{ item.label }}</span>
         </RouterLink>
       </nav>
-      <div class="header-actions flex items-center gap-2">
+      <div class="header-actions">
         <button
           type="button"
-          class="search-trigger-btn flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border/70 bg-muted/40 hover:bg-muted/80 text-muted-foreground hover:text-foreground text-xs font-medium transition-colors cursor-pointer min-h-[38px]"
+          class="search-trigger-btn"
           aria-label="Abrir busca global de estudos (Ctrl+K)"
           @click="openSearch"
         >
           <Icon name="search" :size="15" />
-          <span class="hidden sm:inline">Buscar</span>
-          <kbd class="hidden md:inline-block px-1.5 py-0.5 rounded border border-border bg-card text-[10px] font-mono text-muted-foreground">Ctrl K</kbd>
+          <span class="search-label">Buscar</span>
+          <kbd class="search-kbd">Ctrl K</kbd>
         </button>
       </div>
     </div>
@@ -96,3 +141,57 @@ const mainLinks: NavLinkItem[] = [
   <footer class="app-footer">Caderno de Leitura · Versão 0.4</footer>
   <GlobalSearchModal />
 </template>
+
+<style scoped>
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  min-height: 38px;
+  border-radius: var(--radius-control, 6px);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.search-trigger-btn:hover {
+  background: var(--color-surface-hover, rgba(0, 0, 0, 0.08));
+  border-color: var(--color-border-hover, var(--color-accent));
+  color: var(--color-text);
+}
+
+.search-label {
+  display: inline;
+}
+
+.search-kbd {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 0.6875rem;
+  font-family: monospace;
+  color: var(--color-muted);
+}
+
+@media (max-width: 640px) {
+  .search-label {
+    display: none;
+  }
+  .search-kbd {
+    display: none;
+  }
+}
+</style>

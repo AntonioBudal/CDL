@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.db.session import get_session
+from app.dependencies import CurrentUser
 from app.schemas.dashboard import DashboardResponse
 from app.services.dashboard_service import get_dashboard_data
 
@@ -13,6 +14,7 @@ router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 @router.get("", response_model=DashboardResponse)
 @router.get("/summary", response_model=DashboardResponse)
 def get_dashboard(
+    current_user: CurrentUser,
     tz_offset: Annotated[int, Query(ge=-840, le=840, description="Deslocamento do fuso local em minutos")] = 0,
     days: Annotated[int, Query(ge=30, le=730, description="Dias para projeção do mapa de calor")] = 365,
     date: Annotated[str | None, Query(pattern=r"^\d{4}-\d{2}-\d{2}$", description="Filtro opcional por data (YYYY-MM-DD)")] = None,
@@ -21,6 +23,7 @@ def get_dashboard(
 ) -> DashboardResponse:
     return get_dashboard_data(
         session,
+        user_id=current_user.id,
         tz_offset=tz_offset,
         days=days,
         filter_date=date,

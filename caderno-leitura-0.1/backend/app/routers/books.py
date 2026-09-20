@@ -1,7 +1,7 @@
 from fastapi import APIRouter, File, HTTPException, Response, UploadFile, status
 from sqlalchemy import asc, desc, false, or_, select, text
 
-from app.dependencies import DatabaseSession, Identifier
+from app.dependencies import CurrentUser, DatabaseSession, Identifier
 from app.models import Book
 from app.models.category import book_categories
 from app.schemas.book import BookCreate, BookPatch, BookRead
@@ -15,7 +15,12 @@ from app.services.cover_service import (
     set_book_cover,
 )
 from app.services.export_service import generate_book_export
-from app.services.persistence import check_optimistic_lock, commit_changes, get_or_404
+from app.services.persistence import (
+    check_optimistic_lock,
+    commit_changes,
+    get_or_404,
+    get_user_resource_or_404,
+)
 from app.services.trash_service import permanent_delete_book, restore_book, trash_book
 
 router = APIRouter(prefix="/books", tags=["Livros"])
@@ -24,12 +29,13 @@ router = APIRouter(prefix="/books", tags=["Livros"])
 @router.get("", response_model=list[BookRead], summary="Listar livros")
 def list_books(
     session: DatabaseSession,
+    current_user: CurrentUser,
     q: str | None = None,
     category: str | None = None,
     sort: str | None = None,
     order: str = "asc",
 ):
-    query = select(Book).where(Book.deleted_at.is_(None))
+    query = select(Book).where(Book.deleted_at.is_(None), Book.user_id == current_user.id)
 
     if q and q.strip():
         term = f"%{q.strip()}%"
@@ -75,32 +81,32 @@ def list_books(
 
 
 @router.get("/{book_id}", response_model=BookRead, summary="Consultar livro")
-def get_book(book_id: Identifier, session: DatabaseSession):
-    book = get_or_404(session, Book, book_id, "Livro")
+def get_book(book_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
+    book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
     if book.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Livro não encontrado.")
     return book
 
 
 @router.post("/{book_id}/trash", response_model=BookRead, summary="Mover livro para a lixeira")
-def trash_book_endpoint(book_id: Identifier, session: DatabaseSession):
-    return trash_book(session, book_id)
+def trash_book_endpoint(book_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
+    return trash_book(session, book_id, user_id=current_user.id)
 
 
 @router.post("/{book_id}/restore", response_model=BookRead, summary="Restaurar livro da lixeira")
-def restore_book_endpoint(book_id: Identifier, session: DatabaseSession):
-    return restore_book(session, book_id)
+def restore_book_endpoint(book_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
+    return restore_book(session, book_id, user_id=current_user.id)
 
 
 @router.delete("/{book_id}/permanent", status_code=status.HTTP_204_NO_CONTENT, summary="Excluir livro permanentemente")
-def permanent_delete_book_endpoint(book_id: Identifier, session: DatabaseSession):
-    permanent_delete_book(session, book_id)
+def permanent_delete_book_endpoint(book_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
+    permanent_delete_book(session, book_id, user_id=current_user.id)
 
 
 @router.post("", response_model=BookRead, status_code=status.HTTP_201_CREATED, summary="Cadastrar livro")
-def create_book(payload: BookCreate, session: DatabaseSession):
+def create_book(payload: BookCreate, session: DatabaseSession, current_user: CurrentUser):
     data = payload.model_dump(exclude={"category_ids"})
-    book = Book(**data)
+    book = Book(**data, user_id=current_user.id)
     if payload.category_ids:
         assign_book_categories(session, book, payload.category_ids)
     session.add(book)
@@ -110,8 +116,10 @@ def create_book(payload: BookCreate, session: DatabaseSession):
 
 
 @router.patch("/{book_id}", response_model=BookRead, summary="Atualizar metadados do livro")
-def update_book(book_id: Identifier, payload: BookPatch, session: DatabaseSession):
-    book = get_or_404(session, Book, book_id, "Livro")
+def update_book(book_id: Identifier, payload: BookPatch, session: DatabaseSession, current_user: CurrentUser):
+    book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
+    if book.deleted_at is not None:
+        raise HTTPException(status_code=404, detail="Livro não encontrado.")
     check_optimistic_lock(book.updated_at, payload.expected_updated_at, "Livro")
 
     if "category_ids" in payload.model_fields_set:
@@ -127,8 +135,13 @@ def update_book(book_id: Identifier, payload: BookPatch, session: DatabaseSessio
 
 
 @router.post("/{book_id}/cover", response_model=CoverResponse, summary="Fazer upload de capa do livro")
-async def upload_book_cover(book_id: Identifier, session: DatabaseSession, file: UploadFile = File(...)):
-    book = get_or_404(session, Book, book_id, "Livro")
+async def upload_book_cover(
+    book_id: Identifier,
+    session: DatabaseSession,
+    current_user: CurrentUser,
+    file: UploadFile = File(...),
+):
+    book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
     if book.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Livro não encontrado.")
 
@@ -144,8 +157,13 @@ async def upload_book_cover(book_id: Identifier, session: DatabaseSession, file:
 
 
 @router.post("/{book_id}/cover/url", response_model=CoverResponse, summary="Importar capa por URL direta")
-def import_book_cover_url(book_id: Identifier, payload: CoverUrlRequest, session: DatabaseSession):
-    book = get_or_404(session, Book, book_id, "Livro")
+def import_book_cover_url(
+    book_id: Identifier,
+    payload: CoverUrlRequest,
+    session: DatabaseSession,
+    current_user: CurrentUser,
+):
+    book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
     if book.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Livro não encontrado.")
 
@@ -160,7 +178,10 @@ def import_book_cover_url(book_id: Identifier, payload: CoverUrlRequest, session
 
 
 @router.delete("/{book_id}/cover", response_model=CoverResponse, summary="Remover capa do livro")
-def delete_book_cover(book_id: Identifier, session: DatabaseSession):
+def delete_book_cover(book_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
+    book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
+    if book.deleted_at is not None:
+        raise HTTPException(status_code=404, detail="Livro não encontrado.")
     updated_book = remove_book_cover(session, book_id)
     return CoverResponse(
         book_id=updated_book.id,
@@ -174,12 +195,17 @@ def delete_book_cover(book_id: Identifier, session: DatabaseSession):
 def export_book(
     book_id: Identifier,
     session: DatabaseSession,
+    current_user: CurrentUser,
     format: ExportFormat = ExportFormat.MARKDOWN,
     include_notes: bool = True,
     include_sections: bool = True,
     include_source: bool = False,
     include_metadata: bool = True,
 ):
+    book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
+    if book.deleted_at is not None:
+        raise HTTPException(status_code=404, detail="Livro não encontrado.")
+
     options = ExportOptions(
         format=format,
         include_notes=include_notes,

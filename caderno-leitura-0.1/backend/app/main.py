@@ -7,6 +7,7 @@ from app import __version__
 from app.errors import register_database_error_handlers
 from app.frontend import register_frontend
 from app.routers import (
+    auth,
     backups,
     books,
     canvas,
@@ -48,6 +49,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
         lifespan=lifespan,
     )
     application.include_router(health.router, prefix="/api")
+    application.include_router(auth.router, prefix="/api")
     application.include_router(backups.router, prefix="/api")
     application.include_router(categories.router, prefix="/api")
     application.include_router(books.router, prefix="/api")

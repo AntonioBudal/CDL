@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 
-from app.dependencies import DatabaseSession, Identifier
+from app.dependencies import CurrentUser, DatabaseSession, Identifier
 from app.schemas.study_canvas_node import (
     BookCanvasResponse,
     CanvasBatchUpdateRequest,
@@ -30,8 +30,8 @@ router = APIRouter(tags=["Canvas de Estudos"])
     response_model=BookCanvasResponse,
     summary="Obter layout espacial do Canvas de um livro",
 )
-def get_canvas(book_id: Identifier, session: DatabaseSession):
-    nodes = get_book_canvas_nodes(session, book_id)
+def get_canvas(book_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
+    nodes = get_book_canvas_nodes(session, book_id, user_id=current_user.id)
     return BookCanvasResponse(book_id=book_id, nodes=nodes)
 
 
@@ -44,8 +44,9 @@ def update_canvas_batch(
     book_id: Identifier,
     payload: CanvasBatchUpdateRequest,
     session: DatabaseSession,
+    current_user: CurrentUser,
 ):
-    nodes = batch_upsert_canvas_nodes(session, book_id, payload)
+    nodes = batch_upsert_canvas_nodes(session, book_id, payload, user_id=current_user.id)
     return BookCanvasResponse(book_id=book_id, nodes=nodes)
 
 
@@ -58,8 +59,9 @@ def patch_canvas_node(
     study_id: Identifier,
     payload: CanvasNodePatchRequest,
     session: DatabaseSession,
+    current_user: CurrentUser,
 ):
-    return patch_study_canvas_node(session, study_id, payload)
+    return patch_study_canvas_node(session, study_id, payload, user_id=current_user.id)
 
 
 @router.get(
@@ -67,8 +69,8 @@ def patch_canvas_node(
     response_model=list[CanvasFrameItem],
     summary="Listar todas as molduras manuais do Canvas de um livro",
 )
-def list_canvas_frames(book_id: Identifier, session: DatabaseSession):
-    return get_book_canvas_frames(session, book_id)
+def list_canvas_frames(book_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
+    return get_book_canvas_frames(session, book_id, user_id=current_user.id)
 
 
 @router.post(
@@ -81,8 +83,9 @@ def create_canvas_frame_endpoint(
     book_id: Identifier,
     payload: CanvasFrameCreate,
     session: DatabaseSession,
+    current_user: CurrentUser,
 ):
-    return create_canvas_frame(session, book_id, payload)
+    return create_canvas_frame(session, book_id, payload, user_id=current_user.id)
 
 
 @router.patch(
@@ -94,8 +97,9 @@ def update_canvas_frame_endpoint(
     frame_id: Identifier,
     payload: CanvasFrameUpdate,
     session: DatabaseSession,
+    current_user: CurrentUser,
 ):
-    return update_canvas_frame(session, frame_id, payload)
+    return update_canvas_frame(session, frame_id, payload, user_id=current_user.id)
 
 
 @router.delete(
@@ -105,7 +109,7 @@ def update_canvas_frame_endpoint(
 def delete_canvas_frame_endpoint(
     frame_id: Identifier,
     session: DatabaseSession,
+    current_user: CurrentUser,
 ):
-    delete_canvas_frame(session, frame_id)
+    delete_canvas_frame(session, frame_id, user_id=current_user.id)
     return {"success": True, "message": "Moldura removida com sucesso."}
-

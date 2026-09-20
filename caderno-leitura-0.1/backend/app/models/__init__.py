@@ -8,6 +8,7 @@ from app.models.search_history import SearchHistory
 from app.models.study import Study
 from app.models.study_canvas_node import StudyCanvasNode
 from app.models.study_relation import StudyRelation
+from app.models.user import User
 
 __all__ = [
     "Book",
@@ -18,6 +19,7 @@ __all__ = [
     "Study",
     "StudyCanvasNode",
     "StudyRelation",
+    "User",
     "book_categories",
 ]
 

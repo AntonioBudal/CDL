@@ -17,6 +17,34 @@ def get_or_404(session: Session, model: type[Record], record_id: int, label: str
     return record
 
 
+def get_user_resource_or_404(
+    session: Session,
+    model: type[Record],
+    record_id: int | str,
+    user_id: str,
+    label: str,
+    *,
+    allow_global: bool = False,
+) -> Record:
+    """Retorna um recurso pelo ID garantindo que pertença estritamente ao user_id informado.
+
+    Se o recurso não existir ou pertencer a outro usuário, retorna invariavelmente
+    HTTP 404 Not Found (blindagem anti-IDOR sem vazamento de existência de recursos alheios).
+    """
+    record = session.get(model, record_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"{label} não encontrado.")
+
+    record_user_id = getattr(record, "user_id", None)
+    if record_user_id is None and allow_global:
+        return record
+
+    if record_user_id != user_id:
+        raise HTTPException(status_code=404, detail=f"{label} não encontrado.")
+
+    return record
+
+
 def commit_changes(session: Session) -> None:
     try:
         session.commit()

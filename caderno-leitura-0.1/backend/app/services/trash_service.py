@@ -7,12 +7,15 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.db.types import utc_now
 from app.models import Book, Chapter, Study
-from app.services.persistence import commit_changes, get_or_404
+from app.services.persistence import commit_changes, get_or_404, get_user_resource_or_404
 
 
-def trash_book(session: Session, book_id: int) -> Book:
+def trash_book(session: Session, book_id: int, user_id: str | None = None) -> Book:
     """Move um livro para a lixeira (soft delete)."""
-    book = get_or_404(session, Book, book_id, "Livro")
+    if user_id is not None:
+        book = get_user_resource_or_404(session, Book, book_id, user_id, "Livro")
+    else:
+        book = get_or_404(session, Book, book_id, "Livro")
     if book.deleted_at is not None:
         raise HTTPException(status_code=400, detail="Este livro já está na lixeira.")
 
@@ -22,9 +25,12 @@ def trash_book(session: Session, book_id: int) -> Book:
     return book
 
 
-def restore_book(session: Session, book_id: int) -> Book:
+def restore_book(session: Session, book_id: int, user_id: str | None = None) -> Book:
     """Restaura um livro da lixeira."""
-    book = get_or_404(session, Book, book_id, "Livro")
+    if user_id is not None:
+        book = get_user_resource_or_404(session, Book, book_id, user_id, "Livro")
+    else:
+        book = get_or_404(session, Book, book_id, "Livro")
     if book.deleted_at is None:
         raise HTTPException(status_code=400, detail="Este livro não está na lixeira.")
 
@@ -34,9 +40,12 @@ def restore_book(session: Session, book_id: int) -> Book:
     return book
 
 
-def permanent_delete_book(session: Session, book_id: int) -> None:
+def permanent_delete_book(session: Session, book_id: int, user_id: str | None = None) -> None:
     """Exclui definitivamente um livro, seus capítulos e estudos subordinados."""
-    book = get_or_404(session, Book, book_id, "Livro")
+    if user_id is not None:
+        book = get_user_resource_or_404(session, Book, book_id, user_id, "Livro")
+    else:
+        book = get_or_404(session, Book, book_id, "Livro")
     cover_image = book.cover_image
 
     # Coleta IDs de capítulos para remover estudos vinculados
@@ -53,9 +62,12 @@ def permanent_delete_book(session: Session, book_id: int) -> None:
         delete_cover_file_if_orphan(session, cover_image, current_book_id=book_id)
 
 
-def trash_study(session: Session, study_id: int) -> Study:
+def trash_study(session: Session, study_id: int, user_id: str | None = None) -> Study:
     """Move um estudo para a lixeira (soft delete) aplicando cascata lógica em todos os descendentes."""
-    study = get_or_404(session, Study, study_id, "Estudo")
+    if user_id is not None:
+        study = get_user_resource_or_404(session, Study, study_id, user_id, "Estudo")
+    else:
+        study = get_or_404(session, Study, study_id, "Estudo")
     if study.deleted_at is not None:
         raise HTTPException(status_code=400, detail="Este estudo já está na lixeira.")
 
@@ -70,7 +82,7 @@ def trash_study(session: Session, study_id: int) -> Study:
     return study
 
 
-def restore_study(session: Session, study_id: int) -> tuple[Study, bool]:
+def restore_study(session: Session, study_id: int, user_id: str | None = None) -> tuple[Study, bool]:
     """Restaura um estudo da lixeira.
     
     Se o livro ancestral estiver na lixeira, executa restauração em cascata
@@ -83,7 +95,7 @@ def restore_study(session: Session, study_id: int) -> tuple[Study, bool]:
         .filter(Study.id == study_id)
         .first()
     )
-    if study is None:
+    if study is None or (user_id is not None and study.user_id != user_id):
         raise HTTPException(status_code=404, detail="Estudo não encontrado.")
 
     parent_book_deleted = bool(study.chapter and study.chapter.book and study.chapter.book.deleted_at is not None)
@@ -107,24 +119,25 @@ def restore_study(session: Session, study_id: int) -> tuple[Study, bool]:
     return study, book_restored
 
 
-def permanent_delete_study(session: Session, study_id: int) -> None:
+def permanent_delete_study(session: Session, study_id: int, user_id: str | None = None) -> None:
     """Exclui definitivamente um estudo."""
-    study = get_or_404(session, Study, study_id, "Estudo")
+    if user_id is not None:
+        study = get_user_resource_or_404(session, Study, study_id, user_id, "Estudo")
+    else:
+        study = get_or_404(session, Study, study_id, "Estudo")
     session.delete(study)
     commit_changes(session)
 
 
-def get_trash_items(session: Session, threshold_days: int = 30) -> dict:
+def get_trash_items(session: Session, user_id: str | None = None, threshold_days: int = 30) -> dict:
     """Retorna itens atualmente na lixeira com contagem de dias restantes até o expurgo."""
     now = datetime.now(UTC)
 
     # 1. Livros na lixeira
-    books = (
-        session.query(Book)
-        .filter(Book.deleted_at.is_not(None))
-        .order_by(Book.deleted_at.desc())
-        .all()
-    )
+    books_query = session.query(Book).filter(Book.deleted_at.is_not(None))
+    if user_id is not None:
+        books_query = books_query.filter(Book.user_id == user_id)
+    books = books_query.order_by(Book.deleted_at.desc()).all()
 
     books_data = []
     for b in books:
@@ -148,13 +161,14 @@ def get_trash_items(session: Session, threshold_days: int = 30) -> dict:
         )
 
     # 2. Estudos descartados individualmente (onde o estudo possui deleted_at preenchido)
-    studies = (
+    studies_query = (
         session.query(Study)
         .options(joinedload(Study.chapter).joinedload(Chapter.book))
         .filter(Study.deleted_at.is_not(None))
-        .order_by(Study.deleted_at.desc())
-        .all()
     )
+    if user_id is not None:
+        studies_query = studies_query.filter(Study.user_id == user_id)
+    studies = studies_query.order_by(Study.deleted_at.desc()).all()
 
     studies_data = []
     for s in studies:
@@ -185,10 +199,14 @@ def get_trash_items(session: Session, threshold_days: int = 30) -> dict:
     }
 
 
-def empty_trash(session: Session) -> tuple[int, int]:
+def empty_trash(session: Session, user_id: str | None = None) -> tuple[int, int]:
     """Expurga definitivamente todos os itens na lixeira."""
     # 1. Livros descartados
-    trashed_books = session.query(Book).filter(Book.deleted_at.is_not(None)).all()
+    books_query = session.query(Book).filter(Book.deleted_at.is_not(None))
+    if user_id is not None:
+        books_query = books_query.filter(Book.user_id == user_id)
+    trashed_books = books_query.all()
+
     purged_books = len(trashed_books)
     cover_images = [b.cover_image for b in trashed_books if b.cover_image]
     for b in trashed_books:
@@ -199,7 +217,11 @@ def empty_trash(session: Session) -> tuple[int, int]:
         session.delete(b)
 
     # 2. Estudos restantes descartados individualmente
-    trashed_studies = session.query(Study).filter(Study.deleted_at.is_not(None)).all()
+    studies_query = session.query(Study).filter(Study.deleted_at.is_not(None))
+    if user_id is not None:
+        studies_query = studies_query.filter(Study.user_id == user_id)
+    trashed_studies = studies_query.all()
+
     purged_studies = len(trashed_studies)
     for s in trashed_studies:
         session.delete(s)
@@ -215,12 +237,16 @@ def empty_trash(session: Session) -> tuple[int, int]:
     return purged_books, purged_studies
 
 
-def purge_expired_trash(session: Session, threshold_days: int = 30) -> tuple[int, int]:
+def purge_expired_trash(session: Session, user_id: str | None = None, threshold_days: int = 30) -> tuple[int, int]:
     """Expurga registros na lixeira com mais de `threshold_days` dias."""
     cutoff = datetime.now(UTC) - timedelta(days=threshold_days)
 
     # 1. Livros expirados
-    expired_books = session.query(Book).filter(Book.deleted_at.is_not(None), Book.deleted_at < cutoff).all()
+    books_query = session.query(Book).filter(Book.deleted_at.is_not(None), Book.deleted_at < cutoff)
+    if user_id is not None:
+        books_query = books_query.filter(Book.user_id == user_id)
+    expired_books = books_query.all()
+
     purged_books = len(expired_books)
     cover_images = [b.cover_image for b in expired_books if b.cover_image]
     for b in expired_books:
@@ -231,11 +257,14 @@ def purge_expired_trash(session: Session, threshold_days: int = 30) -> tuple[int
         session.delete(b)
 
     # 2. Estudos expirados
-    expired_studies = (
+    studies_query = (
         session.query(Study)
         .filter(Study.deleted_at.is_not(None), Study.deleted_at < cutoff)
-        .all()
     )
+    if user_id is not None:
+        studies_query = studies_query.filter(Study.user_id == user_id)
+    expired_studies = studies_query.all()
+
     purged_studies = len(expired_studies)
     for s in expired_studies:
         session.delete(s)

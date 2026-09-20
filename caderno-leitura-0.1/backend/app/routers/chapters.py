@@ -1,18 +1,18 @@
 from fastapi import APIRouter, HTTPException, status
 from sqlalchemy import func, select
 
-from app.dependencies import DatabaseSession, Identifier
+from app.dependencies import CurrentUser, DatabaseSession, Identifier
 from app.models import Book, Chapter
 from app.schemas.chapter import ChapterCreate, ChapterMove, ChapterPatch, ChapterRead
 from app.schemas.common import SQLITE_MAX_INTEGER
-from app.services.persistence import check_optimistic_lock, commit_changes, get_or_404
+from app.services.persistence import check_optimistic_lock, commit_changes, get_user_resource_or_404
 
 router = APIRouter(prefix="/books/{book_id}/chapters", tags=["Capítulos"])
 
 
 @router.get("", response_model=list[ChapterRead], summary="Listar capítulos de um livro")
-def list_chapters(book_id: Identifier, session: DatabaseSession):
-    book = get_or_404(session, Book, book_id, "Livro")
+def list_chapters(book_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
+    book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
     if book.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Livro não encontrado.")
     return session.scalars(
@@ -21,8 +21,16 @@ def list_chapters(book_id: Identifier, session: DatabaseSession):
 
 
 @router.post("", response_model=ChapterRead, status_code=status.HTTP_201_CREATED, summary="Cadastrar capítulo")
-def create_chapter(book_id: Identifier, payload: ChapterCreate, session: DatabaseSession):
-    get_or_404(session, Book, book_id, "Livro")
+def create_chapter(
+    book_id: Identifier,
+    payload: ChapterCreate,
+    session: DatabaseSession,
+    current_user: CurrentUser,
+):
+    book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
+    if book.deleted_at is not None:
+        raise HTTPException(status_code=404, detail="Livro não encontrado.")
+
     position = payload.position
     if position is None:
         last_position = session.scalar(select(func.max(Chapter.position)).where(Chapter.book_id == book_id))
@@ -41,8 +49,9 @@ def update_chapter(
     chapter_id: Identifier,
     payload: ChapterPatch,
     session: DatabaseSession,
+    current_user: CurrentUser,
 ):
-    get_or_404(session, Book, book_id, "Livro")
+    get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
     chapter = session.scalar(
         select(Chapter).where(Chapter.id == chapter_id, Chapter.book_id == book_id)
     )
@@ -65,8 +74,9 @@ def move_chapter(
     chapter_id: Identifier,
     payload: ChapterMove,
     session: DatabaseSession,
+    current_user: CurrentUser,
 ):
-    get_or_404(session, Book, book_id, "Livro")
+    get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
     chapters = list(
         session.scalars(
             select(Chapter).where(Chapter.book_id == book_id).order_by(Chapter.position, Chapter.id)
@@ -93,4 +103,3 @@ def move_chapter(
 
     commit_changes(session)
     return chapters
-

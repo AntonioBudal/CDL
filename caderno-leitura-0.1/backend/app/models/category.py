@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, Column, ForeignKey, Index, Integer, Table, Text, text
+from sqlalchemy import CheckConstraint, Column, ForeignKey, Index, Integer, String, Table, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -28,9 +28,13 @@ class Category(Base):
         CheckConstraint("length(trim(name)) > 0", name="category_name_not_blank"),
         Index("ix_categories_parent_id", "parent_id"),
         Index("ix_categories_path", "path"),
+        Index("ix_categories_user_id", "user_id"),
     )
 
     id: Mapped[str] = mapped_column(Text, primary_key=True)
+    user_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=True, default=None
+    )
     name: Mapped[str] = mapped_column(Text, nullable=False)
     parent_id: Mapped[str | None] = mapped_column(
         Text, ForeignKey("categories.id", ondelete="RESTRICT"), nullable=True, default=None

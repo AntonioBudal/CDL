@@ -7,17 +7,20 @@ from fastapi import HTTPException
 from sqlalchemy import select
 
 from app.models import Book, CanvasFrame, Study, StudyCanvasNode
-from app.schemas.study_canvas_node import CanvasBatchUpdateRequest, CanvasNodeItem, CanvasNodePatchRequest
+from app.schemas.study_canvas_node import CanvasBatchUpdateRequest, CanvasNodePatchRequest
 from app.schemas.study_grouping import CanvasFrameCreate, CanvasFrameUpdate
-from app.services.persistence import commit_changes, get_or_404
+from app.services.persistence import commit_changes, get_or_404, get_user_resource_or_404
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
 
-def get_book_canvas_nodes(session: Session, book_id: int) -> list[StudyCanvasNode]:
+def get_book_canvas_nodes(session: Session, book_id: int, user_id: str | None = None) -> list[StudyCanvasNode]:
     """Retorna todas as coordenadas espaciais de estudos associados a um livro."""
-    get_or_404(session, Book, book_id, "Livro")
+    if user_id:
+        get_user_resource_or_404(session, Book, book_id, user_id, "Livro")
+    else:
+        get_or_404(session, Book, book_id, "Livro")
 
     stmt = (
         select(StudyCanvasNode)
@@ -26,8 +29,11 @@ def get_book_canvas_nodes(session: Session, book_id: int) -> list[StudyCanvasNod
             StudyCanvasNode.book_id == book_id,
             Study.deleted_at.is_(None),
         )
-        .order_by(StudyCanvasNode.z_index.asc(), StudyCanvasNode.id.asc())
     )
+    if user_id:
+        stmt = stmt.where(StudyCanvasNode.user_id == user_id)
+
+    stmt = stmt.order_by(StudyCanvasNode.z_index.asc(), StudyCanvasNode.id.asc())
     return list(session.scalars(stmt).all())
 
 
@@ -35,20 +41,32 @@ def batch_upsert_canvas_nodes(
     session: Session,
     book_id: int,
     payload: CanvasBatchUpdateRequest,
+    user_id: str | None = None,
 ) -> list[StudyCanvasNode]:
     """Atualiza ou insere em lote coordenadas espaciais de estudos com isolamento atômico."""
-    get_or_404(session, Book, book_id, "Livro")
+    if user_id:
+        book = get_user_resource_or_404(session, Book, book_id, user_id, "Livro")
+    else:
+        book = get_or_404(session, Book, book_id, "Livro")
+
+    effective_user_id = user_id or book.user_id
 
     # Mapear os nós já existentes no banco para este livro
     stmt_existing = select(StudyCanvasNode).where(StudyCanvasNode.book_id == book_id)
+    if user_id:
+        stmt_existing = stmt_existing.where(StudyCanvasNode.user_id == user_id)
+
     existing_map = {node.study_id: node for node in session.scalars(stmt_existing).all()}
 
     updated_nodes: list[StudyCanvasNode] = []
 
     for item in payload.nodes:
-        study = session.get(Study, item.study_id)
-        if study is None or study.deleted_at is not None:
-            raise HTTPException(status_code=404, detail=f"Estudo #{item.study_id} não encontrado ou está na lixeira.")
+        if user_id:
+            study = get_user_resource_or_404(session, Study, item.study_id, user_id, "Estudo")
+        else:
+            study = session.get(Study, item.study_id)
+            if study is None or study.deleted_at is not None:
+                raise HTTPException(status_code=404, detail=f"Estudo #{item.study_id} não encontrado ou está na lixeira.")
 
         # Validar pertencimento estrito à obra
         if study.chapter is None or study.chapter.book_id != book_id:
@@ -70,6 +88,7 @@ def batch_upsert_canvas_nodes(
                 node.color_tag = item.color_tag
         else:
             node = StudyCanvasNode(
+                user_id=effective_user_id,
                 study_id=item.study_id,
                 book_id=book_id,
                 pos_x=item.pos_x,
@@ -87,16 +106,21 @@ def batch_upsert_canvas_nodes(
     commit_changes(session)
 
     # Retorna todos os nós válidos do livro
-    return get_book_canvas_nodes(session, book_id)
+    return get_book_canvas_nodes(session, book_id, user_id=user_id)
 
 
 def patch_study_canvas_node(
     session: Session,
     study_id: int,
     payload: CanvasNodePatchRequest,
+    user_id: str | None = None,
 ) -> StudyCanvasNode:
     """Atualiza individualmente as coordenadas ou aparência de um estudo no Canvas."""
-    study = get_or_404(session, Study, study_id, "Estudo")
+    if user_id:
+        study = get_user_resource_or_404(session, Study, study_id, user_id, "Estudo")
+    else:
+        study = get_or_404(session, Study, study_id, "Estudo")
+
     if study.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Estudo está na lixeira.")
 
@@ -104,15 +128,20 @@ def patch_study_canvas_node(
         raise HTTPException(status_code=400, detail="Estudo sem capítulo associado.")
 
     book_id = study.chapter.book_id
+    effective_user_id = user_id or study.user_id
 
     stmt = select(StudyCanvasNode).where(
         StudyCanvasNode.study_id == study_id,
         StudyCanvasNode.book_id == book_id,
     )
+    if user_id:
+        stmt = stmt.where(StudyCanvasNode.user_id == user_id)
+
     node = session.scalars(stmt).first()
 
     if node is None:
         node = StudyCanvasNode(
+            user_id=effective_user_id,
             study_id=study_id,
             book_id=book_id,
             pos_x=payload.pos_x if payload.pos_x is not None else 0.0,
@@ -141,15 +170,18 @@ def patch_study_canvas_node(
     return node
 
 
-def get_book_canvas_frames(session: Session, book_id: int) -> list[CanvasFrame]:
+def get_book_canvas_frames(session: Session, book_id: int, user_id: str | None = None) -> list[CanvasFrame]:
     """Retorna todas as molduras espaciais associadas ao Canvas de um livro."""
-    get_or_404(session, Book, book_id, "Livro")
+    if user_id:
+        get_user_resource_or_404(session, Book, book_id, user_id, "Livro")
+    else:
+        get_or_404(session, Book, book_id, "Livro")
 
-    stmt = (
-        select(CanvasFrame)
-        .where(CanvasFrame.book_id == book_id)
-        .order_by(CanvasFrame.created_at.asc(), CanvasFrame.id.asc())
-    )
+    stmt = select(CanvasFrame).where(CanvasFrame.book_id == book_id)
+    if user_id:
+        stmt = stmt.where(CanvasFrame.user_id == user_id)
+
+    stmt = stmt.order_by(CanvasFrame.created_at.asc(), CanvasFrame.id.asc())
     return list(session.scalars(stmt).all())
 
 
@@ -157,11 +189,18 @@ def create_canvas_frame(
     session: Session,
     book_id: int,
     payload: CanvasFrameCreate,
+    user_id: str | None = None,
 ) -> CanvasFrame:
     """Cria uma nova moldura manual delimitadora no Canvas do livro."""
-    get_or_404(session, Book, book_id, "Livro")
+    if user_id:
+        book = get_user_resource_or_404(session, Book, book_id, user_id, "Livro")
+    else:
+        book = get_or_404(session, Book, book_id, "Livro")
+
+    effective_user_id = user_id or book.user_id
 
     frame = CanvasFrame(
+        user_id=effective_user_id,
         book_id=book_id,
         title=payload.title,
         color=payload.color,
@@ -179,9 +218,13 @@ def update_canvas_frame(
     session: Session,
     frame_id: int,
     payload: CanvasFrameUpdate,
+    user_id: str | None = None,
 ) -> CanvasFrame:
-    """Atualiza individualmente o título, cor ou dimensões de uma moldura."""
-    frame = get_or_404(session, CanvasFrame, frame_id, "Moldura")
+    """Atualiza título, cor ou dimensões de uma moldura."""
+    if user_id:
+        frame = get_user_resource_or_404(session, CanvasFrame, frame_id, user_id, "Moldura")
+    else:
+        frame = get_or_404(session, CanvasFrame, frame_id, "Moldura")
 
     if payload.title is not None:
         frame.title = payload.title
@@ -200,9 +243,12 @@ def update_canvas_frame(
     return frame
 
 
-def delete_canvas_frame(session: Session, frame_id: int) -> None:
-    """Remove individualmente uma moldura manual do Canvas."""
-    frame = get_or_404(session, CanvasFrame, frame_id, "Moldura")
+def delete_canvas_frame(session: Session, frame_id: int, user_id: str | None = None) -> None:
+    """Remove permanentemente uma moldura manual do Canvas."""
+    if user_id:
+        frame = get_user_resource_or_404(session, CanvasFrame, frame_id, user_id, "Moldura")
+    else:
+        frame = get_or_404(session, CanvasFrame, frame_id, "Moldura")
+
     session.delete(frame)
     commit_changes(session)
-

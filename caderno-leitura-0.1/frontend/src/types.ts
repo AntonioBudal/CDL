@@ -1,12 +1,23 @@
+export interface UserRead {
+  id: string
+  username: string
+  display_name: string
+  email?: string | null
+  status: string
+  created_at: string
+}
+
 export interface Category {
   id: string
   name: string
   parent_id: string | null
   path: string
+  user_id?: string | null
 }
 
 export interface Book {
   id: number
+  user_id?: string
   title: string
   author: string | null
   subtitle?: string | null

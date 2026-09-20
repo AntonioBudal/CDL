@@ -49,10 +49,10 @@ def _build_relation_item(relation: StudyRelation, connected_study: Study) -> Stu
     )
 
 
-def get_study_relations(session: Session, study_id: int) -> StudyRelationsResponse:
+def get_study_relations(session: Session, study_id: int, user_id: str | None = None) -> StudyRelationsResponse:
     """Retorna todas as relações de saída e backlinks recebidos de um estudo ativo."""
     study = session.get(Study, study_id)
-    if study is None or study.deleted_at is not None:
+    if study is None or study.deleted_at is not None or (user_id and study.user_id != user_id):
         raise HTTPException(status_code=404, detail=f"Estudo #{study_id} não encontrado ou está na lixeira.")
 
     # Relações de saída (onde o estudo atual é a origem)
@@ -66,8 +66,11 @@ def get_study_relations(session: Session, study_id: int) -> StudyRelationsRespon
             StudyRelation.source_study_id == study_id,
             Study.deleted_at.is_(None),
         )
-        .order_by(StudyRelation.created_at.desc())
     )
+    if user_id:
+        stmt_out = stmt_out.where(StudyRelation.user_id == user_id)
+
+    stmt_out = stmt_out.order_by(StudyRelation.created_at.desc())
     outbound_relations = session.scalars(stmt_out).all()
     outbound_items = [
         _build_relation_item(rel, rel.target_study)
@@ -86,8 +89,11 @@ def get_study_relations(session: Session, study_id: int) -> StudyRelationsRespon
             StudyRelation.target_study_id == study_id,
             Study.deleted_at.is_(None),
         )
-        .order_by(StudyRelation.created_at.desc())
     )
+    if user_id:
+        stmt_in = stmt_in.where(StudyRelation.user_id == user_id)
+
+    stmt_in = stmt_in.order_by(StudyRelation.created_at.desc())
     inbound_relations = session.scalars(stmt_in).all()
     inbound_items = [
         _build_relation_item(rel, rel.source_study)
@@ -106,8 +112,9 @@ def create_study_relation(
     session: Session,
     source_study_id: int,
     payload: StudyRelationCreate,
+    user_id: str | None = None,
 ) -> StudyRelationItem:
-    """Cria uma nova relação direcionada entre dois estudos."""
+    """Cria uma nova relação direcionada entre dois estudos validando titularidade."""
     if source_study_id == payload.target_study_id:
         raise HTTPException(
             status_code=400,
@@ -115,7 +122,7 @@ def create_study_relation(
         )
 
     source_study = session.get(Study, source_study_id)
-    if source_study is None or source_study.deleted_at is not None:
+    if source_study is None or source_study.deleted_at is not None or (user_id and source_study.user_id != user_id):
         raise HTTPException(
             status_code=404,
             detail=f"Estudo de origem #{source_study_id} não encontrado ou está na lixeira.",
@@ -127,7 +134,7 @@ def create_study_relation(
         .where(Study.id == payload.target_study_id, Study.deleted_at.is_(None))
     )
     target_study = session.scalars(stmt_target).first()
-    if target_study is None:
+    if target_study is None or (user_id and target_study.user_id != user_id):
         raise HTTPException(
             status_code=404,
             detail=f"Estudo de destino #{payload.target_study_id} não encontrado ou está na lixeira.",
@@ -145,7 +152,9 @@ def create_study_relation(
             detail="Esta relação semântica já existe entre os dois estudos.",
         )
 
+    effective_user_id = user_id or source_study.user_id
     relation = StudyRelation(
+        user_id=effective_user_id,
         source_study_id=source_study_id,
         target_study_id=payload.target_study_id,
         relation_type=payload.relation_type,
@@ -162,6 +171,7 @@ def update_study_relation(
     session: Session,
     relation_id: int,
     payload: StudyRelationUpdate,
+    user_id: str | None = None,
 ) -> StudyRelationItem:
     """Atualiza a anotação descritiva ou o tipo de uma relação existente."""
     stmt = (
@@ -169,6 +179,9 @@ def update_study_relation(
         .options(selectinload(StudyRelation.target_study).selectinload(Study.chapter).selectinload(Chapter.book))
         .where(StudyRelation.id == relation_id)
     )
+    if user_id:
+        stmt = stmt.where(StudyRelation.user_id == user_id)
+
     relation = session.scalars(stmt).first()
     if relation is None:
         raise HTTPException(status_code=404, detail="Relação não encontrada.")
@@ -196,10 +209,10 @@ def update_study_relation(
     return _build_relation_item(relation, relation.target_study)
 
 
-def delete_study_relation(session: Session, relation_id: int) -> None:
+def delete_study_relation(session: Session, relation_id: int, user_id: str | None = None) -> None:
     """Remove individualmente uma relação semântica."""
     relation = session.get(StudyRelation, relation_id)
-    if relation is None:
+    if relation is None or (user_id and relation.user_id != user_id):
         raise HTTPException(status_code=404, detail="Relação não encontrada.")
 
     session.delete(relation)
@@ -211,8 +224,9 @@ def search_candidate_studies(
     exclude_study_id: int,
     query: str = "",
     limit: int = 20,
+    user_id: str | None = None,
 ) -> list[CandidateStudyItem]:
-    """Busca incremental de estudos candidatos em todo o acervo para vinculação rápida."""
+    """Busca incremental de estudos candidatos em todo o acervo do usuário ativo."""
     clean_limit = min(max(1, limit), 50)
 
     stmt = (
@@ -225,6 +239,8 @@ def search_candidate_studies(
             Study.id != exclude_study_id,
         )
     )
+    if user_id:
+        stmt = stmt.where(Study.user_id == user_id)
 
     clean_query = query.strip()
     if clean_query:
@@ -258,9 +274,8 @@ def search_candidate_studies(
     return items
 
 
-def get_book_canvas_relations(session: Session, book_id: int) -> list[BookCanvasRelationItem]:
+def get_book_canvas_relations(session: Session, book_id: int, user_id: str | None = None) -> list[BookCanvasRelationItem]:
     """Retorna todas as relações semânticas ativas entre estudos de um determinado livro."""
-    # Obter os IDs de todos os estudos ativos do livro
     stmt_study_ids = (
         select(Study.id)
         .join(Chapter, Study.chapter_id == Chapter.id)
@@ -269,6 +284,9 @@ def get_book_canvas_relations(session: Session, book_id: int) -> list[BookCanvas
             Study.deleted_at.is_(None),
         )
     )
+    if user_id:
+        stmt_study_ids = stmt_study_ids.where(Study.user_id == user_id)
+
     book_study_ids = set(session.scalars(stmt_study_ids).all())
 
     if not book_study_ids:
@@ -278,6 +296,9 @@ def get_book_canvas_relations(session: Session, book_id: int) -> list[BookCanvas
         StudyRelation.source_study_id.in_(book_study_ids),
         StudyRelation.target_study_id.in_(book_study_ids),
     )
+    if user_id:
+        stmt_relations = stmt_relations.where(StudyRelation.user_id == user_id)
+
     relations = session.scalars(stmt_relations).all()
 
     return [

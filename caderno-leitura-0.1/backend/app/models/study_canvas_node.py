@@ -6,12 +6,14 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Float, ForeignKey, Index, Integer, String, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.core.config import DEFAULT_OWNER_ID
 from app.db.base import Base
 from app.db.types import UTCDateTime, utc_now
 
 if TYPE_CHECKING:
     from app.models.book import Book
     from app.models.study import Study
+    from app.models.user import User
 
 
 class StudyCanvasNode(Base):
@@ -19,9 +21,17 @@ class StudyCanvasNode(Base):
     __table_args__ = (
         UniqueConstraint("study_id", "book_id", name="uq_canvas_node_study_book"),
         Index("ix_canvas_nodes_book_study", "book_id", "study_id"),
+        Index("ix_canvas_nodes_user_id", "user_id"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(
+        String(36),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        default=DEFAULT_OWNER_ID,
+        server_default=text(f"'{DEFAULT_OWNER_ID}'"),
+        nullable=False,
+    )
     study_id: Mapped[int] = mapped_column(
         ForeignKey("studies.id", ondelete="CASCADE"),
         nullable=False,

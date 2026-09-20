@@ -149,6 +149,7 @@ class SearchService:
         book_id: int | None = None,
         category_id: str | None = None,
         limit: int = 20,
+        user_id: str | None = None,
     ) -> SearchResponse:
         clean_q = query.strip()
         if len(clean_q) < 2:
@@ -183,6 +184,9 @@ class SearchService:
                 Book.deleted_at.is_(None),
             )
         )
+
+        if user_id is not None:
+            base_stmt = base_stmt.where(Study.user_id == user_id, Book.user_id == user_id)
 
         if book_id is not None:
             base_stmt = base_stmt.where(Book.id == book_id)
@@ -234,7 +238,7 @@ class SearchService:
         # Registra no histórico se houve resultados
         if len(results) > 0:
             try:
-                SearchService.record_search_query(session, clean_q)
+                SearchService.record_search_query(session, clean_q, user_id=user_id)
             except Exception:
                 # Falha no histórico não pode quebrar a busca
                 session.rollback()
@@ -248,30 +252,35 @@ class SearchService:
         )
 
     @staticmethod
-    def record_search_query(session: Session, query: str) -> SearchHistory:
-        """Registra ou atualiza um termo no histórico com retenção máxima de 10 registros."""
+    def record_search_query(session: Session, query: str, user_id: str | None = None) -> SearchHistory:
+        """Registra ou atualiza um termo no histórico com retenção máxima de 10 registros por usuário."""
         clean_q = query.strip()
         if not clean_q:
             raise ValueError("O termo de busca não pode ser vazio.")
 
         now = datetime.now(timezone.utc)
-        history_item = session.execute(
-            select(SearchHistory).where(SearchHistory.query == clean_q)
-        ).scalar_one_or_none()
+        stmt = select(SearchHistory).where(SearchHistory.query == clean_q)
+        if user_id is not None:
+            stmt = stmt.where(SearchHistory.user_id == user_id)
+
+        history_item = session.execute(stmt).scalar_one_or_none()
 
         if history_item is not None:
             history_item.updated_at = now
         else:
-            history_item = SearchHistory(query=clean_q, created_at=now, updated_at=now)
+            history_item = SearchHistory(query=clean_q, user_id=user_id, created_at=now, updated_at=now)
             session.add(history_item)
 
         session.commit()
         session.refresh(history_item)
 
-        # Política de retenção de 10 itens
-        all_ids = session.execute(
-            select(SearchHistory.id).order_by(SearchHistory.updated_at.desc())
-        ).scalars().all()
+        # Política de retenção de 10 itens por usuário
+        stmt_all = select(SearchHistory.id)
+        if user_id is not None:
+            stmt_all = stmt_all.where(SearchHistory.user_id == user_id)
+        stmt_all = stmt_all.order_by(SearchHistory.updated_at.desc())
+
+        all_ids = session.execute(stmt_all).scalars().all()
 
         if len(all_ids) > 10:
             to_delete_ids = all_ids[10:]
@@ -283,9 +292,12 @@ class SearchService:
         return history_item
 
     @staticmethod
-    def get_recent_searches(session: Session, limit: int = 10) -> SearchHistoryResponse:
-        """Retorna as buscas mais recentes em ordem cronológica decrescente."""
-        stmt = select(SearchHistory).order_by(SearchHistory.updated_at.desc()).limit(limit)
+    def get_recent_searches(session: Session, limit: int = 10, user_id: str | None = None) -> SearchHistoryResponse:
+        """Retorna as buscas mais recentes em ordem cronológica decrescente do usuário ativo."""
+        stmt = select(SearchHistory)
+        if user_id is not None:
+            stmt = stmt.where(SearchHistory.user_id == user_id)
+        stmt = stmt.order_by(SearchHistory.updated_at.desc()).limit(limit)
         items = session.execute(stmt).scalars().all()
         return SearchHistoryResponse(
             items=[
@@ -300,18 +312,21 @@ class SearchService:
         )
 
     @staticmethod
-    def delete_search_query(session: Session, history_id: int) -> bool:
+    def delete_search_query(session: Session, history_id: int, user_id: str | None = None) -> bool:
         """Remove um item específico do histórico."""
         item = session.get(SearchHistory, history_id)
-        if item is None:
+        if item is None or (user_id is not None and item.user_id != user_id):
             return False
         session.delete(item)
         session.commit()
         return True
 
     @staticmethod
-    def clear_all_searches(session: Session) -> int:
-        """Esvazia todo o histórico de buscas."""
-        result = session.execute(delete(SearchHistory))
+    def clear_all_searches(session: Session, user_id: str | None = None) -> int:
+        """Esvazia todo o histórico de buscas do usuário ativo."""
+        stmt = delete(SearchHistory)
+        if user_id is not None:
+            stmt = stmt.where(SearchHistory.user_id == user_id)
+        result = session.execute(stmt)
         session.commit()
         return result.rowcount or 0

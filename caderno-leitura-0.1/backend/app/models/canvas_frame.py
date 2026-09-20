@@ -6,11 +6,13 @@ from typing import TYPE_CHECKING
 from sqlalchemy import CheckConstraint, Float, ForeignKey, Index, String, text
 from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 
+from app.core.config import DEFAULT_OWNER_ID
 from app.db.base import Base
 from app.db.types import UTCDateTime, utc_now
 
 if TYPE_CHECKING:
     from app.models.book import Book
+    from app.models.user import User
 
 
 class CanvasFrame(Base):
@@ -18,9 +20,17 @@ class CanvasFrame(Base):
     __table_args__ = (
         CheckConstraint("width >= 100.0 AND height >= 80.0", name="ck_canvas_frames_dimensions"),
         Index("ix_canvas_frames_book_id", "book_id"),
+        Index("ix_canvas_frames_user_id", "user_id"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(
+        String(36),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        default=DEFAULT_OWNER_ID,
+        server_default=text(f"'{DEFAULT_OWNER_ID}'"),
+        nullable=False,
+    )
     book_id: Mapped[int] = mapped_column(
         ForeignKey("books.id", ondelete="CASCADE"),
         nullable=False,

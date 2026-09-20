@@ -56,27 +56,35 @@ def calculate_streak(active_dates: set[date], today: date) -> int:
 def get_dashboard_data(
     session: Session,
     *,
+    user_id: str | None = None,
     tz_offset: int = 0,
     days: int = 365,
     filter_date: str | None = None,
     limit: int = 30,
 ) -> DashboardResponse:
     # 1. Contagem de Livros e Estudos Ativos
-    total_books = session.scalar(
-        select(func.count(Book.id)).where(Book.deleted_at.is_(None))
-    ) or 0
+    books_count_stmt = select(func.count(Book.id)).where(Book.deleted_at.is_(None))
+    if user_id is not None:
+        books_count_stmt = books_count_stmt.where(Book.user_id == user_id)
+    total_books = session.scalar(books_count_stmt) or 0
 
-    total_studies = session.scalar(
+    studies_count_stmt = (
         select(func.count(Study.id))
         .join(Chapter, Study.chapter_id == Chapter.id)
         .join(Book, Chapter.book_id == Book.id)
         .where(Study.deleted_at.is_(None), Book.deleted_at.is_(None))
-    ) or 0
+    )
+    if user_id is not None:
+        studies_count_stmt = studies_count_stmt.where(Study.user_id == user_id)
+    total_studies = session.scalar(studies_count_stmt) or 0
 
     avg_studies = round(total_studies / total_books, 1) if total_books > 0 else 0.0
 
-    # 1.1 Contagem de Categorias
-    total_categories = session.scalar(select(func.count(Category.id))) or 0
+    # 1.1 Contagem de Categorias (globais ou do usuário)
+    categories_count_stmt = select(func.count(Category.id))
+    if user_id is not None:
+        categories_count_stmt = categories_count_stmt.where((Category.user_id.is_(None)) | (Category.user_id == user_id))
+    total_categories = session.scalar(categories_count_stmt) or 0
 
     # 1.2 Aliases para Relações e Integridade de Soft Delete
     SourceStudy = aliased(Study)
@@ -87,7 +95,7 @@ def get_dashboard_data(
     TargetBook = aliased(Book)
 
     # 1.3 Total de Relações Semânticas Ativas (ambos os estudos e livros não excluídos)
-    total_relations = session.scalar(
+    relations_count_stmt = (
         select(func.count(StudyRelation.id))
         .join(SourceStudy, StudyRelation.source_study_id == SourceStudy.id)
         .join(SourceChapter, SourceStudy.chapter_id == SourceChapter.id)
@@ -101,10 +109,13 @@ def get_dashboard_data(
             TargetStudy.deleted_at.is_(None),
             TargetBook.deleted_at.is_(None),
         )
-    ) or 0
+    )
+    if user_id is not None:
+        relations_count_stmt = relations_count_stmt.where(StudyRelation.user_id == user_id)
+    total_relations = session.scalar(relations_count_stmt) or 0
 
     # 1.4 Estudos Órfãos (sem conexões ativas)
-    has_active_relation = exists(
+    has_active_relation_query = (
         select(1)
         .select_from(StudyRelation)
         .join(SourceStudy, StudyRelation.source_study_id == SourceStudy.id)
@@ -121,8 +132,11 @@ def get_dashboard_data(
             TargetBook.deleted_at.is_(None),
         )
     )
+    if user_id is not None:
+        has_active_relation_query = has_active_relation_query.where(StudyRelation.user_id == user_id)
+    has_active_relation = exists(has_active_relation_query)
 
-    unlinked_studies_count = session.scalar(
+    unlinked_count_stmt = (
         select(func.count(Study.id))
         .join(Chapter, Study.chapter_id == Chapter.id)
         .join(Book, Chapter.book_id == Book.id)
@@ -131,7 +145,10 @@ def get_dashboard_data(
             Book.deleted_at.is_(None),
             ~has_active_relation,
         )
-    ) or 0
+    )
+    if user_id is not None:
+        unlinked_count_stmt = unlinked_count_stmt.where(Study.user_id == user_id)
+    unlinked_studies_count = session.scalar(unlinked_count_stmt) or 0
 
     # 1.5 Amostra de Estudos Órfãos para Enriquecimento (até 10)
     unlinked_stmt = (
@@ -152,9 +169,10 @@ def get_dashboard_data(
             Book.deleted_at.is_(None),
             ~has_active_relation,
         )
-        .order_by(Study.updated_at.desc())
-        .limit(10)
     )
+    if user_id is not None:
+        unlinked_stmt = unlinked_stmt.where(Study.user_id == user_id)
+    unlinked_stmt = unlinked_stmt.order_by(Study.updated_at.desc()).limit(10)
     unlinked_studies = [
         UnlinkedStudyItem(
             study_id=row.study_id,
@@ -187,9 +205,10 @@ def get_dashboard_data(
             Study.deleted_at.is_(None),
             Book.deleted_at.is_(None),
         )
-        .order_by(Study.updated_at.desc())
-        .limit(10)
     )
+    if user_id is not None:
+        recent_studies_stmt = recent_studies_stmt.where(Study.user_id == user_id)
+    recent_studies_stmt = recent_studies_stmt.order_by(Study.updated_at.desc()).limit(10)
     recent_studies = [
         RecentStudyActivityItem(
             study_id=row.study_id,
@@ -232,9 +251,10 @@ def get_dashboard_data(
             TargetStudy.deleted_at.is_(None),
             TargetBook.deleted_at.is_(None),
         )
-        .order_by(StudyRelation.created_at.desc())
-        .limit(10)
     )
+    if user_id is not None:
+        latest_relations_stmt = latest_relations_stmt.where(StudyRelation.user_id == user_id)
+    latest_relations_stmt = latest_relations_stmt.order_by(StudyRelation.created_at.desc()).limit(10)
     latest_relations = [
         RecentRelationItem(
             relation_id=row.relation_id,
@@ -262,6 +282,8 @@ def get_dashboard_data(
 
     # 2.1 Livros criados
     books_stmt = select(Book.id, Book.title, Book.created_at).where(Book.deleted_at.is_(None))
+    if user_id is not None:
+        books_stmt = books_stmt.where(Book.user_id == user_id)
     for book_id, book_title, created_at in session.execute(books_stmt):
         ts = created_at if created_at.tzinfo is not None else created_at.replace(tzinfo=UTC)
         all_events.append(
@@ -295,6 +317,8 @@ def get_dashboard_data(
         .join(Book, Chapter.book_id == Book.id)
         .where(Study.deleted_at.is_(None), Book.deleted_at.is_(None))
     )
+    if user_id is not None:
+        studies_stmt = studies_stmt.where(Study.user_id == user_id)
     for row in session.execute(studies_stmt):
         c_ts = row.created_at if row.created_at.tzinfo is not None else row.created_at.replace(tzinfo=UTC)
         all_events.append(

@@ -3,7 +3,7 @@ import type {
   TrashSummary, TrashEmptyResponse, BookCanvasResponse, CanvasBatchUpdatePayload, CanvasBatchUpdateItem, StudyCanvasNode,
   StudyRelationsResponse, StudyRelationItem, CreateStudyRelationPayload, UpdateStudyRelationPayload, CandidateStudyItem, BookCanvasRelationItem,
   StudyStatusUpdatePayload, StudyStatusResponse, CanvasFrameItem, CreateCanvasFramePayload, UpdateCanvasFramePayload,
-  SearchResponse, SearchHistoryResponse,
+  SearchResponse, SearchHistoryResponse, UserRead,
 } from '../types.ts'
 
 export interface HealthResponse {
@@ -35,6 +35,16 @@ function detailMessage(data: unknown, status: number): string {
     : 'Não foi possível concluir a operação. Confira os dados e tente novamente.'
 }
 
+let currentApiUserId: string | null = null
+
+export function setApiUserId(id: string | null): void {
+  currentApiUserId = id
+}
+
+export function getApiUserId(): string | null {
+  return currentApiUserId
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   let response: Response
   const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData
@@ -43,6 +53,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   }
   if (options.body && !isFormData) {
     headers['Content-Type'] = 'application/json'
+  }
+  if (currentApiUserId) {
+    headers['X-User-Id'] = currentApiUserId
   }
 
   try {
@@ -199,6 +212,20 @@ export const api = {
     request<{ success: boolean; message: string }>(`/canvas/frames/${frameId}`, {
       method: 'DELETE',
     }),
+
+  // Categorias (F01 CRUD)
+  createCategory: (payload: { id?: string; name: string; parent_id?: string | null }) =>
+    request<Category>('/categories', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  deleteCategory: (id: string) =>
+    request<void>(`/categories/${id}`, {
+      method: 'DELETE',
+    }),
+
+  // Usuário e Autenticação (F01)
+  getMe: (signal?: AbortSignal) => request<UserRead>('/auth/me', { signal }),
 }
 
 export function buildExportQuery(config: ExportConfig): string {
@@ -222,7 +249,12 @@ export function getExportStudyUrl(id: number, config: ExportConfig): string {
 }
 
 export async function downloadExportFile(url: string, defaultFilename: string): Promise<{ filename: string; blob: Blob }> {
+  const headers: Record<string, string> = {}
+  if (currentApiUserId) {
+    headers['X-User-Id'] = currentApiUserId
+  }
   const response = await fetch(url, {
+    headers,
     cache: 'no-store',
   })
   if (!response.ok) {

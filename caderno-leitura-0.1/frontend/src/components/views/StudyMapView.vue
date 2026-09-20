@@ -173,6 +173,7 @@ const mapComputedConnections = computed<ComputedConnection[]>(() => {
         <span class="map-badge">{{ studies.length }} nós</span>
       </div>
 
+      <div class="map-canvas-viewport">
         <CanvasAcceleratedLayer
           v-if="isAcceleratedMode"
           :connections="mapComputedConnections"
@@ -311,6 +312,7 @@ const mapComputedConnections = computed<ComputedConnection[]>(() => {
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <style scoped>
@@ -361,6 +363,7 @@ const mapComputedConnections = computed<ComputedConnection[]>(() => {
 .map-canvas-viewport {
   position: relative;
   width: 100%;
+  height: 520px;
   min-height: 480px;
   background: radial-gradient(circle at center, var(--color-surface) 0%, color-mix(in srgb, var(--color-surface-elevated) 80%, transparent) 100%);
   border-radius: 6px;
@@ -429,7 +432,9 @@ const mapComputedConnections = computed<ComputedConnection[]>(() => {
   position: absolute;
   transform: translate(-50%, -50%);
   pointer-events: auto;
-  width: 190px;
+  width: 180px;
+  max-width: calc(100% - 24px);
+  box-sizing: border-box;
   background: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-control, 6px);
@@ -437,6 +442,8 @@ const mapComputedConnections = computed<ComputedConnection[]>(() => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   cursor: pointer;
   transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  color: var(--color-text);
+  overflow: hidden;
 }
 
 .map-node-card:hover {
@@ -481,7 +488,7 @@ const mapComputedConnections = computed<ComputedConnection[]>(() => {
 }
 
 .node-card-link {
-  color: var(--color-inverse-bg, #0f172a);
+  color: var(--color-text);
   text-decoration: none;
 }
 

@@ -3,6 +3,12 @@ from pathlib import Path
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
 
+# Identidade canônica do proprietário soberano da versão multiusuário
+DEFAULT_OWNER_ID: str = "00000000-0000-0000-0000-000000000001"
+DEFAULT_OWNER_USERNAME: str = "proprietario"
+DEFAULT_OWNER_DISPLAY_NAME: str = "Proprietário do Caderno"
+
+
 
 def get_frontend_dist_path() -> Path:
     """Retorna o caminho do build do frontend independente da pasta atual."""

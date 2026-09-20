@@ -15,47 +15,47 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="search-history-list w-full py-2">
-    <div class="flex items-center justify-between px-1 mb-2">
-      <span class="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-        <Icon name="search" :size="13" class="text-muted-foreground/70" />
+  <div class="search-history-list">
+    <div class="history-header">
+      <span class="history-header-title">
+        <Icon name="search" :size="13" class="history-icon" />
         Pesquisas Recentes
       </span>
       <button
         v-if="items.length > 0"
         type="button"
-        class="text-xs text-muted-foreground hover:text-destructive transition-colors px-2 py-1 rounded hover:bg-destructive/10 cursor-pointer min-h-[36px] flex items-center"
+        class="clear-history-btn"
         @click="emit('clear')"
       >
         Limpar histórico
       </button>
     </div>
 
-    <div v-if="isLoading" class="py-4 text-center text-xs text-muted-foreground">
+    <div v-if="isLoading" class="history-loading">
       Carregando histórico...
     </div>
 
-    <div v-else-if="items.length === 0" class="py-6 text-center text-xs text-muted-foreground">
+    <div v-else-if="items.length === 0" class="history-empty">
       Nenhuma pesquisa recente registrada.
     </div>
 
-    <div v-else class="space-y-1">
+    <div v-else class="history-items-container">
       <div
         v-for="item in items"
         :key="item.id"
-        class="group flex items-center justify-between gap-2 px-3 py-2 rounded-md hover:bg-accent/10 border border-transparent hover:border-border/40 transition-all cursor-pointer"
+        class="history-item"
         @click="emit('select', item.query)"
       >
-        <div class="flex items-center gap-2.5 min-w-0">
-          <Icon name="search" :size="14" class="text-muted-foreground/60 shrink-0 group-hover:text-accent transition-colors" />
-          <span class="text-sm text-foreground truncate font-medium group-hover:text-accent transition-colors">
+        <div class="history-item-left">
+          <Icon name="search" :size="14" class="history-item-icon" />
+          <span class="history-query-text">
             {{ item.query }}
           </span>
         </div>
 
         <button
           type="button"
-          class="shrink-0 p-1.5 rounded text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 opacity-70 group-hover:opacity-100 transition-all min-w-[32px] min-h-[32px] flex items-center justify-center cursor-pointer"
+          class="remove-history-btn"
           :aria-label="`Remover pesquisa '${item.query}' do histórico`"
           @click.stop="emit('remove', item.id)"
         >
@@ -65,3 +65,132 @@ const emit = defineEmits<{
     </div>
   </div>
 </template>
+
+<style scoped>
+.search-history-list {
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.history-header-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.history-icon {
+  color: var(--color-muted);
+}
+
+.clear-history-btn {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-control, 4px);
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s ease;
+}
+
+.clear-history-btn:hover {
+  color: var(--color-error-text, #dc2626);
+  background: var(--color-error-bg, rgba(220, 38, 38, 0.08));
+}
+
+.history-empty,
+.history-loading {
+  padding: 1.5rem 0;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+.history-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-control, 6px);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.history-item:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border);
+}
+
+.history-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.history-item-icon {
+  color: var(--color-muted);
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.history-query-text {
+  font-size: 0.875rem;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.history-item:hover .history-query-text,
+.history-item:hover .history-item-icon {
+  color: var(--color-accent);
+}
+
+.remove-history-btn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 0.7;
+  transition: all 0.15s ease;
+}
+
+.remove-history-btn:hover {
+  color: var(--color-error-text, #dc2626);
+  background: var(--color-error-bg, rgba(220, 38, 38, 0.08));
+  opacity: 1;
+}
+</style>
