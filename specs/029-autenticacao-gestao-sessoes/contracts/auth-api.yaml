@@ -1,0 +1,287 @@
+openapi: 3.0.3
+info:
+  title: Caderno de Leitura - Autenticação e Gestão de Sessões API
+  version: 0.5.0 (F02)
+  description: Endpoints para autenticação local, gestão de sessões multi-dispositivo e configuração de acesso.
+paths:
+  /api/auth/config:
+    get:
+      summary: Consultar configurações de autenticação e status do proprietário
+      description: Informa se o auto-registro está ativo e se o proprietário precisa configurar sua senha inicial.
+      responses:
+        '200':
+          description: Configuração pública da aplicação
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - allow_registration
+                  - owner_setup_required
+                properties:
+                  allow_registration:
+                    type: boolean
+                    description: Indica se novos usuários podem se registrar
+                  owner_setup_required:
+                    type: boolean
+                    description: Indica se o proprietário ainda não cadastrou sua senha mestra
+
+  /api/auth/setup-owner:
+    post:
+      summary: Configurar a senha mestra inicial do proprietário canônico
+      description: Permite definir a primeira senha da conta soberana (somente permitido se ainda não configurada).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+              properties:
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  description: Nova senha mestra (mínimo de 8 caracteres)
+      responses:
+        '200':
+          description: Senha mestra configurada com sucesso e sessão iniciada
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                description: Cookie caderno_session HttpOnly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '400':
+          description: Senha inválida ou requisitos mínimos não atendidos
+        '403':
+          description: Senha do proprietário já foi previamente configurada
+
+  /api/auth/register:
+    post:
+      summary: Cadastrar novo leitor no sistema
+      description: Cria um novo usuário com credencial local e inicia sua sessão ativa.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - display_name
+                - password
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 50
+                  pattern: '^[a-zA-Z0-9_.-]+$'
+                email:
+                  type: string
+                  format: email
+                  nullable: true
+                display_name:
+                  type: string
+                  minLength: 1
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+      responses:
+        '201':
+          description: Usuário registrado com sucesso e sessão criada
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '400':
+          description: Parâmetros inválidos ou auto-registro desativado
+        '409':
+          description: Username ou e-mail já existente no sistema
+
+  /api/auth/login:
+    post:
+      summary: Autenticar com credenciais locais
+      description: Valida username/email e senha e emite novo identificador de sessão seguro.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username_or_email
+                - password
+              properties:
+                username_or_email:
+                  type: string
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Login bem-sucedido
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '401':
+          description: Credenciais incorretas ou conta inativa
+
+  /api/auth/logout:
+    post:
+      summary: Encerrar a sessão corrente (Logout)
+      description: Destrói o registro da sessão no servidor e remove o cookie do navegador.
+      responses:
+        '200':
+          description: Sessão encerrada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+
+  /api/auth/me:
+    get:
+      summary: Obter dados do usuário e sessão corrente
+      responses:
+        '200':
+          description: Dados do usuário ativo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          description: Não autenticado
+
+  /api/auth/sessions:
+    get:
+      summary: Listar todas as sessões ativas do usuário conectado
+      responses:
+        '200':
+          description: Lista de sessões
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SessionItem'
+        '401':
+          description: Não autenticado
+
+  /api/auth/sessions/{session_id}:
+    delete:
+      summary: Revogar uma sessão remota específica
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sessão revogada com sucesso
+        '404':
+          description: Sessão não encontrada ou pertencente a outro usuário
+
+  /api/auth/logout-all:
+    post:
+      summary: Encerrar todas as outras sessões ativas do usuário
+      responses:
+        '200':
+          description: Todas as demais sessões foram revogadas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  revoked_count:
+                    type: integer
+
+components:
+  schemas:
+    AuthSuccessResponse:
+      type: object
+      required:
+        - user
+        - session_id
+      properties:
+        user:
+          $ref: '#/components/schemas/UserProfileResponse'
+        session_id:
+          type: string
+          description: Identificador da sessão ativa recém-criada
+
+    UserProfileResponse:
+      type: object
+      required:
+        - id
+        - username
+        - display_name
+        - role
+        - status
+        - created_at
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+          nullable: true
+        display_name:
+          type: string
+        role:
+          type: string
+          enum: [admin, user]
+        status:
+          type: string
+          enum: [ativo, suspenso, inativo]
+        created_at:
+          type: string
+          format: date-time
+
+    SessionItem:
+      type: object
+      required:
+        - id
+        - device_name
+        - ip_address
+        - created_at
+        - last_activity
+        - expires_at
+        - is_current
+      properties:
+        id:
+          type: string
+        device_name:
+          type: string
+        ip_address:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        last_activity:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+        is_current:
+          type: boolean
+          description: Indica se esta sessão corresponde à requisição em andamento

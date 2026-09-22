@@ -6,6 +6,7 @@ import AppearancePreview from '../components/AppearancePreview.vue'
 import DatabaseBackup from '../components/DatabaseBackup.vue'
 import ConfirmResetModal from '../components/ConfirmResetModal.vue'
 import RestoreModal from '../components/RestoreModal.vue'
+import SessionsManager from '../components/auth/SessionsManager.vue'
 import { fetchHealth, type HealthResponse } from '../services/api'
 import { useSuperclassPhysics } from '../composables/useSuperclassPhysics'
 import type { AppearancePreferences } from '../appearance'
@@ -22,6 +23,7 @@ const tabs: SettingsTab[] = [
   { id: 'aparencia', label: 'Aparência', description: 'Paleta cromática, Superclasse e dimensões' },
   { id: 'leitura', label: 'Leitura', description: 'Tipografia literária, tamanho e destaques' },
   { id: 'sistema', label: 'Sistema', description: 'Diagnóstico, conexão, armazenamento e backup' },
+  { id: 'conta', label: 'Conta & Dispositivos', description: 'Sessões ativas e dispositivos conectados' },
 ]
 
 function save() {
@@ -500,6 +502,23 @@ onBeforeUnmount(() => {
 
           <!-- Card 5: Backup do Acervo -->
           <DatabaseBackup @open-restore="isRestoreModalOpen = true" />
+        </section>
+
+        <!-- Aba 4: Conta & Dispositivos (F02) -->
+        <section
+          v-show="activeTab === 'conta'"
+          id="panel-conta"
+          role="tabpanel"
+          aria-labelledby="tab-conta"
+          tabindex="0"
+          class="panel"
+        >
+          <h2 id="conta-title">Conta & Dispositivos</h2>
+          <p class="muted">
+            Gerenciamento da conta conectada, sessões ativas e revogação remota de dispositivos.
+          </p>
+
+          <SessionsManager />
         </section>
       </div>
 

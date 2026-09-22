@@ -53,3 +53,11 @@ qrcode==8.2
 colorama==0.4.6 ; sys_platform == "win32"
 pillow==12.3.0
 python-multipart==0.0.32
+argon2-cffi==25.1.0
+    # via -r requirements.in
+argon2-cffi-bindings==26.1.0
+    # via argon2-cffi
+cffi==2.1.1
+    # via argon2-cffi-bindings
+pycparser==3.0
+    # via cffi

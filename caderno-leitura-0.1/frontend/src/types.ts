@@ -3,9 +3,31 @@ export interface UserRead {
   username: string
   display_name: string
   email?: string | null
+  role?: string
   status: string
   created_at: string
 }
+
+export interface AuthConfigResponse {
+  allow_registration: boolean
+  owner_setup_required: boolean
+}
+
+export interface AuthSuccessResponse {
+  user: UserRead
+  session_id: string
+}
+
+export interface SessionItem {
+  id: string
+  device_name: string
+  ip_address: string
+  created_at: string
+  last_activity: string
+  expires_at: string
+  is_current: boolean
+}
+
 
 export interface Category {
   id: string
@@ -302,7 +324,7 @@ export interface DashboardParams {
   limit?: number
 }
 
-export type SettingsTabId = 'aparencia' | 'leitura' | 'sistema'
+export type SettingsTabId = 'aparencia' | 'leitura' | 'sistema' | 'conta'
 
 export interface SettingsTab {
   id: SettingsTabId
@@ -422,6 +444,9 @@ export type IconName =
   | 'minimize-2'
   | 'link'
   | 'arrow-right'
+  | 'user'
+  | 'smartphone'
+  | 'monitor'
 
 export interface IconProps {
   name: IconName

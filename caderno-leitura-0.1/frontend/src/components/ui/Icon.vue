@@ -37,6 +37,9 @@ import {
   CornerUpLeft,
   Link,
   ArrowRight,
+  User,
+  Smartphone,
+  Monitor,
 } from 'lucide-vue-next'
 
 const props = withDefaults(defineProps<IconProps>(), {
@@ -82,6 +85,9 @@ const iconMap: Record<string, Component> = {
   'corner-up-left': CornerUpLeft,
   'link': Link,
   'arrow-right': ArrowRight,
+  'user': User,
+  'smartphone': Smartphone,
+  'monitor': Monitor,
 }
 
 const currentComponent = computed(() => iconMap[props.name] || BookOpen)

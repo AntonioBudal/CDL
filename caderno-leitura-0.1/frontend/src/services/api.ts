@@ -4,7 +4,9 @@ import type {
   StudyRelationsResponse, StudyRelationItem, CreateStudyRelationPayload, UpdateStudyRelationPayload, CandidateStudyItem, BookCanvasRelationItem,
   StudyStatusUpdatePayload, StudyStatusResponse, CanvasFrameItem, CreateCanvasFramePayload, UpdateCanvasFramePayload,
   SearchResponse, SearchHistoryResponse, UserRead,
+  AuthConfigResponse, AuthSuccessResponse, SessionItem,
 } from '../types.ts'
+
 
 export interface HealthResponse {
   status: 'ok'
@@ -63,7 +65,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       ...options,
       headers: { ...headers, ...(options.headers as Record<string, string> | undefined) },
       cache: 'no-store',
+      credentials: 'same-origin',
     })
+
   } catch (error) {
     if (options.signal?.aborted) throw error
     throw new ApiError('Não foi possível acessar o caderno. Verifique se o servidor local está aberto.', 0)
@@ -224,9 +228,39 @@ export const api = {
       method: 'DELETE',
     }),
 
-  // Usuário e Autenticação (F01)
+  // Usuário e Autenticação (F01 & F02)
   getMe: (signal?: AbortSignal) => request<UserRead>('/auth/me', { signal }),
+  getAuthConfig: (signal?: AbortSignal) => request<AuthConfigResponse>('/auth/config', { signal }),
+  setupOwner: (password: string) =>
+    request<AuthSuccessResponse>('/auth/setup-owner', {
+      method: 'POST',
+      body: JSON.stringify({ password }),
+    }),
+  register: (payload: { username: string; display_name: string; email?: string | null; password: string }) =>
+    request<AuthSuccessResponse>('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  login: (usernameOrEmail: string, password: string) =>
+    request<AuthSuccessResponse>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username_or_email: usernameOrEmail, password }),
+    }),
+  logout: () =>
+    request<{ ok: boolean }>('/auth/logout', {
+      method: 'POST',
+    }),
+  getSessions: (signal?: AbortSignal) => request<SessionItem[]>('/auth/sessions', { signal }),
+  revokeSession: (sessionId: string) =>
+    request<void>(`/auth/sessions/${sessionId}`, {
+      method: 'DELETE',
+    }),
+  logoutAll: () =>
+    request<{ revoked_count: number }>('/auth/logout-all', {
+      method: 'POST',
+    }),
 }
+
 
 export function buildExportQuery(config: ExportConfig): string {
   const params = new URLSearchParams()

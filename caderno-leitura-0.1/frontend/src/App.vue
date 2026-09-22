@@ -1,13 +1,27 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import type { IconName } from './types'
 import Icon from './components/ui/Icon.vue'
 import GlobalSearchModal from './components/search/GlobalSearchModal.vue'
 import { useGlobalSearch } from './composables/useGlobalSearch.ts'
+import { useAuthStore } from './stores/auth.ts'
 
 const route = useRoute()
+const router = useRouter()
+const auth = useAuthStore()
 const { openSearch } = useGlobalSearch()
+
+const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(String(route.name)))
+const currentUser = computed(() => auth.user.value)
+const isAuthenticated = computed(() => auth.isAuthenticated.value)
+
+async function handleLogout() {
+  if (confirm('Deseja realmente sair da aplicação?')) {
+    await auth.logout()
+    router.replace('/login')
+  }
+}
 
 const homeViewPreference = ref<string>('dashboard')
 
@@ -99,7 +113,7 @@ const visibleMainLinks = computed(() => {
   <header class="app-header">
     <div class="header-inner">
       <RouterLink class="brand" to="/">Caderno de Leitura</RouterLink>
-      <nav class="main-nav" aria-label="Navegação principal">
+      <nav v-if="!isAuthPage" class="main-nav" aria-label="Navegação principal">
         <RouterLink
           v-for="item in visibleMainLinks"
           :key="item.to"
@@ -119,6 +133,7 @@ const visibleMainLinks = computed(() => {
       </nav>
       <div class="header-actions">
         <button
+          v-if="!isAuthPage"
           type="button"
           class="search-trigger-btn"
           aria-label="Abrir busca global de estudos (Ctrl+K)"
@@ -128,6 +143,27 @@ const visibleMainLinks = computed(() => {
           <span class="search-label">Buscar</span>
           <kbd class="search-kbd">Ctrl K</kbd>
         </button>
+
+        <!-- Informações do Usuário e Botão de Logout (F02) -->
+        <div v-if="isAuthenticated && !isAuthPage" class="user-nav-actions">
+          <RouterLink
+            to="/ajustes"
+            class="user-chip"
+            :title="`Conectado como ${currentUser?.display_name || currentUser?.username}`"
+          >
+            <Icon name="user" :size="15" class="user-avatar-icon" />
+            <span class="user-display-name">{{ currentUser?.display_name || currentUser?.username }}</span>
+          </RouterLink>
+          <button
+            type="button"
+            class="logout-btn"
+            title="Encerrar sessão"
+            aria-label="Encerrar sessão"
+            @click="handleLogout"
+          >
+            Sair
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -147,6 +183,69 @@ const visibleMainLinks = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.user-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  min-height: 38px;
+  border-radius: var(--radius-control, 6px);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
+  color: var(--color-text);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  max-width: 140px;
+}
+
+.user-chip:hover {
+  border-color: var(--color-accent);
+  background: var(--color-surface-hover);
+}
+
+.user-avatar-icon {
+  font-size: 0.875rem;
+}
+
+.user-display-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-btn {
+  padding: 0.35rem 0.65rem;
+  min-height: 38px;
+  border-radius: var(--radius-control, 6px);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.logout-btn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: #fef2f2;
+}
+
+@media (max-width: 640px) {
+  .user-display-name {
+    display: none;
+  }
 }
 
 .search-trigger-btn {

@@ -12,7 +12,9 @@ from app.db.types import UTCDateTime, utc_now
 
 if TYPE_CHECKING:
     from app.models.book import Book
+    from app.models.local_credential import LocalCredential
     from app.models.study import Study
+    from app.models.user_session import UserSession
 
 
 class User(Base):
@@ -28,7 +30,14 @@ class User(Base):
         default=lambda: str(uuid.uuid4()),
     )
     username: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
+    email: Mapped[str | None] = mapped_column(String(255), unique=True, index=True, nullable=True)
     display_name: Mapped[str] = mapped_column(Text, nullable=False)
+    role: Mapped[str] = mapped_column(
+        String(20),
+        default="user",
+        server_default=text("'user'"),
+        nullable=False,
+    )
     status: Mapped[str] = mapped_column(
         String(20),
         default="ativo",
@@ -49,6 +58,19 @@ class User(Base):
         nullable=False,
     )
 
+    credential: Mapped[LocalCredential | None] = relationship(
+        "LocalCredential",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        uselist=False,
+        passive_deletes=True,
+    )
+    sessions: Mapped[list[UserSession]] = relationship(
+        "UserSession",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
     books: Mapped[list[Book]] = relationship(
         "Book",
         back_populates="user",

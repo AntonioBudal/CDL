@@ -9,10 +9,17 @@ import StudyView from '../views/StudyView.vue'
 import StudyEditView from '../views/StudyEditView.vue'
 import SettingsView from '../views/SettingsView.vue'
 import TrashView from '../views/TrashView.vue'
+import LoginView from '../views/LoginView.vue'
+import RegisterView from '../views/RegisterView.vue'
+import SetupOwnerView from '../views/SetupOwnerView.vue'
+import { useAuthStore } from '../stores/auth.ts'
 
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
+    { path: '/login', name: 'login', component: LoginView, meta: { title: 'Identificação', public: true } },
+    { path: '/registro', name: 'register', component: RegisterView, meta: { title: 'Criar Conta', public: true } },
+    { path: '/primeiro-acesso', name: 'setup-owner', component: SetupOwnerView, meta: { title: 'Primeiro Acesso', public: true } },
     { path: '/', name: 'dashboard', component: DashboardView, meta: { title: 'Dashboard' } },
     { path: '/dashboard', redirect: '/' },
     { path: '/books', alias: ['/livros'], name: 'books', component: BooksView, meta: { title: 'Livros' } },
@@ -32,7 +39,28 @@ export const router = createRouter({
   },
 })
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
+  const auth = useAuthStore()
+  await auth.checkAuth()
+
+  // Se o proprietário ainda não cadastrou a senha mestra inicial
+  if (auth.ownerSetupRequired.value && to.path !== '/primeiro-acesso') {
+    return next('/primeiro-acesso')
+  }
+
+  const isPublicRoute = to.meta.public === true || ['/login', '/registro', '/primeiro-acesso'].includes(to.path)
+
+  // Se não estiver autenticado e tentar acessar rota protegida
+  if (!auth.isAuthenticated.value && !isPublicRoute) {
+    return next({ path: '/login', query: to.fullPath !== '/' ? { redirect: to.fullPath } : undefined })
+  }
+
+  // Se já estiver autenticado e tentar acessar telas de login/registro/primeiro-acesso
+  if (auth.isAuthenticated.value && ['/login', '/registro', '/primeiro-acesso'].includes(to.path)) {
+    return next('/')
+  }
+
+  // Preferência de tela inicial (Dashboard vs Livros)
   if (to.path === '/') {
     try {
       const pref = typeof window !== 'undefined' && window.localStorage
@@ -45,6 +73,7 @@ router.beforeEach((to, _from, next) => {
       // ignore
     }
   }
+
   next()
 })
 
