@@ -6,11 +6,26 @@ export interface UserRead {
   role?: string
   status: string
   created_at: string
+  has_password?: boolean
+  has_google?: boolean
 }
 
 export interface AuthConfigResponse {
   allow_registration: boolean
   owner_setup_required: boolean
+  google_auth_enabled?: boolean
+  google_client_id?: string | null
+}
+
+export interface ExternalIdentityRead {
+  id: string
+  provider: string
+  email_at_link?: string | null
+  created_at: string
+}
+
+export interface GoogleAuthRequest {
+  credential: string
 }
 
 export interface AuthSuccessResponse {

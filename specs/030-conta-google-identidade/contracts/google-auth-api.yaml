@@ -1,0 +1,223 @@
+openapi: 3.1.0
+info:
+  title: Caderno de Leitura - Autenticação Google e Identidades Externas API
+  version: 0.5.0
+  description: Endpoints para autenticação via Google Identity Services (GIS), auto-provisionamento e vinculação de identidades nos Ajustes.
+
+paths:
+  /api/auth/google:
+    post:
+      summary: Autenticar ou registrar leitor via Google Identity Services
+      description: |
+        Recebe o ID Token (JWT) emitido pelo cliente Google GIS, valida a assinatura criptográfica,
+        emissor, expiração e audiência. Se o leitor já possuir a identidade vinculada ou e-mail correspondente verificado,
+        inicia a sessão. Caso contrário, se o auto-registro estiver ativado, provisiona novo usuário e emite a sessão.
+      operationId: authGoogle
+      tags:
+        - Autenticação Google
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoogleAuthRequest'
+      responses:
+        '200':
+          description: Autenticação bem-sucedida. Emite cookie HttpOnly caderno_session.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: caderno_session=raw_opaque_token; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '401':
+          description: Token Google inválido, expirado, audiência divergente ou conta inativa.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '403':
+          description: Auto-registro desativado no servidor para nova conta Google não vinculada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+
+  /api/auth/google/link:
+    post:
+      summary: Vincular conta Google à conta do leitor autenticado
+      description: |
+        Exige autenticação prévia. Associa o claim 'sub' do Google recebido à conta do usuário autenticado.
+        Recusa com HTTP 409 se a conta Google já estiver vinculada a outro usuário do sistema.
+      operationId: linkGoogleAccount
+      tags:
+        - Autenticação Google
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoogleAuthRequest'
+      responses:
+        '200':
+          description: Conta Google vinculada com sucesso à conta atual.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalIdentityRead'
+        '401':
+          description: Não autenticado ou token Google inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '409':
+          description: Esta conta Google já está vinculada a outro usuário no sistema.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+
+  /api/auth/google/unlink:
+    delete:
+      summary: Desvincular conta Google da conta do leitor autenticado
+      description: |
+        Exige autenticação prévia. Remove a identidade externa Google associada à conta.
+        Recusa com HTTP 400 se o usuário não possuir senha local cadastrada, impedindo lockout permanente.
+      operationId: unlinkGoogleAccount
+      tags:
+        - Autenticação Google
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Conta Google desvinculada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnlinkResponse'
+        '400':
+          description: Não é permitido desvincular o Google sem cadastrar previamente uma senha local (prevenção de lockout).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '401':
+          description: Não autenticado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '404':
+          description: Nenhuma identidade Google vinculada a este usuário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: caderno_session
+
+  schemas:
+    GoogleAuthRequest:
+      type: object
+      required:
+        - credential
+      properties:
+        credential:
+          type: string
+          description: Token JWT (ID Token) emitido pela biblioteca oficial do Google Identity Services.
+
+    UserRead:
+      type: object
+      required:
+        - id
+        - username
+        - display_name
+        - role
+        - status
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        display_name:
+          type: string
+        email:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum: [admin, user]
+        status:
+          type: string
+          enum: [ativo, suspenso, inativo]
+        created_at:
+          type: string
+          format: date-time
+        has_password:
+          type: boolean
+          default: false
+        has_google:
+          type: boolean
+          default: false
+
+    AuthSuccessResponse:
+      type: object
+      required:
+        - user
+        - session_id
+      properties:
+        user:
+          $ref: '#/components/schemas/UserRead'
+        session_id:
+          type: string
+          format: uuid
+
+    ExternalIdentityRead:
+      type: object
+      required:
+        - id
+        - provider
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        provider:
+          type: string
+          example: google
+        email_at_link:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    UnlinkResponse:
+      type: object
+      required:
+        - ok
+      properties:
+        ok:
+          type: boolean
+          default: true
+
+    HTTPError:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string

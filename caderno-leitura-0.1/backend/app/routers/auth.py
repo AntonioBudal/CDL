@@ -13,6 +13,8 @@ from app.core.config import (
     PASSWORD_MIN_LENGTH,
     SESSION_COOKIE_NAME,
     get_allow_registration,
+    get_google_client_id,
+    is_google_auth_enabled,
 )
 from app.core.security import hash_password, hash_session_token, needs_rehash, verify_password
 from app.dependencies import CurrentUser, DatabaseSession
@@ -22,6 +24,8 @@ from app.models.user_session import UserSession
 from app.schemas.auth import (
     AuthConfigResponse,
     AuthSuccessResponse,
+    ExternalIdentityRead,
+    GoogleAuthRequest,
     LoginRequest,
     LogoutAllResponse,
     LogoutResponse,
@@ -30,6 +34,16 @@ from app.schemas.auth import (
     SetupOwnerRequest,
 )
 from app.schemas.user import UserRead
+from app.services.auth_service import (
+    authenticate_google_user,
+    link_google_identity,
+    unlink_google_identity,
+)
+from app.services.google_auth_service import (
+    GoogleAuthDisabledError,
+    InvalidGoogleTokenError,
+    verify_google_id_token,
+)
 from app.services.session_service import (
     clear_session_cookie,
     create_session,
@@ -72,6 +86,8 @@ def get_auth_config(session: DatabaseSession) -> AuthConfigResponse:
     return AuthConfigResponse(
         allow_registration=allow_reg,
         owner_setup_required=owner_setup_required,
+        google_auth_enabled=is_google_auth_enabled(),
+        google_client_id=get_google_client_id(),
     )
 
 
@@ -347,3 +363,86 @@ def logout_all_other(
         count = result.rowcount or 0
 
     return LogoutAllResponse(revoked_count=count)
+
+
+@router.post(
+    "/google",
+    response_model=AuthSuccessResponse,
+    summary="Autenticar usuário via Google Identity Services (GIS)",
+)
+def login_with_google(
+    req: GoogleAuthRequest,
+    request: Request,
+    response: Response,
+    session: DatabaseSession,
+) -> AuthSuccessResponse:
+    """Autentica ou provisiona leitor a partir do ID Token verificado do Google GIS."""
+    try:
+        payload = verify_google_id_token(req.credential)
+    except GoogleAuthDisabledError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
+    except InvalidGoogleTokenError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=str(exc),
+        ) from exc
+
+    user = authenticate_google_user(session, payload)
+
+    client_ip = _get_client_ip(request)
+    user_agent = request.headers.get("user-agent", "")
+
+    user_session, raw_token = create_session(session, user.id, client_ip, user_agent)
+    set_session_cookie(response, raw_token, request)
+
+    return AuthSuccessResponse(user=user, session_id=user_session.id)
+
+
+@router.post(
+    "/google/link",
+    response_model=ExternalIdentityRead,
+    summary="Vincular conta Google ao usuário autenticado",
+)
+def link_google(
+    req: GoogleAuthRequest,
+    current_user: CurrentUser,
+    session: DatabaseSession,
+) -> ExternalIdentityRead:
+    """Vincula uma conta Google à conta do leitor autenticado."""
+    try:
+        payload = verify_google_id_token(req.credential)
+    except GoogleAuthDisabledError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
+    except InvalidGoogleTokenError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=str(exc),
+        ) from exc
+
+    identity = link_google_identity(session, current_user, payload)
+    return ExternalIdentityRead(
+        id=identity.id,
+        provider=identity.provider,
+        email_at_link=identity.email_at_link,
+        created_at=identity.created_at,
+    )
+
+
+@router.delete(
+    "/google/unlink",
+    summary="Desvincular conta Google do usuário autenticado",
+)
+def unlink_google(
+    current_user: CurrentUser,
+    session: DatabaseSession,
+) -> dict[str, bool]:
+    """Desvincula a conta Google associada ao usuário autenticado com prevenção de lockout."""
+    unlink_google_identity(session, current_user)
+    return {"ok": True}
+

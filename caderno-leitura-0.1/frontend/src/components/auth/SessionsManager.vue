@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth.ts'
 import { errorMessage } from '../../services/api.ts'
 import Icon from '../ui/Icon.vue'
+import GoogleSignInButton from './GoogleSignInButton.vue'
 import type { SessionItem } from '../../types.ts'
 
 const router = useRouter()
@@ -97,6 +98,46 @@ async function handleLogoutAll() {
   }
 }
 
+const isLinkingGoogle = ref(false)
+const isUnlinkingGoogle = ref(false)
+
+async function handleLinkGoogle(credential: string) {
+  isLinkingGoogle.value = true
+  actionError.value = null
+  actionMessage.value = null
+  try {
+    await auth.linkGoogle(credential)
+    actionMessage.value = 'Conta Google vinculada com sucesso a este perfil.'
+  } catch (err) {
+    actionError.value = errorMessage(err)
+  } finally {
+    isLinkingGoogle.value = false
+  }
+}
+
+async function handleUnlinkGoogle() {
+  if (!currentUser.value?.has_password) {
+    actionError.value = 'Você precisa definir uma senha local antes de desvincular a conta Google, prevenindo bloqueio permanente.'
+    return
+  }
+
+  if (!confirm('Deseja realmente desvincular sua conta Google deste perfil?')) {
+    return
+  }
+
+  isUnlinkingGoogle.value = true
+  actionError.value = null
+  actionMessage.value = null
+  try {
+    await auth.unlinkGoogle()
+    actionMessage.value = 'Conta Google desvinculada com sucesso.'
+  } catch (err) {
+    actionError.value = errorMessage(err)
+  } finally {
+    isUnlinkingGoogle.value = false
+  }
+}
+
 onMounted(() => {
   void loadSessions()
 })
@@ -140,6 +181,60 @@ onMounted(() => {
         <div class="profile-field">
           <span class="field-label">Status da Conta</span>
           <span class="field-value status-active">● Ativo</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Métodos de Acesso e Identidade Google -->
+    <article v-if="auth.googleAuthEnabled.value" class="system-card identity-card">
+      <div class="identity-header">
+        <div>
+          <h3 class="identity-title">Identidade e Acesso</h3>
+          <p class="muted">Gerencie a vinculação da sua conta Google e métodos de autenticação.</p>
+        </div>
+      </div>
+
+      <div class="identity-content">
+        <div class="identity-row">
+          <div class="identity-info">
+            <div class="identity-provider">
+              <Icon name="link" :size="18" class="identity-icon" />
+              <strong>Google Identity</strong>
+            </div>
+            <p v-if="currentUser?.has_google" class="identity-status-linked">
+              <Icon name="check" :size="14" /> Conta Google conectada a este perfil.
+            </p>
+            <p v-else class="identity-status-unlinked muted">
+              Nenhuma conta Google vinculada a este perfil.
+            </p>
+          </div>
+
+          <div class="identity-actions">
+            <template v-if="currentUser?.has_google">
+              <div v-if="!currentUser?.has_password" class="lockout-warning">
+                <Icon name="alert-triangle" :size="14" />
+                <span>Defina uma senha local antes de desvincular para evitar bloqueio.</span>
+              </div>
+              <button
+                type="button"
+                class="danger-button"
+                :disabled="isUnlinkingGoogle || !currentUser?.has_password"
+                @click="handleUnlinkGoogle"
+              >
+                {{ isUnlinkingGoogle ? 'Desvinculando...' : 'Desvincular Google' }}
+              </button>
+            </template>
+
+            <template v-else>
+              <div class="google-link-slot">
+                <GoogleSignInButton
+                  text="continue_with"
+                  @success="handleLinkGoogle"
+                  @error="(msg) => (actionError = msg)"
+                />
+              </div>
+            </template>
+          </div>
         </div>
       </div>
     </article>
@@ -448,5 +543,86 @@ onMounted(() => {
   text-align: center;
   padding: 2rem;
   font-size: 0.875rem;
+}
+
+.identity-header {
+  margin-bottom: 1rem;
+}
+
+.identity-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+}
+
+.identity-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.identity-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius-control, 6px);
+  background: var(--color-surface-soft, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--color-border);
+}
+
+.identity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.identity-provider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text);
+}
+
+.identity-status-linked {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  color: #15803d;
+  font-weight: 500;
+  margin: 0;
+}
+
+.identity-status-unlinked {
+  font-size: 0.8125rem;
+  margin: 0;
+}
+
+.identity-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.lockout-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: #b45309;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  max-width: 320px;
+}
+
+.google-link-slot {
+  min-width: 200px;
 }
 </style>

@@ -4,6 +4,7 @@ from app.models.book import Book
 from app.models.canvas_frame import CanvasFrame
 from app.models.category import Category, book_categories
 from app.models.chapter import Chapter
+from app.models.external_identity import ExternalIdentity
 from app.models.local_credential import LocalCredential
 from app.models.search_history import SearchHistory
 from app.models.study import Study
@@ -17,6 +18,7 @@ __all__ = [
     "CanvasFrame",
     "Category",
     "Chapter",
+    "ExternalIdentity",
     "LocalCredential",
     "SearchHistory",
     "Study",

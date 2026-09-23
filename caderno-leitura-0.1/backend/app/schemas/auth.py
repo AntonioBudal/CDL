@@ -11,6 +11,22 @@ from app.schemas.user import UserRead
 class AuthConfigResponse(OutputModel):
     allow_registration: bool
     owner_setup_required: bool
+    google_auth_enabled: bool = False
+    google_client_id: str | None = None
+
+
+class GoogleAuthRequest(InputModel):
+    credential: str = Field(
+        min_length=1,
+        description="ID Token JWT emitido pelo Google Identity Services (GIS)",
+    )
+
+
+class ExternalIdentityRead(OutputModel):
+    id: str
+    provider: str
+    email_at_link: str | None = None
+    created_at: datetime
 
 
 class SetupOwnerRequest(InputModel):

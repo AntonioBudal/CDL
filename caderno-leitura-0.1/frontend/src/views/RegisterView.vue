@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.ts'
 import { errorMessage } from '../services/api.ts'
+import GoogleSignInButton from '../components/auth/GoogleSignInButton.vue'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -14,6 +15,19 @@ const password = ref('')
 const confirmPassword = ref('')
 const error = ref<string | null>(null)
 const isSubmitting = ref(false)
+
+async function handleGoogleSuccess(credential: string) {
+  error.value = null
+  isSubmitting.value = true
+  try {
+    await auth.loginWithGoogle(credential)
+    router.replace('/')
+  } catch (err) {
+    error.value = errorMessage(err)
+  } finally {
+    isSubmitting.value = false
+  }
+}
 
 async function handleRegister() {
   error.value = null
@@ -55,10 +69,24 @@ async function handleRegister() {
         <p class="auth-subtitle">Cadastre seu próprio caderno de leitura independente</p>
       </header>
 
-      <form class="auth-form" @submit.prevent="handleRegister">
-        <div v-if="error" class="auth-error-alert" role="alert">
-          {{ error }}
+      <div v-if="error" class="auth-error-alert" role="alert">
+        {{ error }}
+      </div>
+
+      <div v-if="auth.googleAuthEnabled.value" class="google-auth-section">
+        <GoogleSignInButton
+          text="signup_with"
+          @success="handleGoogleSuccess"
+          @error="(msg) => (error = msg)"
+        />
+        <div class="auth-divider">
+          <span class="auth-divider-line" />
+          <span class="auth-divider-text">ou preencha com usuário e senha</span>
+          <span class="auth-divider-line" />
         </div>
+      </div>
+
+      <form class="auth-form" @submit.prevent="handleRegister">
 
         <div class="form-group">
           <label for="reg_username" class="form-label">Nome de Usuário *</label>
@@ -183,6 +211,35 @@ async function handleRegister() {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.google-auth-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 1rem 0 0.5rem 0;
+  gap: 0.75rem;
+}
+
+.auth-divider-line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-border, #e5e7eb);
+}
+
+.auth-divider-text {
+  font-size: 0.75rem;
+  color: var(--color-muted, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
 }
 
 .auth-error-alert {

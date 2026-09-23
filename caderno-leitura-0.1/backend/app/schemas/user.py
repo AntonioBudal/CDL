@@ -13,3 +13,5 @@ class UserRead(OutputModel):
     role: str = "user"
     status: str
     created_at: datetime
+    has_password: bool = False
+    has_google: bool = False

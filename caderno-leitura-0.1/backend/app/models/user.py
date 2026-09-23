@@ -12,6 +12,7 @@ from app.db.types import UTCDateTime, utc_now
 
 if TYPE_CHECKING:
     from app.models.book import Book
+    from app.models.external_identity import ExternalIdentity
     from app.models.local_credential import LocalCredential
     from app.models.study import Study
     from app.models.user_session import UserSession
@@ -65,6 +66,12 @@ class User(Base):
         uselist=False,
         passive_deletes=True,
     )
+    external_identities: Mapped[list[ExternalIdentity]] = relationship(
+        "ExternalIdentity",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
     sessions: Mapped[list[UserSession]] = relationship(
         "UserSession",
         back_populates="user",
@@ -83,3 +90,14 @@ class User(Base):
         cascade="all, delete-orphan",
         passive_deletes=True,
     )
+
+    @property
+    def has_password(self) -> bool:
+        return self.credential is not None
+
+    @property
+    def has_google(self) -> bool:
+        if not hasattr(self, "external_identities") or self.external_identities is None:
+            return False
+        return any(ident.provider == "google" for ident in self.external_identities)
+

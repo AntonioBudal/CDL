@@ -4,7 +4,7 @@ import type {
   StudyRelationsResponse, StudyRelationItem, CreateStudyRelationPayload, UpdateStudyRelationPayload, CandidateStudyItem, BookCanvasRelationItem,
   StudyStatusUpdatePayload, StudyStatusResponse, CanvasFrameItem, CreateCanvasFramePayload, UpdateCanvasFramePayload,
   SearchResponse, SearchHistoryResponse, UserRead,
-  AuthConfigResponse, AuthSuccessResponse, SessionItem,
+  AuthConfigResponse, AuthSuccessResponse, SessionItem, ExternalIdentityRead,
 } from '../types.ts'
 
 
@@ -258,6 +258,20 @@ export const api = {
   logoutAll: () =>
     request<{ revoked_count: number }>('/auth/logout-all', {
       method: 'POST',
+    }),
+  loginWithGoogle: (credential: string) =>
+    request<AuthSuccessResponse>('/auth/google', {
+      method: 'POST',
+      body: JSON.stringify({ credential }),
+    }),
+  linkGoogle: (credential: string) =>
+    request<ExternalIdentityRead>('/auth/google/link', {
+      method: 'POST',
+      body: JSON.stringify({ credential }),
+    }),
+  unlinkGoogle: () =>
+    request<{ ok: boolean }>('/auth/google/unlink', {
+      method: 'DELETE',
     }),
 }
 

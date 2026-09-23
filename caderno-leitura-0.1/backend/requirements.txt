@@ -61,3 +61,17 @@ cffi==2.1.1
     # via argon2-cffi-bindings
 pycparser==3.0
     # via cffi
+google-auth==2.58.0
+    # via -r requirements.in
+cryptography==50.0.1
+    # via google-auth
+pyasn1==0.6.4
+    # via pyasn1-modules
+pyasn1-modules==0.4.2
+    # via google-auth
+requests==2.34.2
+    # via -r requirements.in
+urllib3==2.8.0
+    # via requests
+charset-normalizer==3.5.1
+    # via requests

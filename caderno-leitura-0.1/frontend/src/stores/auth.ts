@@ -7,6 +7,8 @@ const currentUser = ref<UserRead | null>(null)
 const currentSessionId = ref<string | null>(null)
 const ownerSetupRequired = ref<boolean>(false)
 const allowRegistration = ref<boolean>(true)
+const googleAuthEnabled = ref<boolean>(false)
+const googleClientId = ref<string | null>(null)
 const isInitialized = ref<boolean>(false)
 const isLoading = ref<boolean>(false)
 
@@ -25,10 +27,14 @@ export function useAuthStore() {
         const config: AuthConfigResponse = await api.getAuthConfig()
         ownerSetupRequired.value = config.owner_setup_required
         allowRegistration.value = config.allow_registration
+        googleAuthEnabled.value = Boolean(config.google_auth_enabled)
+        googleClientId.value = config.google_client_id ?? null
       } catch {
         // Fallback defensivo caso o endpoint não responda
         ownerSetupRequired.value = false
         allowRegistration.value = true
+        googleAuthEnabled.value = false
+        googleClientId.value = null
       }
 
       // 2. Consulta usuário autenticado via cookie de sessão
@@ -127,17 +133,51 @@ export function useAuthStore() {
     return res.revoked_count
   }
 
+  async function loginWithGoogle(credential: string): Promise<UserRead> {
+    isLoading.value = true
+    try {
+      const response = await api.loginWithGoogle(credential)
+      currentUser.value = response.user
+      currentSessionId.value = response.session_id
+      ownerSetupRequired.value = false
+      isInitialized.value = true
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('caderno_auth_changed'))
+      }
+      return response.user
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function linkGoogle(credential: string): Promise<void> {
+    await api.linkGoogle(credential)
+    const updated = await api.getMe()
+    currentUser.value = updated
+  }
+
+  async function unlinkGoogle(): Promise<void> {
+    await api.unlinkGoogle()
+    const updated = await api.getMe()
+    currentUser.value = updated
+  }
+
   return {
     currentUser,
     user,
     currentSessionId,
     ownerSetupRequired,
     allowRegistration,
+    googleAuthEnabled,
+    googleClientId,
     isInitialized,
     isLoading,
     isAuthenticated,
     checkAuth,
     login,
+    loginWithGoogle,
+    linkGoogle,
+    unlinkGoogle,
     setupOwner,
     register,
     logout,

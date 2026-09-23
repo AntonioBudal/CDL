@@ -21,6 +21,17 @@ def get_allow_registration() -> bool:
     return val in ("true", "1", "yes", "sim")
 
 
+def get_google_client_id() -> str | None:
+    """Retorna o Client ID configurado para o Google Identity Services (GIS), ou None."""
+    val = os.environ.get("GOOGLE_CLIENT_ID", "").strip()
+    return val if val else None
+
+
+def is_google_auth_enabled() -> bool:
+    """Informa se a autenticação via Google está ativada (depende de GOOGLE_CLIENT_ID configurado)."""
+    return get_google_client_id() is not None
+
+
 def get_session_cookie_secure() -> bool | None:
     """Retorna configuração explícita de Secure para cookies de sessão, ou None para detecção dinâmica."""
     val = os.environ.get("SESSION_COOKIE_SECURE")
