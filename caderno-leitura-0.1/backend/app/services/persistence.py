@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from datetime import UTC, datetime, timedelta
-from typing import TypeVar
+from typing import Any, TypeVar
 
 from fastapi import HTTPException
 from sqlalchemy.exc import SQLAlchemyError
