@@ -17,9 +17,11 @@ from app.routers import (
     dashboard,
     health,
     imports,
+    preferences,
     search,
     studies,
     study_relations,
+    sync,
     trash,
 )
 
@@ -62,6 +64,8 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(covers.router, prefix="/api")
     application.include_router(dashboard.router, prefix="/api")
     application.include_router(search.router, prefix="/api")
+    application.include_router(sync.router, prefix="/api")
+    application.include_router(preferences.router, prefix="/api")
     register_database_error_handlers(application)
     register_frontend(application, frontend_dist)
     return application

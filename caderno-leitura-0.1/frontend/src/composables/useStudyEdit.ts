@@ -1,6 +1,6 @@
 import { computed, reactive } from 'vue'
-import { ApiError, errorMessage } from '../services/api.ts'
-import { SECTION_LABELS, type AnalysisSections, type Study, type StudyPatch } from '../types.ts'
+import { ApiError, ConcurrencyConflictApiError, errorMessage } from '../services/api.ts'
+import { SECTION_LABELS, type AnalysisSections, type ConflictData, type Study, type StudyPatch } from '../types.ts'
 
 interface EditGateway {
   updateStudy: (id: number, patch: StudyPatch) => Promise<Study>
@@ -25,6 +25,7 @@ export function useStudyEdit(gateway: EditGateway) {
     error: '',
     isConflict: false,
     conflictMessage: '',
+    conflictData: null as ConflictData | null,
   })
 
   function load(study: Study) {
@@ -36,6 +37,7 @@ export function useStudyEdit(gateway: EditGateway) {
     state.error = ''
     state.isConflict = false
     state.conflictMessage = ''
+    state.conflictData = null
   }
 
   function clear() {
@@ -47,6 +49,7 @@ export function useStudyEdit(gateway: EditGateway) {
     state.error = ''
     state.isConflict = false
     state.conflictMessage = ''
+    state.conflictData = null
   }
 
   const patch = computed<StudyPatch>(() => {
@@ -76,6 +79,7 @@ export function useStudyEdit(gateway: EditGateway) {
     const id = state.original.id
     const changes: StudyPatch = {
       ...patch.value,
+      expected_version: state.original.version ?? 1,
       expected_updated_at: state.original.updated_at ?? null,
     }
 
@@ -87,8 +91,16 @@ export function useStudyEdit(gateway: EditGateway) {
       load(saved)
       return saved
     } catch (error) {
-      if (error instanceof ApiError && error.status === 409) {
+      if (error instanceof ConcurrencyConflictApiError) {
         state.isConflict = true
+        state.conflictData = error.conflictData
+        state.conflictMessage = error.message
+        state.error = error.message
+      } else if (error instanceof ApiError && error.status === 409) {
+        state.isConflict = true
+        if (error.data && typeof error.data === 'object' && 'server_version' in error.data) {
+          state.conflictData = error.data as ConflictData
+        }
         state.conflictMessage = errorMessage(error)
         state.error = errorMessage(error)
       } else if (error instanceof ApiError && error.status === 0) {
@@ -106,9 +118,13 @@ export function useStudyEdit(gateway: EditGateway) {
   async function overwrite(): Promise<Study | null> {
     if (!state.original) return null
 
-    if (gateway.getStudy) {
+    if (state.conflictData) {
+      state.original.version = state.conflictData.server_version
+      state.original.updated_at = state.conflictData.server_updated_at
+    } else if (gateway.getStudy) {
       try {
         const latest = await gateway.getStudy(state.original.id)
+        state.original.version = latest.version
         state.original.updated_at = latest.updated_at
       } catch {
         // Se a busca falhar, tenta salvar com o estado local
@@ -116,12 +132,20 @@ export function useStudyEdit(gateway: EditGateway) {
     }
 
     state.isConflict = false
+    state.conflictData = null
     state.conflictMessage = ''
     return save()
   }
 
   async function reload(): Promise<Study | null> {
     if (!state.original) return null
+
+    if (state.conflictData?.server_data && Object.keys(state.conflictData.server_data).length > 0) {
+      load(state.conflictData.server_data as unknown as Study)
+      state.isConflict = false
+      state.conflictData = null
+      return state.original
+    }
 
     if (gateway.getStudy) {
       try {
@@ -137,6 +161,7 @@ export function useStudyEdit(gateway: EditGateway) {
     }
 
     state.isConflict = false
+    state.conflictData = null
     return null
   }
 

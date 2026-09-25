@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, ForeignKey, Index, String, Text, text
+from sqlalchemy import CheckConstraint, ForeignKey, Index, Integer, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.config import DEFAULT_OWNER_ID
@@ -30,6 +30,7 @@ class Study(Base):
         Index("ix_studies_reading_status", "reading_status"),
         Index("ix_studies_user_id", "user_id"),
         Index("ix_studies_user_deleted", "user_id", "deleted_at"),
+        Index("ix_studies_sync", "user_id", "updated_at"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -52,6 +53,7 @@ class Study(Base):
     concepts: Mapped[str] = mapped_column(Text, default="", server_default=text("''"), nullable=False)
     references: Mapped[str] = mapped_column(Text, default="", server_default=text("''"), nullable=False)
     notes: Mapped[str] = mapped_column(Text, default="", server_default=text("''"), nullable=False)
+    version: Mapped[int] = mapped_column(Integer, default=1, server_default=text("1"), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         UTCDateTime(), default=utc_now, server_default=text("CURRENT_TIMESTAMP"), nullable=False
     )

@@ -64,6 +64,7 @@ export interface Book {
   updated_at?: string | null
   deleted_at?: string | null
   categories?: Category[]
+  version?: number
 }
 
 export type LibraryViewMode = 'grid' | 'list'
@@ -99,6 +100,7 @@ export interface BookPatch {
   year?: number | null
   cover_image?: string | null
   expected_updated_at?: string | null
+  expected_version?: number | null
   category_ids?: string[]
 }
 
@@ -134,6 +136,7 @@ export interface StudySummary {
   created_at: string
   updated_at: string
   deleted_at?: string | null
+  version?: number
 }
 
 export interface StudyTreeNode extends StudySummary {
@@ -163,6 +166,7 @@ export interface Study extends StudySummary, AnalysisSections {
 
 export type StudyPatch = Partial<AnalysisSections & Pick<Study, 'title' | 'location' | 'notes'>> & {
   expected_updated_at?: string | null
+  expected_version?: number | null
 }
 
 export interface StudyContext {
@@ -585,6 +589,7 @@ export interface StudyCanvasNode {
   z_index: number
   color_tag: string | null
   updated_at: string
+  version?: number
 }
 
 export interface CanvasViewportState {
@@ -822,3 +827,6 @@ export interface MotionState {
   isDragging: boolean
   isSettling: boolean
 }
+
+export * from './types/sync.ts'
+export * from './types/preferences.ts'

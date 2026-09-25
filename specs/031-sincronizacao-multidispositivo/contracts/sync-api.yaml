@@ -1,0 +1,327 @@
+openapi: 3.1.0
+info:
+  title: Caderno de Leitura — Sincronização Multidispositivo e Preferências API
+  version: 0.5.0-F04
+  description: Endpoints para feed de alterações incrementais (change feed), controle otimista de concorrência e sincronização de preferências do leitor.
+
+paths:
+  /api/sync/changes:
+    get:
+      summary: Consultar feed incremental de alterações e exclusões
+      description: Retorna livros, estudos, nós espaciais e preferências modificados ou excluídos desde o carimbo temporal UTC informado.
+      parameters:
+        - name: since
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: Timestamp ISO 8601 em UTC da última sincronização bem-sucedida. Se omitido, retorna o estado completo atual.
+      responses:
+        '200':
+          description: Mudanças incrementais entregues com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncChangesResponse'
+        '401':
+          description: Não autenticado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/preferences:
+    get:
+      summary: Obter preferências de leitura do usuário autenticado
+      description: Retorna as configurações sincronizadas de superclasse, tipografia, visualização e estado de árvore.
+      responses:
+        '200':
+          description: Preferências recuperadas com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreferenceRead'
+        '401':
+          description: Não autenticado.
+
+    put:
+      summary: Atualizar preferências de leitura do usuário autenticado
+      description: Atualiza parâmetros visuais e de leitura com controle de concorrência otimista.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPreferenceUpdate'
+      responses:
+        '200':
+          description: Preferências atualizadas com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreferenceRead'
+        '409':
+          description: Conflito de concorrência.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictErrorResponse'
+
+  /api/studies/{id}:
+    patch:
+      summary: Atualizar estudo com controle otimista de concorrência
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyUpdateWithVersion'
+      responses:
+        '200':
+          description: Estudo atualizado com sucesso e versão incrementada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyRead'
+        '404':
+          description: Estudo não encontrado.
+        '409':
+          description: Conflito de concorrência detectado (expected_version divergente).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictErrorResponse'
+
+components:
+  schemas:
+    SyncChangesResponse:
+      type: object
+      required:
+        - server_time
+        - updated
+        - deleted
+      properties:
+        server_time:
+          type: string
+          format: date-time
+        updated:
+          type: object
+          required:
+            - books
+            - studies
+            - canvas_nodes
+          properties:
+            books:
+              type: array
+              items:
+                $ref: '#/components/schemas/BookRead'
+            studies:
+              type: array
+              items:
+                $ref: '#/components/schemas/StudyRead'
+            canvas_nodes:
+              type: array
+              items:
+                $ref: '#/components/schemas/CanvasNodeRead'
+            preferences:
+              $ref: '#/components/schemas/UserPreferenceRead'
+        deleted:
+          type: object
+          required:
+            - book_ids
+            - study_ids
+          properties:
+            book_ids:
+              type: array
+              items:
+                type: integer
+            study_ids:
+              type: array
+              items:
+                type: integer
+
+    ConflictErrorResponse:
+      type: object
+      required:
+        - detail
+        - entity_id
+        - entity_type
+        - server_version
+        - server_updated_at
+        - server_data
+      properties:
+        detail:
+          type: string
+        entity_id:
+          type: integer
+        entity_type:
+          type: string
+          enum: [study, book, preference]
+        server_version:
+          type: integer
+        server_updated_at:
+          type: string
+          format: date-time
+        server_data:
+          type: object
+
+    UserPreferenceRead:
+      type: object
+      required:
+        - user_id
+        - active_superclass
+        - superclass_intensity
+        - preferred_view_mode
+        - tree_collapsed_state
+        - font_family
+        - font_scale
+        - theme_mode
+        - version
+        - updated_at
+      properties:
+        user_id:
+          type: string
+        active_superclass:
+          type: string
+        superclass_intensity:
+          type: number
+        preferred_view_mode:
+          type: string
+        tree_collapsed_state:
+          type: array
+          items:
+            type: integer
+        font_family:
+          type: string
+        font_scale:
+          type: number
+        theme_mode:
+          type: string
+        version:
+          type: integer
+        updated_at:
+          type: string
+          format: date-time
+
+    UserPreferenceUpdate:
+      type: object
+      properties:
+        active_superclass:
+          type: string
+        superclass_intensity:
+          type: number
+        preferred_view_mode:
+          type: string
+        tree_collapsed_state:
+          type: array
+          items:
+            type: integer
+        font_family:
+          type: string
+        font_scale:
+          type: number
+        theme_mode:
+          type: string
+        expected_version:
+          type: integer
+
+    StudyUpdateWithVersion:
+      type: object
+      properties:
+        title:
+          type: string
+        summary:
+          type: string
+        explanation:
+          type: string
+        concepts:
+          type: string
+        references:
+          type: string
+        notes:
+          type: string
+        location:
+          type: string
+        reading_status:
+          type: string
+        expected_version:
+          type: integer
+          description: Versão atual do estudo conhecida pelo cliente.
+
+    StudyRead:
+      type: object
+      required:
+        - id
+        - title
+        - version
+        - updated_at
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        version:
+          type: integer
+        updated_at:
+          type: string
+          format: date-time
+
+    BookRead:
+      type: object
+      required:
+        - id
+        - title
+        - version
+        - updated_at
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        version:
+          type: integer
+        updated_at:
+          type: string
+          format: date-time
+
+    CanvasNodeRead:
+      type: object
+      required:
+        - id
+        - study_id
+        - book_id
+        - pos_x
+        - pos_y
+        - version
+        - updated_at
+      properties:
+        id:
+          type: integer
+        study_id:
+          type: integer
+        book_id:
+          type: integer
+        pos_x:
+          type: number
+        pos_y:
+          type: number
+        version:
+          type: integer
+        updated_at:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string

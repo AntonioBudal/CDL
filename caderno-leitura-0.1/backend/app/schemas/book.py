@@ -30,6 +30,7 @@ class BookPatch(InputModel):
     cover_image: str | None = None
     category_ids: list[str] | None = None
     expected_updated_at: datetime | None = Field(default=None, strict=False)
+    expected_version: int | None = Field(default=None, ge=1, strict=False, description="Versão esperada do livro para controle de concorrência")
 
     @field_validator("author", "subtitle")
     @classmethod
@@ -41,7 +42,7 @@ class BookPatch(InputModel):
 
     @model_validator(mode="after")
     def validate_has_changes(self) -> Self:
-        payload_fields = self.model_fields_set - {"expected_updated_at"}
+        payload_fields = self.model_fields_set - {"expected_updated_at", "expected_version"}
         if not payload_fields:
             raise ValueError("Envie pelo menos um campo para alterar.")
         return self
@@ -54,6 +55,7 @@ class BookRead(OutputModel):
     subtitle: str | None = None
     year: int | None = None
     cover_image: str | None = None
+    version: int = 1
     created_at: datetime | None = None
     updated_at: datetime | None = None
     deleted_at: datetime | None = None

@@ -9,6 +9,7 @@ const original = {
   source_response: '## Resumo\r\nTexto **original**.\r\n',
   summary: 'Texto **original**.\r\n', explanation: 'Explicação.', concepts: '- Atenção',
   references: '', notes: 'Minha interpretação.\nOutra linha.',
+  version: 1,
   created_at: '2026-09-08T12:00:00Z', updated_at: '2026-09-08T12:00:00Z',
 }
 function makeEditor(gateway = {}) {
@@ -24,7 +25,7 @@ test('edição de uma seção envia apenas a alteração e preserva origem, outr
   editor.state.sections.explanation = '**Explicação revisada.**\n\nOutro parágrafo.'
   assert.equal(editor.dirty.value, true)
   const saved = await editor.save()
-  assert.deepEqual(sent, { id: 7, patch: { explanation: '**Explicação revisada.**\n\nOutro parágrafo.', expected_updated_at: '2026-09-08T12:00:00Z' } })
+  assert.deepEqual(sent, { id: 7, patch: { explanation: '**Explicação revisada.**\n\nOutro parágrafo.', expected_version: 1, expected_updated_at: '2026-09-08T12:00:00Z' } })
   assert.equal(saved.source_response, original.source_response)
   assert.equal(saved.summary, original.summary)
   assert.equal(saved.concepts, original.concepts)
@@ -40,7 +41,7 @@ test('limpar notas e referências é uma alteração explícita; metadados tamb�
   editor.state.title = '  Novo título  '
   editor.state.location = 'Loc. 320'
   await editor.save()
-  assert.deepEqual(sent, { title: 'Novo título', location: 'Loc. 320', notes: '', concepts: '', expected_updated_at: '2026-09-08T12:00:00Z' })
+  assert.deepEqual(sent, { title: 'Novo título', location: 'Loc. 320', notes: '', concepts: '', expected_version: 1, expected_updated_at: '2026-09-08T12:00:00Z' })
 })
 
 test('conflito de concorrência 409 preserva o formulário intacto e exibe mensagem de alerta', async () => {

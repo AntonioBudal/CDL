@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { onBeforeUnmount, watch } from 'vue'
+import { computed, onBeforeUnmount, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { api } from '../services/api'
 import { useStudyResource } from '../composables/useStudyResource'
 import { useStudyEdit } from '../composables/useStudyEdit'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import StudyEditorFields from '../components/StudyEditorFields.vue'
-import ConcurrencyConflictModal from '../components/ConcurrencyConflictModal.vue'
+import ConflictResolutionModal from '../components/sync/ConflictResolutionModal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,6 +16,16 @@ const editor = useStudyEdit(api)
 const { state, dirty, hasAnalysis, canSave } = editor
 let disposed = false
 useUnsavedChanges(() => dirty.value, () => state.saving)
+
+const localFormData = computed(() => ({
+  title: state.title,
+  location: state.location,
+  summary: state.sections.summary,
+  explanation: state.sections.explanation,
+  concepts: state.sections.concepts,
+  references: state.sections.references,
+  notes: state.notes,
+}))
 
 async function load() {
   editor.clear()
@@ -102,13 +112,14 @@ onBeforeUnmount(() => { disposed = true; resource.cancel() })
         </fieldset>
       </form>
 
-      <!-- Modal de Conflito de Concorrência 409 -->
-      <ConcurrencyConflictModal
+      <!-- Modal de Resolução de Conflitos OCC (F04) -->
+      <ConflictResolutionModal
         :open="state.isConflict"
-        :message="state.conflictMessage"
+        :conflict-data="state.conflictData"
+        :local-data="localFormData"
         :busy="state.saving"
         @overwrite="handleOverwrite"
-        @reload="handleReload"
+        @keep-server="handleReload"
         @close="editor.dismissConflict"
       />
     </template>

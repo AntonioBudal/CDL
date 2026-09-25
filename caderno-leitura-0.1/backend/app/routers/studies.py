@@ -18,6 +18,7 @@ from app.schemas.trash import TrashActionResponse
 from app.services.export_service import generate_study_export
 from app.services.persistence import (
     check_optimistic_lock,
+    check_optimistic_version,
     commit_changes,
     get_or_404,
     get_user_resource_or_404,
@@ -115,8 +116,30 @@ def update_study(study_id: Identifier, payload: StudyPatch, session: DatabaseSes
     study = get_user_resource_or_404(session, Study, study_id, current_user.id, "Estudo")
     if study.deleted_at is not None or (study.chapter and study.chapter.book and study.chapter.book.deleted_at is not None):
         raise HTTPException(status_code=404, detail="Não é possível editar um estudo que está na lixeira.")
-    check_optimistic_lock(study.updated_at, payload.expected_updated_at, "Estudo")
-    changes = payload.model_dump(exclude_unset=True, exclude={"expected_updated_at"})
+
+    server_data = StudyRead.model_validate(study).model_dump(mode="json")
+    if payload.expected_version is not None:
+        check_optimistic_version(
+            current_version=study.version,
+            expected_version=payload.expected_version,
+            entity_id=study.id,
+            entity_type="study",
+            server_updated_at=study.updated_at,
+            server_data=server_data,
+            label="Estudo",
+        )
+    elif payload.expected_updated_at is not None:
+        check_optimistic_lock(
+            study.updated_at,
+            payload.expected_updated_at,
+            label="Estudo",
+            entity_id=study.id,
+            entity_type="study",
+            server_version=study.version,
+            server_data=server_data,
+        )
+
+    changes = payload.model_dump(exclude_unset=True, exclude={"expected_updated_at", "expected_version"})
     candidate = {name: changes.get(name, getattr(study, name)) for name in ANALYSIS_FIELDS}
     if not any(value.strip() for value in candidate.values()):
         raise HTTPException(
@@ -125,6 +148,7 @@ def update_study(study_id: Identifier, payload: StudyPatch, session: DatabaseSes
         )
     for name, value in changes.items():
         setattr(study, name, value)
+    study.version += 1
     commit_changes(session)
     session.refresh(study)
     return study

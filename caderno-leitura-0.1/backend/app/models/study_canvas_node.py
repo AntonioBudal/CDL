@@ -22,6 +22,7 @@ class StudyCanvasNode(Base):
         UniqueConstraint("study_id", "book_id", name="uq_canvas_node_study_book"),
         Index("ix_canvas_nodes_book_study", "book_id", "study_id"),
         Index("ix_canvas_nodes_user_id", "user_id"),
+        Index("ix_canvas_nodes_sync", "user_id", "updated_at"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -46,6 +47,7 @@ class StudyCanvasNode(Base):
     height: Mapped[float | None] = mapped_column(Float, nullable=True, default=None)
     z_index: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
     color_tag: Mapped[str | None] = mapped_column(String(32), nullable=True, default=None)
+    version: Mapped[int] = mapped_column(Integer, default=1, server_default=text("1"), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
         UTCDateTime(),
         default=utc_now,

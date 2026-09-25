@@ -17,6 +17,7 @@ from app.services.cover_service import (
 from app.services.export_service import generate_book_export
 from app.services.persistence import (
     check_optimistic_lock,
+    check_optimistic_version,
     commit_changes,
     get_or_404,
     get_user_resource_or_404,
@@ -120,15 +121,37 @@ def update_book(book_id: Identifier, payload: BookPatch, session: DatabaseSessio
     book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
     if book.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Livro não encontrado.")
-    check_optimistic_lock(book.updated_at, payload.expected_updated_at, "Livro")
+
+    server_data = BookRead.model_validate(book).model_dump(mode="json")
+    if payload.expected_version is not None:
+        check_optimistic_version(
+            current_version=book.version,
+            expected_version=payload.expected_version,
+            entity_id=book.id,
+            entity_type="book",
+            server_updated_at=book.updated_at,
+            server_data=server_data,
+            label="Livro",
+        )
+    elif payload.expected_updated_at is not None:
+        check_optimistic_lock(
+            book.updated_at,
+            payload.expected_updated_at,
+            label="Livro",
+            entity_id=book.id,
+            entity_type="book",
+            server_version=book.version,
+            server_data=server_data,
+        )
 
     if "category_ids" in payload.model_fields_set:
         assign_book_categories(session, book, payload.category_ids or [])
 
-    changes = payload.model_dump(exclude_unset=True, exclude={"expected_updated_at", "category_ids"})
+    changes = payload.model_dump(exclude_unset=True, exclude={"expected_updated_at", "expected_version", "category_ids"})
     for name, value in changes.items():
         setattr(book, name, value)
 
+    book.version += 1
     commit_changes(session)
     session.refresh(book)
     return book

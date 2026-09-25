@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 
 from app.db.base import Base
 
+from app.errors import ConcurrencyConflictError
+
 Record = TypeVar("Record", bound=Base)
 
 
@@ -53,15 +55,50 @@ def commit_changes(session: Session) -> None:
         raise
 
 
+def check_optimistic_version(
+    current_version: int,
+    expected_version: int | None,
+    entity_id: int,
+    entity_type: str,
+    server_updated_at: datetime | None,
+    server_data: dict[str, Any],
+    label: str = "Registro",
+) -> None:
+    """Valida controle otimista de concorrência baseado em versão incremental (OCC).
+
+    Raises:
+        ConcurrencyConflictError: Se a expected_version for divergente da versão atual no banco.
+    """
+    if expected_version is None:
+        return
+
+    if expected_version != current_version:
+        raise ConcurrencyConflictError(
+            entity_id=entity_id,
+            entity_type=entity_type,
+            server_version=current_version,
+            server_updated_at=server_updated_at,
+            server_data=server_data,
+            detail=(
+                f"Conflito de concorrência: este {label.lower()} foi modificado em outro dispositivo. "
+                "Seus dados foram preservados no formulário."
+            ),
+        )
+
+
 def check_optimistic_lock(
     current_updated_at: datetime | None,
     expected_updated_at: datetime | None,
     label: str = "Registro",
+    entity_id: int | None = None,
+    entity_type: str | None = None,
+    server_version: int | None = None,
+    server_data: dict[str, Any] | None = None,
 ) -> None:
     """Valida bloqueio de concorrência otimista.
 
     Raises:
-        HTTPException(409): Se o registro no banco foi alterado após o expected_updated_at.
+        ConcurrencyConflictError ou HTTPException(409): Se o registro no banco foi alterado após o expected_updated_at.
     """
     if expected_updated_at is None or current_updated_at is None:
         return
@@ -70,6 +107,18 @@ def check_optimistic_lock(
     exp = expected_updated_at if expected_updated_at.tzinfo is not None else expected_updated_at.replace(tzinfo=UTC)
 
     if curr > exp + timedelta(seconds=1):
+        if entity_id is not None and entity_type is not None and server_version is not None:
+            raise ConcurrencyConflictError(
+                entity_id=entity_id,
+                entity_type=entity_type,
+                server_version=server_version,
+                server_updated_at=current_updated_at,
+                server_data=server_data or {},
+                detail=(
+                    f"Conflito de concorrência: este {label.lower()} foi modificado em outro dispositivo. "
+                    "Seus dados foram preservados no formulário."
+                ),
+            )
         raise HTTPException(
             status_code=409,
             detail=(

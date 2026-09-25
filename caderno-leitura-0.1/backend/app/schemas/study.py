@@ -45,10 +45,11 @@ class StudyPatch(InputModel):
     references: str | None = None
     notes: str | None = None
     expected_updated_at: datetime | None = Field(default=None, strict=False)
+    expected_version: int | None = Field(default=None, ge=1, strict=False, description="Versão esperada do estudo para controle de concorrência")
 
     @model_validator(mode="after")
     def require_changes_without_null(self) -> Self:
-        payload_fields = self.model_fields_set - {"expected_updated_at"}
+        payload_fields = self.model_fields_set - {"expected_updated_at", "expected_version"}
         if not payload_fields:
             raise ValueError("Envie pelo menos um campo para alterar.")
         for name in payload_fields:
@@ -61,6 +62,7 @@ class StudyMoveRequest(InputModel):
     parent_study_id: RecordId | None = Field(default=None, description="ID do estudo pai ou None para nó raiz.")
     target_position: int = Field(default=0, ge=0, description="Posição ordinal desejada entre os irmãos.")
     expected_updated_at: datetime | None = Field(default=None, strict=False)
+    expected_version: int | None = Field(default=None, ge=1, strict=False)
 
 
 class StudySummary(OutputModel):
@@ -71,6 +73,7 @@ class StudySummary(OutputModel):
     parent_study_id: int | None = None
     position: int = 0
     reading_status: str = "rascunho"
+    version: int = 1
     created_at: datetime
     updated_at: datetime
     deleted_at: datetime | None = None

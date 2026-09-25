@@ -8,6 +8,8 @@ import type {
 } from '../types.ts'
 
 
+import type { ConflictData, SyncChangesResponse, UserPreferenceRead, UserPreferenceUpdate } from '../types.ts'
+
 export interface HealthResponse {
   status: 'ok'
   service: string
@@ -16,10 +18,21 @@ export interface HealthResponse {
 
 export class ApiError extends Error {
   status: number
-  constructor(message: string, status: number) {
+  data?: unknown
+  constructor(message: string, status: number, data?: unknown) {
     super(message)
     this.name = 'ApiError'
     this.status = status
+    this.data = data
+  }
+}
+
+export class ConcurrencyConflictApiError extends ApiError {
+  conflictData: ConflictData
+  constructor(message: string, conflictData: ConflictData) {
+    super(message, 409, conflictData)
+    this.name = 'ConcurrencyConflictApiError'
+    this.conflictData = conflictData
   }
 }
 
@@ -79,7 +92,17 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   try { data = await response.json() } catch {
     throw new ApiError('O servidor não devolveu uma resposta válida. Verifique a conexão local.', response.ok ? 0 : response.status)
   }
-  if (!response.ok) throw new ApiError(detailMessage(data, response.status), response.status)
+  if (!response.ok) {
+    if (
+      response.status === 409 &&
+      typeof data === 'object' &&
+      data !== null &&
+      'server_version' in data
+    ) {
+      throw new ConcurrencyConflictApiError(detailMessage(data, 409), data as ConflictData)
+    }
+    throw new ApiError(detailMessage(data, response.status), response.status, data)
+  }
   return data as T
 }
 
@@ -215,6 +238,19 @@ export const api = {
   deleteCanvasFrame: (frameId: number) =>
     request<{ success: boolean; message: string }>(`/canvas/frames/${frameId}`, {
       method: 'DELETE',
+    }),
+
+  // Sincronização Multidispositivo e Preferências (F04)
+  fetchSyncChanges: (since?: string | null, signal?: AbortSignal) => {
+    const qs = since ? `?since=${encodeURIComponent(since)}` : ''
+    return request<SyncChangesResponse>(`/sync/changes${qs}`, { signal })
+  },
+  getUserPreferences: (signal?: AbortSignal) =>
+    request<UserPreferenceRead>('/preferences', { signal }),
+  updateUserPreferences: (payload: UserPreferenceUpdate) =>
+    request<UserPreferenceRead>('/preferences', {
+      method: 'PUT',
+      body: JSON.stringify(payload),
     }),
 
   // Categorias (F01 CRUD)

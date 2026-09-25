@@ -4,13 +4,18 @@ import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import type { IconName } from './types'
 import Icon from './components/ui/Icon.vue'
 import GlobalSearchModal from './components/search/GlobalSearchModal.vue'
+import SyncStatusBadge from './components/sync/SyncStatusBadge.vue'
 import { useGlobalSearch } from './composables/useGlobalSearch.ts'
+import { usePreferences } from './composables/usePreferences.ts'
+import { useSync } from './composables/useSync.ts'
 import { useAuthStore } from './stores/auth.ts'
 
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const { openSearch } = useGlobalSearch()
+const sync = useSync()
+const preferences = usePreferences()
 
 const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(String(route.name)))
 const currentUser = computed(() => auth.user.value)
@@ -46,11 +51,15 @@ onMounted(() => {
   readHomeViewPreference()
   window.addEventListener('storage', handleStorageChange)
   window.addEventListener('caderno_home_view_changed', handleStorageChange)
+  sync.attachListeners()
+  sync.syncNow(false, 1000)
+  preferences.loadPreferences()
 })
 
 onUnmounted(() => {
   window.removeEventListener('storage', handleStorageChange)
   window.removeEventListener('caderno_home_view_changed', handleStorageChange)
+  sync.detachListeners()
 })
 
 interface NavLinkItem {
@@ -132,6 +141,7 @@ const visibleMainLinks = computed(() => {
         </RouterLink>
       </nav>
       <div class="header-actions">
+        <SyncStatusBadge v-if="!isAuthPage" />
         <button
           v-if="!isAuthPage"
           type="button"
