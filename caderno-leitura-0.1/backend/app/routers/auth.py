@@ -39,6 +39,7 @@ from app.services.auth_service import (
     link_google_identity,
     unlink_google_identity,
 )
+from app.services.persistence import commit_changes
 from app.services.profile_service import get_or_create_profile
 from app.services.google_auth_service import (
     GoogleAuthDisabledError,
@@ -152,6 +153,7 @@ def login(
     user_agent = request.headers.get("user-agent", "")
 
     user_session, raw_token = create_session(session, user.id, client_ip, user_agent)
+    commit_changes(session)
     set_session_cookie(response, raw_token, request)
 
     return AuthSuccessResponse(user=user, session_id=user_session.id)
@@ -196,6 +198,7 @@ def setup_owner(
     client_ip = _get_client_ip(request)
     user_agent = request.headers.get("user-agent", "")
     user_session, raw_token = create_session(session, owner.id, client_ip, user_agent)
+    commit_changes(session)
     set_session_cookie(response, raw_token, request)
 
     return AuthSuccessResponse(user=owner, session_id=user_session.id)
@@ -269,6 +272,7 @@ def register(
     client_ip = _get_client_ip(request)
     user_agent = request.headers.get("user-agent", "")
     user_session, raw_token = create_session(session, new_user.id, client_ip, user_agent)
+    commit_changes(session)
     set_session_cookie(response, raw_token, request)
 
     return AuthSuccessResponse(user=new_user, session_id=user_session.id)
@@ -310,6 +314,8 @@ def delete_session(
             detail="Sessão não encontrada ou não pertence ao usuário.",
         )
 
+    commit_changes(session)
+
     if current_session_id and current_session_id == session_id:
         clear_session_cookie(response, request)
 
@@ -340,6 +346,7 @@ def logout(
             )
             session.flush()
 
+    commit_changes(session)
     clear_session_cookie(response, request)
     return LogoutResponse(ok=True)
 
@@ -364,6 +371,7 @@ def logout_all_other(
         session.flush()
         count = result.rowcount or 0
 
+    commit_changes(session)
     return LogoutAllResponse(revoked_count=count)
 
 
@@ -398,6 +406,7 @@ def login_with_google(
     user_agent = request.headers.get("user-agent", "")
 
     user_session, raw_token = create_session(session, user.id, client_ip, user_agent)
+    commit_changes(session)
     set_session_cookie(response, raw_token, request)
 
     return AuthSuccessResponse(user=user, session_id=user_session.id)
@@ -428,6 +437,7 @@ def link_google(
         ) from exc
 
     identity = link_google_identity(session, current_user, payload)
+    commit_changes(session)
     return ExternalIdentityRead(
         id=identity.id,
         provider=identity.provider,
@@ -446,5 +456,6 @@ def unlink_google(
 ) -> dict[str, bool]:
     """Desvincula a conta Google associada ao usuário autenticado com prevenção de lockout."""
     unlink_google_identity(session, current_user)
+    commit_changes(session)
     return {"ok": True}
 

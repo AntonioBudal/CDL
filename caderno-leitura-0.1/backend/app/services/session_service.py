@@ -73,6 +73,10 @@ def get_session_by_token(session: Session, raw_token: str) -> UserSession | None
         user_session.last_activity = now
         user_session.expires_at = now + timedelta(seconds=SESSION_MAX_AGE_SECONDS)
         session.flush()
+        try:
+            session.commit()
+        except Exception:
+            session.rollback()
 
     return user_session
 
@@ -144,6 +148,10 @@ def delete_expired_sessions(session: Session) -> int:
     stmt = delete(UserSession).where(UserSession.expires_at <= now)
     result = session.execute(stmt)
     session.flush()
+    try:
+        session.commit()
+    except Exception:
+        session.rollback()
     return result.rowcount or 0
 
 

@@ -60,7 +60,6 @@ def auth_client(tmp_path, monkeypatch):
         session = testing_session_local()
         try:
             yield session
-            session.commit()
         except Exception:
             session.rollback()
             raise
