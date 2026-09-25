@@ -12,6 +12,7 @@ import TrashView from '../views/TrashView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import SetupOwnerView from '../views/SetupOwnerView.vue'
+import UserProfileView from '../views/UserProfileView.vue'
 import { useAuthStore } from '../stores/auth.ts'
 
 export const router = createRouter({
@@ -30,6 +31,7 @@ export const router = createRouter({
     { path: '/conexao', name: 'connection', component: ConnectionView, meta: { title: 'Conexão' } },
     { path: '/ajustes', name: 'settings', component: SettingsView, meta: { title: 'Ajustes' } },
     { path: '/lixeira', name: 'trash', component: TrashView, meta: { title: 'Lixeira' } },
+    { path: '/@:username', alias: ['/u/:username'], name: 'user-profile', component: UserProfileView, meta: { title: 'Perfil do Leitor' } },
     { path: '/:pathMatch(.*)*', component: NotFoundView, meta: { title: 'Página não encontrada' } },
   ],
   scrollBehavior(to, from, savedPosition) {

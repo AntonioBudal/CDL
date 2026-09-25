@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import type { IconName } from './types'
 import Icon from './components/ui/Icon.vue'
@@ -9,10 +9,12 @@ import { useGlobalSearch } from './composables/useGlobalSearch.ts'
 import { usePreferences } from './composables/usePreferences.ts'
 import { useSync } from './composables/useSync.ts'
 import { useAuthStore } from './stores/auth.ts'
+import { useProfile } from './composables/useProfile.ts'
 
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
+const profileService = useProfile()
 const { openSearch } = useGlobalSearch()
 const sync = useSync()
 const preferences = usePreferences()
@@ -54,7 +56,19 @@ onMounted(() => {
   sync.attachListeners()
   sync.syncNow(false, 1000)
   preferences.loadPreferences()
+  if (auth.isAuthenticated.value) {
+    void profileService.fetchProfile()
+  }
 })
+
+watch(
+  () => auth.isAuthenticated.value,
+  (isAuth) => {
+    if (isAuth) {
+      void profileService.fetchProfile()
+    }
+  }
+)
 
 onUnmounted(() => {
   window.removeEventListener('storage', handleStorageChange)
@@ -154,15 +168,28 @@ const visibleMainLinks = computed(() => {
           <kbd class="search-kbd">Ctrl K</kbd>
         </button>
 
-        <!-- Informações do Usuário e Botão de Logout (F02) -->
+        <!-- Informações do Usuário e Botão de Logout (F02/F05) -->
         <div v-if="isAuthenticated && !isAuthPage" class="user-nav-actions">
           <RouterLink
-            to="/ajustes"
+            :to="profileService.profile.value?.username ? `/@${profileService.profile.value.username}` : '/ajustes'"
             class="user-chip"
-            :title="`Conectado como ${currentUser?.display_name || currentUser?.username}`"
+            :title="`Perfil de ${profileService.profile.value?.display_name || currentUser?.display_name || currentUser?.username}`"
           >
-            <Icon name="user" :size="15" class="user-avatar-icon" />
-            <span class="user-display-name">{{ currentUser?.display_name || currentUser?.username }}</span>
+            <img
+              v-if="profileService.profile.value?.avatar_url"
+              :src="profileService.profile.value.avatar_url"
+              alt=""
+              class="header-avatar-img"
+              aria-hidden="true"
+            />
+            <span
+              v-else
+              class="header-avatar-initials"
+              aria-hidden="true"
+            >
+              {{ profileService.initials.value }}
+            </span>
+            <span class="user-display-name">{{ profileService.profile.value?.display_name || currentUser?.display_name || currentUser?.username }}</span>
           </RouterLink>
           <button
             type="button"
@@ -225,6 +252,30 @@ const visibleMainLinks = computed(() => {
 
 .user-avatar-icon {
   font-size: 0.875rem;
+}
+
+.header-avatar-img {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.header-avatar-initials {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-accent);
+  color: var(--color-surface, #fff);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  line-height: 1;
+  user-select: none;
 }
 
 .user-display-name {

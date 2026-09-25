@@ -12,6 +12,7 @@ from app.models.study_canvas_node import StudyCanvasNode
 from app.models.study_relation import StudyRelation
 from app.models.user import User
 from app.models.user_preference import UserPreference
+from app.models.user_profile import UserProfile
 from app.models.user_session import UserSession
 
 __all__ = [
@@ -27,6 +28,7 @@ __all__ = [
     "StudyRelation",
     "User",
     "UserPreference",
+    "UserProfile",
     "UserSession",
     "book_categories",
 ]

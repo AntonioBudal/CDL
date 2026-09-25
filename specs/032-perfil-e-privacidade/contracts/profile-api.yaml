@@ -1,0 +1,345 @@
+openapi: 3.0.3
+info:
+  title: Caderno de Leitura - Profile & Privacy API
+  version: 0.5.0
+  description: Endpoints para gestão de perfil público, upload de avatar, configurações de visibilidade e consulta pública de leitores.
+paths:
+  /api/profile/me:
+    get:
+      summary: Obter perfil completo do leitor autenticado
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Perfil privado retornado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfilePrivateRead'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    put:
+      summary: Atualizar dados de perfil e privacidade
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileUpdate'
+      responses:
+        '200':
+          description: Perfil atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfilePrivateRead'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Nome de usuário indisponível (colisão)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/profile/avatar:
+    post:
+      summary: Fazer upload de arquivo de imagem para o avatar
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Arquivo de imagem (PNG, JPEG ou WebP até 2MB)
+              required:
+                - file
+      responses:
+        '200':
+          description: Imagem processada e salva com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  avatar_url:
+                    type: string
+                    example: /api/avatars/avatar_user123_a1b2c3d4.webp
+        '400':
+          description: Arquivo inválido, corrompido ou excedendo 2MB
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      summary: Remover avatar personalizado
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Avatar customizado removido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  avatar_url:
+                    type: string
+                    nullable: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/users/{username}:
+    get:
+      summary: Obter perfil público de um leitor pelo handle @username
+      security:
+        - sessionCookie: []
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Identificador do usuário sem o @
+      responses:
+        '200':
+          description: Dados públicos do perfil retornados respeitando nível de privacidade
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfilePublicRead'
+        '404':
+          description: Usuário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/users:
+    get:
+      summary: Pesquisar usuários descobríveis no sistema
+      security:
+        - sessionCookie: []
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Termo de busca por nome ou handle
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Lista de leitores descobríveis encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSearchItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/avatars/{filename}:
+    get:
+      summary: Servir arquivo de imagem de avatar processado
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Arquivo de imagem retornado
+          content:
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Imagem não encontrada
+components:
+  schemas:
+    UserProfilePrivateRead:
+      type: object
+      required:
+        - user_id
+        - username
+        - display_name
+        - profile_visibility
+        - dashboard_visibility
+        - is_discoverable
+        - show_reading_stats
+        - created_at
+        - updated_at
+      properties:
+        user_id:
+          type: string
+        username:
+          type: string
+        display_name:
+          type: string
+        email:
+          type: string
+          nullable: true
+        avatar_url:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        profile_visibility:
+          type: string
+          enum: [public, friends, private]
+        dashboard_visibility:
+          type: string
+          enum: [public, friends, private]
+        is_discoverable:
+          type: boolean
+        show_reading_stats:
+          type: boolean
+        has_google_avatar:
+          type: boolean
+        google_avatar_url:
+          type: string
+          nullable: true
+        reading_stats:
+          $ref: '#/components/schemas/ProfileReadingStats'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    UserProfilePublicRead:
+      type: object
+      required:
+        - username
+        - display_name
+        - profile_visibility
+        - is_private
+        - created_at
+      properties:
+        username:
+          type: string
+        display_name:
+          type: string
+        avatar_url:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        profile_visibility:
+          type: string
+          enum: [public, friends, private]
+        is_private:
+          type: boolean
+        reading_stats:
+          $ref: '#/components/schemas/ProfileReadingStats'
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    UserProfileUpdate:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+        display_name:
+          type: string
+          minLength: 1
+          maxLength: 60
+        bio:
+          type: string
+          maxLength: 280
+          nullable: true
+        profile_visibility:
+          type: string
+          enum: [public, friends, private]
+        dashboard_visibility:
+          type: string
+          enum: [public, friends, private]
+        is_discoverable:
+          type: boolean
+        show_reading_stats:
+          type: boolean
+        use_google_avatar:
+          type: boolean
+
+    UserSearchItem:
+      type: object
+      required:
+        - username
+        - display_name
+      properties:
+        username:
+          type: string
+        display_name:
+          type: string
+        avatar_url:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+
+    ProfileReadingStats:
+      type: object
+      required:
+        - total_books
+        - total_studies
+        - current_streak_days
+      properties:
+        total_books:
+          type: integer
+        total_studies:
+          type: integer
+        current_streak_days:
+          type: integer
+
+    ErrorDetail:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+
+  responses:
+    Unauthorized:
+      description: Usuário não autenticado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDetail'
+    BadRequest:
+      description: Parâmetros inválidos
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDetail'

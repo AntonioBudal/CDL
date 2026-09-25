@@ -13,6 +13,7 @@ from app.models.external_identity import ExternalIdentity
 from app.models.local_credential import LocalCredential
 from app.models.user import User
 from app.services.google_auth_service import GoogleTokenPayload
+from app.services.profile_service import get_or_create_profile
 
 logger = logging.getLogger(__name__)
 
@@ -143,6 +144,7 @@ def authenticate_google_user(session: Session, payload: GoogleTokenPayload) -> U
         email_at_link=payload.email,
     )
     session.add(new_identity)
+    get_or_create_profile(new_user, session)
     session.flush()
     session.refresh(new_user)
 

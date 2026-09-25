@@ -406,9 +406,42 @@ Este documento registra as evidências consolidadas em cada ciclo de trabalho e 
 
 ---
 
+## Sessão: Implementação e Validação da Feature 05 — Perfil e Privacidade (24/09/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Especificação, Arquitetura e Contratos (Spec Kit):**
+   - Ciclo formal Spec Kit completado para `specs/032-perfil-e-privacidade/` (`spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/`, `tasks.md`, `checklists/`).
+   - Todas as 32 tarefas de `tasks.md` executadas e marcadas como `[X]`.
+2. **Backend e Migrações (Alembic):**
+   - Modelo relacional `UserProfile` com relacionamento 1:1 com `User` e exclusão em cascata.
+   - Migração `0015_add_user_profile.py` com criação de índices e auto-provisionamento para contas existentes.
+   - Pipeline de processamento gráfico de avatar via Pillow (`ImageOps.fit`) gerando arquivos quadrados 256x256 WebP em `backend/data/avatars/`.
+   - Endpoints implementados e validados:
+     - `GET /api/profile/me` e `PUT /api/profile/me` (perfil privado com e-mail, handle único e dados completos).
+     - `POST /api/profile/avatar`, `DELETE /api/profile/avatar` e `GET /api/avatars/{filename}` (gestão de avatar com cache HTTP).
+     - `GET /api/users/{username}` (perfil público com regras de visibilidade desacopladas e mascaramento de campos privados).
+     - `GET /api/users?q=...` (busca de usuários descobríveis e públicos).
+3. **Frontend e Experiência do Leitor (Vue 3 / TypeScript):**
+   - Composable `useProfile.ts` com estado reativo e helpers de iniciais vetoriais.
+   - Componente acessível `AvatarUploadModal.vue` com drag & drop, pré-visualização, seleção de foto Google e exclusão.
+   - Componente `UserProfileCard.vue` com apresentação pública, cartão institucional discreto para perfis restritos e estatísticas quantitativas condicionais.
+   - Rota pública `/@:username` (e alias `/u/:username`) e view `UserProfileView.vue`.
+   - Aba "Perfil & Privacidade" em `SettingsView.vue` com formulário de `@username`, bio (contador de 280 caracteres), seletores desacoplados de visibilidade e switches de descobrimento.
+   - Cabeçalho em `App.vue` integrado com avatar dinâmico e fallback em iniciais estilizadas.
+4. **Validação e Suítes de Teste:**
+   - 276 testes de backend passando (`pytest backend/tests`), incluindo 14 testes herméticos dedicados em `test_profile_and_privacy.py`.
+   - 223 testes de frontend passando (`npm test`).
+   - Build de produção do frontend (`npm run build` / `vue-tsc`) concluído com sucesso (código 0).
+   - Auditoria de sistema visual (`visual_system.test.mjs`) 100% aprovada (0 emojis informais).
+5. **Documentação Técnica:**
+   - Documento arquitetural criado em `caderno-leitura-0.1/docs/contexto/PERFIL-E-PRIVACIDADE.md`.
+
+---
+
 ## Próximo Passo Recomendado
 
-Iniciar o ciclo Spec Kit para a primeira fatia do Roadmap 0.5 executando:
+Após autorização explícita do usuário para o commit atômico da Feature 05 (`feature — perfil e privacidade`), iniciar a próxima etapa do Roadmap 0.5:
 ```bash
-/speckit-specify F01 - Fundação Multiusuário e CRUD Geral
+/speckit-specify F06 - Sistema de Amizades
 ```
+

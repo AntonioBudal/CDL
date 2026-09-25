@@ -113,3 +113,26 @@ def get_covers_dir(database_path: Path | None = None) -> Path:
 
     covers_dir.mkdir(parents=True, exist_ok=True)
     return covers_dir
+
+
+def get_avatars_dir(database_path: Path | None = None) -> Path:
+    """Retorna o diretório dedicado a avatares de usuários (<db_dir>/avatars).
+
+    Se CADERNO_AVATARS_DIR estiver configurado no ambiente, valida que seja
+    um caminho absoluto (disparando ValueError caso contrário) e o resolve.
+    Caso padrão: retorna o diretório 'avatars' no mesmo pai do banco de dados ativo.
+    Garante que o diretório exista antes de retornar seu caminho canônico resolvido.
+    """
+    configured = os.environ.get("CADERNO_AVATARS_DIR")
+    if configured:
+        path = Path(configured).expanduser()
+        if not path.is_absolute():
+            raise ValueError("CADERNO_AVATARS_DIR deve ser um caminho absoluto.")
+        avatars_dir = path.resolve()
+    else:
+        base_db = database_path or get_database_path()
+        avatars_dir = (base_db.parent / "avatars").resolve()
+
+    avatars_dir.mkdir(parents=True, exist_ok=True)
+    return avatars_dir
+

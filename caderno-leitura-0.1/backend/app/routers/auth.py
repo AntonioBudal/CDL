@@ -39,6 +39,7 @@ from app.services.auth_service import (
     link_google_identity,
     unlink_google_identity,
 )
+from app.services.profile_service import get_or_create_profile
 from app.services.google_auth_service import (
     GoogleAuthDisabledError,
     InvalidGoogleTokenError,
@@ -262,6 +263,7 @@ def register(
         password_hash=hash_password(req.password),
     )
     session.add(cred)
+    get_or_create_profile(new_user, session)
     session.flush()
 
     client_ip = _get_client_ip(request)

@@ -343,7 +343,7 @@ export interface DashboardParams {
   limit?: number
 }
 
-export type SettingsTabId = 'aparencia' | 'leitura' | 'sistema' | 'conta'
+export type SettingsTabId = 'perfil' | 'aparencia' | 'leitura' | 'sistema' | 'conta'
 
 export interface SettingsTab {
   id: SettingsTabId
@@ -466,6 +466,14 @@ export type IconName =
   | 'user'
   | 'smartphone'
   | 'monitor'
+  | 'shield'
+  | 'lock'
+  | 'globe'
+  | 'users'
+  | 'camera'
+  | 'image'
+  | 'eye'
+  | 'eye-off'
 
 export interface IconProps {
   name: IconName
@@ -830,3 +838,4 @@ export interface MotionState {
 
 export * from './types/sync.ts'
 export * from './types/preferences.ts'
+export * from './types/profile.ts'

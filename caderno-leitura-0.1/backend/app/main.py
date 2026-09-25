@@ -18,11 +18,13 @@ from app.routers import (
     health,
     imports,
     preferences,
+    profile,
     search,
     studies,
     study_relations,
     sync,
     trash,
+    users,
 )
 
 
@@ -66,6 +68,9 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(search.router, prefix="/api")
     application.include_router(sync.router, prefix="/api")
     application.include_router(preferences.router, prefix="/api")
+    application.include_router(profile.router, prefix="/api")
+    application.include_router(profile.avatars_router, prefix="/api")
+    application.include_router(users.router, prefix="/api")
     register_database_error_handlers(application)
     register_frontend(application, frontend_dist)
     return application

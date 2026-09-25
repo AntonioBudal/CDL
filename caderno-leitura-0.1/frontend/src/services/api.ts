@@ -8,7 +8,16 @@ import type {
 } from '../types.ts'
 
 
-import type { ConflictData, SyncChangesResponse, UserPreferenceRead, UserPreferenceUpdate } from '../types.ts'
+import type {
+  ConflictData,
+  SyncChangesResponse,
+  UserPreferenceRead,
+  UserPreferenceUpdate,
+  UserProfilePrivate,
+  UserProfilePublic,
+  UserProfileUpdate,
+  UserSearchItem,
+} from '../types.ts'
 
 export interface HealthResponse {
   status: 'ok'
@@ -252,6 +261,33 @@ export const api = {
       method: 'PUT',
       body: JSON.stringify(payload),
     }),
+
+  // Perfil e Privacidade (F05)
+  getMyProfile: (signal?: AbortSignal) =>
+    request<UserProfilePrivate>('/profile/me', { signal }),
+  updateMyProfile: (payload: UserProfileUpdate) =>
+    request<UserProfilePrivate>('/profile/me', {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+  uploadAvatar: (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return request<{ avatar_url: string }>('/profile/avatar', {
+      method: 'POST',
+      body: formData,
+    })
+  },
+  deleteAvatar: () =>
+    request<{ avatar_url: string | null }>('/profile/avatar', {
+      method: 'DELETE',
+    }),
+  getUserPublicProfile: (username: string, signal?: AbortSignal) =>
+    request<UserProfilePublic>(`/users/${encodeURIComponent(username)}`, { signal }),
+  searchUsers: (query?: string, signal?: AbortSignal) => {
+    const qs = query ? `?q=${encodeURIComponent(query)}` : ''
+    return request<UserSearchItem[]>(`/users${qs}`, { signal })
+  },
 
   // Categorias (F01 CRUD)
   createCategory: (payload: { id?: string; name: string; parent_id?: string | null }) =>

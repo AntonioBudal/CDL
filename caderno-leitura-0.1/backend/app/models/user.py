@@ -15,6 +15,8 @@ if TYPE_CHECKING:
     from app.models.external_identity import ExternalIdentity
     from app.models.local_credential import LocalCredential
     from app.models.study import Study
+    from app.models.user_preference import UserPreference
+    from app.models.user_profile import UserProfile
     from app.models.user_session import UserSession
 
 
@@ -88,6 +90,13 @@ class User(Base):
         "Study",
         back_populates="user",
         cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+    profile: Mapped[UserProfile | None] = relationship(
+        "UserProfile",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        uselist=False,
         passive_deletes=True,
     )
 
