@@ -4,7 +4,8 @@ import { positiveId, type Book, type Chapter, type Study, type StudyContext } fr
 
 interface StudyGateway {
   getStudy: (id: number, signal?: AbortSignal) => Promise<Study>
-  listBooks: (signal?: AbortSignal) => Promise<Book[]>
+  listBooks?: (signal?: AbortSignal) => Promise<Book[]>
+  getBook?: (id: number, signal?: AbortSignal) => Promise<Book>
   listChapters: (id: number, signal?: AbortSignal) => Promise<Chapter[]>
 }
 
@@ -29,13 +30,18 @@ export function useStudyResource(gateway: StudyGateway) {
       return null
     }
     try {
-      const [study, books, chapters] = await Promise.all([
+      const bookPromise: Promise<Book | null | undefined> = gateway.getBook
+        ? gateway.getBook(bookId, controller.signal).catch(() => null)
+        : (gateway.listBooks
+            ? gateway.listBooks(controller.signal).then(books => books.find(item => item.id === bookId) || null)
+            : Promise.resolve(null))
+
+      const [study, book, chapters] = await Promise.all([
         gateway.getStudy(studyId, controller.signal),
-        gateway.listBooks(controller.signal),
+        bookPromise,
         gateway.listChapters(bookId, controller.signal),
       ])
       if (controller.signal.aborted) return null
-      const book = books.find(item => item.id === bookId)
       const chapter = chapters.find(item => item.id === study.chapter_id && item.book_id === bookId)
       if (!book || !chapter || study.id !== studyId) {
         state.error = 'Este estudo não foi encontrado neste livro. Volte aos livros para abri-lo.'

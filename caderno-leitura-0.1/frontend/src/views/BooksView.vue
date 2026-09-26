@@ -7,6 +7,7 @@ import CategorySelector from '../components/CategorySelector.vue'
 import LibraryToolbar from '../components/LibraryToolbar.vue'
 import EmptyState from '../components/ui/EmptyState.vue'
 import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
+import SharedStudiesList from '../components/library/SharedStudiesList.vue'
 import { api, errorMessage } from '../services/api'
 import { useLibraryFilter } from '../composables/useLibraryFilter'
 import { useMagneticHover } from '../composables/useMagneticHover'
@@ -16,6 +17,7 @@ import type { Book } from '../types'
 const { handlePointerMove, handlePointerLeave } = useMagneticHover()
 
 const router = useRouter()
+const activeTab = ref<'meus-livros' | 'compartilhados'>('meus-livros')
 const books = ref<Book[]>([])
 const loading = ref(true)
 const loadError = ref('')
@@ -85,10 +87,46 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 <template>
   <div class="books-view">
     <header class="page-header">
-    <p class="eyebrow">Seu acervo</p>
-    <h1>Meus livros</h1>
-  </header>
-  <div class="library-layout">
+      <p class="eyebrow">Seu acervo</p>
+      <h1>{{ activeTab === 'meus-livros' ? 'Meus livros' : 'Estudos Compartilhados' }}</h1>
+
+      <nav class="library-tabs-nav" role="tablist" aria-label="Abas da Biblioteca">
+        <button
+          type="button"
+          role="tab"
+          :aria-selected="activeTab === 'meus-livros'"
+          aria-controls="panel-meus-livros"
+          id="tab-meus-livros"
+          class="library-tab-button"
+          :class="{ active: activeTab === 'meus-livros' }"
+          @click="activeTab = 'meus-livros'"
+        >
+          Meu Acervo
+          <span v-if="books.length > 0" class="tab-badge">{{ books.length }}</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          :aria-selected="activeTab === 'compartilhados'"
+          aria-controls="panel-compartilhados"
+          id="tab-compartilhados"
+          class="library-tab-button"
+          :class="{ active: activeTab === 'compartilhados' }"
+          @click="activeTab = 'compartilhados'"
+        >
+          Compartilhados Comigo
+        </button>
+      </nav>
+    </header>
+
+    <!-- Painel Meu Acervo -->
+    <div
+      v-if="activeTab === 'meus-livros'"
+      id="panel-meus-livros"
+      role="tabpanel"
+      aria-labelledby="tab-meus-livros"
+      class="library-layout"
+    >
     <section aria-label="Livros cadastrados" :aria-busy="loading">
       <div v-if="loading" class="books-loading-skeleton" role="status" aria-label="Carregando livros">
         <div class="book-grid">
@@ -241,10 +279,73 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
       </form>
     </aside>
   </div>
+
+  <!-- Painel de Estudos Compartilhados -->
+  <div
+    v-else-if="activeTab === 'compartilhados'"
+    id="panel-compartilhados"
+    role="tabpanel"
+    aria-labelledby="tab-compartilhados"
+    class="shared-tab-panel"
+  >
+    <SharedStudiesList />
+  </div>
   </div>
 </template>
 
 <style scoped>
+/* Abas de Navegação da Biblioteca */
+.library-tabs-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  border-bottom: 1px solid var(--border, #e5e5e5);
+  padding-bottom: 0.25rem;
+}
+
+.library-tab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.5rem 1.125rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted, #71717a);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: var(--radius-sm, 6px) var(--radius-sm, 6px) 0 0;
+}
+
+.library-tab-button:hover {
+  color: var(--color-text-primary, #18181b);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.library-tab-button.active {
+  color: var(--color-primary, #d97706);
+  border-bottom-color: var(--color-primary, #d97706);
+  font-weight: 600;
+}
+
+.tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.45rem;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.06);
+  color: inherit;
+}
+
+.shared-tab-panel {
+  padding-top: 1.5rem;
+}
 .book-card-cover-wrapper {
   display: flex;
   justify-content: center;

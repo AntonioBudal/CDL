@@ -4,6 +4,7 @@ from pydantic import Field, field_validator, model_validator
 
 from app.schemas.category import CategoryRead
 from app.schemas.common import InputModel, NonBlankText, OutputModel
+from app.schemas.sharing import ResourceOwnerSummary
 
 
 class BookCreate(InputModel):
@@ -60,3 +61,6 @@ class BookRead(OutputModel):
     updated_at: datetime | None = None
     deleted_at: datetime | None = None
     categories: list[CategoryRead] = Field(default_factory=list)
+    visibility: str = "private"
+    can_edit: bool = True
+    owner: ResourceOwnerSummary | None = None

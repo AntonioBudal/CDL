@@ -2,8 +2,15 @@ from fastapi import APIRouter, HTTPException, Response, status
 from sqlalchemy import select
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
-from app.models import Chapter, Study
+from app.models import Chapter, Study, User
 from app.schemas.export import ExportFormat, ExportOptions
+from app.schemas.sharing import (
+    GrantPermissionRequest,
+    ResourceOwnerSummary,
+    ResourcePermissionItem,
+    ResourcePermissionsRead,
+    VisibilityUpdateRequest,
+)
 from app.schemas.study import (
     ANALYSIS_FIELDS,
     ANALYSIS_REQUIRED_MESSAGE,
@@ -23,36 +30,84 @@ from app.services.persistence import (
     get_or_404,
     get_user_resource_or_404,
 )
+from app.services.sharing_service import (
+    can_read_book,
+    can_read_study,
+    get_study_permissions,
+    grant_permission,
+    resolve_effective_visibility,
+    revoke_permission,
+    update_study_visibility,
+)
 from app.services.study_service import move_study, update_study_status
 from app.services.trash_service import permanent_delete_study, restore_study, trash_study
 
 router = APIRouter(tags=["Estudos"])
 
 
+def check_study_mutation_permission(session: DatabaseSession, study_id: int, user_id: str) -> Study:
+    """Verifica permissão de mutação sobre o estudo.
+
+    Se o solicitante for o proprietário: retorna o estudo para que a operação prossiga.
+    Se o solicitante não for o proprietário:
+    - Retorna 403 se o usuário tem permissão de leitura sobre o estudo (somente-leitura).
+    - Retorna 404 se não tem acesso algum ou recurso inexistente (anti-enumeração).
+    """
+    study = session.get(Study, study_id)
+    if study is None:
+        raise HTTPException(status_code=404, detail="Estudo não encontrado.")
+    if study.user_id == user_id:
+        return study
+    if study.deleted_at is not None:
+        raise HTTPException(status_code=404, detail="Estudo não encontrado.")
+    if can_read_study(session, user_id, study):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso somente leitura. Apenas o proprietário pode alterar este estudo.",
+        )
+    raise HTTPException(status_code=404, detail="Estudo não encontrado.")
+
+
 @router.get("/chapters/{chapter_id}/studies", response_model=list[StudySummary], summary="Listar estudos de um capítulo")
 def list_studies(chapter_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
     chapter = get_or_404(session, Chapter, chapter_id, "Capítulo")
-    if chapter.book and (chapter.book.user_id != current_user.id or chapter.book.deleted_at is not None):
+    book = chapter.book
+    if book is None or book.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Capítulo não encontrado.")
-    statement = select(
-        Study.id,
-        Study.chapter_id,
-        Study.parent_study_id,
-        Study.position,
-        Study.reading_status,
-        Study.title,
-        Study.location,
-        Study.created_at,
-        Study.updated_at,
-        Study.deleted_at,
-    ).where(
+
+    if book.user_id == current_user.id:
+        statement = select(Study).where(
+            Study.chapter_id == chapter_id,
+            Study.deleted_at.is_(None),
+            Study.user_id == current_user.id,
+        ).order_by(Study.parent_study_id.nullsfirst(), Study.position, Study.id)
+        studies = session.scalars(statement).all()
+        result = []
+        for s in studies:
+            sr = StudySummary.model_validate(s)
+            sr.book_id = book.id
+            sr.effective_visibility = resolve_effective_visibility(s, book)
+            sr.can_edit = True
+            result.append(sr)
+        return result
+
+    if not can_read_book(session, current_user.id, book):
+        raise HTTPException(status_code=404, detail="Capítulo não encontrado.")
+
+    statement = select(Study).where(
         Study.chapter_id == chapter_id,
         Study.deleted_at.is_(None),
-        Study.user_id == current_user.id,
-    ).order_by(
-        Study.parent_study_id.nullsfirst(), Study.position, Study.id
-    )
-    return session.execute(statement).mappings().all()
+    ).order_by(Study.parent_study_id.nullsfirst(), Study.position, Study.id)
+    studies = session.scalars(statement).all()
+    result = []
+    for s in studies:
+        if can_read_study(session, current_user.id, s, book=book):
+            sr = StudySummary.model_validate(s)
+            sr.book_id = book.id
+            sr.effective_visibility = resolve_effective_visibility(s, book)
+            sr.can_edit = (s.user_id == current_user.id)
+            result.append(sr)
+    return result
 
 
 @router.post("/studies/{study_id}/move", response_model=list[StudySummary], summary="Mover e reposicionar estudo na hierarquia")
@@ -62,7 +117,7 @@ def move_study_endpoint(
     session: DatabaseSession,
     current_user: CurrentUser,
 ):
-    get_user_resource_or_404(session, Study, study_id, current_user.id, "Estudo")
+    check_study_mutation_permission(session, study_id, current_user.id)
     return move_study(session, study_id, payload)
 
 
@@ -77,9 +132,8 @@ def update_study_status_endpoint(
     session: DatabaseSession,
     current_user: CurrentUser,
 ):
-    get_user_resource_or_404(session, Study, study_id, current_user.id, "Estudo")
+    check_study_mutation_permission(session, study_id, current_user.id)
     return update_study_status(session, study_id, payload)
-
 
 
 @router.post("/studies", response_model=StudyRead, status_code=status.HTTP_201_CREATED, summary="Cadastrar estudo")
@@ -95,26 +149,131 @@ def create_study(payload: StudyCreate, session: DatabaseSession, current_user: C
     study = Study(**values, user_id=current_user.id)
     session.add(study)
     commit_changes(session)
-    return study
+    session.refresh(study)
+    study_read = StudyRead.model_validate(study)
+    study_read.can_edit = True
+    return study_read
 
 
 @router.get("/studies/{study_id}", response_model=StudyRead, summary="Consultar estudo completo")
 def get_study(study_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
-    study = get_user_resource_or_404(session, Study, study_id, current_user.id, "Estudo")
-    if study.deleted_at is not None or (study.chapter and study.chapter.book and study.chapter.book.deleted_at is not None):
+    study = session.get(Study, study_id)
+    if study is None or study.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Estudo não encontrado.")
-    return study
+
+    book = None
+    if study.chapter:
+        book = study.chapter.book
+        if book and book.deleted_at is not None:
+            raise HTTPException(status_code=404, detail="Estudo não encontrado.")
+    elif study.chapter_id:
+        chapter = session.get(Chapter, study.chapter_id)
+        if chapter and chapter.book:
+            book = chapter.book
+            if book.deleted_at is not None:
+                raise HTTPException(status_code=404, detail="Estudo não encontrado.")
+
+    if not can_read_study(session, current_user.id, study, book=book):
+        raise HTTPException(status_code=404, detail="Estudo não encontrado.")
+
+    can_edit = (study.user_id == current_user.id)
+    study_read = StudyRead.model_validate(study)
+    study_read.can_edit = can_edit
+
+    if not can_edit:
+        owner_user = session.get(User, study.user_id)
+        if owner_user:
+            avatar_url = owner_user.profile.avatar_url if getattr(owner_user, "profile", None) else None
+            study_read.owner = ResourceOwnerSummary(
+                id=owner_user.id,
+                username=owner_user.username,
+                display_name=owner_user.display_name,
+                avatar_url=avatar_url,
+            )
+
+    return study_read
+
+
+@router.put("/studies/{study_id}/visibility", response_model=ResourcePermissionsRead, summary="Alterar visibilidade do estudo")
+def set_study_visibility(
+    study_id: Identifier,
+    payload: VisibilityUpdateRequest,
+    session: DatabaseSession,
+    current_user: CurrentUser,
+):
+    update_study_visibility(session, current_user.id, study_id, payload.visibility)
+    commit_changes(session)
+    return get_study_permissions(session, current_user.id, study_id)
+
+
+@router.get("/studies/{study_id}/permissions", response_model=ResourcePermissionsRead, summary="Consultar permissões do estudo")
+def get_study_permissions_endpoint(
+    study_id: Identifier,
+    session: DatabaseSession,
+    current_user: CurrentUser,
+):
+    return get_study_permissions(session, current_user.id, study_id)
+
+
+@router.post(
+    "/studies/{study_id}/permissions",
+    response_model=ResourcePermissionItem,
+    status_code=status.HTTP_201_CREATED,
+    summary="Conceder permissão nominal de leitura para o estudo",
+)
+def grant_study_permission_endpoint(
+    study_id: Identifier,
+    payload: GrantPermissionRequest,
+    session: DatabaseSession,
+    current_user: CurrentUser,
+):
+    perm = grant_permission(
+        session=session,
+        owner_id=current_user.id,
+        resource_type="study",
+        resource_id=study_id,
+        target_username=payload.username,
+    )
+    commit_changes(session)
+    target_user = session.get(User, perm.granted_to_user_id)
+    avatar_url = target_user.profile.avatar_url if getattr(target_user, "profile", None) else None
+    return ResourcePermissionItem(
+        user_id=target_user.id,
+        username=target_user.username,
+        display_name=target_user.display_name,
+        avatar_url=avatar_url,
+        created_at=perm.created_at,
+    )
+
+
+@router.delete("/studies/{study_id}/permissions/{user_id}", summary="Revogar permissão nominal de leitura do estudo")
+def revoke_study_permission_endpoint(
+    study_id: Identifier,
+    user_id: str,
+    session: DatabaseSession,
+    current_user: CurrentUser,
+):
+    revoke_permission(
+        session=session,
+        owner_id=current_user.id,
+        resource_type="study",
+        resource_id=study_id,
+        granted_to_user_id=user_id,
+    )
+    commit_changes(session)
+    return {"ok": True}
 
 
 @router.post("/studies/{study_id}/trash", response_model=StudyRead, summary="Mover estudo para a lixeira")
 def trash_study_endpoint(study_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
+    check_study_mutation_permission(session, study_id, current_user.id)
     return trash_study(session, study_id, user_id=current_user.id)
 
 
 @router.patch("/studies/{study_id}", response_model=StudyRead, summary="Editar campos de um estudo")
 def update_study(study_id: Identifier, payload: StudyPatch, session: DatabaseSession, current_user: CurrentUser):
-    study = get_user_resource_or_404(session, Study, study_id, current_user.id, "Estudo")
-    if study.deleted_at is not None or (study.chapter and study.chapter.book and study.chapter.book.deleted_at is not None):
+    study = check_study_mutation_permission(session, study_id, current_user.id)
+    if study.chapter and study.chapter.book and study.chapter.book.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Não é possível editar um estudo que está na lixeira.")
 
     server_data = StudyRead.model_validate(study).model_dump(mode="json")
@@ -151,7 +310,9 @@ def update_study(study_id: Identifier, payload: StudyPatch, session: DatabaseSes
     study.version += 1
     commit_changes(session)
     session.refresh(study)
-    return study
+    study_read = StudyRead.model_validate(study)
+    study_read.can_edit = True
+    return study_read
 
 
 @router.post("/studies/{study_id}/restore", response_model=TrashActionResponse, summary="Restaurar estudo da lixeira")
@@ -181,8 +342,10 @@ def export_study(
     include_source: bool = False,
     include_metadata: bool = True,
 ):
-    study = get_user_resource_or_404(session, Study, study_id, current_user.id, "Estudo")
-    if study.deleted_at is not None:
+    study = session.get(Study, study_id)
+    if study is None or study.deleted_at is not None:
+        raise HTTPException(status_code=404, detail="Estudo não encontrado.")
+    if not can_read_study(session, current_user.id, study):
         raise HTTPException(status_code=404, detail="Estudo não encontrado.")
 
     options = ExportOptions(

@@ -6,14 +6,17 @@ from app.models import Book, Chapter
 from app.schemas.chapter import ChapterCreate, ChapterMove, ChapterPatch, ChapterRead
 from app.schemas.common import SQLITE_MAX_INTEGER
 from app.services.persistence import check_optimistic_lock, commit_changes, get_user_resource_or_404
+from app.services.sharing_service import can_read_book
 
 router = APIRouter(prefix="/books/{book_id}/chapters", tags=["Capítulos"])
 
 
 @router.get("", response_model=list[ChapterRead], summary="Listar capítulos de um livro")
 def list_chapters(book_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
-    book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
-    if book.deleted_at is not None:
+    book = session.get(Book, book_id)
+    if book is None or book.deleted_at is not None:
+        raise HTTPException(status_code=404, detail="Livro não encontrado.")
+    if not can_read_book(session, current_user.id, book):
         raise HTTPException(status_code=404, detail="Livro não encontrado.")
     return session.scalars(
         select(Chapter).where(Chapter.book_id == book_id).order_by(Chapter.position, Chapter.id)

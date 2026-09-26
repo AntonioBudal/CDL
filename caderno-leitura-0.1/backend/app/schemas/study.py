@@ -4,6 +4,7 @@ from typing import Self
 from pydantic import ConfigDict, Field, field_validator, model_validator
 
 from app.schemas.common import InputModel, NonBlankText, OutputModel, RecordId
+from app.schemas.sharing import ResourceOwnerSummary
 
 ANALYSIS_FIELDS = ("summary", "explanation", "concepts", "references")
 ANALYSIS_REQUIRED_MESSAGE = "Preencha pelo menos uma das quatro seções da análise."
@@ -77,6 +78,11 @@ class StudySummary(OutputModel):
     created_at: datetime
     updated_at: datetime
     deleted_at: datetime | None = None
+    book_id: int | None = None
+    visibility: str = "inherit"
+    effective_visibility: str = "private"
+    can_edit: bool = True
+    owner: ResourceOwnerSummary | None = None
 
 
 class StudyRead(StudySummary):

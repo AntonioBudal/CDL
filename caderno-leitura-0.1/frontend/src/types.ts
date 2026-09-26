@@ -65,6 +65,9 @@ export interface Book {
   deleted_at?: string | null
   categories?: Category[]
   version?: number
+  visibility?: 'private' | 'friends' | 'public'
+  can_edit?: boolean
+  owner?: { id: string; username: string; display_name: string; avatar_url?: string | null } | null
 }
 
 export type LibraryViewMode = 'grid' | 'list'
@@ -137,6 +140,11 @@ export interface StudySummary {
   updated_at: string
   deleted_at?: string | null
   version?: number
+  book_id?: number | null
+  visibility?: 'inherit' | 'private' | 'friends' | 'custom' | 'public'
+  effective_visibility?: 'inherit' | 'private' | 'friends' | 'custom' | 'public'
+  can_edit?: boolean
+  owner?: { id: string; username: string; display_name: string; avatar_url?: string | null } | null
 }
 
 export interface StudyTreeNode extends StudySummary {
@@ -846,3 +854,4 @@ export * from './types/sync.ts'
 export * from './types/preferences.ts'
 export * from './types/profile.ts'
 export * from './types/friendship.ts'
+export * from './types/sharing.ts'

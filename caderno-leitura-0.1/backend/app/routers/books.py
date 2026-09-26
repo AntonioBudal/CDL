@@ -2,12 +2,14 @@ from fastapi import APIRouter, File, HTTPException, Response, UploadFile, status
 from sqlalchemy import asc, desc, false, or_, select, text
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
-from app.models import Book
+from app.models import Book, User
 from app.models.category import book_categories
 from app.schemas.book import BookCreate, BookPatch, BookRead
 from app.schemas.cover import CoverResponse, CoverUrlRequest
 from app.schemas.export import ExportFormat, ExportOptions
+from app.schemas.sharing import ResourceOwnerSummary, VisibilityUpdateRequest
 from app.services.category_service import assign_book_categories, get_descendant_category_ids
+from app.services.sharing_service import can_read_book, update_book_visibility
 from app.services.cover_service import (
     download_cover_from_url,
     process_and_save_cover,
@@ -83,10 +85,40 @@ def list_books(
 
 @router.get("/{book_id}", response_model=BookRead, summary="Consultar livro")
 def get_book(book_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
-    book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
-    if book.deleted_at is not None:
+    book = session.get(Book, book_id)
+    if book is None or book.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Livro não encontrado.")
-    return book
+    if not can_read_book(session, current_user.id, book):
+        raise HTTPException(status_code=404, detail="Livro não encontrado.")
+
+    book_read = BookRead.model_validate(book)
+    book_read.can_edit = (book.user_id == current_user.id)
+    if book.user_id != current_user.id:
+        owner_user = session.get(User, book.user_id)
+        if owner_user:
+            avatar_url = owner_user.profile.avatar_url if getattr(owner_user, "profile", None) else None
+            book_read.owner = ResourceOwnerSummary(
+                id=owner_user.id,
+                username=owner_user.username,
+                display_name=owner_user.display_name,
+                avatar_url=avatar_url,
+            )
+    return book_read
+
+
+@router.put("/{book_id}/visibility", response_model=BookRead, summary="Alterar visibilidade do livro")
+def set_book_visibility(
+    book_id: Identifier,
+    payload: VisibilityUpdateRequest,
+    session: DatabaseSession,
+    current_user: CurrentUser,
+):
+    book = update_book_visibility(session, current_user.id, book_id, payload.visibility)
+    commit_changes(session)
+    session.refresh(book)
+    book_read = BookRead.model_validate(book)
+    book_read.can_edit = True
+    return book_read
 
 
 @router.post("/{book_id}/trash", response_model=BookRead, summary="Mover livro para a lixeira")

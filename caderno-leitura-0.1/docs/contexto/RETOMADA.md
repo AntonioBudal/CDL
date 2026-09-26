@@ -456,10 +456,44 @@ Este documento registra as evidências consolidadas em cada ciclo de trabalho e 
 
 ---
 
+## Sessão: Implementação e Validação da Feature 07 — Compartilhamento e Permissões por Recurso (ACL) (26/09/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Especificação, Arquitetura e Contratos (Spec Kit):**
+   - Ciclo formal Spec Kit completado para `specs/034-compartilhamento-permissoes/` (`spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/`, `tasks.md`, `checklists/`).
+   - Alinhamentos deliberados com o usuário:
+     - Q1: A — Herança com sobrescrita explícita: estudos possuem `visibility: "inherit"` por padrão adotando a visibilidade do livro, com possibilidade de override individual pelo autor.
+     - Q2: A — Aba dedicada na Biblioteca (`BooksView.vue`): alternador de abas `[ Meu Acervo | Compartilhados Comigo ]` com feed e busca por texto/autor.
+     - Q3: A — Acesso restrito a usuários autenticados, mesmo para estudos e links públicos (`401 Unauthorized` para visitantes anônimos).
+   - Todas as 33 tarefas de `tasks.md` executadas e marcadas como `[x]`.
+2. **Backend e Migrações (Alembic):**
+   - Modelo relacional `ResourcePermission` com constraints de tipo (`study`, `book`), nível (`read`) e unicidade de concessão.
+   - Colunas `visibility` adicionadas nos modelos `Book` e `Study`.
+   - Migração `0017_add_sharing_and_permissions.py` aplicada com checagem rigorosa de schema.
+   - Serviço centralizado `sharing_service.py` com resolução de visibilidade efetiva, herança de livro, verificação de leitura `can_read_study` / `can_read_book`, concessão/revogação nominal e feed consolidado de compartilhados.
+   - Blindagem anti-enumeração rigorosa (HTTP 404 para recursos privados ou não autorizados) e proteção de escrita inviolável (HTTP 403 Forbidden para convidados).
+   - Supressão incondicional de recursos e recusa de permissões entre usuários em relação de bloqueio bilateral (F06).
+   - Endpoints registrados em `studies.py`, `books.py` e novo router dedicado `routers/sharing.py`.
+3. **Frontend e Experiência do Leitor (Vue 3 / TypeScript):**
+   - Módulo de API `sharingApi` em `frontend/src/api/sharing.ts` e métodos estendidos em `services/api.ts`.
+   - Componente modal acessível `ShareModal.vue` com radiogroup de visibilidade, cópia de link direto, listagem de permissões e concessão/revogação nominal com alvos mínimos de 44px.
+   - `StudyView.vue` atualizado com **Banner de Somente Leitura** exibindo avatar e `@username` do autor, e ocultação/bloqueio condicional de ações de edição, exclusão e status quando `can_edit=false`.
+   - Alternador de abas WAI-ARIA em `BooksView.vue` integrando o componente de feed `SharedStudiesList.vue` com busca por termo e autor.
+   - Zero emojis informais em todo o código-fonte, em total conformidade com `visual_system.test.mjs`.
+4. **Validação e Suítes de Teste:**
+   - 293 testes de backend passando (`pytest backend/tests`), incluindo 8 testes dedicados de ponta a ponta em `test_sharing_and_permissions.py`.
+   - 240 testes de frontend passando (`npm test`), incluindo 6 testes dedicados em `sharing.test.mjs`.
+   - Compilação e tipagem estrita do frontend (`npm run build` / `vue-tsc`) 100% aprovada sem erros.
+5. **Documentação Técnica:**
+   - Documento arquitetural criado em `caderno-leitura-0.1/docs/contexto/COMPARTILHAMENTO-ACL.md` e sincronizado na raiz `docs/contexto/COMPARTILHAMENTO-ACL.md`.
+
+---
+
 ## Próximo Passo Recomendado
 
 Iniciar a próxima etapa do Roadmap 0.5:
 ```bash
-/speckit-specify F07 - Compartilhamento e Permissões por Recurso
+/speckit-specify F08 - Administração e RBAC
 ```
+
 

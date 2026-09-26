@@ -21,10 +21,12 @@ class Book(Base):
     __table_args__ = (
         CheckConstraint("length(trim(title)) > 0", name="title_not_blank"),
         CheckConstraint("year IS NULL OR (year >= 1000 AND year <= 2100)", name="year_range"),
+        CheckConstraint("visibility IN ('private', 'friends', 'public')", name="chk_book_visibility"),
         Index("ix_books_deleted_at", "deleted_at"),
         Index("ix_books_user_id", "user_id"),
         Index("ix_books_user_deleted", "user_id", "deleted_at"),
         Index("ix_books_sync", "user_id", "updated_at"),
+        Index("ix_books_visibility", "visibility"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -40,6 +42,9 @@ class Book(Base):
     subtitle: Mapped[str] = mapped_column(Text, default="", server_default=text("''"), nullable=False)
     year: Mapped[int | None] = mapped_column(Integer, nullable=True, default=None)
     version: Mapped[int] = mapped_column(Integer, default=1, server_default=text("1"), nullable=False)
+    visibility: Mapped[str] = mapped_column(
+        String(20), default="private", server_default=text("'private'"), nullable=False
+    )
     created_at: Mapped[datetime] = mapped_column(
         UTCDateTime(), default=utc_now, server_default=text("CURRENT_TIMESTAMP"), nullable=False
     )

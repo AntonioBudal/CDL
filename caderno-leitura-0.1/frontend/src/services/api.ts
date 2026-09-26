@@ -23,6 +23,12 @@ import type {
   FriendsSummary,
   FriendshipStatusResponse,
   FriendshipActionResponse,
+  ResourcePermissionsRead,
+  ResourcePermissionItem,
+  ResourceVisibility,
+  BookVisibility,
+  SharedStudiesResponse,
+  SharedBooksResponse,
 } from '../types.ts'
 
 export interface HealthResponse {
@@ -157,6 +163,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
 export const api = {
   listBooks: (signal?: AbortSignal) => request<Book[]>('/books', { signal }),
+  getBook: (id: number, signal?: AbortSignal) => request<Book>(`/books/${id}`, { signal }),
   createBook: (title: string, author?: string | null, category_ids?: string[]) => request<Book>('/books', {
     method: 'POST',
     body: JSON.stringify({
@@ -368,6 +375,52 @@ export const api = {
     request<FriendsSummary>('/friends/summary', { signal }),
   getRelationStatus: (username: string, signal?: AbortSignal) =>
     request<FriendshipStatusResponse>(`/friends/status/${encodeURIComponent(username)}`, { signal }),
+
+  // Compartilhamento e Permissões (F07)
+  getStudyPermissions: (studyId: number, signal?: AbortSignal) =>
+    request<ResourcePermissionsRead>(`/studies/${studyId}/permissions`, { signal }),
+  updateStudyVisibility: (studyId: number, visibility: ResourceVisibility) =>
+    request<ResourcePermissionsRead>(`/studies/${studyId}/visibility`, {
+      method: 'PUT',
+      body: JSON.stringify({ visibility }),
+    }),
+  updateBookVisibility: (bookId: number, visibility: BookVisibility) =>
+    request<Book>(`/books/${bookId}/visibility`, {
+      method: 'PUT',
+      body: JSON.stringify({ visibility }),
+    }),
+  grantStudyPermission: (studyId: number, username: string) =>
+    request<ResourcePermissionItem>(`/studies/${studyId}/permissions`, {
+      method: 'POST',
+      body: JSON.stringify({ username }),
+    }),
+  revokeStudyPermission: (studyId: number, userId: string) =>
+    request<{ ok: boolean }>(`/studies/${studyId}/permissions/${userId}`, {
+      method: 'DELETE',
+    }),
+  getSharedStudies: (
+    params?: { q?: string; author?: string; limit?: number; offset?: number },
+    signal?: AbortSignal,
+  ) => {
+    const searchParams = new URLSearchParams()
+    if (params?.q?.trim()) searchParams.set('q', params.q.trim())
+    if (params?.author?.trim()) searchParams.set('author', params.author.trim())
+    if (params?.limit != null) searchParams.set('limit', String(params.limit))
+    if (params?.offset != null) searchParams.set('offset', String(params.offset))
+    const queryStr = searchParams.toString()
+    return request<SharedStudiesResponse>(`/shared/studies${queryStr ? `?${queryStr}` : ''}`, { signal })
+  },
+  getSharedBooks: (
+    params?: { q?: string; limit?: number; offset?: number },
+    signal?: AbortSignal,
+  ) => {
+    const searchParams = new URLSearchParams()
+    if (params?.q?.trim()) searchParams.set('q', params.q.trim())
+    if (params?.limit != null) searchParams.set('limit', String(params.limit))
+    if (params?.offset != null) searchParams.set('offset', String(params.offset))
+    const queryStr = searchParams.toString()
+    return request<SharedBooksResponse>(`/shared/books${queryStr ? `?${queryStr}` : ''}`, { signal })
+  },
 
   // Categorias (F01 CRUD)
   createCategory: (payload: { id?: string; name: string; parent_id?: string | null }) =>

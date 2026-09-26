@@ -23,6 +23,10 @@ class Study(Base):
             'length(trim(summary || explanation || concepts || "references")) > 0',
             name="analysis_not_blank",
         ),
+        CheckConstraint(
+            "visibility IN ('inherit', 'private', 'friends', 'custom', 'public')",
+            name="chk_study_visibility",
+        ),
         Index("ix_studies_chapter_id", "chapter_id"),
         Index("ix_studies_deleted_at", "deleted_at"),
         Index("ix_studies_parent_study_id", "parent_study_id"),
@@ -31,6 +35,7 @@ class Study(Base):
         Index("ix_studies_user_id", "user_id"),
         Index("ix_studies_user_deleted", "user_id", "deleted_at"),
         Index("ix_studies_sync", "user_id", "updated_at"),
+        Index("ix_studies_visibility", "visibility"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -45,6 +50,9 @@ class Study(Base):
     parent_study_id: Mapped[int | None] = mapped_column(ForeignKey("studies.id", ondelete="SET NULL"), nullable=True)
     position: Mapped[int] = mapped_column(default=0, server_default=text("0"), nullable=False)
     reading_status: Mapped[str] = mapped_column(String(20), default="rascunho", server_default=text("'rascunho'"), nullable=False)
+    visibility: Mapped[str] = mapped_column(
+        String(20), default="inherit", server_default=text("'inherit'"), nullable=False
+    )
     title: Mapped[str] = mapped_column(Text, nullable=False)
     location: Mapped[str] = mapped_column(Text, default="", server_default=text("''"), nullable=False)
     source_response: Mapped[str] = mapped_column(Text, default="", server_default=text("''"), nullable=False)
@@ -69,3 +77,15 @@ class Study(Base):
     parent: Mapped[Study | None] = relationship("Study", remote_side="Study.id", back_populates="children")
     children: Mapped[list[Study]] = relationship("Study", back_populates="parent", order_by="Study.position")
     user: Mapped[User] = relationship(back_populates="studies")
+
+    @property
+    def book_id(self) -> int | None:
+        return self.chapter.book_id if self.chapter is not None else None
+
+    @property
+    def effective_visibility(self) -> str:
+        if self.visibility != "inherit":
+            return self.visibility
+        if self.chapter and self.chapter.book:
+            return self.chapter.book.visibility or "private"
+        return "private"
