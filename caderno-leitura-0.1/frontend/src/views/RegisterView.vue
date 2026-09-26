@@ -86,7 +86,7 @@ async function handleRegister() {
     <div class="auth-card">
       <header class="auth-header">
         <h1 class="auth-title">Criar Nova Conta</h1>
-        <p class="auth-subtitle">Cadastre seu próprio caderno de leitura independente</p>
+        <p class="auth-subtitle">Crie seu próprio caderno de leitura no Leitorum</p>
       </header>
 
       <div v-if="error" class="auth-error-alert" role="alert">

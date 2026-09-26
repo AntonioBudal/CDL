@@ -480,7 +480,7 @@ onBeforeUnmount(() => {
             <article class="system-card">
               <h3>Identidade Pública</h3>
               <p class="muted">
-                Defina como você é reconhecido por outros leitores na rede do Caderno.
+                Defina como você é reconhecido por outros leitores na rede do Leitorum.
               </p>
 
               <div class="field-group">
@@ -795,7 +795,7 @@ onBeforeUnmount(() => {
           <article class="system-card">
             <h3>Tela Inicial Padrão</h3>
             <p class="muted">
-              Escolha qual tela deve ser carregada por padrão ao abrir o Caderno de Leitura na rota inicial.
+              Escolha qual tela deve ser carregada por padrão ao abrir o Leitorum na rota inicial.
             </p>
             <div class="home-view-options" role="radiogroup" aria-label="Tela inicial padrão">
               <label class="radio-option">

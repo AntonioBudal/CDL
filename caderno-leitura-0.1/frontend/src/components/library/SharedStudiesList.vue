@@ -175,7 +175,7 @@ onMounted(fetchSharedStudies)
         {{
           searchQuery || authorFilter
             ? 'Tente ajustar os termos de busca ou limpar os filtros para encontrar outros estudos.'
-            : 'Quando seus amigos no Caderno ou outros leitores compartilharem estudos e livros, eles aparecerão aqui para você ler e consultar.'
+            : 'Quando seus amigos no Leitorum ou outros leitores compartilharem estudos e livros, eles aparecerão aqui para você ler e consultar.'
         }}
       </p>
       <div v-if="searchQuery || authorFilter" class="pt-2">

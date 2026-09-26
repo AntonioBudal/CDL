@@ -64,7 +64,7 @@ async function handleLogin() {
   <main class="auth-page-container">
     <div class="auth-card">
       <header class="auth-header">
-        <h1 class="auth-title">Caderno de Leitura</h1>
+        <h1 class="auth-title">Leitorum</h1>
         <p class="auth-subtitle">Identificação de acesso ao acervo de estudos</p>
       </header>
 
@@ -122,7 +122,7 @@ async function handleLogin() {
           :disabled="isSubmitting"
         >
           <span v-if="isSubmitting">Autenticando...</span>
-          <span v-else>Entrar no Caderno</span>
+          <span v-else>Entrar no Leitorum</span>
         </button>
       </form>
 

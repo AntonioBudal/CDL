@@ -56,7 +56,7 @@ const visibilityOptions: { value: ResourceVisibility; label: string; desc: strin
   {
     value: 'friends',
     label: 'Amigos',
-    desc: 'Visível para suas amizades confirmadas no Caderno',
+    desc: 'Visível para suas amizades confirmadas no Leitorum',
   },
   {
     value: 'custom',

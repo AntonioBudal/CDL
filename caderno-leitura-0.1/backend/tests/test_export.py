@@ -200,6 +200,7 @@ def test_export_book_markdown_success(client_and_db):
     body = res_exp.content.decode("utf-8")
     assert "---" in body
     assert 'title: "Memórias Póstumas de Brás Cubas"' in body
+    assert 'app: "Leitorum"' in body
     assert "# Memórias Póstumas de Brás Cubas" in body
     assert "## Capítulo I - Do Óbito" in body
     assert "### A Dedicatória aos Vermes" in body
@@ -353,6 +354,7 @@ def test_export_study_markdown_success(client_and_db):
     body = res_exp.content.decode("utf-8")
     assert "---" in body
     assert 'title: "O Primeiro Cego no Semáforo"' in body
+    assert 'app: "Leitorum"' in body
     assert 'book: "Ensaio sobre a Cegueira"' in body
     assert 'chapter: "Capítulo 1"' in body
     assert "# O Primeiro Cego no Semáforo" in body

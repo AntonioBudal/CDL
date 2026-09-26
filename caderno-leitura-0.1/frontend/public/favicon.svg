@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="8" fill="#18181b"/>
+  <!-- Livro Aberto / Open Book -->
+  <path d="M7 10C9.5 8.5 13 8.5 16 10.5C19 8.5 22.5 8.5 25 10V22C22.5 20.5 19 20.5 16 22.5C13 20.5 9.5 20.5 7 22V10Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="0.8" stroke-linejoin="round"/>
+  <!-- Lombada Central / Spine -->
+  <line x1="16" y1="10.5" x2="16" y2="22.5" stroke="#94a3b8" stroke-width="0.8"/>
+  <!-- Marcador de Página Âmbar / Amber Bookmark -->
+  <path d="M14.5 8.5V14L16 12.8L17.5 14V8.5H14.5Z" fill="#f59e0b"/>
+</svg>

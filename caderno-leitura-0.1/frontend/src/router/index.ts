@@ -90,4 +90,4 @@ router.beforeEach(async (to, _from, next) => {
   next()
 })
 
-router.afterEach((to) => { document.title = `${String(to.meta.title)} · Caderno de Leitura` })
+router.afterEach((to) => { document.title = `${String(to.meta.title)} · Leitorum` })

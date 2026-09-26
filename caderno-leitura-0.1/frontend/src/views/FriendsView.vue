@@ -86,7 +86,7 @@ onMounted(async () => {
           <span>Amizades e Leitores</span>
         </h1>
         <p class="header-subtitle muted">
-          Conecte-se com outros leitores, acompanhe estudos mútuos e gerencie sua rede social no Caderno.
+          Conecte-se com outros leitores, acompanhe estudos mútuos e gerencie sua rede social no Leitorum.
         </p>
       </div>
 

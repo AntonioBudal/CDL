@@ -75,7 +75,7 @@ def format_book_markdown(
         lines.append(f"year: {book.year if book.year is not None else 'null'}")
         lines.append(f"categories: {cats_formatted}")
         lines.append(f'date_exported: "{now_iso}"')
-        lines.append('app: "Caderno de Leitura"')
+        lines.append('app: "Leitorum"')
         lines.append("---")
         lines.append("")
 
@@ -252,7 +252,7 @@ def format_study_markdown(
         lines.append(f"chapter: {_yaml_quote(chapter.name)}")
         lines.append(f"location: {_yaml_quote(study.location or '')}")
         lines.append(f'date_exported: "{now_iso}"')
-        lines.append('app: "Caderno de Leitura"')
+        lines.append('app: "Leitorum"')
         lines.append("---")
         lines.append("")
 
