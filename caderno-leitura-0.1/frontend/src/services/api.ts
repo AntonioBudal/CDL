@@ -55,10 +55,44 @@ export function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : 'Não foi possível concluir. Tente novamente.'
 }
 
-function detailMessage(data: unknown, status: number): string {
+export function detailMessage(data: unknown, status: number): string {
   if (typeof data === 'object' && data !== null && 'detail' in data) {
-    if (typeof data.detail === 'string') return data.detail
-    if (Array.isArray(data.detail) && status === 422) return 'Confira os campos obrigatórios e o conteúdo das seções.'
+    const detail = (data as { detail: unknown }).detail
+    if (typeof detail === 'string') return detail
+    if (Array.isArray(detail) && status === 422) {
+      const fieldLabels: Record<string, string> = {
+        username: 'Nome de usuário',
+        display_name: 'Nome de exibição',
+        email: 'E-mail',
+        password: 'Senha',
+        username_or_email: 'Usuário ou e-mail',
+        title: 'Título',
+        content: 'Conteúdo',
+      }
+      const messages = detail
+        .map((err) => {
+          if (typeof err === 'string') return err
+          if (err && typeof err === 'object') {
+            const e = err as { loc?: unknown[]; msg?: string }
+            if (typeof e.msg === 'string') {
+              const cleanMsg = e.msg.replace(/^Value error,\s*/i, '')
+              const lastLoc = Array.isArray(e.loc) ? String(e.loc[e.loc.length - 1]) : ''
+              const label = fieldLabels[lastLoc] || (lastLoc && lastLoc !== 'body' ? lastLoc : '')
+              if (label && !cleanMsg.toLowerCase().includes(label.toLowerCase())) {
+                return `${label}: ${cleanMsg}`
+              }
+              return cleanMsg
+            }
+          }
+          return null
+        })
+        .filter((msg): msg is string => Boolean(msg))
+
+      if (messages.length > 0) {
+        return messages.join('. ')
+      }
+      return 'Confira os campos obrigatórios e os dados informados.'
+    }
   }
   return status >= 500
     ? 'O caderno está indisponível. Verifique o servidor local e tente novamente.'

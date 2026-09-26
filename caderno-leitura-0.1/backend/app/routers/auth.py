@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from fastapi import APIRouter, HTTPException, Request, Response, status
-from sqlalchemy import delete, or_, select
+from sqlalchemy import delete, func, or_, select
 from sqlalchemy.orm import joinedload
 
 from app.core.auth import get_or_create_default_owner, get_user_by_id
@@ -121,11 +121,16 @@ def login(
             detail="Credenciais incorretas ou conta inativa.",
         )
 
+    clean_username = identifier.lstrip("@").lower()
+    clean_email = identifier.lower()
+
     stmt = (
         select(User)
         .options(joinedload(User.credential))
         .where(
             or_(
+                func.lower(User.username) == clean_username,
+                func.lower(User.email) == clean_email,
                 User.username == identifier,
                 User.email == identifier,
             )
@@ -222,9 +227,9 @@ def register(
             detail="O cadastro de novos usuários está desativado neste servidor.",
         )
 
-    username_clean = req.username.strip()
+    username_clean = req.username.strip().lower()
     display_name_clean = req.display_name.strip()
-    email_clean = req.email.strip() if req.email and req.email.strip() else None
+    email_clean = req.email.strip().lower() if req.email and req.email.strip() else None
 
     if len(req.password) < PASSWORD_MIN_LENGTH:
         raise HTTPException(
@@ -233,7 +238,7 @@ def register(
         )
 
     existing_user = session.scalar(
-        select(User).where(User.username == username_clean)
+        select(User).where(func.lower(User.username) == username_clean)
     )
     if existing_user is not None:
         raise HTTPException(
@@ -243,7 +248,7 @@ def register(
 
     if email_clean:
         existing_email = session.scalar(
-            select(User).where(User.email == email_clean)
+            select(User).where(func.lower(User.email) == email_clean)
         )
         if existing_email is not None:
             raise HTTPException(

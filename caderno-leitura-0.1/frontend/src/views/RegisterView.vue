@@ -31,8 +31,28 @@ async function handleGoogleSuccess(credential: string) {
 
 async function handleRegister() {
   error.value = null
-  if (!username.value.trim() || !displayName.value.trim() || !password.value) {
+  const cleanUsername = username.value.trim().replace(/^@/, '').toLowerCase()
+  const cleanDisplayName = displayName.value.trim()
+  const cleanEmail = email.value.trim() || null
+
+  if (!cleanUsername || !cleanDisplayName || !password.value) {
     error.value = 'Preencha todos os campos obrigatórios.'
+    return
+  }
+  if (cleanUsername.length < 3) {
+    error.value = 'O nome de usuário deve conter no mínimo 3 caracteres.'
+    return
+  }
+  if (cleanUsername.length > 30) {
+    error.value = 'O nome de usuário deve conter no máximo 30 caracteres.'
+    return
+  }
+  if (!/^[a-zA-Z0-9_.-]+$/.test(cleanUsername)) {
+    error.value = 'O nome de usuário deve conter apenas letras sem acento, números, ponto (.) ou hífen (-).'
+    return
+  }
+  if (cleanDisplayName.length > 60) {
+    error.value = 'O nome de exibição deve conter no máximo 60 caracteres.'
     return
   }
   if (password.value.length < 8) {
@@ -47,9 +67,9 @@ async function handleRegister() {
   isSubmitting.value = true
   try {
     await auth.register({
-      username: username.value.trim(),
-      display_name: displayName.value.trim(),
-      email: email.value.trim() || null,
+      username: cleanUsername,
+      display_name: cleanDisplayName,
+      email: cleanEmail,
       password: password.value,
     })
     router.replace('/')
@@ -96,10 +116,14 @@ async function handleRegister() {
             type="text"
             class="form-input"
             required
-            pattern="^[a-zA-Z0-9_.-]+$"
+            autocomplete="username"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
             placeholder="Ex: maria.silva"
             :disabled="isSubmitting"
           />
+          <span class="form-hint">3 a 30 caracteres (letras sem acento, números, ponto ou hífen). Sem espaços.</span>
         </div>
 
         <div class="form-group">
@@ -110,6 +134,8 @@ async function handleRegister() {
             type="text"
             class="form-input"
             required
+            maxlength="60"
+            autocomplete="name"
             placeholder="Ex: Maria Silva"
             :disabled="isSubmitting"
           />
@@ -122,6 +148,8 @@ async function handleRegister() {
             v-model="email"
             type="email"
             class="form-input"
+            autocomplete="email"
+            autocapitalize="none"
             placeholder="maria@exemplo.com"
             :disabled="isSubmitting"
           />
@@ -136,6 +164,7 @@ async function handleRegister() {
             class="form-input"
             required
             minlength="8"
+            autocomplete="new-password"
             placeholder="Mínimo de 8 caracteres"
             :disabled="isSubmitting"
           />
@@ -150,6 +179,7 @@ async function handleRegister() {
             class="form-input"
             required
             minlength="8"
+            autocomplete="new-password"
             placeholder="Digite a senha novamente"
             :disabled="isSubmitting"
           />
@@ -261,6 +291,12 @@ async function handleRegister() {
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--color-text, #374151);
+}
+
+.form-hint {
+  font-size: 0.75rem;
+  color: var(--color-muted, #6b7280);
+  line-height: 1.3;
 }
 
 .form-input {

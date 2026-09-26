@@ -311,6 +311,57 @@ def test_register_conflicts_and_validation(auth_client):
     assert r_short.status_code in (400, 422)
 
 
+def test_register_normalization_and_formatting(auth_client):
+    client, _ = auth_client
+
+    # Cadastro com espaços, @ inicial, maiúsculas e e-mail vazio
+    payload = {
+        "username": "  @Leitor_Mobile  ",
+        "display_name": "  Leitor Mobile  ",
+        "email": "   ",
+        "password": "SenhaValida123!",
+    }
+    r = client.post("/api/auth/register", json=payload)
+    assert r.status_code == 200
+    user_data = r.json()["user"]
+    assert user_data["username"] == "leitor_mobile"
+    assert user_data["display_name"] == "Leitor Mobile"
+    assert user_data["email"] is None
+
+    # Login com @ e case-insensitive funciona perfeitamente
+    r_login = client.post(
+        "/api/auth/login",
+        json={"username_or_email": "@LEITOR_MOBILE", "password": "SenhaValida123!"},
+    )
+    assert r_login.status_code == 200
+    assert r_login.json()["user"]["username"] == "leitor_mobile"
+
+    # Username com caracteres inválidos (espaço interno, acento) gera 422 amigável
+    r_invalid = client.post(
+        "/api/auth/register",
+        json={
+            "username": "joao silva",
+            "display_name": "João Silva",
+            "password": "SenhaValida123!",
+        },
+    )
+    assert r_invalid.status_code == 422
+    err_text = str(r_invalid.json())
+    assert "apenas letras sem acento" in err_text
+
+    # Username > 30 caracteres gera 422 amigável
+    r_too_long = client.post(
+        "/api/auth/register",
+        json={
+            "username": "a" * 31,
+            "display_name": "Nome Longo",
+            "password": "SenhaValida123!",
+        },
+    )
+    assert r_too_long.status_code == 422
+    assert "máximo 30 caracteres" in str(r_too_long.json())
+
+
 def test_register_blocked_when_disabled(auth_client, monkeypatch):
     client, _ = auth_client
     monkeypatch.setenv("ALLOW_REGISTRATION", "false")
