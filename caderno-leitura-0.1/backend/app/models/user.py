@@ -13,6 +13,7 @@ from app.db.types import UTCDateTime, utc_now
 if TYPE_CHECKING:
     from app.models.book import Book
     from app.models.external_identity import ExternalIdentity
+    from app.models.friendship import Friendship
     from app.models.local_credential import LocalCredential
     from app.models.study import Study
     from app.models.user_preference import UserPreference

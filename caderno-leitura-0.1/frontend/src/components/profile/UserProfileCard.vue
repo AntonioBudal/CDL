@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { UserProfilePublic } from '../../types.ts'
 import Icon from '../ui/Icon.vue'
+import FriendActionButtons from '../FriendActionButtons.vue'
 import { getInitials } from '../../composables/useProfile.ts'
 
 const props = withDefaults(
@@ -70,12 +71,21 @@ const restrictionNotice = computed(() => {
             <Icon name="pencil" :size="16" />
             <span>Editar perfil</span>
           </RouterLink>
+          <div v-else-if="!isOwner" class="profile-action-wrap">
+            <FriendActionButtons :username="profile.username" compact />
+          </div>
         </div>
         <p class="profile-handle muted">@{{ profile.username }}</p>
 
-        <div v-if="formattedDate" class="profile-meta-row muted">
-          <Icon name="calendar" :size="14" />
-          <span>Membro desde {{ formattedDate }}</span>
+        <div class="profile-meta-group">
+          <div v-if="formattedDate" class="profile-meta-row muted">
+            <Icon name="calendar" :size="14" />
+            <span>Membro desde {{ formattedDate }}</span>
+          </div>
+          <div v-if="profile.friends_count != null" class="profile-meta-row muted">
+            <Icon name="users" :size="14" />
+            <span>{{ profile.friends_count }} {{ profile.friends_count === 1 ? 'amigo' : 'amigos' }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -219,6 +229,18 @@ const restrictionNotice = computed(() => {
   margin: 0.2rem 0 0.4rem;
   font-size: 1rem;
   font-weight: 500;
+}
+
+.profile-action-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.profile-meta-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
 }
 
 .profile-meta-row {

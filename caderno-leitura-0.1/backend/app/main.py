@@ -15,6 +15,7 @@ from app.routers import (
     chapters,
     covers,
     dashboard,
+    friends,
     health,
     imports,
     preferences,
@@ -71,6 +72,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(profile.router, prefix="/api")
     application.include_router(profile.avatars_router, prefix="/api")
     application.include_router(users.router, prefix="/api")
+    application.include_router(friends.router, prefix="/api")
     register_database_error_handlers(application)
     register_frontend(application, frontend_dist)
     return application

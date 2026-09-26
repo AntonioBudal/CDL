@@ -13,6 +13,7 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import SetupOwnerView from '../views/SetupOwnerView.vue'
 import UserProfileView from '../views/UserProfileView.vue'
+import FriendsView from '../views/FriendsView.vue'
 import { useAuthStore } from '../stores/auth.ts'
 
 export const router = createRouter({
@@ -28,6 +29,7 @@ export const router = createRouter({
     { path: '/livros/:bookId/estudos/:studyId', alias: ['/books/:bookId/estudos/:studyId'], name: 'study', component: StudyView, meta: { title: 'Ler estudo' } },
     { path: '/livros/:bookId/estudos/:studyId/editar', alias: ['/books/:bookId/estudos/:studyId/editar'], name: 'study-edit', component: StudyEditView, meta: { title: 'Editar estudo' } },
     { path: '/importar', name: 'import', component: ImportView, meta: { title: 'Importar estudo' } },
+    { path: '/amigos', alias: ['/friends'], name: 'friends', component: FriendsView, meta: { title: 'Amigos e Leitores' } },
     { path: '/conexao', name: 'connection', component: ConnectionView, meta: { title: 'Conexão' } },
     { path: '/ajustes', name: 'settings', component: SettingsView, meta: { title: 'Ajustes' } },
     { path: '/lixeira', name: 'trash', component: TrashView, meta: { title: 'Lixeira' } },

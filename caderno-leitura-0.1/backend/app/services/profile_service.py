@@ -117,6 +117,7 @@ def search_discoverable_users(
     query: str | None,
     session: Session,
     limit: int = 20,
+    exclude_user_ids: set[str] | list[str] | None = None,
 ) -> list[UserSearchItem]:
     """Busca usuários ativos que sejam descobríveis e com perfil não privado."""
     stmt = (
@@ -128,6 +129,8 @@ def search_discoverable_users(
             UserProfile.profile_visibility != "private",
         )
     )
+    if exclude_user_ids:
+        stmt = stmt.where(UserProfile.user_id.not_in(list(exclude_user_ids)))
     if query and query.strip():
         term = f"%{query.strip().lower()}%"
         stmt = stmt.where(

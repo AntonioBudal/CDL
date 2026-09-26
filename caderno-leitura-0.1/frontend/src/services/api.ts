@@ -17,6 +17,12 @@ import type {
   UserProfilePublic,
   UserProfileUpdate,
   UserSearchItem,
+  FriendItem,
+  FriendRequestsResponse,
+  FriendBlockedItem,
+  FriendsSummary,
+  FriendshipStatusResponse,
+  FriendshipActionResponse,
 } from '../types.ts'
 
 export interface HealthResponse {
@@ -288,6 +294,46 @@ export const api = {
     const qs = query ? `?q=${encodeURIComponent(query)}` : ''
     return request<UserSearchItem[]>(`/users${qs}`, { signal })
   },
+
+  // Sistema de Amizades (F06)
+  sendFriendRequest: (username: string) =>
+    request<FriendshipActionResponse>(`/friends/request/${encodeURIComponent(username)}`, {
+      method: 'POST',
+    }),
+  acceptFriendRequest: (requestId: number) =>
+    request<FriendshipActionResponse>(`/friends/accept/${requestId}`, {
+      method: 'POST',
+    }),
+  rejectFriendRequest: (requestId: number) =>
+    request<FriendshipActionResponse>(`/friends/reject/${requestId}`, {
+      method: 'POST',
+    }),
+  cancelFriendRequest: (requestId: number) =>
+    request<FriendshipActionResponse>(`/friends/cancel/${requestId}`, {
+      method: 'DELETE',
+    }),
+  removeFriend: (username: string) =>
+    request<FriendshipActionResponse>(`/friends/${encodeURIComponent(username)}`, {
+      method: 'DELETE',
+    }),
+  blockUser: (username: string) =>
+    request<FriendshipActionResponse>(`/friends/block/${encodeURIComponent(username)}`, {
+      method: 'POST',
+    }),
+  unblockUser: (username: string) =>
+    request<FriendshipActionResponse>(`/friends/unblock/${encodeURIComponent(username)}`, {
+      method: 'POST',
+    }),
+  getFriends: (signal?: AbortSignal) =>
+    request<FriendItem[]>('/friends', { signal }),
+  getFriendRequests: (signal?: AbortSignal) =>
+    request<FriendRequestsResponse>('/friends/requests', { signal }),
+  getBlockedUsers: (signal?: AbortSignal) =>
+    request<FriendBlockedItem[]>('/friends/blocked', { signal }),
+  getFriendsSummary: (signal?: AbortSignal) =>
+    request<FriendsSummary>('/friends/summary', { signal }),
+  getRelationStatus: (username: string, signal?: AbortSignal) =>
+    request<FriendshipStatusResponse>(`/friends/status/${encodeURIComponent(username)}`, { signal }),
 
   // Categorias (F01 CRUD)
   createCategory: (payload: { id?: string; name: string; parent_id?: string | null }) =>
@@ -659,6 +705,45 @@ export async function clearSearchHistory(): Promise<{ success: boolean; message:
     method: 'DELETE',
   })
 }
+
+// --- Funções de Amizade (F06) ---
+export async function sendFriendRequest(username: string): Promise<FriendshipActionResponse> {
+  return api.sendFriendRequest(username)
+}
+export async function acceptFriendRequest(requestId: number): Promise<FriendshipActionResponse> {
+  return api.acceptFriendRequest(requestId)
+}
+export async function rejectFriendRequest(requestId: number): Promise<FriendshipActionResponse> {
+  return api.rejectFriendRequest(requestId)
+}
+export async function cancelFriendRequest(requestId: number): Promise<FriendshipActionResponse> {
+  return api.cancelFriendRequest(requestId)
+}
+export async function removeFriend(username: string): Promise<FriendshipActionResponse> {
+  return api.removeFriend(username)
+}
+export async function blockUser(username: string): Promise<FriendshipActionResponse> {
+  return api.blockUser(username)
+}
+export async function unblockUser(username: string): Promise<FriendshipActionResponse> {
+  return api.unblockUser(username)
+}
+export async function getFriends(signal?: AbortSignal): Promise<FriendItem[]> {
+  return api.getFriends(signal)
+}
+export async function getFriendRequests(signal?: AbortSignal): Promise<FriendRequestsResponse> {
+  return api.getFriendRequests(signal)
+}
+export async function getBlockedUsers(signal?: AbortSignal): Promise<FriendBlockedItem[]> {
+  return api.getBlockedUsers(signal)
+}
+export async function getFriendsSummary(signal?: AbortSignal): Promise<FriendsSummary> {
+  return api.getFriendsSummary(signal)
+}
+export async function getRelationStatus(username: string, signal?: AbortSignal): Promise<FriendshipStatusResponse> {
+  return api.getRelationStatus(username, signal)
+}
+
 
 
 

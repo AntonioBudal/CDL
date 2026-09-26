@@ -48,6 +48,12 @@ import {
   Image,
   Eye,
   EyeOff,
+  UserPlus,
+  UserMinus,
+  Ban,
+  Clock,
+  Unlock,
+  Mail,
 } from 'lucide-vue-next'
 
 const props = withDefaults(defineProps<IconProps>(), {
@@ -104,6 +110,12 @@ const iconMap: Record<string, Component> = {
   'image': Image,
   'eye': Eye,
   'eye-off': EyeOff,
+  'user-plus': UserPlus,
+  'user-minus': UserMinus,
+  'ban': Ban,
+  'clock': Clock,
+  'unlock': Unlock,
+  'mail': Mail,
 }
 
 const currentComponent = computed(() => iconMap[props.name] || BookOpen)

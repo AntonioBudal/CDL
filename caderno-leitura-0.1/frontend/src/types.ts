@@ -474,6 +474,12 @@ export type IconName =
   | 'image'
   | 'eye'
   | 'eye-off'
+  | 'user-plus'
+  | 'user-minus'
+  | 'ban'
+  | 'clock'
+  | 'unlock'
+  | 'mail'
 
 export interface IconProps {
   name: IconName
@@ -839,3 +845,4 @@ export interface MotionState {
 export * from './types/sync.ts'
 export * from './types/preferences.ts'
 export * from './types/profile.ts'
+export * from './types/friendship.ts'

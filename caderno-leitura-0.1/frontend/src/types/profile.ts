@@ -13,6 +13,7 @@ export interface UserProfilePublic {
   bio: string | null;
   profile_visibility: VisibilityLevel;
   is_private: boolean;
+  friends_count?: number;
   reading_stats?: ProfileReadingStats | null;
   created_at: string;
 }

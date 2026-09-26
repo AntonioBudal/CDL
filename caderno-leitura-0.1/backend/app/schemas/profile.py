@@ -31,6 +31,7 @@ class UserProfilePublicRead(BaseModel):
     bio: str | None = None
     profile_visibility: VisibilityLevel
     is_private: bool = False
+    friends_count: int = 0
     reading_stats: ProfileReadingStats | None = None
     created_at: datetime
 

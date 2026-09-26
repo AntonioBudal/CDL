@@ -8,6 +8,12 @@ from sqlalchemy import func, select
 from app.dependencies import CurrentUser, DatabaseSession
 from app.models.user import User
 from app.schemas.profile import UserProfilePublicRead, UserSearchItem
+from app.services.friendship_service import (
+    get_blocked_user_ids_bilateral,
+    get_friends_summary,
+    get_relation_status,
+    is_blocked_between,
+)
 from app.services.profile_service import (
     calculate_reading_stats,
     get_or_create_profile,
@@ -29,7 +35,8 @@ def search_users(
     q: Annotated[str | None, Query(description="Termo de busca por nome ou handle")] = None,
     limit: Annotated[int, Query(ge=1, le=50)] = 20,
 ) -> list[UserSearchItem]:
-    return search_discoverable_users(q, session, limit=limit)
+    blocked_ids = get_blocked_user_ids_bilateral(session, current_user.id)
+    return search_discoverable_users(q, session, limit=limit, exclude_user_ids=blocked_ids)
 
 
 @router.get(
@@ -56,8 +63,17 @@ def get_user_public_profile(
         profile = get_or_create_profile(user, session)
         session.commit()
 
-    is_owner = (profile.user_id == current_user.id)
+    # Blindagem bilateral: se houver bloqueio entre as partes, simula 404 (anti-enumeração)
+    if current_user.id != profile.user_id and is_blocked_between(session, current_user.id, profile.user_id):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuário não encontrado.",
+        )
 
+    friends_summary = get_friends_summary(session, profile.user_id)
+    friends_count = friends_summary.friends_count
+
+    is_owner = (profile.user_id == current_user.id)
     if is_owner:
         stats = calculate_reading_stats(profile.user_id, session) if profile.show_reading_stats else None
         return UserProfilePublicRead(
@@ -67,13 +83,18 @@ def get_user_public_profile(
             bio=profile.bio,
             profile_visibility=profile.profile_visibility,
             is_private=False,
+            friends_count=friends_count,
             reading_stats=stats,
             created_at=profile.created_at,
         )
 
+    # Verifica se há amizade ativa
+    rel = get_relation_status(session, current_user.id, profile.username)
+    is_friend = (rel.relation_status == "friends")
+
     # Visitante externo: aplica regras de visibilidade
-    if profile.profile_visibility in ("private", "friends"):
-        # Sem vínculo de amizade ativo, renderiza cartão discreto restrito
+    if profile.profile_visibility == "private" or (profile.profile_visibility == "friends" and not is_friend):
+        # Perfil restrito para este visitante
         return UserProfilePublicRead(
             username=profile.username,
             display_name=profile.display_name,
@@ -81,11 +102,12 @@ def get_user_public_profile(
             bio=None,
             profile_visibility=profile.profile_visibility,
             is_private=True,
+            friends_count=friends_count,
             reading_stats=None,
             created_at=profile.created_at,
         )
 
-    # Perfil público
+    # Perfil público ou liberado por amizade
     stats = calculate_reading_stats(profile.user_id, session) if profile.show_reading_stats else None
     return UserProfilePublicRead(
         username=profile.username,
@@ -94,6 +116,7 @@ def get_user_public_profile(
         bio=profile.bio,
         profile_visibility=profile.profile_visibility,
         is_private=False,
+        friends_count=friends_count,
         reading_stats=stats,
         created_at=profile.created_at,
     )

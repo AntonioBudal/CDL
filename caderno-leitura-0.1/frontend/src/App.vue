@@ -10,11 +10,13 @@ import { usePreferences } from './composables/usePreferences.ts'
 import { useSync } from './composables/useSync.ts'
 import { useAuthStore } from './stores/auth.ts'
 import { useProfile } from './composables/useProfile.ts'
+import { useFriends } from './composables/useFriends.ts'
 
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const profileService = useProfile()
+const friendsService = useFriends()
 const { openSearch } = useGlobalSearch()
 const sync = useSync()
 const preferences = usePreferences()
@@ -22,6 +24,7 @@ const preferences = usePreferences()
 const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(String(route.name)))
 const currentUser = computed(() => auth.user.value)
 const isAuthenticated = computed(() => auth.isAuthenticated.value)
+const pendingReceivedCount = computed(() => friendsService.pendingReceivedCount.value)
 
 async function handleLogout() {
   if (confirm('Deseja realmente sair da aplicação?')) {
@@ -58,6 +61,7 @@ onMounted(() => {
   preferences.loadPreferences()
   if (auth.isAuthenticated.value) {
     void profileService.fetchProfile()
+    void friendsService.fetchSummary()
   }
 })
 
@@ -66,6 +70,7 @@ watch(
   (isAuth) => {
     if (isAuth) {
       void profileService.fetchProfile()
+      void friendsService.fetchSummary()
     }
   }
 )
@@ -101,6 +106,12 @@ const mainLinks: NavLinkItem[] = [
     label: 'Importar',
     routes: ['import'],
     icon: 'plus',
+  },
+  {
+    to: '/amigos',
+    label: 'Amigos',
+    routes: ['friends'],
+    icon: 'users',
   },
   {
     to: '/ajustes',
@@ -152,6 +163,13 @@ const visibleMainLinks = computed(() => {
         >
           <Icon :name="item.icon" :size="18" :stroke-width="1.8" class="nav-icon" />
           <span>{{ item.label }}</span>
+          <span
+            v-if="item.routes.includes('friends') && pendingReceivedCount > 0"
+            class="nav-badge"
+            aria-label="Novas solicitações pendentes"
+          >
+            {{ pendingReceivedCount }}
+          </span>
         </RouterLink>
       </nav>
       <div class="header-actions">
@@ -220,6 +238,17 @@ const visibleMainLinks = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.nav-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 9999px;
+  background-color: #dc2626;
+  color: #fff;
+  line-height: 1;
+  margin-left: 0.35rem;
 }
 
 .user-nav-actions {
