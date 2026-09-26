@@ -142,6 +142,17 @@ def revoke_all_other_sessions(
     return result.rowcount or 0
 
 
+def revoke_user_all_sessions(
+    session: Session,
+    user_id: str,
+) -> int:
+    """Revoga incondicionalmente todas as sessões ativas do usuário."""
+    stmt = delete(UserSession).where(UserSession.user_id == user_id)
+    result = session.execute(stmt)
+    session.flush()
+    return result.rowcount or 0
+
+
 def delete_expired_sessions(session: Session) -> int:
     """Purga sessões expiradas no banco de dados."""
     now = utc_now()

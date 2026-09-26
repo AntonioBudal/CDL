@@ -488,6 +488,11 @@ export type IconName =
   | 'clock'
   | 'unlock'
   | 'mail'
+  | 'chevron-left'
+  | 'log-out'
+  | 'refresh-cw'
+  | 'user-check'
+  | 'user-x'
 
 export interface IconProps {
   name: IconName

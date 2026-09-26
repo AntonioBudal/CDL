@@ -86,6 +86,7 @@ interface NavLinkItem {
   label: string
   routes: string[]
   icon: IconName
+  requiresAdmin?: boolean
 }
 
 const mainLinks: NavLinkItem[] = [
@@ -114,6 +115,13 @@ const mainLinks: NavLinkItem[] = [
     icon: 'users',
   },
   {
+    to: '/admin',
+    label: 'Administração',
+    routes: ['admin'],
+    icon: 'shield',
+    requiresAdmin: true,
+  },
+  {
     to: '/ajustes',
     label: 'Ajustes',
     routes: ['settings', 'connection'],
@@ -129,6 +137,10 @@ const mainLinks: NavLinkItem[] = [
 
 const visibleMainLinks = computed(() => {
   return mainLinks.filter(item => {
+    // Se a rota requer papel de administrador, oculta para usuários comuns
+    if (item.requiresAdmin && !auth.isAdmin.value) {
+      return false
+    }
     // Se a preferência for 'books', oculta a aba 'Dashboard'
     if (homeViewPreference.value === 'books' && item.label === 'Dashboard') {
       return false

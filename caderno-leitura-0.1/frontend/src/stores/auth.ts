@@ -15,6 +15,7 @@ const isLoading = ref<boolean>(false)
 export function useAuthStore() {
   const user = computed(() => currentUser.value)
   const isAuthenticated = computed(() => currentUser.value !== null)
+  const isAdmin = computed(() => currentUser.value?.role === 'admin')
 
   async function checkAuth(force: boolean = false): Promise<boolean> {
     if (isInitialized.value && !force) {
@@ -173,6 +174,7 @@ export function useAuthStore() {
     isInitialized,
     isLoading,
     isAuthenticated,
+    isAdmin,
     checkAuth,
     login,
     loginWithGoogle,

@@ -489,11 +489,42 @@ Este documento registra as evidências consolidadas em cada ciclo de trabalho e 
 
 ---
 
+## Sessão: Implementação e Validação da Feature 08 — Administração e RBAC (26/09/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Especificação, Arquitetura e Contratos (Spec Kit):**
+   - Ciclo formal Spec Kit completado para `specs/035-administracao-rbac/` (`spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/`, `tasks.md`, `checklists/`).
+   - Alinhamentos deliberados com o usuário:
+     - Q1: A — Suspensão atômica com desconexão imediata e purga de todas as sessões ativas do usuário alvo no banco (`revoke_user_all_sessions`), rejeitando requisições subsequentes com HTTP 401/403 em todos os aparelhos conectados (PC e mobile via LAN/Tailscale).
+     - Q2: A — Link "Administração" na barra de navegação superior (`App.vue`), visível exclusivamente para usuários autenticados com `role === 'admin'`. A rota `/admin` é blindada por navigation guard no Vue Router redirecionando não-admins para `/` com aviso explicativo.
+     - Q3: A — Utilitário CLI em Python (`backend/scripts/create_admin.py`) com modo interativo seguro via `getpass` e modo com flags (`--username`, `--email`, `--password`, `--display-name`), suportando criação de novo admin ou promoção determinística de leitor existente por `@username` (`--promote`).
+   - Todas as 30 tarefas de `tasks.md` (T001 a T030) executadas e marcadas como concluídas (`[x]`).
+2. **Backend e Autorização RBAC:**
+   - Dependência `require_admin` injetada em `AdminUser` com blindagem 403 Forbidden para leitores convencionais (`dependencies.py`).
+   - Router administrativo `/api/admin/*` registrado em `main.py` com endpoints de listagem paginada (`/users`), métricas agregadas (`/stats`), suspensão com motivo (`/users/{id}/suspend`), reativação (`/users/{id}/reactivate`), alteração de papel (`/users/{id}/role`) e desconexão forçada de sessões (`/users/{id}/sessions/revoke-all`).
+   - Salvaguardas anti-lockout rigorosas: proibição de auto-suspensão e proteção incondicional contra despromoção ou suspensão do último administrador ativo.
+   - Script CLI `backend/scripts/create_admin.py` funcional e testado.
+3. **Frontend e Experiência Administrativa (Vue 3 / TypeScript):**
+   - Módulo `adminApi` e tipos TypeScript em `frontend/src/api/admin.ts` e `frontend/src/types/admin.ts`.
+   - Painel `/admin` (`AdminView.vue`) com 5 cards de métricas agregadas, busca textual com debounce, filtros combinados por Status e Papel, paginação e feedback visual.
+   - Tabela semântica `AdminUsersTable.vue` com indicadores de status, papel, métricas e botões de ação acessíveis.
+   - Diálogo modal acessível `AdminConfirmModal.vue` com suporte WAI-ARIA, foco automático e alvos táteis mínimos de 44px.
+   - Link de Administração no `App.vue` e navigation guard no `router/index.ts` blindando o acesso.
+   - Zero emojis informais em todo o código-fonte, em total conformidade com `visual_system.test.mjs`.
+4. **Validação e Suítes de Teste:**
+   - 304 testes de backend passando (`pytest backend/tests`), incluindo 11 testes dedicados de ponta a ponta em `test_admin_and_rbac.py`.
+   - 245 testes de frontend passando (`npm test`), incluindo suíte dedicada em `admin.test.mjs`.
+   - Compilação e tipagem estrita do frontend (`npm run build` / `vue-tsc`) 100% aprovada sem erros.
+5. **Documentação Técnica:**
+   - Documento arquitetural criado em `caderno-leitura-0.1/docs/contexto/ADMINISTRACAO-RBAC.md` e sincronizado na raiz `docs/contexto/ADMINISTRACAO-RBAC.md`.
+
+---
+
 ## Próximo Passo Recomendado
 
 Iniciar a próxima etapa do Roadmap 0.5:
 ```bash
-/speckit-specify F08 - Administração e RBAC
+/speckit-specify F09 - Modo de Alta Densidade e Atalhos Avançados
 ```
 
 

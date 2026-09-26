@@ -14,6 +14,7 @@ import RegisterView from '../views/RegisterView.vue'
 import SetupOwnerView from '../views/SetupOwnerView.vue'
 import UserProfileView from '../views/UserProfileView.vue'
 import FriendsView from '../views/FriendsView.vue'
+import AdminView from '../views/AdminView.vue'
 import { useAuthStore } from '../stores/auth.ts'
 
 export const router = createRouter({
@@ -34,6 +35,7 @@ export const router = createRouter({
     { path: '/ajustes', name: 'settings', component: SettingsView, meta: { title: 'Ajustes' } },
     { path: '/lixeira', name: 'trash', component: TrashView, meta: { title: 'Lixeira' } },
     { path: '/@:username', alias: ['/u/:username'], name: 'user-profile', component: UserProfileView, meta: { title: 'Perfil do Leitor' } },
+    { path: '/admin', name: 'admin', component: AdminView, meta: { title: 'Administração', requiresAdmin: true } },
     { path: '/:pathMatch(.*)*', component: NotFoundView, meta: { title: 'Página não encontrada' } },
   ],
   scrollBehavior(to, from, savedPosition) {
@@ -62,6 +64,13 @@ router.beforeEach(async (to, _from, next) => {
   // Se já estiver autenticado e tentar acessar telas de login/registro/primeiro-acesso
   if (auth.isAuthenticated.value && ['/login', '/registro', '/primeiro-acesso'].includes(to.path)) {
     return next('/')
+  }
+
+  // Se rota requer privilégios de administrador (RBAC)
+  if (to.meta.requiresAdmin === true || to.path === '/admin') {
+    if (!auth.isAdmin.value) {
+      return next({ path: '/', query: { aviso: 'acesso-restrito' } })
+    }
   }
 
   // Preferência de tela inicial (Dashboard vs Livros)

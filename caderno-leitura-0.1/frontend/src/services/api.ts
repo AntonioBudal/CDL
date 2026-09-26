@@ -31,6 +31,18 @@ import type {
   SharedBooksResponse,
 } from '../types.ts'
 
+import type {
+  AdminUsersFilter,
+  AdminUsersResponse,
+  AdminStatsSummary,
+  AdminSuspendRequest,
+  AdminSuspendResponse,
+  AdminReactivateResponse,
+  AdminRoleUpdateRequest,
+  AdminRoleUpdateResponse,
+  AdminRevokeSessionsResponse,
+} from '../types/admin.ts'
+
 export interface HealthResponse {
   status: 'ok'
   service: string
@@ -421,6 +433,41 @@ export const api = {
     const queryStr = searchParams.toString()
     return request<SharedBooksResponse>(`/shared/books${queryStr ? `?${queryStr}` : ''}`, { signal })
   },
+
+  // Administração e RBAC (F08)
+  getAdminUsers: (
+    params?: AdminUsersFilter,
+    signal?: AbortSignal,
+  ) => {
+    const searchParams = new URLSearchParams()
+    if (params?.q?.trim()) searchParams.set('q', params.q.trim())
+    if (params?.status && params.status !== 'all') searchParams.set('status', params.status)
+    if (params?.role && params.role !== 'all') searchParams.set('role', params.role)
+    if (params?.limit != null) searchParams.set('limit', String(params.limit))
+    if (params?.offset != null) searchParams.set('offset', String(params.offset))
+    const queryStr = searchParams.toString()
+    return request<AdminUsersResponse>(`/admin/users${queryStr ? `?${queryStr}` : ''}`, { signal })
+  },
+  getAdminStats: (signal?: AbortSignal) =>
+    request<AdminStatsSummary>('/admin/stats', { signal }),
+  suspendUser: (userId: string, payload?: AdminSuspendRequest) =>
+    request<AdminSuspendResponse>(`/admin/users/${userId}/suspend`, {
+      method: 'POST',
+      body: payload ? JSON.stringify(payload) : undefined,
+    }),
+  reactivateUser: (userId: string) =>
+    request<AdminReactivateResponse>(`/admin/users/${userId}/reactivate`, {
+      method: 'POST',
+    }),
+  updateUserRole: (userId: string, payload: AdminRoleUpdateRequest) =>
+    request<AdminRoleUpdateResponse>(`/admin/users/${userId}/role`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+  revokeAllSessions: (userId: string) =>
+    request<AdminRevokeSessionsResponse>(`/admin/users/${userId}/sessions/revoke-all`, {
+      method: 'POST',
+    }),
 
   // Categorias (F01 CRUD)
   createCategory: (payload: { id?: string; name: string; parent_id?: string | null }) =>
