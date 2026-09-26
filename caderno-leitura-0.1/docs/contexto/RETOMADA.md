@@ -416,32 +416,50 @@ Este documento registra as evidências consolidadas em cada ciclo de trabalho e 
    - Modelo relacional `UserProfile` com relacionamento 1:1 com `User` e exclusão em cascata.
    - Migração `0015_add_user_profile.py` com criação de índices e auto-provisionamento para contas existentes.
    - Pipeline de processamento gráfico de avatar via Pillow (`ImageOps.fit`) gerando arquivos quadrados 256x256 WebP em `backend/data/avatars/`.
-   - Endpoints implementados e validados:
-     - `GET /api/profile/me` e `PUT /api/profile/me` (perfil privado com e-mail, handle único e dados completos).
-     - `POST /api/profile/avatar`, `DELETE /api/profile/avatar` e `GET /api/avatars/{filename}` (gestão de avatar com cache HTTP).
-     - `GET /api/users/{username}` (perfil público com regras de visibilidade desacopladas e mascaramento de campos privados).
-     - `GET /api/users?q=...` (busca de usuários descobríveis e públicos).
+3. **Validação:**
+   - 276 testes de backend passando e 223 testes de frontend passando.
+
+---
+
+## Sessão: Implementação e Validação da Feature 06 — Sistema de Amizades (26/09/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Especificação, Arquitetura e Contratos (Spec Kit):**
+   - Ciclo formal Spec Kit completado para `specs/033-sistema-de-amizades/` (`spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/`, `tasks.md`, `checklists/`).
+   - Alinhamentos deliberados com o usuário:
+     - Q1: A — Recusa de solicitação retorna ao estado neutro (`none`), permitindo novo envio futuro; para impedir em definitivo, utiliza-se o Bloqueio.
+     - Q2: A — Hub Social posicionado na barra superior em `/amigos` para usuários autenticados, com 4 abas estruturadas: "Meus Amigos", "Solicitações", "Descobrir Leitores" e "Bloqueados".
+     - Q3: A — No perfil público (`/@username`), é exposto unicamente o contador quantitativo (`friends_count`); a listagem nominal é estritamente privada.
+   - Todas as 32 tarefas de `tasks.md` executadas e marcadas como `[x]`.
+2. **Backend e Migrações (Alembic):**
+   - Modelo relacional `Friendship` com par ordenado normalizado `(user_id_a < user_id_b)`.
+   - Migração `0016_add_friendships_table.py` com constraints `UNIQUE`, `CHECK` anti-autoamizade e índices compostos de busca.
+   - Serviço `friendship_service.py` e router `friends.py` com `commit_changes(session)` em todas as mutações:
+     - Resolução automática e atômica de solicitações cruzadas simultâneas.
+     - Recusa neutra, cancelamento pelo autor e desfazimento de amizades soberano.
+     - Bloqueio unilateral com **blindagem 404 anti-enumeração** e exclusão recíproca em buscas descobríveis.
+     - Resumo de contadores consolidados para badges em tempo real (`GET /api/friends/summary`).
 3. **Frontend e Experiência do Leitor (Vue 3 / TypeScript):**
-   - Composable `useProfile.ts` com estado reativo e helpers de iniciais vetoriais.
-   - Componente acessível `AvatarUploadModal.vue` com drag & drop, pré-visualização, seleção de foto Google e exclusão.
-   - Componente `UserProfileCard.vue` com apresentação pública, cartão institucional discreto para perfis restritos e estatísticas quantitativas condicionais.
-   - Rota pública `/@:username` (e alias `/u/:username`) e view `UserProfileView.vue`.
-   - Aba "Perfil & Privacidade" em `SettingsView.vue` com formulário de `@username`, bio (contador de 280 caracteres), seletores desacoplados de visibilidade e switches de descobrimento.
-   - Cabeçalho em `App.vue` integrado com avatar dinâmico e fallback em iniciais estilizadas.
+   - Composable reativo `useFriends.ts` com gerenciamento de estado e feedback de carregamento.
+   - Wrapper de cliente `friendsApi` em `frontend/src/api/friends.ts` e métodos estendidos em `services/api.ts`.
+   - Componente tátil `FriendActionButtons.vue` com alvos mínimos de 44px e atributos de acessibilidade WAI-ARIA.
+   - Visão centralizada `FriendsView.vue` na rota `/amigos` com 4 abas acessíveis.
+   - Navegação global no cabeçalho em `App.vue` com ícone `users` e crachá numérico dinâmico de solicitações pendentes recebidas.
+   - Exibição de `friends_count` no perfil público `UserProfileCard.vue`.
 4. **Validação e Suítes de Teste:**
-   - 276 testes de backend passando (`pytest backend/tests`), incluindo 14 testes herméticos dedicados em `test_profile_and_privacy.py`.
-   - 223 testes de frontend passando (`npm test`).
-   - Build de produção do frontend (`npm run build` / `vue-tsc`) concluído com sucesso (código 0).
-   - Auditoria de sistema visual (`visual_system.test.mjs`) 100% aprovada (0 emojis informais).
+   - 284 testes de backend passando (`pytest backend/tests`), incluindo 8 testes dedicados de ponta a ponta em `test_friendships.py`.
+   - 230 testes de frontend passando (`npm test`), incluindo suíte dedicada em `friends.test.mjs`.
+   - Build de produção do frontend (`npm run build` / `vue-tsc`) 100% aprovado sem erros de tipagem.
+   - Commit atômico consolidado: `af45609` (`feature — sistema de amizades`).
 5. **Documentação Técnica:**
-   - Documento arquitetural criado em `caderno-leitura-0.1/docs/contexto/PERFIL-E-PRIVACIDADE.md`.
+   - Documento arquitetural criado em `caderno-leitura-0.1/docs/contexto/SISTEMA-DE-AMIZADES.md`.
 
 ---
 
 ## Próximo Passo Recomendado
 
-Após autorização explícita do usuário para o commit atômico da Feature 05 (`feature — perfil e privacidade`), iniciar a próxima etapa do Roadmap 0.5:
+Iniciar a próxima etapa do Roadmap 0.5:
 ```bash
-/speckit-specify F06 - Sistema de Amizades
+/speckit-specify F07 - Compartilhamento e Permissões por Recurso
 ```
 
