@@ -73,3 +73,41 @@
 .settings-status {
   min-height: 1.6em;
 }
+
+/* Compatibilidade dos Destaques e Oclusão com Temas (F0.6.2) */
+:root {
+  --hl-yellow: #fef08a;
+  --hl-green: #bbf7d0;
+  --hl-blue: #bae6fd;
+  --hl-pink: #fbcfe8;
+  --hl-purple: #e9d5ff;
+  --hl-text: #18181b;
+}
+
+:root[data-theme='noite-suave'],
+:root[data-theme='grafite'] {
+  --hl-yellow: #fef08a;
+  --hl-green: #86efac;
+  --hl-blue: #7dd3fc;
+  --hl-pink: #f9a8d4;
+  --hl-purple: #d8b4fe;
+}
+
+:root[data-theme='e-ink'] .study-highlight {
+  background-color: transparent !important;
+  color: inherit !important;
+  border-bottom: 2px solid currentColor !important;
+  border-radius: 0 !important;
+}
+
+:root[data-theme='e-ink'] .study-occlusion {
+  filter: none !important;
+  color: transparent !important;
+  background-color: #000000 !important;
+}
+
+:root[data-theme='e-ink'] .study-occlusion.is-revealed {
+  color: inherit !important;
+  background-color: transparent !important;
+  border: 1px dashed currentColor !important;
+}

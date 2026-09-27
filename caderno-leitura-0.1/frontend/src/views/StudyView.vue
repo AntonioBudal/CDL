@@ -11,7 +11,12 @@ import StudyRelationsList from '../components/relations/StudyRelationsList.vue'
 import CreateRelationModal from '../components/relations/CreateRelationModal.vue'
 import StudyStatusBadge from '../components/StudyStatusBadge.vue'
 import ShareModal from '../components/sharing/ShareModal.vue'
-import type { ResourceVisibility } from '../types.ts'
+import FloatingActionsToolbar from '../components/FloatingActionsToolbar.vue'
+import HighlightActionPopover from '../components/HighlightActionPopover.vue'
+import { useStudyHighlights } from '../composables/useStudyHighlights'
+import { formatQuoteText, useTextSelection } from '../composables/useTextSelection'
+import type { HighlightClickEvent } from '../utils/highlightRenderer'
+import type { HighlightColor, ResourceVisibility, StudySectionKey } from '../types.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -27,6 +32,143 @@ const trashing = ref(false)
 const trashError = ref('')
 
 const canEdit = computed(() => state.context?.study.can_edit !== false)
+
+// Destaques e Ações Contextuais (F0.6.2)
+const studyId = computed(() => state.context?.study.id)
+const {
+  highlights,
+  activeHighlight,
+  popoverRect,
+  addHighlight,
+  editHighlight,
+  removeHighlight,
+  openHighlightPopover,
+  closeHighlightPopover,
+} = useStudyHighlights(studyId)
+
+const studyTabsRef = ref<InstanceType<typeof StudyTabs> | null>(null)
+const activeSection = ref<StudySectionKey>('summary')
+const activePanelEl = computed(() => studyTabsRef.value?.activePanelEl || null)
+const { selectionContext, clearSelection } = useTextSelection(activePanelEl, activeSection)
+
+// Feedback visual (Toast)
+const toastMessage = ref('')
+let toastTimer: ReturnType<typeof setTimeout> | null = null
+
+function showToast(message: string) {
+  toastMessage.value = message
+  if (toastTimer) clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => {
+    toastMessage.value = ''
+  }, 3000)
+}
+
+async function handleHighlight(payload: { color: HighlightColor }) {
+  if (!selectionContext.value || !state.context) return
+  await addHighlight({
+    section: selectionContext.value.section,
+    start_offset: selectionContext.value.start_offset,
+    end_offset: selectionContext.value.end_offset,
+    selected_text: selectionContext.value.selected_text,
+    prefix: selectionContext.value.prefix,
+    suffix: selectionContext.value.suffix,
+    color: payload.color,
+    kind: 'highlight',
+  })
+  clearSelection()
+}
+
+async function handleAnnotate(payload: { note: string; color: HighlightColor }) {
+  if (!selectionContext.value || !state.context) return
+  await addHighlight({
+    section: selectionContext.value.section,
+    start_offset: selectionContext.value.start_offset,
+    end_offset: selectionContext.value.end_offset,
+    selected_text: selectionContext.value.selected_text,
+    prefix: selectionContext.value.prefix,
+    suffix: selectionContext.value.suffix,
+    color: payload.color,
+    kind: 'note',
+    note: payload.note,
+  })
+  clearSelection()
+}
+
+async function handleCopyQuote() {
+  if (!selectionContext.value || !state.context) return
+  const quote = formatQuoteText({
+    selected_text: selectionContext.value.selected_text,
+    studyTitle: state.context.study.title,
+    bookTitle: state.context.book.title,
+    chapterName: state.context.chapter.name,
+  })
+  try {
+    if (navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(quote)
+    } else {
+      const textarea = document.createElement('textarea')
+      textarea.value = quote
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+    }
+    showToast('Citação copiada para a área de transferência!')
+  } catch {
+    showToast('Não foi possível copiar automaticamente.')
+  }
+  clearSelection()
+}
+
+async function handleOcclude() {
+  if (!selectionContext.value || !state.context) return
+  await addHighlight({
+    section: selectionContext.value.section,
+    start_offset: selectionContext.value.start_offset,
+    end_offset: selectionContext.value.end_offset,
+    selected_text: selectionContext.value.selected_text,
+    prefix: selectionContext.value.prefix,
+    suffix: selectionContext.value.suffix,
+    color: 'yellow',
+    kind: 'hidden',
+  })
+  clearSelection()
+}
+
+async function handleAskQuestion(payload: { question: string }) {
+  if (!selectionContext.value || !state.context) return
+  await addHighlight({
+    section: selectionContext.value.section,
+    start_offset: selectionContext.value.start_offset,
+    end_offset: selectionContext.value.end_offset,
+    selected_text: selectionContext.value.selected_text,
+    prefix: selectionContext.value.prefix,
+    suffix: selectionContext.value.suffix,
+    color: 'yellow',
+    kind: 'question',
+    note: payload.question,
+  })
+  clearSelection()
+}
+
+function handleHighlightClick(event: HighlightClickEvent) {
+  openHighlightPopover(event.highlight, event.boundingRect)
+}
+
+async function handleChangeColor(color: HighlightColor) {
+  if (!activeHighlight.value) return
+  await editHighlight(activeHighlight.value.id, { color })
+}
+
+async function handleUpdateNote(note: string) {
+  if (!activeHighlight.value) return
+  await editHighlight(activeHighlight.value.id, { note })
+}
+
+async function handleDeleteHighlight() {
+  if (!activeHighlight.value) return
+  await removeHighlight(activeHighlight.value.id)
+}
 
 function handleRelationCreated() {
   createRelationModalOpen.value = false
@@ -61,7 +203,10 @@ async function handleTrash() {
 
 async function load() { await resource.load(route.params.bookId, route.params.studyId) }
 watch([() => route.params.bookId, () => route.params.studyId], load, { immediate: true })
-onBeforeUnmount(resource.cancel)
+onBeforeUnmount(() => {
+  resource.cancel()
+  if (toastTimer) clearTimeout(toastTimer)
+})
 </script>
 
 <template>
@@ -144,7 +289,15 @@ onBeforeUnmount(resource.cancel)
     <ReaderTools :key="state.context.study.id" />
 
     <div class="reader-layout reader-static-surface">
-      <StudyTabs :key="state.context.study.id" :id-prefix="`study-${state.context.study.id}`" :sections="state.context.study" />
+      <StudyTabs
+        ref="studyTabsRef"
+        :key="state.context.study.id"
+        :id-prefix="`study-${state.context.study.id}`"
+        :sections="state.context.study"
+        :highlights="highlights"
+        @highlight-click="handleHighlightClick"
+        @active-section-change="(key) => { activeSection = key; clearSelection(); }"
+      />
       <aside class="panel reader-notes" aria-labelledby="notes-heading">
         <h2 id="notes-heading">Minhas anotações</h2>
         <p v-if="state.context.study.notes.trim()" class="notes-content">{{ state.context.study.notes }}</p>
@@ -200,6 +353,43 @@ onBeforeUnmount(resource.cancel)
       :initial-visibility="state.context.study.visibility"
       @visibility-changed="handleVisibilityChanged"
     />
+
+    <!-- Barra Flutuante Contextual de Ações (F0.6.2) -->
+    <FloatingActionsToolbar
+      :visible="Boolean(selectionContext)"
+      :selection="selectionContext"
+      :study-title="state.context.study.title"
+      :book-title="state.context.book.title"
+      :chapter-name="state.context.chapter.name"
+      :can-edit="canEdit"
+      @highlight="handleHighlight"
+      @annotate="handleAnnotate"
+      @copy-quote="handleCopyQuote"
+      @occlude="handleOcclude"
+      @ask-question="handleAskQuestion"
+      @close="clearSelection"
+    />
+
+    <!-- Popover de Gestão de Destaque Clicado (F0.6.2) -->
+    <HighlightActionPopover
+      :highlight="activeHighlight"
+      :bounding-rect="popoverRect"
+      :can-edit="canEdit"
+      @change-color="handleChangeColor"
+      @update-note="handleUpdateNote"
+      @delete="handleDeleteHighlight"
+      @close="closeHighlightPopover"
+    />
+
+    <!-- Toast de Notificação -->
+    <Transition name="toast-fade">
+      <div v-if="toastMessage" class="study-toast" role="status" aria-live="polite">
+        <svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>{{ toastMessage }}</span>
+      </div>
+    </Transition>
   </template>
   </div>
 </template>
@@ -262,5 +452,43 @@ onBeforeUnmount(resource.cancel)
 .danger-action:hover {
   background: var(--color-surface-hover);
   border-color: var(--color-danger, #b91c1c);
+}
+
+.study-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-surface, #18181b);
+  color: var(--color-text-primary, #ffffff);
+  border: 1px solid var(--color-border, #3f3f46);
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  font-size: 0.875rem;
+  font-weight: 500;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.toast-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast-fade-enter-from,
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: translate(-50%, 0.75rem);
 }
 </style>

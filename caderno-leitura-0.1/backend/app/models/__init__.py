@@ -13,6 +13,7 @@ from app.models.resource_permission import ResourcePermission
 from app.models.search_history import SearchHistory
 from app.models.study import Study
 from app.models.study_canvas_node import StudyCanvasNode
+from app.models.study_highlight import StudyHighlight
 from app.models.study_relation import StudyRelation
 from app.models.user import User
 from app.models.user_preference import UserPreference
@@ -33,6 +34,7 @@ __all__ = [
     "SearchHistory",
     "Study",
     "StudyCanvasNode",
+    "StudyHighlight",
     "StudyRelation",
     "User",
     "UserPreference",
@@ -40,5 +42,6 @@ __all__ = [
     "UserSession",
     "book_categories",
 ]
+
 
 

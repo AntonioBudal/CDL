@@ -3,6 +3,7 @@ import type {
   TrashSummary, TrashEmptyResponse, BookCanvasResponse, CanvasBatchUpdatePayload, CanvasBatchUpdateItem, StudyCanvasNode,
   StudyRelationsResponse, StudyRelationItem, CreateStudyRelationPayload, UpdateStudyRelationPayload, CandidateStudyItem, BookCanvasRelationItem,
   StudyStatusUpdatePayload, StudyStatusResponse, CanvasFrameItem, CreateCanvasFramePayload, UpdateCanvasFramePayload,
+  StudyHighlight, StudyHighlightCreatePayload, StudyHighlightUpdatePayload,
   SearchResponse, SearchHistoryResponse, UserRead,
   AuthConfigResponse, AuthSuccessResponse, SessionItem, ExternalIdentityRead,
   AuditLogListResponse, DeactivateAccountRequest, ReactivateAccountRequest, DeleteAccountRequest,
@@ -247,6 +248,23 @@ export const api = {
   }),
   createStudy: (payload: StudyCreate) => request<Study>('/studies', {
     method: 'POST', body: JSON.stringify(payload),
+  }),
+
+  // Métodos de Destaques e Ações Contextuais
+  listStudyHighlights: (studyId: number, section?: string, signal?: AbortSignal) => {
+    const url = section ? `/studies/${studyId}/highlights?section=${encodeURIComponent(section)}` : `/studies/${studyId}/highlights`
+    return request<StudyHighlight[]>(url, { signal })
+  },
+  createStudyHighlight: (studyId: number, payload: StudyHighlightCreatePayload) => request<StudyHighlight>(`/studies/${studyId}/highlights`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+  updateStudyHighlight: (studyId: number, highlightId: number, payload: StudyHighlightUpdatePayload) => request<StudyHighlight>(`/studies/${studyId}/highlights/${highlightId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  }),
+  deleteStudyHighlight: (studyId: number, highlightId: number) => request<void>(`/studies/${studyId}/highlights/${highlightId}`, {
+    method: 'DELETE',
   }),
 
   // Métodos de Lixeira (Soft Delete e Purga)

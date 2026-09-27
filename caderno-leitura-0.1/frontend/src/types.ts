@@ -957,3 +957,53 @@ export * from './types/profile.ts'
 export * from './types/friendship.ts'
 export * from './types/sharing.ts'
 
+export type HighlightColor = 'yellow' | 'green' | 'blue' | 'pink' | 'purple'
+export type HighlightKind = 'highlight' | 'note' | 'quote' | 'hidden' | 'question'
+export type StudySectionKey = 'summary' | 'explanation' | 'concepts' | 'references' | 'source_response'
+
+export interface StudyHighlight {
+  id: number
+  study_id: number
+  user_id: string
+  section: StudySectionKey
+  start_offset: number
+  end_offset: number
+  selected_text: string
+  prefix: string
+  suffix: string
+  color: HighlightColor
+  kind: HighlightKind
+  note: string
+  created_at: string
+  updated_at: string
+}
+
+export interface StudyHighlightCreatePayload {
+  section: StudySectionKey
+  start_offset: number
+  end_offset: number
+  selected_text: string
+  prefix?: string
+  suffix?: string
+  color?: HighlightColor
+  kind?: HighlightKind
+  note?: string
+}
+
+export interface StudyHighlightUpdatePayload {
+  color?: HighlightColor
+  kind?: HighlightKind
+  note?: string
+}
+
+export interface TextSelectionContext {
+  section: StudySectionKey
+  selected_text: string
+  prefix: string
+  suffix: string
+  start_offset: number
+  end_offset: number
+  boundingRect: DOMRect
+}
+
+
