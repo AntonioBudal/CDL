@@ -77,8 +77,8 @@ const contentId = computed(() => `group-content-${props.id}`)
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--bg-primary, #ffffff);
-  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  background: var(--color-surface, #ffffff);
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
   border-radius: 6px 6px 0 0;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
@@ -94,17 +94,48 @@ const contentId = computed(() => `group-content-${props.id}`)
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  color: var(--text-primary, #1a202c);
+  color: var(--color-text, #1a202c);
   border-radius: 6px;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .group-toggle-btn:hover {
-  background-color: var(--bg-subtle, #f8fafc);
+  background-color: var(--color-surface-hover, #f8fafc);
+  color: var(--color-hover-text);
+}
+
+.group-toggle-btn:hover .group-title {
+  color: var(--color-hover-text);
+}
+
+.group-toggle-btn:hover .group-chevron-wrap {
+  color: var(--color-hover-text);
+}
+
+.group-toggle-btn:hover .group-count-badge {
+  color: var(--color-hover-text);
+  border-color: var(--color-border-hover);
+}
+
+:root .group-header .group-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text, #1a202c);
+}
+
+:root .group-header .group-toggle-btn:hover {
+  background-color: var(--color-surface-hover, #f8fafc);
+  color: var(--color-hover-text);
+}
+
+:root .group-header .group-toggle-btn:hover .group-title,
+:root .group-header .group-toggle-btn:hover .group-chevron-wrap,
+:root .group-header .group-toggle-btn:hover .group-count-badge {
+  color: var(--color-hover-text);
 }
 
 .group-toggle-btn:focus-visible {
-  outline: 2px solid var(--accent-color, #3b82f6);
+  outline: 2px solid var(--color-accent, #3b82f6);
   outline-offset: -2px;
 }
 
@@ -115,7 +146,8 @@ const contentId = computed(() => `group-content-${props.id}`)
   width: 28px;
   height: 28px;
   margin-right: 8px;
-  color: var(--text-muted, #718096);
+  color: var(--color-muted, #718096);
+  flex-shrink: 0;
 }
 
 .group-chevron-icon {
@@ -131,7 +163,7 @@ const contentId = computed(() => `group-content-${props.id}`)
   font-size: 1.05rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: var(--text-primary, #1a202c);
+  color: var(--color-text, #1a202c);
   flex-grow: 1;
 }
 
@@ -169,6 +201,51 @@ const contentId = computed(() => `group-content-${props.id}`)
   border: 1px solid #a7f3d0;
 }
 
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .group-header {
+  background: var(--color-surface);
+  border-bottom-color: var(--color-border);
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .group-title {
+  color: #ffffff;
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .group-chevron-wrap {
+  color: #d4d4d4;
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .group-toggle-btn:hover .group-title {
+  color: var(--color-hover-text);
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .group-toggle-btn:hover .group-chevron-wrap {
+  color: var(--color-hover-text);
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-rascunho {
+  background-color: rgba(148, 163, 184, 0.18);
+  color: #e2e8f0;
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-em-estudo {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-revisado {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fde68a;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-concluido {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
 .group-count-badge {
   display: inline-flex;
   align-items: center;
@@ -179,8 +256,9 @@ const contentId = computed(() => `group-content-${props.id}`)
   font-size: 0.8rem;
   font-weight: 600;
   border-radius: 12px;
-  background-color: var(--bg-badge, #e2e8f0);
-  color: var(--text-secondary, #4a5568);
+  background-color: var(--color-surface-soft, #e2e8f0);
+  color: var(--color-muted, #4a5568);
+  border: 1px solid var(--color-border, transparent);
 }
 
 .group-content {

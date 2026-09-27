@@ -165,27 +165,51 @@ async function selectStatus(newStatus: ReadingStatus) {
 }
 
 .badge-rascunho {
-  background-color: #f1f5f9;
-  color: #475569;
-  border: 1px solid #cbd5e1;
+  background-color: var(--badge-draft-bg, #f1f5f9);
+  color: var(--badge-draft-text, #475569);
+  border: 1px solid var(--badge-draft-border, #cbd5e1);
 }
 
 .badge-em-estudo {
-  background-color: #eff6ff;
-  color: #1d4ed8;
-  border: 1px solid #bfdbfe;
+  background-color: var(--badge-study-bg, #eff6ff);
+  color: var(--badge-study-text, #1d4ed8);
+  border: 1px solid var(--badge-study-border, #bfdbfe);
 }
 
 .badge-revisado {
-  background-color: #fef3c7;
-  color: #b45309;
-  border: 1px solid #fde68a;
+  background-color: var(--badge-reviewed-bg, #fef3c7);
+  color: var(--badge-reviewed-text, #b45309);
+  border: 1px solid var(--badge-reviewed-border, #fde68a);
 }
 
 .badge-concluido {
-  background-color: #ecfdf5;
-  color: #047857;
-  border: 1px solid #a7f3d0;
+  background-color: var(--badge-done-bg, #ecfdf5);
+  color: var(--badge-done-text, #047857);
+  border: 1px solid var(--badge-done-border, #a7f3d0);
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-rascunho {
+  background-color: rgba(148, 163, 184, 0.18);
+  color: #e2e8f0;
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-em-estudo {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-revisado {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fde68a;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-concluido {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border-color: rgba(16, 185, 129, 0.4);
 }
 
 .status-dropdown-menu {
@@ -195,10 +219,10 @@ async function selectStatus(newStatus: ReadingStatus) {
   z-index: 50;
   min-width: 150px;
   padding: 4px;
-  background-color: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-color, #e2e8f0);
+  background-color: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -212,6 +236,7 @@ async function selectStatus(newStatus: ReadingStatus) {
   min-height: 44px;
   padding: 6px 10px;
   background: transparent;
+  color: var(--color-text, inherit);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -219,7 +244,7 @@ async function selectStatus(newStatus: ReadingStatus) {
 }
 
 .status-option-btn:hover {
-  background-color: var(--bg-subtle, #f8fafc);
+  background-color: var(--color-surface-soft, #f8fafc);
 }
 
 .status-pill-small {
@@ -230,6 +255,6 @@ async function selectStatus(newStatus: ReadingStatus) {
 }
 
 .current-check-icon {
-  color: var(--accent-color, #3b82f6);
+  color: var(--color-accent, #3b82f6);
 }
 </style>

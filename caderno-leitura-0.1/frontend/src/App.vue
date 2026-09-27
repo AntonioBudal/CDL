@@ -11,12 +11,16 @@ import { useSync } from './composables/useSync.ts'
 import { useAuthStore } from './stores/auth.ts'
 import { useProfile } from './composables/useProfile.ts'
 import { useFriends } from './composables/useFriends.ts'
+import { useNotifications } from './composables/useNotifications.ts'
+import NotificationsDropdown from './components/notifications/NotificationsDropdown.vue'
+import MobileMoreMenu from './components/navigation/MobileMoreMenu.vue'
 
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const profileService = useProfile()
 const friendsService = useFriends()
+const notificationsService = useNotifications()
 const { openSearch } = useGlobalSearch()
 const sync = useSync()
 const preferences = usePreferences()
@@ -62,6 +66,7 @@ onMounted(() => {
   if (auth.isAuthenticated.value) {
     void profileService.fetchProfile()
     void friendsService.fetchSummary()
+    notificationsService.startPolling(45000)
   }
 })
 
@@ -71,6 +76,9 @@ watch(
     if (isAuth) {
       void profileService.fetchProfile()
       void friendsService.fetchSummary()
+      notificationsService.startPolling(45000)
+    } else {
+      notificationsService.stopPolling()
     }
   }
 )
@@ -79,6 +87,13 @@ onUnmounted(() => {
   window.removeEventListener('storage', handleStorageChange)
   window.removeEventListener('caderno_home_view_changed', handleStorageChange)
   sync.detachListeners()
+  notificationsService.stopPolling()
+})
+
+const isMoreMenuOpen = ref(false)
+const isMoreMenuActive = computed(() => {
+  const current = String(route.name)
+  return ['trash', 'admin', 'profile'].includes(current)
 })
 
 interface NavLinkItem {
@@ -87,6 +102,7 @@ interface NavLinkItem {
   routes: string[]
   icon: IconName
   requiresAdmin?: boolean
+  desktopOnly?: boolean
 }
 
 const mainLinks: NavLinkItem[] = [
@@ -115,23 +131,25 @@ const mainLinks: NavLinkItem[] = [
     icon: 'users',
   },
   {
-    to: '/admin',
-    label: 'Administração',
-    routes: ['admin'],
-    icon: 'shield',
-    requiresAdmin: true,
-  },
-  {
     to: '/ajustes',
     label: 'Ajustes',
     routes: ['settings', 'connection'],
     icon: 'sliders',
   },
   {
+    to: '/admin',
+    label: 'Administração',
+    routes: ['admin'],
+    icon: 'shield',
+    requiresAdmin: true,
+    desktopOnly: true,
+  },
+  {
     to: '/lixeira',
     label: 'Lixeira',
     routes: ['trash'],
     icon: 'trash',
+    desktopOnly: true,
   },
 ]
 
@@ -158,14 +176,15 @@ const visibleMainLinks = computed(() => {
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
   <header class="app-header">
     <div class="header-inner">
-      <RouterLink class="brand" to="/">Caderno de Leitura</RouterLink>
+      <RouterLink class="brand" to="/">Leitorum</RouterLink>
       <nav v-if="!isAuthPage" class="main-nav" aria-label="Navegação principal">
         <RouterLink
           v-for="item in visibleMainLinks"
           :key="item.to"
           :to="item.to"
           :class="{
-            selected: item.routes.includes(String(route.name))
+            selected: item.routes.includes(String(route.name)),
+            'desktop-only': item.desktopOnly,
           }"
           :aria-current="
             item.routes.includes(String(route.name))
@@ -183,6 +202,20 @@ const visibleMainLinks = computed(() => {
             {{ pendingReceivedCount }}
           </span>
         </RouterLink>
+
+        <!-- Botão 'Mais' para Mobile (5º destino móvel) -->
+        <button
+          type="button"
+          class="mobile-more-trigger mobile-only"
+          :class="{ active: isMoreMenuActive, selected: isMoreMenuActive }"
+          aria-label="Mais opções de navegação"
+          aria-haspopup="dialog"
+          :aria-expanded="isMoreMenuOpen"
+          @click="isMoreMenuOpen = true"
+        >
+          <Icon name="more-horizontal" :size="18" :stroke-width="1.8" class="nav-icon" />
+          <span>Mais</span>
+        </button>
       </nav>
       <div class="header-actions">
         <SyncStatusBadge v-if="!isAuthPage" />
@@ -197,6 +230,30 @@ const visibleMainLinks = computed(() => {
           <span class="search-label">Buscar</span>
           <kbd class="search-kbd">Ctrl K</kbd>
         </button>
+
+        <!-- Centro de Notificações (F09) -->
+        <div v-if="isAuthenticated && !isAuthPage" class="notifications-nav-container">
+          <button
+            type="button"
+            class="btn-notifications-trigger"
+            :class="{ 'has-unread': notificationsService.unread.value > 0, active: notificationsService.open.value }"
+            :title="notificationsService.unread.value > 0 ? `${notificationsService.unread.value} notificação(ões) pendente(s)` : 'Notificações'"
+            :aria-label="notificationsService.unread.value > 0 ? `Notificações: ${notificationsService.unread.value} pendentes` : 'Notificações'"
+            :aria-expanded="notificationsService.open.value"
+            aria-haspopup="dialog"
+            @click="notificationsService.toggleDropdown"
+          >
+            <Icon :name="notificationsService.unread.value > 0 ? 'bell-ring' : 'bell'" :size="18" />
+            <span
+              v-if="notificationsService.unread.value > 0"
+              class="notifications-badge"
+              aria-hidden="true"
+            >
+              {{ notificationsService.unread.value > 99 ? '99+' : notificationsService.unread.value }}
+            </span>
+          </button>
+          <NotificationsDropdown />
+        </div>
 
         <!-- Informações do Usuário e Botão de Logout (F02/F05) -->
         <div v-if="isAuthenticated && !isAuthPage" class="user-nav-actions">
@@ -241,11 +298,25 @@ const visibleMainLinks = computed(() => {
       </Transition>
     </RouterView>
   </main>
-  <footer class="app-footer">Caderno de Leitura · Versão 0.4</footer>
+  <footer class="app-footer">Leitorum · Versão 0.4</footer>
   <GlobalSearchModal />
+  <MobileMoreMenu
+    :open="isMoreMenuOpen"
+    :is-admin="auth.isAdmin.value"
+    :username="profileService.profile.value?.username || currentUser?.username"
+    :display-name="profileService.profile.value?.display_name || currentUser?.display_name"
+    :avatar-url="profileService.profile.value?.avatar_url"
+    :initials="profileService.initials.value"
+    @close="isMoreMenuOpen = false"
+    @logout="handleLogout"
+  />
 </template>
 
 <style scoped>
+.mobile-more-trigger {
+  display: none;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
@@ -394,5 +465,53 @@ const visibleMainLinks = computed(() => {
   .search-kbd {
     display: none;
   }
+}
+
+.notifications-nav-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.btn-notifications-trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: var(--radius-control, 6px);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-notifications-trigger:hover,
+.btn-notifications-trigger.active {
+  background: var(--color-surface-hover, rgba(0, 0, 0, 0.08));
+  border-color: var(--color-border-hover, var(--color-accent));
+  color: var(--color-text);
+}
+
+.btn-notifications-trigger.has-unread {
+  color: var(--color-accent, #2563eb);
+}
+
+.notifications-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: var(--color-danger, #ef4444);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.18rem 0.35rem;
+  border-radius: 9999px;
+  border: 2px solid var(--color-surface, #ffffff);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 </style>

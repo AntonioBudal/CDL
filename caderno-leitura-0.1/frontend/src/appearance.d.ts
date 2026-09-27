@@ -1,6 +1,17 @@
+export type ThemeId =
+  | 'papel-fosco'
+  | 'noite-suave'
+  | 'cinza-neutro'
+  | 'grafite'
+  | 'monocromatico'
+  | 'pergaminho'
+  | 'e-ink'
+  | 'solario'
+  | 'fiorde'
+  | 'voltagem'
+
 export type AppearancePreferences = {
-  theme: 'porcelana' | 'breu' | 'pergaminho' | 'e-ink' | 'vespera'
-  | 'solario' | 'fiorde' | 'vinil' | 'sequoia' | 'voltagem'
+  theme: ThemeId
   font: 'inter' | 'merriweather' | 'lora' | 'roboto-serif' | 'source-serif-4'
   | 'literata' | 'eb-garamond' | 'libre-baskerville' | 'crimson-pro'
   | 'noto-serif' | 'bitter' | 'fira-sans' | 'source-sans-3' | 'noto-sans'

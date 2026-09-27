@@ -493,6 +493,8 @@ export type IconName =
   | 'refresh-cw'
   | 'user-check'
   | 'user-x'
+  | 'bell'
+  | 'bell-ring'
 
 export interface IconProps {
   name: IconName
@@ -855,8 +857,60 @@ export interface MotionState {
   isSettling: boolean
 }
 
+// ============================================================================
+// F09.5.2 — Contraste Dinâmico e Navegação Móvel
+// ============================================================================
+
+export interface ContrastCalculationOptions {
+  targetRatio?: number
+  lightColor?: string
+  darkColor?: string
+  parentBackground?: string
+  highContrast?: boolean
+}
+
+export interface ContrastResult {
+  textColor: string
+  contrastRatio: number
+  meetsAA: boolean
+  meetsAAA: boolean
+  luminance: number
+  isDarkBackground: boolean
+}
+
+export interface DynamicThemeVariables {
+  '--dynamic-fg': string
+  '--dynamic-hover-bg': string
+  '--dynamic-hover-fg': string
+  '--dynamic-active-bg': string
+  '--dynamic-active-fg': string
+  '--dynamic-border': string
+}
+
+export interface MobileNavItem {
+  id: string
+  to?: string
+  label: string
+  icon: IconName
+  action?: () => void
+  badgeCount?: number
+  isActive: boolean
+}
+
+export interface MobileMoreMenuItem {
+  id: string
+  to?: string
+  label: string
+  icon: IconName
+  badgeCount?: number
+  action?: () => void
+  requiresAdmin?: boolean
+  danger?: boolean
+}
+
 export * from './types/sync.ts'
 export * from './types/preferences.ts'
 export * from './types/profile.ts'
 export * from './types/friendship.ts'
 export * from './types/sharing.ts'
+

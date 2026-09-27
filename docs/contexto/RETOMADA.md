@@ -520,11 +520,80 @@ Este documento registra as evidências consolidadas em cada ciclo de trabalho e 
 
 ---
 
+## Sessão: Implementação e Validação da Feature 09 — Notificações e Atividade Social (26/09/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Especificação, Arquitetura e Contratos (Spec Kit):**
+   - Ciclo formal Spec Kit completado para `specs/036-notificacoes-atividade-social/` (`spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/notifications-api.yaml`, `tasks.md`, `quickstart.md`).
+   - Alinhamentos deliberados com o usuário:
+     - Q1: A — Polling leve no cliente a cada 45s via `GET /api/notifications/unread-count` com revalidação imediata no foco da janela (`window.focus`), navegação de rotas e abertura de dropdown.
+     - Q2: A — Ações rápidas de amizade diretamente no card da notificação com feedback inline imediato ("Amizade aceita" / "Solicitação recusada") sem sumiço abrupto do card.
+     - Q3: A — Alertas institucionais administrativos criam registros individuais na tabela `Notification` para cada usuário ativo no momento do envio.
+     - Purga automática periódica de notificações já lidas com mais de 60 dias (`read_at IS NOT NULL`).
+   - Todas as 31 tarefas de `tasks.md` (T001 a T031) executadas e marcadas como concluídas (`[x]`).
+2. **Backend e Modelo de Dados:**
+   - Modelo relacional `Notification` com índices compostos `(user_id, read_at)` e `(user_id, created_at DESC)` em `app/models/notification.py`.
+   - Migração Alembic `0018_add_notifications_table.py` criada e validada.
+   - Serviço centralizado `notification_service.py` com criação resiliente com captura defensiva (FR-010), contagem de não lidas, listagem paginada, marcação individual e em lote como lida, broadcast administrativo e purga de 60 dias.
+   - Integração com `friendship_service.py` disparando notificações automáticas para `friend_request` e `friend_accepted`.
+   - Integração com `sharing_service.py` disparando notificações para `study_shared` com títulos canônicos e links para `/estudos/{id}` ou `/livro/{id}`.
+   - Endpoints registrados em `routers/notifications.py` e rotas administrativas `/api/admin/notifications/broadcast` e `/api/admin/notifications/purge` em `routers/admin.py`.
+   - Rotina de purga preventiva de notificações lidas integrada no ciclo de vida (`lifespan` em `main.py`) e CLI de manutenção (`app/services/maintenance.py purgar-notificacoes`).
+3. **Frontend e Experiência do Leitor (Vue 3 / TypeScript):**
+   - Tipos TypeScript estritos em `frontend/src/types/notifications.ts`.
+   - Cliente de API `notificationsApi` em `frontend/src/api/notifications.ts` e métodos estendidos em `services/api.ts`.
+   - Composable reativo `useNotifications` com polling de 45s, debounce no foco da aba e sincronização global.
+   - Componente `NotificationItem.vue` com exibição de avatar/iniciais, data relativa amigável, ícones contextuais, links de navegação, ações rápidas de amizade com feedback inline e estilo visual de destaque por severidade para avisos da plataforma.
+   - Componente `NotificationsDropdown.vue` com cabeçalho, indicador de pendências, marcação rápida de todas como lidas, abas de filtro ("Todas" / "Não lidas"), fechamento via Escape e clique externo, e conformidade rigorosa WAI-ARIA.
+   - Botão de sino com badge numérico integrado na barra de navegação superior (`App.vue`).
+   - Zero emojis informais em todo o código-fonte, em total conformidade com `visual_system.test.mjs`.
+4. **Validação e Suítes de Teste:**
+   - 314 testes de backend passando (`pytest backend/tests`), incluindo 9 testes dedicados de integração e autorização em `test_notifications.py` (313 passed, 1 skipped).
+   - 251 testes de frontend passando (`npm test`), incluindo 6 testes dedicados em `notifications.test.mjs`.
+   - Compilação e tipagem estrita do frontend (`npm run build` / `vue-tsc`) 100% aprovada sem erros.
+
+---
+
+## Sessão: Implementação e Validação da Feature 9.5 — Refatoração de Temas, Persistência e Correções Visuais (26/09/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Especificação, Arquitetura e Contratos (Spec Kit):**
+   - Ciclo formal Spec Kit completado para `specs/037-refatoracao-temas-visuais/` (`spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/`, `tasks.md`, `quickstart.md`).
+   - Alinhamentos deliberados com o usuário:
+     - Q1: B — Nomenclatura concisa e simplificada para os 5 temas preservados: Sépia (`pergaminho`), E-Ink (`e-ink`), Solarized (`solario`), Nord (`fiorde`) e Cyber (`voltagem`).
+     - Q2: A — Tema claro padrão oficial assumido por Papel Fosco (`papel-fosco`, fundo `#f5f5f5`, texto `#333333`) após a exclusão de Porcelana.
+     - Q3: A — Unificação de persistência com identificador nominal único em `localStorage` e na store, lido síncronamente antes de `app.mount('#app')`, erradicando a sobreposição de `theme_mode` genérico (`dark`/`light`).
+   - Todas as 24 tarefas de `tasks.md` (T001 a T024) executadas e marcadas como concluídas (`[x]`).
+2. **Catálogo de Temas e Paletas Minimalistas:**
+   - Exclusão total dos 5 temas obsoletos: `porcelana`, `breu`, `vinil`, `sequoia`, `vespera`.
+   - Adição e calibração completa dos 5 novos temas minimalistas de baixo contraste em `frontend/src/palettes.css`: `papel-fosco`, `noite-suave`, `cinza-neutro`, `grafite`, `monocromatico`.
+   - Normalização e mapa de migração automática para legados em `appearance-bootstrap.js`.
+3. **Persistência Síncrona e Prevenção de Reset (F5 e Navegação):**
+   - Leitura imediata de preferências em `main.ts` antes de `createApp(App).use(router).mount('#app')`.
+   - Remoção de valores padrão genéricos em `usePreferences.ts`, impedindo regressão de `data-theme`.
+   - Persistência bidirecional unificada em `SettingsView.vue` comunicando `appearance` e `usePreferences`.
+4. **Contenção Dimensional de Vetores (SVG) e Modais:**
+   - Estado vazio de estudos compartilhados com contenção dimensional física (`max-width: 120px; max-height: 120px`).
+   - Botão `.share-action` em `StudyView.vue` estruturado com `display: inline-flex; align-items: center; gap: 8px; white-space: nowrap` e ícone travado em `1.2em`.
+   - Modal de exportação (`ExportModal.vue`) com inputs radio e checkbox fixados rigidamente em 24x24px sem sobreposição.
+5. **Contraste Dinâmico e Herança de Tokens:**
+   - `ExportModal.vue` padronizado nas variáveis canônicas de `palettes.css` (`--color-surface`, `--color-text`, `--color-muted`, `--color-border`, `--color-accent`).
+   - Badges e menu dropdown de status de leitura (`StudyStatusBadge.vue`) calibrados para temas escuros e claros (WCAG AA).
+   - Cabeçalhos colapsáveis (`GroupSection.vue`) adaptados com contraste dinâmico absoluto em fundos claros e escuros.
+6. **Validação e Suítes de Teste:**
+   - 314 testes de backend passando (`pytest backend/tests` / 313 passed, 1 skipped).
+   - 262 testes de frontend passando (`npm test`), incluindo 11 novos testes dedicados em `theme_refactor.test.mjs`.
+   - Compilação e tipagem estrita do frontend (`npm run build` / `vue-tsc`) 100% aprovada sem erros.
+   - Zero emojis informais em todo o código-fonte, em total conformidade com `visual_system.test.mjs`.
+
+---
+
 ## Próximo Passo Recomendado
 
-Iniciar a próxima etapa do Roadmap 0.5:
+Iniciar a próxima etapa do Roadmap 0.5 (F10):
 ```bash
-/speckit-specify F09 - Modo de Alta Densidade e Atalhos Avançados
+/speckit-specify F10 - ...
 ```
+
 
 

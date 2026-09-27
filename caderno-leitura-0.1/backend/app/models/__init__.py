@@ -7,6 +7,7 @@ from app.models.chapter import Chapter
 from app.models.external_identity import ExternalIdentity
 from app.models.friendship import Friendship
 from app.models.local_credential import LocalCredential
+from app.models.notification import Notification
 from app.models.resource_permission import ResourcePermission
 from app.models.search_history import SearchHistory
 from app.models.study import Study
@@ -25,6 +26,7 @@ __all__ = [
     "ExternalIdentity",
     "Friendship",
     "LocalCredential",
+    "Notification",
     "ResourcePermission",
     "SearchHistory",
     "Study",

@@ -242,7 +242,7 @@ async function handleDownload() {
 .modal-dialog {
   width: 100%;
   max-width: 520px;
-  background: var(--color-bg, #fff);
+  background: var(--color-surface, #fff);
   color: var(--color-text, #111);
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
@@ -271,7 +271,7 @@ async function handleDownload() {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-primary, #2b6cb0);
+  color: var(--color-accent, #475569);
 }
 
 .modal-header h2 {
@@ -279,6 +279,7 @@ async function handleDownload() {
   font-size: 1.15rem;
   font-weight: 600;
   line-height: 1.3;
+  color: var(--color-text, #111);
 }
 
 .modal-close {
@@ -287,12 +288,12 @@ async function handleDownload() {
   font-size: 1.1rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
-  color: var(--color-text-muted, #666);
+  color: var(--color-muted, #666);
   border-radius: 4px;
 }
 
 .modal-close:hover:not(:disabled) {
-  background: var(--color-bg-alt, #eee);
+  background: var(--color-surface-soft, #eee);
   color: var(--color-text, #111);
 }
 
@@ -329,29 +330,36 @@ async function handleDownload() {
 
 .radio-card {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   border-radius: 6px;
   border: 1px solid var(--color-border, #ccc);
-  background: var(--color-bg, #fff);
+  background: var(--color-surface, #fff);
   cursor: pointer;
   transition: border-color 0.15s, background-color 0.15s;
 }
 
 .radio-card:hover {
-  border-color: var(--color-primary, #2b6cb0);
-  background: var(--color-bg-alt, #f8fafc);
+  border-color: var(--color-accent, #475569);
+  background: var(--color-surface-soft, #f8fafc);
 }
 
 .radio-card.selected {
-  border-color: var(--color-primary, #2b6cb0);
-  background: var(--color-bg-alt, #eff6ff);
+  border-color: var(--color-accent, #475569);
+  background: var(--color-surface-soft, #eff6ff);
 }
 
-.radio-card input[type="radio"] {
-  margin-top: 0.2rem;
+.radio-card input[type="radio"],
+.checkbox-row input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  flex-shrink: 0;
+  margin: 0;
   cursor: pointer;
+  accent-color: var(--color-accent, #475569);
 }
 
 .format-details {
@@ -367,7 +375,7 @@ async function handleDownload() {
 
 .format-desc {
   font-size: 0.8rem;
-  color: var(--color-text-muted, #666);
+  color: var(--color-muted, #666);
   line-height: 1.35;
 }
 
@@ -379,29 +387,24 @@ async function handleDownload() {
 
 .checkbox-row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
-  border: 1px solid var(--color-border-subtle, #e2e8f0);
-  background: var(--color-bg, #fff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  background: var(--color-surface, #fff);
   cursor: pointer;
   transition: background-color 0.15s;
 }
 
 .checkbox-row:hover:not(.disabled-checkbox) {
-  background: var(--color-bg-alt, #f8fafc);
+  background: var(--color-surface-soft, #f8fafc);
 }
 
 .disabled-checkbox {
   opacity: 0.75;
   cursor: not-allowed;
-  background: var(--color-bg-alt, #f8fafc);
-}
-
-.checkbox-row input[type="checkbox"] {
-  margin-top: 0.2rem;
-  cursor: pointer;
+  background: var(--color-surface-soft, #f8fafc);
 }
 
 .disabled-checkbox input[type="checkbox"] {
@@ -421,7 +424,7 @@ async function handleDownload() {
 
 .checkbox-desc {
   font-size: 0.78rem;
-  color: var(--color-text-muted, #666);
+  color: var(--color-muted, #666);
 }
 
 .modal-actions {
@@ -429,7 +432,7 @@ async function handleDownload() {
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  background-color: var(--color-bg-alt, #fafafa);
+  background-color: var(--color-surface-soft, #fafafa);
   border-top: 1px solid var(--color-border, #eee);
 }
 
@@ -451,22 +454,22 @@ button:disabled {
 }
 
 button.secondary {
-  background: var(--color-bg, #fff);
+  background: var(--color-surface, #fff);
   border-color: var(--color-border, #ccc);
   color: var(--color-text, #333);
 }
 
 button.secondary:hover:not(:disabled) {
-  background: var(--color-bg-alt, #f0f0f0);
+  background: var(--color-surface-soft, #f0f0f0);
 }
 
 button.primary {
-  background: var(--color-primary, #2b6cb0);
-  color: #fff;
+  background: var(--color-accent, #475569);
+  color: var(--color-on-accent, #fff);
 }
 
 button.primary:hover:not(:disabled) {
-  background: var(--color-primary-hover, #2c5282);
+  filter: brightness(0.9);
 }
 
 .spinner {

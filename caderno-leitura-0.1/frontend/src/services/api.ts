@@ -43,6 +43,20 @@ import type {
   AdminRevokeSessionsResponse,
 } from '../types/admin.ts'
 
+import type {
+  NotificationItem,
+  NotificationListResponse,
+  UnreadCountResponse,
+  BroadcastNotificationRequest,
+  BroadcastNotificationResponse,
+  NotificationPurgeResponse,
+} from '../types/notifications.ts'
+
+export interface NotificationReadAllResponse {
+  marked_count: number
+  message: string
+}
+
 export interface HealthResponse {
   status: 'ok'
   service: string
@@ -525,6 +539,40 @@ export const api = {
     request<{ ok: boolean }>('/auth/google/unlink', {
       method: 'DELETE',
     }),
+
+  // Notificações e Atividade Social (F09)
+  getNotifications: (
+    params?: { unread_only?: boolean; limit?: number; offset?: number },
+    signal?: AbortSignal,
+  ) => {
+    const searchParams = new URLSearchParams()
+    if (params?.unread_only != null) searchParams.set('unread_only', String(params.unread_only))
+    if (params?.limit != null) searchParams.set('limit', String(params.limit))
+    if (params?.offset != null) searchParams.set('offset', String(params.offset))
+    const queryStr = searchParams.toString()
+    return request<NotificationListResponse>(`/notifications${queryStr ? `?${queryStr}` : ''}`, { signal })
+  },
+  getUnreadCount: (signal?: AbortSignal) =>
+    request<UnreadCountResponse>('/notifications/unread-count', { signal }),
+  markNotificationAsRead: (notificationId: string) =>
+    request<NotificationItem>(`/notifications/${notificationId}/read`, {
+      method: 'PATCH',
+    }),
+  markAllNotificationsAsRead: () =>
+    request<NotificationReadAllResponse>('/notifications/read-all', {
+      method: 'POST',
+    }),
+  broadcastNotification: (payload: BroadcastNotificationRequest) =>
+    request<BroadcastNotificationResponse>('/admin/notifications/broadcast', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  purgeNotifications: (retentionDays?: number) => {
+    const queryStr = retentionDays != null ? `?retention_days=${retentionDays}` : ''
+    return request<NotificationPurgeResponse>(`/admin/notifications/purge${queryStr}`, {
+      method: 'POST',
+    })
+  },
 }
 
 

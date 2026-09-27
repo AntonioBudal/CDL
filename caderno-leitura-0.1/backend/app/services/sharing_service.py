@@ -22,6 +22,7 @@ from app.schemas.sharing import (
     VALID_STUDY_VISIBILITIES,
 )
 from app.services.friendship_service import is_blocked_between
+from app.services import notification_service
 
 logger = logging.getLogger(__name__)
 
@@ -229,6 +230,48 @@ def grant_permission(
     )
     session.add(perm)
     session.flush()
+
+    # Emissão de notificação study_shared (F09)
+    owner = session.get(User, owner_id)
+    resource_title = getattr(resource, "title", "Recurso")
+    book_id: int | None = None
+    book_title: str | None = None
+    link: str
+
+    if resource_type == "study":
+        link = f"/estudos/{resource_id}"
+        if getattr(resource, "chapter_id", None):
+            ch = session.get(Chapter, resource.chapter_id)
+            if ch and ch.book_id:
+                bk = session.get(Book, ch.book_id)
+                if bk:
+                    book_id = bk.id
+                    book_title = bk.title
+    else:
+        link = f"/livro/{resource_id}"
+        book_id = resource_id
+        book_title = resource_title
+
+    owner_name = (owner.display_name or owner.username) if owner else "Alguém"
+    notification_service.create_notification(
+        session=session,
+        user_id=target_user.id,
+        actor_id=owner_id,
+        event_type="study_shared",
+        payload={
+            "resource_type": resource_type,
+            "resource_id": resource_id,
+            "resource_title": resource_title,
+            "book_id": book_id,
+            "book_title": book_title,
+            "shared_by_id": owner_id,
+            "shared_by_username": owner.username if owner else "",
+            "shared_by_display_name": owner_name,
+            "link": link,
+            "message": f"{owner_name} compartilhou o {'estudo' if resource_type == 'study' else 'livro'} '{resource_title}' com você.",
+        },
+    )
+
     session.refresh(perm)
     return perm
 

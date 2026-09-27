@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ThemeTokensContract",
+  "description": "Especificação dos 10 temas canônicos do Leitorum e suas variáveis cromáticas obrigatórias",
+  "type": "object",
+  "properties": {
+    "themes": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "scheme": { "type": "string", "enum": ["light", "dark"] },
+          "tokens": {
+            "type": "object",
+            "properties": {
+              "--color-page": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+              "--color-surface": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+              "--color-surface-soft": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+              "--color-text": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+              "--color-muted": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+              "--color-border": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+              "--color-border-strong": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+              "--color-accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+              "--color-on-accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+            },
+            "required": [
+              "--color-page",
+              "--color-surface",
+              "--color-surface-soft",
+              "--color-text",
+              "--color-muted",
+              "--color-border",
+              "--color-border-strong",
+              "--color-accent",
+              "--color-on-accent"
+            ]
+          }
+        },
+        "required": ["id", "name", "scheme", "tokens"]
+      }
+    }
+  },
+  "required": ["themes"]
+}

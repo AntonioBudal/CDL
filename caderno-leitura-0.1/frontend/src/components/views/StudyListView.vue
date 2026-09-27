@@ -204,6 +204,25 @@ function formatDate(isoStr: string): string {
   background-color: var(--color-surface-hover, #f1f5f9);
 }
 
+.study-row-item:hover .row-title-link {
+  color: var(--color-hover-text);
+}
+
+.study-row-item:hover .location-tag {
+  color: var(--color-hover-text);
+  opacity: 0.85;
+}
+
+.study-row-item:hover .row-date {
+  color: var(--color-hover-text);
+  opacity: 0.85;
+}
+
+.study-row-item:hover .text-muted {
+  color: var(--color-hover-text);
+  opacity: 0.7;
+}
+
 .study-row-item.is-focused {
   background-color: var(--color-selected-bg, #eaf0ff);
   border-left: 3px solid var(--color-accent, #1d4ed8);
@@ -238,7 +257,7 @@ function formatDate(isoStr: string): string {
 .row-title-link {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--color-inverse-bg, #0f172a);
+  color: var(--color-text, #0f172a);
   text-decoration: none;
 }
 

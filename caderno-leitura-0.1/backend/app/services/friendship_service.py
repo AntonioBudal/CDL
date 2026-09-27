@@ -20,6 +20,7 @@ from app.schemas.friendship import (
     FriendshipStatusResponse,
     FriendUserRead,
 )
+from app.services import notification_service
 
 logger = logging.getLogger(__name__)
 
@@ -143,6 +144,19 @@ def send_friend_request(session: Session, sender: User, target_username: str) ->
             friendship.action_user_id = sender.id
             friendship.updated_at = utc_now()
             session.flush()
+            notification_service.create_notification(
+                session=session,
+                user_id=target_user.id,
+                actor_id=sender.id,
+                event_type="friend_accepted",
+                payload={
+                    "friendship_id": friendship.id,
+                    "friend_id": sender.id,
+                    "friend_username": sender.username,
+                    "friend_display_name": sender.display_name or sender.username,
+                    "message": f"@{sender.username} aceitou sua solicitação de amizade.",
+                },
+            )
             logger.info("Solicitações cruzadas entre %s e %s aceitas automaticamente", sender.username, target_user.username)
             return friendship
 
@@ -157,6 +171,19 @@ def send_friend_request(session: Session, sender: User, target_username: str) ->
     )
     session.add(new_friendship)
     session.flush()
+    notification_service.create_notification(
+        session=session,
+        user_id=target_user.id,
+        actor_id=sender.id,
+        event_type="friend_request",
+        payload={
+            "friendship_id": new_friendship.id,
+            "requester_id": sender.id,
+            "requester_username": sender.username,
+            "requester_display_name": sender.display_name or sender.username,
+            "message": f"@{sender.username} enviou uma solicitação de amizade para você.",
+        },
+    )
     logger.info("Solicitação de amizade enviada de %s para %s", sender.username, target_user.username)
     return new_friendship
 
@@ -198,6 +225,22 @@ def accept_friend_request(session: Session, current_user: User, request_id: int)
     friendship.action_user_id = current_user.id
     friendship.updated_at = utc_now()
     session.flush()
+
+    other_user_id = friendship.user_id_b if friendship.user_id_a == current_user.id else friendship.user_id_a
+    notification_service.create_notification(
+        session=session,
+        user_id=other_user_id,
+        actor_id=current_user.id,
+        event_type="friend_accepted",
+        payload={
+            "friendship_id": friendship.id,
+            "friend_id": current_user.id,
+            "friend_username": current_user.username,
+            "friend_display_name": current_user.display_name or current_user.username,
+            "message": f"@{current_user.username} aceitou sua solicitação de amizade.",
+        },
+    )
+
     logger.info("Solicitação de amizade #%d aceita por %s", request_id, current_user.username)
     return friendship
 

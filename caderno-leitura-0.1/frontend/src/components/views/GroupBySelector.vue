@@ -77,13 +77,13 @@ function onChange(event: Event) {
   gap: 6px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-secondary, #4a5568);
+  color: var(--color-text, #4a5568);
   cursor: pointer;
   min-height: 44px;
 }
 
 .selector-icon {
-  color: var(--text-muted, #718096);
+  color: var(--color-muted, #718096);
 }
 
 .label-text {
@@ -102,38 +102,40 @@ function onChange(event: Event) {
   min-height: 44px;
   min-width: 140px;
   padding: 8px 32px 8px 12px;
-  background-color: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-color, #cbd5e1);
+  background-color: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #cbd5e1);
   border-radius: 6px;
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-primary, #1e293b);
+  color: var(--color-text, #1e293b);
   cursor: pointer;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .group-by-native-select:hover:not(:disabled) {
-  border-color: var(--border-hover, #94a3b8);
+  border-color: var(--color-border-hover, #94a3b8);
+  background-color: var(--color-surface-hover);
+  color: var(--color-hover-text);
 }
 
 .group-by-native-select:focus {
   outline: none;
-  border-color: var(--accent-color, #3b82f6);
+  border-color: var(--color-accent, #3b82f6);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .group-by-native-select:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  background-color: var(--bg-disabled, #f1f5f9);
+  background-color: var(--color-surface-disabled, #f1f5f9);
 }
 
 .select-chevron {
   position: absolute;
   right: 10px;
   pointer-events: none;
-  color: var(--text-muted, #64748b);
+  color: var(--color-muted, #64748b);
 }
 
 @media (max-width: 768px) {

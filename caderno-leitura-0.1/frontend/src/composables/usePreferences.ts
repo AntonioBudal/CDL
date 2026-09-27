@@ -10,6 +10,37 @@ import type {
 } from '../types.ts'
 
 const STORAGE_KEY_PREFS = 'caderno_user_preferences'
+const STORAGE_KEY_APPEARANCE = 'caderno.aparencia.v2'
+
+export const CANONICAL_THEME_IDS = new Set<string>([
+  'papel-fosco',
+  'noite-suave',
+  'cinza-neutro',
+  'grafite',
+  'monocromatico',
+  'pergaminho',
+  'e-ink',
+  'solario',
+  'fiorde',
+  'voltagem',
+])
+
+export const LEGACY_THEME_MAP: Record<string, string> = {
+  porcelana: 'papel-fosco',
+  breu: 'noite-suave',
+  vinil: 'grafite',
+  sequoia: 'noite-suave',
+  vespera: 'noite-suave',
+  light: 'papel-fosco',
+  dark: 'noite-suave',
+  sepia: 'pergaminho',
+}
+
+export function resolveCanonicalTheme(theme: string | undefined | null): string {
+  if (!theme) return 'papel-fosco'
+  const mapped = LEGACY_THEME_MAP[theme] || theme
+  return CANONICAL_THEME_IDS.has(mapped) ? mapped : 'papel-fosco'
+}
 
 const state = reactive({
   user_id: '',
@@ -19,7 +50,7 @@ const state = reactive({
   tree_collapsed_state: [] as number[],
   font_family: 'garamond' as FontFamilyPreference,
   font_scale: 1.0,
-  theme_mode: 'dark' as ThemeModePreference,
+  theme_mode: 'papel-fosco' as ThemeModePreference,
   version: 1,
   updated_at: '',
   loading: false,
@@ -38,7 +69,11 @@ function applyPreferencesToDocument(prefs: Partial<UserPreferences>) {
     root.style.setProperty('--sc-intensity', String(prefs.superclass_intensity))
   }
   if (prefs.theme_mode) {
-    root.setAttribute('data-theme', prefs.theme_mode)
+    const canonical = resolveCanonicalTheme(prefs.theme_mode)
+    root.setAttribute('data-theme', canonical)
+    if (typeof window !== 'undefined' && window.cadernoAppearance?.get()?.theme !== canonical) {
+      window.cadernoAppearance?.set({ theme: canonical as any })
+    }
   }
   if (prefs.font_family) {
     root.setAttribute('data-font', prefs.font_family)
@@ -63,12 +98,25 @@ export function usePreferences() {
   function loadFromLocal(): void {
     if (typeof localStorage === 'undefined') return
     try {
+      const rawAp = localStorage.getItem(STORAGE_KEY_APPEARANCE)
+      if (rawAp) {
+        const ap = JSON.parse(rawAp)
+        if (ap && typeof ap.theme === 'string') {
+          state.theme_mode = resolveCanonicalTheme(ap.theme) as ThemeModePreference
+        }
+      }
+
       const raw = localStorage.getItem(STORAGE_KEY_PREFS)
       if (raw) {
         const parsed = JSON.parse(raw) as Partial<UserPreferences>
+        if (parsed.theme_mode) {
+          parsed.theme_mode = resolveCanonicalTheme(parsed.theme_mode) as ThemeModePreference
+        } else {
+          parsed.theme_mode = state.theme_mode
+        }
         Object.assign(state, parsed)
-        applyPreferencesToDocument(parsed)
       }
+      applyPreferencesToDocument(state)
     } catch {
       // Falha silenciosa
     }

@@ -59,6 +59,8 @@ import {
   RefreshCw,
   UserCheck,
   UserX,
+  Bell,
+  BellRing,
 } from 'lucide-vue-next'
 
 const props = withDefaults(defineProps<IconProps>(), {
@@ -126,6 +128,8 @@ const iconMap: Record<string, Component> = {
   'refresh-cw': RefreshCw,
   'user-check': UserCheck,
   'user-x': UserX,
+  'bell': Bell,
+  'bell-ring': BellRing,
 }
 
 const currentComponent = computed(() => iconMap[props.name] || BookOpen)

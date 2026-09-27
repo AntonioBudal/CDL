@@ -179,6 +179,24 @@ function formatDate(isoStr: string): string {
   transform: translateY(-2px);
   border-color: var(--color-border-hover, #94a3b8);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  background-color: var(--color-surface-hover);
+}
+
+.study-card:hover .card-title-link {
+  color: var(--color-hover-text);
+}
+
+.study-card:hover .card-date {
+  color: var(--color-hover-text);
+  opacity: 0.85;
+}
+
+.study-card:hover .card-location {
+  color: var(--color-hover-text);
+}
+
+.study-card:hover .location-icon {
+  color: var(--color-hover-text);
 }
 
 .study-card.is-focused {

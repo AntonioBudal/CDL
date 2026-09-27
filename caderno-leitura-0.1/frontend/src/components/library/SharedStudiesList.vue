@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { sharingApi } from '../../api/sharing.ts'
 import type { SharedStudySummary } from '../../types.ts'
+import Icon from '../ui/Icon.vue'
+import LoadingSkeleton from '../ui/LoadingSkeleton.vue'
 
 const loading = ref(true)
 const loadError = ref<string | null>(null)
@@ -74,43 +76,41 @@ onMounted(fetchSharedStudies)
 </script>
 
 <template>
-  <div class="shared-studies-container space-y-6">
+  <div class="shared-studies-container">
     <!-- Barra de Filtros e Busca -->
-    <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
-      <div class="flex-1 flex flex-col sm:flex-row gap-2.5">
+    <div class="shared-filters-bar">
+      <div class="filters-inputs-row">
         <!-- Input de busca textual -->
-        <div class="relative flex-1">
-          <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+        <div class="search-input-box">
+          <Icon name="search" :size="16" class="search-input-icon" />
           <input
             v-model="searchQuery"
             type="search"
             placeholder="Buscar por título ou tema..."
-            class="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 shadow-sm"
+            class="shared-search-input"
             aria-label="Buscar estudos compartilhados por texto"
             @input="onSearchInput"
           />
         </div>
 
         <!-- Input de busca por autor -->
-        <div class="relative w-full sm:w-56">
-          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-sm font-mono" aria-hidden="true">@</span>
+        <div class="author-input-box">
+          <span class="author-prefix" aria-hidden="true">@</span>
           <input
             v-model="authorFilter"
             type="search"
             placeholder="autor (username)"
-            class="w-full pl-8 pr-4 py-2.5 text-sm rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 shadow-sm"
+            class="shared-author-input"
             aria-label="Filtrar estudos compartilhados por autor"
             @input="onSearchInput"
           />
         </div>
       </div>
 
-      <div v-if="searchQuery || authorFilter" class="flex items-center gap-2">
+      <div v-if="searchQuery || authorFilter" class="filters-actions">
         <button
           type="button"
-          class="min-h-[44px] px-3.5 py-2 text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 bg-zinc-100 dark:bg-zinc-800 rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+          class="clear-filters-btn"
           @click="clearFilters"
         >
           Limpar filtros
@@ -118,40 +118,43 @@ onMounted(fetchSharedStudies)
       </div>
     </div>
 
-    <!-- Indicador de Carregamento -->
-    <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 gap-4" role="status" aria-label="Carregando estudos compartilhados">
+    <!-- Indicador de Carregamento (Skeletons) -->
+    <div v-if="loading" class="shared-grid" role="status" aria-label="Carregando estudos compartilhados">
       <div
         v-for="i in 4"
         :key="i"
-        class="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 animate-pulse space-y-3"
+        class="shared-study-card skeleton-card"
       >
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-800" />
-          <div class="space-y-1 flex-1">
-            <div class="h-3 w-28 bg-zinc-200 dark:bg-zinc-800 rounded" />
-            <div class="h-2.5 w-16 bg-zinc-200 dark:bg-zinc-800 rounded" />
+        <div class="card-header">
+          <div class="card-author">
+            <LoadingSkeleton shape="circle" width="32px" height="32px" />
+            <div class="author-skeleton-lines">
+              <LoadingSkeleton shape="text" width="100px" height="14px" />
+              <LoadingSkeleton shape="text" width="60px" height="11px" />
+            </div>
           </div>
+          <LoadingSkeleton shape="rect" width="60px" height="20px" />
         </div>
-        <div class="h-4 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded" />
-        <div class="h-3 w-1/2 bg-zinc-200 dark:bg-zinc-800 rounded" />
+        <div class="card-body">
+          <LoadingSkeleton shape="text" width="80%" height="20px" />
+          <LoadingSkeleton shape="text" width="50%" height="14px" />
+        </div>
       </div>
     </div>
 
     <!-- Mensagem de Erro -->
     <div
       v-else-if="loadError"
-      class="p-4 rounded-2xl bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-900/50 flex items-center justify-between gap-3"
+      class="shared-error-alert"
       role="alert"
     >
-      <div class="flex items-center gap-2">
-        <svg class="w-4 h-4 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-        </svg>
-        <span class="text-sm">{{ loadError }}</span>
+      <div class="error-content">
+        <Icon name="alert-triangle" :size="18" class="error-icon" />
+        <span class="error-text">{{ loadError }}</span>
       </div>
       <button
         type="button"
-        class="min-h-[44px] px-3 py-1.5 text-xs font-medium rounded-lg bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 hover:bg-red-200"
+        class="retry-btn"
         @click="fetchSharedStudies"
       >
         Tentar novamente
@@ -161,27 +164,25 @@ onMounted(fetchSharedStudies)
     <!-- Lista Vazia -->
     <div
       v-else-if="items.length === 0"
-      class="p-12 text-center rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/30 space-y-3"
+      class="shared-empty-state"
     >
-      <div class="flex justify-center" aria-hidden="true">
-        <svg class="w-12 h-12 text-zinc-300 dark:text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
+      <div class="empty-icon-wrap" aria-hidden="true">
+        <Icon name="users" :size="48" class="empty-state-svg" />
       </div>
-      <h3 class="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+      <h3 class="empty-title">
         {{ searchQuery || authorFilter ? 'Nenhum estudo corresponde à busca' : 'Nenhum estudo compartilhado com você' }}
       </h3>
-      <p class="text-xs text-zinc-500 dark:text-zinc-400 max-w-md mx-auto leading-relaxed">
+      <p class="empty-description">
         {{
           searchQuery || authorFilter
             ? 'Tente ajustar os termos de busca ou limpar os filtros para encontrar outros estudos.'
             : 'Quando seus amigos no Leitorum ou outros leitores compartilharem estudos e livros, eles aparecerão aqui para você ler e consultar.'
         }}
       </p>
-      <div v-if="searchQuery || authorFilter" class="pt-2">
+      <div v-if="searchQuery || authorFilter" class="empty-action">
         <button
           type="button"
-          class="min-h-[44px] px-4 py-2 text-xs font-medium rounded-xl bg-amber-600 hover:bg-amber-500 text-white transition-colors"
+          class="reset-filters-btn"
           @click="clearFilters"
         >
           Ver todos os compartilhados
@@ -190,39 +191,37 @@ onMounted(fetchSharedStudies)
     </div>
 
     <!-- Grid de Estudos Compartilhados -->
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div v-else class="shared-grid">
       <article
         v-for="item in items"
         :key="item.id"
-        class="group p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/80 hover:border-amber-400/60 dark:hover:border-amber-500/50 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+        class="shared-study-card"
       >
-        <div class="space-y-3">
+        <div class="card-content">
           <!-- Cabeçalho do Card: Autor + Badge de Visibilidade -->
-          <div class="flex items-center justify-between gap-3">
-            <div class="flex items-center gap-2.5 min-w-0">
-              <div
-                class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 flex items-center justify-center text-xs font-semibold overflow-hidden shrink-0"
-              >
+          <div class="card-header">
+            <div class="card-author">
+              <div class="avatar-circle">
                 <img
                   v-if="item.owner_avatar_url"
                   :src="item.owner_avatar_url"
                   :alt="item.owner_display_name"
-                  class="w-full h-full object-cover"
+                  class="avatar-image"
                 />
                 <span v-else>{{ item.owner_display_name.charAt(0).toUpperCase() }}</span>
               </div>
-              <div class="min-w-0">
-                <p class="text-xs font-semibold text-zinc-900 dark:text-zinc-100 truncate">
+              <div class="author-info">
+                <p class="author-name">
                   {{ item.owner_display_name }}
                 </p>
-                <p class="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono truncate">
+                <p class="author-handle">
                   @{{ item.owner_username }}
                 </p>
               </div>
             </div>
 
             <span
-              class="inline-flex items-center text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 shrink-0"
+              class="visibility-badge"
               :title="`Visibilidade: ${item.visibility}`"
             >
               <span>{{ getVisibilityLabel(item.visibility).label }}</span>
@@ -230,25 +229,25 @@ onMounted(fetchSharedStudies)
           </div>
 
           <!-- Título do Estudo -->
-          <div>
-            <h3 class="text-base font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors line-clamp-2">
+          <div class="card-body">
+            <h3 class="study-title">
               <RouterLink :to="{ name: 'study', params: { bookId: item.book_id, studyId: item.id } }">
                 {{ item.title }}
               </RouterLink>
             </h3>
-            <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-1">
-              <span class="font-medium text-zinc-700 dark:text-zinc-300">{{ item.book_title }}</span>
+            <p class="book-subtitle">
+              <span class="book-name">{{ item.book_title }}</span>
               <span v-if="item.chapter_name"> · {{ item.chapter_name }}</span>
             </p>
           </div>
         </div>
 
         <!-- Rodapé do Card -->
-        <div class="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-500">
-          <span>Atualizado em {{ formatDate(item.updated_at) }}</span>
+        <div class="card-footer">
+          <span class="update-date">Atualizado em {{ formatDate(item.updated_at) }}</span>
           <RouterLink
             :to="{ name: 'study', params: { bookId: item.book_id, studyId: item.id } }"
-            class="min-h-[44px] inline-flex items-center px-3 py-1.5 font-medium text-amber-700 dark:text-amber-400 hover:text-amber-600 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-colors"
+            class="open-study-link"
             aria-label="Abrir estudo em modo somente leitura"
           >
             Abrir leitura →
@@ -262,5 +261,419 @@ onMounted(fetchSharedStudies)
 <style scoped>
 .shared-studies-container {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-unit) * 1.5);
+}
+
+.shared-filters-bar {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-unit) * 0.75);
+}
+
+@media (min-width: 640px) {
+  .shared-filters-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.filters-inputs-row {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-unit) * 0.65);
+  flex: 1;
+}
+
+@media (min-width: 640px) {
+  .filters-inputs-row {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.search-input-box {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-icon {
+  position: absolute;
+  left: 0.875rem;
+  color: var(--color-muted);
+  pointer-events: none;
+  width: 16px;
+  height: 16px;
+}
+
+.shared-search-input {
+  width: 100%;
+  padding: calc(var(--space-unit) * 0.65) calc(var(--space-unit) * 0.85);
+  padding-left: 2.35rem;
+  font-size: 0.875rem;
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  color: var(--color-text);
+  min-height: 44px;
+  outline: none;
+  box-shadow: var(--shadow-control);
+}
+
+.shared-search-input:focus {
+  border-color: var(--color-accent);
+}
+
+.author-input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .author-input-box {
+    width: 14rem;
+  }
+}
+
+.author-prefix {
+  position: absolute;
+  left: 0.875rem;
+  color: var(--color-muted);
+  font-family: monospace;
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+
+.shared-author-input {
+  width: 100%;
+  padding: calc(var(--space-unit) * 0.65) calc(var(--space-unit) * 0.85);
+  padding-left: 2.1rem;
+  font-size: 0.875rem;
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  color: var(--color-text);
+  min-height: 44px;
+  outline: none;
+  box-shadow: var(--shadow-control);
+}
+
+.shared-author-input:focus {
+  border-color: var(--color-accent);
+}
+
+.filters-actions {
+  display: flex;
+  align-items: center;
+}
+
+.clear-filters-btn {
+  min-height: 44px;
+  padding: 0 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: var(--radius-control);
+  background: var(--color-surface-soft);
+  color: var(--color-muted);
+  border: var(--border-width) solid var(--color-border);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.clear-filters-btn:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+/* Grid de cards */
+.shared-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--space-unit) * 1);
+}
+
+@media (min-width: 768px) {
+  .shared-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.shared-study-card {
+  padding: calc(var(--space-unit) * 1.25);
+  border-radius: var(--radius-card);
+  border: var(--border-width) solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-panel);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.shared-study-card:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-card-hover);
+}
+
+.skeleton-card {
+  gap: calc(var(--space-unit) * 1);
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-unit) * 0.75);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--space-unit) * 0.75);
+}
+
+.card-author {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.author-skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.avatar-circle {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background: var(--color-surface-soft);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: var(--border-width) solid var(--color-border);
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.author-info {
+  min-width: 0;
+}
+
+.author-name {
+  font-size: 0.8125rem;
+  font-weight: 650;
+  color: var(--color-text);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.author-handle {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  font-family: monospace;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.visibility-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  background: var(--color-surface-inset);
+  color: var(--color-muted);
+  border: var(--border-width) solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.card-body {
+  margin-top: 0.25rem;
+}
+
+.study-title {
+  font-size: 1.0625rem;
+  font-weight: 650;
+  line-height: 1.4;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.study-title a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.15s ease;
+}
+
+.study-title a:hover {
+  color: var(--color-accent);
+}
+
+.book-subtitle {
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0.35rem 0 0;
+}
+
+.book-name {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.card-footer {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: var(--border-width) solid var(--color-border-list);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.open-study-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  color: var(--color-accent);
+  text-decoration: none;
+  border-radius: var(--radius-control);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.open-study-link:hover {
+  background: var(--color-surface-hover);
+}
+
+/* Erro */
+.shared-error-alert {
+  padding: calc(var(--space-unit) * 1);
+  border-radius: var(--radius-control);
+  background: var(--color-error-bg);
+  color: var(--color-error-text);
+  border: var(--border-width) solid var(--color-error-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--space-unit) * 0.75);
+}
+
+.error-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-icon {
+  flex-shrink: 0;
+  color: var(--color-error-marker);
+  width: 18px;
+  height: 18px;
+}
+
+.error-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.retry-btn {
+  min-height: 44px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-error-text);
+  border: var(--border-width) solid var(--color-error-border);
+  cursor: pointer;
+}
+
+/* Empty State */
+.shared-empty-state {
+  padding: calc(var(--space-unit) * 3) calc(var(--space-unit) * 1.5);
+  text-align: center;
+  border-radius: var(--radius-panel);
+  border: var(--border-width) dashed var(--color-border);
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--space-unit) * 0.75);
+}
+
+.empty-icon-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.empty-state-svg {
+  max-width: 120px;
+  max-height: 120px;
+  width: 48px;
+  height: 48px;
+  color: var(--color-muted);
+  margin: 0 auto;
+}
+
+.empty-title {
+  font-size: 1.0625rem;
+  font-weight: 650;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.empty-description {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  max-width: 32rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.empty-action {
+  margin-top: 0.5rem;
+}
+
+.reset-filters-btn {
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  border-radius: var(--radius-button);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.reset-filters-btn:hover {
+  background: var(--color-accent-hover);
 }
 </style>

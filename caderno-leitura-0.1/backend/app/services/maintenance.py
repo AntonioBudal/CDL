@@ -368,6 +368,36 @@ def _cli_restaurar_backup(args: argparse.Namespace) -> int:
         return 1
 
 
+def purge_read_notifications(retention_days: int = 60) -> int:
+    """Aplica a política de retenção preventiva de notificações lidas antigas."""
+    from app.db.session import SessionLocal
+    from app.services.notification_service import purge_expired_notifications
+    from app.services.persistence import commit_changes
+
+    with SessionLocal() as session:
+        purged = purge_expired_notifications(session, retention_days=retention_days)
+        commit_changes(session)
+        logger.info("Purga preventiva de notificações executada: %d registros lidos removidos", purged)
+        return purged
+
+
+def _cli_purgar_notificacoes(args: argparse.Namespace) -> int:
+    try:
+        dias = getattr(args, "dias", 60)
+        purged = purge_read_notifications(retention_days=dias)
+        if args.json:
+            print(json.dumps({"purged_count": purged, "retention_days": dias, "success": True}, ensure_ascii=True))
+        else:
+            print(f"Sucesso: {purged} notificações lidas com mais de {dias} dias foram purgadas.")
+        return 0
+    except Exception as exc:
+        if args.json:
+            print(json.dumps({"error": str(exc), "success": False}, ensure_ascii=True), file=sys.stderr)
+        else:
+            print(f"Falha na purga de notificações: {exc}", file=sys.stderr)
+        return 1
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="python -m app.services.maintenance",
@@ -415,6 +445,14 @@ def main(argv: list[str] | None = None) -> int:
     p_restaurar.add_argument("--forcar", "-f", action="store_true", help="Pula confirmação interativa")
     p_restaurar.add_argument("--json", action="store_true", help="Emite resultado em formato JSON")
     p_restaurar.set_defaults(func=_cli_restaurar_backup)
+
+    # Subcomando: purgar-notificacoes
+    p_purgar_notif = subparsers.add_parser(
+        "purgar-notificacoes", help="Remove notificações lidas com mais de 60 dias"
+    )
+    p_purgar_notif.add_argument("--dias", type=int, default=60, help="Período de retenção em dias (padrão: 60)")
+    p_purgar_notif.add_argument("--json", action="store_true", help="Emite resultado em formato JSON")
+    p_purgar_notif.set_defaults(func=_cli_purgar_notificacoes)
 
     args = parser.parse_args(argv)
     return args.func(args)

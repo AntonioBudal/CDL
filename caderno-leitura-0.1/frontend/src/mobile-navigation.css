@@ -24,6 +24,10 @@
   display: none;
 }
 
+.app-header .main-nav .mobile-only {
+  display: none !important;
+}
+
 /* Seleção identificável também sem cores. */
 .app-header .main-nav a.selected span {
   font-weight: 750;
@@ -31,7 +35,125 @@
   text-underline-offset: .2em;
 }
 
-/* Celular: a mesma navegação passa para o rodapé. */
+/* Fita de abas com rolagem horizontal e máscara gradiente (fade mask) */
+.tabs-scroll-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.tabs-scroll-wrapper::before,
+.tabs-scroll-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1.25rem;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.2s ease;
+}
+
+.tabs-scroll-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-surface), transparent);
+}
+
+.tabs-scroll-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-surface), transparent);
+}
+
+.tabs-scroll-content {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+  gap: calc(var(--space-unit) * 0.5);
+}
+
+.tabs-scroll-content::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Adaptação de abas de Ajustes para rolagem suave com máscara gradiente */
+.settings-nav {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-bottom: var(--border-width) solid var(--color-border);
+  margin-bottom: calc(var(--space-unit) * 1.5);
+}
+
+.settings-nav::before,
+.settings-nav::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1.25rem;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.2s ease;
+}
+
+.settings-nav::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-surface), transparent);
+}
+
+.settings-nav::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-surface), transparent);
+}
+
+.settings-tabs {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+  gap: calc(var(--space-unit) * 0.25);
+  padding-bottom: 2px;
+}
+
+.settings-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.settings-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 1.125rem;
+  font-size: 0.875rem;
+  font-weight: 550;
+  color: var(--color-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: var(--radius-control) var(--radius-control) 0 0;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.settings-tab:hover {
+  color: var(--color-tab-hover-text);
+  background: var(--color-tab-hover);
+}
+
+.settings-tab[aria-selected="true"] {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* Celular: a mesma navegação passa para o rodapé em 5 colunas proporcionais. */
 @media (max-width: 767px) {
   :root {
     --mobile-nav-height: calc(4rem + var(--space-unit));
@@ -76,9 +198,9 @@
     z-index: 20;
 
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     align-items: stretch;
-    gap: calc(var(--space-unit) * .25);
+    gap: calc(var(--space-unit) * .15);
 
     width: 100%;
     height: var(--mobile-nav-offset);
@@ -92,12 +214,12 @@
     );
 
     padding-left: max(
-      calc(var(--space-unit) * .5),
+      calc(var(--space-unit) * .25),
       env(safe-area-inset-left, 0px)
     );
 
     padding-right: max(
-      calc(var(--space-unit) * .5),
+      calc(var(--space-unit) * .25),
       env(safe-area-inset-right, 0px)
     );
 
@@ -106,28 +228,117 @@
     box-shadow: var(--shadow-panel);
   }
 
-  .app-header .main-nav a {
+  .app-header .main-nav a,
+  .app-header .main-nav button {
+    display: flex;
     flex-direction: column;
-    gap: calc(var(--space-unit) * .2);
-
-    min-width: 0;
-    height: 100%;
-
-    padding:
-      calc(var(--space-unit) * .25)
-      calc(var(--space-unit) * .35);
-
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+    padding: calc(var(--space-unit) * .2);
+    background: transparent;
+    border: none;
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
     border-radius: var(--radius-control);
-    font-size: .875rem;
-    line-height: 1.25;
-    text-align: center;
-    overflow-wrap: anywhere;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .app-header .main-nav a.selected,
+  .app-header .main-nav button.active,
+  .app-header .main-nav button.selected {
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .app-header .main-nav a.selected span,
+  .app-header .main-nav button.active span,
+  .app-header .main-nav button.selected span {
+    font-weight: 750;
+    text-decoration: underline;
+    text-underline-offset: .2em;
+  }
+
+  .app-header .main-nav .desktop-only {
+    display: none !important;
+  }
+
+  .app-header .main-nav .mobile-only {
+    display: flex !important;
   }
 
   .app-header .main-nav .nav-icon {
     display: block;
-    width: 1.375rem;
-    height: 1.375rem;
+    width: 1.25rem;
+    height: 1.25rem;
     flex: none;
+  }
+}
+
+/* Densidade e quebra responsiva do cabeçalho em viewports móveis */
+@media (max-width: 480px) {
+  .app-header .header-inner {
+    padding: calc(var(--space-unit) * 0.5) 0;
+  }
+
+  .header-actions {
+    gap: 0.35rem;
+  }
+
+  .search-trigger-btn {
+    padding: 0.35rem 0.5rem;
+  }
+
+  .search-label,
+  .search-kbd {
+    display: none;
+  }
+
+  .user-display-name {
+    display: none;
+  }
+
+  .logout-btn {
+    display: none;
+  }
+}
+
+/* Viewports ultra estreitas (< 380px) */
+@media (max-width: 380px) {
+  .brand {
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+  }
+
+  .header-actions {
+    gap: 0.25rem;
+  }
+
+  .search-trigger-btn {
+    min-width: 38px;
+    padding: 0.35rem;
+    justify-content: center;
+  }
+
+  .user-chip {
+    padding: 0.25rem;
+    min-width: 38px;
+    justify-content: center;
+  }
+
+  .app-header .main-nav {
+    gap: 0;
+    padding-left: env(safe-area-inset-left, 2px);
+    padding-right: env(safe-area-inset-right, 2px);
+  }
+
+  .app-header .main-nav a,
+  .app-header .main-nav button {
+    font-size: 0.6875rem;
+    padding: calc(var(--space-unit) * 0.15) 2px;
   }
 }

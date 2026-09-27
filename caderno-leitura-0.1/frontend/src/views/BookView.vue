@@ -315,9 +315,18 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
         >
           <Icon name="sliders" :size="16" />
         </button>
-        <button class="secondary" type="button" @click="exportModalOpen = true">Exportar anotações</button>
-        <button class="secondary" type="button" @click="isEditingBook = true">Editar livro</button>
-        <button class="secondary danger-action" type="button" @click="confirmTrashBookOpen = true">Mover para a lixeira</button>
+        <button class="secondary" type="button" @click="exportModalOpen = true">
+          <span class="btn-text-full">Exportar anotações</span>
+          <span class="btn-text-short">Exportar</span>
+        </button>
+        <button class="secondary" type="button" @click="isEditingBook = true">
+          <span class="btn-text-full">Editar livro</span>
+          <span class="btn-text-short">Editar</span>
+        </button>
+        <button class="secondary danger-action" type="button" @click="confirmTrashBookOpen = true">
+          <span class="btn-text-full">Mover para a lixeira</span>
+          <span class="btn-text-short">Lixeira</span>
+        </button>
       </div>
     </header>
 
@@ -576,6 +585,14 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
   gap: calc(var(--space-unit) * 0.75);
 }
 
+.btn-text-short {
+  display: none;
+}
+
+.btn-text-full {
+  display: inline;
+}
+
 .chapter-row {
   display: flex;
   align-items: center;
@@ -673,10 +690,58 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
 }
 
 @media (max-width: 640px) {
+  .book-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
   .book-header-main {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+  }
+
+  .btn-text-full {
+    display: none;
+  }
+
+  .btn-text-short {
+    display: inline;
+  }
+
+  .header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .header-actions button {
+    min-height: 40px;
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+    width: 100%;
+  }
+
+  .header-actions .icon-toggle-btn {
+    width: 100%;
+    min-height: 40px;
+  }
+
+  .header-actions button:not(.icon-toggle-btn) {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 40px;
+    justify-content: center;
+    text-align: center;
   }
 }
 

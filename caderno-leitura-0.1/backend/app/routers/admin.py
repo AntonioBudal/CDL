@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Annotated
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, status
 
 from app.dependencies import AdminUser, DatabaseSession
 from app.schemas.admin import (
@@ -14,7 +14,13 @@ from app.schemas.admin import (
     AdminSuspendResponse,
     AdminUsersResponse,
 )
-from app.services import admin_service
+from app.schemas.notification import (
+    NotificationBroadcastRequest,
+    NotificationBroadcastResponse,
+    NotificationPurgeResponse,
+)
+from app.services import admin_service, notification_service
+from app.services.persistence import commit_changes
 
 router = APIRouter(prefix="/admin", tags=["Administração"])
 
@@ -129,4 +135,54 @@ def revoke_all_sessions_endpoint(
         id=user_id,
         sessions_revoked=sessions_revoked,
         message=f"Todas as {sessions_revoked} sessão(ões) foram revogadas com sucesso.",
+    )
+
+
+@router.post(
+    "/notifications/broadcast",
+    response_model=NotificationBroadcastResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Disparar aviso administrativo em massa",
+)
+def broadcast_notification_endpoint(
+    payload: NotificationBroadcastRequest,
+    session: DatabaseSession,
+    current_admin: AdminUser,
+) -> NotificationBroadcastResponse:
+    """Cria notificações institucionais (system_alert) individuais para todos os usuários ativos."""
+    dispatched = notification_service.broadcast_system_alert(
+        session=session,
+        current_admin=current_admin,
+        title=payload.title,
+        message=payload.message,
+        severity=payload.severity,
+        link=payload.link,
+    )
+    commit_changes(session)
+    return NotificationBroadcastResponse(
+        dispatched_count=dispatched,
+        message=f"Aviso emitido com sucesso para {dispatched} leitores ativos.",
+    )
+
+
+@router.post(
+    "/notifications/purge",
+    response_model=NotificationPurgeResponse,
+    summary="Purgar notificações lidas antigas",
+)
+def purge_notifications_endpoint(
+    session: DatabaseSession,
+    current_admin: AdminUser,
+    retention_days: Annotated[int, Query(ge=1, description="Período de retenção em dias para notificações já lidas")] = 60,
+) -> NotificationPurgeResponse:
+    """Remove notificações que já foram lidas criadas há mais de retention_days dias."""
+    purged = notification_service.purge_expired_notifications(
+        session=session,
+        retention_days=retention_days,
+    )
+    commit_changes(session)
+    return NotificationPurgeResponse(
+        purged_count=purged,
+        retention_days=retention_days,
+        message=f"{purged} notificações lidas antigas foram purgadas com sucesso.",
     )

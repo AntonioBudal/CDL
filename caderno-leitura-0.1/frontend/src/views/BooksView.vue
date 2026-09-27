@@ -90,33 +90,35 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
       <p class="eyebrow">Seu acervo</p>
       <h1>{{ activeTab === 'meus-livros' ? 'Meus livros' : 'Estudos Compartilhados' }}</h1>
 
-      <nav class="library-tabs-nav" role="tablist" aria-label="Abas da Biblioteca">
-        <button
-          type="button"
-          role="tab"
-          :aria-selected="activeTab === 'meus-livros'"
-          aria-controls="panel-meus-livros"
-          id="tab-meus-livros"
-          class="library-tab-button"
-          :class="{ active: activeTab === 'meus-livros' }"
-          @click="activeTab = 'meus-livros'"
-        >
-          Meu Acervo
-          <span v-if="books.length > 0" class="tab-badge">{{ books.length }}</span>
-        </button>
-        <button
-          type="button"
-          role="tab"
-          :aria-selected="activeTab === 'compartilhados'"
-          aria-controls="panel-compartilhados"
-          id="tab-compartilhados"
-          class="library-tab-button"
-          :class="{ active: activeTab === 'compartilhados' }"
-          @click="activeTab = 'compartilhados'"
-        >
-          Compartilhados Comigo
-        </button>
-      </nav>
+      <div class="tabs-scroll-wrapper">
+        <nav class="library-tabs-nav tabs-scroll-content" role="tablist" aria-label="Abas da Biblioteca">
+          <button
+            type="button"
+            role="tab"
+            :aria-selected="activeTab === 'meus-livros'"
+            aria-controls="panel-meus-livros"
+            id="tab-meus-livros"
+            class="library-tab-button"
+            :class="{ active: activeTab === 'meus-livros' }"
+            @click="activeTab = 'meus-livros'"
+          >
+            Meu Acervo
+            <span v-if="books.length > 0" class="tab-badge">{{ books.length }}</span>
+          </button>
+          <button
+            type="button"
+            role="tab"
+            :aria-selected="activeTab === 'compartilhados'"
+            aria-controls="panel-compartilhados"
+            id="tab-compartilhados"
+            class="library-tab-button"
+            :class="{ active: activeTab === 'compartilhados' }"
+            @click="activeTab = 'compartilhados'"
+          >
+            Compartilhados Comigo
+          </button>
+        </nav>
+      </div>
     </header>
 
     <!-- Painel Meu Acervo -->
@@ -300,8 +302,11 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
   align-items: center;
   gap: 0.5rem;
   margin-top: 1rem;
-  border-bottom: 1px solid var(--border, #e5e5e5);
+  border-bottom: var(--border-width) solid var(--color-border);
   padding-bottom: 0.25rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
 }
 
 .library-tab-button {
@@ -312,23 +317,25 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
   padding: 0.5rem 1.125rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--muted, #71717a);
+  color: var(--color-muted);
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
-  border-radius: var(--radius-sm, 6px) var(--radius-sm, 6px) 0 0;
+  border-radius: var(--radius-control) var(--radius-control) 0 0;
+  white-space: nowrap;
 }
 
 .library-tab-button:hover {
-  color: var(--color-text-primary, #18181b);
-  background: rgba(0, 0, 0, 0.03);
+  color: var(--color-text);
+  background: var(--color-surface-hover);
 }
 
 .library-tab-button.active {
-  color: var(--color-primary, #d97706);
-  border-bottom-color: var(--color-primary, #d97706);
+  color: var(--color-selected-text, var(--color-accent));
+  border-bottom-color: var(--color-accent);
+  background: var(--color-selected-bg, transparent);
   font-weight: 600;
 }
 
@@ -339,8 +346,8 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
   font-size: 0.75rem;
   padding: 0.125rem 0.45rem;
   border-radius: 9999px;
-  background: rgba(0, 0, 0, 0.06);
-  color: inherit;
+  background: var(--color-surface-inset);
+  color: var(--color-text);
 }
 
 .shared-tab-panel {

@@ -12,11 +12,13 @@ import Icon from '../components/ui/Icon.vue'
 import { fetchHealth, type HealthResponse } from '../services/api'
 import { useSuperclassPhysics } from '../composables/useSuperclassPhysics'
 import { useProfile } from '../composables/useProfile.ts'
+import { usePreferences } from '../composables/usePreferences'
 import type { AppearancePreferences } from '../appearance'
 import type { HealthCheckResult, HomeViewPreference, SettingsTab, SettingsTabId, StorageDiagnostic, VisibilityLevel } from '../types'
 
 const appearance = window.cadernoAppearance
 const preferences = reactive(appearance?.get() ?? ({} as AppearancePreferences))
+const preferencesStore = usePreferences()
 const message = ref('')
 const physics = useSuperclassPhysics()
 
@@ -132,6 +134,9 @@ function save() {
 function update(patch: Partial<AppearancePreferences>) {
   Object.assign(preferences, patch)
   save()
+  if (patch.theme) {
+    preferencesStore.updatePreferences({ theme_mode: patch.theme as any })
+  }
   if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
     physics.triggerHapticPulse(document.activeElement, 'step')
   }
@@ -307,6 +312,9 @@ function confirmFactoryReset() {
     const success = appearance?.factoryReset?.() ?? false
     if (success) {
       Object.assign(preferences, appearance.get())
+      if (preferences.theme) {
+        preferencesStore.updatePreferences({ theme_mode: preferences.theme as any })
+      }
       systemActionFeedback.value = 'Padrões de aparência restaurados com sucesso!'
       message.value = 'Padrões de fábrica aplicados.'
     } else {
@@ -1223,6 +1231,16 @@ onBeforeUnmount(() => {
 .checkbox-option:hover {
   border-color: var(--color-border-hover, var(--color-accent));
   background-color: var(--color-surface-hover);
+  color: var(--color-hover-text);
+}
+
+.checkbox-option:hover .checkbox-text {
+  color: var(--color-hover-text);
+}
+
+.checkbox-option:hover .checkbox-text .muted {
+  color: var(--color-hover-text);
+  opacity: 0.85;
 }
 
 .checkbox-option input[type="checkbox"] {
@@ -1287,13 +1305,18 @@ onBeforeUnmount(() => {
   border-radius: var(--radius-control, 0.5rem);
   background: var(--color-surface);
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
   user-select: none;
 }
 
 .radio-option:hover {
   border-color: var(--color-border-hover, var(--color-accent));
   background-color: var(--color-surface-hover);
+  color: var(--color-hover-text);
+}
+
+.radio-option:hover .radio-text {
+  color: var(--color-hover-text);
 }
 
 .radio-option input[type="radio"] {
@@ -1315,5 +1338,10 @@ onBeforeUnmount(() => {
   font-size: 0.9375rem;
   line-height: 1.4;
   color: var(--color-text);
+}
+
+.settings-tab:hover {
+  background-color: var(--color-tab-hover);
+  color: var(--color-tab-hover-text);
 }
 </style>

@@ -580,19 +580,24 @@ onMounted(async () => {
   border-bottom: 2px solid transparent;
   font-size: 0.95rem;
   font-weight: 500;
-  color: var(--color-text-muted, #666);
+  color: var(--color-muted, #666);
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
 }
 
 .tab-btn:hover {
-  color: var(--color-text, #111);
+  background-color: var(--color-tab-hover);
+  color: var(--color-tab-hover-text);
+}
+
+.tab-btn:hover .tab-badge:not(.alert) {
+  color: var(--color-tab-hover-text);
 }
 
 .tab-btn.active {
-  color: var(--color-primary, #2563eb);
-  border-bottom-color: var(--color-primary, #2563eb);
+  color: var(--color-accent, #2563eb);
+  border-bottom-color: var(--color-accent, #2563eb);
 }
 
 .tab-badge {
@@ -663,6 +668,23 @@ onMounted(async () => {
   background-color: var(--color-surface, #fff);
   border: 1px solid var(--color-border, #e5e5e5);
   gap: 1rem;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.person-card:hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-border-hover);
+}
+
+.person-card:hover .person-name {
+  color: var(--color-hover-text);
+}
+
+.person-card:hover .person-handle,
+.person-card:hover .person-bio,
+.person-card:hover .meta-since {
+  color: var(--color-hover-text);
+  opacity: 0.9;
 }
 
 .person-avatar {

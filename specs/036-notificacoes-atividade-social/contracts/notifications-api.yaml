@@ -1,0 +1,322 @@
+openapi: 3.1.0
+info:
+  title: Leitorum Notifications & Social Activity API
+  version: 0.5.0
+  description: >
+    API unificada de centro de notificações e eventos sociais para o Leitorum.
+    Suporta listagem paginada, polling leve de contagem de pendências, marcação
+    de leitura individual ou em lote, e emissão administrativa de comunicados.
+
+paths:
+  /api/notifications:
+    get:
+      summary: Listar notificações do leitor autenticado
+      description: >
+        Retorna a lista paginada de notificações recebidas pelo usuário logado,
+        ordenada das mais recentes para as mais antigas, acompanhada da contagem
+        total de notificações pendentes de leitura.
+      tags:
+        - Notificações
+      parameters:
+        - name: unread_only
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Filtrar apenas notificações pendentes de leitura
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Quantidade máxima de itens retornados
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Deslocamento para paginação
+      responses:
+        '200':
+          description: Lista de notificações retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationListResponse'
+        '401':
+          description: Usuário não autenticado
+
+  /api/notifications/unread-count:
+    get:
+      summary: Obter contagem de notificações não lidas
+      description: >
+        Endpoint ultraleve para polling periódico (intervalo padrão de 45 segundos).
+        Retorna exclusivamente o número inteiro de notificações pendentes.
+      tags:
+        - Notificações
+      responses:
+        '200':
+          description: Contagem retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnreadCountResponse'
+        '401':
+          description: Usuário não autenticado
+
+  /api/notifications/{id}/read:
+    patch:
+      summary: Marcar notificação individual como lida
+      description: >
+        Atualiza o timestamp de leitura (`read_at`) da notificação indicada.
+        Operação idempotente: se já estiver lida, retorna 200 sem erro.
+      tags:
+        - Notificações
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID da notificação
+      responses:
+        '200':
+          description: Notificação marcada como lida com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationItem'
+        '401':
+          description: Usuário não autenticado
+        '404':
+          description: Notificação não encontrada ou pertencente a outro usuário
+
+  /api/notifications/read-all:
+    post:
+      summary: Marcar todas as notificações como lidas
+      description: >
+        Marca com o timestamp atual todas as notificações não lidas do usuário logado,
+        zerando o contador de pendências imediatamente.
+      tags:
+        - Notificações
+      responses:
+        '200':
+          description: Todas as notificações foram marcadas como lidas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  marked_count:
+                    type: integer
+                    example: 5
+                  message:
+                    type: string
+                    example: "Todas as notificações foram marcadas como lidas."
+                required:
+                  - marked_count
+                  - message
+        '401':
+          description: Usuário não autenticado
+
+  /api/admin/notifications/broadcast:
+    post:
+      summary: Disparar aviso administrativo em massa
+      description: >
+        Cria notificações institucionais (`system_alert`) individuais para todos os
+        usuários ativos na plataforma. Exclusivo para administradores.
+      tags:
+        - Administração - Notificações
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationBroadcastRequest'
+      responses:
+        '201':
+          description: Aviso institucional disparado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationBroadcastResponse'
+        '401':
+          description: Não autenticado
+        '403':
+          description: Acesso restrito a administradores
+        '422':
+          description: Dados de entrada inválidos
+
+  /api/admin/notifications/purge:
+    post:
+      summary: Purgar notificações lidas antigas
+      description: >
+        Remove notificações lidas cujo timestamp de leitura seja anterior a 60 dias
+        (ou ao número de dias fornecido via query param). Exclusivo para administradores.
+      tags:
+        - Administração - Notificações
+      parameters:
+        - name: retention_days
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 60
+          description: Período de retenção em dias para notificações já lidas
+      responses:
+        '200':
+          description: Purga executada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationPurgeResponse'
+        '401':
+          description: Não autenticado
+        '403':
+          description: Acesso restrito a administradores
+
+components:
+  schemas:
+    NotificationEventType:
+      type: string
+      enum:
+        - friend_request
+        - friend_accepted
+        - study_shared
+        - system_alert
+
+    NotificationActorRead:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        display_name:
+          type: string
+        avatar_url:
+          type: string
+          nullable: true
+      required:
+        - id
+        - username
+        - display_name
+
+    NotificationItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+        actor:
+          $ref: '#/components/schemas/NotificationActorRead'
+          nullable: true
+        event_type:
+          $ref: '#/components/schemas/NotificationEventType'
+        payload:
+          type: object
+          additionalProperties: true
+        read_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - user_id
+        - event_type
+        - payload
+        - created_at
+
+    NotificationListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationItem'
+        total:
+          type: integer
+        unread_count:
+          type: integer
+      required:
+        - items
+        - total
+        - unread_count
+
+    UnreadCountResponse:
+      type: object
+      properties:
+        unread_count:
+          type: integer
+          example: 3
+      required:
+        - unread_count
+
+    NotificationBroadcastRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 2
+          maxLength: 150
+          example: "Manutenção Programada"
+        message:
+          type: string
+          minLength: 2
+          maxLength: 2000
+          example: "O sistema passará por atualização no próximo domingo às 03:00."
+        severity:
+          type: string
+          enum: [info, warning, critical]
+          default: info
+        link:
+          type: string
+          maxLength: 500
+          nullable: true
+          example: "/comunicados/1"
+      required:
+        - title
+        - message
+
+    NotificationBroadcastResponse:
+      type: object
+      properties:
+        dispatched_count:
+          type: integer
+          example: 12
+        message:
+          type: string
+          example: "Aviso emitido com sucesso para 12 leitores ativos."
+      required:
+        - dispatched_count
+        - message
+
+    NotificationPurgeResponse:
+      type: object
+      properties:
+        purged_count:
+          type: integer
+          example: 45
+        retention_days:
+          type: integer
+          example: 60
+        message:
+          type: string
+          example: "45 notificações lidas antigas foram purgadas com sucesso."
+      required:
+        - purged_count
+        - retention_days
+        - message

@@ -366,19 +366,19 @@ function handleCellClick(point: HeatmapPoint) {
   --heatmap-cell-empty-opacity: 0.6;
 }
 
-:root:is([data-theme='breu'], [data-theme='vinil'], [data-theme='vespera'], [data-theme='fiorde'], [data-theme='dark']) {
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem'], [data-theme='dark']) {
   --heatmap-cell-empty-bg: rgba(255, 255, 255, 0.04);
   --heatmap-cell-empty-border: rgba(255, 255, 255, 0.08);
   --heatmap-cell-empty-opacity: 0.45;
 }
 
-:root:is([data-theme='pergaminho'], [data-theme='sequoia'], [data-theme='sepia']) {
+:root:is([data-theme='pergaminho'], [data-theme='sepia']) {
   --heatmap-cell-empty-bg: rgba(60, 40, 20, 0.06);
   --heatmap-cell-empty-border: rgba(60, 40, 20, 0.14);
   --heatmap-cell-empty-opacity: 0.5;
 }
 
-:root:is([data-theme='solario'], [data-theme='voltagem'], [data-theme='solarized']) {
+:root:is([data-theme='solario'], [data-theme='solarized']) {
   --heatmap-cell-empty-bg: rgba(0, 43, 54, 0.08);
   --heatmap-cell-empty-border: rgba(0, 43, 54, 0.16);
   --heatmap-cell-empty-opacity: 0.55;

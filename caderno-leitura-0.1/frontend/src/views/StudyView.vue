@@ -243,7 +243,16 @@ onBeforeUnmount(resource.cancel)
 .share-action {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.share-action svg {
+  width: 1.2em;
+  height: 1.2em;
+  flex-shrink: 0;
+  min-width: 1.2em;
+  min-height: 1.2em;
 }
 
 .danger-action {

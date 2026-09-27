@@ -16,16 +16,16 @@
   // A primeira opção de cada campo é seu valor padrão.
   const fields = Object.freeze([
     field('theme', 'Aparência básica', 'Tema', [
-      ['porcelana', 'Porcelana — Claro clássico'],
-      ['breu', 'Breu — OLED'],
-      ['pergaminho', 'Pergaminho — Sépia real'],
-      ['e-ink', 'E-Ink — Preto e branco'],
-      ['vespera', 'Véspera — Dracula'],
-      ['solario', 'Solário — Solarized Light'],
-      ['fiorde', 'Fiorde — Nord'],
-      ['vinil', 'Vinil — Gruvbox'],
-      ['sequoia', 'Sequoia — Floresta'],
-      ['voltagem', 'Voltagem — Cyber'],
+      ['papel-fosco', 'Papel Fosco'],
+      ['noite-suave', 'Noite Suave'],
+      ['cinza-neutro', 'Cinza Neutro'],
+      ['grafite', 'Grafite'],
+      ['monocromatico', 'Monocromático'],
+      ['pergaminho', 'Sépia'],
+      ['e-ink', 'E-Ink'],
+      ['solario', 'Solarized'],
+      ['fiorde', 'Nord'],
+      ['voltagem', 'Cyber'],
     ]),
     field('accent', '1. Cor de destaque', 'Cor', [
       ['theme', 'Cor original do tema'],
@@ -94,8 +94,13 @@
 
   const aliases = {
     theme: {
-      light: 'porcelana',
-      dark: 'breu',
+      porcelana: 'papel-fosco',
+      breu: 'noite-suave',
+      vinil: 'grafite',
+      sequoia: 'noite-suave',
+      vespera: 'noite-suave',
+      light: 'papel-fosco',
+      dark: 'noite-suave',
       sepia: 'pergaminho',
     },
     font: {

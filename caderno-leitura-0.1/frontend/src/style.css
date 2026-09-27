@@ -31,54 +31,60 @@ code, pre { font-family: var(--font-reading); }
 button, .button { min-height: 2.875rem; border: var(--border-width) solid transparent; border-radius: var(--radius-button); padding: calc(var(--space-unit) * .625) calc(var(--space-unit) * 1); font-weight: 650; cursor: pointer; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: calc(var(--space-unit) * .5); line-height: 1.4; }
 button { background: var(--color-accent); color: var(--color-on-accent); }
 .primary { background: var(--color-accent); color: var(--color-on-accent); }
-.primary:hover:not(:disabled), button:hover:not(:disabled) { background: var(--color-accent-hover); }
+.primary:hover:not(:disabled),
+button:not(.secondary):not([class*='-btn']):not([class*='-tab']):not(.tab-btn):not(.settings-tab):not(.status-badge-trigger):hover:not(:disabled) {
+  background: var(--color-accent-hover);
+  color: var(--color-accent-hover-text);
+}
 .secondary { background: var(--color-surface); color: var(--color-text); border-color: var(--color-border-strong); }
-.secondary:hover:not(:disabled) { background: var(--color-surface-soft); }
+.secondary:hover:not(:disabled), button.secondary:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  color: var(--color-hover-text);
+}
 button:disabled { opacity: .6; cursor: not-allowed; }
 input, textarea, select { display: block; width: 100%; min-width: 0; min-height: 2.875rem; padding: calc(var(--space-unit) * .65) calc(var(--space-unit) * .8); border: var(--border-width) solid var(--color-border-strong); border-radius: var(--radius-control); background: var(--color-surface); color: var(--color-text); line-height: 1.5; }
 select { text-overflow: ellipsis; background-color: var(--color-surface); color: var(--color-text); }
 select option { background-color: var(--color-surface); color: var(--color-text); }
 
-/* Temas escuros: contraste de texto branco em selects e botões secundários */
-:root:is([data-theme='breu'], [data-theme='vespera'], [data-theme='fiorde'], [data-theme='vinil'], [data-theme='sequoia'], [data-theme='voltagem']) select,
-:root:is([data-theme='breu'], [data-theme='vespera'], [data-theme='fiorde'], [data-theme='vinil'], [data-theme='sequoia'], [data-theme='voltagem']) select option {
-  background-color: var(--color-surface, #1e1b2e);
-  color: #FFFFFF !important;
+/* Suporte a alto contraste e temas com foco semântico */
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) select,
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) select option {
+  background-color: var(--color-surface);
+  color: var(--color-text);
 }
 
-:root:is([data-theme='breu'], [data-theme='vespera'], [data-theme='fiorde'], [data-theme='vinil'], [data-theme='sequoia'], [data-theme='voltagem']) :is(.secondary, button.secondary, .button.secondary) {
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) :is(.secondary, button.secondary, .button.secondary) {
   background-color: var(--color-surface);
-  color: #FFFFFF !important;
+  color: var(--color-text);
   border-color: var(--color-border-strong);
 }
 
-:root:is([data-theme='breu'], [data-theme='vespera'], [data-theme='fiorde'], [data-theme='vinil'], [data-theme='sequoia'], [data-theme='voltagem']) :is(.secondary, button.secondary, .button.secondary):hover:not(:disabled) {
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) :is(.secondary, button.secondary, .button.secondary):hover:not(:disabled) {
   background-color: var(--color-surface-hover);
-  color: #FFFFFF !important;
+  color: var(--color-hover-text);
 }
 
-/* Temas claros: contraste de texto escuro em selects e botões secundários */
-:root:not(:is([data-theme='breu'], [data-theme='vespera'], [data-theme='fiorde'], [data-theme='vinil'], [data-theme='sequoia'], [data-theme='voltagem'])) select,
-:root:not(:is([data-theme='breu'], [data-theme='vespera'], [data-theme='fiorde'], [data-theme='vinil'], [data-theme='sequoia'], [data-theme='voltagem'])) select option {
-  background-color: var(--color-surface, #FFFFFF);
-  color: #111827 !important;
-}
-
-:root:not(:is([data-theme='breu'], [data-theme='vespera'], [data-theme='fiorde'], [data-theme='vinil'], [data-theme='sequoia'], [data-theme='voltagem'])) :is(.secondary, button.secondary, .button.secondary) {
+/* Temas claros: contraste semântico em selects e botões secundários */
+:root:not(:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem'])) select,
+:root:not(:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem'])) select option {
   background-color: var(--color-surface);
-  color: #111827 !important;
+  color: var(--color-text);
+}
+
+:root:not(:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem'])) :is(.secondary, button.secondary, .button.secondary) {
+  background-color: var(--color-surface);
+  color: var(--color-text);
   border-color: var(--color-border-strong);
+}
+
+:root:not(:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem'])) :is(.secondary, button.secondary, .button.secondary):hover:not(:disabled) {
+  background-color: var(--color-surface-hover);
+  color: var(--color-hover-text);
 }
 
 @media (prefers-contrast: more) {
   button, .button, select, input, textarea {
-    border-width: 2px !important;
-  }
-  :root:is([data-theme='breu'], [data-theme='vespera'], [data-theme='fiorde'], [data-theme='vinil'], [data-theme='sequoia'], [data-theme='voltagem']) :is(button, .button, select, input, textarea) {
-    color: #FFFFFF !important;
-  }
-  :root:not(:is([data-theme='breu'], [data-theme='vespera'], [data-theme='fiorde'], [data-theme='vinil'], [data-theme='sequoia'], [data-theme='voltagem'])) :is(select, input, textarea, .secondary, button.secondary) {
-    color: #000000 !important;
+    border-width: 2px;
   }
 }
 textarea { resize: vertical; overflow-wrap: anywhere; }

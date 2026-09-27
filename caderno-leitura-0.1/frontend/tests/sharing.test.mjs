@@ -127,7 +127,10 @@ test('validação de SharedStudiesList.vue: acessibilidade e ergonomia', () => {
   assert.ok(sharedListContent.includes('aria-label='), 'Campos de busca devem ter aria-label acessível')
 
   // Alvos táteis móveis de 44px
-  assert.ok(sharedListContent.includes('min-h-[44px]'), 'Ações e botões devem cumprir 44px de ergonomia tátil')
+  assert.ok(
+    sharedListContent.includes('min-h-[44px]') || sharedListContent.includes('min-height: 44px'),
+    'Ações e botões devem cumprir 44px de ergonomia tátil'
+  )
 
   // Sem emojis informais
   const emojiRegex = /[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u

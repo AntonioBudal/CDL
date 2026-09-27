@@ -53,16 +53,16 @@
   --color-selected-text: var(--color-accent);
   --color-selected-bg: var(--accent-light-bg);
   --color-tab-hover: var(--color-selected-bg);
+  --color-tab-hover-text: var(--color-accent);
+  --color-accent-hover-text: #ffffff;
   --color-border-hover: var(--color-accent);
   --color-book-marker: var(--color-accent);
 }
 
 :root:is(
-  [data-theme='breu'],
-  [data-theme='vespera'],
+  [data-theme='noite-suave'],
+  [data-theme='grafite'],
   [data-theme='fiorde'],
-  [data-theme='vinil'],
-  [data-theme='sequoia'],
   [data-theme='voltagem']
 ):is(
   [data-accent='blue'],
@@ -74,6 +74,9 @@
   --color-accent-hover: var(--accent-dark-hover);
   --color-selected-bg: var(--accent-dark-bg);
   --color-on-accent: #111827;
+  --color-tab-hover: var(--accent-dark-bg);
+  --color-tab-hover-text: #ffffff;
+  --color-accent-hover-text: #111827;
 }
 
 /* Tokens adicionais. */
@@ -132,6 +135,8 @@
   --color-selected-text: var(--color-accent);
   --color-selected-bg: var(--accent-light-bg);
   --color-tab-hover: var(--color-selected-bg);
+  --color-tab-hover-text: var(--color-accent);
+  --color-accent-hover-text: #ffffff;
   --color-border-hover: var(--color-accent);
   --color-book-marker: var(--color-accent);
 }
@@ -146,6 +151,9 @@
   --color-accent-hover: var(--accent-dark-hover);
   --color-selected-bg: var(--accent-dark-bg);
   --color-on-accent: #111827;
+  --color-tab-hover: var(--accent-dark-bg);
+  --color-tab-hover-text: #ffffff;
+  --color-accent-hover-text: #111827;
 }
 
 /* 2. Densidade: aproveita os espaçamentos da Tarefa 2. */
@@ -249,13 +257,13 @@
   --shadow-panel: none;
 }
 
-/* 7. Botões de ação. As abas ficam fora destes seletores. */
-:root :is(button, .button):not([role='tab']) {
+/* 7. Botões de ação. As abas e botões de grupo/sanfona ficam fora destes seletores. */
+:root :is(button, .button):not([role='tab']):not(.group-toggle-btn) {
   --button-bg: var(--color-accent);
   --button-fg: var(--color-on-accent);
   --button-border: var(--color-accent);
   --button-hover-bg: var(--color-accent-hover);
-  --button-hover-fg: var(--color-on-accent);
+  --button-hover-fg: var(--color-accent-hover-text, var(--color-on-accent));
 
   background: var(--button-bg);
   color: var(--button-fg);
@@ -265,16 +273,16 @@
   overflow-wrap: anywhere;
 }
 
-:root :is(button, .button).secondary:not([role='tab']) {
+:root :is(button, .button).secondary:not([role='tab']):not(.group-toggle-btn) {
   --button-bg: var(--color-surface);
   --button-fg: var(--color-text);
   --button-border: var(--color-border-strong);
-  --button-hover-bg: var(--color-surface-soft);
-  --button-hover-fg: var(--color-text);
+  --button-hover-bg: var(--color-surface-hover, var(--color-surface-soft));
+  --button-hover-fg: var(--color-hover-text, var(--color-text));
 }
 
-:root[data-button-style='outline'] :is(button, .button):not([role='tab']),
-:root[data-button-style='ghost'] :is(button, .button):not([role='tab']) {
+:root[data-button-style='outline'] :is(button, .button):not([role='tab']):not(.group-toggle-btn),
+:root[data-button-style='ghost'] :is(button, .button):not([role='tab']):not(.group-toggle-btn) {
   --button-bg: transparent;
   --button-fg: var(--color-accent);
   --button-border: var(--color-accent);
@@ -282,16 +290,16 @@
   --button-hover-fg: var(--color-selected-text);
 }
 
-:root[data-button-style='ghost'] :is(button, .button):not([role='tab']) {
+:root[data-button-style='ghost'] :is(button, .button):not([role='tab']):not(.group-toggle-btn) {
   --button-border: transparent;
 }
 
-:root :is(button, .button):not([role='tab']):hover:not(:disabled) {
+:root :is(button, .button):not([role='tab']):not(.group-toggle-btn):hover:not(:disabled) {
   background: var(--button-hover-bg);
   color: var(--button-hover-fg);
 }
 
-:root :is(button, .button):not([role='tab']):disabled {
+:root :is(button, .button):not([role='tab']):not(.group-toggle-btn):disabled {
   opacity: 1;
   cursor: not-allowed;
   background: var(--color-surface-disabled);
@@ -300,12 +308,12 @@
   border-style: dashed;
 }
 
-:root[data-button-width='auto'] :is(button, .button):not([role='tab']) {
+:root[data-button-width='auto'] :is(button, .button):not([role='tab']):not(.group-toggle-btn) {
   width: auto;
   flex: 0 1 auto;
 }
 
-:root[data-button-width='block'] :is(button, .button):not([role='tab']) {
+:root[data-button-width='block'] :is(button, .button):not([role='tab']):not(.group-toggle-btn) {
   width: 100%;
   flex: 0 0 100%;
 }
@@ -608,8 +616,7 @@
   color: #166534;
 }
 
-:root[data-theme='breu'] .connection-status-badge.ok,
-:root[data-theme='vespera'] .connection-status-badge.ok {
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .connection-status-badge.ok {
   color: #86efac;
 }
 
@@ -618,12 +625,54 @@
   color: #991b1b;
 }
 
-:root[data-theme='breu'] .connection-status-badge.error,
-:root[data-theme='vespera'] .connection-status-badge.error {
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .connection-status-badge.error {
   color: #fca5a5;
 }
 
 .connection-status-badge.loading {
   background-color: rgba(156, 163, 175, 0.15);
   color: var(--color-text-muted, inherit);
+}
+
+/* Fita de abas com rolagem horizontal e máscara gradiente (fade mask) */
+.tabs-scroll-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.tabs-scroll-wrapper::before,
+.tabs-scroll-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1.25rem;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.2s ease;
+}
+
+.tabs-scroll-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-surface), transparent);
+}
+
+.tabs-scroll-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-surface), transparent);
+}
+
+.tabs-scroll-content {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+  gap: calc(var(--space-unit) * 0.5);
+}
+
+.tabs-scroll-content::-webkit-scrollbar {
+  display: none;
 }
