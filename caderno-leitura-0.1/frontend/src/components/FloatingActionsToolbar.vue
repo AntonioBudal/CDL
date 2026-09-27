@@ -20,17 +20,28 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'highlight', payload: { color: HighlightColor }): void
-  (e: 'annotate', payload: { note: string; color: HighlightColor }): void
-  (e: 'copy-quote'): void
-  (e: 'occlude'): void
-  (e: 'ask-question', payload: { question: string }): void
+  (e: 'highlight', payload: { color: HighlightColor; selection: TextSelectionContext }): void
+  (e: 'annotate', payload: { note: string; color: HighlightColor; selection: TextSelectionContext }): void
+  (e: 'copy-quote', payload: { selection: TextSelectionContext }): void
+  (e: 'occlude', payload: { selection: TextSelectionContext }): void
+  (e: 'ask-question', payload: { question: string; selection: TextSelectionContext }): void
   (e: 'close'): void
 }>()
 
 const toolbarRef = ref<HTMLElement | null>(null)
 const noteInputRef = ref<HTMLTextAreaElement | null>(null)
 const questionInputRef = ref<HTMLInputElement | null>(null)
+const currentSelection = ref<TextSelectionContext | null>(null)
+
+watch(
+  () => props.selection,
+  (sel) => {
+    if (sel) {
+      currentSelection.value = sel
+    }
+  },
+  { immediate: true },
+)
 
 type Mode = 'actions' | 'color_picker' | 'note' | 'question'
 const mode = ref<Mode>('actions')
@@ -54,9 +65,10 @@ function checkMobile() {
 }
 
 const positionStyle = computed(() => {
-  if (!props.visible || !props.selection) return { display: 'none' }
+  const activeSel = props.selection || currentSelection.value
+  if (!props.visible || !activeSel) return { display: 'none' }
 
-  const rect = props.selection.boundingRect
+  const rect = activeSel.boundingRect
   const vpWidth = typeof window !== 'undefined' ? window.innerWidth : 1280
   const vpHeight = typeof window !== 'undefined' ? window.innerHeight : 800
 
@@ -97,9 +109,19 @@ const positionStyle = computed(() => {
   }
 })
 
+function handleToolbarMouseDown(event: MouseEvent) {
+  const target = event.target as HTMLElement | null
+  if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
+    return
+  }
+  event.preventDefault()
+}
+
 function applyHighlight(color: HighlightColor) {
+  const sel = currentSelection.value || props.selection
+  if (!sel) return
   selectedColor.value = color
-  emit('highlight', { color })
+  emit('highlight', { color, selection: sel })
   reset()
 }
 
@@ -112,9 +134,11 @@ function openNotePrompt() {
 }
 
 function submitNote() {
+  const sel = currentSelection.value || props.selection
+  if (!sel) return
   const clean = noteText.value.trim()
   if (!clean) return
-  emit('annotate', { note: clean, color: selectedColor.value })
+  emit('annotate', { note: clean, color: selectedColor.value, selection: sel })
   reset()
 }
 
@@ -127,19 +151,25 @@ function openQuestionPrompt() {
 }
 
 function submitQuestion() {
+  const sel = currentSelection.value || props.selection
+  if (!sel) return
   const clean = questionText.value.trim()
   if (!clean) return
-  emit('ask-question', { question: clean })
+  emit('ask-question', { question: clean, selection: sel })
   reset()
 }
 
 function triggerOcclude() {
-  emit('occlude')
+  const sel = currentSelection.value || props.selection
+  if (!sel) return
+  emit('occlude', { selection: sel })
   reset()
 }
 
 function triggerQuote() {
-  emit('copy-quote')
+  const sel = currentSelection.value || props.selection
+  if (!sel) return
+  emit('copy-quote', { selection: sel })
   reset()
 }
 
@@ -147,6 +177,7 @@ function reset() {
   mode.value = 'actions'
   noteText.value = ''
   questionText.value = ''
+  currentSelection.value = null
   emit('close')
 }
 
@@ -196,13 +227,14 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    v-if="visible && selection"
+    v-if="visible && (selection || currentSelection)"
     ref="toolbarRef"
     class="floating-actions-toolbar"
     :class="{ 'is-mobile': isMobile }"
     :style="positionStyle"
     role="toolbar"
     aria-label="Ações para o trecho selecionado"
+    @mousedown="handleToolbarMouseDown"
   >
     <!-- MODO 1: Barra de Ações Principais -->
     <template v-if="mode === 'actions'">

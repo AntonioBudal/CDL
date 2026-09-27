@@ -18,7 +18,7 @@ import { useStudyHighlights } from '../composables/useStudyHighlights'
 import { useActiveReadingSession } from '../composables/useActiveReadingSession'
 import { formatQuoteText, useTextSelection } from '../composables/useTextSelection'
 import type { HighlightClickEvent } from '../utils/highlightRenderer'
-import type { HighlightColor, ResourceVisibility, StudySectionKey } from '../types.ts'
+import type { HighlightColor, ResourceVisibility, StudySectionKey, TextSelectionContext } from '../types.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -116,41 +116,54 @@ function showToast(message: string) {
   }, 3000)
 }
 
-async function handleHighlight(payload: { color: HighlightColor }) {
-  if (!selectionContext.value || !state.context) return
-  await addHighlight({
-    section: selectionContext.value.section,
-    start_offset: selectionContext.value.start_offset,
-    end_offset: selectionContext.value.end_offset,
-    selected_text: selectionContext.value.selected_text,
-    prefix: selectionContext.value.prefix,
-    suffix: selectionContext.value.suffix,
+async function handleHighlight(payload: { color: HighlightColor; selection?: TextSelectionContext }) {
+  const sel = payload.selection || selectionContext.value
+  if (!sel || !state.context) return
+  const result = await addHighlight({
+    section: sel.section,
+    start_offset: sel.start_offset,
+    end_offset: sel.end_offset,
+    selected_text: sel.selected_text,
+    prefix: sel.prefix,
+    suffix: sel.suffix,
     color: payload.color,
     kind: 'highlight',
   })
+  if (result) {
+    showToast('Trecho destacado com sucesso!')
+  } else {
+    showToast('Não foi possível salvar o destaque.')
+  }
   clearSelection()
 }
 
-async function handleAnnotate(payload: { note: string; color: HighlightColor }) {
-  if (!selectionContext.value || !state.context) return
-  await addHighlight({
-    section: selectionContext.value.section,
-    start_offset: selectionContext.value.start_offset,
-    end_offset: selectionContext.value.end_offset,
-    selected_text: selectionContext.value.selected_text,
-    prefix: selectionContext.value.prefix,
-    suffix: selectionContext.value.suffix,
+async function handleAnnotate(payload: { note: string; color: HighlightColor; selection?: TextSelectionContext }) {
+  const sel = payload.selection || selectionContext.value
+  if (!sel || !state.context) return
+  const result = await addHighlight({
+    section: sel.section,
+    start_offset: sel.start_offset,
+    end_offset: sel.end_offset,
+    selected_text: sel.selected_text,
+    prefix: sel.prefix,
+    suffix: sel.suffix,
     color: payload.color,
     kind: 'note',
     note: payload.note,
   })
+  if (result) {
+    showToast('Anotação vinculada com sucesso!')
+  } else {
+    showToast('Não foi possível salvar a anotação.')
+  }
   clearSelection()
 }
 
-async function handleCopyQuote() {
-  if (!selectionContext.value || !state.context) return
+async function handleCopyQuote(payload?: { selection?: TextSelectionContext }) {
+  const sel = payload?.selection || selectionContext.value
+  if (!sel || !state.context) return
   const quote = formatQuoteText({
-    selected_text: selectionContext.value.selected_text,
+    selected_text: sel.selected_text,
     studyTitle: state.context.study.title,
     bookTitle: state.context.book.title,
     chapterName: state.context.chapter.name,
@@ -173,34 +186,46 @@ async function handleCopyQuote() {
   clearSelection()
 }
 
-async function handleOcclude() {
-  if (!selectionContext.value || !state.context) return
-  await addHighlight({
-    section: selectionContext.value.section,
-    start_offset: selectionContext.value.start_offset,
-    end_offset: selectionContext.value.end_offset,
-    selected_text: selectionContext.value.selected_text,
-    prefix: selectionContext.value.prefix,
-    suffix: selectionContext.value.suffix,
+async function handleOcclude(payload?: { selection?: TextSelectionContext }) {
+  const sel = payload?.selection || selectionContext.value
+  if (!sel || !state.context) return
+  const result = await addHighlight({
+    section: sel.section,
+    start_offset: sel.start_offset,
+    end_offset: sel.end_offset,
+    selected_text: sel.selected_text,
+    prefix: sel.prefix,
+    suffix: sel.suffix,
     color: 'yellow',
     kind: 'hidden',
   })
+  if (result) {
+    showToast('Trecho ocultado para estudo ativo!')
+  } else {
+    showToast('Não foi possível ocultar o trecho.')
+  }
   clearSelection()
 }
 
-async function handleAskQuestion(payload: { question: string }) {
-  if (!selectionContext.value || !state.context) return
-  await addHighlight({
-    section: selectionContext.value.section,
-    start_offset: selectionContext.value.start_offset,
-    end_offset: selectionContext.value.end_offset,
-    selected_text: selectionContext.value.selected_text,
-    prefix: selectionContext.value.prefix,
-    suffix: selectionContext.value.suffix,
+async function handleAskQuestion(payload: { question: string; selection?: TextSelectionContext }) {
+  const sel = payload.selection || selectionContext.value
+  if (!sel || !state.context) return
+  const result = await addHighlight({
+    section: sel.section,
+    start_offset: sel.start_offset,
+    end_offset: sel.end_offset,
+    selected_text: sel.selected_text,
+    prefix: sel.prefix,
+    suffix: sel.suffix,
     color: 'yellow',
     kind: 'question',
     note: payload.question,
   })
+  if (result) {
+    showToast('Pergunta criada com sucesso!')
+  } else {
+    showToast('Não foi possível criar a pergunta.')
+  }
   clearSelection()
 }
 

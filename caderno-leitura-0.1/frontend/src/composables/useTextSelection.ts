@@ -150,7 +150,11 @@ export function useTextSelection(
     }
   }
 
-  function onMouseUp() {
+  function onMouseUp(event: MouseEvent | TouchEvent) {
+    const target = event.target as HTMLElement | null
+    if (target && target.closest('.floating-actions-toolbar')) {
+      return
+    }
     setTimeout(handleSelection, 20)
   }
 
