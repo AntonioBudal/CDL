@@ -6,7 +6,7 @@ from app.models import Book, User
 from app.models.category import book_categories
 from app.schemas.book import BookCreate, BookPatch, BookRead
 from app.schemas.cover import CoverResponse, CoverUrlRequest
-from app.schemas.export import ExportFormat, ExportOptions
+from app.schemas.export import ExportFormat, ExportOptions, ExportType
 from app.schemas.sharing import ResourceOwnerSummary, VisibilityUpdateRequest
 from app.services.category_service import assign_book_categories, get_descendant_category_ids
 from app.services.sharing_service import can_read_book, update_book_visibility
@@ -252,17 +252,25 @@ def export_book(
     session: DatabaseSession,
     current_user: CurrentUser,
     format: ExportFormat = ExportFormat.MARKDOWN,
+    export_type: ExportType = ExportType.FULL,
+    include_highlights: bool = True,
+    exercise_mode: bool = False,
     include_notes: bool = True,
     include_sections: bool = True,
     include_source: bool = False,
     include_metadata: bool = True,
 ):
-    book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
-    if book.deleted_at is not None:
+    book = session.get(Book, book_id)
+    if book is None or book.deleted_at is not None:
+        raise HTTPException(status_code=404, detail="Livro não encontrado.")
+    if not can_read_book(session, current_user.id, book):
         raise HTTPException(status_code=404, detail="Livro não encontrado.")
 
     options = ExportOptions(
         format=format,
+        export_type=export_type,
+        include_highlights=include_highlights,
+        exercise_mode=exercise_mode,
         include_notes=include_notes,
         include_sections=include_sections,
         include_source=include_source,

@@ -2,7 +2,7 @@
 import { nextTick, ref, watch } from 'vue'
 import { api, errorMessage } from '../services/api'
 import Icon from './ui/Icon.vue'
-import type { ExportConfig, ExportFormat } from '../types'
+import type { ExportConfig, ExportFormat, ExportType } from '../types'
 
 const props = withDefaults(
   defineProps<{
@@ -21,7 +21,10 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
+const exportType = ref<ExportType>('full')
 const format = ref<ExportFormat>('markdown')
+const includeHighlights = ref(true)
+const exerciseMode = ref(false)
 const includeNotes = ref(true)
 const includeSections = ref(true)
 const includeSource = ref(false)
@@ -64,6 +67,9 @@ async function handleDownload() {
 
   const config: ExportConfig = {
     format: format.value,
+    exportType: exportType.value,
+    includeHighlights: includeHighlights.value,
+    exerciseMode: exerciseMode.value,
     includeNotes: includeNotes.value,
     includeSections: includeSections.value,
     includeSource: includeSource.value,
@@ -121,11 +127,42 @@ async function handleDownload() {
           </div>
 
           <fieldset class="export-fieldset">
-            <legend class="fieldset-legend">Formato de Exportação</legend>
+            <legend class="fieldset-legend">Modalidade de Exportação</legend>
+            <div class="format-options">
+              <label class="radio-card" :class="{ selected: exportType === 'full' }">
+                <input
+                  ref="firstFocusable"
+                  v-model="exportType"
+                  type="radio"
+                  name="export-type"
+                  value="full"
+                />
+                <div class="format-details">
+                  <strong class="format-name">{{ scope === 'book' ? 'Livro Completo' : 'Estudo Completo' }}</strong>
+                  <span class="format-desc">Texto integral com notas e destaques inseridos no fluxo da leitura.</span>
+                </div>
+              </label>
+
+              <label class="radio-card" :class="{ selected: exportType === 'digest' }">
+                <input
+                  v-model="exportType"
+                  type="radio"
+                  name="export-type"
+                  value="digest"
+                />
+                <div class="format-details">
+                  <strong class="format-name">Caderno de Revisão</strong>
+                  <span class="format-desc">Compilação executiva focada em perguntas ativas, termos ocluídos e notas.</span>
+                </div>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="export-fieldset">
+            <legend class="fieldset-legend">Formato do Arquivo</legend>
             <div class="format-options">
               <label class="radio-card" :class="{ selected: format === 'markdown' }">
                 <input
-                  ref="firstFocusable"
                   v-model="format"
                   type="radio"
                   name="export-format"
@@ -133,7 +170,7 @@ async function handleDownload() {
                 />
                 <div class="format-details">
                   <strong class="format-name">Markdown (.md)</strong>
-                  <span class="format-desc">Compatível com Obsidian, Notion e leitores modernos. Inclui Frontmatter YAML.</span>
+                  <span class="format-desc">Compatível com Obsidian, Notion e editores modernos.</span>
                 </div>
               </label>
 
@@ -146,15 +183,26 @@ async function handleDownload() {
                 />
                 <div class="format-details">
                   <strong class="format-name">Texto Puro (.txt)</strong>
-                  <span class="format-desc">Texto simples legível com divisores ASCII, ideal para impressão ou anotação rápida.</span>
+                  <span class="format-desc">Texto simples legível com divisores ASCII, ideal para impressão rápida.</span>
                 </div>
               </label>
             </div>
           </fieldset>
 
-          <fieldset class="export-fieldset">
-            <legend class="fieldset-legend">Conteúdo a Incluir</legend>
+          <fieldset v-if="exportType === 'full'" class="export-fieldset">
+            <legend class="fieldset-legend">Opções do Documento</legend>
             <div class="content-options">
+              <label class="checkbox-row">
+                <input
+                  v-model="includeHighlights"
+                  type="checkbox"
+                />
+                <div class="checkbox-label">
+                  <strong>Destaques e Anotações no Texto</strong>
+                  <span class="checkbox-desc">Preserva grifos visuais e notas de rodapé integradas ao texto.</span>
+                </div>
+              </label>
+
               <label class="checkbox-row disabled-checkbox">
                 <input
                   v-model="includeNotes"
@@ -197,6 +245,33 @@ async function handleDownload() {
                 <div class="checkbox-label">
                   <strong>Fichamento da Fonte</strong>
                   <span class="checkbox-desc">Texto-base de apoio preservado na íntegra para consulta.</span>
+                </div>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset v-else class="export-fieldset">
+            <legend class="fieldset-legend">Opções do Caderno de Revisão</legend>
+            <div class="content-options">
+              <label class="checkbox-row">
+                <input
+                  v-model="exerciseMode"
+                  type="checkbox"
+                />
+                <div class="checkbox-label">
+                  <strong>Modo Exercício</strong>
+                  <span class="checkbox-desc">Oculta respostas com linhas de preenchimento (_______) e adiciona gabarito no final.</span>
+                </div>
+              </label>
+
+              <label class="checkbox-row">
+                <input
+                  v-model="includeMetadata"
+                  type="checkbox"
+                />
+                <div class="checkbox-label">
+                  <strong>Metadados e Estatísticas</strong>
+                  <span class="checkbox-desc">Totalizadores de perguntas, oclusões e data da compilação.</span>
                 </div>
               </label>
             </div>

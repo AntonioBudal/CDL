@@ -189,3 +189,44 @@ test('api.exportBook e api.exportStudy chamam downloadExportFile corretamente', 
     globalThis.fetch = originalFetch
   }
 })
+
+test('buildExportQuery suporta includeHighlights e exportType full', () => {
+  const config = {
+    format: 'markdown',
+    exportType: 'full',
+    includeHighlights: true,
+    exerciseMode: false,
+    includeNotes: true,
+    includeSections: true,
+    includeSource: false,
+    includeMetadata: true,
+  }
+
+  const qs = buildExportQuery(config)
+  const params = new URLSearchParams(qs)
+
+  assert.equal(params.get('export_type'), 'full')
+  assert.equal(params.get('include_highlights'), 'true')
+  assert.equal(params.get('exercise_mode'), 'false')
+})
+
+test('buildExportQuery suporta exportType digest e exerciseMode ativo', () => {
+  const config = {
+    format: 'text',
+    exportType: 'digest',
+    includeHighlights: true,
+    exerciseMode: true,
+    includeNotes: false,
+    includeSections: false,
+    includeSource: false,
+    includeMetadata: true,
+  }
+
+  const qs = buildExportQuery(config)
+  const params = new URLSearchParams(qs)
+
+  assert.equal(params.get('export_type'), 'digest')
+  assert.equal(params.get('exercise_mode'), 'true')
+  assert.equal(params.get('format'), 'text')
+})
+

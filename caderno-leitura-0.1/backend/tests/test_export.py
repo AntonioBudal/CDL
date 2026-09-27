@@ -8,20 +8,22 @@ from sqlalchemy.orm import Session
 from app.core.config import BACKEND_DIR
 from app.db.session import create_sqlite_engine, get_session
 from app.main import create_app
-from app.models import Book, Chapter, Study
-from app.schemas.export import ExportFormat, ExportOptions
+from app.models import Book, Chapter, ResourcePermission, Study, StudyHighlight, User
+from app.schemas.export import ExportFormat, ExportOptions, ExportType
 from app.services.export_service import (
     format_book_markdown,
     format_book_text,
     format_study_markdown,
     format_study_text,
+    inject_highlights_into_text,
     sanitize_filename,
 )
 
 
 @pytest.fixture
-def client_and_db(tmp_path):
+def client_and_db(tmp_path, monkeypatch):
     """Configura base SQLite temporária e TestClient 100% isolado em tmp_path."""
+    monkeypatch.setenv("REQUIRE_AUTH", "false")
     db_path = tmp_path / "acervo_export" / "caderno.db"
     db_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -453,3 +455,457 @@ def test_export_study_when_parent_book_in_trash_returns_404(client_and_db):
     res_exp = client.get(f"/api/studies/{study_id}/export")
     assert res_exp.status_code == 404
     assert res_exp.json()["detail"] == "Livro não encontrado."
+
+
+# ==============================================================================
+# Helpers e Testes Fundacionais para Destaques e Caderno de Revisão (F0.6.4)
+# ==============================================================================
+
+def create_study_with_synthetic_highlights(client):
+    """Cria livro, capítulo, estudo e 4 destaques sintéticos para testes."""
+    res_b = client.post("/api/books", json={"title": "Livro com Grifos", "author": "Autor dos Grifos"})
+    assert res_b.status_code == 201
+    book_id = res_b.json()["id"]
+
+    res_c = client.post(f"/api/books/{book_id}/chapters", json={"name": "Capítulo I"})
+    assert res_c.status_code == 201
+    chap_id = res_c.json()["id"]
+
+    res_s = client.post(
+        "/api/studies",
+        json={
+            "chapter_id": chap_id,
+            "title": "Estudo de Leitura Ativa",
+            "summary": "A imaginação é mais importante que o conhecimento científico formal.",
+            "explanation": "O conhecimento é limitado enquanto a imaginação abraça o mundo inteiro.",
+            "concepts": "Imaginação; Conhecimento; Epistemologia",
+            "references": "Einstein, 1929",
+            "notes": "Reflexão sobre a criatividade.",
+        },
+    )
+    assert res_s.status_code == 201
+    study_id = res_s.json()["id"]
+
+    # 1. Destaque simples na seção summary
+    client.post(
+        f"/api/studies/{study_id}/highlights",
+        json={
+            "section": "summary",
+            "start_offset": 2,
+            "end_offset": 12,
+            "selected_text": "imaginação",
+            "color": "yellow",
+            "kind": "highlight",
+            "note": "",
+        },
+    )
+
+    # 2. Nota pessoal na seção summary
+    client.post(
+        f"/api/studies/{study_id}/highlights",
+        json={
+            "section": "summary",
+            "start_offset": 37,
+            "end_offset": 60,
+            "selected_text": "conhecimento científico",
+            "color": "blue",
+            "kind": "note",
+            "note": "Ponto central da tese sobre heurística.",
+        },
+    )
+
+    # 3. Pergunta de retenção na seção explanation
+    client.post(
+        f"/api/studies/{study_id}/highlights",
+        json={
+            "section": "explanation",
+            "start_offset": 19,
+            "end_offset": 27,
+            "selected_text": "limitado",
+            "color": "purple",
+            "kind": "question",
+            "note": "Por que o conhecimento formal é considerado limitado?",
+        },
+    )
+
+    # 4. Termo ocluído na seção explanation
+    client.post(
+        f"/api/studies/{study_id}/highlights",
+        json={
+            "section": "explanation",
+            "start_offset": 40,
+            "end_offset": 50,
+            "selected_text": "imaginação",
+            "color": "pink",
+            "kind": "hidden",
+            "note": "Conceito que abraça o mundo inteiro",
+        },
+    )
+
+    return book_id, chap_id, study_id
+
+
+def test_inject_highlights_into_text_markdown():
+    text = "O conhecimento é limitado enquanto a imaginação abraça o mundo."
+    h1 = StudyHighlight(
+        id=1,
+        study_id=1,
+        section="summary",
+        start_offset=2,
+        end_offset=14,
+        selected_text="conhecimento",
+        kind="highlight",
+        note="",
+    )
+    h2 = StudyHighlight(
+        id=2,
+        study_id=1,
+        section="summary",
+        start_offset=17,
+        end_offset=25,
+        selected_text="limitado",
+        kind="note",
+        note="Nota sobre limitação",
+    )
+    h3 = StudyHighlight(
+        id=3,
+        study_id=1,
+        section="summary",
+        start_offset=37,
+        end_offset=47,
+        selected_text="imaginação",
+        kind="question",
+        note="Qual a faculdade central?",
+    )
+
+    modified, footnotes, next_idx = inject_highlights_into_text(text, [h1, h2, h3], ExportFormat.MARKDOWN, note_start_index=1)
+
+    assert "==conhecimento==" in modified
+    assert "==limitado==[^1]" in modified
+    assert "==imaginação==[^2]" in modified
+    assert len(footnotes) == 2
+    assert footnotes[0] == (1, "**[Anotação]** Nota sobre limitação")
+    assert footnotes[1] == (2, "**[Pergunta]** Qual a faculdade central?")
+    assert next_idx == 3
+
+
+def test_inject_highlights_into_text_text_pure():
+    text = "O conhecimento é limitado enquanto a imaginação abraça o mundo."
+    h1 = StudyHighlight(
+        id=1,
+        study_id=1,
+        section="summary",
+        start_offset=2,
+        end_offset=14,
+        selected_text="conhecimento",
+        kind="highlight",
+        note="",
+    )
+    h2 = StudyHighlight(
+        id=2,
+        study_id=1,
+        section="summary",
+        start_offset=17,
+        end_offset=25,
+        selected_text="limitado",
+        kind="note",
+        note="Nota sobre limitação",
+    )
+
+    modified, footnotes, next_idx = inject_highlights_into_text(text, [h1, h2], ExportFormat.TEXT, note_start_index=1)
+
+    assert "«conhecimento»" in modified
+    assert "«limitado» [1]" in modified
+    assert len(footnotes) == 1
+    assert footnotes[0] == (1, "[Anotação] Nota sobre limitação")
+    assert next_idx == 2
+
+
+def test_export_study_with_highlights_markdown_success(client_and_db):
+    client, _ = client_and_db
+    book_id, chap_id, study_id = create_study_with_synthetic_highlights(client)
+
+    # 1. Com include_highlights=true (padrão)
+    res = client.get(f"/api/studies/{study_id}/export?include_highlights=true")
+    assert res.status_code == 200
+    assert "text/markdown" in res.headers["content-type"]
+    body = res.content.decode("utf-8")
+
+    assert "total_highlights: 4" in body
+    assert "total_questions: 1" in body
+    assert "==imaginação==" in body
+    assert "==conhecimento científico==[^1]" in body
+    assert "[^1]: **[Anotação]** Ponto central da tese sobre heurística." in body
+    assert "==limitado==[^1]" in body
+    assert "[^1]: **[Pergunta]** Por que o conhecimento formal é considerado limitado?" in body
+    assert "==imaginação==[^2]" in body
+    assert "[^2]: **[Termo Ocluído]** Conceito que abraça o mundo inteiro" in body
+
+    # 2. Com include_highlights=false
+    res_clean = client.get(f"/api/studies/{study_id}/export?include_highlights=false")
+    assert res_clean.status_code == 200
+    body_clean = res_clean.content.decode("utf-8")
+    assert "==imaginação==" not in body_clean
+    assert "[^1]:" not in body_clean
+
+
+def test_export_study_with_highlights_text_success(client_and_db):
+    client, _ = client_and_db
+    book_id, chap_id, study_id = create_study_with_synthetic_highlights(client)
+
+    res = client.get(f"/api/studies/{study_id}/export?format=text&include_highlights=true")
+    assert res.status_code == 200
+    assert "text/plain" in res.headers["content-type"]
+    body = res.content.decode("utf-8")
+
+    assert "«imaginação»" in body
+    assert "«conhecimento científico» [1]" in body
+    assert "NOTAS DA SEÇÃO:" in body
+    assert "[1] [Anotação] Ponto central da tese sobre heurística." in body
+
+
+def test_export_book_with_highlights_markdown_success(client_and_db):
+    client, _ = client_and_db
+    book_id, chap_id, study_id = create_study_with_synthetic_highlights(client)
+
+    res = client.get(f"/api/books/{book_id}/export?include_highlights=true")
+    assert res.status_code == 200
+    body = res.content.decode("utf-8")
+
+    assert "total_highlights: 4" in body
+    assert "==imaginação==" in body
+    assert "==conhecimento científico==[^1]" in body
+    assert "[^1]: **[Anotação]** Ponto central da tese sobre heurística." in body
+
+
+# ==============================================================================
+# T013 / T014: Testes de Caderno de Revisão (Digest) e Casos de Borda (US2)
+# ==============================================================================
+
+def test_export_study_digest_markdown_study_mode_success(client_and_db):
+    """Valida exportação do Caderno de Revisão de estudo individual em Markdown (Modo Estudo)."""
+    client, _ = client_and_db
+    book_id, chap_id, study_id = create_study_with_synthetic_highlights(client)
+
+    res = client.get(f"/api/studies/{study_id}/export?export_type=digest&exercise_mode=false&format=markdown")
+    assert res.status_code == 200
+    assert "text/markdown" in res.headers["content-type"]
+    assert "caderno-revisao-" in res.headers["content-disposition"]
+    body = res.content.decode("utf-8")
+
+    assert 'type: "digest"' in body
+    assert 'mode: "study"' in body
+    assert "total_questions: 1" in body
+    assert "total_occlusions: 1" in body
+    assert "total_notes: 2" in body
+    assert "# Caderno de Revisão — Estudo de Leitura Ativa" in body
+    assert "## 1. Perguntas de Retenção (Active Recall)" in body
+    assert "Por que o conhecimento formal é considerado limitado?" in body
+    assert "**Resposta:** limitado" in body
+    assert "## 2. Termos Ocluídos (Cloze Deletion)" in body
+    assert "==imaginação==" in body
+    assert "(Dica: Conceito que abraça o mundo inteiro)" in body
+    assert "## 3. Notas Marginais & Citações" in body
+    assert "conhecimento científico" in body
+    assert "Ponto central da tese sobre heurística." in body
+
+
+def test_export_book_digest_markdown_study_mode_success(client_and_db):
+    """Valida exportação do Caderno de Revisão de livro completo em Markdown."""
+    client, _ = client_and_db
+    book_id, chap_id, study_id = create_study_with_synthetic_highlights(client)
+
+    res = client.get(f"/api/books/{book_id}/export?export_type=digest&exercise_mode=false&format=markdown")
+    assert res.status_code == 200
+    assert "text/markdown" in res.headers["content-type"]
+    assert "caderno-revisao-" in res.headers["content-disposition"]
+    body = res.content.decode("utf-8")
+
+    assert 'type: "digest"' in body
+    assert 'mode: "study"' in body
+    assert "## Sumário da Obra" in body
+    assert "Capítulo I" in body
+    assert "Estudo de Leitura Ativa" in body
+    assert "1. **[Capítulo I / Estudo de Leitura Ativa]**" in body
+    assert "**Resposta:** limitado" in body
+
+
+def test_export_study_digest_text_mode_success(client_and_db):
+    """Valida exportação do Caderno de Revisão de estudo individual em Texto Puro."""
+    client, _ = client_and_db
+    book_id, chap_id, study_id = create_study_with_synthetic_highlights(client)
+
+    res = client.get(f"/api/studies/{study_id}/export?export_type=digest&format=text")
+    assert res.status_code == 200
+    assert "text/plain" in res.headers["content-type"]
+    body = res.content.decode("utf-8")
+
+    assert "CADERNO DE REVISÃO" in body
+    assert "1. PERGUNTAS DE RETENÇÃO (ACTIVE RECALL)" in body
+    assert "2. TERMOS OCLUÍDOS (CLOZE DELETION)" in body
+    assert "3. NOTAS MARGINAIS E CITAÇÕES" in body
+    assert "Resposta: limitado" in body
+
+
+def test_export_study_digest_empty_highlights(client_and_db):
+    """Valida mensagem informativa quando estudo não possui nenhum destaque."""
+    client, _ = client_and_db
+
+    res_b = client.post("/api/books", json={"title": "Livro Vazio", "author": "Autor"})
+    b_id = res_b.json()["id"]
+    res_c = client.post(f"/api/books/{b_id}/chapters", json={"name": "Cap 1", "position": 0})
+    c_id = res_c.json()["id"]
+    res_s = client.post(
+        "/api/studies",
+        json={
+            "chapter_id": c_id,
+            "title": "Estudo Sem Destaques",
+            "summary": "Apenas texto corrido.",
+        },
+    )
+    s_id = res_s.json()["id"]
+
+    res = client.get(f"/api/studies/{s_id}/export?export_type=digest")
+    assert res.status_code == 200
+    body = res.content.decode("utf-8")
+    assert "Este estudo não possui destaques, perguntas ou anotações registradas até o momento." in body
+
+
+def test_export_book_digest_empty_highlights(client_and_db):
+    """Valida mensagem informativa quando livro não possui nenhum destaque."""
+    client, _ = client_and_db
+
+    res_b = client.post("/api/books", json={"title": "Livro Inteiro Vazio", "author": "Autor"})
+    b_id = res_b.json()["id"]
+    res_c = client.post(f"/api/books/{b_id}/chapters", json={"name": "Cap 1", "position": 0})
+    c_id = res_c.json()["id"]
+    client.post(
+        "/api/studies",
+        json={
+            "chapter_id": c_id,
+            "title": "Estudo Limpo",
+            "summary": "Sem notas.",
+        },
+    )
+
+    res = client.get(f"/api/books/{b_id}/export?export_type=digest")
+    assert res.status_code == 200
+    body = res.content.decode("utf-8")
+    assert "Este livro não possui destaques, perguntas ou anotações registradas até o momento." in body
+
+
+# ==============================================================================
+# T019: Testes de Modo Exercício e Gabarito de Revisão (US3)
+# ==============================================================================
+
+def test_export_study_digest_exercise_mode_markdown(client_and_db):
+    """Valida omissão de respostas no corpo e inclusão de Gabarito ao final no Modo Exercício."""
+    client, _ = client_and_db
+    book_id, chap_id, study_id = create_study_with_synthetic_highlights(client)
+
+    res = client.get(f"/api/studies/{study_id}/export?export_type=digest&exercise_mode=true&format=markdown")
+    assert res.status_code == 200
+    assert "caderno-revisao-exercicio-" in res.headers["content-disposition"]
+    body = res.content.decode("utf-8")
+
+    assert 'mode: "exercise"' in body
+    assert "*Resposta:* __________________________________________________" in body
+    assert "## 1. Perguntas de Retenção (Active Recall)" in body
+    assert "[ _______ ]" in body
+
+    assert "## Gabarito de Revisão" in body
+    assert "### Perguntas de Retenção" in body
+    assert "**Resposta:** limitado" in body
+    assert "### Termos Ocluídos" in body
+    assert "**Termo Ocluído:** imaginação" in body
+
+
+def test_export_book_digest_exercise_mode_markdown(client_and_db):
+    """Valida Modo Exercício consolidado para livro completo."""
+    client, _ = client_and_db
+    book_id, chap_id, study_id = create_study_with_synthetic_highlights(client)
+
+    res = client.get(f"/api/books/{book_id}/export?export_type=digest&exercise_mode=true&format=markdown")
+    assert res.status_code == 200
+    assert "caderno-revisao-exercicio-" in res.headers["content-disposition"]
+    body = res.content.decode("utf-8")
+
+    assert 'mode: "exercise"' in body
+    assert "*Resposta:* __________________________________________________" in body
+    assert "[ _______ ]" in body
+    assert "## Gabarito de Revisão" in body
+    assert "**Resposta:** limitado" in body
+    assert "**Termo Ocluído:** imaginação" in body
+
+
+# ==============================================================================
+# T023: Teste de Integração para Estudos Compartilhados em Modo Somente Leitura (US4)
+# ==============================================================================
+
+def test_export_shared_study_readonly_permission(client_and_db):
+    """Garante que usuário convidado com permissão somente leitura consegue exportar."""
+    client, engine = client_and_db
+    user_alice_id = "11111111-1111-1111-1111-111111111111"
+    user_bob_id = "22222222-2222-2222-2222-222222222222"
+    user_carlos_id = "33333333-3333-3333-3333-333333333333"
+
+    with Session(engine) as session:
+        alice = User(id=user_alice_id, username="alice", email="alice@test.com", display_name="Alice", role="user", status="ativo")
+        bob = User(id=user_bob_id, username="bob", email="bob@test.com", display_name="Bob", role="user", status="ativo")
+        carlos = User(id=user_carlos_id, username="carlos", email="carlos@test.com", display_name="Carlos", role="user", status="ativo")
+        session.add_all([alice, bob, carlos])
+        session.commit()
+
+        book = Book(title="Livro da Alice", author="Alice Autora", user_id=user_alice_id)
+        session.add(book)
+        session.commit()
+
+        chapter = Chapter(book_id=book.id, name="Capítulo Compartilhado", position=0)
+        session.add(chapter)
+        session.commit()
+
+        study = Study(
+            chapter_id=chapter.id,
+            title="Estudo da Alice Compartilhado",
+            summary="Texto que Alice sintetizou com muito cuidado.",
+            notes="Minhas notas privadas que viram exportação",
+            visibility="custom",
+            user_id=user_alice_id,
+        )
+        session.add(study)
+        session.commit()
+        study_id = study.id
+
+        hl = StudyHighlight(
+            study_id=study_id,
+            section="summary",
+            start_offset=6,
+            end_offset=9,
+            selected_text="que",
+            color="yellow",
+            kind="highlight",
+        )
+        session.add(hl)
+
+        perm = ResourcePermission(
+            resource_type="study",
+            resource_id=study_id,
+            granted_to_user_id=user_bob_id,
+            can_view=True,
+        )
+        session.add(perm)
+        session.commit()
+
+    res_bob = client.get(f"/api/studies/{study_id}/export?include_highlights=true", headers={"X-User-Id": user_bob_id})
+    assert res_bob.status_code == 200
+    body_bob = res_bob.content.decode("utf-8")
+    assert "Livro da Alice" in body_bob
+    assert "==que==" in body_bob
+
+    res_bob_digest = client.get(f"/api/studies/{study_id}/export?export_type=digest", headers={"X-User-Id": user_bob_id})
+    assert res_bob_digest.status_code == 200
+
+    res_carlos = client.get(f"/api/studies/{study_id}/export", headers={"X-User-Id": user_carlos_id})
+    assert res_carlos.status_code == 404
+
+

@@ -3,7 +3,7 @@ from sqlalchemy import select
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
 from app.models import Chapter, Study, User
-from app.schemas.export import ExportFormat, ExportOptions
+from app.schemas.export import ExportFormat, ExportOptions, ExportType
 from app.schemas.sharing import (
     GrantPermissionRequest,
     ResourceOwnerSummary,
@@ -337,6 +337,9 @@ def export_study(
     session: DatabaseSession,
     current_user: CurrentUser,
     format: ExportFormat = ExportFormat.MARKDOWN,
+    export_type: ExportType = ExportType.FULL,
+    include_highlights: bool = True,
+    exercise_mode: bool = False,
     include_notes: bool = True,
     include_sections: bool = True,
     include_source: bool = False,
@@ -350,6 +353,9 @@ def export_study(
 
     options = ExportOptions(
         format=format,
+        export_type=export_type,
+        include_highlights=include_highlights,
+        exercise_mode=exercise_mode,
         include_notes=include_notes,
         include_sections=include_sections,
         include_source=include_source,

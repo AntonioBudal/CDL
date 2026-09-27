@@ -424,13 +424,17 @@ export interface ConfirmResetModalState {
 }
 
 export type ExportFormat = 'markdown' | 'text'
+export type ExportType = 'full' | 'digest'
 
 export interface ExportConfig {
   format: ExportFormat
+  exportType: ExportType
   includeNotes: boolean
   includeSections: boolean
   includeSource: boolean
   includeMetadata: boolean
+  includeHighlights: boolean
+  exerciseMode: boolean
 }
 
 export interface ExportModalProps {

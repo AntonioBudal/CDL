@@ -7,6 +7,11 @@ class ExportFormat(str, Enum):
     TEXT = "text"
 
 
+class ExportType(str, Enum):
+    FULL = "full"
+    DIGEST = "digest"
+
+
 class ExportOptions(BaseModel):
     """Opções de configuração para exportação de anotações e estudos."""
 
@@ -29,4 +34,16 @@ class ExportOptions(BaseModel):
     include_metadata: bool = Field(
         default=True,
         description="Incluir cabeçalho com metadados do livro/estudo",
+    )
+    include_highlights: bool = Field(
+        default=True,
+        description="Incluir destaques, grifos e marcações no texto",
+    )
+    export_type: ExportType = Field(
+        default=ExportType.FULL,
+        description="Tipo de exportação: 'full' (estudo/livro completo) ou 'digest' (Caderno de Revisão)",
+    )
+    exercise_mode: bool = Field(
+        default=False,
+        description="No modo digest, ocultar respostas e gerar Gabarito de Revisão no final",
     )

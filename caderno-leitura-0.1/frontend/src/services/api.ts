@@ -633,6 +633,9 @@ export const api = {
 export function buildExportQuery(config: ExportConfig): string {
   const params = new URLSearchParams()
   params.set('format', config.format)
+  params.set('export_type', config.exportType || 'full')
+  params.set('include_highlights', String(config.includeHighlights ?? true))
+  params.set('exercise_mode', String(config.exerciseMode ?? false))
   params.set('include_notes', String(config.includeNotes))
   params.set('include_sections', String(config.includeSections))
   params.set('include_source', String(config.includeSource))
