@@ -1006,4 +1006,26 @@ export interface TextSelectionContext {
   boundingRect: DOMRect
 }
 
+export interface ActiveStudyNode {
+  highlight_id: number
+  kind: 'hidden' | 'question'
+  section: StudySectionKey
+  dom_element?: HTMLElement | null
+  is_revealed: boolean
+  prompt_text?: string
+  answer_text?: string
+}
+
+export interface ActiveReadingSessionState {
+  isActive: boolean
+  currentSection: StudySectionKey
+  nodes: ActiveStudyNode[]
+  focusedIndex: number
+  revealedCount: number
+  totalCount: number
+  completionPercentage: number
+}
+
+export type ActiveReadingSessionEvent = 'reveal-all' | 'hide-all' | 'next' | 'previous' | 'close'
+
 

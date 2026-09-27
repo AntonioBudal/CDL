@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { api, errorMessage } from '../services/api'
 import { useStudyResource } from '../composables/useStudyResource'
 import StudyTabs from '../components/StudyTabs.vue'
 import ReaderTools from '../components/ReaderTools.vue'
+import ActiveReadingBar from '../components/ActiveReadingBar.vue'
 import ExportModal from '../components/ExportModal.vue'
 import TrashConfirmModal from '../components/TrashConfirmModal.vue'
 import StudyRelationsList from '../components/relations/StudyRelationsList.vue'
@@ -14,6 +15,7 @@ import ShareModal from '../components/sharing/ShareModal.vue'
 import FloatingActionsToolbar from '../components/FloatingActionsToolbar.vue'
 import HighlightActionPopover from '../components/HighlightActionPopover.vue'
 import { useStudyHighlights } from '../composables/useStudyHighlights'
+import { useActiveReadingSession } from '../composables/useActiveReadingSession'
 import { formatQuoteText, useTextSelection } from '../composables/useTextSelection'
 import type { HighlightClickEvent } from '../utils/highlightRenderer'
 import type { HighlightColor, ResourceVisibility, StudySectionKey } from '../types.ts'
@@ -50,6 +52,57 @@ const studyTabsRef = ref<InstanceType<typeof StudyTabs> | null>(null)
 const activeSection = ref<StudySectionKey>('summary')
 const activePanelEl = computed(() => studyTabsRef.value?.activePanelEl || null)
 const { selectionContext, clearSelection } = useTextSelection(activePanelEl, activeSection)
+
+// Leitura Ativa (F0.6.3)
+const activeReadingSession = useActiveReadingSession({
+  activeSectionRef: activeSection,
+  highlightsRef: highlights,
+  containerRef: activePanelEl,
+})
+
+const totalInteractiveCount = computed(() => {
+  return highlights.value.filter((h) => h.kind === 'hidden' || h.kind === 'question').length
+})
+
+function handleToggleActiveReading() {
+  if (activeReadingSession.isActive.value) {
+    activeReadingSession.endSession()
+  } else {
+    if (activeReadingSession.totalCount.value === 0 && totalInteractiveCount.value === 0) {
+      showToast('Nenhum trecho oculto ou pergunta cadastrada neste estudo. Selecione um texto para criar oclusões ou perguntas.')
+      return
+    }
+    activeReadingSession.startSession()
+  }
+}
+
+function handleActiveToggle(event: Event) {
+  const customEvent = event as CustomEvent<{ id: number; isRevealed: boolean }>
+  if (customEvent.detail) {
+    activeReadingSession.setNodeRevealed(customEvent.detail.id, customEvent.detail.isRevealed)
+  }
+}
+
+function onActiveReadingKeydown(event: KeyboardEvent) {
+  if (!activeReadingSession.isActive.value) return
+  if (event.defaultPrevented || event.isComposing) return
+
+  const target = event.target as HTMLElement | null
+  if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+    return
+  }
+
+  if (event.key === 'Escape') {
+    event.preventDefault()
+    activeReadingSession.endSession()
+  } else if (event.key === 'j' || event.key === 'J' || event.key === 'ArrowDown') {
+    event.preventDefault()
+    activeReadingSession.next()
+  } else if (event.key === 'k' || event.key === 'K' || event.key === 'ArrowUp') {
+    event.preventDefault()
+    activeReadingSession.previous()
+  }
+}
 
 // Feedback visual (Toast)
 const toastMessage = ref('')
@@ -203,7 +256,21 @@ async function handleTrash() {
 
 async function load() { await resource.load(route.params.bookId, route.params.studyId) }
 watch([() => route.params.bookId, () => route.params.studyId], load, { immediate: true })
+
+watch(activeSection, async () => {
+  clearSelection()
+  await nextTick()
+  if (activeReadingSession.isActive.value) {
+    activeReadingSession.hideAll()
+  }
+})
+
+onMounted(() => {
+  window.addEventListener('keydown', onActiveReadingKeydown)
+})
+
 onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onActiveReadingKeydown)
   resource.cancel()
   if (toastTimer) clearTimeout(toastTimer)
 })
@@ -286,9 +353,31 @@ onBeforeUnmount(() => {
         </button>
       </div>
     </header>
-    <ReaderTools :key="state.context.study.id" />
+    <ReaderTools
+      :key="state.context.study.id"
+      :active-reading-enabled="activeReadingSession.isActive.value"
+      :interactive-count="totalInteractiveCount"
+      @toggle-active-reading="handleToggleActiveReading"
+    />
 
-    <div class="reader-layout reader-static-surface">
+    <!-- Barra Contextual de Leitura Ativa (F0.6.3) -->
+    <ActiveReadingBar
+      :active="activeReadingSession.isActive.value"
+      :revealed-count="activeReadingSession.revealedCount.value"
+      :total-count="activeReadingSession.totalCount.value"
+      :completion-percentage="activeReadingSession.completionPercentage.value"
+      :current-index="activeReadingSession.focusedIndex.value"
+      @reveal-all="activeReadingSession.revealAll"
+      @hide-all="activeReadingSession.hideAll"
+      @next="activeReadingSession.next"
+      @previous="activeReadingSession.previous"
+      @close="activeReadingSession.endSession"
+    />
+
+    <div
+      class="reader-layout reader-static-surface"
+      @study-active-toggle="handleActiveToggle"
+    >
       <StudyTabs
         ref="studyTabsRef"
         :key="state.context.study.id"

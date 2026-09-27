@@ -111,3 +111,23 @@
   background-color: transparent !important;
   border: 1px dashed currentColor !important;
 }
+/* Foco e Sessão de Leitura Ativa (F0.6.3) */
+.study-highlight-focused {
+  outline: 3px solid var(--color-primary, #2563eb) !important;
+  outline-offset: 3px !important;
+  border-radius: 4px;
+}
+
+:root[data-theme='e-ink'] .study-highlight-focused {
+  outline: 2px solid #000000 !important;
+  outline-offset: 2px !important;
+}
+
+:root[data-theme='e-ink'] .active-reading-bar {
+  border: 2px solid #000000 !important;
+  background-color: #ffffff !important;
+}
+
+:root[data-theme='e-ink'] .reading-bar-fill {
+  background-color: #000000 !important;
+}

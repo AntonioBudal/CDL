@@ -85,6 +85,7 @@ export function applyHighlightsToDom(
   root: HTMLElement,
   highlights: StudyHighlight[],
   onHighlightClick?: (event: HighlightClickEvent) => void,
+  onToggleActiveHighlight?: (id: number, isRevealed: boolean) => void,
 ): () => void {
   if (typeof document === 'undefined') return () => {}
 
@@ -114,16 +115,34 @@ export function applyHighlightsToDom(
     // Se clicou no botão de revelar da oclusão, alterna estado
     if (target.classList.contains('study-occlusion-btn')) {
       e.stopPropagation()
+      const hlId = Number(mark.getAttribute('data-highlight-id'))
       mark.classList.toggle('is-revealed')
-      target.textContent = mark.classList.contains('is-revealed') ? 'Ocultar' : 'Revelar'
+      const isRev = mark.classList.contains('is-revealed')
+      target.textContent = isRev ? 'Ocultar' : 'Revelar'
+      mark.dispatchEvent(new CustomEvent('study-active-toggle', {
+        bubbles: true,
+        detail: { id: hlId, isRevealed: isRev },
+      }))
+      if (onToggleActiveHighlight && !Number.isNaN(hlId)) {
+        onToggleActiveHighlight(hlId, isRev)
+      }
       return
     }
 
     // Se clicou no botão de ver resposta da pergunta, alterna estado
     if (target.classList.contains('study-question-reveal-btn')) {
       e.stopPropagation()
+      const hlId = Number(mark.getAttribute('data-highlight-id'))
       mark.classList.toggle('is-revealed')
-      target.textContent = mark.classList.contains('is-revealed') ? 'Esconder resposta' : 'Ver resposta'
+      const isRev = mark.classList.contains('is-revealed')
+      target.textContent = isRev ? 'Esconder resposta' : 'Ver resposta'
+      mark.dispatchEvent(new CustomEvent('study-active-toggle', {
+        bubbles: true,
+        detail: { id: hlId, isRevealed: isRev },
+      }))
+      if (onToggleActiveHighlight && !Number.isNaN(hlId)) {
+        onToggleActiveHighlight(hlId, isRev)
+      }
       return
     }
 
@@ -143,6 +162,90 @@ export function applyHighlightsToDom(
   return () => {
     root.removeEventListener('click', handleClick)
   }
+}
+
+export function setHighlightsRevealedState(
+  root: HTMLElement,
+  revealed: boolean,
+  onToggleCallback?: (id: number, isRevealed: boolean) => void,
+): void {
+  if (!root) return
+  const marks = root.querySelectorAll<HTMLElement>('[data-highlight-id][data-kind="hidden"], [data-highlight-id][data-kind="question"]')
+  marks.forEach((mark) => {
+    const id = Number(mark.getAttribute('data-highlight-id'))
+    const kind = mark.getAttribute('data-kind')
+    if (revealed) {
+      mark.classList.add('is-revealed')
+    } else {
+      mark.classList.remove('is-revealed')
+    }
+    if (kind === 'hidden') {
+      const btn = mark.querySelector<HTMLButtonElement>('.study-occlusion-btn')
+      if (btn) {
+        btn.textContent = revealed ? 'Ocultar' : 'Revelar'
+      }
+    } else if (kind === 'question') {
+      const btn = mark.querySelector<HTMLButtonElement>('.study-question-reveal-btn')
+      if (btn) {
+        btn.textContent = revealed ? 'Esconder resposta' : 'Ver resposta'
+      }
+    }
+    if (onToggleCallback && !Number.isNaN(id)) {
+      onToggleCallback(id, revealed)
+    }
+  })
+}
+
+export function collectInteractiveHighlights(
+  root: HTMLElement,
+): { id: number; kind: 'hidden' | 'question'; isRevealed: boolean }[] {
+  if (!root) return []
+  const marks = root.querySelectorAll<HTMLElement>('[data-highlight-id][data-kind="hidden"], [data-highlight-id][data-kind="question"]')
+  const result: { id: number; kind: 'hidden' | 'question'; isRevealed: boolean }[] = []
+  const seenIds = new Set<number>()
+
+  marks.forEach((mark) => {
+    const id = Number(mark.getAttribute('data-highlight-id'))
+    const kind = mark.getAttribute('data-kind') as 'hidden' | 'question'
+    if (!Number.isNaN(id) && !seenIds.has(id)) {
+      seenIds.add(id)
+      result.push({
+        id,
+        kind,
+        isRevealed: mark.classList.contains('is-revealed'),
+      })
+    }
+  })
+  return result
+}
+
+export function scrollAndFocusHighlight(
+  root: HTMLElement,
+  highlightId: number,
+): boolean {
+  if (!root) return false
+  const mark = root.querySelector<HTMLElement>(`[data-highlight-id="${highlightId}"]`)
+  if (!mark) return false
+
+  root.querySelectorAll('.study-highlight-focused').forEach((el) => {
+    el.classList.remove('study-highlight-focused')
+  })
+
+  mark.classList.add('study-highlight-focused')
+  if (typeof mark.scrollIntoView === 'function') {
+    mark.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
+
+  const focusTarget = mark.querySelector<HTMLElement>('button') || mark
+  if (focusTarget) {
+    if (!focusTarget.hasAttribute('tabindex') && focusTarget !== mark.querySelector('button')) {
+      focusTarget.setAttribute('tabindex', '-1')
+    }
+    if (typeof focusTarget.focus === 'function') {
+      focusTarget.focus({ preventScroll: true })
+    }
+  }
+  return true
 }
 
 function wrapSingleHighlight(root: HTMLElement, hl: StudyHighlight, fullText: string): void {
