@@ -12,19 +12,66 @@ SECTION_LABELS = {
     "references": "Referências",
 }
 
+SECTION_SYNONYMS = {
+    "summary": (
+        "resumo",
+        "visao geral",
+        "visao-geral",
+        "sintese",
+        "ideia central",
+        "introducao",
+    ),
+    "explanation": (
+        "explicacao",
+        "aprofundamento",
+        "desenvolvimento",
+        "analise",
+        "compreensao",
+        "detalhamento",
+    ),
+    "concepts": (
+        "conceitos",
+        "conceitos-chave",
+        "termos",
+        "termos-chave",
+        "vocabulario",
+        "glossario",
+        "glossario e termos",
+        "definicoes",
+    ),
+    "references": (
+        "referencias",
+        "fontes",
+        "fontes consultadas",
+        "bibliografia",
+        "leituras complementares",
+        "obras citadas",
+    ),
+}
+
 # Apenas CR/LF delimitam linhas. Os terminadores continuam no conteúdo devolvido.
 _LINES = re.compile(r"[^\r\n]*(?:\r\n|\r|\n|$)")
-_HEADING = re.compile(r"##[ \t]+(.+)")
+_HEADING_MARKDOWN = re.compile(r"#{1,4}[ \t]+(.+)")
 _CLOSING_HASHES = re.compile(r"[ \t]+#+[ \t]*$")
+_ORDINAL_PREFIX = re.compile(
+    r"^(?:(?:secao|seção|parte|capitulo|capítulo)\s+)?(?:[0-9]+|[ivxlcdm]+)[\.\-\:\)][ \t]*(.*)",
+    re.IGNORECASE,
+)
+_BOLD_WRAP = re.compile(r"^(\*\*|__)(.+?)\1$")
+_TRAILING_PUNCT = re.compile(r"[\s\:\-]+$")
 _FENCE = re.compile(r" {0,3}(`{3,}|~{3,})(.*)")
 
 
 def _normalize_label(value: str) -> str:
     decomposed = unicodedata.normalize("NFD", value.casefold())
-    return "".join(char for char in decomposed if unicodedata.category(char) != "Mn")
+    return "".join(char for char in decomposed if unicodedata.category(char) != "Mn").strip()
 
 
-_SECTION_KEYS = {_normalize_label(label): key for key, label in SECTION_LABELS.items()}
+_SECTION_KEYS = {
+    _normalize_label(synonym): key
+    for key, synonyms in SECTION_SYNONYMS.items()
+    for synonym in synonyms
+}
 
 
 @dataclass(frozen=True)
@@ -50,16 +97,47 @@ class _CodeFence:
     line: int
 
 
+def _clean_heading(raw: str) -> str:
+    m = _HEADING_MARKDOWN.fullmatch(raw)
+    if m:
+        raw = _CLOSING_HASHES.sub("", m.group(1)).strip(" \t")
+    else:
+        raw = _CLOSING_HASHES.sub("", raw).strip(" \t")
+
+    raw = _TRAILING_PUNCT.sub("", raw).strip(" \t")
+
+    bm = _BOLD_WRAP.fullmatch(raw)
+    if bm:
+        raw = bm.group(2).strip(" \t")
+
+    om = _ORDINAL_PREFIX.fullmatch(raw)
+    if om:
+        raw = om.group(1).strip(" \t")
+
+    bm = _BOLD_WRAP.fullmatch(raw)
+    if bm:
+        raw = bm.group(2).strip(" \t")
+
+    raw = _TRAILING_PUNCT.sub("", raw).strip(" \t")
+    return raw
+
+
 def _section_heading(line: str) -> str | None:
     indentation = len(line) - len(line.lstrip(" "))
-    # Títulos recuados como código, em citações ou em listas não são separadores.
-    if indentation > 3 or line[indentation:].startswith("\t"):
+    # Títulos recuados > 3 espaços (código), com tab, em citação (>) ou itens de lista não-ordenada (- , * , + ) não são separadores.
+    stripped = line[indentation:]
+    if (
+        indentation > 3
+        or stripped.startswith(("\t", ">"))
+        or (len(stripped) >= 2 and stripped[0] in "-*+" and stripped[1] in " \t")
+    ):
         return None
-    label = line[indentation:].rstrip(" \t")
-    heading = _HEADING.fullmatch(label)
-    if heading is not None:
-        label = _CLOSING_HASHES.sub("", heading.group(1)).strip(" \t")
-    return _SECTION_KEYS.get(_normalize_label(label))
+    raw = stripped.rstrip(" \t")
+    if not raw:
+        return None
+    cleaned = _clean_heading(raw)
+    normalized = _normalize_label(cleaned)
+    return _SECTION_KEYS.get(normalized)
 
 
 def parse_response(source_response: str) -> ParsedResponse:

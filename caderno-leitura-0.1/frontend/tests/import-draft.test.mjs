@@ -172,3 +172,57 @@ test('falha de comunicação não é anunciada como sucesso nem causa reenvio au
   assert.match(draft.state.saveError, /não foi possível confirmar/i)
   assert.equal(draft.state.sourceResponse, source)
 })
+
+test('handlePaste atualiza a origem e dispara a preparação da prévia automaticamente', async () => {
+  let parseCalls = 0
+  const draft = makeDraft({
+    preview: async text => { parseCalls++; return preview(text) },
+  })
+  const pasteContent = '## Resumo\nConteúdo colado via paste.'
+  const ok = await draft.handlePaste(pasteContent)
+  assert.equal(ok, true)
+  assert.equal(parseCalls, 1)
+  assert.equal(draft.state.sourceResponse, pasteContent)
+  assert.notEqual(draft.state.preview, null)
+})
+
+test('assignUnassignedToSection move o texto não associado para a seção alvo com 1 clique', async () => {
+  const unassigned = 'Preâmbulo introdutório de IA.'
+  const draft = makeDraft({
+    preview: async () => ({
+      ...preview(),
+      unassigned_text: unassigned,
+    }),
+  })
+  await draft.prepare()
+  assert.equal(draft.state.preview.unassigned_text, unassigned)
+  assert.equal(draft.state.sections.summary, 'Resumo original.\r\n')
+
+  draft.assignUnassignedToSection('summary')
+  assert.equal(draft.state.sections.summary, `Resumo original.\n\n${unassigned}`)
+  assert.equal(draft.state.preview.unassigned_text, '')
+})
+
+test('texto não atribuído não movimentado é anexado automaticamente à explicação ao salvar', async () => {
+  let sentPayload
+  const unassigned = 'Nota complementar não mapeada.'
+  const draft = makeDraft({
+    preview: async () => ({
+      ...preview(),
+      explanation: 'Explicação prévia.',
+      unassigned_text: unassigned,
+    }),
+    createStudy: async payload => {
+      sentPayload = payload
+      return saved(payload)
+    },
+  })
+  await draft.prepare()
+  assert.equal(draft.canSave.value, true)
+  const result = await draft.save()
+  assert.notEqual(result, null)
+  assert.match(sentPayload.explanation, /Explicação prévia\./)
+  assert.match(sentPayload.explanation, /Conteúdo Adicional \/ Não Classificado/)
+  assert.match(sentPayload.explanation, /Nota complementar não mapeada\./)
+})
+

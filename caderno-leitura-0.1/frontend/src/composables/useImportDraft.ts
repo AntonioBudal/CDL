@@ -55,9 +55,20 @@ export function useImportDraft(gateway: ImportGateway) {
         : 'Escolha o livro e o capítulo, prepare a prévia e preencha ao menos uma seção.'
       return null
     }
+    const sectionsToSave = { ...state.sections }
+    if (state.preview.unassigned_text && state.preview.unassigned_text.trim()) {
+      const unassigned = state.preview.unassigned_text.trim()
+      const alreadyIncluded = SECTION_LABELS.some(({ key }) => sectionsToSave[key].includes(unassigned))
+      if (!alreadyIncluded) {
+        const currentExplanation = sectionsToSave.explanation.trim()
+        sectionsToSave.explanation = currentExplanation
+          ? `${currentExplanation}\n\n---\n**Conteúdo Adicional / Não Classificado:**\n${unassigned}`
+          : unassigned
+      }
+    }
     const payload: StudyCreate = {
       chapter_id: positiveId(state.chapterId)!, title: state.title.trim() || null, location: state.location,
-      source_response: state.preview.source_response, ...state.sections, notes: state.notes,
+      source_response: state.preview.source_response, ...sectionsToSave, notes: state.notes,
     }
     state.saving = true
     state.saveError = ''
@@ -73,6 +84,21 @@ export function useImportDraft(gateway: ImportGateway) {
     } finally { state.saving = false }
   }
 
+  async function handlePaste(text?: string): Promise<boolean> {
+    if (typeof text === 'string') {
+      state.sourceResponse = text
+    }
+    return prepare()
+  }
+
+  function assignUnassignedToSection(sectionKey: keyof AnalysisSections) {
+    if (!state.preview || !state.preview.unassigned_text.trim()) return
+    const unassigned = state.preview.unassigned_text.trim()
+    const current = state.sections[sectionKey].trim()
+    state.sections[sectionKey] = current ? `${current}\n\n${unassigned}` : unassigned
+    state.preview.unassigned_text = ''
+  }
+
   function reset() {
     if (state.saving || state.preparing) return
     state.title = ''; state.location = ''; state.sourceResponse = ''; state.notes = ''
@@ -80,5 +106,18 @@ export function useImportDraft(gateway: ImportGateway) {
     state.previewError = ''; state.saveError = ''
   }
 
-  return { state, stale, hasManualChanges, hasAnalysis, canSave, dirty, prepare, save, reset }
+  return {
+    state,
+    stale,
+    hasManualChanges,
+    hasAnalysis,
+    canSave,
+    dirty,
+    prepare,
+    handlePaste,
+    assignUnassignedToSection,
+    save,
+    reset,
+  }
 }
+

@@ -5,11 +5,11 @@ import { api, errorMessage } from '../services/api'
 import { useImportDraft } from '../composables/useImportDraft'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import StudyEditorFields from '../components/StudyEditorFields.vue'
-import { positiveId, type Book, type Chapter } from '../types'
+import { positiveId, SECTION_LABELS, type Book, type Chapter } from '../types'
 
 const route = useRoute()
 const draft = useImportDraft(api)
-const { state, stale, hasManualChanges, hasAnalysis, canSave } = draft
+const { state, stale, hasManualChanges, hasAnalysis, canSave, assignUnassignedToSection } = draft
 useUnsavedChanges(() => draft.dirty.value, () => state.preparing || state.saving)
 const books = ref<Book[]>([])
 const chapters = ref<Chapter[]>([])
@@ -68,6 +68,18 @@ async function loadChapters() {
 async function prepare() {
   if (hasManualChanges.value && !window.confirm('Preparar novamente substituirá as correções das quatro seções. Suas anotações serão mantidas. Continuar?')) return
   if (await draft.prepare()) { await nextTick(); reviewHeading.value?.focus() }
+}
+
+async function onPaste(event: ClipboardEvent) {
+  const text = event.clipboardData?.getData('text')
+  if (text && text.trim()) {
+    state.sourceResponse = text
+    await nextTick()
+    if (await draft.prepare()) {
+      await nextTick()
+      reviewHeading.value?.focus()
+    }
+  }
 }
 
 async function save() {
@@ -133,33 +145,232 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
         </div>
         <div class="field">
           <label for="source-response">Fichamento da Fonte</label>
-          <p id="source-hint" class="field-hint">Use os títulos Resumo, Explicação, Conceitos e Referências em linhas próprias.</p>
-          <textarea id="source-response" ref="sourceInput" v-model="state.sourceResponse" class="source-text" rows="10" aria-describedby="source-hint" placeholder="Cole o texto-base do fichamento aqui…" spellcheck="false"></textarea>
+          <p id="source-hint" class="field-hint">Cole o texto completo da fonte. O Leitorum identifica automaticamente a estrutura das seções ao colar.</p>
+          <textarea id="source-response" ref="sourceInput" v-model="state.sourceResponse" @paste="onPaste" class="source-text" rows="10" aria-describedby="source-hint" placeholder="Cole o texto-base do fichamento aqui…" spellcheck="false"></textarea>
         </div>
         <p v-if="state.previewError" class="notice error" role="alert">{{ state.previewError }}</p>
-        <p v-if="stale" class="notice warning" role="status">O fichamento da fonte mudou. A prévia abaixo ainda corresponde ao texto anterior; prepare-a novamente antes de salvar.</p>
-        <div class="actions wrap"><button type="button" class="primary" :disabled="!state.sourceResponse.trim() || state.preparing" @click="prepare">{{ state.preparing ? 'Preparando prévia…' : state.preview ? 'Preparar novamente' : 'Preparar prévia' }}</button><span class="muted">Você poderá corrigir as seções antes de salvar.</span></div>
+        <p v-if="stale" class="notice warning" role="status">O texto colado foi modificado após a análise. Clique em "Atualizar prévia" para sincronizar as seções antes de salvar.</p>
+        <div class="actions wrap">
+          <button type="button" class="primary" :disabled="!state.sourceResponse.trim() || state.preparing" @click="prepare">
+            {{ state.preparing ? 'Analisando texto…' : stale ? 'Atualizar prévia' : state.preview ? 'Reanalisar texto' : 'Analisar texto' }}
+          </button>
+          <span class="muted">{{ state.preview ? 'Confira as seções estruturadas na prévia abaixo.' : 'Dica: colar o texto (Ctrl+V) já aciona a prévia instantaneamente.' }}</span>
+        </div>
       </section>
 
       <section v-if="state.preview" class="panel import-step" aria-labelledby="review-heading">
         <div class="step-heading"><span class="step-number" aria-hidden="true">2</span><h2 id="review-heading" ref="reviewHeading" tabindex="-1">Conferir e salvar</h2></div>
+        
         <div v-if="state.preview.warnings.length" class="notice warning" role="status">
-          <h3>Avisos da divisão inicial</h3>
-          <ul><li v-for="(warning, index) in state.preview.warnings" :key="index">{{ warning.message }}<span v-if="warning.line !== null" class="warning-line"> Linha {{ warning.line }}.</span></li></ul>
-          <p>Os avisos descrevem o texto-base colado. Confira abaixo o resultado das suas correções.</p>
+          <h3>Avisos da análise</h3>
+          <ul>
+            <li v-for="(warning, index) in state.preview.warnings" :key="index">
+              {{ warning.message }}<span v-if="warning.line !== null" class="warning-line"> Linha {{ warning.line }}.</span>
+            </li>
+          </ul>
         </div>
-        <div v-if="state.preview.unassigned_text.trim()" class="unassigned field">
-          <label for="unassigned-text">Texto não associado</label>
-          <p id="unassigned-hint" class="field-hint">Copie para a seção adequada. Este texto também será preservado no fichamento da fonte.</p>
-          <textarea id="unassigned-text" :value="state.preview.unassigned_text" readonly rows="5" aria-describedby="unassigned-hint"></textarea>
+
+        <!-- Conteúdo não classificado com ações rápidas de 1 clique -->
+        <div v-if="state.preview.unassigned_text.trim()" class="unassigned-card notice warning" role="region" aria-label="Conteúdo Não Classificado">
+          <div class="unassigned-header">
+            <h3>Conteúdo Não Classificado</h3>
+            <p class="field-hint">O trecho abaixo não foi identificado como título de seção. Atribua-o com 1 clique a uma das seções ou salve direto (será anexado à Explicação sem perda de conteúdo):</p>
+          </div>
+          <pre class="unassigned-preview">{{ state.preview.unassigned_text }}</pre>
+          <div class="unassigned-actions">
+            <span class="action-label">Mover para:</span>
+            <button type="button" class="button secondary small" @click="assignUnassignedToSection('summary')">Resumo</button>
+            <button type="button" class="button secondary small" @click="assignUnassignedToSection('explanation')">Explicação</button>
+            <button type="button" class="button secondary small" @click="assignUnassignedToSection('concepts')">Conceitos</button>
+            <button type="button" class="button secondary small" @click="assignUnassignedToSection('references')">Referências</button>
+          </div>
         </div>
-        <StudyEditorFields id-prefix="import" v-model:title="state.title" v-model:location="state.location" v-model:sections="state.sections" v-model:notes="state.notes" />
+
+        <!-- Grade de Cards da Prévia Inteligente -->
+        <div class="preview-cards-grid" role="region" aria-label="Prévia das Seções">
+          <article v-for="sec in SECTION_LABELS" :key="sec.key" class="preview-section-card" :class="{ 'is-empty': !state.sections[sec.key].trim() }">
+            <header class="section-card-header">
+              <h3 class="section-card-title">{{ sec.label }}</h3>
+              <span v-if="!state.sections[sec.key].trim()" class="empty-badge">Vazia</span>
+            </header>
+            <div class="section-card-content">
+              <p v-if="state.sections[sec.key].trim()" class="section-text">{{ state.sections[sec.key] }}</p>
+              <p v-else class="section-text empty-placeholder">Nenhum conteúdo identificado para esta seção.</p>
+            </div>
+          </article>
+        </div>
+
+        <!-- Barra de Salvamento Direto (Princípio UX: Colar -> Entender -> Conferir -> Salvar) -->
+        <div class="save-bar">
+          <p class="muted">O texto integral original do Fichamento da Fonte será preservado junto das seções estruturadas.</p>
+          <button class="primary large save-button" :disabled="!canSave || !selectedBook || !selectedChapter || chaptersLoading">
+            {{ state.saving ? 'Salvando estudo…' : 'Salvar estudo' }}
+          </button>
+        </div>
         <p v-if="!hasAnalysis" class="notice warning">Preencha ao menos uma das quatro seções para salvar.</p>
         <p v-if="!selectedBook || !selectedChapter" class="notice">Escolha o livro e o capítulo no início do formulário.</p>
         <p v-if="state.saveError" class="notice error" role="alert">{{ state.saveError }}</p>
-        <div class="save-bar"><p class="muted">O fichamento da fonte será guardado junto das seções revisadas.</p><button class="primary" :disabled="!canSave || !selectedBook || !selectedChapter || chaptersLoading">{{ state.saving ? 'Salvando estudo…' : 'Salvar estudo' }}</button></div>
+
+        <!-- Ajuste manual detalhado (Accordion colapsável, opcional) -->
+        <details class="manual-adjustment-panel">
+          <summary class="manual-adjustment-summary">
+            <span>Ajuste manual detalhado e anotações pessoais (opcional)</span>
+          </summary>
+          <div class="manual-adjustment-body">
+            <p class="field-hint">Caso deseje editar o texto de cada seção individualmente ou incluir anotações adicionais antes de salvar:</p>
+            <StudyEditorFields id-prefix="import" v-model:title="state.title" v-model:location="state.location" v-model:sections="state.sections" v-model:notes="state.notes" />
+          </div>
+        </details>
       </section>
     </fieldset>
   </form>
   </div>
 </template>
+
+<style scoped>
+.preview-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.preview-section-card {
+  background: var(--surface-raised, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.preview-section-card.is-empty {
+  opacity: 0.75;
+  border-style: dashed;
+}
+
+.section-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color, #edf2f7);
+}
+
+.section-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-color, #2d3748);
+}
+
+.empty-badge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  background: var(--surface-muted, #edf2f7);
+  color: var(--text-muted, #718096);
+}
+
+.section-card-content {
+  flex: 1;
+}
+
+.section-text {
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  color: var(--text-color, #2d3748);
+}
+
+.empty-placeholder {
+  color: var(--text-muted, #a0aec0);
+  font-style: italic;
+}
+
+.unassigned-card {
+  margin: 1.25rem 0;
+  padding: 1.25rem;
+  border-radius: 8px;
+}
+
+.unassigned-header h3 {
+  margin: 0 0 0.5rem 0;
+}
+
+.unassigned-preview {
+  background: var(--surface-muted, #f7fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 6px;
+  padding: 0.75rem;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.9rem;
+  max-height: 160px;
+  overflow-y: auto;
+  margin: 0.75rem 0;
+}
+
+.unassigned-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.action-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted, #4a5568);
+}
+
+.unassigned-actions .button.small {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.save-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.75rem 0 1.25rem 0;
+  padding: 1rem 1.25rem;
+  background: var(--surface-subtle, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 8px;
+}
+
+.save-button {
+  min-width: 160px;
+}
+
+.manual-adjustment-panel {
+  margin-top: 1.5rem;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 8px;
+  background: var(--surface, #ffffff);
+}
+
+.manual-adjustment-summary {
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-color, #2d3748);
+  user-select: none;
+  outline: none;
+}
+
+.manual-adjustment-summary:focus-visible {
+  outline: 2px solid var(--primary, #3182ce);
+}
+
+.manual-adjustment-body {
+  padding: 0 1.25rem 1.25rem 1.25rem;
+  border-top: 1px solid var(--border-color, #edf2f7);
+}
+</style>

@@ -134,8 +134,10 @@ def test_response_wrapped_in_code_remains_unassigned():
 def test_inline_subheadings_quotes_lists_and_indented_code_are_preserved():
     body = (
         "A frase contém ## Explicação, mas não é um título.\n"
-        "### Conceitos\n**Referências**\n# Resumo\n## Conclusão\n"
-        "> ## Explicação\n- Resumo\n1. Referências\n"
+        "## Conclusão\n"
+        "> ## Explicação\n"
+        "- Resumo\n"
+        "* Conceitos\n"
         "    ## Explicação\n\tConceitos\n"
         "<script>alert('texto, sem execução')</script>\n"
         "Parágrafo com separador Unicode: \u2028Resumo\u2028continuação.\n"
@@ -153,3 +155,62 @@ def test_inline_backticks_are_not_an_open_fence_and_initial_bom_is_preserved():
     assert parsed.sections["summary"] == "```texto `inline`\n"
     assert parsed.sections["explanation"] == "Texto."
     assert not any(w.code == "unclosed_code_block" for w in parsed.warnings)
+
+
+def test_f061_synonyms_recognized_for_all_four_sections():
+    source = (
+        "# Visão Geral\nSíntese dos pontos principais.\n\n"
+        "## Aprofundamento\nDetalhamento do raciocínio e análise crítica.\n\n"
+        "### Glossário e Termos\n- Termo A: significado.\n\n"
+        "#### Fontes Consultadas\n- Livro de Teste, 2026."
+    )
+    parsed = parse_response(source)
+    assert parsed.source_response == source
+    assert parsed.unassigned_text == ""
+    assert parsed.sections["summary"] == "Síntese dos pontos principais.\n\n"
+    assert parsed.sections["explanation"] == "Detalhamento do raciocínio e análise crítica.\n\n"
+    assert parsed.sections["concepts"] == "- Termo A: significado.\n\n"
+    assert parsed.sections["references"] == "- Livro de Teste, 2026."
+    assert not parsed.warnings
+
+
+def test_f061_bold_and_ordinal_headings_recognized():
+    source = (
+        "**Ideia Central:**\nO ponto fundamental da obra.\n\n"
+        "**2. Desenvolvimento**\nExplicação minuciosa.\n\n"
+        "1. Conceitos-chave:\n- Definição 1.\n\n"
+        "Seção 4: Bibliografia\n- Referência 1."
+    )
+    parsed = parse_response(source)
+    assert parsed.source_response == source
+    assert parsed.unassigned_text == ""
+    assert parsed.sections["summary"] == "O ponto fundamental da obra.\n\n"
+    assert parsed.sections["explanation"] == "Explicação minuciosa.\n\n"
+    assert parsed.sections["concepts"] == "- Definição 1.\n\n"
+    assert parsed.sections["references"] == "- Referência 1."
+    assert not parsed.warnings
+
+
+def test_f061_code_fence_with_synonyms_does_not_break():
+    source = (
+        "# 1. Visão Geral\n"
+        "```python\n"
+        "# 2. Desenvolvimento\n"
+        "def test():\n"
+        "    return 'Fontes'\n"
+        "```\n\n"
+        "## Explicação\n"
+        "Texto após o bloco de código.\n"
+        "## Conceitos\n"
+        "Conceitos reais.\n"
+        "## Referências\n"
+        "Bibliografia real."
+    )
+    parsed = parse_response(source)
+    assert "def test():" in parsed.sections["summary"]
+    assert "# 2. Desenvolvimento" in parsed.sections["summary"]
+    assert parsed.sections["explanation"] == "Texto após o bloco de código.\n"
+    assert parsed.sections["concepts"] == "Conceitos reais.\n"
+    assert parsed.sections["references"] == "Bibliografia real."
+    assert not parsed.warnings
+
