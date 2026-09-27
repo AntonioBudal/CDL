@@ -5,6 +5,7 @@ import type {
   StudyStatusUpdatePayload, StudyStatusResponse, CanvasFrameItem, CreateCanvasFramePayload, UpdateCanvasFramePayload,
   SearchResponse, SearchHistoryResponse, UserRead,
   AuthConfigResponse, AuthSuccessResponse, SessionItem, ExternalIdentityRead,
+  AuditLogListResponse, DeactivateAccountRequest, ReactivateAccountRequest, DeleteAccountRequest,
 } from '../types.ts'
 
 
@@ -88,9 +89,13 @@ export function errorMessage(error: unknown): string {
 }
 
 export function detailMessage(data: unknown, status: number): string {
-  if (typeof data === 'object' && data !== null && 'detail' in data) {
-    const detail = (data as { detail: unknown }).detail
-    if (typeof detail === 'string') return detail
+  if (typeof data === 'object' && data !== null) {
+    if ('message' in data && typeof (data as { message: unknown }).message === 'string') {
+      return (data as { message: string }).message
+    }
+    if ('detail' in data) {
+      const detail = (data as { detail: unknown }).detail
+      if (typeof detail === 'string') return detail
     if (Array.isArray(detail) && status === 422) {
       const fieldLabels: Record<string, string> = {
         username: 'Nome de usuário',
@@ -125,6 +130,7 @@ export function detailMessage(data: unknown, status: number): string {
       }
       return 'Confira os campos obrigatórios e os dados informados.'
     }
+  }
   }
   return status >= 500
     ? 'O caderno está indisponível. Verifique o servidor local e tente novamente.'
@@ -539,6 +545,36 @@ export const api = {
     request<{ ok: boolean }>('/auth/google/unlink', {
       method: 'DELETE',
     }),
+
+  // Ciclo de Vida da Conta e Segurança (F10)
+  deactivateAccount: (data?: DeactivateAccountRequest) =>
+    request<{ ok: boolean; message: string }>('/account/deactivate', {
+      method: 'POST',
+      body: JSON.stringify(data || {}),
+    }),
+  reactivateAccount: (data: ReactivateAccountRequest) =>
+    request<AuthSuccessResponse>('/account/reactivate', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  deleteAccount: (data: DeleteAccountRequest) =>
+    request<{ ok: boolean; message: string }>('/account', {
+      method: 'DELETE',
+      body: JSON.stringify(data),
+    }),
+  exportAccountData: () =>
+    downloadExportFile('/api/account/export', 'caderno-dados-acervo.zip'),
+  getAuditLogs: (
+    params?: { event_type?: string; limit?: number; offset?: number },
+    signal?: AbortSignal,
+  ) => {
+    const searchParams = new URLSearchParams()
+    if (params?.event_type != null) searchParams.set('event_type', params.event_type)
+    if (params?.limit != null) searchParams.set('limit', String(params.limit))
+    if (params?.offset != null) searchParams.set('offset', String(params.offset))
+    const queryStr = searchParams.toString()
+    return request<AuditLogListResponse>(`/admin/audit-logs${queryStr ? `?${queryStr}` : ''}`, { signal })
+  },
 
   // Notificações e Atividade Social (F09)
   getNotifications: (

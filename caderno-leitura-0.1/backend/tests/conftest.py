@@ -22,6 +22,15 @@ from app.models.user import User
 TEST_GOOGLE_CLIENT_ID = "test-client-id.apps.googleusercontent.com"
 
 
+@pytest.fixture(autouse=True)
+def reset_auth_rate_limiter_fixture():
+    """Garante que a memória do rate limiter seja reiniciada para cada teste."""
+    from app.core.rate_limiter import auth_rate_limiter
+    auth_rate_limiter.reset()
+    yield
+    auth_rate_limiter.reset()
+
+
 @pytest.fixture
 def mock_google_claims() -> dict[str, Any]:
     """Retorna um payload de claims JWT padrão e sintético emitido pelo Google."""

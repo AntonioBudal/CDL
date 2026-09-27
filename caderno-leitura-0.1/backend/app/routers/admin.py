@@ -1,9 +1,9 @@
-from __future__ import annotations
-
 from typing import Annotated
 from fastapi import APIRouter, Depends, Query, status
+from sqlalchemy import func, select
 
 from app.dependencies import AdminUser, DatabaseSession
+from app.models.audit_log import AuditLog
 from app.schemas.admin import (
     AdminReactivateResponse,
     AdminRevokeSessionsResponse,
@@ -14,12 +14,14 @@ from app.schemas.admin import (
     AdminSuspendResponse,
     AdminUsersResponse,
 )
+from app.schemas.audit_log import AuditLogItem, AuditLogListResponse
 from app.schemas.notification import (
     NotificationBroadcastRequest,
     NotificationBroadcastResponse,
     NotificationPurgeResponse,
 )
 from app.services import admin_service, notification_service
+from app.services.audit_service import log_security_event
 from app.services.persistence import commit_changes
 
 router = APIRouter(prefix="/admin", tags=["Administração"])
@@ -71,6 +73,14 @@ def suspend_user_endpoint(
         current_user=current_admin,
         reason=reason,
     )
+    log_security_event(
+        session,
+        "user_suspended",
+        user_id=target_user.id,
+        actor_username=current_admin.username,
+        details={"reason": reason, "sessions_revoked": sessions_revoked},
+    )
+    commit_changes(session)
     return AdminSuspendResponse(
         id=target_user.id,
         status="suspenso",
@@ -91,6 +101,13 @@ def reactivate_user_endpoint(
         target_user_id=user_id,
         current_user=current_admin,
     )
+    log_security_event(
+        session,
+        "user_reactivated",
+        user_id=target_user.id,
+        actor_username=current_admin.username,
+    )
+    commit_changes(session)
     return AdminReactivateResponse(
         id=target_user.id,
         status="ativo",
@@ -112,6 +129,14 @@ def update_user_role_endpoint(
         new_role=payload.role,
         current_user=current_admin,
     )
+    log_security_event(
+        session,
+        "user_role_updated",
+        user_id=target_user.id,
+        actor_username=current_admin.username,
+        details={"new_role": payload.role},
+    )
+    commit_changes(session)
     return AdminRoleUpdateResponse(
         id=target_user.id,
         role=target_user.role,  # type: ignore[arg-type]
@@ -131,6 +156,14 @@ def revoke_all_sessions_endpoint(
         target_user_id=user_id,
         current_user=current_admin,
     )
+    log_security_event(
+        session,
+        "user_sessions_revoked_by_admin",
+        user_id=user_id,
+        actor_username=current_admin.username,
+        details={"sessions_revoked": sessions_revoked},
+    )
+    commit_changes(session)
     return AdminRevokeSessionsResponse(
         id=user_id,
         sessions_revoked=sessions_revoked,
@@ -186,3 +219,31 @@ def purge_notifications_endpoint(
         retention_days=retention_days,
         message=f"{purged} notificações lidas antigas foram purgadas com sucesso.",
     )
+
+
+@router.get("/audit-logs", response_model=AuditLogListResponse, summary="Listar trilha de auditoria de segurança")
+def get_audit_logs(
+    session: DatabaseSession,
+    current_admin: AdminUser,
+    event_type: Annotated[str | None, Query(description="Filtrar por tipo de evento")] = None,
+    limit: Annotated[int, Query(ge=1, le=200)] = 50,
+    offset: Annotated[int, Query(ge=0)] = 0,
+) -> AuditLogListResponse:
+    """Retorna lista paginada de eventos de auditoria ordenados por created_at desc (exclusivo para administradores)."""
+    stmt = select(AuditLog)
+    count_stmt = select(func.count(AuditLog.id))
+    if event_type:
+        stmt = stmt.where(AuditLog.event_type == event_type)
+        count_stmt = count_stmt.where(AuditLog.event_type == event_type)
+
+    total = session.scalar(count_stmt) or 0
+    stmt = stmt.order_by(AuditLog.created_at.desc()).offset(offset).limit(limit)
+    items = session.scalars(stmt).all()
+
+    return AuditLogListResponse(
+        items=[AuditLogItem.model_validate(item) for item in items],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
+

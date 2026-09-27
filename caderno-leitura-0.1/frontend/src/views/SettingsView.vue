@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import AppearanceControls from '../components/AppearanceControls.vue'
 import AppearancePreview from '../components/AppearancePreview.vue'
 import DatabaseBackup from '../components/DatabaseBackup.vue'
@@ -8,8 +8,12 @@ import ConfirmResetModal from '../components/ConfirmResetModal.vue'
 import RestoreModal from '../components/RestoreModal.vue'
 import SessionsManager from '../components/auth/SessionsManager.vue'
 import AvatarUploadModal from '../components/profile/AvatarUploadModal.vue'
+import DeactivateAccountModal from '../components/settings/DeactivateAccountModal.vue'
+import DeleteAccountModal from '../components/settings/DeleteAccountModal.vue'
 import Icon from '../components/ui/Icon.vue'
 import { fetchHealth, type HealthResponse } from '../services/api'
+import { accountApi } from '../api/account.ts'
+import { useAuthStore } from '../stores/auth.ts'
 import { useSuperclassPhysics } from '../composables/useSuperclassPhysics'
 import { useProfile } from '../composables/useProfile.ts'
 import { usePreferences } from '../composables/usePreferences'
@@ -351,6 +355,75 @@ function setHomeViewPreference(val: HomeViewPreference) {
     systemActionFeedback.value = `Tela inicial padrão definida como: ${val === 'dashboard' ? 'Dashboard 2.0' : 'Acervo de Livros'}.`
   } catch {
     // ignore
+  }
+}
+
+// --- Portabilidade e Exportação Completa de Dados (F10 - US5) ---
+const router = useRouter()
+const authStore = useAuthStore()
+
+const isExporting = ref(false)
+const exportMessage = ref<{ text: string; type: 'success' | 'error' } | null>(null)
+
+async function handleExportAcervo() {
+  isExporting.value = true
+  exportMessage.value = null
+  try {
+    const res = await accountApi.exportAccountData()
+    exportMessage.value = {
+      type: 'success',
+      text: `Arquivo "${res.filename}" gerado e baixado com sucesso!`,
+    }
+  } catch (err: unknown) {
+    exportMessage.value = {
+      type: 'error',
+      text: err instanceof Error ? err.message : 'Falha ao gerar o pacote ZIP de exportação.',
+    }
+  } finally {
+    isExporting.value = false
+  }
+}
+
+// --- Ciclo de Vida da Conta: Desativação e Exclusão (F10 - US4) ---
+const isDeactivateModalOpen = ref(false)
+const isDeactivating = ref(false)
+const isDeleteModalOpen = ref(false)
+const isDeleting = ref(false)
+const lifecycleMessage = ref<{ text: string; type: 'success' | 'error' } | null>(null)
+
+async function handleDeactivateConfirm(password?: string) {
+  isDeactivating.value = true
+  lifecycleMessage.value = null
+  try {
+    await accountApi.deactivateAccount({ password })
+    isDeactivateModalOpen.value = false
+    await authStore.logout()
+    router.push('/login')
+  } catch (err: unknown) {
+    lifecycleMessage.value = {
+      type: 'error',
+      text: err instanceof Error ? err.message : 'Falha ao desativar conta.',
+    }
+  } finally {
+    isDeactivating.value = false
+  }
+}
+
+async function handleDeleteConfirm(payload: { confirmation_text: string; password?: string }) {
+  isDeleting.value = true
+  lifecycleMessage.value = null
+  try {
+    await accountApi.deleteAccount(payload)
+    isDeleteModalOpen.value = false
+    await authStore.logout()
+    router.push('/login')
+  } catch (err: unknown) {
+    lifecycleMessage.value = {
+      type: 'error',
+      text: err instanceof Error ? err.message : 'Falha ao excluir permanentemente a conta.',
+    }
+  } finally {
+    isDeleting.value = false
   }
 }
 
@@ -945,12 +1018,87 @@ onBeforeUnmount(() => {
           tabindex="0"
           class="panel"
         >
-          <h2 id="conta-title">Conta & Dispositivos</h2>
+          <h2 id="conta-title">Conta, Segurança & Portabilidade</h2>
           <p class="muted">
-            Gerenciamento da conta conectada, sessões ativas e revogação remota de dispositivos.
+            Gerenciamento da conta conectada, sessões ativas, portabilidade de dados e ciclo de vida.
           </p>
 
           <SessionsManager />
+
+          <!-- Card: Portabilidade de Dados (F10 - US5) -->
+          <article class="system-card">
+            <h3>Portabilidade e Exportação Completa (LGPD)</h3>
+            <p class="muted">
+              Baixe uma cópia integral do seu acervo no formato aberto ZIP, contendo todos os seus livros e capítulos organizados em pastas com estudos formatados em Markdown e o arquivo consolidado <code>dados_acervo.json</code> na raiz.
+            </p>
+
+            <div v-if="exportMessage" class="feedback-box" :class="exportMessage.type" role="status">
+              {{ exportMessage.text }}
+            </div>
+
+            <div class="actions wrap" style="margin-top: calc(var(--space-unit) * 0.75);">
+              <button
+                type="button"
+                class="secondary touch-button"
+                :disabled="isExporting"
+                @click="handleExportAcervo"
+              >
+                <Icon v-if="!isExporting" name="download" :size="16" />
+                <span v-if="isExporting" class="spinner" aria-hidden="true" />
+                {{ isExporting ? 'Compilando arquivo ZIP...' : 'Baixar Acervo Completo (.zip)' }}
+              </button>
+            </div>
+          </article>
+
+          <!-- Card: Ciclo de Vida da Conta (F10 - US4) -->
+          <article class="system-card danger-card">
+            <h3 class="text-danger">Ciclo de Vida da Conta</h3>
+            <p class="muted">
+              Opções para desativação temporária do acesso ou exclusão definitiva de todo o acervo pessoal.
+            </p>
+
+            <div v-if="lifecycleMessage" class="feedback-box" :class="lifecycleMessage.type" role="status">
+              {{ lifecycleMessage.text }}
+            </div>
+
+            <div class="lifecycle-actions">
+              <div class="lifecycle-item">
+                <div class="lifecycle-info">
+                  <strong>Desativação Temporária</strong>
+                  <p class="muted">
+                    Desconecta imediatamente todas as sessões e oculta seu perfil da rede. Seus livros e anotações permanecem seguros e você poderá reativar a conta a qualquer momento na tela de login.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  class="warning-action-btn touch-button"
+                  @click="isDeactivateModalOpen = true"
+                >
+                  <Icon name="ban" :size="16" />
+                  Desativar Conta
+                </button>
+              </div>
+
+              <div class="lifecycle-divider" />
+
+              <div class="lifecycle-item">
+                <div class="lifecycle-info">
+                  <strong class="text-danger">Exclusão Definitiva (LGPD)</strong>
+                  <p class="muted">
+                    Elimina fisicamente e de forma irreversível seu usuário, perfil, preferências, livros, capítulos, estudos e conexões de amizade do banco de dados SQLite.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  class="danger-action-btn touch-button"
+                  @click="isDeleteModalOpen = true"
+                >
+                  <Icon name="trash" :size="16" />
+                  Excluir Permanentemente
+                </button>
+              </div>
+            </div>
+          </article>
         </section>
       </div>
 
@@ -984,6 +1132,22 @@ onBeforeUnmount(() => {
       :initials="profileService.initials.value"
       @close="isAvatarModalOpen = false"
       @updated="loadProfileData"
+    />
+
+    <!-- Modais de Ciclo de Vida da Conta (F10) -->
+    <DeactivateAccountModal
+      :open="isDeactivateModalOpen"
+      :loading="isDeactivating"
+      @close="isDeactivateModalOpen = false"
+      @confirm="handleDeactivateConfirm"
+    />
+
+    <DeleteAccountModal
+      :open="isDeleteModalOpen"
+      :expected-username="authStore.user.value?.username || profileForm.username || ''"
+      :loading="isDeleting"
+      @close="isDeleteModalOpen = false"
+      @confirm="handleDeleteConfirm"
     />
   </section>
 </template>
@@ -1343,5 +1507,122 @@ onBeforeUnmount(() => {
 .settings-tab:hover {
   background-color: var(--color-tab-hover);
   color: var(--color-tab-hover-text);
+}
+
+.danger-card {
+  border-left: 4px solid var(--color-danger, #dc2626);
+}
+
+.lifecycle-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: calc(var(--space-unit) * 0.75);
+}
+
+.lifecycle-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .lifecycle-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.lifecycle-info strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.lifecycle-info p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.lifecycle-divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: 0.25rem 0;
+}
+
+.warning-action-btn {
+  background-color: transparent;
+  color: var(--color-warning, #d97706);
+  border: 1px solid var(--color-warning, #d97706);
+  border-radius: var(--radius-control, 6px);
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  min-height: 44px;
+  transition: background-color 0.15s ease;
+}
+
+.warning-action-btn:hover {
+  background-color: #fffbeb;
+}
+
+.danger-action-btn {
+  background-color: transparent;
+  color: var(--color-danger, #dc2626);
+  border: 1px solid var(--color-danger, #dc2626);
+  border-radius: var(--radius-control, 6px);
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  min-height: 44px;
+  transition: background-color 0.15s ease;
+}
+
+.danger-action-btn:hover {
+  background-color: #fef2f2;
+}
+
+.feedback-box {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-control, 6px);
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.feedback-box.success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.feedback-box.error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

@@ -1,0 +1,246 @@
+openapi: 3.1.0
+info:
+  title: API de Segurança, Auditoria, Ciclo de Vida e Google OAuth
+  version: 1.0.0
+  description: Contratos de endpoints para rate limiting, Google OAuth 2.0, trilha de auditoria e ciclo de vida da conta (F10).
+
+paths:
+  /api/auth/login:
+    post:
+      summary: Autenticação de leitor com rate limiting
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username_or_email, password]
+              properties:
+                username_or_email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login bem-sucedido
+        '401':
+          description: Credenciais inválidas (mensagem unificada contra enumeração)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericAuthError'
+        '403':
+          description: Conta desativada (requer confirmação de reativação)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDeactivatedError'
+        '429':
+          description: Limite de requisições excedido
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Tempo de espera em segundos até a próxima tentativa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitError'
+
+  /api/auth/google:
+    post:
+      summary: Autenticar ou auto-provisionar leitor via Google Identity Services (GIS)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [credential]
+              properties:
+                credential:
+                  type: string
+                  description: ID Token JWT emitido pelo Google GIS
+      responses:
+        '200':
+          description: Autenticação realizada com sucesso
+        '403':
+          description: Conta desativada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDeactivatedError'
+        '429':
+          description: Rate limit atingido
+
+  /api/auth/google/login:
+    get:
+      summary: Iniciar fluxo web OAuth 2.0 (Redirecionamento para Google)
+      responses:
+        '307':
+          description: Redirecionamento temporário para accounts.google.com
+
+  /api/auth/google/callback:
+    get:
+      summary: Callback de retorno do Google OAuth 2.0
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirecionamento com cookie de sessão estabelecido para a aplicação
+
+  /api/account/deactivate:
+    post:
+      summary: Desativar temporariamente a conta do leitor
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: Obrigatório se o usuário possui senha local definida
+      responses:
+        '200':
+          description: Conta desativada com sucesso, sessões revogadas
+        '400':
+          description: Senha incorreta
+
+  /api/account/reactivate:
+    post:
+      summary: Confirmar reativação explícita de conta desativada
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username_or_email, password]
+              properties:
+                username_or_email:
+                  type: string
+                password:
+                  type: string
+                google_credential:
+                  type: string
+                  description: Alternativa para reativação de contas vinculadas ao Google
+      responses:
+        '200':
+          description: Conta reativada com sucesso e sessão iniciada
+        '400':
+          description: Credenciais incorretas ou conta já ativa
+
+  /api/account:
+    delete:
+      summary: Excluir definitivamente a conta e todo o acervo (LGPD)
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [confirmation_text]
+              properties:
+                password:
+                  type: string
+                  description: Senha atual (obrigatória se houver senha local)
+                confirmation_text:
+                  type: string
+                  description: Digitação do username para confirmação inequívoca
+      responses:
+        '200':
+          description: Conta e acervo excluídos permanentemente em cascata física
+        '400':
+          description: Confirmação ou senha inválida
+
+  /api/account/export:
+    get:
+      summary: Baixar arquivo ZIP completo com todo o acervo e metadados (Portabilidade LGPD)
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Arquivo ZIP com Markdown e JSON
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename="caderno-dados-leitor-2026-09-26.zip"
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+
+  /api/admin/audit-logs:
+    get:
+      summary: Listar trilha de auditoria de segurança (Somente ADMIN)
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: event_type
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Lista paginada de eventos auditados
+        '403':
+          description: Acesso negado (não administrador)
+
+components:
+  schemas:
+    GenericAuthError:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: Credenciais inválidas.
+
+    AccountDeactivatedError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: ACCOUNT_DEACTIVATED
+        message:
+          type: string
+          example: Sua conta está desativada. Deseja reativá-la agora?
+
+    RateLimitError:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: Muitas tentativas. Aguarde 300 segundos antes de tentar novamente.
+        retry_after:
+          type: integer
+          example: 300

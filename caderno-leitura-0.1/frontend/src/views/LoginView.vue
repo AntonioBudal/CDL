@@ -2,8 +2,9 @@
 import { onMounted, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.ts'
-import { errorMessage } from '../services/api.ts'
+import { errorMessage, ApiError } from '../services/api.ts'
 import GoogleSignInButton from '../components/auth/GoogleSignInButton.vue'
+import ReactivateAccountModal from '../components/settings/ReactivateAccountModal.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -13,6 +14,9 @@ const usernameOrEmail = ref('')
 const password = ref('')
 const error = ref<string | null>(null)
 const isSubmitting = ref(false)
+const showReactivateModal = ref(false)
+const deactivatedUsername = ref('')
+const deactivatedPassword = ref('')
 
 onMounted(async () => {
   await auth.checkAuth()
@@ -23,6 +27,13 @@ onMounted(async () => {
   if (auth.isAuthenticated.value) {
     const redirect = (route.query.redirect as string) || '/'
     router.replace(redirect)
+    return
+  }
+  if (route.query.account_deactivated === '1') {
+    showReactivateModal.value = true
+  }
+  if (route.query.error) {
+    error.value = String(route.query.error)
   }
 })
 
@@ -33,7 +44,11 @@ async function handleGoogleSuccess(credential: string) {
     await auth.loginWithGoogle(credential)
     const redirect = (route.query.redirect as string) || '/'
     router.replace(redirect)
-  } catch (err) {
+  } catch (err: unknown) {
+    if (err instanceof ApiError && (err.data as { code?: string })?.code === 'ACCOUNT_DEACTIVATED') {
+      showReactivateModal.value = true
+      return
+    }
     error.value = errorMessage(err)
   } finally {
     isSubmitting.value = false
@@ -52,11 +67,24 @@ async function handleLogin() {
     await auth.login(usernameOrEmail.value.trim(), password.value)
     const redirect = (route.query.redirect as string) || '/'
     router.replace(redirect)
-  } catch (err) {
+  } catch (err: unknown) {
+    if (err instanceof ApiError && (err.data as { code?: string })?.code === 'ACCOUNT_DEACTIVATED') {
+      deactivatedUsername.value = usernameOrEmail.value.trim()
+      deactivatedPassword.value = password.value
+      showReactivateModal.value = true
+      return
+    }
     error.value = errorMessage(err)
   } finally {
     isSubmitting.value = false
   }
+}
+
+async function handleReactivated() {
+  showReactivateModal.value = false
+  await auth.checkAuth()
+  const redirect = (route.query.redirect as string) || '/'
+  router.replace(redirect)
 }
 </script>
 
@@ -72,7 +100,7 @@ async function handleLogin() {
         {{ error }}
       </div>
 
-      <div v-if="auth.googleAuthEnabled.value" class="google-auth-section">
+      <div class="google-auth-section">
         <GoogleSignInButton
           text="signin_with"
           @success="handleGoogleSuccess"
@@ -133,6 +161,14 @@ async function handleLogin() {
         </p>
       </footer>
     </div>
+
+    <ReactivateAccountModal
+      :open="showReactivateModal"
+      :username-or-email="deactivatedUsername"
+      :initial-password="deactivatedPassword"
+      @close="showReactivateModal = false"
+      @reactivated="handleReactivated"
+    />
   </main>
 </template>
 

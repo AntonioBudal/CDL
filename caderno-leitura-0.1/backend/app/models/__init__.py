@@ -1,5 +1,6 @@
 """Importar este pacote registra todos os modelos no metadata do SQLAlchemy."""
 
+from app.models.audit_log import AuditLog
 from app.models.book import Book
 from app.models.canvas_frame import CanvasFrame
 from app.models.category import Category, book_categories
@@ -19,6 +20,7 @@ from app.models.user_profile import UserProfile
 from app.models.user_session import UserSession
 
 __all__ = [
+    "AuditLog",
     "Book",
     "CanvasFrame",
     "Category",

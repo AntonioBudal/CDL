@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue'
-import { api } from '../services/api.ts'
+import { api, ApiError } from '../services/api.ts'
 
 import type { AuthConfigResponse, SessionItem, UserRead } from '../types.ts'
 
@@ -11,6 +11,7 @@ const googleAuthEnabled = ref<boolean>(false)
 const googleClientId = ref<string | null>(null)
 const isInitialized = ref<boolean>(false)
 const isLoading = ref<boolean>(false)
+const authError = ref<string | null>(null)
 
 export function useAuthStore() {
   const user = computed(() => currentUser.value)
@@ -54,6 +55,7 @@ export function useAuthStore() {
 
   async function login(usernameOrEmail: string, password: string): Promise<UserRead> {
     isLoading.value = true
+    authError.value = null
     try {
       const response = await api.login(usernameOrEmail, password)
       currentUser.value = response.user
@@ -64,6 +66,12 @@ export function useAuthStore() {
         window.dispatchEvent(new CustomEvent('caderno_auth_changed'))
       }
       return response.user
+    } catch (err: unknown) {
+      if (err instanceof ApiError && err.status === 429) {
+        const detail = (err.data as { detail?: string })?.detail
+        authError.value = detail || 'Limite de tentativas atingido. Por favor, aguarde alguns instantes antes de tentar novamente.'
+      }
+      throw err
     } finally {
       isLoading.value = false
     }
@@ -173,6 +181,7 @@ export function useAuthStore() {
     googleClientId,
     isInitialized,
     isLoading,
+    authError,
     isAuthenticated,
     isAdmin,
     checkAuth,

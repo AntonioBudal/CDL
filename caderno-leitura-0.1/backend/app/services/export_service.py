@@ -2,14 +2,17 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+import io
+import json
 import re
 from typing import TYPE_CHECKING
 import unicodedata
+import zipfile
 
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.models import Book, Chapter, Study
+from app.models import Book, Category, Chapter, Study, User, UserPreference, UserProfile
 from app.schemas.export import ExportFormat, ExportOptions
 
 if TYPE_CHECKING:
@@ -444,3 +447,145 @@ def generate_study_export(
         media_type = "text/plain; charset=utf-8"
 
     return content, filename, media_type
+
+
+def sanitize_folder_name(name: str, max_length: int = 60) -> str:
+    """Sanitiza nomes de pastas para o arquivo ZIP no Windows/Linux/macOS."""
+    clean = re.sub(r'[\\/:*?"<>|\x00-\x1f]', "-", name.strip())
+    clean = re.sub(r"[\s_]+", " ", clean)
+    clean = re.sub(r"-+", "-", clean).strip(".- ")
+    if not clean:
+        clean = "item"
+    return clean[:max_length].rstrip(".- ")
+
+
+def generate_account_export_zip(
+    session: Session,
+    user: User,
+) -> tuple[bytes, str]:
+    """Compila o pacote completo de portabilidade do acervo do usuário (LGPD - Opção A).
+
+    Retorna: (zip_bytes, filename)
+    - Pastas: [Nome do Livro]/[Nome do Capítulo]/[Nome do Estudo].md
+    - Raiz: dados_acervo.json com histórico, categorias, relações e metadados.
+    """
+    books = (
+        session.query(Book)
+        .filter(Book.user_id == user.id, Book.deleted_at.is_(None))
+        .order_by(Book.id)
+        .all()
+    )
+
+    profile = session.query(UserProfile).filter(UserProfile.user_id == user.id).first()
+    preference = session.query(UserPreference).filter(UserPreference.user_id == user.id).first()
+    categories = session.query(Category).filter(Category.user_id == user.id).all()
+
+    export_opts = ExportOptions(
+        format=ExportFormat.MARKDOWN,
+        include_metadata=True,
+        include_notes=True,
+        include_sections=True,
+        include_source=True,
+    )
+
+    markdown_files: list[tuple[str, str]] = []
+    books_data = []
+    total_chapters_count = 0
+    total_studies_count = 0
+
+    for book in books:
+        chapters = (
+            session.query(Chapter)
+            .filter(Chapter.book_id == book.id)
+            .order_by(Chapter.position, Chapter.id)
+            .all()
+        )
+        total_chapters_count += len(chapters)
+
+        chapters_data = []
+        book_folder = sanitize_folder_name(book.title)
+
+        for ch in chapters:
+            studies = (
+                session.query(Study)
+                .filter(Study.chapter_id == ch.id, Study.deleted_at.is_(None))
+                .order_by(Study.id)
+                .all()
+            )
+            total_studies_count += len(studies)
+            chapter_folder = sanitize_folder_name(ch.name)
+
+            studies_data = []
+            for st in studies:
+                study_filename = sanitize_folder_name(st.title) + ".md"
+                rel_path = f"{book_folder}/{chapter_folder}/{study_filename}"
+                content = format_study_markdown(book, ch, st, export_opts)
+                markdown_files.append((rel_path, content))
+
+                studies_data.append({
+                    "id": st.id,
+                    "title": st.title,
+                    "location": st.location,
+                    "summary": st.summary,
+                    "notes": st.notes,
+                    "explanation": st.explanation,
+                    "concepts": st.concepts,
+                    "references": st.references,
+                    "created_at": st.created_at.isoformat() if st.created_at else None,
+                    "updated_at": st.updated_at.isoformat() if st.updated_at else None,
+                })
+
+            chapters_data.append({
+                "id": ch.id,
+                "name": ch.name,
+                "position": ch.position,
+                "studies": studies_data,
+            })
+
+        books_data.append({
+            "id": book.id,
+            "title": book.title,
+            "author": book.author,
+            "subtitle": book.subtitle,
+            "year": book.year,
+            "categories": [c.name for c in book.categories] if book.categories else [],
+            "chapters": chapters_data,
+        })
+
+    acervo_data = {
+        "exported_at": datetime.now(UTC).isoformat(),
+        "app": "Leitorum",
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "display_name": user.display_name,
+            "role": user.role,
+            "created_at": user.created_at.isoformat() if user.created_at else None,
+        },
+        "profile": {
+            "bio": profile.bio if profile else None,
+            "profile_visibility": profile.profile_visibility if profile else "public",
+            "dashboard_visibility": profile.dashboard_visibility if profile else "private",
+        } if profile else None,
+        "preferences": {
+            "active_superclass": preference.active_superclass if preference else None,
+            "theme_mode": preference.theme_mode if preference else None,
+        } if preference else None,
+        "total_books": len(books),
+        "total_chapters": total_chapters_count,
+        "total_studies": total_studies_count,
+        "categories": [{"id": cat.id, "name": cat.name} for cat in categories],
+        "books": books_data,
+    }
+
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr("dados_acervo.json", json.dumps(acervo_data, ensure_ascii=False, indent=2))
+        for rel_path, content in markdown_files:
+            zf.writestr(rel_path, content)
+
+    now_str = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
+    filename = f"caderno-dados-{user.username}-{now_str}.zip"
+    return zip_buffer.getvalue(), filename
+

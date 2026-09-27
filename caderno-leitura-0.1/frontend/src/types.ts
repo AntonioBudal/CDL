@@ -43,6 +43,49 @@ export interface SessionItem {
   is_current: boolean
 }
 
+export interface AccountDeactivatedResponse {
+  code: string
+  message: string
+}
+
+export interface RateLimitResponse {
+  detail: string
+  retry_after?: number
+}
+
+export interface AuditLogItem {
+  id: string
+  created_at: string
+  event_type: string
+  user_id: string | null
+  actor_username: string | null
+  ip_address: string | null
+  user_agent: string | null
+  details: Record<string, any> | null
+}
+
+export interface AuditLogListResponse {
+  items: AuditLogItem[]
+  total: number
+  limit: number
+  offset: number
+}
+
+export interface DeactivateAccountRequest {
+  password?: string
+}
+
+export interface ReactivateAccountRequest {
+  username_or_email: string
+  password?: string
+  google_credential?: string
+}
+
+export interface DeleteAccountRequest {
+  password?: string
+  confirmation_text: string
+}
+
 
 export interface Category {
   id: string

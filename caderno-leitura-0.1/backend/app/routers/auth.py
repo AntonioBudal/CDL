@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import logging
+import secrets
+import urllib.parse
 
-from fastapi import APIRouter, HTTPException, Request, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from fastapi.responses import JSONResponse, RedirectResponse
 from sqlalchemy import delete, func, or_, select
 from sqlalchemy.orm import joinedload
 
@@ -16,6 +19,7 @@ from app.core.config import (
     get_google_client_id,
     is_google_auth_enabled,
 )
+from app.core.rate_limiter import rate_limit_auth_endpoint
 from app.core.security import hash_password, hash_session_token, needs_rehash, verify_password
 from app.dependencies import CurrentUser, DatabaseSession
 from app.models.local_credential import LocalCredential
@@ -34,18 +38,23 @@ from app.schemas.auth import (
     SetupOwnerRequest,
 )
 from app.schemas.user import UserRead
+from app.services.audit_service import log_security_event
 from app.services.auth_service import (
     authenticate_google_user,
+    check_account_lockout,
+    handle_failed_login,
+    handle_successful_login,
     link_google_identity,
     unlink_google_identity,
 )
-from app.services.persistence import commit_changes
-from app.services.profile_service import get_or_create_profile
+from app.services import google_auth_service
 from app.services.google_auth_service import (
     GoogleAuthDisabledError,
     InvalidGoogleTokenError,
     verify_google_id_token,
 )
+from app.services.persistence import commit_changes
+from app.services.profile_service import get_or_create_profile
 from app.services.session_service import (
     clear_session_cookie,
     create_session,
@@ -102,6 +111,7 @@ def get_me(current_user: CurrentUser) -> UserRead:
 @router.post(
     "/login",
     response_model=AuthSuccessResponse,
+    dependencies=[Depends(rate_limit_auth_endpoint)],
     summary="Autenticar usuário com credenciais locais",
 )
 def login(
@@ -109,16 +119,17 @@ def login(
     request: Request,
     response: Response,
     session: DatabaseSession,
-) -> AuthSuccessResponse:
+):
     """Autentica o usuário validando nome de usuário/e-mail e senha com Argon2id.
 
     Emite cookie seguro HttpOnly 'caderno_session' com janela deslizante de 30 dias.
     """
     identifier = login_req.username_or_email.strip()
     if not identifier:
+        log_security_event(session, "login_failure", request=request, details={"reason": "empty_identifier"})
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciais incorretas ou conta inativa.",
+            detail="Credenciais inválidas.",
         )
 
     clean_username = identifier.lstrip("@").lower()
@@ -138,17 +149,71 @@ def login(
     )
     user = session.scalar(stmt)
 
-    if user is None or user.status != "ativo" or user.credential is None:
+    if user is not None:
+        check_account_lockout(user)
+
+    if user is None or user.credential is None:
+        log_security_event(
+            session,
+            "login_failure",
+            request=request,
+            actor_username=identifier,
+            details={"reason": "user_or_credential_not_found"},
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciais incorretas ou conta inativa.",
+            detail="Credenciais inválidas.",
         )
 
     if not verify_password(user.credential.password_hash, login_req.password):
+        handle_failed_login(session, user)
+        commit_changes(session)
+        log_security_event(
+            session,
+            "login_failure",
+            request=request,
+            user_id=user.id,
+            actor_username=user.username,
+            details={"reason": "invalid_password"},
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciais incorretas ou conta inativa.",
+            detail="Credenciais inválidas.",
         )
+
+    # Tratamento de conta desativada (Opção B - Reativação explícita)
+    if user.status == "deactivated":
+        log_security_event(
+            session,
+            "login_blocked_deactivated",
+            request=request,
+            user_id=user.id,
+            actor_username=user.username,
+        )
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={
+                "code": "ACCOUNT_DEACTIVATED",
+                "message": "Sua conta está desativada. Deseja reativá-la agora?",
+            },
+        )
+
+    if user.status != "ativo":
+        log_security_event(
+            session,
+            "login_blocked_inactive",
+            request=request,
+            user_id=user.id,
+            actor_username=user.username,
+            details={"status": user.status},
+        )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Conta de usuário suspensa ou inativa.",
+        )
+
+    # Sucesso: limpa contadores de falhas
+    handle_successful_login(session, user)
 
     if needs_rehash(user.credential.password_hash):
         user.credential.password_hash = hash_password(login_req.password)
@@ -158,6 +223,13 @@ def login(
     user_agent = request.headers.get("user-agent", "")
 
     user_session, raw_token = create_session(session, user.id, client_ip, user_agent)
+    log_security_event(
+        session,
+        "login_success",
+        request=request,
+        user_id=user.id,
+        actor_username=user.username,
+    )
     commit_changes(session)
     set_session_cookie(response, raw_token, request)
 
@@ -212,6 +284,7 @@ def setup_owner(
 @router.post(
     "/register",
     response_model=AuthSuccessResponse,
+    dependencies=[Depends(rate_limit_auth_endpoint)],
     summary="Cadastrar novo usuário leitor independente",
 )
 def register(
@@ -277,6 +350,13 @@ def register(
     client_ip = _get_client_ip(request)
     user_agent = request.headers.get("user-agent", "")
     user_session, raw_token = create_session(session, new_user.id, client_ip, user_agent)
+    log_security_event(
+        session,
+        "user_registered",
+        request=request,
+        user_id=new_user.id,
+        actor_username=new_user.username,
+    )
     commit_changes(session)
     set_session_cookie(response, raw_token, request)
 
@@ -383,6 +463,7 @@ def logout_all_other(
 @router.post(
     "/google",
     response_model=AuthSuccessResponse,
+    dependencies=[Depends(rate_limit_auth_endpoint)],
     summary="Autenticar usuário via Google Identity Services (GIS)",
 )
 def login_with_google(
@@ -390,10 +471,10 @@ def login_with_google(
     request: Request,
     response: Response,
     session: DatabaseSession,
-) -> AuthSuccessResponse:
+):
     """Autentica ou provisiona leitor a partir do ID Token verificado do Google GIS."""
     try:
-        payload = verify_google_id_token(req.credential)
+        payload = google_auth_service.verify_google_id_token(req.credential)
     except GoogleAuthDisabledError as exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -407,14 +488,131 @@ def login_with_google(
 
     user = authenticate_google_user(session, payload)
 
+    # Tratamento de conta desativada (Opção B - Reativação explícita)
+    if user.status == "deactivated":
+        log_security_event(
+            session,
+            "google_login_blocked_deactivated",
+            request=request,
+            user_id=user.id,
+            actor_username=user.username,
+        )
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={
+                "code": "ACCOUNT_DEACTIVATED",
+                "message": "Sua conta está desativada. Deseja reativá-la agora?",
+            },
+        )
+
+    if user.status != "ativo":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Conta de usuário suspensa ou inativa.",
+        )
+
     client_ip = _get_client_ip(request)
     user_agent = request.headers.get("user-agent", "")
 
     user_session, raw_token = create_session(session, user.id, client_ip, user_agent)
+    log_security_event(
+        session,
+        "google_login_success",
+        request=request,
+        user_id=user.id,
+        actor_username=user.username,
+    )
     commit_changes(session)
     set_session_cookie(response, raw_token, request)
 
     return AuthSuccessResponse(user=user, session_id=user_session.id)
+
+
+@router.get(
+    "/google/login",
+    summary="Iniciar fluxo web OAuth 2.0 (Redirecionamento para Google)",
+)
+def google_web_login(request: Request) -> Response:
+    """Gera estado anti-CSRF e redireciona o navegador para a tela de autenticação do Google."""
+    state = secrets.token_urlsafe(16)
+    try:
+        auth_url = google_auth_service.build_google_authorization_url(state)
+    except GoogleAuthDisabledError:
+        msg = "Para ativar o Login com o Google, configure as credenciais GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET nas variáveis de ambiente."
+        return RedirectResponse(
+            url=f"/login?error={urllib.parse.quote(msg)}",
+            status_code=status.HTTP_302_FOUND,
+        )
+
+    redirect_resp = RedirectResponse(url=auth_url, status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+    redirect_resp.set_cookie(
+        key="google_oauth_state",
+        value=state,
+        max_age=300,
+        httponly=True,
+        samesite="lax",
+    )
+    return redirect_resp
+
+
+@router.get(
+    "/google/callback",
+    summary="Callback de retorno do Google OAuth 2.0",
+)
+def google_web_callback(
+    code: str,
+    state: str,
+    request: Request,
+    response: Response,
+    session: DatabaseSession,
+) -> Response:
+    """Processa o código retornado pelo Google, autentica/provisiona o leitor e estabelece a sessão."""
+    try:
+        payload = google_auth_service.exchange_google_code_for_token(code)
+    except GoogleAuthDisabledError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+    except InvalidGoogleTokenError as exc:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(exc)) from exc
+
+    user = authenticate_google_user(session, payload)
+
+    # Tratamento de conta desativada (Opção B - Reativação explícita)
+    if user.status == "deactivated":
+        log_security_event(
+            session,
+            "google_web_login_blocked_deactivated",
+            request=request,
+            user_id=user.id,
+            actor_username=user.username,
+        )
+        return RedirectResponse(
+            url="/login?account_deactivated=1",
+            status_code=status.HTTP_302_FOUND,
+        )
+
+    if user.status != "ativo":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Conta de usuário suspensa ou inativa.",
+        )
+
+    client_ip = _get_client_ip(request)
+    user_agent = request.headers.get("user-agent", "")
+
+    user_session, raw_token = create_session(session, user.id, client_ip, user_agent)
+    log_security_event(
+        session,
+        "google_oauth_web_success",
+        request=request,
+        user_id=user.id,
+        actor_username=user.username,
+    )
+    commit_changes(session)
+
+    redirect_resp = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+    set_session_cookie(redirect_resp, raw_token, request)
+    redirect_resp.delete_cookie("google_oauth_state")
+    return redirect_resp
 
 
 @router.post(

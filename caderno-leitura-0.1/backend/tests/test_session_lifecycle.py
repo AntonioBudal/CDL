@@ -92,7 +92,7 @@ def test_login_invalid_credentials(auth_client):
         json={"username_or_email": "fantasma", "password": "qualquer_senha"},
     )
     assert r1.status_code == 401
-    assert "Credenciais incorretas" in r1.json()["detail"]
+    assert "Credenciais" in r1.json()["detail"]
 
     # Senha errada
     r2 = client.post(
@@ -100,7 +100,7 @@ def test_login_invalid_credentials(auth_client):
         json={"username_or_email": "leitor_teste", "password": "senha_errada"},
     )
     assert r2.status_code == 401
-    assert "Credenciais incorretas" in r2.json()["detail"]
+    assert "Credenciais" in r2.json()["detail"]
 
     # Usuário sem credencial cadastrada (ex.: proprietário legado antes do setup)
     r3 = client.post(

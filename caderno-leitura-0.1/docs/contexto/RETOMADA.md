@@ -585,15 +585,56 @@ Este documento registra as evidências consolidadas em cada ciclo de trabalho e 
    - 262 testes de frontend passando (`npm test`), incluindo 11 novos testes dedicados em `theme_refactor.test.mjs`.
    - Compilação e tipagem estrita do frontend (`npm run build` / `vue-tsc`) 100% aprovada sem erros.
    - Zero emojis informais em todo o código-fonte, em total conformidade com `visual_system.test.mjs`.
+---
+
+## Sessão: Implementação e Validação da Feature 10 — Segurança, Auditoria, Ciclo de Vida da Conta e Google OAuth (27/09/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Especificação, Arquitetura e Contratos (Spec Kit):**
+   - Ciclo formal Spec Kit completado para `specs/039-seguranca-auditoria-conta/` (`spec.md`, `plan.md`, `research.md`, `data-model.md`, `contracts/`, `tasks.md`, `quickstart.md`).
+   - Alinhamentos deliberados com o usuário:
+     - Q1: B — Reativação de conta exige confirmação explícita no login. Login de conta desativada retorna HTTP 403 com `{code: "ACCOUNT_DEACTIVATED", message: "..."}`, disparando modal de reativação que chama `POST /api/account/reactivate`.
+     - Q2: A — `DELETE /api/account` executa purga física transacional em cascata no SQLite eliminando todos os livros, capítulos, estudos, relações, amizades, permissões, perfil e usuário sem deixar registros órfãos.
+     - Q3: A — Exportação em ZIP organiza pastas `[Livro]/[Capítulo]/[Estudo].md` com metadados Frontmatter e arquivo `dados_acervo.json` na raiz.
+     - Google OAuth: Suporte a Login com o Google prático sem necessidade de senha local (OAuth 2.0 Web redirect `GET /api/auth/google/login` -> `GET /api/auth/google/callback` e GIS com ID token), auto-associando por e-mail verificado ou criando usuário sem senha.
+   - Todas as 43 tarefas de `tasks.md` (T001 a T043) executadas e marcadas como concluídas (`[X]`).
+2. **Proteção contra Força Bruta e Enumeração (OWASP):**
+   - `InMemoryRateLimiter` com janela deslizante de 5 tentativas a cada 5 minutos por IP e chave em endpoints sensíveis (`/api/auth/login`, `/api/auth/register`, `/api/auth/google`), respondendo com `HTTP 429` e cabeçalho `Retry-After`.
+   - Bloqueio progressivo de conta por tentativas incorretas (`failed_login_attempts`, `locked_until`).
+   - Padronização rigorosa de mensagens contra enumeração de contas (`"Credenciais inválidas."` unificado para usuário inexistente e senha incorreta).
+   - Tratamento defensivo de erro 429 no store de autenticação do frontend com feedback amigável ao leitor.
+3. **Google OAuth 2.0 Web & GIS:**
+   - Geração de URL com `state` anti-CSRF e troca de código no backend (`google_auth_service.py`).
+   - Endpoints `GET /api/auth/google/login` e `GET /api/auth/google/callback` em `auth.py`.
+   - Provisionamento automático de novos leitores Google sem exigência de senha local e vínculo seguro a e-mail verificado.
+   - Componente `GoogleSignInButton.vue` refinado com fallback redirect e integrado com destaque nas telas de login (`LoginView.vue`) e cadastro (`RegisterView.vue`).
+4. **Trilha de Auditoria Estruturada e Sem Segredos (`AuditLog`):**
+   - Modelo relacional `AuditLog` e migração Alembic `0019_add_audit_logs_and_user_lifecycle.py`.
+   - Serviço central de auditoria (`audit_service.py`) com filtro recursivo sanitizador que elimina segredos (`password`, `token`, `secret`, `credential`, `authorization`).
+   - Registro de eventos em autenticação local, Google, alteração de papéis, suspensões e exportações.
+   - Endpoint administrativo paginado e filtrado `GET /api/admin/audit-logs`.
+5. **Ciclo de Vida da Conta e Portabilidade (LGPD):**
+   - Endpoints `POST /api/account/deactivate`, `POST /api/account/reactivate`, `DELETE /api/account` e `GET /api/account/export`.
+   - Modais Vue 3: `ReactivateAccountModal.vue`, `DeactivateAccountModal.vue`, `DeleteAccountModal.vue` com WAI-ARIA, confirmação digitada do identificador `@username` e alvos táteis de 44px.
+   - Botão e rotina de compilação sob demanda do acervo consolidado em ZIP na tela de ajustes (`SettingsView.vue`).
+6. **Validação e Suítes de Teste:**
+   - 326 testes de backend passando (`pytest backend/tests` / 326 passed, 1 skipped).
+   - 282 testes de frontend passando (`npm test`), incluindo 7 testes dedicados em `security_lifecycle.test.mjs`.
+   - Compilação e tipagem estrita do frontend (`npm run build` / `vue-tsc`) 100% aprovada sem erros.
+   - Preservação absoluta do banco de dados local de produção (`backend/data/caderno.db`).
 
 ---
 
-## Próximo Passo Recomendado
+## Status da Versão 0.5
 
-Iniciar a próxima etapa do Roadmap 0.5 (F10):
-```bash
-/speckit-specify F10 - ...
-```
-
-
-
+Com a conclusão da Feature 10 (F10), **todas as dez features do Roadmap 0.5 (F01 a F10) estão 100% implementadas, testadas e aprovadas**:
+- F01: Base Multiusuário e Isolamento de Dados
+- F02: Autenticação de Sessões e Gestão de Dispositivos
+- F03: Edição Avançada do Acervo e Modais
+- F04: Relações Semânticas entre Estudos e Grafo
+- F05: Perfil Público, Descoberta e Avatar
+- F06: Amizades, Interações Sociais e Privacidade
+- F07: Dashboard 2.0 e Cockpit de Estudos
+- F08: Árvore Hierárquica e Navegação de Estudos
+- F09 / F09.5: Notificações, Atividade Social, Refatoração de Temas e Correções Visuais
+- F10: Segurança, Auditoria, Ciclo de Vida da Conta e Google OAuth

@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 import uuid
 
-from sqlalchemy import CheckConstraint, String, Text, text
+from sqlalchemy import CheckConstraint, Integer, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -47,6 +47,24 @@ class User(Base):
         default="ativo",
         server_default=text("'ativo'"),
         nullable=False,
+    )
+    deactivated_at: Mapped[datetime | None] = mapped_column(
+        UTCDateTime(),
+        nullable=True,
+    )
+    deleted_at: Mapped[datetime | None] = mapped_column(
+        UTCDateTime(),
+        nullable=True,
+    )
+    failed_login_attempts: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
+        server_default=text("0"),
+        nullable=False,
+    )
+    locked_until: Mapped[datetime | None] = mapped_column(
+        UTCDateTime(),
+        nullable=True,
     )
     created_at: Mapped[datetime] = mapped_column(
         UTCDateTime(),

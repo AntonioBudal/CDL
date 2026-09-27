@@ -3,6 +3,27 @@ from pathlib import Path
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
 
+
+def _load_env_file() -> None:
+    """Carrega variáveis de ambiente de um arquivo .env se presente na raiz do projeto ou em backend/."""
+    for candidate in (BACKEND_DIR.parent / ".env", BACKEND_DIR / ".env"):
+        if candidate.is_file():
+            try:
+                with candidate.open("r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line and not line.startswith("#") and "=" in line:
+                            k, v = line.split("=", 1)
+                            k = k.strip()
+                            v = v.strip().strip("'\"")
+                            if k and k not in os.environ:
+                                os.environ[k] = v
+            except Exception:
+                pass
+
+
+_load_env_file()
+
 # Identidade canônica do proprietário soberano da versão multiusuário
 DEFAULT_OWNER_ID: str = "00000000-0000-0000-0000-000000000001"
 DEFAULT_OWNER_USERNAME: str = "proprietario"
@@ -22,14 +43,55 @@ def get_allow_registration() -> bool:
 
 
 def get_google_client_id() -> str | None:
-    """Retorna o Client ID configurado para o Google Identity Services (GIS), ou None."""
+    """Retorna o Client ID configurado para o Google Identity Services (GIS) e OAuth, ou None."""
     val = os.environ.get("GOOGLE_CLIENT_ID", "").strip()
     return val if val else None
+
+
+def get_google_client_secret() -> str | None:
+    """Retorna o Client Secret configurado para o fluxo Google OAuth 2.0 Web, ou None."""
+    val = os.environ.get("GOOGLE_CLIENT_SECRET", "").strip()
+    return val if val else None
+
+
+def get_google_redirect_uri() -> str:
+    """Retorna a URL de redirecionamento para o callback do Google OAuth 2.0."""
+    return os.environ.get("GOOGLE_REDIRECT_URI", "http://localhost:8000/api/auth/google/callback").strip()
 
 
 def is_google_auth_enabled() -> bool:
     """Informa se a autenticação via Google está ativada (depende de GOOGLE_CLIENT_ID configurado)."""
     return get_google_client_id() is not None
+
+
+# Configurações de Rate Limiting e Proteção de Autenticação (F10)
+DEFAULT_RATE_LIMIT_ATTEMPTS = 5
+DEFAULT_RATE_LIMIT_WINDOW_SECONDS = 300  # 5 minutos
+DEFAULT_LOCKOUT_DURATION_SECONDS = 900   # 15 minutos
+
+
+def get_rate_limit_max_attempts() -> int:
+    """Número máximo de tentativas inválidas permitidas na janela de tempo."""
+    try:
+        return int(os.environ.get("RATE_LIMIT_MAX_ATTEMPTS", str(DEFAULT_RATE_LIMIT_ATTEMPTS)))
+    except ValueError:
+        return DEFAULT_RATE_LIMIT_ATTEMPTS
+
+
+def get_rate_limit_window_seconds() -> int:
+    """Tamanho da janela deslizante de rate limiting em segundos."""
+    try:
+        return int(os.environ.get("RATE_LIMIT_WINDOW_SECONDS", str(DEFAULT_RATE_LIMIT_WINDOW_SECONDS)))
+    except ValueError:
+        return DEFAULT_RATE_LIMIT_WINDOW_SECONDS
+
+
+def get_lockout_duration_seconds() -> int:
+    """Duração do bloqueio de conta após sucessivas falhas de autenticação."""
+    try:
+        return int(os.environ.get("LOCKOUT_DURATION_SECONDS", str(DEFAULT_LOCKOUT_DURATION_SECONDS)))
+    except ValueError:
+        return DEFAULT_LOCKOUT_DURATION_SECONDS
 
 
 def get_session_cookie_secure() -> bool | None:

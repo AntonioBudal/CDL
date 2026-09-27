@@ -5,4 +5,11 @@ export type {
   SessionItem,
   ExternalIdentityRead,
   GoogleAuthRequest,
+  AccountDeactivatedResponse,
+  RateLimitResponse,
+  AuditLogItem,
+  AuditLogListResponse,
+  DeactivateAccountRequest,
+  ReactivateAccountRequest,
+  DeleteAccountRequest,
 } from '../types'

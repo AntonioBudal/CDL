@@ -1,5 +1,4 @@
-from __future__ import annotations
-
+from datetime import timedelta
 import logging
 import re
 import uuid
@@ -8,7 +7,12 @@ from fastapi import HTTPException, status
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session, joinedload
 
-from app.core.config import get_allow_registration
+from app.core.config import (
+    get_allow_registration,
+    get_lockout_duration_seconds,
+    get_rate_limit_max_attempts,
+)
+from app.db.types import utc_now
 from app.models.external_identity import ExternalIdentity
 from app.models.local_credential import LocalCredential
 from app.models.user import User
@@ -16,6 +20,37 @@ from app.services.google_auth_service import GoogleTokenPayload
 from app.services.profile_service import get_or_create_profile
 
 logger = logging.getLogger(__name__)
+
+
+def check_account_lockout(user: User) -> None:
+    """Verifica se a conta está temporariamente bloqueada por excesso de tentativas."""
+    if user.locked_until is not None:
+        if user.locked_until > utc_now():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Conta temporariamente bloqueada devido a múltiplas tentativas incorretas. Tente novamente mais tarde.",
+            )
+        else:
+            user.locked_until = None
+            user.failed_login_attempts = 0
+
+
+def handle_failed_login(session: Session, user: User | None) -> None:
+    """Incrementa contador de tentativas falhas e aplica bloqueio temporário se atingir o teto."""
+    if user is None:
+        return
+    user.failed_login_attempts = (user.failed_login_attempts or 0) + 1
+    if user.failed_login_attempts >= get_rate_limit_max_attempts():
+        user.locked_until = utc_now() + timedelta(seconds=get_lockout_duration_seconds())
+        logger.warning("Conta %s bloqueada temporariamente até %s", user.username, user.locked_until)
+    session.flush()
+
+
+def handle_successful_login(session: Session, user: User) -> None:
+    """Limpa contadores de falhas e desbloqueia a conta após login com sucesso."""
+    user.failed_login_attempts = 0
+    user.locked_until = None
+    session.flush()
 
 
 def _sanitize_username(hint: str) -> str:
@@ -70,7 +105,7 @@ def authenticate_google_user(session: Session, payload: GoogleTokenPayload) -> U
     identity = session.scalar(stmt)
     if identity is not None:
         user = identity.user
-        if user.status != "ativo":
+        if user.status not in ("ativo", "deactivated"):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Conta de usuário suspensa ou inativa.",
@@ -86,7 +121,7 @@ def authenticate_google_user(session: Session, payload: GoogleTokenPayload) -> U
             .where(User.email == payload.email)
         )
         if existing_user is not None:
-            if existing_user.status != "ativo":
+            if existing_user.status not in ("ativo", "deactivated"):
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
                     detail="Conta de usuário suspensa ou inativa.",

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.ts'
 import { errorMessage } from '../services/api.ts'
 import GoogleSignInButton from '../components/auth/GoogleSignInButton.vue'
 
 const router = useRouter()
+const route = useRoute()
 const auth = useAuthStore()
 
 const username = ref('')
@@ -15,6 +16,12 @@ const password = ref('')
 const confirmPassword = ref('')
 const error = ref<string | null>(null)
 const isSubmitting = ref(false)
+
+onMounted(() => {
+  if (route.query.error) {
+    error.value = String(route.query.error)
+  }
+})
 
 async function handleGoogleSuccess(credential: string) {
   error.value = null
@@ -93,7 +100,7 @@ async function handleRegister() {
         {{ error }}
       </div>
 
-      <div v-if="auth.googleAuthEnabled.value" class="google-auth-section">
+      <div class="google-auth-section">
         <GoogleSignInButton
           text="signup_with"
           @success="handleGoogleSuccess"
