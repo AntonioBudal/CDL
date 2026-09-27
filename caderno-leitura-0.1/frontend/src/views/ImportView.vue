@@ -5,6 +5,7 @@ import { api, errorMessage } from '../services/api'
 import { useImportDraft } from '../composables/useImportDraft'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import StudyEditorFields from '../components/StudyEditorFields.vue'
+import MarkdownToolbar from '../components/MarkdownToolbar.vue'
 import { positiveId, SECTION_LABELS, type Book, type Chapter } from '../types'
 
 const route = useRoute()
@@ -143,10 +144,11 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
           <div class="field"><label for="import-location">Página ou localização <span class="optional">opcional</span></label><input id="import-location" v-model="state.location" placeholder="Ex.: p. 32–34 ou Loc. 1820" /></div>
           <div class="field"><label for="import-title">Título do estudo <span class="optional">opcional</span></label><input id="import-title" v-model="state.title" placeholder="Se vazio, será criado a partir do capítulo" /></div>
         </div>
-        <div class="field">
+        <div class="field field-with-toolbar">
           <label for="source-response">Fichamento da Fonte</label>
           <p id="source-hint" class="field-hint">Cole o texto completo da fonte. O Leitorum identifica automaticamente a estrutura das seções ao colar.</p>
-          <textarea id="source-response" ref="sourceInput" v-model="state.sourceResponse" @paste="onPaste" class="source-text" rows="10" aria-describedby="source-hint" placeholder="Cole o texto-base do fichamento aqui…" spellcheck="false"></textarea>
+          <MarkdownToolbar target-id="source-response" />
+          <textarea id="source-response" ref="sourceInput" v-model="state.sourceResponse" @paste="onPaste" class="source-text textarea-with-toolbar" rows="10" aria-describedby="source-hint" placeholder="Cole o texto-base do fichamento aqui…" spellcheck="false"></textarea>
         </div>
         <p v-if="state.previewError" class="notice error" role="alert">{{ state.previewError }}</p>
         <p v-if="stale" class="notice warning" role="status">O texto colado foi modificado após a análise. Clique em "Atualizar prévia" para sincronizar as seções antes de salvar.</p>
@@ -228,6 +230,17 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
 </template>
 
 <style scoped>
+.field-with-toolbar {
+  display: flex;
+  flex-direction: column;
+}
+
+.textarea-with-toolbar {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  margin-top: -1px;
+}
+
 .preview-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -236,9 +249,9 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
 }
 
 .preview-section-card {
-  background: var(--surface-raised, #ffffff);
-  border: 1px solid var(--border-color, #e2e8f0);
-  border-radius: 8px;
+  background: var(--color-surface);
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--radius-control, 8px);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
@@ -256,22 +269,22 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
   align-items: center;
   margin-bottom: 0.75rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border-color, #edf2f7);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .section-card-title {
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
-  color: var(--text-color, #2d3748);
+  color: var(--color-text);
 }
 
 .empty-badge {
   font-size: 0.75rem;
   padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  background: var(--surface-muted, #edf2f7);
-  color: var(--text-muted, #718096);
+  border-radius: var(--radius-control, 4px);
+  background: var(--color-surface-subtle);
+  color: var(--color-text-muted);
 }
 
 .section-card-content {
@@ -283,18 +296,18 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
   font-size: 0.95rem;
   line-height: 1.5;
   margin: 0;
-  color: var(--text-color, #2d3748);
+  color: var(--color-text);
 }
 
 .empty-placeholder {
-  color: var(--text-muted, #a0aec0);
+  color: var(--color-text-muted);
   font-style: italic;
 }
 
 .unassigned-card {
   margin: 1.25rem 0;
   padding: 1.25rem;
-  border-radius: 8px;
+  border-radius: var(--radius-control, 8px);
 }
 
 .unassigned-header h3 {
@@ -302,9 +315,9 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
 }
 
 .unassigned-preview {
-  background: var(--surface-muted, #f7fafc);
-  border: 1px solid var(--border-color, #e2e8f0);
-  border-radius: 6px;
+  background: var(--color-surface-subtle);
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--radius-control, 6px);
   padding: 0.75rem;
   white-space: pre-wrap;
   font-family: inherit;
@@ -324,7 +337,7 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
 .action-label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--text-muted, #4a5568);
+  color: var(--color-text-muted);
 }
 
 .unassigned-actions .button.small {
@@ -340,9 +353,9 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
   gap: 1rem;
   margin: 1.75rem 0 1.25rem 0;
   padding: 1rem 1.25rem;
-  background: var(--surface-subtle, #f8fafc);
-  border: 1px solid var(--border-color, #e2e8f0);
-  border-radius: 8px;
+  background: var(--color-surface-subtle);
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--radius-control, 8px);
 }
 
 .save-button {
@@ -351,26 +364,28 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
 
 .manual-adjustment-panel {
   margin-top: 1.5rem;
-  border: 1px solid var(--border-color, #e2e8f0);
-  border-radius: 8px;
-  background: var(--surface, #ffffff);
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--radius-control, 8px);
+  background: var(--color-surface);
 }
 
 .manual-adjustment-summary {
   padding: 1rem 1.25rem;
   cursor: pointer;
   font-weight: 600;
-  color: var(--text-color, #2d3748);
+  color: var(--color-text);
   user-select: none;
   outline: none;
 }
 
 .manual-adjustment-summary:focus-visible {
-  outline: 2px solid var(--primary, #3182ce);
+  outline: 2px solid var(--color-primary);
 }
 
 .manual-adjustment-body {
   padding: 0 1.25rem 1.25rem 1.25rem;
-  border-top: 1px solid var(--border-color, #edf2f7);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 </style>

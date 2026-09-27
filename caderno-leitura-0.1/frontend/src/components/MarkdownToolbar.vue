@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted } from 'vue'
 import { applyFormatToTextarea, type MarkdownFormatAction } from '../utils/markdownFormatter'
 
 const props = defineProps<{
@@ -12,6 +13,32 @@ function handleFormat(action: MarkdownFormatAction) {
     applyFormatToTextarea(textarea, action)
   }
 }
+
+onMounted(() => {
+  if (typeof document === 'undefined') return
+  const textarea = document.getElementById(props.targetId) as HTMLTextAreaElement | null
+  if (!textarea) return
+
+  function onTextareaKeydown(e: KeyboardEvent) {
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey) {
+      if (e.key === 'b' || e.key === 'B') {
+        e.preventDefault()
+        handleFormat('bold')
+      } else if (e.key === 'i' || e.key === 'I') {
+        e.preventDefault()
+        handleFormat('italic')
+      } else if (e.key === 'k' || e.key === 'K') {
+        e.preventDefault()
+        handleFormat('link')
+      }
+    }
+  }
+
+  textarea.addEventListener('keydown', onTextareaKeydown)
+  onBeforeUnmount(() => {
+    textarea.removeEventListener('keydown', onTextareaKeydown)
+  })
+})
 </script>
 
 <template>
