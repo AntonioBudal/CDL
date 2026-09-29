@@ -28,10 +28,12 @@ from app.routers import (
     studies,
     study_highlights,
     study_relations,
+    study_versions,
     sync,
     trash,
     users,
 )
+
 
 
 @asynccontextmanager
@@ -73,6 +75,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(study_relations.router, prefix="/api")
     application.include_router(studies.router, prefix="/api")
     application.include_router(study_highlights.router, prefix="/api")
+    application.include_router(study_versions.router, prefix="/api")
     application.include_router(canvas.router, prefix="/api")
     application.include_router(imports.router, prefix="/api")
     application.include_router(trash.router, prefix="/api")

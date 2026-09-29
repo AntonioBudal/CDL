@@ -490,6 +490,7 @@ export type IconName =
   | 'sliders'
   | 'trash'
   | 'trash-restore'
+  | 'rotate-ccw'
   | 'pencil'
   | 'x'
   | 'search'
@@ -1031,5 +1032,54 @@ export interface ActiveReadingSessionState {
 }
 
 export type ActiveReadingSessionEvent = 'reveal-all' | 'hide-all' | 'next' | 'previous' | 'close'
+
+export interface StudyVersionSummary {
+  id: number
+  study_id: number
+  version_number: number
+  user_id?: string | null
+  author_name?: string | null
+  change_summary: string
+  char_count: number
+  highlights_count: number
+  is_current: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface StudyVersionDetail extends StudyVersionSummary {
+  title: string
+  summary: string
+  explanation: string
+  concepts: string
+  references: string
+  notes: string
+  highlights: StudyHighlight[]
+}
+
+export interface DiffChunk {
+  type: 'equal' | 'insert' | 'delete'
+  text: string
+}
+
+export interface SectionDiff {
+  status: 'modified' | 'unchanged' | 'added' | 'removed'
+  chunks: DiffChunk[]
+}
+
+export interface StudyDiffResult {
+  version_number: number
+  target_version_number: number
+  is_target_current: boolean
+  sections: {
+    title: SectionDiff
+    summary: SectionDiff
+    explanation: SectionDiff
+    concepts: SectionDiff
+    references: SectionDiff
+    notes: SectionDiff
+  }
+}
+
 
 

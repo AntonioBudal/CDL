@@ -4,6 +4,7 @@ import type {
   StudyRelationsResponse, StudyRelationItem, CreateStudyRelationPayload, UpdateStudyRelationPayload, CandidateStudyItem, BookCanvasRelationItem,
   StudyStatusUpdatePayload, StudyStatusResponse, CanvasFrameItem, CreateCanvasFramePayload, UpdateCanvasFramePayload,
   StudyHighlight, StudyHighlightCreatePayload, StudyHighlightUpdatePayload,
+  StudyVersionSummary, StudyVersionDetail, StudyDiffResult,
   SearchResponse, SearchHistoryResponse, UserRead,
   AuthConfigResponse, AuthSuccessResponse, SessionItem, ExternalIdentityRead,
   AuditLogListResponse, DeactivateAccountRequest, ReactivateAccountRequest, DeleteAccountRequest,
@@ -266,6 +267,23 @@ export const api = {
   deleteStudyHighlight: (studyId: number, highlightId: number) => request<void>(`/studies/${studyId}/highlights/${highlightId}`, {
     method: 'DELETE',
   }),
+
+  // Métodos de Histórico e Versões de Estudos (F0.6.5)
+  listStudyVersions: (studyId: number, signal?: AbortSignal) =>
+    request<StudyVersionSummary[]>(`/studies/${studyId}/versions`, { signal }),
+  getStudyVersionDetail: (studyId: number, versionId: number, signal?: AbortSignal) =>
+    request<StudyVersionDetail>(`/studies/${studyId}/versions/${versionId}`, { signal }),
+  getStudyVersionDiff: (studyId: number, versionId: number, targetVersionId?: number, signal?: AbortSignal) => {
+    const url = targetVersionId
+      ? `/studies/${studyId}/versions/${versionId}/diff?target_version_id=${targetVersionId}`
+      : `/studies/${studyId}/versions/${versionId}/diff`
+    return request<StudyDiffResult>(url, { signal })
+  },
+  restoreStudyVersion: (studyId: number, versionId: number) =>
+    request<Study>(`/studies/${studyId}/versions/${versionId}/restore`, {
+      method: 'POST',
+    }),
+
 
   // Métodos de Lixeira (Soft Delete e Purga)
   trashBook: (id: number) => request<Book>(`/books/${id}/trash`, { method: 'POST' }),

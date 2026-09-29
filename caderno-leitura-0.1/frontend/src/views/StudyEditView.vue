@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { api } from '../services/api'
 import { useStudyResource } from '../composables/useStudyResource'
@@ -7,6 +7,8 @@ import { useStudyEdit } from '../composables/useStudyEdit'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import StudyEditorFields from '../components/StudyEditorFields.vue'
 import ConflictResolutionModal from '../components/sync/ConflictResolutionModal.vue'
+import StudyHistoryModal from '../components/StudyHistoryModal.vue'
+import type { Study } from '../types.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -14,8 +16,14 @@ const resource = useStudyResource(api)
 const { state: resourceState } = resource
 const editor = useStudyEdit(api)
 const { state, dirty, hasAnalysis, canSave } = editor
+const historyModalOpen = ref(false)
 let disposed = false
 useUnsavedChanges(() => dirty.value, () => state.saving)
+
+function handleStudyRestored(updatedStudy: Study) {
+  editor.load(updatedStudy)
+}
+
 
 const localFormData = computed(() => ({
   title: state.title,
@@ -77,11 +85,26 @@ onBeforeUnmount(() => { disposed = true; resource.cancel() })
           {{ resourceState.context.book.title }} · {{ resourceState.context.chapter.name }}
         </RouterLink>
       </nav>
-      <header class="page-header">
-        <p class="eyebrow">{{ resourceState.context.study.title }}</p>
-        <h1>Editar estudo</h1>
-        <p class="intro">Revise as seções e registre suas próprias interpretações.</p>
+      <header class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <p class="eyebrow">{{ resourceState.context.study.title }}</p>
+          <h1>Editar estudo</h1>
+          <p class="intro">Revise as seções e registre suas próprias interpretações.</p>
+        </div>
+        <button
+          type="button"
+          class="secondary"
+          style="display: flex; align-items: center; gap: 0.375rem; margin-top: 0.5rem;"
+          aria-label="Abrir histórico de versões do estudo"
+          @click="historyModalOpen = true"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Histórico de versões
+        </button>
       </header>
+
       <form class="import-form panel import-step" @submit.prevent="save">
         <fieldset :disabled="state.saving">
           <StudyEditorFields
@@ -122,6 +145,15 @@ onBeforeUnmount(() => { disposed = true; resource.cancel() })
         @keep-server="handleReload"
         @close="editor.dismissConflict"
       />
+
+      <StudyHistoryModal
+        :open="historyModalOpen"
+        :study-id="resourceState.context.study.id"
+        :can-edit="true"
+        @close="historyModalOpen = false"
+        @restored="handleStudyRestored"
+      />
     </template>
+
   </div>
 </template>

@@ -78,6 +78,7 @@ const iconMap: Record<string, Component> = {
   'sliders': Sliders,
   'trash': Trash2,
   'trash-restore': RotateCcw,
+  'rotate-ccw': RotateCcw,
   'pencil': Pencil,
   'x': X,
   'search': Search,

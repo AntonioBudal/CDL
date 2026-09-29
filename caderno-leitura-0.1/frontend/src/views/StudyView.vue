@@ -12,13 +12,15 @@ import StudyRelationsList from '../components/relations/StudyRelationsList.vue'
 import CreateRelationModal from '../components/relations/CreateRelationModal.vue'
 import StudyStatusBadge from '../components/StudyStatusBadge.vue'
 import ShareModal from '../components/sharing/ShareModal.vue'
+import StudyHistoryModal from '../components/StudyHistoryModal.vue'
 import FloatingActionsToolbar from '../components/FloatingActionsToolbar.vue'
 import HighlightActionPopover from '../components/HighlightActionPopover.vue'
 import { useStudyHighlights } from '../composables/useStudyHighlights'
 import { useActiveReadingSession } from '../composables/useActiveReadingSession'
 import { formatQuoteText, useTextSelection } from '../composables/useTextSelection'
 import type { HighlightClickEvent } from '../utils/highlightRenderer'
-import type { HighlightColor, ResourceVisibility, StudySectionKey, TextSelectionContext } from '../types.ts'
+import type { HighlightColor, ResourceVisibility, Study, StudySectionKey, TextSelectionContext } from '../types.ts'
+
 
 const route = useRoute()
 const router = useRouter()
@@ -29,9 +31,18 @@ const exportModalOpen = ref(false)
 const confirmTrashOpen = ref(false)
 const createRelationModalOpen = ref(false)
 const shareModalOpen = ref(false)
+const historyModalOpen = ref(false)
 const relationsListRef = ref<InstanceType<typeof StudyRelationsList> | null>(null)
 const trashing = ref(false)
 const trashError = ref('')
+
+function handleStudyRestored(updatedStudy: Study) {
+  if (state.context) {
+    state.context.study = updatedStudy
+  }
+  showToast('Versão restaurada com sucesso!')
+}
+
 
 const canEdit = computed(() => state.context?.study.can_edit !== false)
 
@@ -361,7 +372,19 @@ onBeforeUnmount(() => {
           Compartilhar
         </button>
         <button type="button" class="secondary" @click="exportModalOpen = true">Exportar estudo</button>
+        <button
+          type="button"
+          class="secondary history-action"
+          aria-label="Abrir histórico de versões do estudo"
+          @click="historyModalOpen = true"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Histórico
+        </button>
         <RouterLink
+
           v-if="canEdit"
           class="button secondary"
           :to="{ name: 'study-edit', params: { bookId: state.context.book.id, studyId: state.context.study.id } }"
@@ -467,6 +490,15 @@ onBeforeUnmount(() => {
       :initial-visibility="state.context.study.visibility"
       @visibility-changed="handleVisibilityChanged"
     />
+
+    <StudyHistoryModal
+      :open="historyModalOpen"
+      :study-id="state.context.study.id"
+      :can-edit="canEdit"
+      @close="historyModalOpen = false"
+      @restored="handleStudyRestored"
+    />
+
 
     <!-- Barra Flutuante Contextual de Ações (F0.6.2) -->
     <FloatingActionsToolbar

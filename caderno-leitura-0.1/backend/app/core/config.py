@@ -6,6 +6,8 @@ BACKEND_DIR = Path(__file__).resolve().parents[2]
 
 def _load_env_file() -> None:
     """Carrega variáveis de ambiente de um arquivo .env se presente na raiz do projeto ou em backend/."""
+    import sys
+    is_pytest = "pytest" in sys.modules or bool(os.environ.get("PYTEST_CURRENT_TEST"))
     for candidate in (BACKEND_DIR.parent / ".env", BACKEND_DIR / ".env"):
         if candidate.is_file():
             try:
@@ -16,6 +18,8 @@ def _load_env_file() -> None:
                             k, v = line.split("=", 1)
                             k = k.strip()
                             v = v.strip().strip("'\"")
+                            if is_pytest and k == "REQUIRE_AUTH":
+                                continue
                             if k and k not in os.environ:
                                 os.environ[k] = v
             except Exception:

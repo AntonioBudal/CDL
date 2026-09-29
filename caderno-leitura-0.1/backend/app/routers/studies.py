@@ -40,9 +40,11 @@ from app.services.sharing_service import (
     update_study_visibility,
 )
 from app.services.study_service import move_study, update_study_status
+from app.services.study_version_service import record_study_version_on_change
 from app.services.trash_service import permanent_delete_study, restore_study, trash_study
 
 router = APIRouter(tags=["Estudos"])
+
 
 
 def check_study_mutation_permission(session: DatabaseSession, study_id: int, user_id: str) -> Study:
@@ -305,9 +307,14 @@ def update_study(study_id: Identifier, payload: StudyPatch, session: DatabaseSes
             status_code=422,
             detail=[{"loc": ["body"], "msg": ANALYSIS_REQUIRED_MESSAGE, "type": "value_error"}],
         )
+
+    # Gravar versão de histórico automaticamente ao detectar alterações
+    record_study_version_on_change(session, study, changes, current_user.id)
+
     for name, value in changes.items():
         setattr(study, name, value)
     study.version += 1
+
     commit_changes(session)
     session.refresh(study)
     study_read = StudyRead.model_validate(study)

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, ForeignKey, Index, Integer, String, Text, text
+from sqlalchemy import CheckConstraint, ForeignKey, Index, Integer, String, Text, desc, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.config import DEFAULT_OWNER_ID
@@ -12,6 +12,7 @@ from app.db.types import UTCDateTime, utc_now
 
 if TYPE_CHECKING:
     from app.models.chapter import Chapter
+    from app.models.study_version import StudyVersion
     from app.models.user import User
 
 
@@ -77,6 +78,12 @@ class Study(Base):
     parent: Mapped[Study | None] = relationship("Study", remote_side="Study.id", back_populates="children")
     children: Mapped[list[Study]] = relationship("Study", back_populates="parent", order_by="Study.position")
     user: Mapped[User] = relationship(back_populates="studies")
+    versions: Mapped[list[StudyVersion]] = relationship(
+        "StudyVersion",
+        back_populates="study",
+        cascade="all, delete-orphan",
+        order_by="desc(StudyVersion.version_number)",
+    )
 
     @property
     def book_id(self) -> int | None:
