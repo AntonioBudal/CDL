@@ -16,6 +16,7 @@ from app.models.study_canvas_node import StudyCanvasNode
 from app.models.study_highlight import StudyHighlight
 from app.models.study_relation import StudyRelation
 from app.models.study_version import StudyVersion
+from app.models.support_setting import SupportSetting
 from app.models.user import User
 from app.models.user_preference import UserPreference
 from app.models.user_profile import UserProfile
@@ -38,6 +39,7 @@ __all__ = [
     "StudyHighlight",
     "StudyRelation",
     "StudyVersion",
+    "SupportSetting",
     "User",
     "UserPreference",
     "UserProfile",

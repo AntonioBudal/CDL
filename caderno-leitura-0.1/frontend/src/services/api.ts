@@ -5,6 +5,7 @@ import type {
   StudyStatusUpdatePayload, StudyStatusResponse, CanvasFrameItem, CreateCanvasFramePayload, UpdateCanvasFramePayload,
   StudyHighlight, StudyHighlightCreatePayload, StudyHighlightUpdatePayload,
   StudyVersionSummary, StudyVersionDetail, StudyDiffResult,
+  SupportPublicInfo, SupportAdminConfig, SupportConfigUpdate,
   SearchResponse, SearchHistoryResponse, UserRead,
   AuthConfigResponse, AuthSuccessResponse, SessionItem, ExternalIdentityRead,
   AuditLogListResponse, DeactivateAccountRequest, ReactivateAccountRequest, DeleteAccountRequest,
@@ -645,6 +646,17 @@ export const api = {
       method: 'POST',
     })
   },
+
+  // Apoie o Leitorum (F0.6.6)
+  getSupportInfo: (signal?: AbortSignal) =>
+    request<SupportPublicInfo>('/support', { signal }),
+  getAdminSupportConfig: (signal?: AbortSignal) =>
+    request<SupportAdminConfig>('/admin/support', { signal }),
+  updateAdminSupportConfig: (payload: SupportConfigUpdate) =>
+    request<SupportAdminConfig>('/admin/support', {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
 }
 
 
@@ -1001,6 +1013,15 @@ export async function getRelationStatus(username: string, signal?: AbortSignal):
   return api.getRelationStatus(username, signal)
 }
 
+export async function getSupportInfo(signal?: AbortSignal): Promise<SupportPublicInfo> {
+  return api.getSupportInfo(signal)
+}
 
+export async function getAdminSupportConfig(signal?: AbortSignal): Promise<SupportAdminConfig> {
+  return api.getAdminSupportConfig(signal)
+}
 
+export async function updateAdminSupportConfig(payload: SupportConfigUpdate): Promise<SupportAdminConfig> {
+  return api.updateAdminSupportConfig(payload)
+}
 

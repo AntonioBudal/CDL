@@ -491,6 +491,8 @@ export type IconName =
   | 'trash'
   | 'trash-restore'
   | 'rotate-ccw'
+  | 'copy'
+  | 'heart'
   | 'pencil'
   | 'x'
   | 'search'
@@ -1079,7 +1081,34 @@ export interface StudyDiffResult {
     references: SectionDiff
     notes: SectionDiff
   }
+}// --- Apoie o Leitorum (F0.6.6) ---
+
+export interface SupportPublicInfo {
+  pix_enabled: boolean
+  pix_key: string | null
+  pix_recipient_name: string | null
+  pix_qr_code_url: string | null
+  alternative_enabled: boolean
+  alternative_label: string | null
+  alternative_url: string | null
+  custom_message: string | null
+  has_any_method_active: boolean
 }
 
+export interface SupportAdminConfig extends SupportPublicInfo {
+  source: 'database' | 'environment' | 'default'
+  updated_at: string | null
+  updated_by_user_id: string | null
+  updated_by_name: string | null
+}
 
-
+export interface SupportConfigUpdate {
+  pix_enabled: boolean
+  pix_key?: string | null
+  pix_recipient_name?: string | null
+  pix_qr_code_url?: string | null
+  alternative_enabled: boolean
+  alternative_label?: string | null
+  alternative_url?: string | null
+  custom_message?: string | null
+}

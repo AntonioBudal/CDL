@@ -298,7 +298,13 @@ const visibleMainLinks = computed(() => {
       </Transition>
     </RouterView>
   </main>
-  <footer class="app-footer">Leitorum · Versão 0.4</footer>
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <span>Leitorum</span>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <RouterLink to="/apoie" class="footer-support-link">Apoie o Leitorum</RouterLink>
+    </div>
+  </footer>
   <GlobalSearchModal />
   <MobileMoreMenu
     :open="isMoreMenuOpen"
@@ -313,6 +319,28 @@ const visibleMainLinks = computed(() => {
 </template>
 
 <style scoped>
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.footer-sep {
+  opacity: 0.5;
+}
+
+.footer-support-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-support-link:hover {
+  text-decoration: underline;
+  color: var(--primary, #4338ca);
+}
+
 .mobile-more-trigger {
   display: none;
 }

@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, Request, status
 from sqlalchemy import func, select
 
 from app.dependencies import AdminUser, DatabaseSession
@@ -20,7 +20,8 @@ from app.schemas.notification import (
     NotificationBroadcastResponse,
     NotificationPurgeResponse,
 )
-from app.services import admin_service, notification_service
+from app.schemas.support_setting import SupportAdminResponse, SupportConfigUpdate
+from app.services import admin_service, notification_service, support_service
 from app.services.audit_service import log_security_event
 from app.services.persistence import commit_changes
 
@@ -245,5 +246,38 @@ def get_audit_logs(
         total=total,
         limit=limit,
         offset=offset,
+    )
+
+
+@router.get(
+    "/support",
+    response_model=SupportAdminResponse,
+    summary="Consultar configurações de apoio do sistema",
+)
+def get_admin_support(
+    session: DatabaseSession,
+    current_admin: AdminUser,
+) -> SupportAdminResponse:
+    """Retorna os parâmetros de apoio completos e sua fonte (database, environment ou default)."""
+    return support_service.get_admin_support_config(session=session)
+
+
+@router.put(
+    "/support",
+    response_model=SupportAdminResponse,
+    summary="Atualizar configurações de apoio do sistema",
+)
+def update_admin_support(
+    session: DatabaseSession,
+    current_admin: AdminUser,
+    payload: SupportConfigUpdate,
+    request: Request,
+) -> SupportAdminResponse:
+    """Atualiza ou cria as configurações de apoio na tabela singleton e registra trilha de auditoria."""
+    return support_service.update_support_config(
+        session=session,
+        payload=payload,
+        current_admin=current_admin,
+        request=request,
     )
 

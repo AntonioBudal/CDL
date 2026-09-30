@@ -145,6 +145,15 @@ onUnmounted(() => {
             <span class="drawer-item-label">Ajustes & Conexão</span>
           </RouterLink>
 
+          <RouterLink
+            to="/apoie"
+            class="drawer-item"
+            @click="emit('close')"
+          >
+            <Icon name="heart" :size="20" class="drawer-item-icon" />
+            <span class="drawer-item-label">Apoie o Leitorum</span>
+          </RouterLink>
+
           <div class="drawer-divider" role="separator" />
 
           <button

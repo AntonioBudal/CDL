@@ -29,6 +29,7 @@ from app.routers import (
     study_highlights,
     study_relations,
     study_versions,
+    support,
     sync,
     trash,
     users,
@@ -90,6 +91,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(friends.router, prefix="/api")
     application.include_router(sharing.router, prefix="/api")
     application.include_router(notifications.router, prefix="/api")
+    application.include_router(support.router, prefix="/api")
     register_database_error_handlers(application)
     register_frontend(application, frontend_dist)
     return application

@@ -15,6 +15,7 @@ import SetupOwnerView from '../views/SetupOwnerView.vue'
 import UserProfileView from '../views/UserProfileView.vue'
 import FriendsView from '../views/FriendsView.vue'
 import AdminView from '../views/AdminView.vue'
+import SupportView from '../views/SupportView.vue'
 import { useAuthStore } from '../stores/auth.ts'
 
 export const router = createRouter({
@@ -36,6 +37,7 @@ export const router = createRouter({
     { path: '/lixeira', name: 'trash', component: TrashView, meta: { title: 'Lixeira' } },
     { path: '/@:username', alias: ['/u/:username'], name: 'user-profile', component: UserProfileView, meta: { title: 'Perfil do Leitor' } },
     { path: '/admin', name: 'admin', component: AdminView, meta: { title: 'Administração', requiresAdmin: true } },
+    { path: '/apoie', alias: ['/apoiar'], name: 'support', component: SupportView, meta: { title: 'Apoie o Leitorum', public: true } },
     { path: '/:pathMatch(.*)*', component: NotFoundView, meta: { title: 'Página não encontrada' } },
   ],
   scrollBehavior(to, from, savedPosition) {

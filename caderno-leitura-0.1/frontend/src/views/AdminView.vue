@@ -5,6 +5,8 @@ import AdminConfirmModal from '../components/admin/AdminConfirmModal.vue'
 import AdminUsersTable from '../components/admin/AdminUsersTable.vue'
 import Icon from '../components/ui/Icon.vue'
 import { useAuth } from '../composables/useAuth.ts'
+import { getAdminSupportConfig, updateAdminSupportConfig } from '../services/api.ts'
+import type { SupportAdminConfig, SupportConfigUpdate } from '../types.ts'
 import type {
   AdminStatsSummary,
   AdminUserItem,
@@ -232,6 +234,91 @@ watch([statusFilter, roleFilter], () => {
   fetchUsers()
 })
 
+// Abas administrativas
+const activeTab = ref<'users' | 'support'>('users')
+
+// Estado da aba de suporte
+const supportConfig = ref<SupportAdminConfig>({
+  pix_enabled: false,
+  pix_key: null,
+  pix_recipient_name: null,
+  pix_qr_code_url: null,
+  alternative_enabled: false,
+  alternative_label: null,
+  alternative_url: null,
+  custom_message: null,
+  has_any_method_active: false,
+  source: 'default',
+  updated_at: null,
+  updated_by_user_id: null,
+  updated_by_name: null,
+})
+const supportLoading = ref(false)
+const supportSaving = ref(false)
+
+async function fetchSupportConfig() {
+  supportLoading.value = true
+  try {
+    const data = await getAdminSupportConfig()
+    supportConfig.value = data
+  } catch (err: unknown) {
+    showFeedback(err instanceof Error ? err.message : 'Falha ao carregar configurações de apoio.', 'error')
+  } finally {
+    supportLoading.value = false
+  }
+}
+
+async function handleSaveSupportConfig() {
+  supportSaving.value = true
+  try {
+    const payload: SupportConfigUpdate = {
+      pix_enabled: supportConfig.value.pix_enabled,
+      pix_key: supportConfig.value.pix_key ? supportConfig.value.pix_key.trim() : null,
+      pix_recipient_name: supportConfig.value.pix_recipient_name ? supportConfig.value.pix_recipient_name.trim() : null,
+      pix_qr_code_url: supportConfig.value.pix_qr_code_url ? supportConfig.value.pix_qr_code_url.trim() : null,
+      alternative_enabled: supportConfig.value.alternative_enabled,
+      alternative_label: supportConfig.value.alternative_label ? supportConfig.value.alternative_label.trim() : null,
+      alternative_url: supportConfig.value.alternative_url ? supportConfig.value.alternative_url.trim() : null,
+      custom_message: supportConfig.value.custom_message ? supportConfig.value.custom_message.trim() : null,
+    }
+    const updated = await updateAdminSupportConfig(payload)
+    supportConfig.value = updated
+    showFeedback('Configurações de apoio salvas com sucesso no banco de dados.', 'success')
+  } catch (err: unknown) {
+    showFeedback(err instanceof Error ? err.message : 'Falha ao salvar configurações de apoio.', 'error')
+  } finally {
+    supportSaving.value = false
+  }
+}
+
+function formatSourceLabel(source: string): string {
+  switch (source) {
+    case 'database':
+      return 'Banco de Dados'
+    case 'environment':
+      return 'Variáveis de Ambiente (.env)'
+    default:
+      return 'Padrão do Sistema (Desativado)'
+  }
+}
+
+function formatDateTime(val: string | null): string {
+  if (!val) return '—'
+  try {
+    return new Date(val).toLocaleString('pt-BR')
+  } catch {
+    return val
+  }
+}
+
+async function handleRefreshAll() {
+  if (activeTab.value === 'users') {
+    await Promise.all([fetchStats(), fetchUsers()])
+  } else {
+    await fetchSupportConfig()
+  }
+}
+
 onMounted(() => {
   fetchStats()
   fetchUsers()
@@ -256,8 +343,8 @@ onMounted(() => {
         type="button"
         class="btn-refresh touch-button"
         aria-label="Atualizar dados"
-        :disabled="loading || statsLoading"
-        @click="() => { fetchStats(); fetchUsers(); }"
+        :disabled="loading || statsLoading || supportLoading"
+        @click="handleRefreshAll"
       >
         <Icon name="refresh-cw" :size="16" />
         <span>Atualizar</span>
@@ -283,8 +370,47 @@ onMounted(() => {
       </button>
     </div>
 
-    <!-- Cards de Indicadores Globais -->
-    <section class="stats-section" aria-label="Indicadores da plataforma">
+    <!-- Navegação por Abas -->
+    <nav class="admin-tabs" role="tablist" aria-label="Seções da administração">
+      <button
+        type="button"
+        role="tab"
+        class="admin-tab-btn touch-button"
+        :class="{ active: activeTab === 'users' }"
+        :aria-selected="activeTab === 'users'"
+        aria-controls="tab-panel-users"
+        id="tab-users"
+        @click="activeTab = 'users'"
+      >
+        <Icon name="users" :size="18" />
+        <span>Contas e Acessos</span>
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        class="admin-tab-btn touch-button"
+        :class="{ active: activeTab === 'support' }"
+        :aria-selected="activeTab === 'support'"
+        aria-controls="tab-panel-support"
+        id="tab-support"
+        @click="() => { activeTab = 'support'; fetchSupportConfig(); }"
+      >
+        <Icon name="heart" :size="18" />
+        <span>Apoio e Doações</span>
+      </button>
+    </nav>
+
+    <!-- Aba 1: Gestão de Contas e Estatísticas -->
+    <div
+      v-show="activeTab === 'users'"
+      id="tab-panel-users"
+      role="tabpanel"
+      aria-labelledby="tab-users"
+      class="tab-panel-content"
+    >
+      <!-- Cards de Indicadores Globais -->
+      <section class="stats-section" aria-label="Indicadores da plataforma">
       <div class="stat-card">
         <div class="stat-icon-wrapper icon-users">
           <Icon name="users" :size="20" />
@@ -439,6 +565,199 @@ onMounted(() => {
         </div>
       </footer>
     </section>
+    </div>
+
+    <!-- Aba 2: Gestão de Apoio e Doações -->
+    <div
+      v-show="activeTab === 'support'"
+      id="tab-panel-support"
+      role="tabpanel"
+      aria-labelledby="tab-support"
+      class="tab-panel-content"
+    >
+      <div v-if="supportLoading" class="support-admin-loading">
+        <Icon name="refresh-cw" :size="20" class="spin-icon" />
+        <span>Carregando parâmetros de apoio...</span>
+      </div>
+
+      <div v-else class="support-admin-panel">
+        <!-- Metadados de Origem -->
+        <div class="support-meta-bar panel">
+          <div class="meta-item">
+            <span class="meta-label">Origem da Configuração:</span>
+            <span class="meta-badge" :class="`badge-${supportConfig.source}`">
+              {{ formatSourceLabel(supportConfig.source) }}
+            </span>
+          </div>
+
+          <div v-if="supportConfig.updated_at" class="meta-item">
+            <span class="meta-label">Última Atualização:</span>
+            <span class="meta-val">{{ formatDateTime(supportConfig.updated_at) }}</span>
+          </div>
+
+          <div v-if="supportConfig.updated_by_name" class="meta-item">
+            <span class="meta-label">Atualizado por:</span>
+            <span class="meta-val">{{ supportConfig.updated_by_name }}</span>
+          </div>
+
+          <div class="meta-item meta-actions">
+            <router-link
+              to="/apoie"
+              target="_blank"
+              class="btn-preview-link touch-button"
+              aria-label="Abrir página pública de apoio em nova aba"
+            >
+              <span>Ver Página Pública</span>
+              <Icon name="external-link" :size="16" />
+            </router-link>
+          </div>
+        </div>
+
+        <!-- Formulário de Gestão -->
+        <form @submit.prevent="handleSaveSupportConfig" class="support-admin-form">
+          <!-- Bloco PIX -->
+          <section class="admin-card panel" aria-labelledby="heading-pix-settings">
+            <div class="card-header-toggle">
+              <div class="header-text">
+                <h2 id="heading-pix-settings" class="section-title">Transferência PIX</h2>
+                <p class="section-subtitle text-muted">
+                  Exibe chave PIX, nome do titular e imagem de QR Code na página de apoio.
+                </p>
+              </div>
+              <label class="toggle-control" for="toggle-pix">
+                <input
+                  id="toggle-pix"
+                  type="checkbox"
+                  v-model="supportConfig.pix_enabled"
+                  class="toggle-checkbox"
+                />
+                <span class="toggle-label" :class="{ 'label-active': supportConfig.pix_enabled }">
+                  {{ supportConfig.pix_enabled ? 'Ativo' : 'Inativo' }}
+                </span>
+              </label>
+            </div>
+
+            <div class="form-grid" :class="{ 'form-disabled': !supportConfig.pix_enabled }">
+              <div class="form-group">
+                <label for="admin-pix-key" class="form-label">Chave PIX (E-mail, CPF/CNPJ, Telefone ou Aleatória):</label>
+                <input
+                  id="admin-pix-key"
+                  type="text"
+                  v-model="supportConfig.pix_key"
+                  class="form-input"
+                  placeholder="Ex: apoio@leitorum.app, CPF/CNPJ ou chave aleatória"
+                  :disabled="!supportConfig.pix_enabled"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="admin-pix-recipient" class="form-label">Nome do Titular / Beneficiário:</label>
+                <input
+                  id="admin-pix-recipient"
+                  type="text"
+                  v-model="supportConfig.pix_recipient_name"
+                  class="form-input"
+                  placeholder="Ex: Mantenedor do Leitorum"
+                  :disabled="!supportConfig.pix_enabled"
+                />
+              </div>
+
+              <div class="form-group full-width">
+                <label for="admin-pix-qr" class="form-label">URL ou Imagem em Base64 do QR Code:</label>
+                <input
+                  id="admin-pix-qr"
+                  type="text"
+                  v-model="supportConfig.pix_qr_code_url"
+                  class="form-input"
+                  placeholder="Ex: /api/static/pix-qr.png ou data:image/png;base64,..."
+                  :disabled="!supportConfig.pix_enabled"
+                />
+              </div>
+            </div>
+          </section>
+
+          <!-- Bloco Meio Alternativo (Google Pay / Link Externo) -->
+          <section class="admin-card panel" aria-labelledby="heading-alt-settings">
+            <div class="card-header-toggle">
+              <div class="header-text">
+                <h2 id="heading-alt-settings" class="section-title">Meio Alternativo (Google Pay / Link Externo)</h2>
+                <p class="section-subtitle text-muted">
+                  Disponibiliza um botão seguro de redirecionamento para carteira digital ou página externa.
+                </p>
+              </div>
+              <label class="toggle-control" for="toggle-alt">
+                <input
+                  id="toggle-alt"
+                  type="checkbox"
+                  v-model="supportConfig.alternative_enabled"
+                  class="toggle-checkbox"
+                />
+                <span class="toggle-label" :class="{ 'label-active': supportConfig.alternative_enabled }">
+                  {{ supportConfig.alternative_enabled ? 'Ativo' : 'Inativo' }}
+                </span>
+              </label>
+            </div>
+
+            <div class="form-grid" :class="{ 'form-disabled': !supportConfig.alternative_enabled }">
+              <div class="form-group">
+                <label for="admin-alt-label" class="form-label">Rótulo do Botão:</label>
+                <input
+                  id="admin-alt-label"
+                  type="text"
+                  v-model="supportConfig.alternative_label"
+                  class="form-input"
+                  placeholder="Ex: Google Pay ou Apoio Coletivo"
+                  :disabled="!supportConfig.alternative_enabled"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="admin-alt-url" class="form-label">Endereço Web / URL de Pagamento:</label>
+                <input
+                  id="admin-alt-url"
+                  type="url"
+                  v-model="supportConfig.alternative_url"
+                  class="form-input"
+                  placeholder="Ex: https://pay.google.com/exemplo ou https://apoie.me/..."
+                  :disabled="!supportConfig.alternative_enabled"
+                />
+              </div>
+            </div>
+          </section>
+
+          <!-- Mensagem Personalizada -->
+          <section class="admin-card panel" aria-labelledby="heading-msg-settings">
+            <h2 id="heading-msg-settings" class="section-title">Mensagem Institucional de Apoio</h2>
+            <p class="section-subtitle text-muted">
+              Texto complementar opcional exibido aos visitantes no topo da página de apoio.
+            </p>
+
+            <div class="form-group">
+              <label for="admin-custom-message" class="sr-only">Mensagem de apoio</label>
+              <textarea
+                id="admin-custom-message"
+                v-model="supportConfig.custom_message"
+                rows="3"
+                class="form-textarea"
+                placeholder="Ex: Suas contribuições voluntárias ajudam a custear servidores, hospedagem e melhorias continuadas."
+              ></textarea>
+            </div>
+          </section>
+
+          <!-- Ação Salvar -->
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="btn-save-support touch-button"
+              :disabled="supportSaving"
+            >
+              <Icon name="check" :size="18" />
+              <span>{{ supportSaving ? 'Salvando alterações...' : 'Salvar Configurações de Apoio' }}</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <!-- Modal Universal de Confirmação -->
     <AdminConfirmModal
@@ -737,4 +1056,286 @@ onMounted(() => {
 .text-muted {
   color: var(--color-text-muted, #6b7280);
 }
+
+/* Abas de Navegação */
+.admin-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px solid var(--color-border, #e5e7eb);
+  margin-bottom: 0.5rem;
+}
+
+.admin-tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  border-radius: 6px 6px 0 0;
+  color: var(--color-text-muted, #4b5563);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.75rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.admin-tab-btn:hover:not(.active) {
+  color: var(--color-text, #111827);
+  background-color: var(--color-surface-hover, #f3f4f6);
+}
+
+.admin-tab-btn.active {
+  color: var(--color-primary, #2563eb);
+  border-bottom-color: var(--color-primary, #2563eb);
+}
+
+.tab-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Painel de Apoio e Doações */
+.support-admin-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem;
+  color: var(--color-text-muted, #6b7280);
+  font-size: 0.95rem;
+}
+
+.support-admin-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.support-meta-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+  background-color: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 8px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.meta-label {
+  color: var(--color-text-muted, #6b7280);
+  font-weight: 500;
+}
+
+.meta-val {
+  font-weight: 600;
+  color: var(--color-text, #111827);
+}
+
+.meta-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-database {
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
+.badge-environment {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.badge-default {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.meta-actions {
+  margin-left: auto;
+}
+
+.btn-preview-link {
+  text-decoration: none;
+  border: 1px solid var(--color-border, #d1d5db);
+  background-color: var(--color-surface, #fff);
+  color: var(--color-primary, #2563eb);
+}
+
+.btn-preview-link:hover {
+  background-color: var(--color-surface-hover, #f3f4f6);
+}
+
+.support-admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.admin-card {
+  background-color: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.card-header-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text, #111827);
+}
+
+.section-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.toggle-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  min-height: 44px;
+  user-select: none;
+}
+
+.toggle-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--color-primary, #2563eb);
+}
+
+.toggle-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.toggle-label.label-active {
+  color: var(--color-primary, #2563eb);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.form-grid.form-disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-muted, #4b5563);
+}
+
+.form-input {
+  min-height: 44px;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: var(--color-surface, #fff);
+  color: var(--color-text, #111827);
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: var(--color-primary, #2563eb);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+.form-textarea {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: var(--color-surface, #fff);
+  color: var(--color-text, #111827);
+  resize: vertical;
+  min-height: 80px;
+  box-sizing: border-box;
+}
+
+.form-textarea:focus {
+  border-color: var(--color-primary, #2563eb);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem 0;
+}
+
+.btn-save-support {
+  background-color: var(--color-primary, #2563eb);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+}
+
+.btn-save-support:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.btn-save-support:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 </style>
+
