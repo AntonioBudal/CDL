@@ -2,8 +2,8 @@
 
 **Input**: [spec.md](./spec.md), [plan.md](./plan.md)
 
-**Status**: `APPROVED` em 2026-09-30. **Fases 0, 1 e 2 concluídas.** Fase 3 em diante não iniciada; nenhum
-peso ou dataset baixado. Aguardando autorização do usuário para a Fase 3.
+**Status**: `APPROVED` em 2026-09-30. **Fases 0 a 3 concluídas** (Fase 3 só com a camada sintética: o BRESSAY ficou com licença em aberto).
+Fase 4 não iniciada.
 
 **Formato**: `[ID] [P?] [Cenário] Descrição` — `[P]` = pode rodar em paralelo; C1/C2/C3 = cenários da spec.
 
@@ -45,13 +45,37 @@ Resultado da Fase 2:
 
 ## Fase 3 — Cenário 2: candidatos reais (P2)
 
-- [ ] T014 [C2] Baixar o BRESSAY do Zenodo para `dataset/raw/exp-001/` (1,5 GB), conferir o MD5 publicado, e congelar um subconjunto de linhas do split de teste oficial (manifesto com SHA-256 por imagem, amostragem com seed fixa, um autor por página). Se falhar, registrar e seguir só com o sintético.
-- [ ] T015 [C2] Instalar os ambientes (`uv sync` em `envs/pylaia` e `envs/trocr`) e, para cada candidato com `benchmark_allowed`, baixar os pesos da revisão fixada para `models/exp-001/`, conferindo o SHA-256 de `candidates.json` antes de qualquer carga. **Primeira etapa com download de pesos.**
-- [ ] T016 [P] [C2] Adaptador `pylaia-rimes` (e `pylaia-iam`), sem modelo de linguagem.
-- [ ] T017 [P] [C2] Adaptador `trocr-small-handwritten`, decodificação gulosa; relatórios marcam `LICENSE STATUS: NEEDS VALIDATION`.
-- [ ] T018 [C2] Executar o benchmark (3 repetições por candidato) na camada sintética e, se existir, na real; logs em `evaluation/exp-001/`.
+- [ ] T014 [C2] **(BLOQUEADA — licença)** Baixar o BRESSAY do Zenodo para `dataset/raw/exp-001/` (1,5 GB), conferir o MD5 publicado, e congelar um subconjunto de linhas do split de teste oficial (manifesto com SHA-256 por imagem, amostragem com seed fixa, um autor por página). Se falhar, registrar e seguir só com o sintético.
+- [x] T015 [C2] Instalar os ambientes (`uv sync` em `envs/pylaia` e `envs/trocr`) e, para cada candidato com `benchmark_allowed`, baixar os pesos da revisão fixada para `models/exp-001/`, conferindo o SHA-256 de `candidates.json` antes de qualquer carga. **Primeira etapa com download de pesos.**
+- [x] T016 [P] [C2] Adaptador `pylaia-rimes` (e `pylaia-iam`), sem modelo de linguagem.
+- [x] T017 [P] [C2] Adaptador `trocr-small-handwritten`, decodificação gulosa; relatórios marcam `LICENSE STATUS: NEEDS VALIDATION`.
+- [x] T018 [C2] Executar o benchmark (3 repetições por candidato) na camada sintética e, se existir, na real; logs em `evaluation/exp-001/`.
 
-**Checkpoint**: tabela comparativa bruta disponível.
+**Checkpoint**: tabela comparativa bruta disponível. *(Atingido em 2026-09-30.)*
+
+Resultado da Fase 3:
+
+- **T014 bloqueada**: `bressay.zip` baixado (MD5 conferido), mas o `README.md` interno restringe o uso a
+  "non-commercial research and teaching purposes only", em conflito com o CC-BY-4.0 dos metadados do Zenodo.
+  Status rebaixado para `LICENSE STATUS: NEEDS VALIDATION`; arquivo **não extraído nem usado**. Pela regra do
+  usuário, a rodada foi medida só com a camada sintética. H1 (caligrafia real) segue **não respondida**.
+- Ambientes instalados; pesos baixados das revisões fixadas, SHA-256 conferidos contra `candidates.json`.
+  O PyLaia precisou de `setuptools<81` (o `torchmetrics` antigo importa `pkg_resources`).
+- TrOCR: o tokenizador legado não carrega no `transformers` 5; o adaptador decodifica os ids direto com o
+  SentencePiece (convenção do XLM-R). Geração gulosa com `use_cache=True`.
+- `run.py` ganhou `--wait-free-s`: espera a RAM livre chegar ao mínimo de 1 GiB em vez de pular a execução
+  (o limite não foi relaxado). As primeiras tentativas do PyLaia foram `SKIPPED` por RAM livre insuficiente.
+
+Camada sintética (200 linhas, 3 repetições, CPU, 4 threads; predições idênticas entre repetições):
+
+| Candidato | Licença | CER | WER | Mediana ms/linha | p95 ms | Carga | Pico de memória |
+| :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `pylaia-rimes` | `VERIFIED` | 22,3 % | 68,8 % | 179 | 253–273 | ~10 s | 474 MiB |
+| `pylaia-iam` | `VERIFIED` | 24,6 % | 81,0 % | 181–186 | 251–285 | ~10 s | 473 MiB |
+| `trocr-small-handwritten` | `NEEDS VALIDATION` (exceção experimental) | 17,0 % | 46,2 % | 790–798 | 969–1.049 | ~30 s | 573 MiB |
+
+Nenhum candidato atinge as metas de qualidade (CER ≤ 12 %, WER ≤ 25 %) nem a de latência (≤ 150 ms), mesmo em
+linhas sintéticas limpas. Todos ficam bem abaixo do teto de 2 GB. Logs: `evaluation/benchmarks/*-synthetic.json`.
 
 ## Fase 4 — Cenário 3: análise de erros (P3)
 

@@ -1,6 +1,6 @@
 # EXP-001: Ambientes Isolados do Experimento
 
-* **Status:** `envs/harness` instalado (sem modelos); `envs/trocr` e `envs/pylaia` apenas resolvidos por `uv lock` — **nenhum peso baixado**
+* **Status:** os três ambientes instalados em 2026-09-30; pesos em `models/exp-001/` (fora do Git), SHA-256 conferidos
 * **Hardware e sistema:** os de [`../EXP-000/environment.md`](../EXP-000/environment.md) (CPU-only)
 * **`uv`:** 0.11.21
 
@@ -33,4 +33,7 @@ O `pyproject.toml` e o `uv.lock` principais de `document-intelligence/` não for
   serão carregados depois de conferir o SHA-256 contra [`candidates.json`](./candidates.json).
 * **RAM livre:** em 2026-09-30, em uso normal, a máquina tinha cerca de 1.013 MiB livres de 8.072 MiB — abaixo do
   mínimo de 1 GiB que o supervisor exige para iniciar um candidato.
-* **Instalação efetiva** (`uv sync` nos dois ambientes) acontece em T015 e será registrada aqui.
+* **Instalação efetiva (T015):** `envs/trocr/.venv` ≈ 631 MiB; `envs/pylaia/.venv` ≈ 1.059 MiB (antes do ajuste do
+  `setuptools`). `envs/pylaia` fixa `setuptools<81` porque o `torchmetrics` 0.7 importa `pkg_resources`.
+* **Pesos:** `pylaia-rimes` e `pylaia-iam` ≈ 43 MB cada; `trocr-small-handwritten` ≈ 246 MB.
+* **Dataset:** `dataset/raw/exp-001/bressay.zip` (1,5 GB) baixado e **não extraído** — licença em aberto.
