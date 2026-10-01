@@ -1,0 +1,16 @@
+# Ambiente isolado do EXP-001 para o candidato TrOCR (Transformer encoder-decoder).
+# NÃO faz parte do pacote leitorum-di; estas dependências não devem migrar para o pyproject principal.
+[project]
+name = "exp-001-trocr"
+version = "0.0.0"
+description = "EXP-001: ambiente isolado do candidato TrOCR (CPU-only)"
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    "torch",
+    "transformers",
+    "sentencepiece",
+    "pillow",
+]
+
+[tool.uv]
+package = false

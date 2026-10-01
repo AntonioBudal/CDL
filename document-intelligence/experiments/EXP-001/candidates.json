@@ -1,0 +1,140 @@
+{
+  "schema": "leitorum-di-candidates/1",
+  "verified_on": "2026-09-30",
+  "note": "Licenças conforme declaradas nas fontes oficiais na data indicada; não constitui parecer jurídico. Nenhum peso foi baixado.",
+  "candidates": [
+    {
+      "id": "pylaia-rimes",
+      "family": "CNN-RNN-CTC",
+      "role": "manuscrito, zero-shot (treinado em francês)",
+      "environment": "envs/pylaia",
+      "code": {
+        "package": "pylaia==1.1.2",
+        "license": "MIT",
+        "source": "https://pypi.org/project/pylaia/"
+      },
+      "weights": {
+        "repository": "https://huggingface.co/Teklia/pylaia-rimes",
+        "revision": "270d9e1d4ccfa1047a4e617f2af3df40f3074fed",
+        "license": "MIT",
+        "files": {
+          "weights.ckpt": {
+            "bytes": 42750044,
+            "sha256": "b24aa78625c3c5cfbd07926aee3d5890dec2d7aab931a1c55bdbe6770236a8aa"
+          }
+        },
+        "training_data": "RIMES (francês); termos de uso próprios do dataset"
+      },
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "remarks": "Usar sem o modelo de linguagem francês (language_model.arpa.gz), conforme FR-006. Checkpoint em formato pickle: carregar somente após conferir o SHA-256."
+    },
+    {
+      "id": "pylaia-iam",
+      "family": "CNN-RNN-CTC",
+      "role": "manuscrito, zero-shot (treinado em inglês); opcional",
+      "environment": "envs/pylaia",
+      "code": {
+        "package": "pylaia==1.1.2",
+        "license": "MIT",
+        "source": "https://pypi.org/project/pylaia/"
+      },
+      "weights": {
+        "repository": "https://huggingface.co/Teklia/pylaia-iam",
+        "revision": "9c22c3e4ae7e8455a7fb7c6784a7c372c47270db",
+        "license": "MIT",
+        "files": {
+          "weights.ckpt": {
+            "bytes": 42671836,
+            "sha256": "9b9541eb80007bc817bbe5b91828f3dc3ddc7e461d3480bf14cc6931458474b2"
+          }
+        },
+        "training_data": "IAM (inglês); termos de uso próprios do dataset"
+      },
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "remarks": "Mesmas observações do pylaia-rimes."
+    },
+    {
+      "id": "trocr-small-handwritten",
+      "family": "Transformer encoder-decoder",
+      "role": "manuscrito, zero-shot (ajustado em inglês)",
+      "environment": "envs/trocr",
+      "code": {
+        "package": "transformers",
+        "license": "Apache-2.0",
+        "source": "https://pypi.org/project/transformers/",
+        "upstream": "https://github.com/microsoft/unilm (MIT)"
+      },
+      "weights": {
+        "repository": "https://huggingface.co/microsoft/trocr-small-handwritten",
+        "revision": "b4648cfa171985a6745f37ddd637e98c0da958ac",
+        "license": null,
+        "files": {
+          "pytorch_model.bin": {
+            "bytes": 245933041,
+            "sha256": "1b83102cbc1520dee1c3937ac334da83da18cf4683d46ebd1bd4e93ebe584dd7"
+          },
+          "sentencepiece.bpe.model": {
+            "bytes": 1356293,
+            "sha256": "6f5e2fefcf793761a76a6bfb8ad35489f9c203b25557673284b6d032f41043f4"
+          }
+        },
+        "training_data": "IAM (inglês); termos de uso próprios do dataset"
+      },
+      "license_status": "NEEDS VALIDATION",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "user_exception": "Autorizado pelo usuário em 2026-09-30 para uso estritamente experimental e comparativo local no EXP-001. Não pode ser promovido a feature de produto sem conformidade de licença.",
+      "remarks": "O card dos pesos não declara licença. pytorch_model.bin é pickle: carregar somente após conferir o SHA-256."
+    }
+  ],
+  "excluded": [
+    {
+      "id": "tesseract-por",
+      "reason": "Exige binário instalado no sistema fora de document-intelligence/; não autorizado pelo usuário em 2026-09-30. Licença em si verificada (Apache-2.0)."
+    },
+    {
+      "id": "easyocr-pt",
+      "reason": "Licença dos pesos não declarada (NEEDS VALIDATION) e sem exceção do usuário; a documentação oficial informa que manuscrito não é suportado. Baseline impresso dispensado nesta rodada."
+    },
+    {
+      "id": "mazafard/trocr-finetuned_20250422_125947",
+      "reason": "Procedência fraca; base de texto impresso."
+    },
+    {
+      "id": "transkribus-portuguese",
+      "reason": "Executa em plataforma de terceiros; viola o Princípio 1 (local-first)."
+    }
+  ],
+  "datasets": [
+    {
+      "id": "bressay",
+      "title": "BRESSAY: A Brazilian Portuguese Dataset for Offline Handwritten Text Recognition",
+      "source": "https://zenodo.org/records/11637681",
+      "doi": "10.5281/zenodo.11637681",
+      "version": "1",
+      "license": "CC-BY-4.0",
+      "access": "open",
+      "files": {
+        "bressay.zip": {
+          "bytes": 1496017418,
+          "md5": "e4a4093304efff8322b605c8b79aa957"
+        }
+      },
+      "license_status": "VERIFIED",
+      "remarks": "1.000 páginas, 1.000 autores, 30.090 linhas. Exige atribuição. Destino local: dataset/raw/exp-001/ (fora do Git)."
+    }
+  ],
+  "fonts": [
+    {
+      "id": "caveat",
+      "source": "https://github.com/googlefonts/caveat",
+      "license": "OFL-1.1",
+      "license_status": "VERIFIED",
+      "use": "Renderização das linhas sintéticas."
+    }
+  ]
+}

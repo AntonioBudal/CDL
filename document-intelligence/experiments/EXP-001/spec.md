@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-30
 
-**Status**: `DRAFT — AWAITING USER REVIEW` (nenhum código de avaliação, inferência ou download de pesos foi executado)
+**Status**: `APPROVED` — spec, plano e tarefas aprovados pelo usuário em 2026-09-30; decisões registradas em §6. Fase 1 concluída (licenças e ambientes); nenhum peso ou dataset foi baixado.
 
 **Input**: `experiments/EXP-001-context.md` + instrução do usuário de 2026-09-30 (ciclo Spec Kit adaptado a
 experimentos: Specify → Plan → Tasks, apresentados antes de qualquer execução).
@@ -91,7 +91,9 @@ Matriz de confusão por caractere com foco em diacríticos, cedilha, dígitos e 
 - **FR-008**: Dependências pesadas (Torch, ONNX Runtime, wrappers de OCR) NÃO DEVEM entrar no `pyproject.toml` principal; ficam em ambiente isolado do experimento.
 - **FR-009**: Rede só é permitida para instalar pacotes e baixar pesos verificados de repositório oficial; a inferência DEVE rodar offline. Nenhuma imagem ou texto sai da máquina.
 - **FR-010**: Nenhuma imagem real de caderno, texto do acervo ou conteúdo de `backend/data/` pode ser lido ou usado sem consentimento explícito do usuário para aquela amostra.
-- **FR-011**: Conjunto de avaliação com dados reais — **[NEEDS CLARIFICATION: ver §6, pergunta 1]**.
+- **FR-011**: A caligrafia real é avaliada com um dataset público de licença verificada e download reproduzível (BRESSAY, CC-BY-4.0, Zenodo, checksum conferido). Nenhuma amostra pessoal do usuário é usada. Se o dataset público não puder ser usado, a rodada conclui só com a camada sintética, medindo custo e lacuna.
+- **FR-012**: Nenhum binário é instalado no sistema fora de `document-intelligence/`; todo candidato precisa ser instalável por wheels em ambiente `uv` isolado.
+- **FR-013**: Candidato executado sob exceção do usuário mantém `LICENSE STATUS: NEEDS VALIDATION` em todos os relatórios e não pode ser promovido a feature de produto.
 
 ### Entidades
 
@@ -114,7 +116,26 @@ modelos do Hugging Face). Nada foi baixado. "Declarada" = o que o repositório o
 | D | EasyOCR (`pt`) | CRNN, impresso | Apache-2.0 (verificada) | não verificada separadamente | sim, impresso | `LICENSE STATUS: NEEDS VALIDATION` |
 | E | `mazafard/trocr-finetuned_20250422_125947` | TrOCR ajustado (en/pt, base impressa) | — | MIT (declarada); procedência fraca (41 downloads) | sim, impresso | `LICENSE STATUS: NEEDS VALIDATION` |
 
-**Achados que condicionam o escopo:**
+### 4.1 Lista final (T002/T003, 2026-09-30)
+
+Fonte de verdade: [`candidates.json`](./candidates.json) (revisões e SHA-256) e `docs/models-and-licensing.md`.
+
+| Candidato | Decisão | Status de licença |
+| :--- | :--- | :--- |
+| `pylaia-rimes` (PyLaia 1.1.2 + pesos Teklia, francês) | **executar** | `LICENSE STATUS: VERIFIED` (código MIT, pesos MIT declarados) |
+| `pylaia-iam` (idem, inglês) | executar se o tempo permitir | `LICENSE STATUS: VERIFIED` |
+| `trocr-small-handwritten` | **executar sob exceção do usuário**, só experimental/local | `LICENSE STATUS: NEEDS VALIDATION` — não promovível a produto |
+| Tesseract + `por` | excluído: exige binário no sistema (não autorizado) | licença verificada, mas fora da rodada |
+| EasyOCR (`pt`) | excluído: pesos sem licença declarada e sem exceção; a documentação oficial informa que manuscrito não é suportado | `LICENSE STATUS: NEEDS VALIDATION` |
+| `mazafard/trocr-finetuned…` | excluído: procedência fraca | `LICENSE STATUS: NEEDS VALIDATION` |
+
+Consequência: **não há baseline de texto impresso nesta rodada**; a comparação é entre duas famílias de manuscrito
+(CNN-RNN-CTC × Transformer), ambas sem treino em português.
+
+**Dataset real:** BRESSAY — acesso aberto no Zenodo, **CC-BY-4.0**, `LICENSE STATUS: VERIFIED`
+(DOI 10.5281/zenodo.11637681, `bressay.zip`, 1,5 GB, MD5 publicado). Exige atribuição no relatório.
+
+### 4.2 Achados da pesquisa inicial
 
 1. **Não encontrei nenhum modelo leve de manuscrito em português com pesos de licença verificada.** Os modelos
    PT de manuscrito localizados (Transkribus) rodam em plataforma de terceiros e ficam **excluídos** pelo Princípio 1.
@@ -140,7 +161,15 @@ O experimento é bem-sucedido se responder à pergunta com evidência reproduzí
 
 ---
 
-## 6. Perguntas em Aberto *(Clarify — decisões do usuário)*
+## 6. Decisões do Usuário *(Clarify — respondido em 2026-09-30)*
+
+1. **Dados:** sem amostras pessoais. Camada sintética expandida + dataset público em português com licença
+   verificada e download reproduzível (BRESSAY ou similar). Sem dataset fechado a tempo → concluir com o sintético.
+2. **Tesseract:** não autorizado; nada de binários no sistema fora de `document-intelligence/`. Só wheels em ambiente `uv` isolado; baseline impresso pode ser dispensado.
+3. **TrOCR:** autorizado para uso estritamente experimental e comparativo local, mantendo `LICENSE STATUS: NEEDS VALIDATION` em todos os relatórios e sem promoção a produto.
+4. **Git:** commit inicial autorizado e criado — `33c293f doc-intelligence — estrutura inicial e fundação (EXP-000)`.
+
+### Perguntas originais (histórico)
 
 1. **Dados reais de avaliação.** O projeto não tem dataset real (`docs/dataset-and-evaluation.md` §3) e linhas
    sintéticas renderizadas com fonte não medem HTR de verdade. Opções:

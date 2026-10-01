@@ -46,7 +46,25 @@ Toda dependência de modelo explorada em `experiments/` deve ser registrada nest
 
 | Identificador do Modelo | Versão | Licença do Código | Licença dos Pesos | Local-First? | Status de Validação |
 | :--- | :--- | :--- | :--- | :---: | :--- |
-| *(A preencher no EXP-001)* | — | — | — | — | `NEEDS VALIDATION` |
+| `pylaia-rimes` (PyLaia + `Teklia/pylaia-rimes`) | PyLaia 1.1.2; pesos rev. `270d9e1d` | MIT | MIT (declarada no card) | Sim | `LICENSE STATUS: VERIFIED` — só benchmark EXP-001 |
+| `pylaia-iam` (PyLaia + `Teklia/pylaia-iam`) | PyLaia 1.1.2; pesos rev. `9c22c3e4` | MIT | MIT (declarada no card) | Sim | `LICENSE STATUS: VERIFIED` — só benchmark EXP-001 |
+| `microsoft/trocr-small-handwritten` | rev. `b4648cfa` | MIT (`microsoft/unilm`); `transformers` Apache-2.0 | **não declarada** | Sim | `LICENSE STATUS: NEEDS VALIDATION` — uso experimental local autorizado pelo usuário em 2026-09-30; **proibido promover a produto** |
+| Tesseract 5 + `por` (`tessdata_best`) | — | Apache-2.0 | Apache-2.0 | Sim | `LICENSE STATUS: VERIFIED`, mas **excluído**: exige binário no sistema |
+| EasyOCR (`pt`) | 1.7.2 | Apache-2.0 | não declarada | Sim | `LICENSE STATUS: NEEDS VALIDATION` — excluído (sem suporte a manuscrito) |
+| `mazafard/trocr-finetuned_20250422_125947` | — | — | MIT (declarada) | Sim | `LICENSE STATUS: NEEDS VALIDATION` — excluído (procedência) |
+| Transkribus (modelos de português) | — | — | plataforma de terceiros | **Não** | Excluído pelo Princípio 1 |
+
+Consulta em 2026-09-30 às fontes oficiais (API de licenças do GitHub, API e cards do Hugging Face, PyPI). "Declarada"
+significa o que o repositório oficial publica; não é parecer jurídico. Revisões completas e SHA-256 dos pesos:
+`experiments/EXP-001/candidates.json`. Os pesos de PyLaia e TrOCR foram treinados em RIMES/IAM, que têm termos
+de uso próprios — ponto a revalidar antes de qualquer adoção em produto.
+
+### Datasets e fontes
+
+| Recurso | Versão | Licença | Origem | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| BRESSAY (manuscrito PT-BR, 1.000 autores) | v1, DOI 10.5281/zenodo.11637681 | CC-BY-4.0 (exige atribuição) | Zenodo, acesso aberto | `LICENSE STATUS: VERIFIED` |
+| Fonte Caveat (linhas sintéticas) | `googlefonts/caveat` | OFL-1.1 | GitHub | `LICENSE STATUS: VERIFIED` |
 
 ---
 

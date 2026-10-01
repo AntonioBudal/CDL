@@ -1,0 +1,14 @@
+# Ambiente isolado do EXP-001 para o candidato PyLaia (CNN-RNN-CTC).
+# PyLaia 1.1.2 exige Python <3.11 e torch 1.13; por isso este ambiente usa Python 3.10,
+# diferente do projeto principal. NÃO faz parte do pacote leitorum-di.
+[project]
+name = "exp-001-pylaia"
+version = "0.0.0"
+description = "EXP-001: ambiente isolado do candidato PyLaia (CPU-only)"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "pylaia==1.1.2",
+]
+
+[tool.uv]
+package = false
