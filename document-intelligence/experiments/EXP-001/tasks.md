@@ -2,8 +2,7 @@
 
 **Input**: [spec.md](./spec.md), [plan.md](./plan.md)
 
-**Status**: `APPROVED` em 2026-09-30. **Fases 0 a 3 concluídas** (Fase 3 só com a camada sintética: o BRESSAY ficou com licença em aberto).
-Fase 4 não iniciada.
+**Status**: `APPROVED` em 2026-09-30. **Fases 0 a 4 concluídas.** Fase 5 (RESULTS.md, ADR, aceite) não iniciada.
 
 **Formato**: `[ID] [P?] [Cenário] Descrição` — `[P]` = pode rodar em paralelo; C1/C2/C3 = cenários da spec.
 
@@ -45,7 +44,7 @@ Resultado da Fase 2:
 
 ## Fase 3 — Cenário 2: candidatos reais (P2)
 
-- [ ] T014 [C2] **(BLOQUEADA — licença)** Baixar o BRESSAY do Zenodo para `dataset/raw/exp-001/` (1,5 GB), conferir o MD5 publicado, e congelar um subconjunto de linhas do split de teste oficial (manifesto com SHA-256 por imagem, amostragem com seed fixa, um autor por página). Se falhar, registrar e seguir só com o sintético.
+- [x] T014 [C2] Baixar o BRESSAY do Zenodo para `dataset/raw/exp-001/` (1,5 GB), conferir o MD5 publicado, e congelar um subconjunto de linhas do split de teste oficial (manifesto com SHA-256 por imagem, amostragem com seed fixa, um autor por página). Se falhar, registrar e seguir só com o sintético.
 - [x] T015 [C2] Instalar os ambientes (`uv sync` em `envs/pylaia` e `envs/trocr`) e, para cada candidato com `benchmark_allowed`, baixar os pesos da revisão fixada para `models/exp-001/`, conferindo o SHA-256 de `candidates.json` antes de qualquer carga. **Primeira etapa com download de pesos.**
 - [x] T016 [P] [C2] Adaptador `pylaia-rimes` (e `pylaia-iam`), sem modelo de linguagem.
 - [x] T017 [P] [C2] Adaptador `trocr-small-handwritten`, decodificação gulosa; relatórios marcam `LICENSE STATUS: NEEDS VALIDATION`.
@@ -79,8 +78,15 @@ linhas sintéticas limpas. Todos ficam bem abaixo do teto de 2 GB. Logs: `evalua
 
 ## Fase 4 — Cenário 3: análise de erros (P3)
 
-- [ ] T019 [C3] Alinhamento por caractere e matriz de confusão por candidato; taxas por classe (acentuadas, `ç`, dígitos, pontuação).
-- [ ] T020 [C3] Listar as 20 confusões mais frequentes por candidato.
+- [x] T019 [C3] Alinhamento por caractere e matriz de confusão por candidato; taxas por classe (acentuadas, `ç`, dígitos, pontuação).
+- [x] T020 [C3] Listar as 20 confusões mais frequentes por candidato.
+
+**Atualização de 2026-10-01 (Fases 3 e 4):** o usuário autorizou o BRESSAY como exceção experimental local
+(`LICENSE STATUS: NEEDS VALIDATION` mantido). T014 concluída com um subconjunto congelado de 398 linhas do split de
+teste oficial (2 por página, 199 autores, seed 1234; `harness/bressay_subset.py`); imagens, transcrições e
+predições ficam fora do Git, e o Git guarda só identificadores, hashes e agregados. No BRESSAY: CER de 94,7 %
+(`pylaia-rimes`), 79,3 % (`pylaia-iam`) e 69,4 % (`trocr-small-handwritten`). Análise completa em
+[`error-analysis.md`](./error-analysis.md).
 
 ## Fase 5 — Relatório e decisão
 

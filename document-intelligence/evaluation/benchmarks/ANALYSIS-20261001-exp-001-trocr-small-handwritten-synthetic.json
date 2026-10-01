@@ -1,0 +1,217 @@
+{
+  "schema": "leitorum-di-htr-error-analysis/1",
+  "candidate": "trocr-small-handwritten",
+  "license_status": "NEEDS VALIDATION",
+  "dataset": {
+    "id": "exp-001-synthetic",
+    "origin": "synthetic",
+    "manifest": "synthetic-manifest.json",
+    "manifest_sha256": "4e57398cd000a542d0387260c8e18449a45549a93fbb0b06c33ae0b4021899ac",
+    "lines": 200
+  },
+  "git": {
+    "commit": "0b47660dbe6027507b32ba006ffd8a1c14098210",
+    "dirty": false
+  },
+  "lines": 200,
+  "ref_chars": 8107,
+  "operations": {
+    "eq": 7240,
+    "sub": 806,
+    "del": 61,
+    "ins": 509
+  },
+  "cer": 0.16972986308128776,
+  "cer_without_diacritics": 0.10928826939681756,
+  "cer_case_insensitive": 0.16960651289009498,
+  "cer_punctuation_glued": 0.12396694214876033,
+  "by_class": {
+    "acentuada": {
+      "ref_chars": 557,
+      "errors": 557,
+      "error_rate": 1.0,
+      "insertions": 0
+    },
+    "cedilha": {
+      "ref_chars": 60,
+      "errors": 60,
+      "error_rate": 1.0,
+      "insertions": 0
+    },
+    "dígito": {
+      "ref_chars": 408,
+      "errors": 12,
+      "error_rate": 0.029411764705882353,
+      "insertions": 0
+    },
+    "pontuação": {
+      "ref_chars": 464,
+      "errors": 29,
+      "error_rate": 0.0625,
+      "insertions": 14
+    },
+    "maiúscula": {
+      "ref_chars": 360,
+      "errors": 6,
+      "error_rate": 0.016666666666666666,
+      "insertions": 9
+    },
+    "minúscula": {
+      "ref_chars": 4992,
+      "errors": 168,
+      "error_rate": 0.03365384615384615,
+      "insertions": 105
+    },
+    "espaço": {
+      "ref_chars": 1266,
+      "errors": 35,
+      "error_rate": 0.02764612954186414,
+      "insertions": 381
+    },
+    "outro": {
+      "ref_chars": 0,
+      "errors": 0,
+      "error_rate": null,
+      "insertions": 0
+    }
+  },
+  "top_confusions": [
+    {
+      "ref": "∅",
+      "hyp": " ",
+      "count": 381
+    },
+    {
+      "ref": "í",
+      "hyp": "i",
+      "count": 97
+    },
+    {
+      "ref": "ã",
+      "hyp": "a",
+      "count": 74
+    },
+    {
+      "ref": "á",
+      "hyp": "a",
+      "count": 68
+    },
+    {
+      "ref": "é",
+      "hyp": "e",
+      "count": 53
+    },
+    {
+      "ref": "ç",
+      "hyp": "g",
+      "count": 41
+    },
+    {
+      "ref": "à",
+      "hyp": "a",
+      "count": 40
+    },
+    {
+      "ref": "ê",
+      "hyp": "e",
+      "count": 37
+    },
+    {
+      "ref": "ó",
+      "hyp": "o",
+      "count": 37
+    },
+    {
+      "ref": "∅",
+      "hyp": "l",
+      "count": 25
+    },
+    {
+      "ref": " ",
+      "hyp": "∅",
+      "count": 25
+    },
+    {
+      "ref": "u",
+      "hyp": "o",
+      "count": 21
+    },
+    {
+      "ref": "∅",
+      "hyp": "e",
+      "count": 13
+    },
+    {
+      "ref": "ô",
+      "hyp": "o",
+      "count": 13
+    },
+    {
+      "ref": "á",
+      "hyp": "c",
+      "count": 12
+    },
+    {
+      "ref": "i",
+      "hyp": "u",
+      "count": 11
+    },
+    {
+      "ref": "ã",
+      "hyp": "o",
+      "count": 10
+    },
+    {
+      "ref": "â",
+      "hyp": "a",
+      "count": 10
+    },
+    {
+      "ref": "ú",
+      "hyp": "u",
+      "count": 10
+    },
+    {
+      "ref": "∅",
+      "hyp": "f",
+      "count": 9
+    }
+  ],
+  "ambiguous_pairs": [
+    {
+      "a": "l",
+      "b": "1",
+      "count": 0
+    },
+    {
+      "a": "O",
+      "b": "0",
+      "count": 1
+    },
+    {
+      "a": "I",
+      "b": "l",
+      "count": 0
+    },
+    {
+      "a": "o",
+      "b": "0",
+      "count": 0
+    },
+    {
+      "a": "S",
+      "b": "5",
+      "count": 0
+    },
+    {
+      "a": "a",
+      "b": "o",
+      "count": 9
+    },
+    {
+      "a": "e",
+      "b": "c",
+      "count": 1
+    }
+  ]
+}

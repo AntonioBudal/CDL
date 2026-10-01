@@ -1,0 +1,231 @@
+{
+  "schema": "leitorum-di-htr-error-analysis/1",
+  "candidate": "pylaia-rimes",
+  "license_status": "VERIFIED",
+  "dataset": {
+    "id": "bressay-test-subset",
+    "origin": "real",
+    "manifest": "manifest.json",
+    "manifest_sha256": "71043a14c9e803792b6c676255fe0d49fa54ee1832d565a226fd96d14f814ca1",
+    "lines": 398
+  },
+  "git": {
+    "commit": "e0e4600144a36142edda2e53907ac4d777357a0a",
+    "dirty": false
+  },
+  "lines": 398,
+  "ref_chars": 34994,
+  "operations": {
+    "eq": 1851,
+    "sub": 1241,
+    "del": 31902,
+    "ins": 0
+  },
+  "cer": 0.9471052180373778,
+  "cer_without_diacritics": 0.9456192490141168,
+  "cer_case_insensitive": 0.9446190775561525,
+  "cer_punctuation_glued": 0.9471337943647482,
+  "by_class": {
+    "acentuada": {
+      "ref_chars": 854,
+      "errors": 847,
+      "error_rate": 0.9918032786885246,
+      "insertions": 0
+    },
+    "cedilha": {
+      "ref_chars": 252,
+      "errors": 252,
+      "error_rate": 1.0,
+      "insertions": 0
+    },
+    "dígito": {
+      "ref_chars": 39,
+      "errors": 39,
+      "error_rate": 1.0,
+      "insertions": 0
+    },
+    "pontuação": {
+      "ref_chars": 970,
+      "errors": 953,
+      "error_rate": 0.9824742268041237,
+      "insertions": 0
+    },
+    "maiúscula": {
+      "ref_chars": 382,
+      "errors": 371,
+      "error_rate": 0.9712041884816754,
+      "insertions": 0
+    },
+    "minúscula": {
+      "ref_chars": 27409,
+      "errors": 25810,
+      "error_rate": 0.9416614980480864,
+      "insertions": 0
+    },
+    "espaço": {
+      "ref_chars": 5088,
+      "errors": 4871,
+      "error_rate": 0.9573506289308176,
+      "insertions": 0
+    },
+    "outro": {
+      "ref_chars": 0,
+      "errors": 0,
+      "error_rate": null,
+      "insertions": 0
+    }
+  },
+  "top_confusions": [
+    {
+      "ref": " ",
+      "hyp": "∅",
+      "count": 4733
+    },
+    {
+      "ref": "a",
+      "hyp": "∅",
+      "count": 3255
+    },
+    {
+      "ref": "e",
+      "hyp": "∅",
+      "count": 3036
+    },
+    {
+      "ref": "o",
+      "hyp": "∅",
+      "count": 2671
+    },
+    {
+      "ref": "s",
+      "hyp": "∅",
+      "count": 2198
+    },
+    {
+      "ref": "i",
+      "hyp": "∅",
+      "count": 1935
+    },
+    {
+      "ref": "r",
+      "hyp": "∅",
+      "count": 1677
+    },
+    {
+      "ref": "d",
+      "hyp": "∅",
+      "count": 1480
+    },
+    {
+      "ref": "n",
+      "hyp": "∅",
+      "count": 1392
+    },
+    {
+      "ref": "m",
+      "hyp": "∅",
+      "count": 1156
+    },
+    {
+      "ref": "t",
+      "hyp": "∅",
+      "count": 1152
+    },
+    {
+      "ref": "c",
+      "hyp": "∅",
+      "count": 1001
+    },
+    {
+      "ref": "u",
+      "hyp": "∅",
+      "count": 838
+    },
+    {
+      "ref": "p",
+      "hyp": "∅",
+      "count": 716
+    },
+    {
+      "ref": "l",
+      "hyp": "∅",
+      "count": 702
+    },
+    {
+      "ref": ",",
+      "hyp": "∅",
+      "count": 490
+    },
+    {
+      "ref": "v",
+      "hyp": "∅",
+      "count": 345
+    },
+    {
+      "ref": "f",
+      "hyp": "∅",
+      "count": 261
+    },
+    {
+      "ref": "ã",
+      "hyp": "∅",
+      "count": 253
+    },
+    {
+      "ref": "g",
+      "hyp": "∅",
+      "count": 249
+    }
+  ],
+  "ambiguous_pairs": [
+    {
+      "a": "l",
+      "b": "1",
+      "count": 0
+    },
+    {
+      "a": "O",
+      "b": "0",
+      "count": 0
+    },
+    {
+      "a": "I",
+      "b": "l",
+      "count": 0
+    },
+    {
+      "a": "o",
+      "b": "0",
+      "count": 1
+    },
+    {
+      "a": "S",
+      "b": "5",
+      "count": 0
+    },
+    {
+      "a": "a",
+      "b": "o",
+      "count": 22
+    },
+    {
+      "a": "e",
+      "b": "c",
+      "count": 8
+    }
+  ],
+  "alphabet": {
+    "symbols": 97,
+    "unreachable_ref_chars": 609,
+    "unreachable_share": 0.01740298336857747,
+    "unreachable_by_char": {
+      "ã": 263,
+      "á": 125,
+      "í": 90,
+      "ó": 50,
+      "õ": 47,
+      "ú": 33,
+      "ª": 1
+    }
+  }
+}

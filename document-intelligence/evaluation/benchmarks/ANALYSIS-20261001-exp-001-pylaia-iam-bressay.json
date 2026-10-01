@@ -1,0 +1,239 @@
+{
+  "schema": "leitorum-di-htr-error-analysis/1",
+  "candidate": "pylaia-iam",
+  "license_status": "VERIFIED",
+  "dataset": {
+    "id": "bressay-test-subset",
+    "origin": "real",
+    "manifest": "manifest.json",
+    "manifest_sha256": "71043a14c9e803792b6c676255fe0d49fa54ee1832d565a226fd96d14f814ca1",
+    "lines": 398
+  },
+  "git": {
+    "commit": "e0e4600144a36142edda2e53907ac4d777357a0a",
+    "dirty": false
+  },
+  "lines": 398,
+  "ref_chars": 34994,
+  "operations": {
+    "eq": 7312,
+    "sub": 6444,
+    "del": 21238,
+    "ins": 52
+  },
+  "cer": 0.7925358632908499,
+  "cer_without_diacritics": 0.788820940732697,
+  "cer_case_insensitive": 0.7908784363033663,
+  "cer_punctuation_glued": 0.7927644739098131,
+  "by_class": {
+    "acentuada": {
+      "ref_chars": 854,
+      "errors": 854,
+      "error_rate": 1.0,
+      "insertions": 0
+    },
+    "cedilha": {
+      "ref_chars": 252,
+      "errors": 252,
+      "error_rate": 1.0,
+      "insertions": 0
+    },
+    "dígito": {
+      "ref_chars": 39,
+      "errors": 39,
+      "error_rate": 1.0,
+      "insertions": 0
+    },
+    "pontuação": {
+      "ref_chars": 970,
+      "errors": 908,
+      "error_rate": 0.9360824742268041,
+      "insertions": 4
+    },
+    "maiúscula": {
+      "ref_chars": 382,
+      "errors": 354,
+      "error_rate": 0.9267015706806283,
+      "insertions": 0
+    },
+    "minúscula": {
+      "ref_chars": 27409,
+      "errors": 20750,
+      "error_rate": 0.7570506038162648,
+      "insertions": 40
+    },
+    "espaço": {
+      "ref_chars": 5088,
+      "errors": 4525,
+      "error_rate": 0.8893474842767296,
+      "insertions": 8
+    },
+    "outro": {
+      "ref_chars": 0,
+      "errors": 0,
+      "error_rate": null,
+      "insertions": 0
+    }
+  },
+  "top_confusions": [
+    {
+      "ref": " ",
+      "hyp": "∅",
+      "count": 3451
+    },
+    {
+      "ref": "a",
+      "hyp": "∅",
+      "count": 2100
+    },
+    {
+      "ref": "o",
+      "hyp": "∅",
+      "count": 1987
+    },
+    {
+      "ref": "e",
+      "hyp": "∅",
+      "count": 1867
+    },
+    {
+      "ref": "s",
+      "hyp": "∅",
+      "count": 1558
+    },
+    {
+      "ref": "i",
+      "hyp": "∅",
+      "count": 1154
+    },
+    {
+      "ref": "r",
+      "hyp": "∅",
+      "count": 1118
+    },
+    {
+      "ref": "d",
+      "hyp": "∅",
+      "count": 906
+    },
+    {
+      "ref": "n",
+      "hyp": "∅",
+      "count": 801
+    },
+    {
+      "ref": "c",
+      "hyp": "∅",
+      "count": 768
+    },
+    {
+      "ref": "m",
+      "hyp": "∅",
+      "count": 716
+    },
+    {
+      "ref": "t",
+      "hyp": "∅",
+      "count": 674
+    },
+    {
+      "ref": "u",
+      "hyp": "∅",
+      "count": 476
+    },
+    {
+      "ref": "l",
+      "hyp": "∅",
+      "count": 434
+    },
+    {
+      "ref": "p",
+      "hyp": "∅",
+      "count": 433
+    },
+    {
+      "ref": ",",
+      "hyp": "∅",
+      "count": 394
+    },
+    {
+      "ref": "v",
+      "hyp": "∅",
+      "count": 250
+    },
+    {
+      "ref": "ç",
+      "hyp": "∅",
+      "count": 205
+    },
+    {
+      "ref": "ã",
+      "hyp": "∅",
+      "count": 197
+    },
+    {
+      "ref": " ",
+      "hyp": "e",
+      "count": 185
+    }
+  ],
+  "ambiguous_pairs": [
+    {
+      "a": "l",
+      "b": "1",
+      "count": 0
+    },
+    {
+      "a": "O",
+      "b": "0",
+      "count": 0
+    },
+    {
+      "a": "I",
+      "b": "l",
+      "count": 1
+    },
+    {
+      "a": "o",
+      "b": "0",
+      "count": 0
+    },
+    {
+      "a": "S",
+      "b": "5",
+      "count": 0
+    },
+    {
+      "a": "a",
+      "b": "o",
+      "count": 91
+    },
+    {
+      "a": "e",
+      "b": "c",
+      "count": 36
+    }
+  ],
+  "alphabet": {
+    "symbols": 78,
+    "unreachable_ref_chars": 1110,
+    "unreachable_share": 0.03171972338115105,
+    "unreachable_by_char": {
+      "ã": 263,
+      "ç": 252,
+      "á": 125,
+      "é": 125,
+      "í": 90,
+      "ó": 50,
+      "õ": 47,
+      "à": 45,
+      "ê": 36,
+      "ú": 33,
+      "â": 26,
+      "ô": 10,
+      "É": 4,
+      "%": 3,
+      "ª": 1
+    }
+  }
+}
