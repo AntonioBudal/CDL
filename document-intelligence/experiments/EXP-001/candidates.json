@@ -1,7 +1,7 @@
 {
   "schema": "leitorum-di-candidates/1",
   "verified_on": "2026-09-30",
-  "note": "Licenças conforme declaradas nas fontes oficiais na data indicada; não constitui parecer jurídico. Nenhum peso foi baixado.",
+  "note": "Licenças conforme declaradas nas fontes oficiais na data indicada; não constitui parecer jurídico. Pesos baixados em 2026-09-30 para models/exp-001/ (fora do Git), com SHA-256 conferido.",
   "candidates": [
     {
       "id": "pylaia-rimes",
@@ -21,14 +21,26 @@
           "weights.ckpt": {
             "bytes": 42750044,
             "sha256": "b24aa78625c3c5cfbd07926aee3d5890dec2d7aab931a1c55bdbe6770236a8aa"
+          },
+          "model": {
+            "bytes": 1515,
+            "sha256": "e50c1ec3ff00c86c448634987e05f135cbd8017b39f2389ec032fc8f0f99ff6f",
+            "sha256_source": "calculado localmente na revisão fixada"
+          },
+          "syms.txt": {
+            "bytes": 523,
+            "sha256": "ad1f4574e53658cc972ee0ce9f664fefd1061624c9664ff9a9ec371aaa0d9e66",
+            "sha256_source": "calculado localmente na revisão fixada"
           }
         },
-        "training_data": "RIMES (francês); termos de uso próprios do dataset"
+        "training_data": "RIMES (francês); termos de uso próprios do dataset",
+        "local_dir": "models/exp-001/pylaia-rimes"
       },
       "license_status": "VERIFIED",
       "benchmark_allowed": true,
       "product_allowed": false,
-      "remarks": "Usar sem o modelo de linguagem francês (language_model.arpa.gz), conforme FR-006. Checkpoint em formato pickle: carregar somente após conferir o SHA-256."
+      "remarks": "Usar sem o modelo de linguagem francês (language_model.arpa.gz), conforme FR-006. Checkpoint em formato pickle: carregar somente após conferir o SHA-256.",
+      "adapter": "adapters.pylaia_ctc:PyLaiaRecognizer"
     },
     {
       "id": "pylaia-iam",
@@ -48,14 +60,26 @@
           "weights.ckpt": {
             "bytes": 42671836,
             "sha256": "9b9541eb80007bc817bbe5b91828f3dc3ddc7e461d3480bf14cc6931458474b2"
+          },
+          "model": {
+            "bytes": 1515,
+            "sha256": "cfe0c2e1da98dcddb0db65e11635b5fbb6a620d07529c29ef027ea1293aee784",
+            "sha256_source": "calculado localmente na revisão fixada"
+          },
+          "syms.txt": {
+            "bytes": 409,
+            "sha256": "79cfd87cabdf7a137b7b3c9814481b17b1ce4cd52717748a9390da61f0e6c55f",
+            "sha256_source": "calculado localmente na revisão fixada"
           }
         },
-        "training_data": "IAM (inglês); termos de uso próprios do dataset"
+        "training_data": "IAM (inglês); termos de uso próprios do dataset",
+        "local_dir": "models/exp-001/pylaia-iam"
       },
       "license_status": "VERIFIED",
       "benchmark_allowed": true,
       "product_allowed": false,
-      "remarks": "Mesmas observações do pylaia-rimes."
+      "remarks": "Mesmas observações do pylaia-rimes.",
+      "adapter": "adapters.pylaia_ctc:PyLaiaRecognizer"
     },
     {
       "id": "trocr-small-handwritten",
@@ -80,15 +104,42 @@
           "sentencepiece.bpe.model": {
             "bytes": 1356293,
             "sha256": "6f5e2fefcf793761a76a6bfb8ad35489f9c203b25557673284b6d032f41043f4"
+          },
+          "config.json": {
+            "bytes": 4211,
+            "sha256": "2b6e06edec319984eca99c932d940bfa1f308db3f74d6279440b906c373bf727",
+            "sha256_source": "calculado localmente na revisão fixada"
+          },
+          "generation_config.json": {
+            "bytes": 190,
+            "sha256": "41149cdcffec4d657f32dfcddd9b208037f01286c9e07945c724908c58ed0193",
+            "sha256_source": "calculado localmente na revisão fixada"
+          },
+          "preprocessor_config.json": {
+            "bytes": 272,
+            "sha256": "eec0c686d2e2ea6d5887f87e1c6a34ef5bf1ba5b2ac98b8675e131da646fa1d2",
+            "sha256_source": "calculado localmente na revisão fixada"
+          },
+          "special_tokens_map.json": {
+            "bytes": 238,
+            "sha256": "58dc0a3d15e3bad4861bcf2dee770ea327344d185182d4c5d2bf253285e53a83",
+            "sha256_source": "calculado localmente na revisão fixada"
+          },
+          "tokenizer_config.json": {
+            "bytes": 327,
+            "sha256": "e098c98c6834fbcd3f3e75215e3e8b8868f0fe5bf07aef93d28e4f7196db293c",
+            "sha256_source": "calculado localmente na revisão fixada"
           }
         },
-        "training_data": "IAM (inglês); termos de uso próprios do dataset"
+        "training_data": "IAM (inglês); termos de uso próprios do dataset",
+        "local_dir": "models/exp-001/trocr-small-handwritten"
       },
       "license_status": "NEEDS VALIDATION",
       "benchmark_allowed": true,
       "product_allowed": false,
       "user_exception": "Autorizado pelo usuário em 2026-09-30 para uso estritamente experimental e comparativo local no EXP-001. Não pode ser promovido a feature de produto sem conformidade de licença.",
-      "remarks": "O card dos pesos não declara licença. pytorch_model.bin é pickle: carregar somente após conferir o SHA-256."
+      "remarks": "O card dos pesos não declara licença. pytorch_model.bin é pickle: carregar somente após conferir o SHA-256.",
+      "adapter": "adapters.trocr:TrOCRRecognizer"
     }
   ],
   "excluded": [
@@ -116,7 +167,7 @@
       "source": "https://zenodo.org/records/11637681",
       "doi": "10.5281/zenodo.11637681",
       "version": "1",
-      "license": "CC-BY-4.0",
+      "license": "CC-BY-4.0 nos metadados do Zenodo; o README dentro do arquivo restringe a 'non-commercial research and teaching purposes only'",
       "access": "open",
       "files": {
         "bressay.zip": {
@@ -124,8 +175,15 @@
           "md5": "e4a4093304efff8322b605c8b79aa957"
         }
       },
-      "license_status": "VERIFIED",
-      "remarks": "1.000 páginas, 1.000 autores, 30.090 linhas. Exige atribuição. Destino local: dataset/raw/exp-001/ (fora do Git)."
+      "license_status": "NEEDS VALIDATION",
+      "remarks": "1.000 páginas, 1.000 autores, 30.090 linhas; split oficial por página/autor (647 treino, 154 validação, 199 teste). Termos conflitantes entre o Zenodo e o README: não usado na avaliação até decisão do usuário.",
+      "evaluation_allowed": false,
+      "downloaded": {
+        "date": "2026-09-30",
+        "path": "dataset/raw/exp-001/bressay.zip",
+        "md5_verified": true,
+        "extracted": false
+      }
     }
   ],
   "fonts": [

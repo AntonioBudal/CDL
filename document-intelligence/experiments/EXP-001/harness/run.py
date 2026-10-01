@@ -71,7 +71,8 @@ def git_state() -> dict[str, object]:
             return None
         return out.stdout.strip()
 
-    status = git("status", "--porcelain", "--", ".")
+    # Os próprios relatórios em evaluation/ não contam como alteração de código.
+    status = git("status", "--porcelain", "--", ".", ":(exclude)evaluation")
     return {"commit": git("rev-parse", "HEAD"), "dirty": None if status is None else bool(status)}
 
 
@@ -161,6 +162,15 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     candidate = load_candidate(args.candidate)
+    weights_dir = None
+    local_dir = candidate.get("weights", {}).get("local_dir")
+    if local_dir:
+        weights_dir = ROOT / local_dir
+        candidate["options"] = {
+            "id": candidate["id"],
+            "weights_dir": str(weights_dir),
+            "seed": args.seed,
+        }
     report = build_report(
         candidate,
         Path(args.manifest),
@@ -168,6 +178,7 @@ def main(argv: list[str] | None = None) -> int:
         Limits(min_free_system_bytes=args.min_free_mib * 1024 * 1024),
         seed=args.seed,
         python_exe=candidate_python(candidate),
+        weights_dir=weights_dir,
     )
     if args.out:
         out = Path(args.out)

@@ -132,8 +132,11 @@ Fonte de verdade: [`candidates.json`](./candidates.json) (revisões e SHA-256) e
 Consequência: **não há baseline de texto impresso nesta rodada**; a comparação é entre duas famílias de manuscrito
 (CNN-RNN-CTC × Transformer), ambas sem treino em português.
 
-**Dataset real:** BRESSAY — acesso aberto no Zenodo, **CC-BY-4.0**, `LICENSE STATUS: VERIFIED`
-(DOI 10.5281/zenodo.11637681, `bressay.zip`, 1,5 GB, MD5 publicado). Exige atribuição no relatório.
+**Dataset real:** BRESSAY (DOI 10.5281/zenodo.11637681, `bressay.zip`, 1,5 GB, MD5 conferido em 2026-09-30).
+**Correção da Fase 3:** os metadados do Zenodo declaram CC-BY-4.0, mas o `README.md` dentro do arquivo restringe o
+uso a "non-commercial research and teaching purposes only". Com termos conflitantes, o status passa a
+`LICENSE STATUS: NEEDS VALIDATION` e, pela regra do usuário (§6.1), a rodada conclui só com a camada sintética,
+salvo autorização expressa. O arquivo foi baixado e não foi extraído.
 
 ### 4.2 Achados da pesquisa inicial
 

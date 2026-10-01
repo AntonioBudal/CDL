@@ -8,6 +8,8 @@ description = "EXP-001: ambiente isolado do candidato PyLaia (CPU-only)"
 requires-python = ">=3.10,<3.11"
 dependencies = [
     "pylaia==1.1.2",
+    # torchmetrics 0.7 importa pkg_resources, removido das versões recentes do setuptools.
+    "setuptools<81",
 ]
 
 [tool.uv]

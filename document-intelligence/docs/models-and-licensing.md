@@ -63,7 +63,7 @@ de uso próprios — ponto a revalidar antes de qualquer adoção em produto.
 
 | Recurso | Versão | Licença | Origem | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| BRESSAY (manuscrito PT-BR, 1.000 autores) | v1, DOI 10.5281/zenodo.11637681 | CC-BY-4.0 (exige atribuição) | Zenodo, acesso aberto | `LICENSE STATUS: VERIFIED` |
+| BRESSAY (manuscrito PT-BR, 1.000 autores) | v1, DOI 10.5281/zenodo.11637681 | **Conflitante**: CC-BY-4.0 nos metadados do Zenodo; o `README.md` do arquivo restringe a "non-commercial research and teaching purposes only" | Zenodo, acesso aberto | `LICENSE STATUS: NEEDS VALIDATION` — baixado (MD5 conferido), **não usado** na avaliação até decisão do usuário |
 | Fonte Caveat (linhas sintéticas) | `googlefonts/caveat` | OFL-1.1 | GitHub | `LICENSE STATUS: VERIFIED` |
 
 ---
