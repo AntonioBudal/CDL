@@ -12,6 +12,7 @@ import json
 import statistics
 import subprocess
 import sys
+import time
 from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
@@ -20,6 +21,7 @@ from typing import Any
 from evaluate import evaluate, latency_stats, verdicts
 from supervisor import Limits, RunResult, run_candidate, sha256_file
 
+from leitorum_di.procmem import available_system_memory_bytes
 from leitorum_di.reproducibility import DEFAULT_SEED, environment_snapshot, freeze_seeds
 
 SCHEMA = "leitorum-di-htr-benchmark/1"
@@ -76,6 +78,17 @@ def git_state() -> dict[str, object]:
     return {"commit": git("rev-parse", "HEAD"), "dirty": None if status is None else bool(status)}
 
 
+def wait_for_free_memory(min_bytes: int, timeout_s: float) -> float:
+    """Espera a RAM livre atingir o mínimo exigido, sem relaxá-lo; devolve a espera em s."""
+    started = time.monotonic()
+    while time.monotonic() - started < timeout_s:
+        free = available_system_memory_bytes()
+        if free is None or free >= min_bytes:
+            break
+        time.sleep(2.0)
+    return time.monotonic() - started
+
+
 def summarize_run(result: RunResult, manifest: dict[str, Any]) -> dict[str, Any]:
     metrics = evaluate(manifest, result.predictions)
     latency = latency_stats(result.predictions)
@@ -95,11 +108,13 @@ def build_report(
     seed: int = DEFAULT_SEED,
     python_exe: str | None = None,
     weights_dir: Path | None = None,
+    wait_free_s: float = 0.0,
 ) -> dict[str, Any]:
     manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
     seed_record = freeze_seeds(seed)
     runs = []
     for _ in range(repeats):
+        waited = wait_for_free_memory(limits.min_free_system_bytes, wait_free_s)
         result = run_candidate(
             candidate,
             manifest_path,
@@ -109,7 +124,7 @@ def build_report(
             seed=seed,
             weights_dir=weights_dir,
         )
-        runs.append(summarize_run(result, manifest))
+        runs.append({**summarize_run(result, manifest), "waited_for_memory_s": waited})
 
     ok = [run for run in runs if run["status"] == "OK"]
     medians = [run["latency"]["median_ms"] for run in ok if run["latency"]["median_ms"] is not None]
@@ -159,6 +174,12 @@ def main(argv: list[str] | None = None) -> int:
         help="RAM livre mínima do sistema para iniciar (padrão do plano: 1024). "
         "O valor usado fica registrado em 'limits' no relatório.",
     )
+    parser.add_argument(
+        "--wait-free-s",
+        type=float,
+        default=0.0,
+        help="Tempo máximo de espera, antes de cada repetição, até haver a RAM livre mínima.",
+    )
     args = parser.parse_args(argv)
 
     candidate = load_candidate(args.candidate)
@@ -179,6 +200,7 @@ def main(argv: list[str] | None = None) -> int:
         seed=args.seed,
         python_exe=candidate_python(candidate),
         weights_dir=weights_dir,
+        wait_free_s=args.wait_free_s,
     )
     if args.out:
         out = Path(args.out)
