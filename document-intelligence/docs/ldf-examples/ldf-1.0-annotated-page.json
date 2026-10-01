@@ -1,0 +1,174 @@
+{
+  "ldf_version": "1.0.0",
+  "document_id": "01923f10-77a8-7000-8800-456789abcdef",
+  "created_at": "2026-09-30T20:15:00Z",
+  "source_image": {
+    "filename": "pagina_estudo_termodinamica.jpg",
+    "width": 2480,
+    "height": 3508,
+    "dpi": 300,
+    "sha256": "8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4"
+  },
+  "pipeline_metadata": {
+    "model_versions": {
+      "detector": "yolo-layout-pt-v0",
+      "htr": "trocr-handwritten-pt-v1",
+      "diagram": "arrow-node-detector-v0",
+      "classifier": "semantic-bert-pt-v0"
+    },
+    "processing_time_ms": 680
+  },
+  "recognition": {
+    "lines": [
+      {
+        "id": "line_t1",
+        "bbox": [200, 280, 1400, 360],
+        "polygon": [[200, 280], [1400, 285], [1400, 360], [200, 355]],
+        "text": "Termodinâmica: Ciclo de Carnot",
+        "confidence": 0.96,
+        "is_handwritten": true
+      },
+      {
+        "id": "line_c1",
+        "bbox": [200, 420, 1800, 490],
+        "text": "O rendimento máximo de qualquer máquina térmica depende exclusivamente",
+        "confidence": 0.92,
+        "is_handwritten": true
+      },
+      {
+        "id": "line_c2",
+        "bbox": [200, 500, 1500, 570],
+        "text": "das temperaturas das fontes quente (Tq) e fria (Tf).",
+        "confidence": 0.91,
+        "is_handwritten": true
+      },
+      {
+        "id": "line_diag_source",
+        "bbox": [400, 800, 700, 860],
+        "text": "Fonte Quente (Tq)",
+        "confidence": 0.89,
+        "is_handwritten": true
+      },
+      {
+        "id": "line_diag_engine",
+        "bbox": [450, 1100, 650, 1160],
+        "text": "Motor Térmico",
+        "confidence": 0.93,
+        "is_handwritten": true
+      },
+      {
+        "id": "line_diag_sink",
+        "bbox": [400, 1400, 700, 1460],
+        "text": "Fonte Fria (Tf)",
+        "confidence": 0.90,
+        "is_handwritten": true
+      }
+    ]
+  },
+  "structure": {
+    "reading_order": ["block_title", "block_explanation", "diag_flow_01"],
+    "blocks": [
+      {
+        "id": "block_title",
+        "type": "heading",
+        "bbox": [190, 270, 1420, 370],
+        "line_ids": ["line_t1"],
+        "confidence": 0.97
+      },
+      {
+        "id": "block_explanation",
+        "type": "paragraph",
+        "bbox": [190, 410, 1820, 580],
+        "line_ids": ["line_c1", "line_c2"],
+        "confidence": 0.94
+      }
+    ],
+    "diagrams": [
+      {
+        "id": "diag_flow_01",
+        "nodes": [
+          {
+            "id": "node_q",
+            "label": "Fonte Quente (Tq)",
+            "bbox": [380, 780, 720, 880],
+            "line_ids": ["line_diag_source"]
+          },
+          {
+            "id": "node_m",
+            "label": "Motor Térmico",
+            "bbox": [420, 1080, 680, 1180],
+            "line_ids": ["line_diag_engine"]
+          },
+          {
+            "id": "node_f",
+            "label": "Fonte Fria (Tf)",
+            "bbox": [380, 1380, 720, 1480],
+            "line_ids": ["line_diag_sink"]
+          }
+        ],
+        "edges": [
+          {
+            "id": "edge_q_to_m",
+            "source": "node_q",
+            "target": "node_m",
+            "type": "arrow",
+            "label": "Calor Fornecido (Q1)",
+            "confidence": 0.88
+          },
+          {
+            "id": "edge_m_to_f",
+            "source": "node_m",
+            "target": "node_f",
+            "type": "arrow",
+            "label": "Calor Rejeitado (Q2)",
+            "confidence": 0.87
+          }
+        ]
+      }
+    ]
+  },
+  "semantics": {
+    "sections": [
+      {
+        "id": "sec_title",
+        "role": "title",
+        "block_ids": ["block_title"],
+        "label": "Título do Fichamento",
+        "confidence": 0.98
+      },
+      {
+        "id": "sec_law",
+        "role": "concept",
+        "block_ids": ["block_explanation"],
+        "label": "Princípio de Carnot",
+        "confidence": 0.95
+      }
+    ],
+    "entities": [
+      {
+        "id": "entity_01",
+        "type": "concept",
+        "text_reference": "Ciclo de Carnot",
+        "block_ids": ["block_title", "block_explanation"],
+        "confidence": 0.96
+      },
+      {
+        "id": "entity_02",
+        "type": "diagram_flow",
+        "text_reference": "Fluxo Térmico de Carnot",
+        "block_ids": ["diag_flow_01"],
+        "confidence": 0.91
+      }
+    ]
+  },
+  "human_corrections": [
+    {
+      "op": "replace",
+      "path": "/recognition/lines/1/text",
+      "value": "O rendimento máximo de qualquer máquina térmica depende exclusivamente",
+      "author": "antonio",
+      "timestamp": "2026-09-30T20:25:00Z",
+      "reason": "Correção de caractere mal segmentado pelo HTR"
+    }
+  ]
+}

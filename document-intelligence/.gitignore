@@ -1,0 +1,63 @@
+# Ambientes Virtuais e Gerenciadores de Pacote
+.venv/
+env/
+venv/
+.uv/
+
+# Caches do Python e Compiladores
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Ferramentas de Teste, Cobertura e Linter
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.ruff_cache/
+.mypy_cache/
+
+# IDEs e Editores Locais
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Checkpoints de Modelos e Pesos Pesados (Local Models)
+# NOTA: Modelos baixados devem residir localmente e nunca ser versionados no Git.
+models/*
+!models/README.md
+!models/.gitkeep
+
+# Datasets e Imagens Brutas Reais
+# NOTA: Fotos de cadernos e datasets privados nunca devem ser commitados.
+dataset/raw/*
+dataset/processed/*
+dataset/splits/*
+!dataset/README.md
+!dataset/fixtures/
+!dataset/fixtures/**
+
+# Arquivos de Sistema Operacional
+.DS_Store
+Thumbs.db
+desktop.ini

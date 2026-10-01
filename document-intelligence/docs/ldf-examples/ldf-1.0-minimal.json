@@ -1,0 +1,56 @@
+{
+  "ldf_version": "1.0.0",
+  "document_id": "00000000-0000-0000-0000-000000000001",
+  "created_at": "2026-09-30T20:00:00Z",
+  "source_image": {
+    "filename": "exemplo_sintetico_minimo.jpg",
+    "width": 1200,
+    "height": 1600,
+    "dpi": 150,
+    "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+  },
+  "pipeline_metadata": {
+    "model_versions": {
+      "detector": "mock-layout-v1",
+      "htr": "mock-htr-v1"
+    },
+    "processing_time_ms": 150
+  },
+  "recognition": {
+    "lines": [
+      {
+        "id": "line_01",
+        "bbox": [100, 150, 600, 200],
+        "text": "Anotação de Teste em Linha Única",
+        "confidence": 0.98,
+        "is_handwritten": true
+      }
+    ]
+  },
+  "structure": {
+    "reading_order": ["block_01"],
+    "blocks": [
+      {
+        "id": "block_01",
+        "type": "text_block",
+        "bbox": [100, 140, 600, 210],
+        "line_ids": ["line_01"],
+        "confidence": 0.98
+      }
+    ],
+    "diagrams": []
+  },
+  "semantics": {
+    "sections": [
+      {
+        "id": "sec_01",
+        "role": "concept",
+        "block_ids": ["block_01"],
+        "label": "Conceito Inicial",
+        "confidence": 0.95
+      }
+    ],
+    "entities": []
+  },
+  "human_corrections": []
+}

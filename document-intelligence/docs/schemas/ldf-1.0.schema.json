@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leitorum.app/schemas/ldf-1.0.schema.json",
+  "title": "LeitorumDocumentFormat",
+  "description": "Schema oficial do Leitorum Document Format (LDF 1.0) para anotações manuscritas digitalizadas.",
+  "type": "object",
+  "required": [
+    "ldf_version",
+    "document_id",
+    "created_at",
+    "source_image",
+    "recognition",
+    "structure",
+    "semantics"
+  ],
+  "properties": {
+    "ldf_version": {
+      "type": "string",
+      "pattern": "^1\\.[0-9]+\\.[0-9]+$",
+      "description": "Versão SemVer do formato LDF."
+    },
+    "document_id": {
+      "type": "string",
+      "description": "Identificador único global do documento processado."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp ISO 8601 em UTC da geração do documento."
+    },
+    "source_image": {
+      "type": "object",
+      "required": ["filename", "width", "height", "sha256"],
+      "properties": {
+        "filename": { "type": "string" },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "dpi": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "pipeline_metadata": {
+      "type": "object",
+      "properties": {
+        "model_versions": { "type": "object" },
+        "processing_time_ms": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "recognition": {
+      "type": "object",
+      "required": ["lines"],
+      "properties": {
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "bbox", "text", "confidence"],
+            "properties": {
+              "id": { "type": "string" },
+              "bbox": {
+                "type": "array",
+                "items": { "type": "integer" },
+                "minItems": 4,
+                "maxItems": 4,
+                "description": "[x_min, y_min, x_max, y_max]"
+              },
+              "polygon": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": { "type": "integer" },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "text": { "type": "string" },
+              "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+              "is_handwritten": { "type": "boolean", "default": true }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "structure": {
+      "type": "object",
+      "required": ["reading_order", "blocks", "diagrams"],
+      "properties": {
+        "reading_order": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "IDs de blocos na sequência de leitura recomendada."
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "bbox", "line_ids"],
+            "properties": {
+              "id": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["heading", "paragraph", "list_item", "text_block", "table", "margin_note"]
+              },
+              "bbox": {
+                "type": "array",
+                "items": { "type": "integer" },
+                "minItems": 4,
+                "maxItems": 4
+              },
+              "line_ids": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "diagrams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nodes", "edges"],
+            "properties": {
+              "id": { "type": "string" },
+              "nodes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "label", "bbox"],
+                  "properties": {
+                    "id": { "type": "string" },
+                    "label": { "type": "string" },
+                    "bbox": {
+                      "type": "array",
+                      "items": { "type": "integer" },
+                      "minItems": 4,
+                      "maxItems": 4
+                    },
+                    "line_ids": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "edges": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "source", "target", "type"],
+                  "properties": {
+                    "id": { "type": "string" },
+                    "source": { "type": "string" },
+                    "target": { "type": "string" },
+                    "type": {
+                      "type": "string",
+                      "enum": ["arrow", "line", "bidirectional_arrow", "dashed_line"]
+                    },
+                    "label": { "type": "string" },
+                    "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "semantics": {
+      "type": "object",
+      "required": ["sections", "entities"],
+      "properties": {
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "role", "block_ids"],
+            "properties": {
+              "id": { "type": "string" },
+              "role": {
+                "type": "string",
+                "enum": ["title", "summary", "concept", "question", "quote", "example", "margin_note", "other"]
+              },
+              "block_ids": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "label": { "type": "string" },
+              "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "text_reference", "block_ids"],
+            "properties": {
+              "id": { "type": "string" },
+              "type": { "type": "string" },
+              "text_reference": { "type": "string" },
+              "block_ids": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "human_corrections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["op", "path"],
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": ["add", "remove", "replace", "move", "copy", "test"]
+          },
+          "path": { "type": "string" },
+          "value": {},
+          "from": { "type": "string" },
+          "author": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "reason": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "default": []
+    }
+  },
+  "additionalProperties": false
+}

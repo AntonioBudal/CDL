@@ -1,0 +1,152 @@
+{
+  "description": "Synthetic line pairs for deterministic metric validation (CER, WER, IoU). Expected values derived by hand (fractions), independent of the implementation.",
+  "samples": [
+    {
+      "id": "syn-001",
+      "ground_truth": "Introdução ao Estudo da Lógica Formal",
+      "prediction": "Introdução ao Estudo da Lógica Formal",
+      "comment": "Transcrição perfeita",
+      "expected_cer": 0.0,
+      "expected_wer": 0.0,
+      "bounding_box_gt": [
+        10,
+        20,
+        310,
+        60
+      ],
+      "bounding_box_pred": [
+        10,
+        20,
+        310,
+        60
+      ],
+      "expected_iou": 1.0
+    },
+    {
+      "id": "syn-002",
+      "ground_truth": "definicao e conceitos essenciais",
+      "prediction": "definição e conceitos essenciais",
+      "comment": "Duas substituições (c→ç, a→ã); 1 palavra errada de 4",
+      "expected_cer": 0.0625,
+      "expected_wer": 0.25,
+      "bounding_box_gt": [
+        15,
+        70,
+        250,
+        110
+      ],
+      "bounding_box_pred": [
+        15,
+        70,
+        250,
+        110
+      ],
+      "expected_iou": 1.0
+    },
+    {
+      "id": "syn-003",
+      "ground_truth": "Capítulo 1: Fundamentos Sintéticos",
+      "prediction": "Capitulo 1: Fundamentos Sinteticos",
+      "comment": "Acentos ausentes na predição; sobreposição parcial de caixas",
+      "expected_cer": 0.058823529411764705,
+      "expected_wer": 0.5,
+      "bounding_box_gt": [
+        0,
+        0,
+        100,
+        100
+      ],
+      "bounding_box_pred": [
+        50,
+        0,
+        150,
+        100
+      ],
+      "expected_iou": 0.3333333333333333
+    },
+    {
+      "id": "syn-004",
+      "ground_truth": "Resumo da Aula Seis",
+      "prediction": "resumo da aula seis",
+      "comment": "Variação de caixa (R/A/S minúsculos): 3 substituições; caixa contida (IoU 0.5)",
+      "expected_cer": 0.15789473684210525,
+      "expected_wer": 0.75,
+      "bounding_box_gt": [
+        0,
+        0,
+        10,
+        10
+      ],
+      "bounding_box_pred": [
+        0,
+        0,
+        5,
+        10
+      ],
+      "expected_iou": 0.5
+    },
+    {
+      "id": "syn-005",
+      "ground_truth": "feijao com arroz",
+      "prediction": "feijaõo com arroz",
+      "comment": "Inserção de caractere acentuado (õ); caixas disjuntas",
+      "expected_cer": 0.0625,
+      "expected_wer": 0.3333333333333333,
+      "bounding_box_gt": [
+        0,
+        0,
+        10,
+        10
+      ],
+      "bounding_box_pred": [
+        20,
+        20,
+        30,
+        30
+      ],
+      "expected_iou": 0.0
+    },
+    {
+      "id": "syn-006",
+      "ground_truth": "açúcar é doce",
+      "prediction": "açúcar doce",
+      "comment": "Deleção de 'é ' (2 caracteres); 1 palavra deletada de 3",
+      "expected_cer": 0.15384615384615385,
+      "expected_wer": 0.3333333333333333,
+      "bounding_box_gt": [
+        5,
+        5,
+        15,
+        15
+      ],
+      "bounding_box_pred": [
+        5,
+        5,
+        15,
+        15
+      ],
+      "expected_iou": 1.0
+    },
+    {
+      "id": "syn-007",
+      "ground_truth": "Olá, mundo! Tudo bem?",
+      "prediction": "Olá mundo Tudo bem",
+      "comment": "Só pontuação difere: CER conta 3 deleções; WER normaliza pontuação (=0)",
+      "expected_cer": 0.14285714285714285,
+      "expected_wer": 0.0,
+      "bounding_box_gt": [
+        0,
+        0,
+        50,
+        20
+      ],
+      "bounding_box_pred": [
+        0,
+        0,
+        50,
+        20
+      ],
+      "expected_iou": 1.0
+    }
+  ]
+}
