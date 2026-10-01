@@ -1,0 +1,7394 @@
+{
+  "schema": "leitorum-di-htr-benchmark/1",
+  "created_utc": "2026-10-01T00:38:05+00:00",
+  "experiment": "EXP-001",
+  "git": {
+    "commit": "33c293fbb0f066cb0c28a4735cd63e08e2de0b4c",
+    "dirty": true
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "seed": {
+    "seed": 1234,
+    "seeded": [
+      "random"
+    ],
+    "pythonhashseed_effective": false
+  },
+  "limits": {
+    "memory_bytes": 2147483648,
+    "load_timeout_s": 120.0,
+    "latency_probe_lines": 20,
+    "latency_abort_ms": 1500.0,
+    "wall_timeout_s": 1200.0,
+    "min_free_system_bytes": 268435456,
+    "poll_interval_s": 0.05
+  },
+  "dataset": {
+    "id": "exp-001-synthetic",
+    "origin": "synthetic",
+    "manifest": "synthetic-manifest.json",
+    "manifest_sha256": "4e57398cd000a542d0387260c8e18449a45549a93fbb0b06c33ae0b4021899ac",
+    "lines": 200
+  },
+  "candidate": {
+    "id": "echo-reference",
+    "kind": "reference",
+    "adapter": "adapters.echo:EchoRecognizer",
+    "license_status": "N/A (sem modelo)"
+  },
+  "license_status": "N/A (sem modelo)",
+  "repeats": 3,
+  "summary": {
+    "statuses": [
+      "OK",
+      "OK",
+      "OK"
+    ],
+    "cer_micro": 0.0,
+    "wer_micro": 0.0,
+    "median_ms_of_medians": 0.5683,
+    "median_ms_min": 0.42235,
+    "median_ms_max": 0.70495,
+    "peak_rss_bytes_max": 20955136
+  },
+  "runs": [
+    {
+      "candidate_id": "echo-reference",
+      "status": "OK",
+      "reason": "reconhecedor de referência (sem modelo)",
+      "license_status": "N/A (sem modelo)",
+      "load_ms": 54.5359,
+      "peak_rss_bytes": 20754432,
+      "wall_s": 0.4229547000004459,
+      "exit_code": 0,
+      "describe": {
+        "id": "echo-reference",
+        "kind": "reference",
+        "weights": null
+      },
+      "predictions": [
+        {
+          "id": "syn-0001",
+          "text": "Capítulo 25: o pêndulo simples",
+          "elapsed_ms": 0.4142
+        },
+        {
+          "id": "syn-0002",
+          "text": "O que é a equação linear?",
+          "elapsed_ms": 0.4133
+        },
+        {
+          "id": "syn-0003",
+          "text": "A lógica formal - ver página 56 (seção 1).",
+          "elapsed_ms": 0.3996
+        },
+        {
+          "id": "syn-0004",
+          "text": "\"Ninguém aprende às pressas\", disse a monitora Cecília.",
+          "elapsed_ms": 0.6259
+        },
+        {
+          "id": "syn-0005",
+          "text": "Exemplo 6: somar 8 e 51 dá 59.",
+          "elapsed_ms": 0.9761
+        },
+        {
+          "id": "syn-0006",
+          "text": "Comparar a lógica formal às 7h, não à tarde.",
+          "elapsed_ms": 1.0985
+        },
+        {
+          "id": "syn-0007",
+          "text": "Por quê? Porque a hipótese não se sustenta.",
+          "elapsed_ms": 1.341
+        },
+        {
+          "id": "syn-0008",
+          "text": "Em 2011, a aluna Thaís estudou as funções inversas.",
+          "elapsed_ms": 1.0503
+        },
+        {
+          "id": "syn-0009",
+          "text": "A razão áurea: avançada, essencial e difícil.",
+          "elapsed_ms": 0.6049
+        },
+        {
+          "id": "syn-0010",
+          "text": "Questão 8: a ciência política é simples?",
+          "elapsed_ms": 0.617
+        },
+        {
+          "id": "syn-0011",
+          "text": "RESUMO: o triângulo retângulo.",
+          "elapsed_ms": 0.4505
+        },
+        {
+          "id": "syn-0012",
+          "text": "Capítulo 29: a análise sintática",
+          "elapsed_ms": 0.4027
+        },
+        {
+          "id": "syn-0013",
+          "text": "O que é o método científico?",
+          "elapsed_ms": 0.4022
+        },
+        {
+          "id": "syn-0014",
+          "text": "As noções básicas - ver página 287 (seção 8).",
+          "elapsed_ms": 0.4398
+        },
+        {
+          "id": "syn-0015",
+          "text": "\"Não há atalho\", disse a pesquisadora Ágata.",
+          "elapsed_ms": 0.4049
+        },
+        {
+          "id": "syn-0016",
+          "text": "Exemplo 9: somar 45 e 7 dá 52.",
+          "elapsed_ms": 0.3962
+        },
+        {
+          "id": "syn-0017",
+          "text": "Revisar o período histórico às 9h, não à tarde.",
+          "elapsed_ms": 0.3929
+        },
+        {
+          "id": "syn-0018",
+          "text": "Por quê? Porque a amostra é pequena.",
+          "elapsed_ms": 0.4496
+        },
+        {
+          "id": "syn-0019",
+          "text": "Em 2011, o colega Júlio estudou a ciência política.",
+          "elapsed_ms": 0.4064
+        },
+        {
+          "id": "syn-0020",
+          "text": "As equações químicas: útil, teórica e prática.",
+          "elapsed_ms": 0.4155
+        },
+        {
+          "id": "syn-0021",
+          "text": "Questão 13: o pêndulo simples é ambígua?",
+          "elapsed_ms": 0.396
+        },
+        {
+          "id": "syn-0022",
+          "text": "RESUMO: as noções básicas.",
+          "elapsed_ms": 0.4081
+        },
+        {
+          "id": "syn-0023",
+          "text": "Capítulo 1: a frequência de onda",
+          "elapsed_ms": 0.3958
+        },
+        {
+          "id": "syn-0024",
+          "text": "A lógica formal - ver página 180 (seção 3).",
+          "elapsed_ms": 0.398
+        },
+        {
+          "id": "syn-0025",
+          "text": "\"Ninguém aprende às pressas\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.4026
+        },
+        {
+          "id": "syn-0026",
+          "text": "Exemplo 3: somar 44 e 26 dá 70.",
+          "elapsed_ms": 0.3923
+        },
+        {
+          "id": "syn-0027",
+          "text": "Revisar o método científico às 22h, não à tarde.",
+          "elapsed_ms": 0.4102
+        },
+        {
+          "id": "syn-0028",
+          "text": "Por quê? Porque o exemplo contradiz a regra.",
+          "elapsed_ms": 0.3933
+        },
+        {
+          "id": "syn-0029",
+          "text": "Em 2021, a monitora Cecília estudou o número complexo.",
+          "elapsed_ms": 0.417
+        },
+        {
+          "id": "syn-0030",
+          "text": "O binômio perfeito: essencial, simples e útil.",
+          "elapsed_ms": 0.3947
+        },
+        {
+          "id": "syn-0031",
+          "text": "Questão 8: a frequência de onda é essencial?",
+          "elapsed_ms": 0.4058
+        },
+        {
+          "id": "syn-0032",
+          "text": "QUESTÕES: o pêndulo simples.",
+          "elapsed_ms": 0.4403
+        },
+        {
+          "id": "syn-0033",
+          "text": "Capítulo 2: a pressão atmosférica",
+          "elapsed_ms": 0.5855
+        },
+        {
+          "id": "syn-0034",
+          "text": "O que é o período histórico?",
+          "elapsed_ms": 1.0418
+        },
+        {
+          "id": "syn-0035",
+          "text": "As noções básicas - ver página 422 (seção 1).",
+          "elapsed_ms": 1.5005
+        },
+        {
+          "id": "syn-0036",
+          "text": "\"A prática vem antes\", disse o colega Júlio.",
+          "elapsed_ms": 0.7738
+        },
+        {
+          "id": "syn-0037",
+          "text": "Exemplo 3: somar 11 e 21 dá 32.",
+          "elapsed_ms": 0.7402
+        },
+        {
+          "id": "syn-0038",
+          "text": "Explicar a função contínua às 19h, não à tarde.",
+          "elapsed_ms": 0.5519
+        },
+        {
+          "id": "syn-0039",
+          "text": "Por quê? Porque faltou medir de novo.",
+          "elapsed_ms": 0.4363
+        },
+        {
+          "id": "syn-0040",
+          "text": "Em 1993, a bibliotecária Hortência estudou o gênero textual.",
+          "elapsed_ms": 0.5893
+        },
+        {
+          "id": "syn-0041",
+          "text": "A função contínua: rigorosa, avançada e ambígua.",
+          "elapsed_ms": 0.4633
+        },
+        {
+          "id": "syn-0042",
+          "text": "Questão 31: a ciência política é rigorosa?",
+          "elapsed_ms": 0.4264
+        },
+        {
+          "id": "syn-0043",
+          "text": "DÚVIDA: as três hipóteses.",
+          "elapsed_ms": 0.3956
+        },
+        {
+          "id": "syn-0044",
+          "text": "Capítulo 6: o pêndulo simples",
+          "elapsed_ms": 0.4218
+        },
+        {
+          "id": "syn-0045",
+          "text": "O que é a fórmula útil?",
+          "elapsed_ms": 0.4409
+        },
+        {
+          "id": "syn-0046",
+          "text": "O binômio perfeito - ver página 275 (seção 8).",
+          "elapsed_ms": 0.424
+        },
+        {
+          "id": "syn-0047",
+          "text": "\"Meça e só então conclua\", disse o colega Júlio.",
+          "elapsed_ms": 0.4333
+        },
+        {
+          "id": "syn-0048",
+          "text": "Exemplo 3: somar 9 e 51 dá 60.",
+          "elapsed_ms": 0.401
+        },
+        {
+          "id": "syn-0049",
+          "text": "Fichar a pressão atmosférica às 10h, não à tarde.",
+          "elapsed_ms": 0.4109
+        },
+        {
+          "id": "syn-0050",
+          "text": "Por quê? Porque o método é mais confiável.",
+          "elapsed_ms": 0.3947
+        },
+        {
+          "id": "syn-0051",
+          "text": "Em 2012, a monitora Cecília estudou a tabela periódica.",
+          "elapsed_ms": 0.4102
+        },
+        {
+          "id": "syn-0052",
+          "text": "O período histórico: rigorosa, ambígua e rápida.",
+          "elapsed_ms": 0.4161
+        },
+        {
+          "id": "syn-0053",
+          "text": "Questão 13: o sistema nervoso é difícil?",
+          "elapsed_ms": 0.4555
+        },
+        {
+          "id": "syn-0054",
+          "text": "CONCLUSÃO: o gênero textual.",
+          "elapsed_ms": 0.4416
+        },
+        {
+          "id": "syn-0055",
+          "text": "Capítulo 9: o raciocínio dedutivo",
+          "elapsed_ms": 0.4785
+        },
+        {
+          "id": "syn-0056",
+          "text": "O que é a ciência política?",
+          "elapsed_ms": 0.3945
+        },
+        {
+          "id": "syn-0057",
+          "text": "O conteúdo da prova - ver página 378 (seção 6).",
+          "elapsed_ms": 0.4368
+        },
+        {
+          "id": "syn-0058",
+          "text": "\"A pergunta já é metade\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.4117
+        },
+        {
+          "id": "syn-0059",
+          "text": "Exemplo 2: somar 48 e 6 dá 54.",
+          "elapsed_ms": 0.4105
+        },
+        {
+          "id": "syn-0060",
+          "text": "Fichar o número complexo às 8h, não à tarde.",
+          "elapsed_ms": 0.3997
+        },
+        {
+          "id": "syn-0061",
+          "text": "Em 1978, o professor Abelardo estudou a frequência de onda.",
+          "elapsed_ms": 0.4734
+        },
+        {
+          "id": "syn-0062",
+          "text": "O índice remissivo: rigorosa, difícil e concisa.",
+          "elapsed_ms": 1.8131
+        },
+        {
+          "id": "syn-0063",
+          "text": "Questão 21: a órbita elíptica é avançada?",
+          "elapsed_ms": 2.0997
+        },
+        {
+          "id": "syn-0064",
+          "text": "REVISÃO: o gênero textual.",
+          "elapsed_ms": 1.1683
+        },
+        {
+          "id": "syn-0065",
+          "text": "Capítulo 9: a ciência política",
+          "elapsed_ms": 0.6436
+        },
+        {
+          "id": "syn-0066",
+          "text": "O princípio da inércia - ver página 228 (seção 4).",
+          "elapsed_ms": 0.7166
+        },
+        {
+          "id": "syn-0067",
+          "text": "\"Não há atalho\", disse o autor Quirino.",
+          "elapsed_ms": 0.564
+        },
+        {
+          "id": "syn-0068",
+          "text": "Exemplo 8: somar 14 e 47 dá 61.",
+          "elapsed_ms": 0.4145
+        },
+        {
+          "id": "syn-0069",
+          "text": "Comparar o conteúdo da prova às 18h, não à tarde.",
+          "elapsed_ms": 0.4202
+        },
+        {
+          "id": "syn-0070",
+          "text": "Em 2003, o orientador Wálter estudou a razão áurea.",
+          "elapsed_ms": 0.4068
+        },
+        {
+          "id": "syn-0071",
+          "text": "A função contínua: sólida, prática e teórica.",
+          "elapsed_ms": 0.4149
+        },
+        {
+          "id": "syn-0072",
+          "text": "Questão 23: o fenômeno óptico é essencial?",
+          "elapsed_ms": 0.397
+        },
+        {
+          "id": "syn-0073",
+          "text": "OBSERVAÇÃO: o índice remissivo.",
+          "elapsed_ms": 0.4052
+        },
+        {
+          "id": "syn-0074",
+          "text": "Capítulo 25: o fenômeno óptico",
+          "elapsed_ms": 0.4154
+        },
+        {
+          "id": "syn-0075",
+          "text": "O que é o triângulo retângulo?",
+          "elapsed_ms": 0.5249
+        },
+        {
+          "id": "syn-0076",
+          "text": "A célula vegetal - ver página 81 (seção 3).",
+          "elapsed_ms": 0.4968
+        },
+        {
+          "id": "syn-0077",
+          "text": "Exemplo 9: somar 12 e 11 dá 23.",
+          "elapsed_ms": 0.4782
+        },
+        {
+          "id": "syn-0078",
+          "text": "Estudar o princípio da inércia às 17h, não à tarde.",
+          "elapsed_ms": 0.4544
+        },
+        {
+          "id": "syn-0079",
+          "text": "Em 1957, o professor Abelardo estudou as equações químicas.",
+          "elapsed_ms": 0.6045
+        },
+        {
+          "id": "syn-0080",
+          "text": "O raciocínio dedutivo: difícil, concisa e rigorosa.",
+          "elapsed_ms": 0.4558
+        },
+        {
+          "id": "syn-0081",
+          "text": "Questão 14: a função contínua é básica?",
+          "elapsed_ms": 0.4302
+        },
+        {
+          "id": "syn-0082",
+          "text": "DEFINIÇÃO: a fórmula útil.",
+          "elapsed_ms": 0.4328
+        },
+        {
+          "id": "syn-0083",
+          "text": "Capítulo 11: o número complexo",
+          "elapsed_ms": 0.4005
+        },
+        {
+          "id": "syn-0084",
+          "text": "O que é o conteúdo da prova?",
+          "elapsed_ms": 0.3893
+        },
+        {
+          "id": "syn-0085",
+          "text": "As noções básicas - ver página 205 (seção 5).",
+          "elapsed_ms": 0.4022
+        },
+        {
+          "id": "syn-0086",
+          "text": "\"O exemplo ensina mais\", disse o colega Júlio.",
+          "elapsed_ms": 0.5954
+        },
+        {
+          "id": "syn-0087",
+          "text": "Exemplo 3: somar 29 e 22 dá 51.",
+          "elapsed_ms": 1.2886
+        },
+        {
+          "id": "syn-0088",
+          "text": "Estudar o binômio perfeito às 15h, não à tarde.",
+          "elapsed_ms": 1.5082
+        },
+        {
+          "id": "syn-0089",
+          "text": "Em 2001, o autor Quirino estudou a ciência política.",
+          "elapsed_ms": 1.2051
+        },
+        {
+          "id": "syn-0090",
+          "text": "A equação linear: sólida, teórica e frágil.",
+          "elapsed_ms": 0.7553
+        },
+        {
+          "id": "syn-0091",
+          "text": "Questão 25: o período histórico é prática?",
+          "elapsed_ms": 0.4395
+        },
+        {
+          "id": "syn-0092",
+          "text": "QUESTÕES: o princípio da inércia.",
+          "elapsed_ms": 0.4832
+        },
+        {
+          "id": "syn-0093",
+          "text": "Capítulo 27: o gênero textual",
+          "elapsed_ms": 0.4991
+        },
+        {
+          "id": "syn-0094",
+          "text": "O que é a tabela periódica?",
+          "elapsed_ms": 0.424
+        },
+        {
+          "id": "syn-0095",
+          "text": "A função contínua - ver página 188 (seção 8).",
+          "elapsed_ms": 0.4076
+        },
+        {
+          "id": "syn-0096",
+          "text": "\"A prática vem antes\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.4322
+        },
+        {
+          "id": "syn-0097",
+          "text": "Exemplo 5: somar 12 e 26 dá 38.",
+          "elapsed_ms": 0.4189
+        },
+        {
+          "id": "syn-0098",
+          "text": "Por quê? Porque a conclusão veio cedo demais.",
+          "elapsed_ms": 0.4138
+        },
+        {
+          "id": "syn-0099",
+          "text": "Em 2004, o colega Júlio estudou o conteúdo da prova.",
+          "elapsed_ms": 0.4044
+        },
+        {
+          "id": "syn-0100",
+          "text": "A razão áurea: rápida, rigorosa e avançada.",
+          "elapsed_ms": 0.439
+        },
+        {
+          "id": "syn-0101",
+          "text": "Questão 26: as equações químicas é avançada?",
+          "elapsed_ms": 0.4029
+        },
+        {
+          "id": "syn-0102",
+          "text": "CONCLUSÃO: a órbita elíptica.",
+          "elapsed_ms": 0.4082
+        },
+        {
+          "id": "syn-0103",
+          "text": "Capítulo 19: o sistema nervoso",
+          "elapsed_ms": 0.4015
+        },
+        {
+          "id": "syn-0104",
+          "text": "O que é as equações químicas?",
+          "elapsed_ms": 0.4094
+        },
+        {
+          "id": "syn-0105",
+          "text": "As funções inversas - ver página 187 (seção 4).",
+          "elapsed_ms": 0.4014
+        },
+        {
+          "id": "syn-0106",
+          "text": "\"A prática vem antes\", disse o orientador Wálter.",
+          "elapsed_ms": 0.3984
+        },
+        {
+          "id": "syn-0107",
+          "text": "Exemplo 8: somar 38 e 31 dá 69.",
+          "elapsed_ms": 0.4076
+        },
+        {
+          "id": "syn-0108",
+          "text": "Revisar a distância média às 21h, não à tarde.",
+          "elapsed_ms": 0.3928
+        },
+        {
+          "id": "syn-0109",
+          "text": "Em 1953, a monitora Cecília estudou o sistema nervoso.",
+          "elapsed_ms": 0.3951
+        },
+        {
+          "id": "syn-0110",
+          "text": "O índice remissivo: concisa, avançada e difícil.",
+          "elapsed_ms": 0.4432
+        },
+        {
+          "id": "syn-0111",
+          "text": "Questão 9: as três hipóteses é ambígua?",
+          "elapsed_ms": 0.4132
+        },
+        {
+          "id": "syn-0112",
+          "text": "DÚVIDA: a célula vegetal.",
+          "elapsed_ms": 0.4529
+        },
+        {
+          "id": "syn-0113",
+          "text": "Capítulo 12: o binômio perfeito",
+          "elapsed_ms": 0.4006
+        },
+        {
+          "id": "syn-0114",
+          "text": "O que é o binômio perfeito?",
+          "elapsed_ms": 0.5619
+        },
+        {
+          "id": "syn-0115",
+          "text": "A órbita elíptica - ver página 162 (seção 6).",
+          "elapsed_ms": 1.1267
+        },
+        {
+          "id": "syn-0116",
+          "text": "Exemplo 9: somar 38 e 14 dá 52.",
+          "elapsed_ms": 2.1836
+        },
+        {
+          "id": "syn-0117",
+          "text": "Anotar o método científico às 13h, não à tarde.",
+          "elapsed_ms": 1.3056
+        },
+        {
+          "id": "syn-0118",
+          "text": "Em 1992, o orientador Wálter estudou o índice remissivo.",
+          "elapsed_ms": 0.6649
+        },
+        {
+          "id": "syn-0119",
+          "text": "O método científico: útil, avançada e teórica.",
+          "elapsed_ms": 0.6028
+        },
+        {
+          "id": "syn-0120",
+          "text": "Questão 34: o gênero textual é sólida?",
+          "elapsed_ms": 0.4305
+        },
+        {
+          "id": "syn-0121",
+          "text": "RESUMO: a equação linear.",
+          "elapsed_ms": 0.4299
+        },
+        {
+          "id": "syn-0122",
+          "text": "Capítulo 27: a análise sintática",
+          "elapsed_ms": 0.44
+        },
+        {
+          "id": "syn-0123",
+          "text": "O sistema nervoso - ver página 80 (seção 1).",
+          "elapsed_ms": 0.4236
+        },
+        {
+          "id": "syn-0124",
+          "text": "\"Tudo começa na dúvida\", disse o professor Abelardo.",
+          "elapsed_ms": 0.4653
+        },
+        {
+          "id": "syn-0125",
+          "text": "Exemplo 4: somar 44 e 4 dá 48.",
+          "elapsed_ms": 0.39
+        },
+        {
+          "id": "syn-0126",
+          "text": "Resumir a célula vegetal às 18h, não à tarde.",
+          "elapsed_ms": 0.3944
+        },
+        {
+          "id": "syn-0127",
+          "text": "Em 1958, o orientador Wálter estudou a ciência política.",
+          "elapsed_ms": 0.3973
+        },
+        {
+          "id": "syn-0128",
+          "text": "O princípio da inércia: concisa, teórica e rigorosa.",
+          "elapsed_ms": 0.4015
+        },
+        {
+          "id": "syn-0129",
+          "text": "Questão 32: o índice remissivo é sólida?",
+          "elapsed_ms": 0.4753
+        },
+        {
+          "id": "syn-0130",
+          "text": "INTRODUÇÃO: o sistema nervoso.",
+          "elapsed_ms": 0.4043
+        },
+        {
+          "id": "syn-0131",
+          "text": "Capítulo 17: o método científico",
+          "elapsed_ms": 0.3994
+        },
+        {
+          "id": "syn-0132",
+          "text": "O índice remissivo - ver página 425 (seção 1).",
+          "elapsed_ms": 0.4293
+        },
+        {
+          "id": "syn-0133",
+          "text": "\"Ninguém aprende às pressas\", disse a pesquisadora Ágata.",
+          "elapsed_ms": 0.3979
+        },
+        {
+          "id": "syn-0134",
+          "text": "Exemplo 4: somar 23 e 57 dá 80.",
+          "elapsed_ms": 0.3941
+        },
+        {
+          "id": "syn-0135",
+          "text": "Resumir o triângulo retângulo às 22h, não à tarde.",
+          "elapsed_ms": 0.4007
+        },
+        {
+          "id": "syn-0136",
+          "text": "Em 2018, o tutor Zózimo estudou as funções inversas.",
+          "elapsed_ms": 0.4136
+        },
+        {
+          "id": "syn-0137",
+          "text": "O fenômeno óptico: sólida, difícil e essencial.",
+          "elapsed_ms": 0.3922
+        },
+        {
+          "id": "syn-0138",
+          "text": "Questão 16: o princípio da inércia é essencial?",
+          "elapsed_ms": 0.4071
+        },
+        {
+          "id": "syn-0139",
+          "text": "RESUMO: o binômio perfeito.",
+          "elapsed_ms": 0.4072
+        },
+        {
+          "id": "syn-0140",
+          "text": "Capítulo 17: o princípio da inércia",
+          "elapsed_ms": 0.3998
+        },
+        {
+          "id": "syn-0141",
+          "text": "A tabela periódica - ver página 446 (seção 6).",
+          "elapsed_ms": 1.6348
+        },
+        {
+          "id": "syn-0142",
+          "text": "Exemplo 8: somar 38 e 36 dá 74.",
+          "elapsed_ms": 1.9684
+        },
+        {
+          "id": "syn-0143",
+          "text": "Revisar o sistema nervoso às 9h, não à tarde.",
+          "elapsed_ms": 0.8938
+        },
+        {
+          "id": "syn-0144",
+          "text": "Em 1955, o autor Quirino estudou as funções inversas.",
+          "elapsed_ms": 1.1617
+        },
+        {
+          "id": "syn-0145",
+          "text": "A análise sintática: sólida, difícil e útil.",
+          "elapsed_ms": 0.5908
+        },
+        {
+          "id": "syn-0146",
+          "text": "Questão 40: a distância média é prática?",
+          "elapsed_ms": 0.5718
+        },
+        {
+          "id": "syn-0147",
+          "text": "EXERCÍCIO: a frequência de onda.",
+          "elapsed_ms": 0.4602
+        },
+        {
+          "id": "syn-0148",
+          "text": "Capítulo 23: o binômio perfeito",
+          "elapsed_ms": 0.4191
+        },
+        {
+          "id": "syn-0149",
+          "text": "O gênero textual - ver página 262 (seção 1).",
+          "elapsed_ms": 0.4083
+        },
+        {
+          "id": "syn-0150",
+          "text": "\"Não há atalho\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.3998
+        },
+        {
+          "id": "syn-0151",
+          "text": "Exemplo 5: somar 53 e 7 dá 60.",
+          "elapsed_ms": 0.6914
+        },
+        {
+          "id": "syn-0152",
+          "text": "Fichar o índice remissivo às 17h, não à tarde.",
+          "elapsed_ms": 0.4451
+        },
+        {
+          "id": "syn-0153",
+          "text": "O sistema nervoso: concisa, simples e ampla.",
+          "elapsed_ms": 0.426
+        },
+        {
+          "id": "syn-0154",
+          "text": "Questão 38: o sistema nervoso é básica?",
+          "elapsed_ms": 0.5678
+        },
+        {
+          "id": "syn-0155",
+          "text": "CONCLUSÃO: o método científico.",
+          "elapsed_ms": 0.472
+        },
+        {
+          "id": "syn-0156",
+          "text": "Capítulo 21: a lógica formal",
+          "elapsed_ms": 0.4062
+        },
+        {
+          "id": "syn-0157",
+          "text": "O que é o número complexo?",
+          "elapsed_ms": 0.3992
+        },
+        {
+          "id": "syn-0158",
+          "text": "O binômio perfeito - ver página 110 (seção 9).",
+          "elapsed_ms": 0.4299
+        },
+        {
+          "id": "syn-0159",
+          "text": "\"Ninguém aprende às pressas\", disse o tutor Zózimo.",
+          "elapsed_ms": 0.4111
+        },
+        {
+          "id": "syn-0160",
+          "text": "Exemplo 5: somar 34 e 10 dá 44.",
+          "elapsed_ms": 0.3968
+        },
+        {
+          "id": "syn-0161",
+          "text": "Revisar o índice remissivo às 21h, não à tarde.",
+          "elapsed_ms": 0.4064
+        },
+        {
+          "id": "syn-0162",
+          "text": "Em 1997, a pesquisadora Ágata estudou a órbita elíptica.",
+          "elapsed_ms": 0.4839
+        },
+        {
+          "id": "syn-0163",
+          "text": "O sistema nervoso: básica, ambígua e concisa.",
+          "elapsed_ms": 0.4009
+        },
+        {
+          "id": "syn-0164",
+          "text": "Questão 15: a órbita elíptica é simples?",
+          "elapsed_ms": 0.3929
+        },
+        {
+          "id": "syn-0165",
+          "text": "EXERCÍCIO: o gênero textual.",
+          "elapsed_ms": 0.403
+        },
+        {
+          "id": "syn-0166",
+          "text": "Capítulo 9: a equação linear",
+          "elapsed_ms": 0.8922
+        },
+        {
+          "id": "syn-0167",
+          "text": "O que é o fenômeno óptico?",
+          "elapsed_ms": 1.8687
+        },
+        {
+          "id": "syn-0168",
+          "text": "As funções inversas - ver página 28 (seção 4).",
+          "elapsed_ms": 0.9044
+        },
+        {
+          "id": "syn-0169",
+          "text": "\"O exemplo ensina mais\", disse a pesquisadora Ágata.",
+          "elapsed_ms": 0.6317
+        },
+        {
+          "id": "syn-0170",
+          "text": "Exemplo 9: somar 39 e 25 dá 64.",
+          "elapsed_ms": 0.8611
+        },
+        {
+          "id": "syn-0171",
+          "text": "Resumir a célula vegetal às 16h, não à tarde.",
+          "elapsed_ms": 0.5234
+        },
+        {
+          "id": "syn-0172",
+          "text": "Em 1972, o colega Júlio estudou o pêndulo simples.",
+          "elapsed_ms": 0.4954
+        },
+        {
+          "id": "syn-0173",
+          "text": "O fenômeno óptico: ambígua, essencial e simples.",
+          "elapsed_ms": 0.4095
+        },
+        {
+          "id": "syn-0174",
+          "text": "Questão 27: a análise sintática é prática?",
+          "elapsed_ms": 0.4155
+        },
+        {
+          "id": "syn-0175",
+          "text": "OBSERVAÇÃO: o período histórico.",
+          "elapsed_ms": 0.4229
+        },
+        {
+          "id": "syn-0176",
+          "text": "Capítulo 27: a ciência política",
+          "elapsed_ms": 0.4038
+        },
+        {
+          "id": "syn-0177",
+          "text": "A razão áurea - ver página 191 (seção 7).",
+          "elapsed_ms": 0.4332
+        },
+        {
+          "id": "syn-0178",
+          "text": "\"O exemplo ensina mais\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.4093
+        },
+        {
+          "id": "syn-0179",
+          "text": "Exemplo 8: somar 50 e 40 dá 90.",
+          "elapsed_ms": 0.3928
+        },
+        {
+          "id": "syn-0180",
+          "text": "Explicar a frequência de onda às 21h, não à tarde.",
+          "elapsed_ms": 0.3958
+        },
+        {
+          "id": "syn-0181",
+          "text": "Em 1963, a aluna Thaís estudou o princípio da inércia.",
+          "elapsed_ms": 0.4422
+        },
+        {
+          "id": "syn-0182",
+          "text": "O conteúdo da prova: rápida, frágil e básica.",
+          "elapsed_ms": 0.3966
+        },
+        {
+          "id": "syn-0183",
+          "text": "Questão 38: o raciocínio dedutivo é difícil?",
+          "elapsed_ms": 0.3897
+        },
+        {
+          "id": "syn-0184",
+          "text": "OBSERVAÇÃO: o triângulo retângulo.",
+          "elapsed_ms": 0.3889
+        },
+        {
+          "id": "syn-0185",
+          "text": "Capítulo 4: o fenômeno óptico",
+          "elapsed_ms": 0.3961
+        },
+        {
+          "id": "syn-0186",
+          "text": "O raciocínio dedutivo - ver página 423 (seção 5).",
+          "elapsed_ms": 0.3903
+        },
+        {
+          "id": "syn-0187",
+          "text": "\"A prática vem antes\", disse a monitora Cecília.",
+          "elapsed_ms": 0.3854
+        },
+        {
+          "id": "syn-0188",
+          "text": "Exemplo 5: somar 23 e 27 dá 50.",
+          "elapsed_ms": 0.3837
+        },
+        {
+          "id": "syn-0189",
+          "text": "Reler a tabela periódica às 13h, não à tarde.",
+          "elapsed_ms": 0.3889
+        },
+        {
+          "id": "syn-0190",
+          "text": "Em 2009, a bibliotecária Hortência estudou a célula vegetal.",
+          "elapsed_ms": 0.4202
+        },
+        {
+          "id": "syn-0191",
+          "text": "O fenômeno óptico: avançada, frágil e difícil.",
+          "elapsed_ms": 0.4535
+        },
+        {
+          "id": "syn-0192",
+          "text": "Questão 30: o método científico é difícil?",
+          "elapsed_ms": 0.4063
+        },
+        {
+          "id": "syn-0193",
+          "text": "INTRODUÇÃO: a razão áurea.",
+          "elapsed_ms": 0.3977
+        },
+        {
+          "id": "syn-0194",
+          "text": "Capítulo 20: as três hipóteses",
+          "elapsed_ms": 0.3981
+        },
+        {
+          "id": "syn-0195",
+          "text": "O que é a célula vegetal?",
+          "elapsed_ms": 0.7533
+        },
+        {
+          "id": "syn-0196",
+          "text": "A razão áurea - ver página 203 (seção 5).",
+          "elapsed_ms": 1.3228
+        },
+        {
+          "id": "syn-0197",
+          "text": "\"Ninguém aprende às pressas\", disse a doutora Íris.",
+          "elapsed_ms": 1.5235
+        },
+        {
+          "id": "syn-0198",
+          "text": "Exemplo 3: somar 18 e 3 dá 21.",
+          "elapsed_ms": 0.6697
+        },
+        {
+          "id": "syn-0199",
+          "text": "Reler as funções inversas às 10h, não à tarde.",
+          "elapsed_ms": 0.7868
+        },
+        {
+          "id": "syn-0200",
+          "text": "Em 1983, o professor Abelardo estudou a pressão atmosférica.",
+          "elapsed_ms": 0.538
+        }
+      ],
+      "stderr_tail": [],
+      "metrics": {
+        "lines": 200,
+        "missing": [],
+        "cer_micro": 0.0,
+        "wer_micro": 0.0,
+        "cer_macro": 0.0,
+        "wer_macro": 0.0,
+        "char_edits": 0,
+        "ref_chars": 8107,
+        "word_edits": 0,
+        "ref_words": 1445,
+        "per_line": [
+          {
+            "id": "syn-0001",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0002",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0003",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0004",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0005",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0006",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0007",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0008",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0009",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0010",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0011",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0012",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0013",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0014",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0015",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0016",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0017",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0018",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 36,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0019",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0020",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0021",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0022",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0023",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0024",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0025",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 62,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0026",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0027",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0028",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0029",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0030",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0031",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0032",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0033",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0034",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0035",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0036",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0037",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0038",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0039",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 37,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0040",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0041",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0042",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0043",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0044",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0045",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 23,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0046",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0047",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0048",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0049",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0050",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0051",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 55,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0052",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0053",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0054",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0055",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0056",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0057",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0058",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 58,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0059",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0060",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0061",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 59,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0062",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0063",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 41,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0064",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0065",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0066",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0067",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0068",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0069",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0070",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0071",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0072",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0073",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0074",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0075",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0076",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0077",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0078",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0079",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 59,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0080",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0081",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0082",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0083",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0084",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0085",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0086",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0087",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0088",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0089",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0090",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0091",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0092",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0093",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0094",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0095",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0096",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0097",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0098",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0099",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0100",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0101",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0102",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0103",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0104",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0105",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0106",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0107",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0108",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0109",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0110",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0111",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0112",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0113",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0114",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0115",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0116",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0117",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0118",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0119",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0120",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 38,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0121",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0122",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0123",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0124",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0125",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0126",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0127",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0128",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0129",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0130",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0131",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0132",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0133",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0134",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0135",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0136",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0137",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0138",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0139",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0140",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 35,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0141",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0142",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0143",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0144",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 53,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0145",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0146",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0147",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0148",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0149",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0150",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0151",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0152",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0153",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0154",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0155",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0156",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0157",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0158",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0159",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0160",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0161",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0162",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0163",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0164",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0165",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0166",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0167",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0168",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0169",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0170",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0171",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0172",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0173",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0174",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0175",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0176",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0177",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0178",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0179",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0180",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0181",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 54,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0182",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0183",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0184",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 34,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0185",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0186",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0187",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0188",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0189",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0190",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0191",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0192",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0193",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0194",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0195",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0196",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0197",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0198",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0199",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0200",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          }
+        ]
+      },
+      "latency": {
+        "lines": 200,
+        "median_ms": 0.42235,
+        "p95_ms": 1.3228,
+        "mean_ms": 0.5638865,
+        "max_ms": 2.1836
+      },
+      "partial": false,
+      "verdicts": {
+        "h1_quality": true,
+        "h2_cost": true
+      }
+    },
+    {
+      "candidate_id": "echo-reference",
+      "status": "OK",
+      "reason": "reconhecedor de referência (sem modelo)",
+      "license_status": "N/A (sem modelo)",
+      "load_ms": 60.1989,
+      "peak_rss_bytes": 20955136,
+      "wall_s": 0.4683103999996092,
+      "exit_code": 0,
+      "describe": {
+        "id": "echo-reference",
+        "kind": "reference",
+        "weights": null
+      },
+      "predictions": [
+        {
+          "id": "syn-0001",
+          "text": "Capítulo 25: o pêndulo simples",
+          "elapsed_ms": 0.3849
+        },
+        {
+          "id": "syn-0002",
+          "text": "O que é a equação linear?",
+          "elapsed_ms": 0.4565
+        },
+        {
+          "id": "syn-0003",
+          "text": "A lógica formal - ver página 56 (seção 1).",
+          "elapsed_ms": 0.3982
+        },
+        {
+          "id": "syn-0004",
+          "text": "\"Ninguém aprende às pressas\", disse a monitora Cecília.",
+          "elapsed_ms": 0.4024
+        },
+        {
+          "id": "syn-0005",
+          "text": "Exemplo 6: somar 8 e 51 dá 59.",
+          "elapsed_ms": 0.3854
+        },
+        {
+          "id": "syn-0006",
+          "text": "Comparar a lógica formal às 7h, não à tarde.",
+          "elapsed_ms": 0.3757
+        },
+        {
+          "id": "syn-0007",
+          "text": "Por quê? Porque a hipótese não se sustenta.",
+          "elapsed_ms": 0.3723
+        },
+        {
+          "id": "syn-0008",
+          "text": "Em 2011, a aluna Thaís estudou as funções inversas.",
+          "elapsed_ms": 0.3927
+        },
+        {
+          "id": "syn-0009",
+          "text": "A razão áurea: avançada, essencial e difícil.",
+          "elapsed_ms": 0.3768
+        },
+        {
+          "id": "syn-0010",
+          "text": "Questão 8: a ciência política é simples?",
+          "elapsed_ms": 0.3737
+        },
+        {
+          "id": "syn-0011",
+          "text": "RESUMO: o triângulo retângulo.",
+          "elapsed_ms": 0.3729
+        },
+        {
+          "id": "syn-0012",
+          "text": "Capítulo 29: a análise sintática",
+          "elapsed_ms": 0.5664
+        },
+        {
+          "id": "syn-0013",
+          "text": "O que é o método científico?",
+          "elapsed_ms": 1.0585
+        },
+        {
+          "id": "syn-0014",
+          "text": "As noções básicas - ver página 287 (seção 8).",
+          "elapsed_ms": 1.8495
+        },
+        {
+          "id": "syn-0015",
+          "text": "\"Não há atalho\", disse a pesquisadora Ágata.",
+          "elapsed_ms": 0.8074
+        },
+        {
+          "id": "syn-0016",
+          "text": "Exemplo 9: somar 45 e 7 dá 52.",
+          "elapsed_ms": 0.8097
+        },
+        {
+          "id": "syn-0017",
+          "text": "Revisar o período histórico às 9h, não à tarde.",
+          "elapsed_ms": 0.7445
+        },
+        {
+          "id": "syn-0018",
+          "text": "Por quê? Porque a amostra é pequena.",
+          "elapsed_ms": 1.1355
+        },
+        {
+          "id": "syn-0019",
+          "text": "Em 2011, o colega Júlio estudou a ciência política.",
+          "elapsed_ms": 0.6156
+        },
+        {
+          "id": "syn-0020",
+          "text": "As equações químicas: útil, teórica e prática.",
+          "elapsed_ms": 0.4626
+        },
+        {
+          "id": "syn-0021",
+          "text": "Questão 13: o pêndulo simples é ambígua?",
+          "elapsed_ms": 0.4248
+        },
+        {
+          "id": "syn-0022",
+          "text": "RESUMO: as noções básicas.",
+          "elapsed_ms": 0.4011
+        },
+        {
+          "id": "syn-0023",
+          "text": "Capítulo 1: a frequência de onda",
+          "elapsed_ms": 0.4046
+        },
+        {
+          "id": "syn-0024",
+          "text": "A lógica formal - ver página 180 (seção 3).",
+          "elapsed_ms": 0.3876
+        },
+        {
+          "id": "syn-0025",
+          "text": "\"Ninguém aprende às pressas\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.4087
+        },
+        {
+          "id": "syn-0026",
+          "text": "Exemplo 3: somar 44 e 26 dá 70.",
+          "elapsed_ms": 0.3686
+        },
+        {
+          "id": "syn-0027",
+          "text": "Revisar o método científico às 22h, não à tarde.",
+          "elapsed_ms": 0.3881
+        },
+        {
+          "id": "syn-0028",
+          "text": "Por quê? Porque o exemplo contradiz a regra.",
+          "elapsed_ms": 0.3751
+        },
+        {
+          "id": "syn-0029",
+          "text": "Em 2021, a monitora Cecília estudou o número complexo.",
+          "elapsed_ms": 0.3934
+        },
+        {
+          "id": "syn-0030",
+          "text": "O binômio perfeito: essencial, simples e útil.",
+          "elapsed_ms": 0.3827
+        },
+        {
+          "id": "syn-0031",
+          "text": "Questão 8: a frequência de onda é essencial?",
+          "elapsed_ms": 0.389
+        },
+        {
+          "id": "syn-0032",
+          "text": "QUESTÕES: o pêndulo simples.",
+          "elapsed_ms": 0.3839
+        },
+        {
+          "id": "syn-0033",
+          "text": "Capítulo 2: a pressão atmosférica",
+          "elapsed_ms": 0.3668
+        },
+        {
+          "id": "syn-0034",
+          "text": "O que é o período histórico?",
+          "elapsed_ms": 0.3801
+        },
+        {
+          "id": "syn-0035",
+          "text": "As noções básicas - ver página 422 (seção 1).",
+          "elapsed_ms": 0.4271
+        },
+        {
+          "id": "syn-0036",
+          "text": "\"A prática vem antes\", disse o colega Júlio.",
+          "elapsed_ms": 0.422
+        },
+        {
+          "id": "syn-0037",
+          "text": "Exemplo 3: somar 11 e 21 dá 32.",
+          "elapsed_ms": 0.3754
+        },
+        {
+          "id": "syn-0038",
+          "text": "Explicar a função contínua às 19h, não à tarde.",
+          "elapsed_ms": 0.3807
+        },
+        {
+          "id": "syn-0039",
+          "text": "Por quê? Porque faltou medir de novo.",
+          "elapsed_ms": 0.5924
+        },
+        {
+          "id": "syn-0040",
+          "text": "Em 1993, a bibliotecária Hortência estudou o gênero textual.",
+          "elapsed_ms": 2.2548
+        },
+        {
+          "id": "syn-0041",
+          "text": "A função contínua: rigorosa, avançada e ambígua.",
+          "elapsed_ms": 1.3768
+        },
+        {
+          "id": "syn-0042",
+          "text": "Questão 31: a ciência política é rigorosa?",
+          "elapsed_ms": 1.1291
+        },
+        {
+          "id": "syn-0043",
+          "text": "DÚVIDA: as três hipóteses.",
+          "elapsed_ms": 1.212
+        },
+        {
+          "id": "syn-0044",
+          "text": "Capítulo 6: o pêndulo simples",
+          "elapsed_ms": 0.6481
+        },
+        {
+          "id": "syn-0045",
+          "text": "O que é a fórmula útil?",
+          "elapsed_ms": 0.7336
+        },
+        {
+          "id": "syn-0046",
+          "text": "O binômio perfeito - ver página 275 (seção 8).",
+          "elapsed_ms": 0.7644
+        },
+        {
+          "id": "syn-0047",
+          "text": "\"Meça e só então conclua\", disse o colega Júlio.",
+          "elapsed_ms": 0.5626
+        },
+        {
+          "id": "syn-0048",
+          "text": "Exemplo 3: somar 9 e 51 dá 60.",
+          "elapsed_ms": 0.4718
+        },
+        {
+          "id": "syn-0049",
+          "text": "Fichar a pressão atmosférica às 10h, não à tarde.",
+          "elapsed_ms": 0.4354
+        },
+        {
+          "id": "syn-0050",
+          "text": "Por quê? Porque o método é mais confiável.",
+          "elapsed_ms": 0.4364
+        },
+        {
+          "id": "syn-0051",
+          "text": "Em 2012, a monitora Cecília estudou a tabela periódica.",
+          "elapsed_ms": 0.4234
+        },
+        {
+          "id": "syn-0052",
+          "text": "O período histórico: rigorosa, ambígua e rápida.",
+          "elapsed_ms": 0.4844
+        },
+        {
+          "id": "syn-0053",
+          "text": "Questão 13: o sistema nervoso é difícil?",
+          "elapsed_ms": 0.4408
+        },
+        {
+          "id": "syn-0054",
+          "text": "CONCLUSÃO: o gênero textual.",
+          "elapsed_ms": 0.4283
+        },
+        {
+          "id": "syn-0055",
+          "text": "Capítulo 9: o raciocínio dedutivo",
+          "elapsed_ms": 0.3989
+        },
+        {
+          "id": "syn-0056",
+          "text": "O que é a ciência política?",
+          "elapsed_ms": 0.4128
+        },
+        {
+          "id": "syn-0057",
+          "text": "O conteúdo da prova - ver página 378 (seção 6).",
+          "elapsed_ms": 0.4126
+        },
+        {
+          "id": "syn-0058",
+          "text": "\"A pergunta já é metade\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.4143
+        },
+        {
+          "id": "syn-0059",
+          "text": "Exemplo 2: somar 48 e 6 dá 54.",
+          "elapsed_ms": 0.3977
+        },
+        {
+          "id": "syn-0060",
+          "text": "Fichar o número complexo às 8h, não à tarde.",
+          "elapsed_ms": 0.9759
+        },
+        {
+          "id": "syn-0061",
+          "text": "Em 1978, o professor Abelardo estudou a frequência de onda.",
+          "elapsed_ms": 0.7731
+        },
+        {
+          "id": "syn-0062",
+          "text": "O índice remissivo: rigorosa, difícil e concisa.",
+          "elapsed_ms": 0.9291
+        },
+        {
+          "id": "syn-0063",
+          "text": "Questão 21: a órbita elíptica é avançada?",
+          "elapsed_ms": 1.3509
+        },
+        {
+          "id": "syn-0064",
+          "text": "REVISÃO: o gênero textual.",
+          "elapsed_ms": 2.3638
+        },
+        {
+          "id": "syn-0065",
+          "text": "Capítulo 9: a ciência política",
+          "elapsed_ms": 1.3757
+        },
+        {
+          "id": "syn-0066",
+          "text": "O princípio da inércia - ver página 228 (seção 4).",
+          "elapsed_ms": 0.6965
+        },
+        {
+          "id": "syn-0067",
+          "text": "\"Não há atalho\", disse o autor Quirino.",
+          "elapsed_ms": 0.5014
+        },
+        {
+          "id": "syn-0068",
+          "text": "Exemplo 8: somar 14 e 47 dá 61.",
+          "elapsed_ms": 0.5333
+        },
+        {
+          "id": "syn-0069",
+          "text": "Comparar o conteúdo da prova às 18h, não à tarde.",
+          "elapsed_ms": 0.5261
+        },
+        {
+          "id": "syn-0070",
+          "text": "Em 2003, o orientador Wálter estudou a razão áurea.",
+          "elapsed_ms": 0.5424
+        },
+        {
+          "id": "syn-0071",
+          "text": "A função contínua: sólida, prática e teórica.",
+          "elapsed_ms": 0.6535
+        },
+        {
+          "id": "syn-0072",
+          "text": "Questão 23: o fenômeno óptico é essencial?",
+          "elapsed_ms": 0.8664
+        },
+        {
+          "id": "syn-0073",
+          "text": "OBSERVAÇÃO: o índice remissivo.",
+          "elapsed_ms": 0.5176
+        },
+        {
+          "id": "syn-0074",
+          "text": "Capítulo 25: o fenômeno óptico",
+          "elapsed_ms": 0.448
+        },
+        {
+          "id": "syn-0075",
+          "text": "O que é o triângulo retângulo?",
+          "elapsed_ms": 0.437
+        },
+        {
+          "id": "syn-0076",
+          "text": "A célula vegetal - ver página 81 (seção 3).",
+          "elapsed_ms": 0.6099
+        },
+        {
+          "id": "syn-0077",
+          "text": "Exemplo 9: somar 12 e 11 dá 23.",
+          "elapsed_ms": 0.4889
+        },
+        {
+          "id": "syn-0078",
+          "text": "Estudar o princípio da inércia às 17h, não à tarde.",
+          "elapsed_ms": 0.7184
+        },
+        {
+          "id": "syn-0079",
+          "text": "Em 1957, o professor Abelardo estudou as equações químicas.",
+          "elapsed_ms": 1.052
+        },
+        {
+          "id": "syn-0080",
+          "text": "O raciocínio dedutivo: difícil, concisa e rigorosa.",
+          "elapsed_ms": 2.6728
+        },
+        {
+          "id": "syn-0081",
+          "text": "Questão 14: a função contínua é básica?",
+          "elapsed_ms": 0.9533
+        },
+        {
+          "id": "syn-0082",
+          "text": "DEFINIÇÃO: a fórmula útil.",
+          "elapsed_ms": 1.1858
+        },
+        {
+          "id": "syn-0083",
+          "text": "Capítulo 11: o número complexo",
+          "elapsed_ms": 0.7408
+        },
+        {
+          "id": "syn-0084",
+          "text": "O que é o conteúdo da prova?",
+          "elapsed_ms": 0.763
+        },
+        {
+          "id": "syn-0085",
+          "text": "As noções básicas - ver página 205 (seção 5).",
+          "elapsed_ms": 0.5301
+        },
+        {
+          "id": "syn-0086",
+          "text": "\"O exemplo ensina mais\", disse o colega Júlio.",
+          "elapsed_ms": 0.477
+        },
+        {
+          "id": "syn-0087",
+          "text": "Exemplo 3: somar 29 e 22 dá 51.",
+          "elapsed_ms": 0.4457
+        },
+        {
+          "id": "syn-0088",
+          "text": "Estudar o binômio perfeito às 15h, não à tarde.",
+          "elapsed_ms": 0.4128
+        },
+        {
+          "id": "syn-0089",
+          "text": "Em 2001, o autor Quirino estudou a ciência política.",
+          "elapsed_ms": 0.3976
+        },
+        {
+          "id": "syn-0090",
+          "text": "A equação linear: sólida, teórica e frágil.",
+          "elapsed_ms": 0.3926
+        },
+        {
+          "id": "syn-0091",
+          "text": "Questão 25: o período histórico é prática?",
+          "elapsed_ms": 0.4241
+        },
+        {
+          "id": "syn-0092",
+          "text": "QUESTÕES: o princípio da inércia.",
+          "elapsed_ms": 0.4386
+        },
+        {
+          "id": "syn-0093",
+          "text": "Capítulo 27: o gênero textual",
+          "elapsed_ms": 0.4404
+        },
+        {
+          "id": "syn-0094",
+          "text": "O que é a tabela periódica?",
+          "elapsed_ms": 0.4107
+        },
+        {
+          "id": "syn-0095",
+          "text": "A função contínua - ver página 188 (seção 8).",
+          "elapsed_ms": 0.4259
+        },
+        {
+          "id": "syn-0096",
+          "text": "\"A prática vem antes\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.4095
+        },
+        {
+          "id": "syn-0097",
+          "text": "Exemplo 5: somar 12 e 26 dá 38.",
+          "elapsed_ms": 0.4652
+        },
+        {
+          "id": "syn-0098",
+          "text": "Por quê? Porque a conclusão veio cedo demais.",
+          "elapsed_ms": 0.7245
+        },
+        {
+          "id": "syn-0099",
+          "text": "Em 2004, o colega Júlio estudou o conteúdo da prova.",
+          "elapsed_ms": 0.7106
+        },
+        {
+          "id": "syn-0100",
+          "text": "A razão áurea: rápida, rigorosa e avançada.",
+          "elapsed_ms": 3.4681
+        },
+        {
+          "id": "syn-0101",
+          "text": "Questão 26: as equações químicas é avançada?",
+          "elapsed_ms": 1.831
+        },
+        {
+          "id": "syn-0102",
+          "text": "CONCLUSÃO: a órbita elíptica.",
+          "elapsed_ms": 0.7456
+        },
+        {
+          "id": "syn-0103",
+          "text": "Capítulo 19: o sistema nervoso",
+          "elapsed_ms": 0.5578
+        },
+        {
+          "id": "syn-0104",
+          "text": "O que é as equações químicas?",
+          "elapsed_ms": 0.5236
+        },
+        {
+          "id": "syn-0105",
+          "text": "As funções inversas - ver página 187 (seção 4).",
+          "elapsed_ms": 0.5052
+        },
+        {
+          "id": "syn-0106",
+          "text": "\"A prática vem antes\", disse o orientador Wálter.",
+          "elapsed_ms": 0.5551
+        },
+        {
+          "id": "syn-0107",
+          "text": "Exemplo 8: somar 38 e 31 dá 69.",
+          "elapsed_ms": 0.7985
+        },
+        {
+          "id": "syn-0108",
+          "text": "Revisar a distância média às 21h, não à tarde.",
+          "elapsed_ms": 0.6664
+        },
+        {
+          "id": "syn-0109",
+          "text": "Em 1953, a monitora Cecília estudou o sistema nervoso.",
+          "elapsed_ms": 0.5766
+        },
+        {
+          "id": "syn-0110",
+          "text": "O índice remissivo: concisa, avançada e difícil.",
+          "elapsed_ms": 0.4923
+        },
+        {
+          "id": "syn-0111",
+          "text": "Questão 9: as três hipóteses é ambígua?",
+          "elapsed_ms": 0.4483
+        },
+        {
+          "id": "syn-0112",
+          "text": "DÚVIDA: a célula vegetal.",
+          "elapsed_ms": 0.4735
+        },
+        {
+          "id": "syn-0113",
+          "text": "Capítulo 12: o binômio perfeito",
+          "elapsed_ms": 0.4843
+        },
+        {
+          "id": "syn-0114",
+          "text": "O que é o binômio perfeito?",
+          "elapsed_ms": 0.5941
+        },
+        {
+          "id": "syn-0115",
+          "text": "A órbita elíptica - ver página 162 (seção 6).",
+          "elapsed_ms": 0.8103
+        },
+        {
+          "id": "syn-0116",
+          "text": "Exemplo 9: somar 38 e 14 dá 52.",
+          "elapsed_ms": 0.7062
+        },
+        {
+          "id": "syn-0117",
+          "text": "Anotar o método científico às 13h, não à tarde.",
+          "elapsed_ms": 0.691
+        },
+        {
+          "id": "syn-0118",
+          "text": "Em 1992, o orientador Wálter estudou o índice remissivo.",
+          "elapsed_ms": 4.7921
+        },
+        {
+          "id": "syn-0119",
+          "text": "O método científico: útil, avançada e teórica.",
+          "elapsed_ms": 2.1246
+        },
+        {
+          "id": "syn-0120",
+          "text": "Questão 34: o gênero textual é sólida?",
+          "elapsed_ms": 0.9801
+        },
+        {
+          "id": "syn-0121",
+          "text": "RESUMO: a equação linear.",
+          "elapsed_ms": 0.7018
+        },
+        {
+          "id": "syn-0122",
+          "text": "Capítulo 27: a análise sintática",
+          "elapsed_ms": 0.9138
+        },
+        {
+          "id": "syn-0123",
+          "text": "O sistema nervoso - ver página 80 (seção 1).",
+          "elapsed_ms": 0.8802
+        },
+        {
+          "id": "syn-0124",
+          "text": "\"Tudo começa na dúvida\", disse o professor Abelardo.",
+          "elapsed_ms": 0.7115
+        },
+        {
+          "id": "syn-0125",
+          "text": "Exemplo 4: somar 44 e 4 dá 48.",
+          "elapsed_ms": 0.6111
+        },
+        {
+          "id": "syn-0126",
+          "text": "Resumir a célula vegetal às 18h, não à tarde.",
+          "elapsed_ms": 0.9348
+        },
+        {
+          "id": "syn-0127",
+          "text": "Em 1958, o orientador Wálter estudou a ciência política.",
+          "elapsed_ms": 0.7461
+        },
+        {
+          "id": "syn-0128",
+          "text": "O princípio da inércia: concisa, teórica e rigorosa.",
+          "elapsed_ms": 0.7528
+        },
+        {
+          "id": "syn-0129",
+          "text": "Questão 32: o índice remissivo é sólida?",
+          "elapsed_ms": 0.5278
+        },
+        {
+          "id": "syn-0130",
+          "text": "INTRODUÇÃO: o sistema nervoso.",
+          "elapsed_ms": 0.4906
+        },
+        {
+          "id": "syn-0131",
+          "text": "Capítulo 17: o método científico",
+          "elapsed_ms": 0.5702
+        },
+        {
+          "id": "syn-0132",
+          "text": "O índice remissivo - ver página 425 (seção 1).",
+          "elapsed_ms": 1.0075
+        },
+        {
+          "id": "syn-0133",
+          "text": "\"Ninguém aprende às pressas\", disse a pesquisadora Ágata.",
+          "elapsed_ms": 0.9707
+        },
+        {
+          "id": "syn-0134",
+          "text": "Exemplo 4: somar 23 e 57 dá 80.",
+          "elapsed_ms": 1.6088
+        },
+        {
+          "id": "syn-0135",
+          "text": "Resumir o triângulo retângulo às 22h, não à tarde.",
+          "elapsed_ms": 3.4388
+        },
+        {
+          "id": "syn-0136",
+          "text": "Em 2018, o tutor Zózimo estudou as funções inversas.",
+          "elapsed_ms": 1.0716
+        },
+        {
+          "id": "syn-0137",
+          "text": "O fenômeno óptico: sólida, difícil e essencial.",
+          "elapsed_ms": 0.8673
+        },
+        {
+          "id": "syn-0138",
+          "text": "Questão 16: o princípio da inércia é essencial?",
+          "elapsed_ms": 0.8945
+        },
+        {
+          "id": "syn-0139",
+          "text": "RESUMO: o binômio perfeito.",
+          "elapsed_ms": 0.8835
+        },
+        {
+          "id": "syn-0140",
+          "text": "Capítulo 17: o princípio da inércia",
+          "elapsed_ms": 0.6546
+        },
+        {
+          "id": "syn-0141",
+          "text": "A tabela periódica - ver página 446 (seção 6).",
+          "elapsed_ms": 0.608
+        },
+        {
+          "id": "syn-0142",
+          "text": "Exemplo 8: somar 38 e 36 dá 74.",
+          "elapsed_ms": 0.5711
+        },
+        {
+          "id": "syn-0143",
+          "text": "Revisar o sistema nervoso às 9h, não à tarde.",
+          "elapsed_ms": 0.5801
+        },
+        {
+          "id": "syn-0144",
+          "text": "Em 1955, o autor Quirino estudou as funções inversas.",
+          "elapsed_ms": 0.5749
+        },
+        {
+          "id": "syn-0145",
+          "text": "A análise sintática: sólida, difícil e útil.",
+          "elapsed_ms": 0.5449
+        },
+        {
+          "id": "syn-0146",
+          "text": "Questão 40: a distância média é prática?",
+          "elapsed_ms": 0.6359
+        },
+        {
+          "id": "syn-0147",
+          "text": "EXERCÍCIO: a frequência de onda.",
+          "elapsed_ms": 0.6881
+        },
+        {
+          "id": "syn-0148",
+          "text": "Capítulo 23: o binômio perfeito",
+          "elapsed_ms": 1.1688
+        },
+        {
+          "id": "syn-0149",
+          "text": "O gênero textual - ver página 262 (seção 1).",
+          "elapsed_ms": 2.328
+        },
+        {
+          "id": "syn-0150",
+          "text": "\"Não há atalho\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 1.0786
+        },
+        {
+          "id": "syn-0151",
+          "text": "Exemplo 5: somar 53 e 7 dá 60.",
+          "elapsed_ms": 1.3131
+        },
+        {
+          "id": "syn-0152",
+          "text": "Fichar o índice remissivo às 17h, não à tarde.",
+          "elapsed_ms": 0.9495
+        },
+        {
+          "id": "syn-0153",
+          "text": "O sistema nervoso: concisa, simples e ampla.",
+          "elapsed_ms": 0.8972
+        },
+        {
+          "id": "syn-0154",
+          "text": "Questão 38: o sistema nervoso é básica?",
+          "elapsed_ms": 0.8148
+        },
+        {
+          "id": "syn-0155",
+          "text": "CONCLUSÃO: o método científico.",
+          "elapsed_ms": 0.8023
+        },
+        {
+          "id": "syn-0156",
+          "text": "Capítulo 21: a lógica formal",
+          "elapsed_ms": 0.7057
+        },
+        {
+          "id": "syn-0157",
+          "text": "O que é o número complexo?",
+          "elapsed_ms": 0.736
+        },
+        {
+          "id": "syn-0158",
+          "text": "O binômio perfeito - ver página 110 (seção 9).",
+          "elapsed_ms": 0.5267
+        },
+        {
+          "id": "syn-0159",
+          "text": "\"Ninguém aprende às pressas\", disse o tutor Zózimo.",
+          "elapsed_ms": 0.4837
+        },
+        {
+          "id": "syn-0160",
+          "text": "Exemplo 5: somar 34 e 10 dá 44.",
+          "elapsed_ms": 0.4302
+        },
+        {
+          "id": "syn-0161",
+          "text": "Revisar o índice remissivo às 21h, não à tarde.",
+          "elapsed_ms": 0.4989
+        },
+        {
+          "id": "syn-0162",
+          "text": "Em 1997, a pesquisadora Ágata estudou a órbita elíptica.",
+          "elapsed_ms": 0.4619
+        },
+        {
+          "id": "syn-0163",
+          "text": "O sistema nervoso: básica, ambígua e concisa.",
+          "elapsed_ms": 0.4301
+        },
+        {
+          "id": "syn-0164",
+          "text": "Questão 15: a órbita elíptica é simples?",
+          "elapsed_ms": 0.4284
+        },
+        {
+          "id": "syn-0165",
+          "text": "EXERCÍCIO: o gênero textual.",
+          "elapsed_ms": 0.6122
+        },
+        {
+          "id": "syn-0166",
+          "text": "Capítulo 9: a equação linear",
+          "elapsed_ms": 1.3009
+        },
+        {
+          "id": "syn-0167",
+          "text": "O que é o fenômeno óptico?",
+          "elapsed_ms": 3.1323
+        },
+        {
+          "id": "syn-0168",
+          "text": "As funções inversas - ver página 28 (seção 4).",
+          "elapsed_ms": 0.9208
+        },
+        {
+          "id": "syn-0169",
+          "text": "\"O exemplo ensina mais\", disse a pesquisadora Ágata.",
+          "elapsed_ms": 0.7901
+        },
+        {
+          "id": "syn-0170",
+          "text": "Exemplo 9: somar 39 e 25 dá 64.",
+          "elapsed_ms": 0.6774
+        },
+        {
+          "id": "syn-0171",
+          "text": "Resumir a célula vegetal às 16h, não à tarde.",
+          "elapsed_ms": 0.7829
+        },
+        {
+          "id": "syn-0172",
+          "text": "Em 1972, o colega Júlio estudou o pêndulo simples.",
+          "elapsed_ms": 0.867
+        },
+        {
+          "id": "syn-0173",
+          "text": "O fenômeno óptico: ambígua, essencial e simples.",
+          "elapsed_ms": 0.7917
+        },
+        {
+          "id": "syn-0174",
+          "text": "Questão 27: a análise sintática é prática?",
+          "elapsed_ms": 0.6774
+        },
+        {
+          "id": "syn-0175",
+          "text": "OBSERVAÇÃO: o período histórico.",
+          "elapsed_ms": 0.653
+        },
+        {
+          "id": "syn-0176",
+          "text": "Capítulo 27: a ciência política",
+          "elapsed_ms": 0.662
+        },
+        {
+          "id": "syn-0177",
+          "text": "A razão áurea - ver página 191 (seção 7).",
+          "elapsed_ms": 0.7039
+        },
+        {
+          "id": "syn-0178",
+          "text": "\"O exemplo ensina mais\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.7216
+        },
+        {
+          "id": "syn-0179",
+          "text": "Exemplo 8: somar 50 e 40 dá 90.",
+          "elapsed_ms": 0.7047
+        },
+        {
+          "id": "syn-0180",
+          "text": "Explicar a frequência de onda às 21h, não à tarde.",
+          "elapsed_ms": 0.5133
+        },
+        {
+          "id": "syn-0181",
+          "text": "Em 1963, a aluna Thaís estudou o princípio da inércia.",
+          "elapsed_ms": 0.4879
+        },
+        {
+          "id": "syn-0182",
+          "text": "O conteúdo da prova: rápida, frágil e básica.",
+          "elapsed_ms": 0.54
+        },
+        {
+          "id": "syn-0183",
+          "text": "Questão 38: o raciocínio dedutivo é difícil?",
+          "elapsed_ms": 0.4733
+        },
+        {
+          "id": "syn-0184",
+          "text": "OBSERVAÇÃO: o triângulo retângulo.",
+          "elapsed_ms": 3.9442
+        },
+        {
+          "id": "syn-0185",
+          "text": "Capítulo 4: o fenômeno óptico",
+          "elapsed_ms": 1.7315
+        },
+        {
+          "id": "syn-0186",
+          "text": "O raciocínio dedutivo - ver página 423 (seção 5).",
+          "elapsed_ms": 1.4947
+        },
+        {
+          "id": "syn-0187",
+          "text": "\"A prática vem antes\", disse a monitora Cecília.",
+          "elapsed_ms": 0.8271
+        },
+        {
+          "id": "syn-0188",
+          "text": "Exemplo 5: somar 23 e 27 dá 50.",
+          "elapsed_ms": 0.5093
+        },
+        {
+          "id": "syn-0189",
+          "text": "Reler a tabela periódica às 13h, não à tarde.",
+          "elapsed_ms": 0.4794
+        },
+        {
+          "id": "syn-0190",
+          "text": "Em 2009, a bibliotecária Hortência estudou a célula vegetal.",
+          "elapsed_ms": 0.4726
+        },
+        {
+          "id": "syn-0191",
+          "text": "O fenômeno óptico: avançada, frágil e difícil.",
+          "elapsed_ms": 0.4679
+        },
+        {
+          "id": "syn-0192",
+          "text": "Questão 30: o método científico é difícil?",
+          "elapsed_ms": 0.4512
+        },
+        {
+          "id": "syn-0193",
+          "text": "INTRODUÇÃO: a razão áurea.",
+          "elapsed_ms": 0.4478
+        },
+        {
+          "id": "syn-0194",
+          "text": "Capítulo 20: as três hipóteses",
+          "elapsed_ms": 0.4883
+        },
+        {
+          "id": "syn-0195",
+          "text": "O que é a célula vegetal?",
+          "elapsed_ms": 0.4643
+        },
+        {
+          "id": "syn-0196",
+          "text": "A razão áurea - ver página 203 (seção 5).",
+          "elapsed_ms": 0.4724
+        },
+        {
+          "id": "syn-0197",
+          "text": "\"Ninguém aprende às pressas\", disse a doutora Íris.",
+          "elapsed_ms": 0.4426
+        },
+        {
+          "id": "syn-0198",
+          "text": "Exemplo 3: somar 18 e 3 dá 21.",
+          "elapsed_ms": 0.4556
+        },
+        {
+          "id": "syn-0199",
+          "text": "Reler as funções inversas às 10h, não à tarde.",
+          "elapsed_ms": 0.4598
+        },
+        {
+          "id": "syn-0200",
+          "text": "Em 1983, o professor Abelardo estudou a pressão atmosférica.",
+          "elapsed_ms": 0.4261
+        }
+      ],
+      "stderr_tail": [],
+      "metrics": {
+        "lines": 200,
+        "missing": [],
+        "cer_micro": 0.0,
+        "wer_micro": 0.0,
+        "cer_macro": 0.0,
+        "wer_macro": 0.0,
+        "char_edits": 0,
+        "ref_chars": 8107,
+        "word_edits": 0,
+        "ref_words": 1445,
+        "per_line": [
+          {
+            "id": "syn-0001",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0002",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0003",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0004",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0005",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0006",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0007",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0008",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0009",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0010",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0011",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0012",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0013",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0014",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0015",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0016",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0017",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0018",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 36,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0019",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0020",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0021",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0022",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0023",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0024",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0025",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 62,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0026",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0027",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0028",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0029",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0030",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0031",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0032",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0033",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0034",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0035",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0036",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0037",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0038",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0039",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 37,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0040",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0041",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0042",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0043",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0044",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0045",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 23,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0046",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0047",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0048",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0049",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0050",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0051",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 55,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0052",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0053",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0054",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0055",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0056",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0057",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0058",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 58,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0059",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0060",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0061",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 59,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0062",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0063",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 41,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0064",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0065",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0066",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0067",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0068",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0069",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0070",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0071",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0072",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0073",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0074",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0075",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0076",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0077",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0078",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0079",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 59,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0080",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0081",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0082",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0083",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0084",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0085",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0086",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0087",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0088",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0089",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0090",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0091",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0092",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0093",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0094",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0095",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0096",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0097",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0098",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0099",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0100",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0101",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0102",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0103",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0104",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0105",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0106",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0107",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0108",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0109",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0110",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0111",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0112",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0113",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0114",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0115",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0116",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0117",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0118",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0119",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0120",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 38,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0121",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0122",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0123",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0124",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0125",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0126",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0127",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0128",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0129",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0130",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0131",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0132",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0133",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0134",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0135",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0136",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0137",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0138",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0139",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0140",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 35,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0141",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0142",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0143",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0144",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 53,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0145",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0146",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0147",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0148",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0149",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0150",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0151",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0152",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0153",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0154",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0155",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0156",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0157",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0158",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0159",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0160",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0161",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0162",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0163",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0164",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0165",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0166",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0167",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0168",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0169",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0170",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0171",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0172",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0173",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0174",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0175",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0176",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0177",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0178",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0179",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0180",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0181",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 54,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0182",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0183",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0184",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 34,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0185",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0186",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0187",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0188",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0189",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0190",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0191",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0192",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0193",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0194",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0195",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0196",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0197",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0198",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0199",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0200",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          }
+        ]
+      },
+      "latency": {
+        "lines": 200,
+        "median_ms": 0.5683,
+        "p95_ms": 1.8495,
+        "mean_ms": 0.7698959999999999,
+        "max_ms": 4.7921
+      },
+      "partial": false,
+      "verdicts": {
+        "h1_quality": true,
+        "h2_cost": true
+      }
+    },
+    {
+      "candidate_id": "echo-reference",
+      "status": "OK",
+      "reason": "reconhecedor de referência (sem modelo)",
+      "license_status": "N/A (sem modelo)",
+      "load_ms": 68.6435,
+      "peak_rss_bytes": 20910080,
+      "wall_s": 0.520118100000218,
+      "exit_code": 0,
+      "describe": {
+        "id": "echo-reference",
+        "kind": "reference",
+        "weights": null
+      },
+      "predictions": [
+        {
+          "id": "syn-0001",
+          "text": "Capítulo 25: o pêndulo simples",
+          "elapsed_ms": 0.6455
+        },
+        {
+          "id": "syn-0002",
+          "text": "O que é a equação linear?",
+          "elapsed_ms": 0.6552
+        },
+        {
+          "id": "syn-0003",
+          "text": "A lógica formal - ver página 56 (seção 1).",
+          "elapsed_ms": 0.631
+        },
+        {
+          "id": "syn-0004",
+          "text": "\"Ninguém aprende às pressas\", disse a monitora Cecília.",
+          "elapsed_ms": 0.6478
+        },
+        {
+          "id": "syn-0005",
+          "text": "Exemplo 6: somar 8 e 51 dá 59.",
+          "elapsed_ms": 0.7037
+        },
+        {
+          "id": "syn-0006",
+          "text": "Comparar a lógica formal às 7h, não à tarde.",
+          "elapsed_ms": 0.791
+        },
+        {
+          "id": "syn-0007",
+          "text": "Por quê? Porque a hipótese não se sustenta.",
+          "elapsed_ms": 1.0733
+        },
+        {
+          "id": "syn-0008",
+          "text": "Em 2011, a aluna Thaís estudou as funções inversas.",
+          "elapsed_ms": 2.232
+        },
+        {
+          "id": "syn-0009",
+          "text": "A razão áurea: avançada, essencial e difícil.",
+          "elapsed_ms": 1.1628
+        },
+        {
+          "id": "syn-0010",
+          "text": "Questão 8: a ciência política é simples?",
+          "elapsed_ms": 0.7544
+        },
+        {
+          "id": "syn-0011",
+          "text": "RESUMO: o triângulo retângulo.",
+          "elapsed_ms": 0.7371
+        },
+        {
+          "id": "syn-0012",
+          "text": "Capítulo 29: a análise sintática",
+          "elapsed_ms": 0.5174
+        },
+        {
+          "id": "syn-0013",
+          "text": "O que é o método científico?",
+          "elapsed_ms": 0.4782
+        },
+        {
+          "id": "syn-0014",
+          "text": "As noções básicas - ver página 287 (seção 8).",
+          "elapsed_ms": 0.454
+        },
+        {
+          "id": "syn-0015",
+          "text": "\"Não há atalho\", disse a pesquisadora Ágata.",
+          "elapsed_ms": 0.4532
+        },
+        {
+          "id": "syn-0016",
+          "text": "Exemplo 9: somar 45 e 7 dá 52.",
+          "elapsed_ms": 0.438
+        },
+        {
+          "id": "syn-0017",
+          "text": "Revisar o período histórico às 9h, não à tarde.",
+          "elapsed_ms": 0.4553
+        },
+        {
+          "id": "syn-0018",
+          "text": "Por quê? Porque a amostra é pequena.",
+          "elapsed_ms": 0.4396
+        },
+        {
+          "id": "syn-0019",
+          "text": "Em 2011, o colega Júlio estudou a ciência política.",
+          "elapsed_ms": 0.7229
+        },
+        {
+          "id": "syn-0020",
+          "text": "As equações químicas: útil, teórica e prática.",
+          "elapsed_ms": 0.7551
+        },
+        {
+          "id": "syn-0021",
+          "text": "Questão 13: o pêndulo simples é ambígua?",
+          "elapsed_ms": 0.7574
+        },
+        {
+          "id": "syn-0022",
+          "text": "RESUMO: as noções básicas.",
+          "elapsed_ms": 0.7549
+        },
+        {
+          "id": "syn-0023",
+          "text": "Capítulo 1: a frequência de onda",
+          "elapsed_ms": 0.6946
+        },
+        {
+          "id": "syn-0024",
+          "text": "A lógica formal - ver página 180 (seção 3).",
+          "elapsed_ms": 0.4974
+        },
+        {
+          "id": "syn-0025",
+          "text": "\"Ninguém aprende às pressas\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.4866
+        },
+        {
+          "id": "syn-0026",
+          "text": "Exemplo 3: somar 44 e 26 dá 70.",
+          "elapsed_ms": 0.4591
+        },
+        {
+          "id": "syn-0027",
+          "text": "Revisar o método científico às 22h, não à tarde.",
+          "elapsed_ms": 0.4382
+        },
+        {
+          "id": "syn-0028",
+          "text": "Por quê? Porque o exemplo contradiz a regra.",
+          "elapsed_ms": 1.473
+        },
+        {
+          "id": "syn-0029",
+          "text": "Em 2021, a monitora Cecília estudou o número complexo.",
+          "elapsed_ms": 1.1591
+        },
+        {
+          "id": "syn-0030",
+          "text": "O binômio perfeito: essencial, simples e útil.",
+          "elapsed_ms": 1.615
+        },
+        {
+          "id": "syn-0031",
+          "text": "Questão 8: a frequência de onda é essencial?",
+          "elapsed_ms": 1.2963
+        },
+        {
+          "id": "syn-0032",
+          "text": "QUESTÕES: o pêndulo simples.",
+          "elapsed_ms": 0.8697
+        },
+        {
+          "id": "syn-0033",
+          "text": "Capítulo 2: a pressão atmosférica",
+          "elapsed_ms": 0.8313
+        },
+        {
+          "id": "syn-0034",
+          "text": "O que é o período histórico?",
+          "elapsed_ms": 0.608
+        },
+        {
+          "id": "syn-0035",
+          "text": "As noções básicas - ver página 422 (seção 1).",
+          "elapsed_ms": 0.5017
+        },
+        {
+          "id": "syn-0036",
+          "text": "\"A prática vem antes\", disse o colega Júlio.",
+          "elapsed_ms": 0.5011
+        },
+        {
+          "id": "syn-0037",
+          "text": "Exemplo 3: somar 11 e 21 dá 32.",
+          "elapsed_ms": 0.5892
+        },
+        {
+          "id": "syn-0038",
+          "text": "Explicar a função contínua às 19h, não à tarde.",
+          "elapsed_ms": 0.7946
+        },
+        {
+          "id": "syn-0039",
+          "text": "Por quê? Porque faltou medir de novo.",
+          "elapsed_ms": 0.7672
+        },
+        {
+          "id": "syn-0040",
+          "text": "Em 1993, a bibliotecária Hortência estudou o gênero textual.",
+          "elapsed_ms": 0.6414
+        },
+        {
+          "id": "syn-0041",
+          "text": "A função contínua: rigorosa, avançada e ambígua.",
+          "elapsed_ms": 0.5004
+        },
+        {
+          "id": "syn-0042",
+          "text": "Questão 31: a ciência política é rigorosa?",
+          "elapsed_ms": 0.4892
+        },
+        {
+          "id": "syn-0043",
+          "text": "DÚVIDA: as três hipóteses.",
+          "elapsed_ms": 0.4845
+        },
+        {
+          "id": "syn-0044",
+          "text": "Capítulo 6: o pêndulo simples",
+          "elapsed_ms": 0.4913
+        },
+        {
+          "id": "syn-0045",
+          "text": "O que é a fórmula útil?",
+          "elapsed_ms": 0.4675
+        },
+        {
+          "id": "syn-0046",
+          "text": "O binômio perfeito - ver página 275 (seção 8).",
+          "elapsed_ms": 0.5084
+        },
+        {
+          "id": "syn-0047",
+          "text": "\"Meça e só então conclua\", disse o colega Júlio.",
+          "elapsed_ms": 0.5
+        },
+        {
+          "id": "syn-0048",
+          "text": "Exemplo 3: somar 9 e 51 dá 60.",
+          "elapsed_ms": 0.7636
+        },
+        {
+          "id": "syn-0049",
+          "text": "Fichar a pressão atmosférica às 10h, não à tarde.",
+          "elapsed_ms": 2.6739
+        },
+        {
+          "id": "syn-0050",
+          "text": "Por quê? Porque o método é mais confiável.",
+          "elapsed_ms": 1.6479
+        },
+        {
+          "id": "syn-0051",
+          "text": "Em 2012, a monitora Cecília estudou a tabela periódica.",
+          "elapsed_ms": 0.7751
+        },
+        {
+          "id": "syn-0052",
+          "text": "O período histórico: rigorosa, ambígua e rápida.",
+          "elapsed_ms": 0.6677
+        },
+        {
+          "id": "syn-0053",
+          "text": "Questão 13: o sistema nervoso é difícil?",
+          "elapsed_ms": 0.5961
+        },
+        {
+          "id": "syn-0054",
+          "text": "CONCLUSÃO: o gênero textual.",
+          "elapsed_ms": 0.4784
+        },
+        {
+          "id": "syn-0055",
+          "text": "Capítulo 9: o raciocínio dedutivo",
+          "elapsed_ms": 0.492
+        },
+        {
+          "id": "syn-0056",
+          "text": "O que é a ciência política?",
+          "elapsed_ms": 0.512
+        },
+        {
+          "id": "syn-0057",
+          "text": "O conteúdo da prova - ver página 378 (seção 6).",
+          "elapsed_ms": 0.5069
+        },
+        {
+          "id": "syn-0058",
+          "text": "\"A pergunta já é metade\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.565
+        },
+        {
+          "id": "syn-0059",
+          "text": "Exemplo 2: somar 48 e 6 dá 54.",
+          "elapsed_ms": 0.492
+        },
+        {
+          "id": "syn-0060",
+          "text": "Fichar o número complexo às 8h, não à tarde.",
+          "elapsed_ms": 0.4583
+        },
+        {
+          "id": "syn-0061",
+          "text": "Em 1978, o professor Abelardo estudou a frequência de onda.",
+          "elapsed_ms": 0.4562
+        },
+        {
+          "id": "syn-0062",
+          "text": "O índice remissivo: rigorosa, difícil e concisa.",
+          "elapsed_ms": 0.5074
+        },
+        {
+          "id": "syn-0063",
+          "text": "Questão 21: a órbita elíptica é avançada?",
+          "elapsed_ms": 0.4607
+        },
+        {
+          "id": "syn-0064",
+          "text": "REVISÃO: o gênero textual.",
+          "elapsed_ms": 0.4371
+        },
+        {
+          "id": "syn-0065",
+          "text": "Capítulo 9: a ciência política",
+          "elapsed_ms": 0.4493
+        },
+        {
+          "id": "syn-0066",
+          "text": "O princípio da inércia - ver página 228 (seção 4).",
+          "elapsed_ms": 0.5026
+        },
+        {
+          "id": "syn-0067",
+          "text": "\"Não há atalho\", disse o autor Quirino.",
+          "elapsed_ms": 0.4361
+        },
+        {
+          "id": "syn-0068",
+          "text": "Exemplo 8: somar 14 e 47 dá 61.",
+          "elapsed_ms": 0.4478
+        },
+        {
+          "id": "syn-0069",
+          "text": "Comparar o conteúdo da prova às 18h, não à tarde.",
+          "elapsed_ms": 0.4484
+        },
+        {
+          "id": "syn-0070",
+          "text": "Em 2003, o orientador Wálter estudou a razão áurea.",
+          "elapsed_ms": 0.523
+        },
+        {
+          "id": "syn-0071",
+          "text": "A função contínua: sólida, prática e teórica.",
+          "elapsed_ms": 1.0839
+        },
+        {
+          "id": "syn-0072",
+          "text": "Questão 23: o fenômeno óptico é essencial?",
+          "elapsed_ms": 2.3671
+        },
+        {
+          "id": "syn-0073",
+          "text": "OBSERVAÇÃO: o índice remissivo.",
+          "elapsed_ms": 1.2165
+        },
+        {
+          "id": "syn-0074",
+          "text": "Capítulo 25: o fenômeno óptico",
+          "elapsed_ms": 0.9295
+        },
+        {
+          "id": "syn-0075",
+          "text": "O que é o triângulo retângulo?",
+          "elapsed_ms": 0.8408
+        },
+        {
+          "id": "syn-0076",
+          "text": "A célula vegetal - ver página 81 (seção 3).",
+          "elapsed_ms": 0.6709
+        },
+        {
+          "id": "syn-0077",
+          "text": "Exemplo 9: somar 12 e 11 dá 23.",
+          "elapsed_ms": 0.5524
+        },
+        {
+          "id": "syn-0078",
+          "text": "Estudar o princípio da inércia às 17h, não à tarde.",
+          "elapsed_ms": 0.6222
+        },
+        {
+          "id": "syn-0079",
+          "text": "Em 1957, o professor Abelardo estudou as equações químicas.",
+          "elapsed_ms": 0.5259
+        },
+        {
+          "id": "syn-0080",
+          "text": "O raciocínio dedutivo: difícil, concisa e rigorosa.",
+          "elapsed_ms": 0.7698
+        },
+        {
+          "id": "syn-0081",
+          "text": "Questão 14: a função contínua é básica?",
+          "elapsed_ms": 0.6295
+        },
+        {
+          "id": "syn-0082",
+          "text": "DEFINIÇÃO: a fórmula útil.",
+          "elapsed_ms": 1.2366
+        },
+        {
+          "id": "syn-0083",
+          "text": "Capítulo 11: o número complexo",
+          "elapsed_ms": 0.8005
+        },
+        {
+          "id": "syn-0084",
+          "text": "O que é o conteúdo da prova?",
+          "elapsed_ms": 0.7136
+        },
+        {
+          "id": "syn-0085",
+          "text": "As noções básicas - ver página 205 (seção 5).",
+          "elapsed_ms": 0.7434
+        },
+        {
+          "id": "syn-0086",
+          "text": "\"O exemplo ensina mais\", disse o colega Júlio.",
+          "elapsed_ms": 0.6386
+        },
+        {
+          "id": "syn-0087",
+          "text": "Exemplo 3: somar 29 e 22 dá 51.",
+          "elapsed_ms": 0.9824
+        },
+        {
+          "id": "syn-0088",
+          "text": "Estudar o binômio perfeito às 15h, não à tarde.",
+          "elapsed_ms": 3.0071
+        },
+        {
+          "id": "syn-0089",
+          "text": "Em 2001, o autor Quirino estudou a ciência política.",
+          "elapsed_ms": 1.236
+        },
+        {
+          "id": "syn-0090",
+          "text": "A equação linear: sólida, teórica e frágil.",
+          "elapsed_ms": 1.2965
+        },
+        {
+          "id": "syn-0091",
+          "text": "Questão 25: o período histórico é prática?",
+          "elapsed_ms": 0.7278
+        },
+        {
+          "id": "syn-0092",
+          "text": "QUESTÕES: o princípio da inércia.",
+          "elapsed_ms": 0.6416
+        },
+        {
+          "id": "syn-0093",
+          "text": "Capítulo 27: o gênero textual",
+          "elapsed_ms": 0.5716
+        },
+        {
+          "id": "syn-0094",
+          "text": "O que é a tabela periódica?",
+          "elapsed_ms": 0.5502
+        },
+        {
+          "id": "syn-0095",
+          "text": "A função contínua - ver página 188 (seção 8).",
+          "elapsed_ms": 0.5688
+        },
+        {
+          "id": "syn-0096",
+          "text": "\"A prática vem antes\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.57
+        },
+        {
+          "id": "syn-0097",
+          "text": "Exemplo 5: somar 12 e 26 dá 38.",
+          "elapsed_ms": 0.5345
+        },
+        {
+          "id": "syn-0098",
+          "text": "Por quê? Porque a conclusão veio cedo demais.",
+          "elapsed_ms": 0.7608
+        },
+        {
+          "id": "syn-0099",
+          "text": "Em 2004, o colega Júlio estudou o conteúdo da prova.",
+          "elapsed_ms": 0.7823
+        },
+        {
+          "id": "syn-0100",
+          "text": "A razão áurea: rápida, rigorosa e avançada.",
+          "elapsed_ms": 0.8851
+        },
+        {
+          "id": "syn-0101",
+          "text": "Questão 26: as equações químicas é avançada?",
+          "elapsed_ms": 0.777
+        },
+        {
+          "id": "syn-0102",
+          "text": "CONCLUSÃO: a órbita elíptica.",
+          "elapsed_ms": 0.7438
+        },
+        {
+          "id": "syn-0103",
+          "text": "Capítulo 19: o sistema nervoso",
+          "elapsed_ms": 2.4407
+        },
+        {
+          "id": "syn-0104",
+          "text": "O que é as equações químicas?",
+          "elapsed_ms": 3.2841
+        },
+        {
+          "id": "syn-0105",
+          "text": "As funções inversas - ver página 187 (seção 4).",
+          "elapsed_ms": 1.8671
+        },
+        {
+          "id": "syn-0106",
+          "text": "\"A prática vem antes\", disse o orientador Wálter.",
+          "elapsed_ms": 0.8302
+        },
+        {
+          "id": "syn-0107",
+          "text": "Exemplo 8: somar 38 e 31 dá 69.",
+          "elapsed_ms": 0.921
+        },
+        {
+          "id": "syn-0108",
+          "text": "Revisar a distância média às 21h, não à tarde.",
+          "elapsed_ms": 1.2555
+        },
+        {
+          "id": "syn-0109",
+          "text": "Em 1953, a monitora Cecília estudou o sistema nervoso.",
+          "elapsed_ms": 0.8996
+        },
+        {
+          "id": "syn-0110",
+          "text": "O índice remissivo: concisa, avançada e difícil.",
+          "elapsed_ms": 0.8447
+        },
+        {
+          "id": "syn-0111",
+          "text": "Questão 9: as três hipóteses é ambígua?",
+          "elapsed_ms": 0.7793
+        },
+        {
+          "id": "syn-0112",
+          "text": "DÚVIDA: a célula vegetal.",
+          "elapsed_ms": 0.7768
+        },
+        {
+          "id": "syn-0113",
+          "text": "Capítulo 12: o binômio perfeito",
+          "elapsed_ms": 0.7335
+        },
+        {
+          "id": "syn-0114",
+          "text": "O que é o binômio perfeito?",
+          "elapsed_ms": 0.7705
+        },
+        {
+          "id": "syn-0115",
+          "text": "A órbita elíptica - ver página 162 (seção 6).",
+          "elapsed_ms": 1.1722
+        },
+        {
+          "id": "syn-0116",
+          "text": "Exemplo 9: somar 38 e 14 dá 52.",
+          "elapsed_ms": 1.2284
+        },
+        {
+          "id": "syn-0117",
+          "text": "Anotar o método científico às 13h, não à tarde.",
+          "elapsed_ms": 3.2641
+        },
+        {
+          "id": "syn-0118",
+          "text": "Em 1992, o orientador Wálter estudou o índice remissivo.",
+          "elapsed_ms": 1.1251
+        },
+        {
+          "id": "syn-0119",
+          "text": "O método científico: útil, avançada e teórica.",
+          "elapsed_ms": 0.8085
+        },
+        {
+          "id": "syn-0120",
+          "text": "Questão 34: o gênero textual é sólida?",
+          "elapsed_ms": 0.7665
+        },
+        {
+          "id": "syn-0121",
+          "text": "RESUMO: a equação linear.",
+          "elapsed_ms": 0.7139
+        },
+        {
+          "id": "syn-0122",
+          "text": "Capítulo 27: a análise sintática",
+          "elapsed_ms": 0.7043
+        },
+        {
+          "id": "syn-0123",
+          "text": "O sistema nervoso - ver página 80 (seção 1).",
+          "elapsed_ms": 0.7404
+        },
+        {
+          "id": "syn-0124",
+          "text": "\"Tudo começa na dúvida\", disse o professor Abelardo.",
+          "elapsed_ms": 0.6923
+        },
+        {
+          "id": "syn-0125",
+          "text": "Exemplo 4: somar 44 e 4 dá 48.",
+          "elapsed_ms": 0.4813
+        },
+        {
+          "id": "syn-0126",
+          "text": "Resumir a célula vegetal às 18h, não à tarde.",
+          "elapsed_ms": 0.5152
+        },
+        {
+          "id": "syn-0127",
+          "text": "Em 1958, o orientador Wálter estudou a ciência política.",
+          "elapsed_ms": 0.733
+        },
+        {
+          "id": "syn-0128",
+          "text": "O princípio da inércia: concisa, teórica e rigorosa.",
+          "elapsed_ms": 0.8045
+        },
+        {
+          "id": "syn-0129",
+          "text": "Questão 32: o índice remissivo é sólida?",
+          "elapsed_ms": 0.768
+        },
+        {
+          "id": "syn-0130",
+          "text": "INTRODUÇÃO: o sistema nervoso.",
+          "elapsed_ms": 0.7842
+        },
+        {
+          "id": "syn-0131",
+          "text": "Capítulo 17: o método científico",
+          "elapsed_ms": 0.8088
+        },
+        {
+          "id": "syn-0132",
+          "text": "O índice remissivo - ver página 425 (seção 1).",
+          "elapsed_ms": 0.8978
+        },
+        {
+          "id": "syn-0133",
+          "text": "\"Ninguém aprende às pressas\", disse a pesquisadora Ágata.",
+          "elapsed_ms": 1.0033
+        },
+        {
+          "id": "syn-0134",
+          "text": "Exemplo 4: somar 23 e 57 dá 80.",
+          "elapsed_ms": 1.5978
+        },
+        {
+          "id": "syn-0135",
+          "text": "Resumir o triângulo retângulo às 22h, não à tarde.",
+          "elapsed_ms": 1.1283
+        },
+        {
+          "id": "syn-0136",
+          "text": "Em 2018, o tutor Zózimo estudou as funções inversas.",
+          "elapsed_ms": 0.6581
+        },
+        {
+          "id": "syn-0137",
+          "text": "O fenômeno óptico: sólida, difícil e essencial.",
+          "elapsed_ms": 0.6542
+        },
+        {
+          "id": "syn-0138",
+          "text": "Questão 16: o princípio da inércia é essencial?",
+          "elapsed_ms": 0.5507
+        },
+        {
+          "id": "syn-0139",
+          "text": "RESUMO: o binômio perfeito.",
+          "elapsed_ms": 0.5331
+        },
+        {
+          "id": "syn-0140",
+          "text": "Capítulo 17: o princípio da inércia",
+          "elapsed_ms": 0.4675
+        },
+        {
+          "id": "syn-0141",
+          "text": "A tabela periódica - ver página 446 (seção 6).",
+          "elapsed_ms": 0.4805
+        },
+        {
+          "id": "syn-0142",
+          "text": "Exemplo 8: somar 38 e 36 dá 74.",
+          "elapsed_ms": 0.4731
+        },
+        {
+          "id": "syn-0143",
+          "text": "Revisar o sistema nervoso às 9h, não à tarde.",
+          "elapsed_ms": 0.4685
+        },
+        {
+          "id": "syn-0144",
+          "text": "Em 1955, o autor Quirino estudou as funções inversas.",
+          "elapsed_ms": 0.4482
+        },
+        {
+          "id": "syn-0145",
+          "text": "A análise sintática: sólida, difícil e útil.",
+          "elapsed_ms": 0.4476
+        },
+        {
+          "id": "syn-0146",
+          "text": "Questão 40: a distância média é prática?",
+          "elapsed_ms": 0.4554
+        },
+        {
+          "id": "syn-0147",
+          "text": "EXERCÍCIO: a frequência de onda.",
+          "elapsed_ms": 0.4728
+        },
+        {
+          "id": "syn-0148",
+          "text": "Capítulo 23: o binômio perfeito",
+          "elapsed_ms": 0.4422
+        },
+        {
+          "id": "syn-0149",
+          "text": "O gênero textual - ver página 262 (seção 1).",
+          "elapsed_ms": 0.4673
+        },
+        {
+          "id": "syn-0150",
+          "text": "\"Não há atalho\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 0.4447
+        },
+        {
+          "id": "syn-0151",
+          "text": "Exemplo 5: somar 53 e 7 dá 60.",
+          "elapsed_ms": 0.4463
+        },
+        {
+          "id": "syn-0152",
+          "text": "Fichar o índice remissivo às 17h, não à tarde.",
+          "elapsed_ms": 0.4289
+        },
+        {
+          "id": "syn-0153",
+          "text": "O sistema nervoso: concisa, simples e ampla.",
+          "elapsed_ms": 0.4461
+        },
+        {
+          "id": "syn-0154",
+          "text": "Questão 38: o sistema nervoso é básica?",
+          "elapsed_ms": 0.4359
+        },
+        {
+          "id": "syn-0155",
+          "text": "CONCLUSÃO: o método científico.",
+          "elapsed_ms": 0.519
+        },
+        {
+          "id": "syn-0156",
+          "text": "Capítulo 21: a lógica formal",
+          "elapsed_ms": 0.985
+        },
+        {
+          "id": "syn-0157",
+          "text": "O que é o número complexo?",
+          "elapsed_ms": 1.4186
+        },
+        {
+          "id": "syn-0158",
+          "text": "O binômio perfeito - ver página 110 (seção 9).",
+          "elapsed_ms": 2.6746
+        },
+        {
+          "id": "syn-0159",
+          "text": "\"Ninguém aprende às pressas\", disse o tutor Zózimo.",
+          "elapsed_ms": 0.8585
+        },
+        {
+          "id": "syn-0160",
+          "text": "Exemplo 5: somar 34 e 10 dá 44.",
+          "elapsed_ms": 0.662
+        },
+        {
+          "id": "syn-0161",
+          "text": "Revisar o índice remissivo às 21h, não à tarde.",
+          "elapsed_ms": 0.5884
+        },
+        {
+          "id": "syn-0162",
+          "text": "Em 1997, a pesquisadora Ágata estudou a órbita elíptica.",
+          "elapsed_ms": 0.4938
+        },
+        {
+          "id": "syn-0163",
+          "text": "O sistema nervoso: básica, ambígua e concisa.",
+          "elapsed_ms": 0.5049
+        },
+        {
+          "id": "syn-0164",
+          "text": "Questão 15: a órbita elíptica é simples?",
+          "elapsed_ms": 0.6004
+        },
+        {
+          "id": "syn-0165",
+          "text": "EXERCÍCIO: o gênero textual.",
+          "elapsed_ms": 0.565
+        },
+        {
+          "id": "syn-0166",
+          "text": "Capítulo 9: a equação linear",
+          "elapsed_ms": 0.756
+        },
+        {
+          "id": "syn-0167",
+          "text": "O que é o fenômeno óptico?",
+          "elapsed_ms": 0.72
+        },
+        {
+          "id": "syn-0168",
+          "text": "As funções inversas - ver página 28 (seção 4).",
+          "elapsed_ms": 0.5949
+        },
+        {
+          "id": "syn-0169",
+          "text": "\"O exemplo ensina mais\", disse a pesquisadora Ágata.",
+          "elapsed_ms": 0.4772
+        },
+        {
+          "id": "syn-0170",
+          "text": "Exemplo 9: somar 39 e 25 dá 64.",
+          "elapsed_ms": 0.7833
+        },
+        {
+          "id": "syn-0171",
+          "text": "Resumir a célula vegetal às 16h, não à tarde.",
+          "elapsed_ms": 0.7277
+        },
+        {
+          "id": "syn-0172",
+          "text": "Em 1972, o colega Júlio estudou o pêndulo simples.",
+          "elapsed_ms": 0.6309
+        },
+        {
+          "id": "syn-0173",
+          "text": "O fenômeno óptico: ambígua, essencial e simples.",
+          "elapsed_ms": 0.4687
+        },
+        {
+          "id": "syn-0174",
+          "text": "Questão 27: a análise sintática é prática?",
+          "elapsed_ms": 0.5178
+        },
+        {
+          "id": "syn-0175",
+          "text": "OBSERVAÇÃO: o período histórico.",
+          "elapsed_ms": 0.6415
+        },
+        {
+          "id": "syn-0176",
+          "text": "Capítulo 27: a ciência política",
+          "elapsed_ms": 0.9497
+        },
+        {
+          "id": "syn-0177",
+          "text": "A razão áurea - ver página 191 (seção 7).",
+          "elapsed_ms": 2.5628
+        },
+        {
+          "id": "syn-0178",
+          "text": "\"O exemplo ensina mais\", disse a bibliotecária Hortência.",
+          "elapsed_ms": 1.0025
+        },
+        {
+          "id": "syn-0179",
+          "text": "Exemplo 8: somar 50 e 40 dá 90.",
+          "elapsed_ms": 0.9593
+        },
+        {
+          "id": "syn-0180",
+          "text": "Explicar a frequência de onda às 21h, não à tarde.",
+          "elapsed_ms": 0.7273
+        },
+        {
+          "id": "syn-0181",
+          "text": "Em 1963, a aluna Thaís estudou o princípio da inércia.",
+          "elapsed_ms": 0.7526
+        },
+        {
+          "id": "syn-0182",
+          "text": "O conteúdo da prova: rápida, frágil e básica.",
+          "elapsed_ms": 0.7178
+        },
+        {
+          "id": "syn-0183",
+          "text": "Questão 38: o raciocínio dedutivo é difícil?",
+          "elapsed_ms": 0.7059
+        },
+        {
+          "id": "syn-0184",
+          "text": "OBSERVAÇÃO: o triângulo retângulo.",
+          "elapsed_ms": 0.7073
+        },
+        {
+          "id": "syn-0185",
+          "text": "Capítulo 4: o fenômeno óptico",
+          "elapsed_ms": 0.6643
+        },
+        {
+          "id": "syn-0186",
+          "text": "O raciocínio dedutivo - ver página 423 (seção 5).",
+          "elapsed_ms": 0.7434
+        },
+        {
+          "id": "syn-0187",
+          "text": "\"A prática vem antes\", disse a monitora Cecília.",
+          "elapsed_ms": 0.6896
+        },
+        {
+          "id": "syn-0188",
+          "text": "Exemplo 5: somar 23 e 27 dá 50.",
+          "elapsed_ms": 0.7414
+        },
+        {
+          "id": "syn-0189",
+          "text": "Reler a tabela periódica às 13h, não à tarde.",
+          "elapsed_ms": 0.7777
+        },
+        {
+          "id": "syn-0190",
+          "text": "Em 2009, a bibliotecária Hortência estudou a célula vegetal.",
+          "elapsed_ms": 0.7017
+        },
+        {
+          "id": "syn-0191",
+          "text": "O fenômeno óptico: avançada, frágil e difícil.",
+          "elapsed_ms": 0.7405
+        },
+        {
+          "id": "syn-0192",
+          "text": "Questão 30: o método científico é difícil?",
+          "elapsed_ms": 0.8395
+        },
+        {
+          "id": "syn-0193",
+          "text": "INTRODUÇÃO: a razão áurea.",
+          "elapsed_ms": 1.043
+        },
+        {
+          "id": "syn-0194",
+          "text": "Capítulo 20: as três hipóteses",
+          "elapsed_ms": 1.3688
+        },
+        {
+          "id": "syn-0195",
+          "text": "O que é a célula vegetal?",
+          "elapsed_ms": 1.3012
+        },
+        {
+          "id": "syn-0196",
+          "text": "A razão áurea - ver página 203 (seção 5).",
+          "elapsed_ms": 0.9415
+        },
+        {
+          "id": "syn-0197",
+          "text": "\"Ninguém aprende às pressas\", disse a doutora Íris.",
+          "elapsed_ms": 0.9432
+        },
+        {
+          "id": "syn-0198",
+          "text": "Exemplo 3: somar 18 e 3 dá 21.",
+          "elapsed_ms": 0.785
+        },
+        {
+          "id": "syn-0199",
+          "text": "Reler as funções inversas às 10h, não à tarde.",
+          "elapsed_ms": 0.7056
+        },
+        {
+          "id": "syn-0200",
+          "text": "Em 1983, o professor Abelardo estudou a pressão atmosférica.",
+          "elapsed_ms": 0.6058
+        }
+      ],
+      "stderr_tail": [],
+      "metrics": {
+        "lines": 200,
+        "missing": [],
+        "cer_micro": 0.0,
+        "wer_micro": 0.0,
+        "cer_macro": 0.0,
+        "wer_macro": 0.0,
+        "char_edits": 0,
+        "ref_chars": 8107,
+        "word_edits": 0,
+        "ref_words": 1445,
+        "per_line": [
+          {
+            "id": "syn-0001",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0002",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0003",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0004",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0005",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0006",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0007",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0008",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0009",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0010",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0011",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0012",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0013",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0014",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0015",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0016",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0017",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0018",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 36,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0019",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0020",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0021",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0022",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0023",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0024",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0025",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 62,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0026",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0027",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0028",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0029",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0030",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0031",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0032",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0033",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0034",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0035",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0036",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0037",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0038",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0039",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 37,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0040",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0041",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0042",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0043",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0044",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0045",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 23,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0046",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0047",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0048",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0049",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0050",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0051",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 55,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0052",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0053",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0054",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0055",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0056",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0057",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0058",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 58,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0059",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0060",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0061",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 59,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0062",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0063",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 41,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0064",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0065",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0066",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0067",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0068",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0069",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0070",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0071",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0072",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0073",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0074",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0075",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0076",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0077",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0078",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0079",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 59,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0080",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0081",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0082",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0083",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0084",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0085",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0086",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0087",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0088",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0089",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0090",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0091",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0092",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0093",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0094",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0095",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0096",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0097",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0098",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0099",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0100",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0101",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0102",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0103",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0104",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0105",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0106",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0107",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0108",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0109",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0110",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0111",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0112",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0113",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0114",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0115",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0116",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0117",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0118",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0119",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0120",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 38,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0121",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0122",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0123",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0124",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0125",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0126",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0127",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0128",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0129",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0130",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0131",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0132",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0133",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0134",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0135",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0136",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0137",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0138",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0139",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 27,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0140",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 35,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0141",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0142",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0143",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0144",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 53,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0145",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0146",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0147",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0148",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0149",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0150",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0151",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0152",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0153",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0154",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0155",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0156",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0157",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0158",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0159",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0160",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0161",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0162",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0163",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0164",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0165",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0166",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0167",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0168",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0169",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0170",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0171",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0172",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0173",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0174",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0175",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 32,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0176",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0177",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0178",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0179",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0180",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 50,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0181",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 54,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0182",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0183",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0184",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 34,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0185",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0186",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0187",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 48,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0188",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0189",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0190",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0191",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0192",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0193",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0194",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0195",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0196",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0197",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0198",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0199",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0200",
+            "cer": 0.0,
+            "wer": 0.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          }
+        ]
+      },
+      "latency": {
+        "lines": 200,
+        "median_ms": 0.70495,
+        "p95_ms": 1.6479,
+        "mean_ms": 0.812132,
+        "max_ms": 3.2841
+      },
+      "partial": false,
+      "verdicts": {
+        "h1_quality": true,
+        "h2_cost": true
+      }
+    }
+  ]
+}

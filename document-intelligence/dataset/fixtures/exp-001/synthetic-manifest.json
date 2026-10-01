@@ -1,0 +1,1820 @@
+{
+  "schema": "leitorum-di-lines/1",
+  "dataset": "exp-001-synthetic",
+  "origin": "synthetic",
+  "note": "Linhas sintéticas: validam o harness e o custo; não são métrica de HTR real.",
+  "sentences_sha256": "9d609bc1887f26a97cfd647f0bec8145106ff9ab407996116f00a0cb82c45267",
+  "font": {
+    "file": "Caveat-Regular.ttf",
+    "sha256": "7af58d70e539c9195cc328617a68c9961ed804a4404b0b818989ba7c013e8776",
+    "size": 48,
+    "license": "OFL-1.1"
+  },
+  "renderer": {
+    "pillow": "12.3.0",
+    "padding": 12,
+    "mode": "L"
+  },
+  "lines": [
+    {
+      "id": "syn-0001",
+      "image": "dataset/processed/exp-001/synthetic/syn-0001.png",
+      "sha256": "b3f666118c9dbf8f5618aa2f544dc9db42d97bee67748f4089270bc8aef5f9a4",
+      "text": "Capítulo 25: o pêndulo simples",
+      "width": 506,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0002",
+      "image": "dataset/processed/exp-001/synthetic/syn-0002.png",
+      "sha256": "dd6e87feba63fe74e36063428b58d0391bf93d8c5173f96de7bf111645218c7c",
+      "text": "O que é a equação linear?",
+      "width": 444,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0003",
+      "image": "dataset/processed/exp-001/synthetic/syn-0003.png",
+      "sha256": "b1122a52fccd0d14745491e513c0a65794067ff7e67d3c5932fefb46732e85ad",
+      "text": "A lógica formal - ver página 56 (seção 1).",
+      "width": 705,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0004",
+      "image": "dataset/processed/exp-001/synthetic/syn-0004.png",
+      "sha256": "e3d8c03c05f0f52ad999ef8b557580f422ffdd5015f8ad13e2f2dee7b1466d64",
+      "text": "\"Ninguém aprende às pressas\", disse a monitora Cecília.",
+      "width": 920,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0005",
+      "image": "dataset/processed/exp-001/synthetic/syn-0005.png",
+      "sha256": "c05baaf56d0d9eacd1ed4b3e2ac6bde880e6ffcd7d46b042f2898ac3e2dc0b42",
+      "text": "Exemplo 6: somar 8 e 51 dá 59.",
+      "width": 541,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0006",
+      "image": "dataset/processed/exp-001/synthetic/syn-0006.png",
+      "sha256": "62765bd81a27268d8b26f7730bd317028cf2f2dba811764d308052a3fc548ed0",
+      "text": "Comparar a lógica formal às 7h, não à tarde.",
+      "width": 766,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0007",
+      "image": "dataset/processed/exp-001/synthetic/syn-0007.png",
+      "sha256": "927378f144ca26d85164bf12ca8ebd6c4da96ab176aacd366ea5a51c6f11e049",
+      "text": "Por quê? Porque a hipótese não se sustenta.",
+      "width": 736,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0008",
+      "image": "dataset/processed/exp-001/synthetic/syn-0008.png",
+      "sha256": "282aa2db2584512f25fdbe258f0aa8ccbe816f62c352e00a859228dab89e4da1",
+      "text": "Em 2011, a aluna Thaís estudou as funções inversas.",
+      "width": 891,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0009",
+      "image": "dataset/processed/exp-001/synthetic/syn-0009.png",
+      "sha256": "7df5a7a23f83a760dc5f24dbf2bfc55faaca5ac5b452705a3fb481d47dff6a03",
+      "text": "A razão áurea: avançada, essencial e difícil.",
+      "width": 734,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0010",
+      "image": "dataset/processed/exp-001/synthetic/syn-0010.png",
+      "sha256": "60dd29c134db6ce4ddcf9acae95224cd04ee01d4a9354dd00a54b1209fbf240d",
+      "text": "Questão 8: a ciência política é simples?",
+      "width": 655,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0011",
+      "image": "dataset/processed/exp-001/synthetic/syn-0011.png",
+      "sha256": "8215dd8f46e7cbc2106345d4479c5dc37636e0d54f05c3545a57bdd0ba39fd76",
+      "text": "RESUMO: o triângulo retângulo.",
+      "width": 550,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0012",
+      "image": "dataset/processed/exp-001/synthetic/syn-0012.png",
+      "sha256": "c5ccc61ad1a30392cc2ff56f11e1a44d06d1d0135cb0990dad6436f2afb55796",
+      "text": "Capítulo 29: a análise sintática",
+      "width": 540,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0013",
+      "image": "dataset/processed/exp-001/synthetic/syn-0013.png",
+      "sha256": "c45147a9a5360dbd95a1eae192f19279b2e150c86d18f10f196b96f7e118299d",
+      "text": "O que é o método científico?",
+      "width": 477,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0014",
+      "image": "dataset/processed/exp-001/synthetic/syn-0014.png",
+      "sha256": "f389d79d061c85d0aaaf3a7bbabe4a6d241ea692410e9122a3131dd9a8b2c41f",
+      "text": "As noções básicas - ver página 287 (seção 8).",
+      "width": 776,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0015",
+      "image": "dataset/processed/exp-001/synthetic/syn-0015.png",
+      "sha256": "b594d19a17930e87a49798ce76264b72bdd5ec8677ca377bde8c469a834a561c",
+      "text": "\"Não há atalho\", disse a pesquisadora Ágata.",
+      "width": 755,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0016",
+      "image": "dataset/processed/exp-001/synthetic/syn-0016.png",
+      "sha256": "cbd0436a32828f71f8d27eada195c9fbbbf9d176041e7e453b664d1bacf734d4",
+      "text": "Exemplo 9: somar 45 e 7 dá 52.",
+      "width": 541,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0017",
+      "image": "dataset/processed/exp-001/synthetic/syn-0017.png",
+      "sha256": "04d100821c7ae6a66becb168d868ed44b81d62f8ec65a206aecaa876780aa935",
+      "text": "Revisar o período histórico às 9h, não à tarde.",
+      "width": 782,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0018",
+      "image": "dataset/processed/exp-001/synthetic/syn-0018.png",
+      "sha256": "6c8a5ab1cd17f624983a2c2a65427a91e862b36a683848f82659dd0c26cee1be",
+      "text": "Por quê? Porque a amostra é pequena.",
+      "width": 641,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0019",
+      "image": "dataset/processed/exp-001/synthetic/syn-0019.png",
+      "sha256": "1476e45ef3c9ac461f3bbb3a755f1470e31b17a1b79a6f0b12fc592545b17aaa",
+      "text": "Em 2011, o colega Júlio estudou a ciência política.",
+      "width": 827,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0020",
+      "image": "dataset/processed/exp-001/synthetic/syn-0020.png",
+      "sha256": "ca623a30a867fb273bb7d1dcdcb2026a9ed22fa295b8747811d095f6b3b86e62",
+      "text": "As equações químicas: útil, teórica e prática.",
+      "width": 739,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0021",
+      "image": "dataset/processed/exp-001/synthetic/syn-0021.png",
+      "sha256": "576e8772dc6fa67999bc8e11290c1c2563b969696a0f1ce2ac16550e448b01c4",
+      "text": "Questão 13: o pêndulo simples é ambígua?",
+      "width": 699,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0022",
+      "image": "dataset/processed/exp-001/synthetic/syn-0022.png",
+      "sha256": "598d056247d06d68bd51c47cfb7fceef043ce388f1b43387c9cf1c7f7b8535e9",
+      "text": "RESUMO: as noções básicas.",
+      "width": 499,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0023",
+      "image": "dataset/processed/exp-001/synthetic/syn-0023.png",
+      "sha256": "044224b54fb84d9aa8b986e5815332e57d95d584c20fca7849085978dd7e03ed",
+      "text": "Capítulo 1: a frequência de onda",
+      "width": 552,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0024",
+      "image": "dataset/processed/exp-001/synthetic/syn-0024.png",
+      "sha256": "ee06e5611bfeebdab5e047a7792c9ba3d60b2505e99e081a6a8f3f487fa7d233",
+      "text": "A lógica formal - ver página 180 (seção 3).",
+      "width": 727,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0025",
+      "image": "dataset/processed/exp-001/synthetic/syn-0025.png",
+      "sha256": "18da0a100d260ff39f98e8cc9b11a35fa08854f2d1fbe98594d0647ec4aca910",
+      "text": "\"Ninguém aprende às pressas\", disse a bibliotecária Hortência.",
+      "width": 1035,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0026",
+      "image": "dataset/processed/exp-001/synthetic/syn-0026.png",
+      "sha256": "5fda93c21fbfcad056d1e361db1dcf388c60f1508d1febfa9926be94b40619ce",
+      "text": "Exemplo 3: somar 44 e 26 dá 70.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0027",
+      "image": "dataset/processed/exp-001/synthetic/syn-0027.png",
+      "sha256": "d52d678b42dd6bf140eb8939f50a971e38ecc26bda13ac7e6a3cd2c0a997fbeb",
+      "text": "Revisar o método científico às 22h, não à tarde.",
+      "width": 809,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0028",
+      "image": "dataset/processed/exp-001/synthetic/syn-0028.png",
+      "sha256": "ff86e243e272ad1f7c28d03805c0589d01ec0c5fca520d39ab65781ee99ddca0",
+      "text": "Por quê? Porque o exemplo contradiz a regra.",
+      "width": 749,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0029",
+      "image": "dataset/processed/exp-001/synthetic/syn-0029.png",
+      "sha256": "2370168de9aab3beb8a94d181b9fa898ea5a286b6d3a17f7e312658421fde228",
+      "text": "Em 2021, a monitora Cecília estudou o número complexo.",
+      "width": 940,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0030",
+      "image": "dataset/processed/exp-001/synthetic/syn-0030.png",
+      "sha256": "58eb33372fd71e68deb247ef13c3237f5d9dbebf00657ab5eef3992d013f72ed",
+      "text": "O binômio perfeito: essencial, simples e útil.",
+      "width": 713,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0031",
+      "image": "dataset/processed/exp-001/synthetic/syn-0031.png",
+      "sha256": "2f68dc247bcb69abf38fc73c22f3ae8aa925294193eb3cfc66ce1b9c276904d6",
+      "text": "Questão 8: a frequência de onda é essencial?",
+      "width": 754,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0032",
+      "image": "dataset/processed/exp-001/synthetic/syn-0032.png",
+      "sha256": "3e835131bda0f39d7e23840e8375c13160158f2a6ce8b444f268c859d85e0e68",
+      "text": "QUESTÕES: o pêndulo simples.",
+      "width": 514,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0033",
+      "image": "dataset/processed/exp-001/synthetic/syn-0033.png",
+      "sha256": "7e1fb0ac02372c4ec7ddbae794bfdd56869052a7e3e34e1bfd7c799b7111a8c3",
+      "text": "Capítulo 2: a pressão atmosférica",
+      "width": 570,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0034",
+      "image": "dataset/processed/exp-001/synthetic/syn-0034.png",
+      "sha256": "a242d7cf87b87d67e3663571d64139e143f5537c497a6459a24db9e76db952d5",
+      "text": "O que é o período histórico?",
+      "width": 472,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0035",
+      "image": "dataset/processed/exp-001/synthetic/syn-0035.png",
+      "sha256": "7427bd267f0d3b14d8dd718691480cc5d4288baf1c8d790576899915c15766df",
+      "text": "As noções básicas - ver página 422 (seção 1).",
+      "width": 776,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0036",
+      "image": "dataset/processed/exp-001/synthetic/syn-0036.png",
+      "sha256": "b14a4bd7216242fae4ecbe6a16cd21abacc11932664838a27776a1a42bfdb76c",
+      "text": "\"A prática vem antes\", disse o colega Júlio.",
+      "width": 699,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0037",
+      "image": "dataset/processed/exp-001/synthetic/syn-0037.png",
+      "sha256": "a05d937e80c5c8729f2d54d1893fc88194a10d5bd2ba13f6839e6167bcee336f",
+      "text": "Exemplo 3: somar 11 e 21 dá 32.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0038",
+      "image": "dataset/processed/exp-001/synthetic/syn-0038.png",
+      "sha256": "994c95f73eab065b7553f71ee0e58bcfd738274e0871c2d25c2cef47fd948ab0",
+      "text": "Explicar a função contínua às 19h, não à tarde.",
+      "width": 816,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0039",
+      "image": "dataset/processed/exp-001/synthetic/syn-0039.png",
+      "sha256": "d89e898a7949eb1c93aacadb77f6fe7820c08ff47581d47b1e866d2f511576e3",
+      "text": "Por quê? Porque faltou medir de novo.",
+      "width": 629,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0040",
+      "image": "dataset/processed/exp-001/synthetic/syn-0040.png",
+      "sha256": "88c9656ac6184cd37e689792aa3be66e5ea96084ff089f21e482e70632417962",
+      "text": "Em 1993, a bibliotecária Hortência estudou o gênero textual.",
+      "width": 1018,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0041",
+      "image": "dataset/processed/exp-001/synthetic/syn-0041.png",
+      "sha256": "630aa4299efa94c4fe20956858eff0512d3a14979aed8401658eaf85c9afbe1a",
+      "text": "A função contínua: rigorosa, avançada e ambígua.",
+      "width": 840,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0042",
+      "image": "dataset/processed/exp-001/synthetic/syn-0042.png",
+      "sha256": "85ad66a4da8944918e056c36fa85ef5045b648c11e7b37a2fef5a81472afb6f6",
+      "text": "Questão 31: a ciência política é rigorosa?",
+      "width": 698,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0043",
+      "image": "dataset/processed/exp-001/synthetic/syn-0043.png",
+      "sha256": "273bb589cc6ebb7651607409596ea1a9c9d2219c77645f124795fb629a2e1f50",
+      "text": "DÚVIDA: as três hipóteses.",
+      "width": 474,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0044",
+      "image": "dataset/processed/exp-001/synthetic/syn-0044.png",
+      "sha256": "26e677a0b5686353083e0209ac3ea513c7bcd7e081c2679cd9b11ff2613b2385",
+      "text": "Capítulo 6: o pêndulo simples",
+      "width": 484,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0045",
+      "image": "dataset/processed/exp-001/synthetic/syn-0045.png",
+      "sha256": "5555e53f9d8dd85b96b8058a6d3178449543b2e83e8c53dc80af96f643fcabf2",
+      "text": "O que é a fórmula útil?",
+      "width": 396,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0046",
+      "image": "dataset/processed/exp-001/synthetic/syn-0046.png",
+      "sha256": "ed4218513084218569b74ed3c2e2490b055b6b87fcfb1b13619c090d5c8cbf8c",
+      "text": "O binômio perfeito - ver página 275 (seção 8).",
+      "width": 779,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0047",
+      "image": "dataset/processed/exp-001/synthetic/syn-0047.png",
+      "sha256": "9e4b62c737824a66b18fe341d46f041da0beb32bc43893f790a37249c5392dcc",
+      "text": "\"Meça e só então conclua\", disse o colega Júlio.",
+      "width": 768,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0048",
+      "image": "dataset/processed/exp-001/synthetic/syn-0048.png",
+      "sha256": "a53c5b26130ca4e2d9e90259c32c033efbc02eaeb77abd8a0f817b0701ac7d2e",
+      "text": "Exemplo 3: somar 9 e 51 dá 60.",
+      "width": 541,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0049",
+      "image": "dataset/processed/exp-001/synthetic/syn-0049.png",
+      "sha256": "2a4f36d2ac8618bbebcf7f803d701065522753a538ba45c2f55118e936e002c7",
+      "text": "Fichar a pressão atmosférica às 10h, não à tarde.",
+      "width": 854,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0050",
+      "image": "dataset/processed/exp-001/synthetic/syn-0050.png",
+      "sha256": "ef42aa3ed7bef0a3601ec68129bf95ca6fd56ad36b06375c6fae9bb963ab3354",
+      "text": "Por quê? Porque o método é mais confiável.",
+      "width": 710,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0051",
+      "image": "dataset/processed/exp-001/synthetic/syn-0051.png",
+      "sha256": "5a2edb59d623ebaceb4d16371c950223391300f683808ebe35f3f9a09ea76f4a",
+      "text": "Em 2012, a monitora Cecília estudou a tabela periódica.",
+      "width": 937,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0052",
+      "image": "dataset/processed/exp-001/synthetic/syn-0052.png",
+      "sha256": "01c6fdb97c6141c4f17166f614a6fc63c8f8a0d2aacac8b809d2e7913950e291",
+      "text": "O período histórico: rigorosa, ambígua e rápida.",
+      "width": 789,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0053",
+      "image": "dataset/processed/exp-001/synthetic/syn-0053.png",
+      "sha256": "8fc6d66097d7bfb411faaa2733ea964704115beea4a02b4331dff09dfe818411",
+      "text": "Questão 13: o sistema nervoso é difícil?",
+      "width": 664,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0054",
+      "image": "dataset/processed/exp-001/synthetic/syn-0054.png",
+      "sha256": "413a95c30527746a713eead9f0bf7109ef2a9c0b1a5393597cf0ed918bc662b0",
+      "text": "CONCLUSÃO: o gênero textual.",
+      "width": 526,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0055",
+      "image": "dataset/processed/exp-001/synthetic/syn-0055.png",
+      "sha256": "336ec28be0b5e748e5187de27275ce474ab83f8d6fbc0609d971ae5c34043874",
+      "text": "Capítulo 9: o raciocínio dedutivo",
+      "width": 539,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0056",
+      "image": "dataset/processed/exp-001/synthetic/syn-0056.png",
+      "sha256": "4bda77f081e38518003c357b5b3fd22a5c1b0e55d2cf7a2c7e8143af2e378371",
+      "text": "O que é a ciência política?",
+      "width": 449,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0057",
+      "image": "dataset/processed/exp-001/synthetic/syn-0057.png",
+      "sha256": "113f3ceaa0f2f87994454f7290418c4d9b0e74d22d0ad0048ab10bb390aed7fb",
+      "text": "O conteúdo da prova - ver página 378 (seção 6).",
+      "width": 817,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0058",
+      "image": "dataset/processed/exp-001/synthetic/syn-0058.png",
+      "sha256": "72c096876228b7a6595b108b2b0aa144f4011bea3247763700017d71e853589e",
+      "text": "\"A pergunta já é metade\", disse a bibliotecária Hortência.",
+      "width": 954,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0059",
+      "image": "dataset/processed/exp-001/synthetic/syn-0059.png",
+      "sha256": "8725cbc47fcf3d7567c7b6c5d3e7044cf609886a94b9fb99792eba7b6982869e",
+      "text": "Exemplo 2: somar 48 e 6 dá 54.",
+      "width": 541,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0060",
+      "image": "dataset/processed/exp-001/synthetic/syn-0060.png",
+      "sha256": "027a4d15691048fc8a565309470baeb1e0537f037e75735c3ace54b0f6e70390",
+      "text": "Fichar o número complexo às 8h, não à tarde.",
+      "width": 769,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0061",
+      "image": "dataset/processed/exp-001/synthetic/syn-0061.png",
+      "sha256": "43d895e497083d4a62dcf30c4ef53eeb4bb4d7979cca769fc4e5bb549dda49c6",
+      "text": "Em 1978, o professor Abelardo estudou a frequência de onda.",
+      "width": 1023,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0062",
+      "image": "dataset/processed/exp-001/synthetic/syn-0062.png",
+      "sha256": "0d2f1ecefd807c2462f732d257c6332668fbe9d515d96eb5c1e02139c33e9a05",
+      "text": "O índice remissivo: rigorosa, difícil e concisa.",
+      "width": 736,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0063",
+      "image": "dataset/processed/exp-001/synthetic/syn-0063.png",
+      "sha256": "3ea3a0747cc88b6bffbd13a08026687b203e2b87b47c0ac0632f4b79041d61b7",
+      "text": "Questão 21: a órbita elíptica é avançada?",
+      "width": 714,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0064",
+      "image": "dataset/processed/exp-001/synthetic/syn-0064.png",
+      "sha256": "a33e187e82fe3348fc254d10d79941e59147355bf72cf8ba948439b9ca0245f7",
+      "text": "REVISÃO: o gênero textual.",
+      "width": 478,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0065",
+      "image": "dataset/processed/exp-001/synthetic/syn-0065.png",
+      "sha256": "78b29066887dd783fdfb004ab6284b054d5d23f948989ed539ed35a39356c52f",
+      "text": "Capítulo 9: a ciência política",
+      "width": 484,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0066",
+      "image": "dataset/processed/exp-001/synthetic/syn-0066.png",
+      "sha256": "8e746772bda279810ef319af08697175dc7e24528b0e8678e1725af2bb91f8f4",
+      "text": "O princípio da inércia - ver página 228 (seção 4).",
+      "width": 833,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0067",
+      "image": "dataset/processed/exp-001/synthetic/syn-0067.png",
+      "sha256": "5def212f0e1f5e08635bdb16326f1b57bccab4d41f7d5c45d3eeff8aa894271c",
+      "text": "\"Não há atalho\", disse o autor Quirino.",
+      "width": 651,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0068",
+      "image": "dataset/processed/exp-001/synthetic/syn-0068.png",
+      "sha256": "7d1e8c5c03d7283e375f39bd84450ee0549d1c1dee8d412651ce6a4c8e915c41",
+      "text": "Exemplo 8: somar 14 e 47 dá 61.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0069",
+      "image": "dataset/processed/exp-001/synthetic/syn-0069.png",
+      "sha256": "60b1a198de4cda9c0127e1e6c5573e936e24c0e23a2053720746b79e79614869",
+      "text": "Comparar o conteúdo da prova às 18h, não à tarde.",
+      "width": 874,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0070",
+      "image": "dataset/processed/exp-001/synthetic/syn-0070.png",
+      "sha256": "b727954407ed8f40c4b26442508dcc0f332a00a05853625a849d2fe77f1a94ed",
+      "text": "Em 2003, o orientador Wálter estudou a razão áurea.",
+      "width": 906,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0071",
+      "image": "dataset/processed/exp-001/synthetic/syn-0071.png",
+      "sha256": "77236e1a1ec201a2bc8839521de4d7e4cf854de71037280fe4d1e48d7b4867fe",
+      "text": "A função contínua: sólida, prática e teórica.",
+      "width": 739,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0072",
+      "image": "dataset/processed/exp-001/synthetic/syn-0072.png",
+      "sha256": "3d56260181670c50cf69ebb21a6a387da87a2b9e8ad5d2c719ed083ecfe8f66e",
+      "text": "Questão 23: o fenômeno óptico é essencial?",
+      "width": 723,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0073",
+      "image": "dataset/processed/exp-001/synthetic/syn-0073.png",
+      "sha256": "4ea94a383df794c04d6cc1dd33432e4bc54f68d751059b0de70dac8fca9fc418",
+      "text": "OBSERVAÇÃO: o índice remissivo.",
+      "width": 574,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0074",
+      "image": "dataset/processed/exp-001/synthetic/syn-0074.png",
+      "sha256": "3592141d8b4e166877f32fafba98275183dc825feefc75158e902dcb97380e42",
+      "text": "Capítulo 25: o fenômeno óptico",
+      "width": 521,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0075",
+      "image": "dataset/processed/exp-001/synthetic/syn-0075.png",
+      "sha256": "332858cac67162c19616d5ea21cbf31bc8bb9adc1950857cdd8704eb7de59302",
+      "text": "O que é o triângulo retângulo?",
+      "width": 516,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0076",
+      "image": "dataset/processed/exp-001/synthetic/syn-0076.png",
+      "sha256": "fb6ee188d4c56f66f237dc66b5510dc56a85fcfb7be44b72f0ae7ec3068f2b73",
+      "text": "A célula vegetal - ver página 81 (seção 3).",
+      "width": 710,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0077",
+      "image": "dataset/processed/exp-001/synthetic/syn-0077.png",
+      "sha256": "ae4a606e85b27691451d76a67366ec43ee8f66ba18b1816b80461b9c60cf12e8",
+      "text": "Exemplo 9: somar 12 e 11 dá 23.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0078",
+      "image": "dataset/processed/exp-001/synthetic/syn-0078.png",
+      "sha256": "ddef98c623bc9268f71fcb66d905d08765a62c5bd74a7f68fcf01aa5b8fe2fe5",
+      "text": "Estudar o princípio da inércia às 17h, não à tarde.",
+      "width": 861,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0079",
+      "image": "dataset/processed/exp-001/synthetic/syn-0079.png",
+      "sha256": "4e22db16395287ecb8da41054434aa332c3acb804bd61a32e95627eb695babdb",
+      "text": "Em 1957, o professor Abelardo estudou as equações químicas.",
+      "width": 1019,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0080",
+      "image": "dataset/processed/exp-001/synthetic/syn-0080.png",
+      "sha256": "8306fec857ef1867a85869690dab0fa60143db049e033ba36a40bfc1df6a7c30",
+      "text": "O raciocínio dedutivo: difícil, concisa e rigorosa.",
+      "width": 786,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0081",
+      "image": "dataset/processed/exp-001/synthetic/syn-0081.png",
+      "sha256": "078ac615be31b47d0c2f77410d5e0cbda7b0da303559c3ccc74990cdf955ba79",
+      "text": "Questão 14: a função contínua é básica?",
+      "width": 697,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0082",
+      "image": "dataset/processed/exp-001/synthetic/syn-0082.png",
+      "sha256": "e6ba9483c62e54e893bfda9608b8dfef2d70077fbfcb19d55693b1a94c635e01",
+      "text": "DEFINIÇÃO: a fórmula útil.",
+      "width": 487,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0083",
+      "image": "dataset/processed/exp-001/synthetic/syn-0083.png",
+      "sha256": "65b69db72d71d6e5e18d555ab4128fbbe37b248646853f8aa4f79fe3734fdec2",
+      "text": "Capítulo 11: o número complexo",
+      "width": 529,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0084",
+      "image": "dataset/processed/exp-001/synthetic/syn-0084.png",
+      "sha256": "876710d9873fa690741ddadff6020de0f815530718effa079a851fde38bc38de",
+      "text": "O que é o conteúdo da prova?",
+      "width": 502,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0085",
+      "image": "dataset/processed/exp-001/synthetic/syn-0085.png",
+      "sha256": "cb015f0d8430c8d64bafa05ecca880368bf4f8b922042b144fdfd552491ec430",
+      "text": "As noções básicas - ver página 205 (seção 5).",
+      "width": 776,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0086",
+      "image": "dataset/processed/exp-001/synthetic/syn-0086.png",
+      "sha256": "e6024bf2147a6f89fa445a237561cd38a7cb7d8d52f51720411b14b57abb87d4",
+      "text": "\"O exemplo ensina mais\", disse o colega Júlio.",
+      "width": 727,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0087",
+      "image": "dataset/processed/exp-001/synthetic/syn-0087.png",
+      "sha256": "090dbb04c4fd43472f1417d90b94b180152e042541d39770369336d380683067",
+      "text": "Exemplo 3: somar 29 e 22 dá 51.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0088",
+      "image": "dataset/processed/exp-001/synthetic/syn-0088.png",
+      "sha256": "cabd4f4caf22142041f3fa7238e3049bab1240507d2810e0378f083c4dfe935c",
+      "text": "Estudar o binômio perfeito às 15h, não à tarde.",
+      "width": 807,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0089",
+      "image": "dataset/processed/exp-001/synthetic/syn-0089.png",
+      "sha256": "5cfc4b52b5323f879617fe88b7f572e4ac881ea9730a655d01c0d671fff365d0",
+      "text": "Em 2001, o autor Quirino estudou a ciência política.",
+      "width": 869,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0090",
+      "image": "dataset/processed/exp-001/synthetic/syn-0090.png",
+      "sha256": "13074600ecb4afe9e5dd5fcaf88cad5bd4206f03274b92796c6b07067254c038",
+      "text": "A equação linear: sólida, teórica e frágil.",
+      "width": 676,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0091",
+      "image": "dataset/processed/exp-001/synthetic/syn-0091.png",
+      "sha256": "992a3c9f65f575b25d4d4d82b307fe47eef5992919acabed28e0a8ef0bb3168c",
+      "text": "Questão 25: o período histórico é prática?",
+      "width": 709,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0092",
+      "image": "dataset/processed/exp-001/synthetic/syn-0092.png",
+      "sha256": "92b1fb41c8b2d98147a96eae7649a18ff9c4fdcfe883ac31498937482eb1cb9c",
+      "text": "QUESTÕES: o princípio da inércia.",
+      "width": 585,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0093",
+      "image": "dataset/processed/exp-001/synthetic/syn-0093.png",
+      "sha256": "a1756ac2561925729d33f2cfeadf9e7ce980f644739b048f5e886926c50ba1d9",
+      "text": "Capítulo 27: o gênero textual",
+      "width": 497,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0094",
+      "image": "dataset/processed/exp-001/synthetic/syn-0094.png",
+      "sha256": "43e015cbfe95327a85064477feb1bb6af54b97a0a9aeb209aa7a2214302f0afd",
+      "text": "O que é a tabela periódica?",
+      "width": 469,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0095",
+      "image": "dataset/processed/exp-001/synthetic/syn-0095.png",
+      "sha256": "2d729ec554b8179d440eb19cb40b73c2acd12e662ab67a14dc3bb54529f7f0ac",
+      "text": "A função contínua - ver página 188 (seção 8).",
+      "width": 785,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0096",
+      "image": "dataset/processed/exp-001/synthetic/syn-0096.png",
+      "sha256": "cc4ddc0d01bd0205849968abaa56cb6240c6f97d119d4508d498de552c73e886",
+      "text": "\"A prática vem antes\", disse a bibliotecária Hortência.",
+      "width": 904,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0097",
+      "image": "dataset/processed/exp-001/synthetic/syn-0097.png",
+      "sha256": "dad4c97253c6643b4c6fd9ff62515581e657c5d67228c1f57b94e165013b968f",
+      "text": "Exemplo 5: somar 12 e 26 dá 38.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0098",
+      "image": "dataset/processed/exp-001/synthetic/syn-0098.png",
+      "sha256": "c30b1770ec79822c79f5b03b70c65a41f3d56b45c95edfe7b21298c0884a4da2",
+      "text": "Por quê? Porque a conclusão veio cedo demais.",
+      "width": 761,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0099",
+      "image": "dataset/processed/exp-001/synthetic/syn-0099.png",
+      "sha256": "74bc3426e0d175069c9fdc0c641583875bc796ceead83dd17063878cbde8e48a",
+      "text": "Em 2004, o colega Júlio estudou o conteúdo da prova.",
+      "width": 880,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0100",
+      "image": "dataset/processed/exp-001/synthetic/syn-0100.png",
+      "sha256": "3a191dda6fc666c8ab1f14c87101098f6ff701472c3e0f4d2d41996a2f42dc8c",
+      "text": "A razão áurea: rápida, rigorosa e avançada.",
+      "width": 744,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0101",
+      "image": "dataset/processed/exp-001/synthetic/syn-0101.png",
+      "sha256": "513f4620cdee58f8ed9d27ba0e21a842472f3c79addf2716f707ec9388c1caa0",
+      "text": "Questão 26: as equações químicas é avançada?",
+      "width": 789,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0102",
+      "image": "dataset/processed/exp-001/synthetic/syn-0102.png",
+      "sha256": "4b6ad969a13e684e0b0ef3507e9bce917ae66692a6c1ed1c07cc708530616c57",
+      "text": "CONCLUSÃO: a órbita elíptica.",
+      "width": 529,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0103",
+      "image": "dataset/processed/exp-001/synthetic/syn-0103.png",
+      "sha256": "c5df3986c5cfc451441360816c21d87314eee6d42aaf8d0f1c6964e99dd10fd0",
+      "text": "Capítulo 19: o sistema nervoso",
+      "width": 518,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0104",
+      "image": "dataset/processed/exp-001/synthetic/syn-0104.png",
+      "sha256": "2c4fc3b5031b20406316e019154f2327781b9d690a7b50391fb2cf1da56aba21",
+      "text": "O que é as equações químicas?",
+      "width": 513,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0105",
+      "image": "dataset/processed/exp-001/synthetic/syn-0105.png",
+      "sha256": "6b98d9d99853f19f562f747f55dfc94d27728a33667e63f7f314c50479a71ae8",
+      "text": "As funções inversas - ver página 187 (seção 4).",
+      "width": 803,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0106",
+      "image": "dataset/processed/exp-001/synthetic/syn-0106.png",
+      "sha256": "26344c6a519e6feb9db55d25a694e304165e9dfeaa998817527cc14de1869120",
+      "text": "\"A prática vem antes\", disse o orientador Wálter.",
+      "width": 820,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0107",
+      "image": "dataset/processed/exp-001/synthetic/syn-0107.png",
+      "sha256": "006589a19660573bf76a81dd1e184015164b5d31e8d1ed9c6b8f71f98ff4c5c3",
+      "text": "Exemplo 8: somar 38 e 31 dá 69.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0108",
+      "image": "dataset/processed/exp-001/synthetic/syn-0108.png",
+      "sha256": "2af5b90dae60f4aca826a5fdc3f58b0df621177fe77459dbb0036966b4d4751f",
+      "text": "Revisar a distância média às 21h, não à tarde.",
+      "width": 797,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0109",
+      "image": "dataset/processed/exp-001/synthetic/syn-0109.png",
+      "sha256": "af709e0e21a39c3a7542e3b31036f14b4828c8bf1ae0990ffd95894dfd7f1378",
+      "text": "Em 1953, a monitora Cecília estudou o sistema nervoso.",
+      "width": 929,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0110",
+      "image": "dataset/processed/exp-001/synthetic/syn-0110.png",
+      "sha256": "955ca8bdad5409f8481dc263c34219163dfd27ed2b0b14aeedb1c644eeff2e26",
+      "text": "O índice remissivo: concisa, avançada e difícil.",
+      "width": 763,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0111",
+      "image": "dataset/processed/exp-001/synthetic/syn-0111.png",
+      "sha256": "f84fbbce4b0c339945a7a3df77e3096660ee0387762b3f8fe1dfd0363afb6cf8",
+      "text": "Questão 9: as três hipóteses é ambígua?",
+      "width": 680,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0112",
+      "image": "dataset/processed/exp-001/synthetic/syn-0112.png",
+      "sha256": "8c1a332d96880a343d36f9328ee5fbc498aae4e73e7fc1e9424d4b03edce4c43",
+      "text": "DÚVIDA: a célula vegetal.",
+      "width": 445,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0113",
+      "image": "dataset/processed/exp-001/synthetic/syn-0113.png",
+      "sha256": "cbf9c34d735a137efde7b1160eb1cd9f22f2b870f6af66e5fadfbb418fe9d93e",
+      "text": "Capítulo 12: o binômio perfeito",
+      "width": 521,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0114",
+      "image": "dataset/processed/exp-001/synthetic/syn-0114.png",
+      "sha256": "3fba2990e934e0ee27abe5958dca3a50dafbfe1c4416a9d8a7c201f930e42006",
+      "text": "O que é o binômio perfeito?",
+      "width": 464,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0115",
+      "image": "dataset/processed/exp-001/synthetic/syn-0115.png",
+      "sha256": "4f436f48c6914aa9b76171df6ce9014666f8fd7b2d690bfec2f8da184e767936",
+      "text": "A órbita elíptica - ver página 162 (seção 6).",
+      "width": 749,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0116",
+      "image": "dataset/processed/exp-001/synthetic/syn-0116.png",
+      "sha256": "bf37d1b85f78056bf13e03005efe66dc59c3e006a586dcb3eb46862028404b25",
+      "text": "Exemplo 9: somar 38 e 14 dá 52.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0117",
+      "image": "dataset/processed/exp-001/synthetic/syn-0117.png",
+      "sha256": "d6c15331e34180f1a5916aeff9403e7780cd5fd91ca1358fce28cafd19f6bf66",
+      "text": "Anotar o método científico às 13h, não à tarde.",
+      "width": 805,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0118",
+      "image": "dataset/processed/exp-001/synthetic/syn-0118.png",
+      "sha256": "a0192698674ee2575e51ab4cbd982cc096e425e282eb46819d1991d5d97f7c22",
+      "text": "Em 1992, o orientador Wálter estudou o índice remissivo.",
+      "width": 953,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0119",
+      "image": "dataset/processed/exp-001/synthetic/syn-0119.png",
+      "sha256": "02cdc507c823273d79aca34b0217f9d957d0704b17b494027849280e8b88543a",
+      "text": "O método científico: útil, avançada e teórica.",
+      "width": 746,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0120",
+      "image": "dataset/processed/exp-001/synthetic/syn-0120.png",
+      "sha256": "d87dbe855096017ac06797bc7af752c37df410204cb97f2fd30c487bb66719f8",
+      "text": "Questão 34: o gênero textual é sólida?",
+      "width": 643,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0121",
+      "image": "dataset/processed/exp-001/synthetic/syn-0121.png",
+      "sha256": "120d522c9ca93d5d0630323ea590a1c94989bdac26b6b98dd14131bee61a184e",
+      "text": "RESUMO: a equação linear.",
+      "width": 478,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0122",
+      "image": "dataset/processed/exp-001/synthetic/syn-0122.png",
+      "sha256": "84816074d092316193d63f0f4dabc6ad3f2b02bcfee0bc1c4fe3070a14d20da6",
+      "text": "Capítulo 27: a análise sintática",
+      "width": 540,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0123",
+      "image": "dataset/processed/exp-001/synthetic/syn-0123.png",
+      "sha256": "89d7d11690a4cd916a9db1152d24cbed8640d6b29c8e09bc3354a034b3e199f7",
+      "text": "O sistema nervoso - ver página 80 (seção 1).",
+      "width": 754,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0124",
+      "image": "dataset/processed/exp-001/synthetic/syn-0124.png",
+      "sha256": "9ef6ae28d2964c4ff4d0f3fc633d6b309642cf22d9a546c44a2426dd288fb47b",
+      "text": "\"Tudo começa na dúvida\", disse o professor Abelardo.",
+      "width": 870,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0125",
+      "image": "dataset/processed/exp-001/synthetic/syn-0125.png",
+      "sha256": "6bc3bbcdfb8f0f27632a2771f674e54e9be8a1f2e0db8339f94477774f540fd7",
+      "text": "Exemplo 4: somar 44 e 4 dá 48.",
+      "width": 541,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0126",
+      "image": "dataset/processed/exp-001/synthetic/syn-0126.png",
+      "sha256": "5a692c9f5ef61eb43bc30bae8e28f4a27a32782ae938ea36d2cfd81c18671c35",
+      "text": "Resumir a célula vegetal às 18h, não à tarde.",
+      "width": 761,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0127",
+      "image": "dataset/processed/exp-001/synthetic/syn-0127.png",
+      "sha256": "15086580b199ccfaf01e232b7f1892d9e51e75e437925ba9a6588f9a6b1cd5a9",
+      "text": "Em 1958, o orientador Wálter estudou a ciência política.",
+      "width": 948,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0128",
+      "image": "dataset/processed/exp-001/synthetic/syn-0128.png",
+      "sha256": "9915180d4ec8f53d3bdcb7e371849b07dd55f6baa4ebb5728709c1b3a7a12604",
+      "text": "O princípio da inércia: concisa, teórica e rigorosa.",
+      "width": 828,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0129",
+      "image": "dataset/processed/exp-001/synthetic/syn-0129.png",
+      "sha256": "da9bab2480c748129d66395201771671e6c720aa5369ab45ad83dbf5197cea0a",
+      "text": "Questão 32: o índice remissivo é sólida?",
+      "width": 662,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0130",
+      "image": "dataset/processed/exp-001/synthetic/syn-0130.png",
+      "sha256": "7ee71e7abe1245eae28ff2c290659eed4f555bcd411bc10205ec9dc443952812",
+      "text": "INTRODUÇÃO: o sistema nervoso.",
+      "width": 581,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0131",
+      "image": "dataset/processed/exp-001/synthetic/syn-0131.png",
+      "sha256": "5da3d53691e637e0ec0a0a95c4181dcd158d57f39d775102ba0e114014102acb",
+      "text": "Capítulo 17: o método científico",
+      "width": 534,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0132",
+      "image": "dataset/processed/exp-001/synthetic/syn-0132.png",
+      "sha256": "179cc851a3688c80d399c156c64e5dab08473ac2924dc823ed08af90ffaca358",
+      "text": "O índice remissivo - ver página 425 (seção 1).",
+      "width": 769,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0133",
+      "image": "dataset/processed/exp-001/synthetic/syn-0133.png",
+      "sha256": "504fb9e44b7952faa42cfbcee2cac9ff01a3fcf0072d148350bd972c9d2657c5",
+      "text": "\"Ninguém aprende às pressas\", disse a pesquisadora Ágata.",
+      "width": 976,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0134",
+      "image": "dataset/processed/exp-001/synthetic/syn-0134.png",
+      "sha256": "83c26014e134e015f731673d17b52e21daed90f51dcea9627dc9ab4acfcf885f",
+      "text": "Exemplo 4: somar 23 e 57 dá 80.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0135",
+      "image": "dataset/processed/exp-001/synthetic/syn-0135.png",
+      "sha256": "98e5b8b8be971481a8e80c5303a2aa224456c19f584439423b4ad2174aa4f7e3",
+      "text": "Resumir o triângulo retângulo às 22h, não à tarde.",
+      "width": 856,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0136",
+      "image": "dataset/processed/exp-001/synthetic/syn-0136.png",
+      "sha256": "32241d9e6aa1980805ae9a8e84a5c5e8da235562651a71082994f9c03b3b7a0a",
+      "text": "Em 2018, o tutor Zózimo estudou as funções inversas.",
+      "width": 901,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0137",
+      "image": "dataset/processed/exp-001/synthetic/syn-0137.png",
+      "sha256": "52d80c46497b54f76b30463236eb0cd00209f54f2268e3aa6df2b584afcf4ae1",
+      "text": "O fenômeno óptico: sólida, difícil e essencial.",
+      "width": 727,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0138",
+      "image": "dataset/processed/exp-001/synthetic/syn-0138.png",
+      "sha256": "beb976c3e0a2bddfe0098908fbf189fb755ea833a23a93702d9369e6b03e4e8a",
+      "text": "Questão 16: o princípio da inércia é essencial?",
+      "width": 777,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0139",
+      "image": "dataset/processed/exp-001/synthetic/syn-0139.png",
+      "sha256": "bb44764e254a8122c00413567475786db55d9bf69771532e295a0339698b87d8",
+      "text": "RESUMO: o binômio perfeito.",
+      "width": 498,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0140",
+      "image": "dataset/processed/exp-001/synthetic/syn-0140.png",
+      "sha256": "de4e653a6a91255dd80d459b6e8eb58af723060170d576f655b3778df7722237",
+      "text": "Capítulo 17: o princípio da inércia",
+      "width": 575,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0141",
+      "image": "dataset/processed/exp-001/synthetic/syn-0141.png",
+      "sha256": "2d5f68c33b71a22f119b0033c5d5a690ff343a6c3f43652750cad7d8b58d4bf9",
+      "text": "A tabela periódica - ver página 446 (seção 6).",
+      "width": 780,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0142",
+      "image": "dataset/processed/exp-001/synthetic/syn-0142.png",
+      "sha256": "654626b31df189bb66547915bd8a3bda4238d76d28cede910fdfc57743e68fb4",
+      "text": "Exemplo 8: somar 38 e 36 dá 74.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0143",
+      "image": "dataset/processed/exp-001/synthetic/syn-0143.png",
+      "sha256": "77a1f8cd390a3e943f8098fadc1fc90f98894cce7ee2bcae90880e9dc68d003e",
+      "text": "Revisar o sistema nervoso às 9h, não à tarde.",
+      "width": 771,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0144",
+      "image": "dataset/processed/exp-001/synthetic/syn-0144.png",
+      "sha256": "60eb5f04dc992b79afb68947fe5a4c6b8833fdb12e828f8baf88f13bb012e4ab",
+      "text": "Em 1955, o autor Quirino estudou as funções inversas.",
+      "width": 912,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0145",
+      "image": "dataset/processed/exp-001/synthetic/syn-0145.png",
+      "sha256": "306f2e1ea63e90e2f5807ca0a858f76d20e814fd0c9a4a6d0d6cb473589b6360",
+      "text": "A análise sintática: sólida, difícil e útil.",
+      "width": 652,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0146",
+      "image": "dataset/processed/exp-001/synthetic/syn-0146.png",
+      "sha256": "7967ae986d4fa1e7095e99d4cc90e14fb5c8628d2bfcf4d3142c04ff00be9b36",
+      "text": "Questão 40: a distância média é prática?",
+      "width": 702,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0147",
+      "image": "dataset/processed/exp-001/synthetic/syn-0147.png",
+      "sha256": "cf5d779655d6b267b9937eb2447e1d8c110c753788c7ead2f287a1fe04bec668",
+      "text": "EXERCÍCIO: a frequência de onda.",
+      "width": 604,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0148",
+      "image": "dataset/processed/exp-001/synthetic/syn-0148.png",
+      "sha256": "c89548994c34f7823f183605c58bcf089398168828aaff503cd1ea1dc0c1f053",
+      "text": "Capítulo 23: o binômio perfeito",
+      "width": 521,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0149",
+      "image": "dataset/processed/exp-001/synthetic/syn-0149.png",
+      "sha256": "5261f5623e9ae31b510bffdb79cec09387f920ff3d7e12598e656dd3ad2ed405",
+      "text": "O gênero textual - ver página 262 (seção 1).",
+      "width": 750,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0150",
+      "image": "dataset/processed/exp-001/synthetic/syn-0150.png",
+      "sha256": "d39e8d51bad9d63d60a7addc7c4abc799f100cb4fbb1344dc164853728ffd7cd",
+      "text": "\"Não há atalho\", disse a bibliotecária Hortência.",
+      "width": 814,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0151",
+      "image": "dataset/processed/exp-001/synthetic/syn-0151.png",
+      "sha256": "4a13835194eca6a69a8c9645f86519e8c0751e597f77a9a71553fb899f3d5b67",
+      "text": "Exemplo 5: somar 53 e 7 dá 60.",
+      "width": 541,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0152",
+      "image": "dataset/processed/exp-001/synthetic/syn-0152.png",
+      "sha256": "d64705e99e34156dbf511087d69bd5b3ca1f43534b49384692386695a5b1526e",
+      "text": "Fichar o índice remissivo às 17h, não à tarde.",
+      "width": 773,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0153",
+      "image": "dataset/processed/exp-001/synthetic/syn-0153.png",
+      "sha256": "86b0a52670bc3e4d46a60ae2e6ee3ad17a30b2aa7deba2054e6799e55becb009",
+      "text": "O sistema nervoso: concisa, simples e ampla.",
+      "width": 732,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0154",
+      "image": "dataset/processed/exp-001/synthetic/syn-0154.png",
+      "sha256": "349c8c884a26bca2fe561a0c4405081c3dd5aa0dea35df715b3e00799ee7ea9e",
+      "text": "Questão 38: o sistema nervoso é básica?",
+      "width": 684,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0155",
+      "image": "dataset/processed/exp-001/synthetic/syn-0155.png",
+      "sha256": "57888e5f8644b94cdc9a90772cc1f93caa3b05439fe959a077e9fe3ca04341b1",
+      "text": "CONCLUSÃO: o método científico.",
+      "width": 568,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0156",
+      "image": "dataset/processed/exp-001/synthetic/syn-0156.png",
+      "sha256": "4090dd6b47e71058ad897e1966ab7e3958a752aacc0248816088256b0ab147ad",
+      "text": "Capítulo 21: a lógica formal",
+      "width": 478,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0157",
+      "image": "dataset/processed/exp-001/synthetic/syn-0157.png",
+      "sha256": "bb08cc540d1046cb43eb1d33eabb5e999f352491b0486a36ffae659f7988f917",
+      "text": "O que é o número complexo?",
+      "width": 472,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0158",
+      "image": "dataset/processed/exp-001/synthetic/syn-0158.png",
+      "sha256": "5361bb1f715af9a39a78ea27ff35b51c92b130c94b269db922b166db1f240280",
+      "text": "O binômio perfeito - ver página 110 (seção 9).",
+      "width": 779,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0159",
+      "image": "dataset/processed/exp-001/synthetic/syn-0159.png",
+      "sha256": "1724186c60f67e15a7e00c00a02acceb4c428ff8fdf02858d0d6dcdf9c9e6615",
+      "text": "\"Ninguém aprende às pressas\", disse o tutor Zózimo.",
+      "width": 861,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0160",
+      "image": "dataset/processed/exp-001/synthetic/syn-0160.png",
+      "sha256": "2251d93d5cdbf1b98f79010e23c482f0e4526f9e05b75b23d43a78e8537c1dac",
+      "text": "Exemplo 5: somar 34 e 10 dá 44.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0161",
+      "image": "dataset/processed/exp-001/synthetic/syn-0161.png",
+      "sha256": "a9944d271dc84e1c997e1390b3222c4fb2e273e8c7dcdc280d973742d91277ca",
+      "text": "Revisar o índice remissivo às 21h, não à tarde.",
+      "width": 786,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0162",
+      "image": "dataset/processed/exp-001/synthetic/syn-0162.png",
+      "sha256": "3ffeec7eaa3a39c1ba8660bf0cf7e96118d36943ee1520c01ed734bb562860c9",
+      "text": "Em 1997, a pesquisadora Ágata estudou a órbita elíptica.",
+      "width": 962,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0163",
+      "image": "dataset/processed/exp-001/synthetic/syn-0163.png",
+      "sha256": "b4de794e8a14c56ad2ccc67fc0305bdd216835927d66d02539cbe2d4013db4fc",
+      "text": "O sistema nervoso: básica, ambígua e concisa.",
+      "width": 766,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0164",
+      "image": "dataset/processed/exp-001/synthetic/syn-0164.png",
+      "sha256": "c8ac82226587c3faa80cd93a93d8c383d6fbb230f9c4c5f07e95332e972c48eb",
+      "text": "Questão 15: a órbita elíptica é simples?",
+      "width": 666,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0165",
+      "image": "dataset/processed/exp-001/synthetic/syn-0165.png",
+      "sha256": "b19ffbaabc3740278f0b62ba859fcf020ef3cc8ebda627df887d0bf24391dffd",
+      "text": "EXERCÍCIO: o gênero textual.",
+      "width": 522,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0166",
+      "image": "dataset/processed/exp-001/synthetic/syn-0166.png",
+      "sha256": "fd24440933fc908d6b83e2042cbdee5026bee179a2233d3323483b351b21b708",
+      "text": "Capítulo 9: a equação linear",
+      "width": 481,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0167",
+      "image": "dataset/processed/exp-001/synthetic/syn-0167.png",
+      "sha256": "5b89ec764a61568a3b58d3ddf8c715c3b6c4be213251aec2c1814e10a4e2b28d",
+      "text": "O que é o fenômeno óptico?",
+      "width": 464,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0168",
+      "image": "dataset/processed/exp-001/synthetic/syn-0168.png",
+      "sha256": "d526e952842a24285e425baad00d1f184f9dacfdac9d792d120f6e63bb72f3b0",
+      "text": "As funções inversas - ver página 28 (seção 4).",
+      "width": 781,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0169",
+      "image": "dataset/processed/exp-001/synthetic/syn-0169.png",
+      "sha256": "667fcc80d37c5c1ff2f953ce7956868718333faf05abbe4d9dbd16b0a70f773e",
+      "text": "\"O exemplo ensina mais\", disse a pesquisadora Ágata.",
+      "width": 873,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0170",
+      "image": "dataset/processed/exp-001/synthetic/syn-0170.png",
+      "sha256": "314393575e8a69316fc793430f9fd4c187f4ad4b7b7bf553d8a3239c81a6262e",
+      "text": "Exemplo 9: somar 39 e 25 dá 64.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0171",
+      "image": "dataset/processed/exp-001/synthetic/syn-0171.png",
+      "sha256": "eb22bd6889348ac46b0f983c17e7aaaea3077d9db3dd17a6d2e70171d1cc41d7",
+      "text": "Resumir a célula vegetal às 16h, não à tarde.",
+      "width": 761,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0172",
+      "image": "dataset/processed/exp-001/synthetic/syn-0172.png",
+      "sha256": "70238f316daf229be6d0daf246c3f98cd895fbdbfd79a464dbf615c93b314e31",
+      "text": "Em 1972, o colega Júlio estudou o pêndulo simples.",
+      "width": 825,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0173",
+      "image": "dataset/processed/exp-001/synthetic/syn-0173.png",
+      "sha256": "d9ee9dba13124b664748e59a115647940a2b3b9ccd555303e46535576ba2a7cc",
+      "text": "O fenômeno óptico: ambígua, essencial e simples.",
+      "width": 796,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0174",
+      "image": "dataset/processed/exp-001/synthetic/syn-0174.png",
+      "sha256": "6d712cd807d0eed47e5a2c8eb1c3c4f36e00b54ac526e84ff67bd40c9e3f401d",
+      "text": "Questão 27: a análise sintática é prática?",
+      "width": 720,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0175",
+      "image": "dataset/processed/exp-001/synthetic/syn-0175.png",
+      "sha256": "a3235804e6e1d9dbf295f9a6e44745c42210d1b318d9c3d79865b249b3f903e6",
+      "text": "OBSERVAÇÃO: o período histórico.",
+      "width": 592,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0176",
+      "image": "dataset/processed/exp-001/synthetic/syn-0176.png",
+      "sha256": "ca296b502d84fded0fa87bbaff90a59be401886b6eb8e83efb131d86c9f53a63",
+      "text": "Capítulo 27: a ciência política",
+      "width": 506,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0177",
+      "image": "dataset/processed/exp-001/synthetic/syn-0177.png",
+      "sha256": "f000a404918a14a256ce796031867d151ffd8f79c275bfc8fa42ac5e150e34e5",
+      "text": "A razão áurea - ver página 191 (seção 7).",
+      "width": 718,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0178",
+      "image": "dataset/processed/exp-001/synthetic/syn-0178.png",
+      "sha256": "eb16961e1f6dcaff11a789059aab0079a106eda3acd5e6280839aed1ab708669",
+      "text": "\"O exemplo ensina mais\", disse a bibliotecária Hortência.",
+      "width": 932,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0179",
+      "image": "dataset/processed/exp-001/synthetic/syn-0179.png",
+      "sha256": "7754325aa57678c0ef6e9e381cf0a252df31addc572e061afcc99ad769d19a90",
+      "text": "Exemplo 8: somar 50 e 40 dá 90.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0180",
+      "image": "dataset/processed/exp-001/synthetic/syn-0180.png",
+      "sha256": "bf6eb809e67d533dcc3821dd51c43072bc32584c4e5956019e1bc9541e57cfde",
+      "text": "Explicar a frequência de onda às 21h, não à tarde.",
+      "width": 859,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0181",
+      "image": "dataset/processed/exp-001/synthetic/syn-0181.png",
+      "sha256": "8795bb144202c907302e639ea8e0214d8475fd4d608e035d9fbcd6f042478278",
+      "text": "Em 1963, a aluna Thaís estudou o princípio da inércia.",
+      "width": 917,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0182",
+      "image": "dataset/processed/exp-001/synthetic/syn-0182.png",
+      "sha256": "0131a1b8fb59b8eafa91157e6e644a547c2d987b2615acbf75325c08520b1239",
+      "text": "O conteúdo da prova: rápida, frágil e básica.",
+      "width": 745,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0183",
+      "image": "dataset/processed/exp-001/synthetic/syn-0183.png",
+      "sha256": "42f944536682ac7cd1d182d3f9be3a9c65802aab7b1c4324f6895929cef97aaf",
+      "text": "Questão 38: o raciocínio dedutivo é difícil?",
+      "width": 707,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0184",
+      "image": "dataset/processed/exp-001/synthetic/syn-0184.png",
+      "sha256": "f07cec5aeffaa798e2d81393dcab34d1d501df7c04142fe4d8d0eab244ca6ffb",
+      "text": "OBSERVAÇÃO: o triângulo retângulo.",
+      "width": 636,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0185",
+      "image": "dataset/processed/exp-001/synthetic/syn-0185.png",
+      "sha256": "d9c57ba8fd007b10e150eb50bae10a853bc8b6324c070fd2af992148f775ca99",
+      "text": "Capítulo 4: o fenômeno óptico",
+      "width": 499,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0186",
+      "image": "dataset/processed/exp-001/synthetic/syn-0186.png",
+      "sha256": "9d6b37e170316088f9ef70c94b7557d19dda4fa749d4b07e01da3fa49c75a69b",
+      "text": "O raciocínio dedutivo - ver página 423 (seção 5).",
+      "width": 819,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0187",
+      "image": "dataset/processed/exp-001/synthetic/syn-0187.png",
+      "sha256": "e49faf66e7c7edb1810199d770f50eb05f5a57b97ff49084218ecaa49909eae8",
+      "text": "\"A prática vem antes\", disse a monitora Cecília.",
+      "width": 789,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0188",
+      "image": "dataset/processed/exp-001/synthetic/syn-0188.png",
+      "sha256": "2535188d0805bb111f387c3c39c6972a0d460782990a3339943e99ef578858df",
+      "text": "Exemplo 5: somar 23 e 27 dá 50.",
+      "width": 563,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0189",
+      "image": "dataset/processed/exp-001/synthetic/syn-0189.png",
+      "sha256": "6004e5fe4b505ea035b9ae5e9bc0011989683456512ddd4b7d63664dddf68802",
+      "text": "Reler a tabela periódica às 13h, não à tarde.",
+      "width": 763,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0190",
+      "image": "dataset/processed/exp-001/synthetic/syn-0190.png",
+      "sha256": "1e6da05f02968dfd0596f86fc8afc8bb92ff493e385b99a296d3edc6a444641b",
+      "text": "Em 2009, a bibliotecária Hortência estudou a célula vegetal.",
+      "width": 1004,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0191",
+      "image": "dataset/processed/exp-001/synthetic/syn-0191.png",
+      "sha256": "85d903e5a19969809975ed82e237f60a143835d77bc1b4d4e68d8d931055d5b7",
+      "text": "O fenômeno óptico: avançada, frágil e difícil.",
+      "width": 740,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0192",
+      "image": "dataset/processed/exp-001/synthetic/syn-0192.png",
+      "sha256": "2f75c5f8cb51431a184738649e40fcf54f263f29c541aaab0f9686beb7e4fe9e",
+      "text": "Questão 30: o método científico é difícil?",
+      "width": 680,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0193",
+      "image": "dataset/processed/exp-001/synthetic/syn-0193.png",
+      "sha256": "efbe34c4e93e54f5e330d523a7929491f02006dc43f53d72e55bfdb1d6fb9eef",
+      "text": "INTRODUÇÃO: a razão áurea.",
+      "width": 527,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0194",
+      "image": "dataset/processed/exp-001/synthetic/syn-0194.png",
+      "sha256": "f0f6189dd38e9bb3f54341dd2b09a5165898ed814e64a701677daf86d0c437b9",
+      "text": "Capítulo 20: as três hipóteses",
+      "width": 509,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0195",
+      "image": "dataset/processed/exp-001/synthetic/syn-0195.png",
+      "sha256": "53ad805ed9f959fd43abbd2121ee6669219a7a2f4788905ce78c78bb62037cd7",
+      "text": "O que é a célula vegetal?",
+      "width": 421,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0196",
+      "image": "dataset/processed/exp-001/synthetic/syn-0196.png",
+      "sha256": "c504ab35c2465731fe7c0035f924af6bcc855d8a030a6789d7b82a64f289d147",
+      "text": "A razão áurea - ver página 203 (seção 5).",
+      "width": 718,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0197",
+      "image": "dataset/processed/exp-001/synthetic/syn-0197.png",
+      "sha256": "15a78f1f42931f8a81fa8b783827c0f5b06f1dd2130d3f7bade23222d123f7a6",
+      "text": "\"Ninguém aprende às pressas\", disse a doutora Íris.",
+      "width": 857,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0198",
+      "image": "dataset/processed/exp-001/synthetic/syn-0198.png",
+      "sha256": "3c141544abb21bae94c8b29ca5c303f4406130f8b30e3c0470fdfbfacfe1ba42",
+      "text": "Exemplo 3: somar 18 e 3 dá 21.",
+      "width": 541,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0199",
+      "image": "dataset/processed/exp-001/synthetic/syn-0199.png",
+      "sha256": "54ee82821961da165721cfb30dfdefb00786352e817b59bbe2100478833c518c",
+      "text": "Reler as funções inversas às 10h, não à tarde.",
+      "width": 786,
+      "height": 86,
+      "origin": "synthetic"
+    },
+    {
+      "id": "syn-0200",
+      "image": "dataset/processed/exp-001/synthetic/syn-0200.png",
+      "sha256": "60fb23378820828e6fadb6cbbff92d5f2ad22bfd0cc012df0abae235d19bbcae",
+      "text": "Em 1983, o professor Abelardo estudou a pressão atmosférica.",
+      "width": 1041,
+      "height": 86,
+      "origin": "synthetic"
+    }
+  ]
+}

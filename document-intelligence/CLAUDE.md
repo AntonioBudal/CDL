@@ -44,7 +44,8 @@ uv run python -m leitorum_di
 - **Tarefa Atual**: **`EXP-001`** em fase de especificação, aguardando revisão do usuário.
   - Artefatos: [`spec.md`](./experiments/EXP-001/spec.md), [`plan.md`](./experiments/EXP-001/plan.md), [`tasks.md`](./experiments/EXP-001/tasks.md).
   - **Regra de workflow (usuário, 2026-09-30):** todo experimento segue o ciclo Spec Kit adaptado — Specify → Plan → Tasks — e a especificação/plano é apresentada **antes** de qualquer código de avaliação, script de inferência ou download de pesos.
-  - **NÃO** execute tarefas de `tasks.md` antes da aprovação registrada em T001.
+  - **Ritmo fatiado (usuário, 2026-09-30):** nos próximos experimentos e features, produza **um artefato por vez** e aguarde a revisão antes do seguinte (Specify → aprovação → Plan → aprovação → Tasks → aprovação). Na execução, pare em cada checkpoint de fase e reporte.
+  - EXP-001: spec, plano e tarefas aprovados; Fases 0 e 1 concluídas; Fase 2 autorizada. **Não** inicie a Fase 3 (download de pesos/dataset) sem autorização.
   - Normalização do WER (pontuação de borda removida; acentos e caixa preservados) foi **aprovada** e deve ser mantida.
 
 ---

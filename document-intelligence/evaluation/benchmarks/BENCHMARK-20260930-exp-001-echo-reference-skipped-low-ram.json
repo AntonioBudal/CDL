@@ -1,0 +1,4982 @@
+{
+  "schema": "leitorum-di-htr-benchmark/1",
+  "created_utc": "2026-10-01T00:37:45+00:00",
+  "experiment": "EXP-001",
+  "git": {
+    "commit": "33c293fbb0f066cb0c28a4735cd63e08e2de0b4c",
+    "dirty": true
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "seed": {
+    "seed": 1234,
+    "seeded": [
+      "random"
+    ],
+    "pythonhashseed_effective": false
+  },
+  "limits": {
+    "memory_bytes": 2147483648,
+    "load_timeout_s": 120.0,
+    "latency_probe_lines": 20,
+    "latency_abort_ms": 1500.0,
+    "wall_timeout_s": 1200.0,
+    "min_free_system_bytes": 1073741824,
+    "poll_interval_s": 0.05
+  },
+  "dataset": {
+    "id": "exp-001-synthetic",
+    "origin": "synthetic",
+    "manifest": "synthetic-manifest.json",
+    "manifest_sha256": "4e57398cd000a542d0387260c8e18449a45549a93fbb0b06c33ae0b4021899ac",
+    "lines": 200
+  },
+  "candidate": {
+    "id": "echo-reference",
+    "kind": "reference",
+    "adapter": "adapters.echo:EchoRecognizer",
+    "license_status": "N/A (sem modelo)"
+  },
+  "license_status": "N/A (sem modelo)",
+  "repeats": 3,
+  "summary": {
+    "statuses": [
+      "SKIPPED",
+      "SKIPPED",
+      "SKIPPED"
+    ],
+    "cer_micro": null,
+    "wer_micro": null,
+    "median_ms_of_medians": null,
+    "median_ms_min": null,
+    "median_ms_max": null,
+    "peak_rss_bytes_max": null
+  },
+  "runs": [
+    {
+      "candidate_id": "echo-reference",
+      "status": "SKIPPED",
+      "reason": "memória livre do sistema insuficiente (1062014976 bytes)",
+      "license_status": "N/A (sem modelo)",
+      "load_ms": null,
+      "peak_rss_bytes": null,
+      "wall_s": 0.0,
+      "exit_code": null,
+      "describe": {},
+      "predictions": [],
+      "stderr_tail": [],
+      "metrics": {
+        "lines": 200,
+        "missing": [
+          "syn-0001",
+          "syn-0002",
+          "syn-0003",
+          "syn-0004",
+          "syn-0005",
+          "syn-0006",
+          "syn-0007",
+          "syn-0008",
+          "syn-0009",
+          "syn-0010",
+          "syn-0011",
+          "syn-0012",
+          "syn-0013",
+          "syn-0014",
+          "syn-0015",
+          "syn-0016",
+          "syn-0017",
+          "syn-0018",
+          "syn-0019",
+          "syn-0020",
+          "syn-0021",
+          "syn-0022",
+          "syn-0023",
+          "syn-0024",
+          "syn-0025",
+          "syn-0026",
+          "syn-0027",
+          "syn-0028",
+          "syn-0029",
+          "syn-0030",
+          "syn-0031",
+          "syn-0032",
+          "syn-0033",
+          "syn-0034",
+          "syn-0035",
+          "syn-0036",
+          "syn-0037",
+          "syn-0038",
+          "syn-0039",
+          "syn-0040",
+          "syn-0041",
+          "syn-0042",
+          "syn-0043",
+          "syn-0044",
+          "syn-0045",
+          "syn-0046",
+          "syn-0047",
+          "syn-0048",
+          "syn-0049",
+          "syn-0050",
+          "syn-0051",
+          "syn-0052",
+          "syn-0053",
+          "syn-0054",
+          "syn-0055",
+          "syn-0056",
+          "syn-0057",
+          "syn-0058",
+          "syn-0059",
+          "syn-0060",
+          "syn-0061",
+          "syn-0062",
+          "syn-0063",
+          "syn-0064",
+          "syn-0065",
+          "syn-0066",
+          "syn-0067",
+          "syn-0068",
+          "syn-0069",
+          "syn-0070",
+          "syn-0071",
+          "syn-0072",
+          "syn-0073",
+          "syn-0074",
+          "syn-0075",
+          "syn-0076",
+          "syn-0077",
+          "syn-0078",
+          "syn-0079",
+          "syn-0080",
+          "syn-0081",
+          "syn-0082",
+          "syn-0083",
+          "syn-0084",
+          "syn-0085",
+          "syn-0086",
+          "syn-0087",
+          "syn-0088",
+          "syn-0089",
+          "syn-0090",
+          "syn-0091",
+          "syn-0092",
+          "syn-0093",
+          "syn-0094",
+          "syn-0095",
+          "syn-0096",
+          "syn-0097",
+          "syn-0098",
+          "syn-0099",
+          "syn-0100",
+          "syn-0101",
+          "syn-0102",
+          "syn-0103",
+          "syn-0104",
+          "syn-0105",
+          "syn-0106",
+          "syn-0107",
+          "syn-0108",
+          "syn-0109",
+          "syn-0110",
+          "syn-0111",
+          "syn-0112",
+          "syn-0113",
+          "syn-0114",
+          "syn-0115",
+          "syn-0116",
+          "syn-0117",
+          "syn-0118",
+          "syn-0119",
+          "syn-0120",
+          "syn-0121",
+          "syn-0122",
+          "syn-0123",
+          "syn-0124",
+          "syn-0125",
+          "syn-0126",
+          "syn-0127",
+          "syn-0128",
+          "syn-0129",
+          "syn-0130",
+          "syn-0131",
+          "syn-0132",
+          "syn-0133",
+          "syn-0134",
+          "syn-0135",
+          "syn-0136",
+          "syn-0137",
+          "syn-0138",
+          "syn-0139",
+          "syn-0140",
+          "syn-0141",
+          "syn-0142",
+          "syn-0143",
+          "syn-0144",
+          "syn-0145",
+          "syn-0146",
+          "syn-0147",
+          "syn-0148",
+          "syn-0149",
+          "syn-0150",
+          "syn-0151",
+          "syn-0152",
+          "syn-0153",
+          "syn-0154",
+          "syn-0155",
+          "syn-0156",
+          "syn-0157",
+          "syn-0158",
+          "syn-0159",
+          "syn-0160",
+          "syn-0161",
+          "syn-0162",
+          "syn-0163",
+          "syn-0164",
+          "syn-0165",
+          "syn-0166",
+          "syn-0167",
+          "syn-0168",
+          "syn-0169",
+          "syn-0170",
+          "syn-0171",
+          "syn-0172",
+          "syn-0173",
+          "syn-0174",
+          "syn-0175",
+          "syn-0176",
+          "syn-0177",
+          "syn-0178",
+          "syn-0179",
+          "syn-0180",
+          "syn-0181",
+          "syn-0182",
+          "syn-0183",
+          "syn-0184",
+          "syn-0185",
+          "syn-0186",
+          "syn-0187",
+          "syn-0188",
+          "syn-0189",
+          "syn-0190",
+          "syn-0191",
+          "syn-0192",
+          "syn-0193",
+          "syn-0194",
+          "syn-0195",
+          "syn-0196",
+          "syn-0197",
+          "syn-0198",
+          "syn-0199",
+          "syn-0200"
+        ],
+        "cer_micro": 1.0,
+        "wer_micro": 1.0,
+        "cer_macro": 1.0,
+        "wer_macro": 1.0,
+        "char_edits": 8107,
+        "ref_chars": 8107,
+        "word_edits": 1445,
+        "ref_words": 1445,
+        "per_line": [
+          {
+            "id": "syn-0001",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0002",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0003",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0004",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0005",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0006",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0007",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0008",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0009",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0010",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0011",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0012",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0013",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0014",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0015",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0016",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0017",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0018",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 36,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0019",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0020",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0021",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0022",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0023",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0024",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0025",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 62,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0026",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0027",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0028",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0029",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0030",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0031",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0032",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0033",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0034",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0035",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0036",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0037",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0038",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0039",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 37,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0040",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0041",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0042",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0043",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0044",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0045",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 23,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0046",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0047",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0048",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0049",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0050",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0051",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 55,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0052",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0053",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0054",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0055",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0056",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0057",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0058",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 58,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0059",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0060",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0061",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 59,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0062",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0063",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 41,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0064",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0065",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0066",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0067",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0068",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0069",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0070",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0071",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0072",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0073",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0074",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0075",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0076",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0077",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0078",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0079",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 59,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0080",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0081",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0082",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0083",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0084",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0085",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0086",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0087",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0088",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0089",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0090",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0091",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0092",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0093",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0094",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0095",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0096",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0097",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0098",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0099",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0100",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0101",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0102",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0103",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0104",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0105",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0106",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0107",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0108",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0109",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0110",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0111",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0112",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0113",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0114",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0115",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0116",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0117",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0118",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0119",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0120",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 38,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0121",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0122",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0123",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0124",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0125",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0126",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0127",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0128",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0129",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0130",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0131",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0132",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0133",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0134",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0135",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0136",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0137",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0138",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0139",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0140",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 35,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0141",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0142",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0143",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0144",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 53,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0145",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0146",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0147",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0148",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0149",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0150",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0151",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0152",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0153",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0154",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0155",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0156",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0157",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0158",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0159",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0160",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0161",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0162",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0163",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0164",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0165",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0166",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0167",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0168",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0169",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0170",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0171",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0172",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0173",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0174",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0175",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0176",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0177",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0178",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0179",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0180",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0181",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 54,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0182",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0183",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0184",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 34,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0185",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0186",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0187",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0188",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0189",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0190",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0191",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0192",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0193",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0194",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0195",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0196",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0197",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0198",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0199",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0200",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          }
+        ]
+      },
+      "latency": {
+        "lines": 0,
+        "median_ms": null,
+        "p95_ms": null,
+        "mean_ms": null,
+        "max_ms": null
+      },
+      "partial": true,
+      "verdicts": {
+        "h1_quality": false,
+        "h2_cost": null
+      }
+    },
+    {
+      "candidate_id": "echo-reference",
+      "status": "SKIPPED",
+      "reason": "memória livre do sistema insuficiente (1061883904 bytes)",
+      "license_status": "N/A (sem modelo)",
+      "load_ms": null,
+      "peak_rss_bytes": null,
+      "wall_s": 0.0,
+      "exit_code": null,
+      "describe": {},
+      "predictions": [],
+      "stderr_tail": [],
+      "metrics": {
+        "lines": 200,
+        "missing": [
+          "syn-0001",
+          "syn-0002",
+          "syn-0003",
+          "syn-0004",
+          "syn-0005",
+          "syn-0006",
+          "syn-0007",
+          "syn-0008",
+          "syn-0009",
+          "syn-0010",
+          "syn-0011",
+          "syn-0012",
+          "syn-0013",
+          "syn-0014",
+          "syn-0015",
+          "syn-0016",
+          "syn-0017",
+          "syn-0018",
+          "syn-0019",
+          "syn-0020",
+          "syn-0021",
+          "syn-0022",
+          "syn-0023",
+          "syn-0024",
+          "syn-0025",
+          "syn-0026",
+          "syn-0027",
+          "syn-0028",
+          "syn-0029",
+          "syn-0030",
+          "syn-0031",
+          "syn-0032",
+          "syn-0033",
+          "syn-0034",
+          "syn-0035",
+          "syn-0036",
+          "syn-0037",
+          "syn-0038",
+          "syn-0039",
+          "syn-0040",
+          "syn-0041",
+          "syn-0042",
+          "syn-0043",
+          "syn-0044",
+          "syn-0045",
+          "syn-0046",
+          "syn-0047",
+          "syn-0048",
+          "syn-0049",
+          "syn-0050",
+          "syn-0051",
+          "syn-0052",
+          "syn-0053",
+          "syn-0054",
+          "syn-0055",
+          "syn-0056",
+          "syn-0057",
+          "syn-0058",
+          "syn-0059",
+          "syn-0060",
+          "syn-0061",
+          "syn-0062",
+          "syn-0063",
+          "syn-0064",
+          "syn-0065",
+          "syn-0066",
+          "syn-0067",
+          "syn-0068",
+          "syn-0069",
+          "syn-0070",
+          "syn-0071",
+          "syn-0072",
+          "syn-0073",
+          "syn-0074",
+          "syn-0075",
+          "syn-0076",
+          "syn-0077",
+          "syn-0078",
+          "syn-0079",
+          "syn-0080",
+          "syn-0081",
+          "syn-0082",
+          "syn-0083",
+          "syn-0084",
+          "syn-0085",
+          "syn-0086",
+          "syn-0087",
+          "syn-0088",
+          "syn-0089",
+          "syn-0090",
+          "syn-0091",
+          "syn-0092",
+          "syn-0093",
+          "syn-0094",
+          "syn-0095",
+          "syn-0096",
+          "syn-0097",
+          "syn-0098",
+          "syn-0099",
+          "syn-0100",
+          "syn-0101",
+          "syn-0102",
+          "syn-0103",
+          "syn-0104",
+          "syn-0105",
+          "syn-0106",
+          "syn-0107",
+          "syn-0108",
+          "syn-0109",
+          "syn-0110",
+          "syn-0111",
+          "syn-0112",
+          "syn-0113",
+          "syn-0114",
+          "syn-0115",
+          "syn-0116",
+          "syn-0117",
+          "syn-0118",
+          "syn-0119",
+          "syn-0120",
+          "syn-0121",
+          "syn-0122",
+          "syn-0123",
+          "syn-0124",
+          "syn-0125",
+          "syn-0126",
+          "syn-0127",
+          "syn-0128",
+          "syn-0129",
+          "syn-0130",
+          "syn-0131",
+          "syn-0132",
+          "syn-0133",
+          "syn-0134",
+          "syn-0135",
+          "syn-0136",
+          "syn-0137",
+          "syn-0138",
+          "syn-0139",
+          "syn-0140",
+          "syn-0141",
+          "syn-0142",
+          "syn-0143",
+          "syn-0144",
+          "syn-0145",
+          "syn-0146",
+          "syn-0147",
+          "syn-0148",
+          "syn-0149",
+          "syn-0150",
+          "syn-0151",
+          "syn-0152",
+          "syn-0153",
+          "syn-0154",
+          "syn-0155",
+          "syn-0156",
+          "syn-0157",
+          "syn-0158",
+          "syn-0159",
+          "syn-0160",
+          "syn-0161",
+          "syn-0162",
+          "syn-0163",
+          "syn-0164",
+          "syn-0165",
+          "syn-0166",
+          "syn-0167",
+          "syn-0168",
+          "syn-0169",
+          "syn-0170",
+          "syn-0171",
+          "syn-0172",
+          "syn-0173",
+          "syn-0174",
+          "syn-0175",
+          "syn-0176",
+          "syn-0177",
+          "syn-0178",
+          "syn-0179",
+          "syn-0180",
+          "syn-0181",
+          "syn-0182",
+          "syn-0183",
+          "syn-0184",
+          "syn-0185",
+          "syn-0186",
+          "syn-0187",
+          "syn-0188",
+          "syn-0189",
+          "syn-0190",
+          "syn-0191",
+          "syn-0192",
+          "syn-0193",
+          "syn-0194",
+          "syn-0195",
+          "syn-0196",
+          "syn-0197",
+          "syn-0198",
+          "syn-0199",
+          "syn-0200"
+        ],
+        "cer_micro": 1.0,
+        "wer_micro": 1.0,
+        "cer_macro": 1.0,
+        "wer_macro": 1.0,
+        "char_edits": 8107,
+        "ref_chars": 8107,
+        "word_edits": 1445,
+        "ref_words": 1445,
+        "per_line": [
+          {
+            "id": "syn-0001",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0002",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0003",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0004",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0005",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0006",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0007",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0008",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0009",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0010",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0011",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0012",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0013",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0014",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0015",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0016",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0017",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0018",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 36,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0019",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0020",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0021",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0022",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0023",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0024",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0025",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 62,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0026",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0027",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0028",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0029",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0030",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0031",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0032",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0033",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0034",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0035",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0036",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0037",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0038",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0039",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 37,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0040",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0041",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0042",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0043",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0044",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0045",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 23,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0046",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0047",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0048",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0049",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0050",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0051",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 55,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0052",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0053",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0054",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0055",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0056",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0057",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0058",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 58,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0059",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0060",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0061",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 59,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0062",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0063",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 41,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0064",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0065",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0066",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0067",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0068",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0069",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0070",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0071",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0072",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0073",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0074",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0075",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0076",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0077",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0078",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0079",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 59,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0080",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0081",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0082",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0083",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0084",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0085",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0086",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0087",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0088",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0089",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0090",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0091",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0092",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0093",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0094",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0095",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0096",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0097",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0098",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0099",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0100",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0101",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0102",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0103",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0104",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0105",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0106",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0107",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0108",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0109",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0110",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0111",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0112",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0113",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0114",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0115",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0116",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0117",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0118",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0119",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0120",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 38,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0121",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0122",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0123",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0124",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0125",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0126",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0127",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0128",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0129",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0130",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0131",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0132",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0133",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0134",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0135",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0136",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0137",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0138",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0139",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0140",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 35,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0141",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0142",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0143",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0144",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 53,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0145",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0146",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0147",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0148",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0149",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0150",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0151",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0152",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0153",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0154",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0155",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0156",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0157",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0158",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0159",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0160",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0161",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0162",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0163",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0164",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0165",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0166",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0167",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0168",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0169",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0170",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0171",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0172",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0173",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0174",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0175",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0176",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0177",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0178",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0179",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0180",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0181",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 54,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0182",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0183",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0184",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 34,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0185",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0186",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0187",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0188",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0189",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0190",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0191",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0192",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0193",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0194",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0195",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0196",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0197",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0198",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0199",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0200",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          }
+        ]
+      },
+      "latency": {
+        "lines": 0,
+        "median_ms": null,
+        "p95_ms": null,
+        "mean_ms": null,
+        "max_ms": null
+      },
+      "partial": true,
+      "verdicts": {
+        "h1_quality": false,
+        "h2_cost": null
+      }
+    },
+    {
+      "candidate_id": "echo-reference",
+      "status": "SKIPPED",
+      "reason": "memória livre do sistema insuficiente (1061646336 bytes)",
+      "license_status": "N/A (sem modelo)",
+      "load_ms": null,
+      "peak_rss_bytes": null,
+      "wall_s": 0.0,
+      "exit_code": null,
+      "describe": {},
+      "predictions": [],
+      "stderr_tail": [],
+      "metrics": {
+        "lines": 200,
+        "missing": [
+          "syn-0001",
+          "syn-0002",
+          "syn-0003",
+          "syn-0004",
+          "syn-0005",
+          "syn-0006",
+          "syn-0007",
+          "syn-0008",
+          "syn-0009",
+          "syn-0010",
+          "syn-0011",
+          "syn-0012",
+          "syn-0013",
+          "syn-0014",
+          "syn-0015",
+          "syn-0016",
+          "syn-0017",
+          "syn-0018",
+          "syn-0019",
+          "syn-0020",
+          "syn-0021",
+          "syn-0022",
+          "syn-0023",
+          "syn-0024",
+          "syn-0025",
+          "syn-0026",
+          "syn-0027",
+          "syn-0028",
+          "syn-0029",
+          "syn-0030",
+          "syn-0031",
+          "syn-0032",
+          "syn-0033",
+          "syn-0034",
+          "syn-0035",
+          "syn-0036",
+          "syn-0037",
+          "syn-0038",
+          "syn-0039",
+          "syn-0040",
+          "syn-0041",
+          "syn-0042",
+          "syn-0043",
+          "syn-0044",
+          "syn-0045",
+          "syn-0046",
+          "syn-0047",
+          "syn-0048",
+          "syn-0049",
+          "syn-0050",
+          "syn-0051",
+          "syn-0052",
+          "syn-0053",
+          "syn-0054",
+          "syn-0055",
+          "syn-0056",
+          "syn-0057",
+          "syn-0058",
+          "syn-0059",
+          "syn-0060",
+          "syn-0061",
+          "syn-0062",
+          "syn-0063",
+          "syn-0064",
+          "syn-0065",
+          "syn-0066",
+          "syn-0067",
+          "syn-0068",
+          "syn-0069",
+          "syn-0070",
+          "syn-0071",
+          "syn-0072",
+          "syn-0073",
+          "syn-0074",
+          "syn-0075",
+          "syn-0076",
+          "syn-0077",
+          "syn-0078",
+          "syn-0079",
+          "syn-0080",
+          "syn-0081",
+          "syn-0082",
+          "syn-0083",
+          "syn-0084",
+          "syn-0085",
+          "syn-0086",
+          "syn-0087",
+          "syn-0088",
+          "syn-0089",
+          "syn-0090",
+          "syn-0091",
+          "syn-0092",
+          "syn-0093",
+          "syn-0094",
+          "syn-0095",
+          "syn-0096",
+          "syn-0097",
+          "syn-0098",
+          "syn-0099",
+          "syn-0100",
+          "syn-0101",
+          "syn-0102",
+          "syn-0103",
+          "syn-0104",
+          "syn-0105",
+          "syn-0106",
+          "syn-0107",
+          "syn-0108",
+          "syn-0109",
+          "syn-0110",
+          "syn-0111",
+          "syn-0112",
+          "syn-0113",
+          "syn-0114",
+          "syn-0115",
+          "syn-0116",
+          "syn-0117",
+          "syn-0118",
+          "syn-0119",
+          "syn-0120",
+          "syn-0121",
+          "syn-0122",
+          "syn-0123",
+          "syn-0124",
+          "syn-0125",
+          "syn-0126",
+          "syn-0127",
+          "syn-0128",
+          "syn-0129",
+          "syn-0130",
+          "syn-0131",
+          "syn-0132",
+          "syn-0133",
+          "syn-0134",
+          "syn-0135",
+          "syn-0136",
+          "syn-0137",
+          "syn-0138",
+          "syn-0139",
+          "syn-0140",
+          "syn-0141",
+          "syn-0142",
+          "syn-0143",
+          "syn-0144",
+          "syn-0145",
+          "syn-0146",
+          "syn-0147",
+          "syn-0148",
+          "syn-0149",
+          "syn-0150",
+          "syn-0151",
+          "syn-0152",
+          "syn-0153",
+          "syn-0154",
+          "syn-0155",
+          "syn-0156",
+          "syn-0157",
+          "syn-0158",
+          "syn-0159",
+          "syn-0160",
+          "syn-0161",
+          "syn-0162",
+          "syn-0163",
+          "syn-0164",
+          "syn-0165",
+          "syn-0166",
+          "syn-0167",
+          "syn-0168",
+          "syn-0169",
+          "syn-0170",
+          "syn-0171",
+          "syn-0172",
+          "syn-0173",
+          "syn-0174",
+          "syn-0175",
+          "syn-0176",
+          "syn-0177",
+          "syn-0178",
+          "syn-0179",
+          "syn-0180",
+          "syn-0181",
+          "syn-0182",
+          "syn-0183",
+          "syn-0184",
+          "syn-0185",
+          "syn-0186",
+          "syn-0187",
+          "syn-0188",
+          "syn-0189",
+          "syn-0190",
+          "syn-0191",
+          "syn-0192",
+          "syn-0193",
+          "syn-0194",
+          "syn-0195",
+          "syn-0196",
+          "syn-0197",
+          "syn-0198",
+          "syn-0199",
+          "syn-0200"
+        ],
+        "cer_micro": 1.0,
+        "wer_micro": 1.0,
+        "cer_macro": 1.0,
+        "wer_macro": 1.0,
+        "char_edits": 8107,
+        "ref_chars": 8107,
+        "word_edits": 1445,
+        "ref_words": 1445,
+        "per_line": [
+          {
+            "id": "syn-0001",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0002",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0003",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0004",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0005",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0006",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0007",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0008",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0009",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0010",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0011",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0012",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0013",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0014",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0015",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0016",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0017",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0018",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 36,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0019",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0020",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0021",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0022",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0023",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0024",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0025",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 62,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0026",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0027",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0028",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0029",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0030",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0031",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0032",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0033",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0034",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0035",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0036",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0037",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0038",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0039",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 37,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0040",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0041",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0042",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0043",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0044",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0045",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 23,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0046",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0047",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0048",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0049",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0050",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0051",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 55,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0052",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0053",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0054",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0055",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0056",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0057",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0058",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 58,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0059",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0060",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0061",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 59,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0062",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0063",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 41,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0064",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0065",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0066",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0067",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0068",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0069",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0070",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0071",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0072",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0073",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0074",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0075",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0076",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0077",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0078",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0079",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 59,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0080",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0081",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0082",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0083",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0084",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0085",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0086",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0087",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0088",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0089",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0090",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0091",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0092",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 33,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0093",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0094",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0095",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0096",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 55,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0097",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0098",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0099",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0100",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 43,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0101",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0102",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0103",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0104",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0105",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0106",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0107",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0108",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0109",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 54,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0110",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0111",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0112",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0113",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0114",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0115",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0116",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0117",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0118",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0119",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0120",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 38,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0121",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0122",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0123",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0124",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0125",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0126",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0127",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0128",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0129",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0130",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0131",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0132",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0133",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0134",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0135",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0136",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0137",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0138",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0139",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 27,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0140",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 35,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0141",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0142",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0143",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0144",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 53,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0145",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0146",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0147",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0148",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0149",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0150",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0151",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0152",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0153",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0154",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 39,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0155",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0156",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0157",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0158",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0159",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0160",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0161",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 47,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0162",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 56,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0163",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0164",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 40,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0165",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0166",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 28,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0167",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0168",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0169",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 52,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0170",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0171",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0172",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0173",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0174",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0175",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 32,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0176",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0177",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0178",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 57,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0179",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0180",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 50,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0181",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 54,
+            "ref_words": 10
+          },
+          {
+            "id": "syn-0182",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0183",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 44,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0184",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 34,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0185",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 29,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0186",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 49,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0187",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 48,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0188",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 31,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0189",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 45,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0190",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0191",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0192",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 42,
+            "ref_words": 7
+          },
+          {
+            "id": "syn-0193",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 26,
+            "ref_words": 4
+          },
+          {
+            "id": "syn-0194",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 5
+          },
+          {
+            "id": "syn-0195",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 25,
+            "ref_words": 6
+          },
+          {
+            "id": "syn-0196",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 41,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0197",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 51,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0198",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 30,
+            "ref_words": 8
+          },
+          {
+            "id": "syn-0199",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 46,
+            "ref_words": 9
+          },
+          {
+            "id": "syn-0200",
+            "cer": 1.0,
+            "wer": 1.0,
+            "ref_chars": 60,
+            "ref_words": 9
+          }
+        ]
+      },
+      "latency": {
+        "lines": 0,
+        "median_ms": null,
+        "p95_ms": null,
+        "mean_ms": null,
+        "max_ms": null
+      },
+      "partial": true,
+      "verdicts": {
+        "h1_quality": false,
+        "h2_cost": null
+      }
+    }
+  ]
+}

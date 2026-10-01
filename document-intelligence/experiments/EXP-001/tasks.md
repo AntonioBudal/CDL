@@ -2,8 +2,8 @@
 
 **Input**: [spec.md](./spec.md), [plan.md](./plan.md)
 
-**Status**: `DRAFT — AWAITING USER REVIEW` — **nenhuma tarefa iniciada**. A execução só começa após a
-aprovação da especificação/plano e as respostas às perguntas da spec §6.
+**Status**: `APPROVED` em 2026-09-30. **Fases 0, 1 e 2 concluídas.** Fase 3 em diante não iniciada; nenhum
+peso ou dataset baixado. Aguardando autorização do usuário para a Fase 3.
 
 **Formato**: `[ID] [P?] [Cenário] Descrição` — `[P]` = pode rodar em paralelo; C1/C2/C3 = cenários da spec.
 
@@ -11,36 +11,44 @@ aprovação da especificação/plano e as respostas às perguntas da spec §6.
 
 ## Fase 0 — Portões (bloqueiam tudo)
 
-- [ ] T001 Usuário aprova `spec.md` e `plan.md` e responde às perguntas da spec §6 (dados reais, Tesseract, TrOCR, versionamento).
-- [ ] T002 Atualizar `spec.md` com as respostas (remover `NEEDS CLARIFICATION`) e fixar a lista final de candidatos.
+- [x] T001 Usuário aprova `spec.md` e `plan.md` e responde às perguntas da spec §6 (dados reais, Tesseract, TrOCR, versionamento). *(2026-09-30; commit inicial `33c293f`.)*
+- [x] T002 Atualizar `spec.md` com as respostas (remover `NEEDS CLARIFICATION`) e fixar a lista final de candidatos. *(spec §4.1 e §6.)*
 
 ## Fase 1 — Licenças e ambiente (sem download de pesos)
 
-- [ ] T003 Fechar a verificação de licença de cada candidato da lista final (código, pesos, dados de treino declarados), com URL e data da consulta, em `docs/models-and-licensing.md`; criar `experiments/EXP-001/candidates.json` com revisão fixa por candidato.
-- [ ] T004 Criar o projeto `uv` isolado em `experiments/EXP-001/pyproject.toml`; conferir por resolução a seco se há wheels Windows para Python 3.14 e, se não houver, fixar 3.13 só ali. Registrar em `experiments/EXP-001/environment.md`.
-- [ ] T005 [P] Verificar a licença da fonte usada para renderizar as linhas sintéticas e registrá-la em `dataset/fixtures/exp-001/README.md`.
+- [x] T003 Fechar a verificação de licença de cada candidato da lista final (código, pesos, dados de treino declarados), com URL e data da consulta, em `docs/models-and-licensing.md`; criar `experiments/EXP-001/candidates.json` com revisão fixa por candidato. *(Inclui o dataset BRESSAY.)*
+- [x] T004 Criar os projetos `uv` isolados em `experiments/EXP-001/envs/{pylaia,trocr}/` e conferir por resolução a seco as wheels para Windows. Registrar em `experiments/EXP-001/environment.md`. *(Só `uv lock`; nada instalado. Dois ambientes em vez de um — ver plan.md.)*
+- [x] T005 [P] Verificar a licença da fonte usada para renderizar as linhas sintéticas e registrá-la em `dataset/fixtures/exp-001/README.md`. *(Caveat, OFL-1.1.)*
 
 **Checkpoint**: lista de candidatos `VERIFIED` e ambiente resolvível. Reportar ao usuário antes de seguir.
 
 ## Fase 2 — Cenário 1: harness validado com sintético (P1)
 
-- [ ] T006 [C1] Escrever ~200 frases fictícias PT-BR cobrindo o alfabeto exigido em `dataset/fixtures/exp-001/sentences.json`, com teste de cobertura de caracteres.
-- [ ] T007 [C1] Gerador de linhas sintéticas (frase → imagem) e manifesto com SHA-256 em `experiments/EXP-001/harness/synth.py`.
-- [ ] T008 [P] [C1] Utilitário de pico de memória de processo filho, com teste, em `src/leitorum_di/` (genérico, sem dependência nova).
-- [ ] T009 [C1] Interface de adaptador + reconhecedor de referência ("eco") em `experiments/EXP-001/harness/adapters/`.
-- [ ] T010 [C1] Supervisor com subprocesso, medição e critérios de parada do plano em `experiments/EXP-001/harness/supervisor.py`.
-- [ ] T011 [C1] Avaliador (CER/WER por linha e agregados, NFC) e relatório JSON em `experiments/EXP-001/harness/evaluate.py`.
-- [ ] T012 [C1] Testes do harness: referência dá CER = WER = 0; adaptador falso que estoura memória/tempo vira `ABORTED`; candidato não verificado vira `REFUSED`.
-- [ ] T013 [C1] Rodar `uv run pytest` e `uv run ruff check .`; executar o harness com o reconhecedor de referência e guardar o log em `evaluation/exp-001/`.
+- [x] T006 [C1] Escrever ~200 frases fictícias PT-BR cobrindo o alfabeto exigido em `dataset/fixtures/exp-001/sentences.json`, com teste de cobertura de caracteres.
+- [x] T007 [C1] Gerador de linhas sintéticas (frase → imagem) e manifesto com SHA-256 em `experiments/EXP-001/harness/synth.py`.
+- [x] T008 [P] [C1] Utilitário de pico de memória de processo filho, com teste, em `src/leitorum_di/` (genérico, sem dependência nova).
+- [x] T009 [C1] Interface de adaptador + reconhecedor de referência ("eco") em `experiments/EXP-001/harness/adapters/`.
+- [x] T010 [C1] Supervisor com subprocesso, medição e critérios de parada do plano em `experiments/EXP-001/harness/supervisor.py`.
+- [x] T011 [C1] Avaliador (CER/WER por linha e agregados, NFC) e relatório JSON em `experiments/EXP-001/harness/evaluate.py`.
+- [x] T012 [C1] Testes do harness: referência dá CER = WER = 0; adaptador falso que estoura memória/tempo vira `ABORTED`; candidato não verificado vira `REFUSED`.
+- [x] T013 [C1] Rodar `uv run pytest` e `uv run ruff check .`; executar o harness com o reconhecedor de referência e guardar o log em `evaluation/exp-001/`.
 
-**Checkpoint**: harness demonstrado sem nenhum modelo. Reportar ao usuário.
+**Checkpoint**: harness demonstrado sem nenhum modelo. Reportar ao usuário. *(Atingido em 2026-09-30.)*
+
+Resultado da Fase 2:
+
+- Ambiente `envs/harness/` (Pillow, fontTools, pytest; sem bibliotecas de modelo).
+- `dataset/fixtures/exp-001/sentences.json`: 200 frases fictícias; `synthetic-manifest.json`: 200 linhas, 8.107 caracteres, altura 86 px, largura 396–1.041 px. Imagens em `dataset/processed/exp-001/synthetic/` (fora do Git, regeneráveis).
+- Testes: 27 do harness (`experiments/EXP-001/tests/`) + 24 da suíte principal; `ruff` limpo.
+- Reconhecedor de referência, 3 execuções × 200 linhas: `OK`, CER = WER = 0, mediana 0,42–0,70 ms/linha, pico de 20 MiB. Log: `evaluation/benchmarks/BENCHMARK-20260930-exp-001-echo-reference.json`.
+- **Achado**: com o limite padrão de 1 GiB de RAM livre, a execução foi `SKIPPED` — a máquina tinha ~1.013 MiB livres em uso normal (log `…-skipped-low-ram.json`). A execução de referência usou `--min-free-mib 256`, registrado no relatório. Para a Fase 3 será preciso fechar aplicações antes de medir.
 
 ## Fase 3 — Cenário 2: candidatos reais (P2)
 
-- [ ] T014 [C2] Se a spec §6.1 for (a) ou (b): montar e congelar o conjunto real (manifesto, SHA-256, origem, consentimento) em `dataset/raw/exp-001/`.
-- [ ] T015 [C2] Para cada candidato `VERIFIED`: baixar pesos da fonte oficial para `models/exp-001/`, conferir SHA-256 e registrá-lo. **Primeira etapa com download — exige a aprovação de T001.**
-- [ ] T016 [P] [C2] Adaptador do candidato A.
-- [ ] T017 [P] [C2] Adaptador do candidato B (e demais aprovados), um arquivo por candidato.
+- [ ] T014 [C2] Baixar o BRESSAY do Zenodo para `dataset/raw/exp-001/` (1,5 GB), conferir o MD5 publicado, e congelar um subconjunto de linhas do split de teste oficial (manifesto com SHA-256 por imagem, amostragem com seed fixa, um autor por página). Se falhar, registrar e seguir só com o sintético.
+- [ ] T015 [C2] Instalar os ambientes (`uv sync` em `envs/pylaia` e `envs/trocr`) e, para cada candidato com `benchmark_allowed`, baixar os pesos da revisão fixada para `models/exp-001/`, conferindo o SHA-256 de `candidates.json` antes de qualquer carga. **Primeira etapa com download de pesos.**
+- [ ] T016 [P] [C2] Adaptador `pylaia-rimes` (e `pylaia-iam`), sem modelo de linguagem.
+- [ ] T017 [P] [C2] Adaptador `trocr-small-handwritten`, decodificação gulosa; relatórios marcam `LICENSE STATUS: NEEDS VALIDATION`.
 - [ ] T018 [C2] Executar o benchmark (3 repetições por candidato) na camada sintética e, se existir, na real; logs em `evaluation/exp-001/`.
 
 **Checkpoint**: tabela comparativa bruta disponível.

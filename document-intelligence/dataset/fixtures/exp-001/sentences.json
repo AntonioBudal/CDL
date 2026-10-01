@@ -1,0 +1,808 @@
+{
+  "schema": "leitorum-di-sentences/1",
+  "description": "Frases fictícias em PT-BR para a camada sintética do EXP-001.",
+  "seed": 1234,
+  "required_chars": "áéíóúâêôãõàçÇ,.:-\"()?0123456789",
+  "sentences": [
+    {
+      "id": "syn-0001",
+      "text": "Capítulo 25: o pêndulo simples"
+    },
+    {
+      "id": "syn-0002",
+      "text": "O que é a equação linear?"
+    },
+    {
+      "id": "syn-0003",
+      "text": "A lógica formal - ver página 56 (seção 1)."
+    },
+    {
+      "id": "syn-0004",
+      "text": "\"Ninguém aprende às pressas\", disse a monitora Cecília."
+    },
+    {
+      "id": "syn-0005",
+      "text": "Exemplo 6: somar 8 e 51 dá 59."
+    },
+    {
+      "id": "syn-0006",
+      "text": "Comparar a lógica formal às 7h, não à tarde."
+    },
+    {
+      "id": "syn-0007",
+      "text": "Por quê? Porque a hipótese não se sustenta."
+    },
+    {
+      "id": "syn-0008",
+      "text": "Em 2011, a aluna Thaís estudou as funções inversas."
+    },
+    {
+      "id": "syn-0009",
+      "text": "A razão áurea: avançada, essencial e difícil."
+    },
+    {
+      "id": "syn-0010",
+      "text": "Questão 8: a ciência política é simples?"
+    },
+    {
+      "id": "syn-0011",
+      "text": "RESUMO: o triângulo retângulo."
+    },
+    {
+      "id": "syn-0012",
+      "text": "Capítulo 29: a análise sintática"
+    },
+    {
+      "id": "syn-0013",
+      "text": "O que é o método científico?"
+    },
+    {
+      "id": "syn-0014",
+      "text": "As noções básicas - ver página 287 (seção 8)."
+    },
+    {
+      "id": "syn-0015",
+      "text": "\"Não há atalho\", disse a pesquisadora Ágata."
+    },
+    {
+      "id": "syn-0016",
+      "text": "Exemplo 9: somar 45 e 7 dá 52."
+    },
+    {
+      "id": "syn-0017",
+      "text": "Revisar o período histórico às 9h, não à tarde."
+    },
+    {
+      "id": "syn-0018",
+      "text": "Por quê? Porque a amostra é pequena."
+    },
+    {
+      "id": "syn-0019",
+      "text": "Em 2011, o colega Júlio estudou a ciência política."
+    },
+    {
+      "id": "syn-0020",
+      "text": "As equações químicas: útil, teórica e prática."
+    },
+    {
+      "id": "syn-0021",
+      "text": "Questão 13: o pêndulo simples é ambígua?"
+    },
+    {
+      "id": "syn-0022",
+      "text": "RESUMO: as noções básicas."
+    },
+    {
+      "id": "syn-0023",
+      "text": "Capítulo 1: a frequência de onda"
+    },
+    {
+      "id": "syn-0024",
+      "text": "A lógica formal - ver página 180 (seção 3)."
+    },
+    {
+      "id": "syn-0025",
+      "text": "\"Ninguém aprende às pressas\", disse a bibliotecária Hortência."
+    },
+    {
+      "id": "syn-0026",
+      "text": "Exemplo 3: somar 44 e 26 dá 70."
+    },
+    {
+      "id": "syn-0027",
+      "text": "Revisar o método científico às 22h, não à tarde."
+    },
+    {
+      "id": "syn-0028",
+      "text": "Por quê? Porque o exemplo contradiz a regra."
+    },
+    {
+      "id": "syn-0029",
+      "text": "Em 2021, a monitora Cecília estudou o número complexo."
+    },
+    {
+      "id": "syn-0030",
+      "text": "O binômio perfeito: essencial, simples e útil."
+    },
+    {
+      "id": "syn-0031",
+      "text": "Questão 8: a frequência de onda é essencial?"
+    },
+    {
+      "id": "syn-0032",
+      "text": "QUESTÕES: o pêndulo simples."
+    },
+    {
+      "id": "syn-0033",
+      "text": "Capítulo 2: a pressão atmosférica"
+    },
+    {
+      "id": "syn-0034",
+      "text": "O que é o período histórico?"
+    },
+    {
+      "id": "syn-0035",
+      "text": "As noções básicas - ver página 422 (seção 1)."
+    },
+    {
+      "id": "syn-0036",
+      "text": "\"A prática vem antes\", disse o colega Júlio."
+    },
+    {
+      "id": "syn-0037",
+      "text": "Exemplo 3: somar 11 e 21 dá 32."
+    },
+    {
+      "id": "syn-0038",
+      "text": "Explicar a função contínua às 19h, não à tarde."
+    },
+    {
+      "id": "syn-0039",
+      "text": "Por quê? Porque faltou medir de novo."
+    },
+    {
+      "id": "syn-0040",
+      "text": "Em 1993, a bibliotecária Hortência estudou o gênero textual."
+    },
+    {
+      "id": "syn-0041",
+      "text": "A função contínua: rigorosa, avançada e ambígua."
+    },
+    {
+      "id": "syn-0042",
+      "text": "Questão 31: a ciência política é rigorosa?"
+    },
+    {
+      "id": "syn-0043",
+      "text": "DÚVIDA: as três hipóteses."
+    },
+    {
+      "id": "syn-0044",
+      "text": "Capítulo 6: o pêndulo simples"
+    },
+    {
+      "id": "syn-0045",
+      "text": "O que é a fórmula útil?"
+    },
+    {
+      "id": "syn-0046",
+      "text": "O binômio perfeito - ver página 275 (seção 8)."
+    },
+    {
+      "id": "syn-0047",
+      "text": "\"Meça e só então conclua\", disse o colega Júlio."
+    },
+    {
+      "id": "syn-0048",
+      "text": "Exemplo 3: somar 9 e 51 dá 60."
+    },
+    {
+      "id": "syn-0049",
+      "text": "Fichar a pressão atmosférica às 10h, não à tarde."
+    },
+    {
+      "id": "syn-0050",
+      "text": "Por quê? Porque o método é mais confiável."
+    },
+    {
+      "id": "syn-0051",
+      "text": "Em 2012, a monitora Cecília estudou a tabela periódica."
+    },
+    {
+      "id": "syn-0052",
+      "text": "O período histórico: rigorosa, ambígua e rápida."
+    },
+    {
+      "id": "syn-0053",
+      "text": "Questão 13: o sistema nervoso é difícil?"
+    },
+    {
+      "id": "syn-0054",
+      "text": "CONCLUSÃO: o gênero textual."
+    },
+    {
+      "id": "syn-0055",
+      "text": "Capítulo 9: o raciocínio dedutivo"
+    },
+    {
+      "id": "syn-0056",
+      "text": "O que é a ciência política?"
+    },
+    {
+      "id": "syn-0057",
+      "text": "O conteúdo da prova - ver página 378 (seção 6)."
+    },
+    {
+      "id": "syn-0058",
+      "text": "\"A pergunta já é metade\", disse a bibliotecária Hortência."
+    },
+    {
+      "id": "syn-0059",
+      "text": "Exemplo 2: somar 48 e 6 dá 54."
+    },
+    {
+      "id": "syn-0060",
+      "text": "Fichar o número complexo às 8h, não à tarde."
+    },
+    {
+      "id": "syn-0061",
+      "text": "Em 1978, o professor Abelardo estudou a frequência de onda."
+    },
+    {
+      "id": "syn-0062",
+      "text": "O índice remissivo: rigorosa, difícil e concisa."
+    },
+    {
+      "id": "syn-0063",
+      "text": "Questão 21: a órbita elíptica é avançada?"
+    },
+    {
+      "id": "syn-0064",
+      "text": "REVISÃO: o gênero textual."
+    },
+    {
+      "id": "syn-0065",
+      "text": "Capítulo 9: a ciência política"
+    },
+    {
+      "id": "syn-0066",
+      "text": "O princípio da inércia - ver página 228 (seção 4)."
+    },
+    {
+      "id": "syn-0067",
+      "text": "\"Não há atalho\", disse o autor Quirino."
+    },
+    {
+      "id": "syn-0068",
+      "text": "Exemplo 8: somar 14 e 47 dá 61."
+    },
+    {
+      "id": "syn-0069",
+      "text": "Comparar o conteúdo da prova às 18h, não à tarde."
+    },
+    {
+      "id": "syn-0070",
+      "text": "Em 2003, o orientador Wálter estudou a razão áurea."
+    },
+    {
+      "id": "syn-0071",
+      "text": "A função contínua: sólida, prática e teórica."
+    },
+    {
+      "id": "syn-0072",
+      "text": "Questão 23: o fenômeno óptico é essencial?"
+    },
+    {
+      "id": "syn-0073",
+      "text": "OBSERVAÇÃO: o índice remissivo."
+    },
+    {
+      "id": "syn-0074",
+      "text": "Capítulo 25: o fenômeno óptico"
+    },
+    {
+      "id": "syn-0075",
+      "text": "O que é o triângulo retângulo?"
+    },
+    {
+      "id": "syn-0076",
+      "text": "A célula vegetal - ver página 81 (seção 3)."
+    },
+    {
+      "id": "syn-0077",
+      "text": "Exemplo 9: somar 12 e 11 dá 23."
+    },
+    {
+      "id": "syn-0078",
+      "text": "Estudar o princípio da inércia às 17h, não à tarde."
+    },
+    {
+      "id": "syn-0079",
+      "text": "Em 1957, o professor Abelardo estudou as equações químicas."
+    },
+    {
+      "id": "syn-0080",
+      "text": "O raciocínio dedutivo: difícil, concisa e rigorosa."
+    },
+    {
+      "id": "syn-0081",
+      "text": "Questão 14: a função contínua é básica?"
+    },
+    {
+      "id": "syn-0082",
+      "text": "DEFINIÇÃO: a fórmula útil."
+    },
+    {
+      "id": "syn-0083",
+      "text": "Capítulo 11: o número complexo"
+    },
+    {
+      "id": "syn-0084",
+      "text": "O que é o conteúdo da prova?"
+    },
+    {
+      "id": "syn-0085",
+      "text": "As noções básicas - ver página 205 (seção 5)."
+    },
+    {
+      "id": "syn-0086",
+      "text": "\"O exemplo ensina mais\", disse o colega Júlio."
+    },
+    {
+      "id": "syn-0087",
+      "text": "Exemplo 3: somar 29 e 22 dá 51."
+    },
+    {
+      "id": "syn-0088",
+      "text": "Estudar o binômio perfeito às 15h, não à tarde."
+    },
+    {
+      "id": "syn-0089",
+      "text": "Em 2001, o autor Quirino estudou a ciência política."
+    },
+    {
+      "id": "syn-0090",
+      "text": "A equação linear: sólida, teórica e frágil."
+    },
+    {
+      "id": "syn-0091",
+      "text": "Questão 25: o período histórico é prática?"
+    },
+    {
+      "id": "syn-0092",
+      "text": "QUESTÕES: o princípio da inércia."
+    },
+    {
+      "id": "syn-0093",
+      "text": "Capítulo 27: o gênero textual"
+    },
+    {
+      "id": "syn-0094",
+      "text": "O que é a tabela periódica?"
+    },
+    {
+      "id": "syn-0095",
+      "text": "A função contínua - ver página 188 (seção 8)."
+    },
+    {
+      "id": "syn-0096",
+      "text": "\"A prática vem antes\", disse a bibliotecária Hortência."
+    },
+    {
+      "id": "syn-0097",
+      "text": "Exemplo 5: somar 12 e 26 dá 38."
+    },
+    {
+      "id": "syn-0098",
+      "text": "Por quê? Porque a conclusão veio cedo demais."
+    },
+    {
+      "id": "syn-0099",
+      "text": "Em 2004, o colega Júlio estudou o conteúdo da prova."
+    },
+    {
+      "id": "syn-0100",
+      "text": "A razão áurea: rápida, rigorosa e avançada."
+    },
+    {
+      "id": "syn-0101",
+      "text": "Questão 26: as equações químicas é avançada?"
+    },
+    {
+      "id": "syn-0102",
+      "text": "CONCLUSÃO: a órbita elíptica."
+    },
+    {
+      "id": "syn-0103",
+      "text": "Capítulo 19: o sistema nervoso"
+    },
+    {
+      "id": "syn-0104",
+      "text": "O que é as equações químicas?"
+    },
+    {
+      "id": "syn-0105",
+      "text": "As funções inversas - ver página 187 (seção 4)."
+    },
+    {
+      "id": "syn-0106",
+      "text": "\"A prática vem antes\", disse o orientador Wálter."
+    },
+    {
+      "id": "syn-0107",
+      "text": "Exemplo 8: somar 38 e 31 dá 69."
+    },
+    {
+      "id": "syn-0108",
+      "text": "Revisar a distância média às 21h, não à tarde."
+    },
+    {
+      "id": "syn-0109",
+      "text": "Em 1953, a monitora Cecília estudou o sistema nervoso."
+    },
+    {
+      "id": "syn-0110",
+      "text": "O índice remissivo: concisa, avançada e difícil."
+    },
+    {
+      "id": "syn-0111",
+      "text": "Questão 9: as três hipóteses é ambígua?"
+    },
+    {
+      "id": "syn-0112",
+      "text": "DÚVIDA: a célula vegetal."
+    },
+    {
+      "id": "syn-0113",
+      "text": "Capítulo 12: o binômio perfeito"
+    },
+    {
+      "id": "syn-0114",
+      "text": "O que é o binômio perfeito?"
+    },
+    {
+      "id": "syn-0115",
+      "text": "A órbita elíptica - ver página 162 (seção 6)."
+    },
+    {
+      "id": "syn-0116",
+      "text": "Exemplo 9: somar 38 e 14 dá 52."
+    },
+    {
+      "id": "syn-0117",
+      "text": "Anotar o método científico às 13h, não à tarde."
+    },
+    {
+      "id": "syn-0118",
+      "text": "Em 1992, o orientador Wálter estudou o índice remissivo."
+    },
+    {
+      "id": "syn-0119",
+      "text": "O método científico: útil, avançada e teórica."
+    },
+    {
+      "id": "syn-0120",
+      "text": "Questão 34: o gênero textual é sólida?"
+    },
+    {
+      "id": "syn-0121",
+      "text": "RESUMO: a equação linear."
+    },
+    {
+      "id": "syn-0122",
+      "text": "Capítulo 27: a análise sintática"
+    },
+    {
+      "id": "syn-0123",
+      "text": "O sistema nervoso - ver página 80 (seção 1)."
+    },
+    {
+      "id": "syn-0124",
+      "text": "\"Tudo começa na dúvida\", disse o professor Abelardo."
+    },
+    {
+      "id": "syn-0125",
+      "text": "Exemplo 4: somar 44 e 4 dá 48."
+    },
+    {
+      "id": "syn-0126",
+      "text": "Resumir a célula vegetal às 18h, não à tarde."
+    },
+    {
+      "id": "syn-0127",
+      "text": "Em 1958, o orientador Wálter estudou a ciência política."
+    },
+    {
+      "id": "syn-0128",
+      "text": "O princípio da inércia: concisa, teórica e rigorosa."
+    },
+    {
+      "id": "syn-0129",
+      "text": "Questão 32: o índice remissivo é sólida?"
+    },
+    {
+      "id": "syn-0130",
+      "text": "INTRODUÇÃO: o sistema nervoso."
+    },
+    {
+      "id": "syn-0131",
+      "text": "Capítulo 17: o método científico"
+    },
+    {
+      "id": "syn-0132",
+      "text": "O índice remissivo - ver página 425 (seção 1)."
+    },
+    {
+      "id": "syn-0133",
+      "text": "\"Ninguém aprende às pressas\", disse a pesquisadora Ágata."
+    },
+    {
+      "id": "syn-0134",
+      "text": "Exemplo 4: somar 23 e 57 dá 80."
+    },
+    {
+      "id": "syn-0135",
+      "text": "Resumir o triângulo retângulo às 22h, não à tarde."
+    },
+    {
+      "id": "syn-0136",
+      "text": "Em 2018, o tutor Zózimo estudou as funções inversas."
+    },
+    {
+      "id": "syn-0137",
+      "text": "O fenômeno óptico: sólida, difícil e essencial."
+    },
+    {
+      "id": "syn-0138",
+      "text": "Questão 16: o princípio da inércia é essencial?"
+    },
+    {
+      "id": "syn-0139",
+      "text": "RESUMO: o binômio perfeito."
+    },
+    {
+      "id": "syn-0140",
+      "text": "Capítulo 17: o princípio da inércia"
+    },
+    {
+      "id": "syn-0141",
+      "text": "A tabela periódica - ver página 446 (seção 6)."
+    },
+    {
+      "id": "syn-0142",
+      "text": "Exemplo 8: somar 38 e 36 dá 74."
+    },
+    {
+      "id": "syn-0143",
+      "text": "Revisar o sistema nervoso às 9h, não à tarde."
+    },
+    {
+      "id": "syn-0144",
+      "text": "Em 1955, o autor Quirino estudou as funções inversas."
+    },
+    {
+      "id": "syn-0145",
+      "text": "A análise sintática: sólida, difícil e útil."
+    },
+    {
+      "id": "syn-0146",
+      "text": "Questão 40: a distância média é prática?"
+    },
+    {
+      "id": "syn-0147",
+      "text": "EXERCÍCIO: a frequência de onda."
+    },
+    {
+      "id": "syn-0148",
+      "text": "Capítulo 23: o binômio perfeito"
+    },
+    {
+      "id": "syn-0149",
+      "text": "O gênero textual - ver página 262 (seção 1)."
+    },
+    {
+      "id": "syn-0150",
+      "text": "\"Não há atalho\", disse a bibliotecária Hortência."
+    },
+    {
+      "id": "syn-0151",
+      "text": "Exemplo 5: somar 53 e 7 dá 60."
+    },
+    {
+      "id": "syn-0152",
+      "text": "Fichar o índice remissivo às 17h, não à tarde."
+    },
+    {
+      "id": "syn-0153",
+      "text": "O sistema nervoso: concisa, simples e ampla."
+    },
+    {
+      "id": "syn-0154",
+      "text": "Questão 38: o sistema nervoso é básica?"
+    },
+    {
+      "id": "syn-0155",
+      "text": "CONCLUSÃO: o método científico."
+    },
+    {
+      "id": "syn-0156",
+      "text": "Capítulo 21: a lógica formal"
+    },
+    {
+      "id": "syn-0157",
+      "text": "O que é o número complexo?"
+    },
+    {
+      "id": "syn-0158",
+      "text": "O binômio perfeito - ver página 110 (seção 9)."
+    },
+    {
+      "id": "syn-0159",
+      "text": "\"Ninguém aprende às pressas\", disse o tutor Zózimo."
+    },
+    {
+      "id": "syn-0160",
+      "text": "Exemplo 5: somar 34 e 10 dá 44."
+    },
+    {
+      "id": "syn-0161",
+      "text": "Revisar o índice remissivo às 21h, não à tarde."
+    },
+    {
+      "id": "syn-0162",
+      "text": "Em 1997, a pesquisadora Ágata estudou a órbita elíptica."
+    },
+    {
+      "id": "syn-0163",
+      "text": "O sistema nervoso: básica, ambígua e concisa."
+    },
+    {
+      "id": "syn-0164",
+      "text": "Questão 15: a órbita elíptica é simples?"
+    },
+    {
+      "id": "syn-0165",
+      "text": "EXERCÍCIO: o gênero textual."
+    },
+    {
+      "id": "syn-0166",
+      "text": "Capítulo 9: a equação linear"
+    },
+    {
+      "id": "syn-0167",
+      "text": "O que é o fenômeno óptico?"
+    },
+    {
+      "id": "syn-0168",
+      "text": "As funções inversas - ver página 28 (seção 4)."
+    },
+    {
+      "id": "syn-0169",
+      "text": "\"O exemplo ensina mais\", disse a pesquisadora Ágata."
+    },
+    {
+      "id": "syn-0170",
+      "text": "Exemplo 9: somar 39 e 25 dá 64."
+    },
+    {
+      "id": "syn-0171",
+      "text": "Resumir a célula vegetal às 16h, não à tarde."
+    },
+    {
+      "id": "syn-0172",
+      "text": "Em 1972, o colega Júlio estudou o pêndulo simples."
+    },
+    {
+      "id": "syn-0173",
+      "text": "O fenômeno óptico: ambígua, essencial e simples."
+    },
+    {
+      "id": "syn-0174",
+      "text": "Questão 27: a análise sintática é prática?"
+    },
+    {
+      "id": "syn-0175",
+      "text": "OBSERVAÇÃO: o período histórico."
+    },
+    {
+      "id": "syn-0176",
+      "text": "Capítulo 27: a ciência política"
+    },
+    {
+      "id": "syn-0177",
+      "text": "A razão áurea - ver página 191 (seção 7)."
+    },
+    {
+      "id": "syn-0178",
+      "text": "\"O exemplo ensina mais\", disse a bibliotecária Hortência."
+    },
+    {
+      "id": "syn-0179",
+      "text": "Exemplo 8: somar 50 e 40 dá 90."
+    },
+    {
+      "id": "syn-0180",
+      "text": "Explicar a frequência de onda às 21h, não à tarde."
+    },
+    {
+      "id": "syn-0181",
+      "text": "Em 1963, a aluna Thaís estudou o princípio da inércia."
+    },
+    {
+      "id": "syn-0182",
+      "text": "O conteúdo da prova: rápida, frágil e básica."
+    },
+    {
+      "id": "syn-0183",
+      "text": "Questão 38: o raciocínio dedutivo é difícil?"
+    },
+    {
+      "id": "syn-0184",
+      "text": "OBSERVAÇÃO: o triângulo retângulo."
+    },
+    {
+      "id": "syn-0185",
+      "text": "Capítulo 4: o fenômeno óptico"
+    },
+    {
+      "id": "syn-0186",
+      "text": "O raciocínio dedutivo - ver página 423 (seção 5)."
+    },
+    {
+      "id": "syn-0187",
+      "text": "\"A prática vem antes\", disse a monitora Cecília."
+    },
+    {
+      "id": "syn-0188",
+      "text": "Exemplo 5: somar 23 e 27 dá 50."
+    },
+    {
+      "id": "syn-0189",
+      "text": "Reler a tabela periódica às 13h, não à tarde."
+    },
+    {
+      "id": "syn-0190",
+      "text": "Em 2009, a bibliotecária Hortência estudou a célula vegetal."
+    },
+    {
+      "id": "syn-0191",
+      "text": "O fenômeno óptico: avançada, frágil e difícil."
+    },
+    {
+      "id": "syn-0192",
+      "text": "Questão 30: o método científico é difícil?"
+    },
+    {
+      "id": "syn-0193",
+      "text": "INTRODUÇÃO: a razão áurea."
+    },
+    {
+      "id": "syn-0194",
+      "text": "Capítulo 20: as três hipóteses"
+    },
+    {
+      "id": "syn-0195",
+      "text": "O que é a célula vegetal?"
+    },
+    {
+      "id": "syn-0196",
+      "text": "A razão áurea - ver página 203 (seção 5)."
+    },
+    {
+      "id": "syn-0197",
+      "text": "\"Ninguém aprende às pressas\", disse a doutora Íris."
+    },
+    {
+      "id": "syn-0198",
+      "text": "Exemplo 3: somar 18 e 3 dá 21."
+    },
+    {
+      "id": "syn-0199",
+      "text": "Reler as funções inversas às 10h, não à tarde."
+    },
+    {
+      "id": "syn-0200",
+      "text": "Em 1983, o professor Abelardo estudou a pressão atmosférica."
+    }
+  ]
+}

@@ -62,6 +62,11 @@ def _normalize_words(text: str) -> list[str]:
     return words
 
 
+def tokenize_words(text: str) -> list[str]:
+    """Tokens de palavra usados pelo WER (pontuação de borda removida, acentos e caixa mantidos)."""
+    return _normalize_words(text)
+
+
 def calculate_wer(reference: str, hypothesis: str) -> float:
     """Calcula a taxa de erro de palavras (Word Error Rate - WER).
 

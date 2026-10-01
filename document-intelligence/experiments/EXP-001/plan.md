@@ -2,7 +2,24 @@
 
 **Diretório**: `experiments/EXP-001/` | **Date**: 2026-09-30 | **Spec**: [spec.md](./spec.md)
 
-**Status**: `DRAFT — AWAITING USER REVIEW` (plano apenas; nada foi instalado, baixado ou executado)
+**Status**: `APPROVED` pelo usuário em 2026-09-30. Revisado na Fase 1 (ver "Revisão pós-Fase 1" abaixo).
+
+## Revisão pós-Fase 1 (2026-09-30)
+
+- **Dois ambientes `uv` em vez de um**: PyLaia 1.1.2 exige Python < 3.11 e `torch` 1.13, incompatível com o
+  stack do TrOCR. Ficam `envs/pylaia/` (Python 3.10) e `envs/trocr/` (Python 3.14), cada um com seu `uv.lock`.
+- **Tesseract fora** (sem binários no sistema) e **EasyOCR fora** (licença dos pesos em aberto): sem baseline impresso.
+- **Dados reais**: BRESSAY (CC-BY-4.0) substitui amostras do usuário; download de 1,5 GB com MD5 conferido, na Fase 3.
+- **Risco novo — checkpoints em pickle**: `weights.ckpt` (PyLaia) e `pytorch_model.bin` (TrOCR) executam código
+  ao carregar. Mitigação: baixar só da revisão fixada, conferir SHA-256 contra `candidates.json` antes de carregar,
+  e rodar o subprocesso sem rede. `torch` 1.13.1 é antigo e sem correções recentes; fica restrito ao ambiente do experimento.
+- **Terceiro ambiente, `envs/harness/`** (Fase 2): Pillow + fontTools + pytest, sem bibliotecas de modelo; roda o
+  gerador sintético, o supervisor, o avaliador e os testes do harness.
+- **PID do worker**: no Windows o `python.exe` de um venv é um lançador; o interpretador real é outro processo.
+  O worker informa o próprio PID e é esse processo que o supervisor mede e encerra.
+- **RAM livre**: em uso normal a máquina fica em torno de 1 GiB livre, abaixo do mínimo exigido para iniciar.
+  Antes da Fase 3 é preciso liberar memória; o limite não será relaxado para candidatos reais.
+- **Python 3.10 gerenciado pelo `uv`**: fica em `%APPDATA%\uv\python` (diretório do próprio `uv`, fora do PATH).
 
 ## Summary
 
@@ -39,13 +56,13 @@ etc.). Nenhuma delas entra no `pyproject.toml` da raiz de `document-intelligence
 | :--- | :--- |
 | 1 — Local-first | PASS: inferência offline; rede só para instalar pacotes e baixar pesos verificados. Modelos de plataforma (Transkribus) excluídos. |
 | 2 — Evidência antes de decisão | PASS: nenhum candidato é adotado; o experimento só mede. |
-| 3 — Reprodutibilidade | **CONDICIONAL**: manifesto exige hash Git, e `document-intelligence/` ainda não está versionado (spec §6, pergunta 4). |
+| 3 — Reprodutibilidade | PASS: pasta versionada a partir do commit `33c293f`; locks por ambiente; revisões e hashes em `candidates.json`. |
 | 4 — Reconhecimento × interpretação | PASS: saída bruta preservada; sem correção por dicionário/LM externo. |
 | 5 — Human-in-the-loop | N/A neste experimento (sem fluxo de correção). |
 | 6 — Medir antes de otimizar | PASS: sem quantização, ONNX customizado ou código nativo próprio. |
 | 7 — Experimentos antes de features | PASS: código de candidatos fica em `experiments/EXP-001/`; ADR ao final. |
 | 8 — LDF como contrato soberano | PASS: nenhuma troca de dados com o Leitorum. |
-| Governança de escopo (fronteira) | PASS, com uma exceção a autorizar: binário do Tesseract instalado no sistema (spec §6, pergunta 2). |
+| Governança de escopo (fronteira) | PASS: Tesseract excluído; nenhum binário instalado no sistema. |
 | Privacidade (AGENTS da raiz §1) | PASS: só dados sintéticos ou amostras fornecidas com consentimento explícito. |
 
 ## Arquitetura do Benchmark
@@ -110,7 +127,8 @@ Um `ABORTED` conta como resultado e entra no relatório.
 ```text
 experiments/EXP-001/
 ├── spec.md  plan.md  tasks.md      # ciclo Spec Kit (este conjunto)
-├── pyproject.toml  uv.lock         # ambiente uv isolado do experimento (criado em T004)
+├── envs/pylaia/                    # pyproject.toml + uv.lock (Python 3.10, torch 1.13)
+├── envs/trocr/                     # pyproject.toml + uv.lock (Python 3.14, torch 2.x)
 ├── candidates.json                 # candidatos, revisões, licenças, sha256
 ├── harness/                        # supervisor, adaptadores, avaliador
 ├── environment.md                  # versões efetivamente usadas
