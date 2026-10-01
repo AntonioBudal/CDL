@@ -136,7 +136,9 @@ Consequência: **não há baseline de texto impresso nesta rodada**; a comparaç
 **Correção da Fase 3:** os metadados do Zenodo declaram CC-BY-4.0, mas o `README.md` dentro do arquivo restringe o
 uso a "non-commercial research and teaching purposes only". Com termos conflitantes, o status passa a
 `LICENSE STATUS: NEEDS VALIDATION` e, pela regra do usuário (§6.1), a rodada conclui só com a camada sintética,
-salvo autorização expressa. O arquivo foi baixado e não foi extraído.
+salvo autorização expressa.
+**Exceção do usuário (2026-10-01):** uso experimental e local autorizado, mantendo `LICENSE STATUS: NEEDS VALIDATION`
+em todos os relatórios. Imagens e transcrições ficam fora do Git; os relatórios versionados trazem só agregados.
 
 ### 4.2 Achados da pesquisa inicial
 

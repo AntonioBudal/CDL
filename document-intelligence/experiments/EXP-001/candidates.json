@@ -176,14 +176,15 @@
         }
       },
       "license_status": "NEEDS VALIDATION",
-      "remarks": "1.000 páginas, 1.000 autores, 30.090 linhas; split oficial por página/autor (647 treino, 154 validação, 199 teste). Termos conflitantes entre o Zenodo e o README: não usado na avaliação até decisão do usuário.",
-      "evaluation_allowed": false,
+      "remarks": "1.000 páginas, 1.000 autores, 30.090 linhas; split oficial por página/autor (647 treino, 154 validação, 199 teste). Termos conflitantes entre o Zenodo (CC-BY-4.0) e o README (pesquisa e ensino não comerciais).",
+      "evaluation_allowed": true,
       "downloaded": {
         "date": "2026-09-30",
         "path": "dataset/raw/exp-001/bressay.zip",
         "md5_verified": true,
-        "extracted": false
-      }
+        "extracted": "apenas o subconjunto congelado de teste (398 linhas, 199 autores) em dataset/raw/exp-001/bressay-subset/"
+      },
+      "user_exception": "Autorizado pelo usuário em 2026-10-01 para uso estritamente experimental e local no EXP-001, mantendo LICENSE STATUS: NEEDS VALIDATION. Conteúdo (imagens e transcrições) fica fora do Git."
     }
   ],
   "fonts": [

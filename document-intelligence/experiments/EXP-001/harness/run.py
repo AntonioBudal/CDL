@@ -175,6 +175,12 @@ def main(argv: list[str] | None = None) -> int:
         "O valor usado fica registrado em 'limits' no relatório.",
     )
     parser.add_argument(
+        "--private-out",
+        default=None,
+        help="Grava aqui o relatório completo e omite o texto das predições em --out "
+        "(para datasets cujo conteúdo não deve ir para o Git).",
+    )
+    parser.add_argument(
         "--wait-free-s",
         type=float,
         default=0.0,
@@ -202,6 +208,20 @@ def main(argv: list[str] | None = None) -> int:
         weights_dir=weights_dir,
         wait_free_s=args.wait_free_s,
     )
+    if args.private_out:
+        private = Path(args.private_out)
+        private.parent.mkdir(parents=True, exist_ok=True)
+        private.write_text(
+            json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        for run in report["runs"]:
+            run["predictions"] = [
+                {key: value for key, value in prediction.items() if key != "text"}
+                for prediction in run["predictions"]
+            ]
+        report["predictions_text"] = "omitido; relatório completo mantido só localmente"
     if args.out:
         out = Path(args.out)
         out.parent.mkdir(parents=True, exist_ok=True)
