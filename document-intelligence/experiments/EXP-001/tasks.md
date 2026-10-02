@@ -2,7 +2,7 @@
 
 **Input**: [spec.md](./spec.md), [plan.md](./plan.md)
 
-**Status**: `APPROVED` em 2026-09-30. **Fases 0 a 4 concluídas.** Fase 5 (RESULTS.md, ADR, aceite) não iniciada.
+**Status**: `APPROVED` em 2026-09-30. **Fases 0 a 5 concluídas** em 2026-10-02. Aguardando o aceite do usuário (T024). EXP-002 não iniciado.
 
 **Formato**: `[ID] [P?] [Cenário] Descrição` — `[P]` = pode rodar em paralelo; C1/C2/C3 = cenários da spec.
 
@@ -90,10 +90,10 @@ predições ficam fora do Git, e o Git guarda só identificadores, hashes e agre
 
 ## Fase 5 — Relatório e decisão
 
-- [ ] T021 Escrever `experiments/EXP-001/RESULTS.md`: tabela, veredito de H1/H2/H0, limitações (camada de dados usada, ausência de *writer split*), manifesto de reprodutibilidade.
-- [ ] T022 Redigir o ADR em `docs/adr/` a partir de `template-madr.md` (adotar / adaptar em experimento futuro / descartar).
-- [ ] T023 Conferência final: `uv run pytest`, `uv run ruff check .`, nenhum arquivo alterado fora de `document-intelligence/`, pesos e dados reais fora do Git.
-- [ ] T024 Submeter ao usuário para aceite. **Não iniciar o EXP-002 antes do aceite.**
+- [x] T021 Escrever `experiments/EXP-001/RESULTS.md`: tabela, veredito de H1/H2/H0, limitações (camada de dados usada, ausência de *writer split*), manifesto de reprodutibilidade.
+- [x] T022 Redigir o ADR em `docs/adr/` a partir de `template-madr.md` (adotar / adaptar em experimento futuro / descartar).
+- [x] T023 Conferência final: `uv run pytest`, `uv run ruff check .`, nenhum arquivo alterado fora de `document-intelligence/`, pesos e dados reais fora do Git.
+- [ ] T024 *(submetido em 2026-10-02; aguardando resposta)* Submeter ao usuário para aceite. **Não iniciar o EXP-002 antes do aceite.**
 
 ---
 

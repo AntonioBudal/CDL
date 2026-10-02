@@ -2,7 +2,7 @@
 
 **Diretório**: `experiments/EXP-001/` | **Date**: 2026-09-30 | **Spec**: [spec.md](./spec.md)
 
-**Status**: `APPROVED` pelo usuário em 2026-09-30. Revisado na Fase 1 (ver "Revisão pós-Fase 1" abaixo).
+**Status**: `APPROVED` pelo usuário em 2026-09-30; executado (ver [RESULTS.md](./RESULTS.md)). Revisado na Fase 1 (ver "Revisão pós-Fase 1" abaixo).
 
 ## Revisão pós-Fase 1 (2026-09-30)
 

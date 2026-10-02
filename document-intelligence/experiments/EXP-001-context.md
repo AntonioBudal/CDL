@@ -5,7 +5,7 @@
 > experimentos: ver [`EXP-001/spec.md`](./EXP-001/spec.md), [`plan.md`](./EXP-001/plan.md) e [`tasks.md`](./EXP-001/tasks.md).
 > **Nenhuma execução (código de avaliação, inferência ou download de pesos) antes da aprovação da especificação/plano.**
 
-* **Status:** `SPECIFICATION — AWAITING USER REVIEW` (execução não iniciada)
+* **Status:** `EXECUTED — AWAITING USER ACCEPTANCE` (ver [`EXP-001/RESULTS.md`](./EXP-001/RESULTS.md))
 * **Responsável:** Claude Code
 * **Domínio:** Handwritten Text Recognition (HTR) — Linhas Manuscritas Isoladas
 

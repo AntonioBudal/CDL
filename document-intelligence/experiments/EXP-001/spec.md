@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-30
 
-**Status**: `APPROVED` — spec, plano e tarefas aprovados pelo usuário em 2026-09-30; decisões registradas em §6. Fase 1 concluída (licenças e ambientes); nenhum peso ou dataset foi baixado.
+**Status**: `APPROVED` — spec, plano e tarefas aprovados pelo usuário em 2026-09-30; decisões registradas em §6. Execução concluída em 2026-10-02; resultados em [RESULTS.md](./RESULTS.md).
 
 **Input**: `experiments/EXP-001-context.md` + instrução do usuário de 2026-09-30 (ciclo Spec Kit adaptado a
 experimentos: Specify → Plan → Tasks, apresentados antes de qualquer execução).

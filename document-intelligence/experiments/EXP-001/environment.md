@@ -36,4 +36,5 @@ O `pyproject.toml` e o `uv.lock` principais de `document-intelligence/` não for
 * **Instalação efetiva (T015):** `envs/trocr/.venv` ≈ 631 MiB; `envs/pylaia/.venv` ≈ 1.059 MiB (antes do ajuste do
   `setuptools`). `envs/pylaia` fixa `setuptools<81` porque o `torchmetrics` 0.7 importa `pkg_resources`.
 * **Pesos:** `pylaia-rimes` e `pylaia-iam` ≈ 43 MB cada; `trocr-small-handwritten` ≈ 246 MB.
-* **Dataset:** `dataset/raw/exp-001/bressay.zip` (1,5 GB) baixado e **não extraído** — licença em aberto.
+* **Dataset:** `dataset/raw/exp-001/bressay.zip` (1,5 GB) baixado (MD5 conferido); extraído apenas o
+  subconjunto congelado de 398 linhas em `dataset/raw/exp-001/bressay-subset/`, por exceção do usuário (2026-10-01).

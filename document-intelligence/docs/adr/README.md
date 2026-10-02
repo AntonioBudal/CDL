@@ -63,3 +63,4 @@ Um ADR passa pelos seguintes status:
 | ID | Título | Status | Experimento Relacionado | Data |
 | :--- | :--- | :--- | :--- | :--- |
 | `ADR-000` | *Adoção de Arquitetura Local-First e Formato LDF* | *DRAFT* | N/A (Fundacional) | 2026-09-30 |
+| [`ADR-001`](./ADR-001-nao-adotar-htr-pronto-sem-portugues.md) | Não adotar reconhecedores de manuscrito prontos sem treino em português | PROPOSED | EXP-001 | 2026-10-02 |

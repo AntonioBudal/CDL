@@ -59,7 +59,7 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 - **Artefatos**: Diretório [`experiments/EXP-000/`](../experiments/EXP-000/).
 - **Entregável**: Relatório formal em `experiments/EXP-000/RESULTS.md` com status de aptidão do ambiente.
 
-### `EXP-001` — HTR em Linhas Manuscritas *(FASE ATUAL — em especificação, ver `experiments/EXP-001/`)*
+### `EXP-001` — HTR em Linhas Manuscritas *(EXECUTADO — aguardando aceite, ver `experiments/EXP-001/RESULTS.md`)*
 - **Objetivo**: Transformar imagens isoladas de linhas manuscritas em português em texto puro. Comparar *baseline zero-shot* contra arquiteturas com eventual adaptação/fine-tuning.
 - **Métricas**: CER, WER, latência de inferência e consumo de VRAM.
 - **Critério**: Não escolher modelos por popularidade; auditar candidatos (ex.: TrOCR, PyLaia, CTC/CRNN) em dataset controlado.
