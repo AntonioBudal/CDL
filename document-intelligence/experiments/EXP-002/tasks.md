@@ -2,7 +2,7 @@
 
 **Input**: [spec.md](./spec.md), [plan.md](./plan.md)
 
-**Status**: `APPROVED` em 2026-10-02. **Fases 0, 1 e 2 concluídas**; Fase 3 aguardando autorização.
+**Status**: `APPROVED` em 2026-10-02. **Fases 0–2 concluídas; Fase 3 em andamento** — T018–T022 concluídas; T023 (medições) bloqueada por falta de RAM livre.
 
 **Formato**: `[ID] [P?] [Cenário] Descrição` — `[P]` = pode rodar em paralelo; C1–C4 = cenários da spec.
 
@@ -71,14 +71,28 @@ Resultado da Fase 2:
 
 ## Fase 3 — Cenários 2 e 3: detectores de linhas e blocos
 
-- [ ] T018 [C2] Baseline `classic` (binarização adaptativa, remoção da pauta, perfis de projeção, componentes conexos), com parâmetros calibrados **só** no `dev` e registrados.
-- [ ] T019 [C3] `harness/blocks.py`: regras de montagem de blocos calibradas **só** no `dev`; testes com páginas de referência.
-- [ ] T020 [C2] Instalar `envs/docufcn` e `envs/doctr`; baixar pesos das revisões fixadas para `models/exp-002/`, conferindo SHA-256 antes da carga. **Primeira etapa com download de pesos.** Medir o disco antes.
-- [ ] T021 [P] [C2] Adaptador `docufcn-line`.
-- [ ] T022 [P] [C2] Adaptador `doctr` (detecção + agrupamento em linhas).
+- [x] T018 [C2] Baseline `classic` (binarização adaptativa, remoção da pauta, perfis de projeção, componentes conexos), com parâmetros calibrados **só** no `dev` e registrados.
+- [x] T019 [C3] `harness/blocks.py`: regras de montagem de blocos calibradas **só** no `dev`; testes com páginas de referência.
+- [x] T020 [C2] Instalar `envs/docufcn` e `envs/doctr`; baixar pesos das revisões fixadas para `models/exp-002/`, conferindo SHA-256 antes da carga. **Primeira etapa com download de pesos.** Medir o disco antes.
+- [x] T021 [P] [C2] Adaptador `docufcn-line`.
+- [x] T022 [P] [C2] Adaptador `doctr` (detecção + agrupamento em linhas).
 - [ ] T023 [C2] Commit limpo; executar os 3 detectores × 3 níveis de degradação (sem retificação), 3 repetições, e a montagem de blocos sobre cada saída; validar as saídas no LDF.
 
 **Checkpoint 3**: tabela de linhas e blocos sem retificação. Reportar.
+
+Andamento da Fase 3 (2026-10-03):
+
+- Ambientes `docufcn`, `heron` e `doctr` instalados; pesos baixados das revisões fixadas, todos os SHA-256 conferidos
+  (o do docTR começa com o prefixo publicado `688a8b34`). O pacote `doc-ufcn` traz arquivo LICENSE BSD-3-Clause.
+- Baseline clássico: a primeira versão não removia a pauta inclinada pela perspectiva (quase nenhuma linha detectada
+  nas páginas degradadas); passou a usar aberturas com segmentos em 9 ângulos. Calibração só no `dev`
+  (`calibration.json`, 33 min): F1 de linhas 0,63 no `dev`; `offset` 30, `dilate_width` 15, `merge_gap_factor` 4,0.
+- Regras de blocos calibradas sobre as linhas verdadeiras do `dev`: mAP@0,5 = 0,71. Vários parâmetros escolhidos
+  ficaram na borda da grade testada (limitação registrada).
+- Teste rápido em 2 páginas do `dev`: Doc-UFCN (as duas variantes), Heron e docTR carregam e produzem saídas
+  coerentes (carga de 17–58 s).
+- **T023 interrompida:** a máquina ficou com 250–500 MiB de RAM disponível; com o mínimo de 1 GiB para iniciar, as
+  execuções ficariam esperando e seriam puladas. Nenhum relatório de medição foi gerado. Decisão pedida ao usuário.
 
 ## Fase 4 — Cenário 4: retificação de perspectiva
 
