@@ -1,9 +1,9 @@
 # EXP-001: Relatório de Resultados — HTR em Linhas Manuscritas Isoladas (PT-BR)
 
-* **Status:** `AWAITING USER ACCEPTANCE`
+* **Status:** `ACCEPTED` / `CONCLUÍDO` (aceito pelo usuário em 2026-10-02)
 * **Período de execução:** 2026-09-30 a 2026-10-02
 * **Executor:** Claude Code
-* **Decisão arquitetural gerada:** [ADR-001](../../docs/adr/ADR-001-nao-adotar-htr-pronto-sem-portugues.md) (`PROPOSED`)
+* **Decisão arquitetural gerada:** [ADR-001](../../docs/adr/ADR-001-nao-adotar-htr-pronto-sem-portugues.md) (`ACCEPTED`)
 * **Artefatos do ciclo:** [spec.md](./spec.md) · [plan.md](./plan.md) · [tasks.md](./tasks.md) · [error-analysis.md](./error-analysis.md)
 
 > **Licenças.** `trocr-small-handwritten`: `LICENSE STATUS: NEEDS VALIDATION` — pesos sem licença declarada; uso
@@ -77,7 +77,7 @@ Detalhes, tabelas por classe de caractere e confusões mais frequentes: [error-a
 | SC-002 — CER, WER, latência e memória por candidato, com veredito | Atendido (§1 e §2) |
 | SC-003 — análise de erros por classe de caractere PT-BR | Atendido (`error-analysis.md`) |
 | SC-004 — `docs/models-and-licensing.md` preenchido, inclusive recusados | Atendido |
-| SC-005 — ADR com a decisão | Atendido: ADR-001, `PROPOSED`, aguardando o usuário |
+| SC-005 — ADR com a decisão | Atendido: ADR-001, `ACCEPTED` em 2026-10-02 |
 | SC-006 — nada alterado fora de `document-intelligence/`; pytest e ruff verdes | Atendido (§6) |
 
 Critérios de aceite de `EXP-001-context.md` §5: benchmark entre duas abordagens ✔; análise de erros ✔; verificação
@@ -159,8 +159,8 @@ instalado no sistema.
 ## 8. Homologação
 
 - [x] Entregáveis do EXP-001 concluídos e submetidos ao usuário.
-- [ ] EXP-001 **ACEITO** — decisão do usuário.
-- [ ] ADR-001 aceito ou rejeitado — decisão do usuário.
-- [ ] Autorização para o próximo passo — decisão do usuário. **EXP-002 não iniciado.**
+- [x] EXP-001 **ACEITO** pelo usuário em 2026-10-02.
+- [x] ADR-001 **ACEITO** pelo usuário em 2026-10-02.
+- [x] Próximo passo autorizado em 2026-10-02: EXP-002, começando só pela especificação.
 
 *Assinatura do agente executor:* `Claude Code (claude-opus-5-5), 2026-10-02`

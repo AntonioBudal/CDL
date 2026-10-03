@@ -1,6 +1,6 @@
 # ADR-001: Não adotar reconhecedores de manuscrito prontos sem treino em português
 
-* **Status:** PROPOSED
+* **Status:** ACCEPTED (aceito pelo usuário em 2026-10-02)
 * **Data:** 2026-10-02
 * **Decisores:** Usuário (decisão); Claude Code (proposta)
 * **Experimento de Suporte:** [EXP-001](../../experiments/EXP-001/RESULTS.md)
@@ -68,7 +68,7 @@ candidatos avaliados foram treinados em francês (PyLaia/RIMES) ou inglês (PyLa
 
 ## 4. Decisão Escolhida
 
-Propõe-se a **Opção C**. As Opções A e B falham no Driver 2 por larga margem (CER de 69–95 % contra a meta de
+Aprovamos a **Opção C**. As Opções A e B falham no Driver 2 por larga margem (CER de 69–95 % contra a meta de
 12 %), a Opção A falha também nos Drivers 3 e 4, e nenhuma das duas tem o alfabeto do português na saída — uma
 limitação que não se corrige sem treino.
 

@@ -59,12 +59,12 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 - **Artefatos**: Diretório [`experiments/EXP-000/`](../experiments/EXP-000/).
 - **Entregável**: Relatório formal em `experiments/EXP-000/RESULTS.md` com status de aptidão do ambiente.
 
-### `EXP-001` — HTR em Linhas Manuscritas *(EXECUTADO — aguardando aceite, ver `experiments/EXP-001/RESULTS.md`)*
+### `EXP-001` — HTR em Linhas Manuscritas *(CONCLUÍDO — aceito em 2026-10-02; decisão no ADR-001)*
 - **Objetivo**: Transformar imagens isoladas de linhas manuscritas em português em texto puro. Comparar *baseline zero-shot* contra arquiteturas com eventual adaptação/fine-tuning.
 - **Métricas**: CER, WER, latência de inferência e consumo de VRAM.
 - **Critério**: Não escolher modelos por popularidade; auditar candidatos (ex.: TrOCR, PyLaia, CTC/CRNN) em dataset controlado.
 
-### `EXP-002` — Detecção de Layout e Segmentação de Blocos/Regiões
+### `EXP-002` — Detecção de Layout e Segmentação de Blocos/Regiões *(FASE ATUAL — em especificação)*
 - **Objetivo**: Localizar na página fotográfica os limites das linhas, parágrafos, cabeçalhos, notas de margem e caixas gráficas.
 - **Métricas**: IoU, mAP, Precision e Recall de detecção de caixas.
 

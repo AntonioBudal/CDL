@@ -41,12 +41,16 @@ uv run python -m leitorum_di
 ## 3. Estado Atual do Projeto e Próxima Tarefa
 
 - **Status**: **`EXP-000` aceito pelo usuário em 2026-09-30** (ver [`experiments/EXP-000/RESULTS.md`](./experiments/EXP-000/RESULTS.md)).
-- **Tarefa Atual**: **`EXP-001`** executado (Fases 0 a 5); [`RESULTS.md`](./experiments/EXP-001/RESULTS.md) e ADR-001 (`PROPOSED`) **aguardando aceite do usuário**. Não inicie o EXP-002 nem qualquer experimento de adaptação antes disso.
-  - Artefatos: [`spec.md`](./experiments/EXP-001/spec.md), [`plan.md`](./experiments/EXP-001/plan.md), [`tasks.md`](./experiments/EXP-001/tasks.md).
+- **EXP-001 aceito em 2026-10-02**, com o [ADR-001](./docs/adr/ADR-001-nao-adotar-htr-pronto-sem-portugues.md) aceito: nenhum HTR pronto sem treino em português é adotado.
+- **Tarefa Atual**: **`EXP-002`** (layout e segmentação), em especificação: só [`spec.md`](./experiments/EXP-002/spec.md), aguardando revisão. Não escreva plan/tasks antes da aprovação.
   - **Regra de workflow (usuário, 2026-09-30):** todo experimento segue o ciclo Spec Kit adaptado — Specify → Plan → Tasks — e a especificação/plano é apresentada **antes** de qualquer código de avaliação, script de inferência ou download de pesos.
   - **Ritmo fatiado (usuário, 2026-09-30):** nos próximos experimentos e features, produza **um artefato por vez** e aguarde a revisão antes do seguinte (Specify → aprovação → Plan → aprovação → Tasks → aprovação). Na execução, pare em cada checkpoint de fase e reporte.
   - Commits: padrão `FNN(document-inteligence) <nome da fase>`, definido pelo usuário em 2026-09-30.
   - Exceções de licença em vigor (só uso experimental local, nunca produto): pesos do TrOCR small e dataset BRESSAY, ambos `LICENSE STATUS: NEEDS VALIDATION`. Conteúdo do BRESSAY nunca vai para o Git.
+  - **Armazenamento local (usuário, 2026-10-02):** ambientes, pesos e datasets de experimentos podem ocupar no
+    máximo **20 GB** em `document-intelligence/` (unidade C:). Antes de ultrapassar, **pergunte ao usuário**; o plano é
+    passar a armazenar no HD (unidade D:, ~880 GB livres). Meça o uso antes de cada download grande. Uso em
+    2026-10-02: ~3,5 GB.
   - Normalização do WER (pontuação de borda removida; acentos e caixa preservados) foi **aprovada** e deve ser mantida.
 
 ---
