@@ -389,71 +389,76 @@ onBeforeUnmount(() => {
 
     <header class="page-header reader-heading">
       <div class="reader-heading-main">
+        <h1 class="reader-title">{{ state.context.study.title }}</h1>
         <div class="reader-meta-row">
-          <p class="eyebrow" style="margin: 0;">Estudo</p>
           <StudyStatusBadge
             :status="state.context.study.reading_status || 'rascunho'"
             :study-id="state.context.study.id"
             :interactive="canEdit"
             @change="(newSt) => { if (state.context) state.context.study.reading_status = newSt }"
           />
+          <span class="meta-dot-separator" aria-hidden="true">•</span>
+          <span class="reader-location intro">{{ state.context.study.location || 'Localização não informada' }}</span>
         </div>
-        <h1 class="reader-title">{{ state.context.study.title }}</h1>
-        <p class="intro">{{ state.context.study.location || 'Localização não informada' }}</p>
       </div>
       <div class="header-actions">
-        <!-- Compartilhar (se canEdit) -->
-        <button
-          v-if="canEdit"
-          type="button"
-          class="secondary share-action header-icon-btn"
-          aria-label="Compartilhar estudo e gerenciar permissões"
-          title="Compartilhar estudo"
-          @click="shareModalOpen = true"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-          </svg>
-        </button>
+        <div class="header-actions-group">
+          <!-- Compartilhar (se canEdit) -->
+          <button
+            v-if="canEdit"
+            type="button"
+            class="secondary share-action header-icon-btn"
+            aria-label="Compartilhar estudo e gerenciar permissões"
+            title="Compartilhar estudo"
+            @click="shareModalOpen = true"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+          </button>
 
-        <!-- Exportar estudo -->
-        <button
-          type="button"
-          class="secondary export-action header-icon-btn"
-          aria-label="Exportar estudo"
-          title="Exportar estudo"
-          @click="exportModalOpen = true"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-        </button>
+          <!-- Exportar estudo -->
+          <button
+            type="button"
+            class="secondary export-action header-icon-btn"
+            aria-label="Exportar estudo"
+            title="Exportar estudo"
+            @click="exportModalOpen = true"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+          </button>
 
-        <!-- Histórico de versões -->
-        <button
-          type="button"
-          class="secondary history-action header-icon-btn"
-          aria-label="Abrir histórico de versões do estudo"
-          title="Histórico de versões"
-          @click="historyModalOpen = true"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </button>
+          <!-- Histórico de versões -->
+          <button
+            type="button"
+            class="secondary history-action header-icon-btn"
+            aria-label="Abrir histórico de versões do estudo"
+            title="Histórico de versões"
+            @click="historyModalOpen = true"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
 
-        <!-- Editar estudo (se canEdit) -->
-        <RouterLink
-          v-if="canEdit"
-          class="button primary edit-action header-icon-btn"
-          :to="{ name: 'study-edit', params: { bookId: state.context.book.id, studyId: state.context.study.id } }"
-          aria-label="Editar estudo"
-          title="Editar estudo"
-        >
-          <svg class="w-4 h-4 edit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-        </RouterLink>
+          <!-- Editar estudo (se canEdit) -->
+          <RouterLink
+            v-if="canEdit"
+            class="button primary edit-action header-icon-btn"
+            :to="{ name: 'study-edit', params: { bookId: state.context.book.id, studyId: state.context.study.id } }"
+            aria-label="Editar estudo"
+            title="Editar estudo"
+          >
+            <svg class="w-4 h-4 edit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </RouterLink>
+        </div>
+
+        <!-- Separação espacial entre ações comuns e a ação destrutiva de exclusão -->
+        <div v-if="canEdit" class="header-actions-divider" aria-hidden="true"></div>
 
         <!-- Mover para a lixeira (se canEdit) -->
         <button
@@ -470,12 +475,6 @@ onBeforeUnmount(() => {
         </button>
       </div>
     </header>
-    <ReaderTools
-      :key="state.context.study.id"
-      :active-reading-enabled="activeReadingSession.isActive.value"
-      :interactive-count="totalInteractiveCount"
-      @toggle-active-reading="handleToggleActiveReading"
-    />
 
     <!-- Barra Contextual de Leitura Ativa (F0.6.3) -->
     <ActiveReadingBar
@@ -495,15 +494,24 @@ onBeforeUnmount(() => {
       class="reader-layout reader-static-surface"
       @study-active-toggle="handleActiveToggle"
     >
-      <StudyTabs
-        ref="studyTabsRef"
-        :key="state.context.study.id"
-        :id-prefix="`study-${state.context.study.id}`"
-        :sections="state.context.study"
-        :highlights="highlights"
-        @highlight-click="handleHighlightClick"
-        @active-section-change="(key) => { activeSection = key; clearSelection(); }"
-      />
+      <div class="reader-content-column">
+        <StudyTabs
+          ref="studyTabsRef"
+          :key="state.context.study.id"
+          :id-prefix="`study-${state.context.study.id}`"
+          :sections="state.context.study"
+          :highlights="highlights"
+          @highlight-click="handleHighlightClick"
+          @active-section-change="(key) => { activeSection = key; clearSelection(); }"
+        />
+
+        <ReaderTools
+          :key="state.context.study.id"
+          :active-reading-enabled="activeReadingSession.isActive.value"
+          :interactive-count="totalInteractiveCount"
+          @toggle-active-reading="handleToggleActiveReading"
+        />
+      </div>
       <aside class="panel reader-notes" aria-labelledby="notes-heading">
         <h2 id="notes-heading">Minhas anotações</h2>
         <p v-if="state.context.study.notes.trim()" class="notes-content">{{ state.context.study.notes }}</p>
@@ -665,6 +673,22 @@ onBeforeUnmount(() => {
   flex-wrap: nowrap;
   gap: 0.5rem;
   flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.header-actions-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+}
+
+.header-actions-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--color-border, #e4e4e7);
+  margin: 0 0.25rem;
+  flex-shrink: 0;
 }
 
 .header-icon-btn {
@@ -721,6 +745,13 @@ onBeforeUnmount(() => {
   color: #ef4444 !important;
   border-color: rgba(239, 68, 68, 0.4) !important;
   background: rgba(239, 68, 68, 0.08) !important;
+}
+
+.reader-content-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-unit, 1rem);
+  min-width: 0;
 }
 
 .desktop-only {
@@ -780,7 +811,7 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1.25rem;
+  gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
@@ -789,15 +820,8 @@ onBeforeUnmount(() => {
   min-width: 0;
 }
 
-.reader-meta-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 6px;
-}
-
 .reader-title {
-  margin: 0.25rem 0;
+  margin: 0;
   font-size: 2rem;
   font-weight: 700;
   line-height: 1.25;
@@ -805,62 +829,26 @@ onBeforeUnmount(() => {
   word-break: break-word;
 }
 
-.dropdown-action-btn {
+.reader-meta-row {
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius-md, 0.375rem);
-  border: none;
-  background: transparent;
-  color: var(--color-text-primary, #18181b);
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.12s ease;
-  min-height: 40px;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
 }
 
-.dropdown-action-btn svg {
-  width: 1.125rem;
-  height: 1.125rem;
-  flex-shrink: 0;
+.meta-dot-separator {
   color: var(--color-text-muted, #71717a);
+  font-size: 0.75rem;
+  line-height: 1;
+  user-select: none;
 }
 
-.dropdown-action-btn:hover {
-  background: var(--color-surface-hover, #f4f4f5);
-  color: var(--color-text-primary, #18181b);
-}
-
-.dropdown-action-btn:hover svg {
-  color: var(--color-text-primary, #18181b);
-}
-
-.dropdown-action-btn:focus-visible {
-  outline: 2px solid var(--color-primary, #4f46e5);
-  outline-offset: -2px;
-}
-
-.dropdown-action-btn.danger-item {
-  color: var(--color-danger, #dc2626);
-}
-
-.dropdown-action-btn.danger-item svg {
-  color: var(--color-danger, #dc2626);
-}
-
-.dropdown-action-btn.danger-item:hover {
-  background: var(--color-danger-subtle, rgba(220, 38, 38, 0.08));
-  color: var(--color-danger, #dc2626);
-}
-
-.dropdown-divider {
-  margin: 0.25rem 0;
-  border: 0;
-  border-top: 1px solid var(--color-border, #e4e4e7);
+.reader-location {
+  font-size: 0.875rem;
+  color: var(--color-text-muted, #71717a);
+  margin: 0;
+  line-height: 1.4;
 }
 
 @media (max-width: 768px) {
@@ -872,8 +860,53 @@ onBeforeUnmount(() => {
     display: flex !important;
   }
 
+  .page-header.reader-heading {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.875rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .reader-heading-main {
+    width: 100%;
+  }
+
+  .reader-title {
+    font-size: 1.5rem;
+    line-height: 1.25;
+    margin: 0;
+    width: 100%;
+  }
+
+  .reader-meta-row {
+    margin-top: 0.375rem;
+    gap: 0.5rem;
+  }
+
   .header-actions {
-    gap: 0.375rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-subtle, rgba(0, 0, 0, 0.08));
+    margin-top: 0;
+  }
+
+  .header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .header-actions-divider {
+    display: none;
+  }
+
+  .header-actions .danger-action {
+    margin-left: auto;
   }
 
   .header-icon-btn {
@@ -886,13 +919,8 @@ onBeforeUnmount(() => {
   .edit-action {
     min-width: 44px;
     min-height: 44px;
-    padding: 0.5rem;
+    padding: 0;
     justify-content: center;
-  }
-
-  .dropdown-action-btn {
-    min-height: 44px;
-    padding: 0.625rem 0.75rem;
   }
 }
 
@@ -904,16 +932,6 @@ onBeforeUnmount(() => {
   .breadcrumb-mobile {
     display: block !important;
     margin-bottom: 0.75rem;
-  }
-
-  .reader-title {
-    font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .edit-action .edit-label {
-    display: none;
   }
 }
 

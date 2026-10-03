@@ -52,6 +52,35 @@ test('StudyView.vue - Blindagem no Modo Somente Leitura', () => {
   assert.match(content, /class="secondary history-action header-icon-btn"[^>]*@click="historyModalOpen = true"/)
 })
 
+test('StudyView.vue - Hierarquia Visual e Composição Mobile Dedicada', () => {
+  const content = fs.readFileSync(studyViewPath, 'utf-8')
+
+  // Ausência de rótulo solto "Estudo" na mesma linha
+  assert.ok(!content.includes('<p class="eyebrow" style="margin: 0;">Estudo</p>'))
+
+  // Título do estudo antecede a linha de metadados secundários
+  const titleIdx = content.indexOf('<h1 class="reader-title">{{ state.context.study.title }}</h1>')
+  const metaIdx = content.indexOf('<div class="reader-meta-row">')
+  const tabsIdx = content.indexOf('<StudyTabs')
+
+  assert.ok(titleIdx !== -1 && metaIdx !== -1, 'Título e metadados devem estar presentes')
+  assert.ok(titleIdx < metaIdx, 'Título principal deve anteceder os metadados secundários')
+  assert.ok(metaIdx < tabsIdx, 'Metadados e cabeçalho devem anteceder as abas de conteúdo')
+
+  // Metadados secundários agrupam status, separador e localização
+  assert.match(content, /<StudyStatusBadge/)
+  assert.match(content, /class="meta-dot-separator"/)
+  assert.match(content, /class="reader-location intro"/)
+
+  // Separação espacial entre ações comuns e ação destrutiva de exclusão
+  assert.match(content, /class="header-actions-group"/)
+  assert.match(content, /class="header-actions-divider"/)
+
+  // Composição mobile dedicada: coluna vertical e lixeira ancorada à direita
+  assert.match(content, /\.page-header\.reader-heading\s*\{[^}]*flex-direction:\s*column/s)
+  assert.match(content, /\.header-actions\s*\.danger-action\s*\{[^}]*margin-left:\s*auto/s)
+})
+
 test('DropdownMenu.vue - Acessibilidade WAI-ARIA e Isolamento de Teclas', () => {
   const content = fs.readFileSync(dropdownComponentPath, 'utf-8')
   // WAI-ARIA Menu semantics
