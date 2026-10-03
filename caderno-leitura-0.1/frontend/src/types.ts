@@ -208,6 +208,20 @@ export interface StudySummary {
   summary_preview?: string
   highlights_count?: number
   relations_count?: number
+  has_summary?: boolean
+  has_explanation?: boolean
+  has_concepts?: boolean
+  has_references?: boolean
+}
+
+export type SortColumn = 'natural' | 'title' | 'status' | 'date'
+export type SortDirection = 'asc' | 'desc' | 'default'
+
+export interface StudyListFilterState {
+  searchQuery: string
+  statusFilter: ReadingStatus | 'all'
+  sortColumn: SortColumn
+  sortDirection: SortDirection
 }
 
 export interface StudyTreeNode extends StudySummary {
@@ -527,6 +541,7 @@ export type IconName =
   | 'external-link'
   | 'chevron-right'
   | 'chevron-down'
+  | 'chevron-up'
   | 'grid'
   | 'list'
   | 'network'
@@ -808,7 +823,7 @@ export interface BookCanvasRelationItem {
 
 // --- Agrupamento Visual e Status de Leitura (F05) ---
 
-export type ReadingStatus = 'rascunho' | 'em_estudo' | 'revisado' | 'concluido'
+export type ReadingStatus = 'rascunho' | 'em_estudo' | 'em_andamento' | 'revisado' | 'concluido'
 
 export type StudyGroupByCriteria = 'chapter' | 'status' | 'category' | 'date' | 'manual'
 

@@ -95,6 +95,22 @@ class StudySummary(OutputModel):
         default=0,
         description="Quantidade total de relações semânticas ativas (de saída ou de entrada).",
     )
+    has_summary: bool = Field(
+        default=False,
+        description="Indica se o estudo possui resumo analítico preenchido.",
+    )
+    has_explanation: bool = Field(
+        default=False,
+        description="Indica se o estudo possui explicação detalhada preenchida.",
+    )
+    has_concepts: bool = Field(
+        default=False,
+        description="Indica se o estudo possui conceitos-chave preenchidos.",
+    )
+    has_references: bool = Field(
+        default=False,
+        description="Indica se o estudo possui referências ou fontes preenchidas.",
+    )
 
 
 class StudyRead(StudySummary):

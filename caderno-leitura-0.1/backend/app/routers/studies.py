@@ -119,6 +119,13 @@ def _populate_study_summaries(
 
         sr.highlights_count = hl_counts.get(s.id, 0)
         sr.relations_count = rel_out_counts.get(s.id, 0) + rel_in_counts.get(s.id, 0)
+
+        # Flags booleanas de completude analítica (F 0.7.5)
+        sr.has_summary = bool(s.summary and s.summary.strip())
+        sr.has_explanation = bool(s.explanation and s.explanation.strip())
+        sr.has_concepts = bool(s.concepts and s.concepts.strip())
+        sr.has_references = bool(s.references and s.references.strip())
+
         result.append(sr)
 
     return result
