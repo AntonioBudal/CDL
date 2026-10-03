@@ -95,10 +95,10 @@ Interferência com eventos de teclado globais existentes de Active Recall. (Miti
 Tornar ações frequentes excessivamente escondidas atrás de cliques adicionais. (Mitigação: manter `Editar` e `Compartilhar` sempre expostos).
 
 #### 18. Critérios objetivos de aceitação
-* [ ] Em telas `< 768px`, o cabeçalho não quebra em mais de 1 linha de ações.
-* [ ] No Desktop, botões secundários estão organizados sem sobrecarregar a leitura.
-* [ ] Todos os botões possuem área de clique/toque de no mínimo 44x44px no mobile.
-* [ ] 100% dos testes de regressão de `StudyView.vue` aprovados.
+* [x] Em telas `< 768px`, o cabeçalho não quebra em mais de 1 linha de ações.
+* [x] No Desktop, botões secundários estão organizados sem sobrecarregar a leitura.
+* [x] Todos os botões possuem área de clique/toque de no mínimo 44x44px no mobile.
+* [x] 100% dos testes de regressão de `StudyView.vue` aprovados.
 
 #### 19. O que explicitamente NÃO faz parte da feature
 * Modificar a lógica de compartilhamento ou exportação.

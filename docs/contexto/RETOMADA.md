@@ -691,6 +691,39 @@ Com a conclusão da Feature 10 (F10), **todas as dez features do Roadmap 0.5 (F0
    - **F 0.7.1 a F 0.7.15 estão estritamente NÃO INICIADAS.**
    - Nenhuma linha de código foi implementada antecipadamente.
 5. **Próximos Passos:**
-   - Aguardar validação do usuário sobre o Roadmap 0.7.
    - Iniciar o ciclo formal do Spec Kit para a primeira fatia de entrega: **Feature F 0.7.1** (`speckit-specify F 0.7.1`).
+
+---
+
+## Sessão: Implementação da Feature F 0.7.1 (03/10/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Feature Concluída:**
+   - Feature: `050-ergonomia-header-actions` (Feature F 0.7.1 — Hierarquia e Ergonomia de Header Actions no Leitor).
+   - Diretório: `specs/050-ergonomia-header-actions/`.
+   - Todas as 18 tarefas de `tasks.md` (T001 a T018) executadas e marcadas como concluídas (`[x]`).
+2. **Componente Modular Reutilizável (`DropdownMenu.vue`):**
+   - Criado `frontend/src/components/ui/DropdownMenu.vue` e `frontend/src/types/dropdown.ts`.
+   - Suporte completo a WAI-ARIA Menu (`role="menu"`, `role="menuitem"`, `aria-haspopup="menu"`, `:aria-expanded`).
+   - Navegação cíclica por teclado (`ArrowDown`, `ArrowUp`, `Home`, `End`) com foco dinâmico.
+   - Detecção de clique externo (`pointerdown`) e fechamento defensivo com `Escape`.
+   - Contenção de propagação de eventos (`stopPropagation`) prevenindo interferência com os atalhos de Active Recall do leitor.
+3. **Hierarquia Editorial no Desktop (`StudyView.vue`):**
+   - Ação primária "Editar estudo" com destaque visual proeminente (`button primary`).
+   - Ação de colaboração "Compartilhar" preservada ao lado do botão primário quando `canEdit === true`.
+   - Ferramentas utilitárias secundárias ("Histórico de versões", "Exportar estudo", "Mover para a lixeira") agrupadas de forma limpa no menu suspenso `•••`.
+   - Opção "Mover para a lixeira" estilizada com variante semântica de perigo (`danger-item`).
+4. **Ergonomia e Responsividade Mobile (`StudyView.vue`):**
+   - Breadcrumb em telas estreitas (< 640px) colapsa no botão inteligente de retorno `← Voltar ao capítulo` com truncamento defensivo, poupando espaço vertical.
+   - Barra de ações compactada em linha única rígida (`flex-wrap: nowrap`), impedindo quebras e sobreposições.
+   - No celular (< 768px), o cabeçalho expõe diretamente apenas "Editar" (compacto) e o menu `•••`, mantendo "Compartilhar" dentro do menu dropdown.
+   - Dimensões de toque estritamente respeitando o mínimo de 44x44px em todos os elementos interativos móveis (WCAG 2.1 Critério 2.5.5).
+5. **Modo Somente Leitura e Visualização de Visitante:**
+   - Para estudos compartilhados sem permissão de edição (`canEdit === false`), ações mutáveis ("Editar estudo", "Compartilhar", "Mover para a lixeira") são omitidas defensivamente, exibindo apenas "Exportar estudo".
+6. **Validação e Suítes de Testes:**
+   - 420 testes de backend passando (`pytest backend/tests` / 420 passed, 1 skipped).
+   - 364 testes de frontend passando (`npm test` / 364 passed), incluindo novos testes unitários e de integração em `dropdown_menu.test.mjs` e `study_header_actions.test.mjs`.
+   - Compilação estrita e build de produção (`npm run build` / `vue-tsc`) concluídos sem nenhum erro de tipagem.
+   - Preservação estrita e integridade do banco de produção (`backend/data/caderno.db`).
+
 

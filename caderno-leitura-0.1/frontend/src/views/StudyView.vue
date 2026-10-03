@@ -13,6 +13,7 @@ import CreateRelationModal from '../components/relations/CreateRelationModal.vue
 import StudyStatusBadge from '../components/StudyStatusBadge.vue'
 import ShareModal from '../components/sharing/ShareModal.vue'
 import StudyHistoryModal from '../components/StudyHistoryModal.vue'
+import DropdownMenu from '../components/ui/DropdownMenu.vue'
 import FloatingActionsToolbar from '../components/FloatingActionsToolbar.vue'
 import HighlightActionPopover from '../components/HighlightActionPopover.vue'
 import { useStudyHighlights } from '../composables/useStudyHighlights'
@@ -321,9 +322,23 @@ onBeforeUnmount(() => {
   </div>
   <template v-else-if="state.context">
     <nav class="breadcrumb" aria-label="Caminho">
-      <RouterLink to="/">Meus livros</RouterLink><span aria-hidden="true">/</span>
-      <RouterLink :to="{ name: 'book', params: { bookId: state.context.book.id } }">{{ state.context.book.title }}</RouterLink><span aria-hidden="true">/</span>
-      <RouterLink :to="{ name: 'book', params: { bookId: state.context.book.id }, query: { chapter: state.context.chapter.id } }">{{ state.context.chapter.name }}</RouterLink>
+      <div class="breadcrumb-desktop">
+        <RouterLink to="/">Meus livros</RouterLink><span aria-hidden="true">/</span>
+        <RouterLink :to="{ name: 'book', params: { bookId: state.context.book.id } }">{{ state.context.book.title }}</RouterLink><span aria-hidden="true">/</span>
+        <RouterLink :to="{ name: 'book', params: { bookId: state.context.book.id }, query: { chapter: state.context.chapter.id } }">{{ state.context.chapter.name }}</RouterLink>
+      </div>
+      <div class="breadcrumb-mobile">
+        <RouterLink
+          class="back-chapter-btn"
+          :to="{ name: 'book', params: { bookId: state.context.book.id }, query: { chapter: state.context.chapter.id } }"
+          :title="`Voltar a ${state.context.chapter.name}`"
+        >
+          <svg class="w-4 h-4 back-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span class="back-chapter-text">Voltar a {{ state.context.chapter.name }}</span>
+        </RouterLink>
+      </div>
     </nav>
     <!-- Banner de Somente Leitura (Convidado) -->
     <div v-if="!canEdit" class="read-only-banner" role="status" aria-live="polite">
@@ -345,8 +360,8 @@ onBeforeUnmount(() => {
     </div>
 
     <header class="page-header reader-heading">
-      <div>
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+      <div class="reader-heading-main">
+        <div class="reader-meta-row">
           <p class="eyebrow" style="margin: 0;">Estudo</p>
           <StudyStatusBadge
             :status="state.context.study.reading_status || 'rascunho'"
@@ -355,50 +370,98 @@ onBeforeUnmount(() => {
             @change="(newSt) => { if (state.context) state.context.study.reading_status = newSt }"
           />
         </div>
-        <h1>{{ state.context.study.title }}</h1>
+        <h1 class="reader-title">{{ state.context.study.title }}</h1>
         <p class="intro">{{ state.context.study.location || 'Localização não informada' }}</p>
       </div>
       <div class="header-actions">
+        <!-- Ação Primária: Editar estudo (Destacado no Desktop; compacto com ícone no mobile) -->
+        <RouterLink
+          v-if="canEdit"
+          class="button primary edit-action"
+          :to="{ name: 'study-edit', params: { bookId: state.context.book.id, studyId: state.context.study.id } }"
+          aria-label="Editar estudo"
+        >
+          <svg class="w-4 h-4 edit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          <span class="edit-label">Editar estudo</span>
+        </RouterLink>
+
+        <!-- Ação Secundária no Desktop: Compartilhar -->
         <button
           v-if="canEdit"
           type="button"
-          class="secondary share-action"
+          class="secondary share-action desktop-only"
           aria-label="Compartilhar estudo e gerenciar permissões"
           @click="shareModalOpen = true"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
           </svg>
-          Compartilhar
+          <span>Compartilhar</span>
         </button>
-        <button type="button" class="secondary" @click="exportModalOpen = true">Exportar estudo</button>
-        <button
-          type="button"
-          class="secondary history-action"
-          aria-label="Abrir histórico de versões do estudo"
-          @click="historyModalOpen = true"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Histórico
-        </button>
-        <RouterLink
 
-          v-if="canEdit"
-          class="button secondary"
-          :to="{ name: 'study-edit', params: { bookId: state.context.book.id, studyId: state.context.study.id } }"
-        >
-          Editar estudo
-        </RouterLink>
-        <button
-          v-if="canEdit"
-          type="button"
-          class="secondary danger-action"
-          @click="confirmTrashOpen = true"
-        >
-          Mover para a lixeira
-        </button>
+        <!-- Menu Suspenso de Mais Opções -->
+        <DropdownMenu aria-label="Mais opções do estudo">
+          <template #default="{ close }">
+            <!-- Compartilhar no Mobile (se canEdit) -->
+            <button
+              v-if="canEdit"
+              type="button"
+              class="dropdown-action-btn mobile-only"
+              role="menuitem"
+              @click="close(); shareModalOpen = true"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              </svg>
+              <span>Compartilhar</span>
+            </button>
+
+            <!-- Histórico de Versões -->
+            <button
+              type="button"
+              class="dropdown-action-btn"
+              role="menuitem"
+              aria-label="Abrir histórico de versões do estudo"
+              @click="close(); historyModalOpen = true"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Histórico de versões</span>
+            </button>
+
+            <!-- Exportar estudo -->
+            <button
+              type="button"
+              class="dropdown-action-btn"
+              role="menuitem"
+              @click="close(); exportModalOpen = true"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span>Exportar estudo</span>
+            </button>
+
+            <hr v-if="canEdit" class="dropdown-divider" />
+
+            <!-- Mover para a Lixeira (se canEdit) -->
+            <button
+              v-if="canEdit"
+              type="button"
+              class="dropdown-action-btn danger-item"
+              role="menuitem"
+              @click="close(); confirmTrashOpen = true"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              <span>Mover para a lixeira</span>
+            </button>
+          </template>
+        </DropdownMenu>
       </div>
     </header>
     <ReaderTools
@@ -573,7 +636,23 @@ onBeforeUnmount(() => {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: calc(var(--space-unit) * 0.75);
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.edit-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.edit-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
 }
 
 .share-action {
@@ -591,13 +670,191 @@ onBeforeUnmount(() => {
   min-height: 1.2em;
 }
 
-.danger-action {
-  color: var(--color-danger, #b91c1c);
+.desktop-only {
+  display: inline-flex;
 }
 
-.danger-action:hover {
-  background: var(--color-surface-hover);
-  border-color: var(--color-danger, #b91c1c);
+.mobile-only {
+  display: none;
+}
+
+.breadcrumb-desktop {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-mobile {
+  display: none;
+}
+
+.back-chapter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-md, 0.5rem);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary, #52525b);
+  text-decoration: none;
+  background: var(--color-surface-subtle, rgba(0, 0, 0, 0.04));
+  border: 1px solid var(--color-border, #e4e4e7);
+  max-width: 100%;
+  transition: all 0.15s ease;
+}
+
+.back-chapter-btn:hover {
+  background: var(--color-surface-hover, #f4f4f5);
+  color: var(--color-text-primary, #18181b);
+}
+
+.back-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+}
+
+.back-chapter-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-header.reader-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.reader-heading-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.reader-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.reader-title {
+  margin: 0.25rem 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-text-primary, #18181b);
+  word-break: break-word;
+}
+
+.dropdown-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md, 0.375rem);
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary, #18181b);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  min-height: 40px;
+}
+
+.dropdown-action-btn svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  color: var(--color-text-muted, #71717a);
+}
+
+.dropdown-action-btn:hover {
+  background: var(--color-surface-hover, #f4f4f5);
+  color: var(--color-text-primary, #18181b);
+}
+
+.dropdown-action-btn:hover svg {
+  color: var(--color-text-primary, #18181b);
+}
+
+.dropdown-action-btn:focus-visible {
+  outline: 2px solid var(--color-primary, #4f46e5);
+  outline-offset: -2px;
+}
+
+.dropdown-action-btn.danger-item {
+  color: var(--color-danger, #dc2626);
+}
+
+.dropdown-action-btn.danger-item svg {
+  color: var(--color-danger, #dc2626);
+}
+
+.dropdown-action-btn.danger-item:hover {
+  background: var(--color-danger-subtle, rgba(220, 38, 38, 0.08));
+  color: var(--color-danger, #dc2626);
+}
+
+.dropdown-divider {
+  margin: 0.25rem 0;
+  border: 0;
+  border-top: 1px solid var(--color-border, #e4e4e7);
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: flex !important;
+  }
+
+  .header-actions {
+    gap: 0.375rem;
+  }
+
+  .edit-action {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.5rem;
+    justify-content: center;
+  }
+
+  .dropdown-action-btn {
+    min-height: 44px;
+    padding: 0.625rem 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .breadcrumb-desktop {
+    display: none !important;
+  }
+
+  .breadcrumb-mobile {
+    display: block !important;
+    margin-bottom: 0.75rem;
+  }
+
+  .reader-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .edit-action .edit-label {
+    display: none;
+  }
 }
 
 .study-toast {
