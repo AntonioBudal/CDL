@@ -338,6 +338,9 @@ export function useTextSelection(
     })
 
     if (doubleTapDetected) {
+      if (e.cancelable) {
+        e.preventDefault()
+      }
       lastTapTimestamp = 0
       // Tenta expandir palavra sob o ponto se a seleção nativa estiver colapsada
       if (typeof window !== 'undefined') {

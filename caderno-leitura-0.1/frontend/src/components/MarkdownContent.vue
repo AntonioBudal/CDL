@@ -57,10 +57,21 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="containerRef" class="markdown-content" v-html="rendered"></div>
+  <div
+    ref="containerRef"
+    class="markdown-content"
+    tabindex="-1"
+    role="region"
+    aria-label="Conteúdo da seção"
+    v-html="rendered"
+  ></div>
 </template>
 
 <style scoped>
+.markdown-content:focus {
+  outline: none;
+}
+
 :deep(.study-highlight) {
   padding: 0.1em 0.25em;
   border-radius: 4px;

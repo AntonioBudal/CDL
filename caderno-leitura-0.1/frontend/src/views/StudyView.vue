@@ -13,7 +13,6 @@ import CreateRelationModal from '../components/relations/CreateRelationModal.vue
 import StudyStatusBadge from '../components/StudyStatusBadge.vue'
 import ShareModal from '../components/sharing/ShareModal.vue'
 import StudyHistoryModal from '../components/StudyHistoryModal.vue'
-import DropdownMenu from '../components/ui/DropdownMenu.vue'
 import FloatingActionsToolbar from '../components/FloatingActionsToolbar.vue'
 import HighlightActionPopover from '../components/HighlightActionPopover.vue'
 import { useStudyHighlights } from '../composables/useStudyHighlights'
@@ -403,94 +402,72 @@ onBeforeUnmount(() => {
         <p class="intro">{{ state.context.study.location || 'Localização não informada' }}</p>
       </div>
       <div class="header-actions">
-        <!-- Ação Primária: Editar estudo (Destacado no Desktop; compacto com ícone no mobile) -->
-        <RouterLink
-          v-if="canEdit"
-          class="button primary edit-action"
-          :to="{ name: 'study-edit', params: { bookId: state.context.book.id, studyId: state.context.study.id } }"
-          aria-label="Editar estudo"
-        >
-          <svg class="w-4 h-4 edit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-          <span class="edit-label">Editar estudo</span>
-        </RouterLink>
-
-        <!-- Ação Secundária no Desktop: Compartilhar -->
+        <!-- Compartilhar (se canEdit) -->
         <button
           v-if="canEdit"
           type="button"
-          class="secondary share-action desktop-only"
+          class="secondary share-action header-icon-btn"
           aria-label="Compartilhar estudo e gerenciar permissões"
+          title="Compartilhar estudo"
           @click="shareModalOpen = true"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
           </svg>
-          <span>Compartilhar</span>
         </button>
 
-        <!-- Menu Suspenso de Mais Opções -->
-        <DropdownMenu aria-label="Mais opções do estudo">
-          <template #default="{ close }">
-            <!-- Compartilhar no Mobile (se canEdit) -->
-            <button
-              v-if="canEdit"
-              type="button"
-              class="dropdown-action-btn mobile-only"
-              role="menuitem"
-              @click="close(); shareModalOpen = true"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-              </svg>
-              <span>Compartilhar</span>
-            </button>
+        <!-- Exportar estudo -->
+        <button
+          type="button"
+          class="secondary export-action header-icon-btn"
+          aria-label="Exportar estudo"
+          title="Exportar estudo"
+          @click="exportModalOpen = true"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+        </button>
 
-            <!-- Histórico de Versões -->
-            <button
-              type="button"
-              class="dropdown-action-btn"
-              role="menuitem"
-              aria-label="Abrir histórico de versões do estudo"
-              @click="close(); historyModalOpen = true"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>Histórico de versões</span>
-            </button>
+        <!-- Histórico de versões -->
+        <button
+          type="button"
+          class="secondary history-action header-icon-btn"
+          aria-label="Abrir histórico de versões do estudo"
+          title="Histórico de versões"
+          @click="historyModalOpen = true"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
 
-            <!-- Exportar estudo -->
-            <button
-              type="button"
-              class="dropdown-action-btn"
-              role="menuitem"
-              @click="close(); exportModalOpen = true"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              <span>Exportar estudo</span>
-            </button>
+        <!-- Editar estudo (se canEdit) -->
+        <RouterLink
+          v-if="canEdit"
+          class="button primary edit-action header-icon-btn"
+          :to="{ name: 'study-edit', params: { bookId: state.context.book.id, studyId: state.context.study.id } }"
+          aria-label="Editar estudo"
+          title="Editar estudo"
+        >
+          <svg class="w-4 h-4 edit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+        </RouterLink>
 
-            <hr v-if="canEdit" class="dropdown-divider" />
-
-            <!-- Mover para a Lixeira (se canEdit) -->
-            <button
-              v-if="canEdit"
-              type="button"
-              class="dropdown-action-btn danger-item"
-              role="menuitem"
-              @click="close(); confirmTrashOpen = true"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-              <span>Mover para a lixeira</span>
-            </button>
-          </template>
-        </DropdownMenu>
+        <!-- Mover para a lixeira (se canEdit) -->
+        <button
+          v-if="canEdit"
+          type="button"
+          class="secondary danger-action header-icon-btn"
+          aria-label="Mover para a lixeira"
+          title="Mover para a lixeira"
+          @click="confirmTrashOpen = true"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </button>
       </div>
     </header>
     <ReaderTools
@@ -690,23 +667,44 @@ onBeforeUnmount(() => {
   flex-shrink: 0;
 }
 
+.header-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: var(--radius-md, 0.5rem);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.header-icon-btn svg {
+  width: 1.2em;
+  height: 1.2em;
+  flex-shrink: 0;
+}
+
 .edit-action {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
+  justify-content: center;
   font-weight: 600;
 }
 
 .edit-icon {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1.2em;
+  height: 1.2em;
   flex-shrink: 0;
 }
 
 .share-action {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   white-space: nowrap;
 }
@@ -717,6 +715,12 @@ onBeforeUnmount(() => {
   flex-shrink: 0;
   min-width: 1.2em;
   min-height: 1.2em;
+}
+
+.danger-action:hover {
+  color: #ef4444 !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+  background: rgba(239, 68, 68, 0.08) !important;
 }
 
 .desktop-only {
@@ -870,6 +874,13 @@ onBeforeUnmount(() => {
 
   .header-actions {
     gap: 0.375rem;
+  }
+
+  .header-icon-btn {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
   }
 
   .edit-action {
