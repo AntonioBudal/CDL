@@ -638,3 +638,34 @@ Com a conclusão da Feature 10 (F10), **todas as dez features do Roadmap 0.5 (F0
 - F08: Árvore Hierárquica e Navegação de Estudos
 - F09 / F09.5: Notificações, Atividade Social, Refatoração de Temas e Correções Visuais
 - F10: Segurança, Auditoria, Ciclo de Vida da Conta e Google OAuth
+
+---
+
+## Sessão: Implementação da Feature F0.6.10 (03/10/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Feature Concluída:**
+   - Feature: `049-seguranca-auth-infraestrutura` (Feature F0.6.10 — Segurança de Autenticação, Abuso e Infraestrutura).
+   - Diretório: `specs/049-seguranca-auth-infraestrutura/`.
+   - Todas as 18 tarefas de `tasks.md` (T001 a T018) executadas e marcadas como concluídas (`[x]`).
+2. **Mitigação de Força Bruta e Rate Limiting Volumétrico (US1):**
+   - Rastreador em memória `AuthFailureTracker` implementado em `app/core/rate_limiter.py`.
+   - Bloqueio temporário de 60 segundos por IP após 5 falhas consecutivas de credenciais em 1 minuto, com resposta `HTTP 429` e cabeçalho `Retry-After: 60`.
+   - Cota volumétrica unificada de 30 requisições por minuto nos endpoints de autenticação (`CADERNO_AUTH_MAX_ATTEMPTS_PER_MINUTE`).
+   - Interceptor defensivo no frontend (`api.ts`) tratando `RateLimitApiError` com extração do cabeçalho `Retry-After`.
+3. **Governança Adaptativa de Cookies de Sessão e Revogação no Servidor (US2):**
+   - Helper `resolve_cookie_secure` em `session_service.py` atualizado para detectar tráfego seguro sob proxies e Cloudflare Tunnel (`X-Forwarded-Proto: https`, `CF-Visitor: {"scheme":"https"}`), garantindo `Secure=True` em HTTPS e mantendo compatibilidade com `localhost` HTTP puro.
+   - Cookies com diretivas estritas `HttpOnly` e `SameSite=Lax`.
+   - Invalidação atômica e redundante de sessão no banco SQLite no logout (remoção pelo `current_session_id` e pelo `token_hash` do cookie), prevenindo reaproveitamento de tokens.
+   - Geração de novos tokens opacos a cada login bem-sucedido, prevenindo fixação de sessão.
+4. **Resolução Resiliente de IP e Proteção de Recursos Privados/RBAC (US3):**
+   - Extração padronizada de IP do cliente em `get_client_ip`, priorizando `CF-Connecting-IP`, `X-Forwarded-For` e aplicando sanitização de portas e sintaxe de IPv4/IPv6.
+   - Centralização da extração de IP nos routers `auth.py` e `account.py`.
+   - Endpoints de infraestrutura (`/api/backup`, `/api/backup/bundle`, `/api/backup/restore`) estritamente protegidos por RBAC exigindo permissão administrativa (`AdminUser`).
+5. **Validação e Suítes de Teste:**
+   - 420 testes de backend aprovados (`pytest backend/tests` / 420 passed, 1 skipped).
+   - 353 testes de frontend aprovados (`npm test` / 353 passed).
+   - Compilação de produção do frontend (`npm run build`) concluída com sucesso.
+   - Preservação estrita e integridade do banco de produção (`backend/data/caderno.db`), com testes operando hermeticamente em diretórios temporários (`tmp_path`).
+6. **Commit Atômico:**
+   - Commit `a4a81fe`: `feature — segurança de autenticação, abuso e infraestrutura`.
