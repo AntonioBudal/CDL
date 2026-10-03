@@ -19,6 +19,7 @@ import HighlightActionPopover from '../components/HighlightActionPopover.vue'
 import { useStudyHighlights } from '../composables/useStudyHighlights'
 import { useActiveReadingSession } from '../composables/useActiveReadingSession'
 import { formatQuoteText, useTextSelection } from '../composables/useTextSelection'
+import { useFloatingToast } from '../composables/useFloatingToast'
 import type { HighlightClickEvent } from '../utils/highlightRenderer'
 import type { HighlightColor, ResourceVisibility, Study, StudySectionKey, TextSelectionContext } from '../types.ts'
 
@@ -116,9 +117,19 @@ function onActiveReadingKeydown(event: KeyboardEvent) {
   }
 }
 
-// Feedback visual (Toast)
+// Feedback visual (Toast genérico na base e Micro-Toast de ferramentas no topo)
 const toastMessage = ref('')
 let toastTimer: ReturnType<typeof setTimeout> | null = null
+
+const highlightColorMap: Record<HighlightColor, string> = {
+  yellow: '#fef08a',
+  green: '#bbf7d0',
+  blue: '#bae6fd',
+  pink: '#fbcfe8',
+  purple: '#e9d5ff',
+}
+
+const floatingToast = useFloatingToast()
 
 function showToast(message: string) {
   toastMessage.value = message
@@ -126,6 +137,13 @@ function showToast(message: string) {
   toastTimer = setTimeout(() => {
     toastMessage.value = ''
   }, 3000)
+}
+
+function handleToolSelected(payload: { tool: string; label: string; colorDot?: string }) {
+  floatingToast.showToast({
+    message: payload.label,
+    colorDot: payload.colorDot,
+  })
 }
 
 async function handleHighlight(payload: { color: HighlightColor; selection?: TextSelectionContext }) {
@@ -142,7 +160,10 @@ async function handleHighlight(payload: { color: HighlightColor; selection?: Tex
     kind: 'highlight',
   })
   if (result) {
-    showToast('Trecho destacado com sucesso!')
+    floatingToast.showToast({
+      message: 'Destaque aplicado',
+      colorDot: highlightColorMap[payload.color] || '#fef08a',
+    })
   } else {
     showToast('Não foi possível salvar o destaque.')
   }
@@ -164,7 +185,9 @@ async function handleAnnotate(payload: { note: string; color: HighlightColor; se
     note: payload.note,
   })
   if (result) {
-    showToast('Anotação vinculada com sucesso!')
+    floatingToast.showToast({
+      message: 'Anotação salva',
+    })
   } else {
     showToast('Não foi possível salvar a anotação.')
   }
@@ -191,7 +214,9 @@ async function handleCopyQuote(payload?: { selection?: TextSelectionContext }) {
       document.execCommand('copy')
       document.body.removeChild(textarea)
     }
-    showToast('Citação copiada para a área de transferência!')
+    floatingToast.showToast({
+      message: 'Citação copiada',
+    })
   } catch {
     showToast('Não foi possível copiar automaticamente.')
   }
@@ -212,7 +237,9 @@ async function handleOcclude(payload?: { selection?: TextSelectionContext }) {
     kind: 'hidden',
   })
   if (result) {
-    showToast('Trecho ocultado para estudo ativo!')
+    floatingToast.showToast({
+      message: 'Trecho ocultado para revisão',
+    })
   } else {
     showToast('Não foi possível ocultar o trecho.')
   }
@@ -234,7 +261,9 @@ async function handleAskQuestion(payload: { question: string; selection?: TextSe
     note: payload.question,
   })
   if (result) {
-    showToast('Pergunta criada com sucesso!')
+    floatingToast.showToast({
+      message: 'Pergunta cadastrada',
+    })
   } else {
     showToast('Não foi possível criar a pergunta.')
   }
@@ -576,6 +605,7 @@ onBeforeUnmount(() => {
       @copy-quote="handleCopyQuote"
       @occlude="handleOcclude"
       @ask-question="handleAskQuestion"
+      @tool-selected="handleToolSelected"
       @close="clearSelection"
     />
 
@@ -589,6 +619,25 @@ onBeforeUnmount(() => {
       @delete="handleDeleteHighlight"
       @close="closeHighlightPopover"
     />
+
+    <!-- Micro-Toast Flutuante de Ferramentas no Topo do Leitor (F 0.7.2) -->
+    <Transition name="floating-toast-fade">
+      <div
+        v-if="floatingToast.visible.value"
+        class="study-micro-toast"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <span
+          v-if="floatingToast.colorDot.value"
+          class="micro-toast-color-dot"
+          :style="{ backgroundColor: floatingToast.colorDot.value }"
+          aria-hidden="true"
+        />
+        <span class="micro-toast-text">{{ floatingToast.message.value }}</span>
+      </div>
+    </Transition>
 
     <!-- Toast de Notificação -->
     <Transition name="toast-fade">
@@ -893,5 +942,59 @@ onBeforeUnmount(() => {
 .toast-fade-leave-to {
   opacity: 0;
   transform: translate(-50%, 0.75rem);
+}
+
+/* Micro-Toast de Ferramentas no Topo do Leitor (F 0.7.2) */
+.study-micro-toast {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-surface, #18181b);
+  color: var(--color-text-primary, #ffffff);
+  border: 1px solid var(--color-border, #3f3f46);
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.15);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  z-index: 10001;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.micro-toast-color-dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 9999px;
+  display: inline-block;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.micro-toast-text {
+  line-height: 1.25;
+}
+
+.floating-toast-fade-enter-active,
+.floating-toast-fade-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.floating-toast-fade-enter-from,
+.floating-toast-fade-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -0.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-toast-fade-enter-active,
+  .floating-toast-fade-leave-active {
+    transition: opacity 0.05s ease !important;
+    transform: translateX(-50%) !important;
+  }
 }
 </style>

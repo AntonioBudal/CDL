@@ -25,6 +25,7 @@ const emit = defineEmits<{
   (e: 'copy-quote', payload: { selection: TextSelectionContext }): void
   (e: 'occlude', payload: { selection: TextSelectionContext }): void
   (e: 'ask-question', payload: { question: string; selection: TextSelectionContext }): void
+  (e: 'tool-selected', payload: { tool: string; label: string; colorDot?: string }): void
   (e: 'close'): void
 }>()
 
@@ -121,6 +122,8 @@ function applyHighlight(color: HighlightColor) {
   const sel = currentSelection.value || props.selection
   if (!sel) return
   selectedColor.value = color
+  const colorBg = colors.find((c) => c.id === color)?.bg
+  emit('tool-selected', { tool: 'highlight', label: 'Destaque aplicado', colorDot: colorBg })
   emit('highlight', { color, selection: sel })
   reset()
 }
@@ -128,6 +131,7 @@ function applyHighlight(color: HighlightColor) {
 function openNotePrompt() {
   mode.value = 'note'
   noteText.value = ''
+  emit('tool-selected', { tool: 'note', label: 'Adicionar anotação' })
   nextTick(() => {
     noteInputRef.value?.focus()
   })
@@ -145,6 +149,7 @@ function submitNote() {
 function openQuestionPrompt() {
   mode.value = 'question'
   questionText.value = ''
+  emit('tool-selected', { tool: 'question', label: 'Criar pergunta' })
   nextTick(() => {
     questionInputRef.value?.focus()
   })
@@ -162,6 +167,7 @@ function submitQuestion() {
 function triggerOcclude() {
   const sel = currentSelection.value || props.selection
   if (!sel) return
+  emit('tool-selected', { tool: 'occlude', label: 'Trecho ocultado para revisão' })
   emit('occlude', { selection: sel })
   reset()
 }
@@ -169,6 +175,7 @@ function triggerOcclude() {
 function triggerQuote() {
   const sel = currentSelection.value || props.selection
   if (!sel) return
+  emit('tool-selected', { tool: 'copy-quote', label: 'Citação copiada' })
   emit('copy-quote', { selection: sel })
   reset()
 }
@@ -251,7 +258,7 @@ onBeforeUnmount(() => {
           class="color-dot"
           :style="{ backgroundColor: colors.find((c) => c.id === selectedColor)?.bg || '#fef08a' }"
         ></span>
-        <span>Destacar</span>
+        <span class="btn-text">Destacar</span>
       </button>
 
       <!-- Botão para escolher outra cor -->
@@ -285,7 +292,7 @@ onBeforeUnmount(() => {
           <path d="M12 20h9" />
           <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
         </svg>
-        <span>Anotar</span>
+        <span class="btn-text">Anotar</span>
       </button>
 
       <!-- Ação 3: Copiar Citação -->
@@ -300,7 +307,7 @@ onBeforeUnmount(() => {
           <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
           <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
         </svg>
-        <span>Citação</span>
+        <span class="btn-text">Citação</span>
       </button>
 
       <div v-if="canEdit" class="toolbar-divider" aria-hidden="true"></div>
@@ -318,7 +325,7 @@ onBeforeUnmount(() => {
           <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
           <line x1="1" y1="1" x2="23" y2="23" />
         </svg>
-        <span>Ocultar</span>
+        <span class="btn-text">Ocultar</span>
       </button>
 
       <!-- Ação 5: Pergunta -->
@@ -335,7 +342,7 @@ onBeforeUnmount(() => {
           <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
           <line x1="12" y1="17" x2="12.01" y2="17" />
         </svg>
-        <span>Pergunta</span>
+        <span class="btn-text">Pergunta</span>
       </button>
 
       <!-- Botão Fechar -->
@@ -440,13 +447,13 @@ onBeforeUnmount(() => {
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
-/* Modo Mobile: Barra ancorada na base */
+/* Modo Mobile: Barra ancorada na base com ícones puros de 44x44px */
 .floating-actions-toolbar.is-mobile {
   border-radius: 16px 16px 0 0;
   border-left: none;
   border-right: none;
   border-bottom: none;
-  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)) 12px;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)) 12px;
   justify-content: space-around;
   width: 100%;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
@@ -470,13 +477,22 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
+/* No mobile, oculta textos e assegura botões de no mínimo 44x44px */
 .is-mobile .toolbar-btn {
   min-height: 44px;
   min-width: 44px;
-  padding: 8px 10px;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.75rem;
+  padding: 0.5rem;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.is-mobile .toolbar-btn .btn-text {
+  display: none;
+}
+
+.is-mobile .toolbar-btn.icon-only {
+  border-radius: 9999px;
 }
 
 .toolbar-btn:hover {
@@ -493,10 +509,6 @@ onBeforeUnmount(() => {
   border-radius: 50%;
 }
 
-.is-mobile .toolbar-btn.icon-only {
-  border-radius: 8px;
-}
-
 .color-dot {
   width: 14px;
   height: 14px;
@@ -506,6 +518,12 @@ onBeforeUnmount(() => {
   flex-shrink: 0;
 }
 
+.is-mobile .color-dot {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
 .icon-svg {
   width: 16px;
   height: 16px;
@@ -513,8 +531,8 @@ onBeforeUnmount(() => {
 }
 
 .is-mobile .icon-svg {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
 }
 
 .toolbar-divider {
@@ -524,11 +542,22 @@ onBeforeUnmount(() => {
   margin: 0 2px;
 }
 
+.is-mobile .toolbar-divider {
+  display: none;
+}
+
 .color-picker-row {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 2px 6px;
+}
+
+.is-mobile .color-picker-row {
+  justify-content: center;
+  gap: 12px;
+  padding: 4px 8px;
+  width: 100%;
 }
 
 .mode-label {
@@ -545,8 +574,13 @@ onBeforeUnmount(() => {
   transition: transform 0.15s ease;
 }
 
+.is-mobile .color-choice-btn {
+  width: 36px;
+  height: 36px;
+}
+
 .color-choice-btn:hover {
-  transform: scale(1.2);
+  transform: scale(1.15);
 }
 
 .prompt-container {
@@ -555,6 +589,12 @@ onBeforeUnmount(() => {
   gap: 8px;
   min-width: 280px;
   padding: 6px;
+}
+
+.is-mobile .prompt-container {
+  min-width: 0;
+  width: 100%;
+  padding: 4px;
 }
 
 .prompt-textarea,
@@ -571,6 +611,18 @@ onBeforeUnmount(() => {
   box-sizing: border-box;
 }
 
+.is-mobile .prompt-textarea {
+  font-size: 0.875rem;
+  padding: 8px;
+  max-height: 80px;
+}
+
+.is-mobile .prompt-input {
+  font-size: 0.875rem;
+  padding: 8px;
+  height: 40px;
+}
+
 .prompt-textarea:focus,
 .prompt-input:focus {
   outline: 2px solid var(--color-primary, #3b82f6);
@@ -582,6 +634,17 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
+}
+
+.is-mobile .prompt-actions {
+  gap: 6px;
+  width: 100%;
+}
+
+.is-mobile .prompt-actions .toolbar-btn {
+  min-height: 44px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
 }
 
 .submit-btn {

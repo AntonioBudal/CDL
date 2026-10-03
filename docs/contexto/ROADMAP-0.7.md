@@ -167,10 +167,10 @@ Inconsistências no comportamento de seleção por toque entre navegadores móve
 O toast cobrir elementos importantes da tela. (Mitigação: posicionar no topo absoluto da área da aba com z-index controlado e altura reduzida).
 
 #### 18. Critérios objetivos de aceitação
-* [ ] No mobile, a toolbar não exibe textos extensos, apenas ícones.
-* [ ] Ao acionar cada ação, surge notificação flutuante temporária de 2s.
-* [ ] Duplo toque no celular seleciona a palavra sem zoom espúrio.
-* [ ] Nenhuma sobreposição de botões abaixo de 360px de largura de tela.
+* [x] No mobile, a toolbar não exibe textos extensos, apenas ícones.
+* [x] Ao acionar cada ação, surge notificação flutuante temporária de 2s.
+* [x] Duplo toque no celular seleciona a palavra sem zoom espúrio.
+* [x] Nenhuma sobreposição de botões abaixo de 360px de largura de tela.
 
 #### 19. O que explicitamente NÃO faz parte da feature
 * Criação de novo tipo de destaque ou anotação.

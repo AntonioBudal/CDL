@@ -727,3 +727,39 @@ Com a conclusão da Feature 10 (F10), **todas as dez features do Roadmap 0.5 (F0
    - Preservação estrita e integridade do banco de produção (`backend/data/caderno.db`).
 
 
+
+
+---
+
+## Sessão: Implementação da Feature F 0.7.2 (03/10/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Feature Concluída:**
+   - Feature: `051-mobile-toque-microtoast` (Feature F 0.7.2 — Responsividade Mobile, Toque Nativo e Micro-Toast de Ferramentas).
+   - Diretório: `specs/051-mobile-toque-microtoast/`.
+   - Todas as 17 tarefas de `tasks.md` (T001 a T017) executadas e marcadas como concluídas (`[x]`).
+2. **Seleção de Palavra por Duplo Toque e Tolerância a Rolagem (`useTextSelection.ts`):**
+   - Implementado rastreamento tátil com tolerância a micro-deslocamentos de rolagem (`isScrolling = Math.hypot(dx, dy) > 15px`).
+   - Algoritmo de duplo toque móvel calibrado (`intervalo < 320ms`, `distância < 15px`).
+   - Resolução de limites de palavras acentuadas em português (`findWordBoundaries`) e expansão atômica de seleção (`expandRangeToWord`).
+   - Cobertura completa de testes unitários em `frontend/tests/mobile_touch_selection.test.mjs`.
+3. **Barra Mobile de Ícones Puros de 44x44px (`FloatingActionsToolbar.vue`):**
+   - Ocultação de legendas de texto longas no celular (`.is-mobile .toolbar-btn .btn-text { display: none; }`), reduzindo a largura da barra e eliminando overflow horizontal.
+   - Botões com alvos de toque estritamente respeitando o mínimo de 44x44px (WCAG 2.1 AA) e ícones centralizados de 22x22px.
+   - Paleta de cores de marca-texto com círculos ampliados para 36x36px e espaçamento confortável.
+   - Emissão do evento informativo `@tool-selected` para sincronização com o sistema de feedback.
+   - Preservação integral do layout desktop com texto + ícone para viewports ≥ 768px.
+4. **Mecanismo de Micro-Toast no Topo do Leitor (`useFloatingToast.ts` e `StudyView.vue`):**
+   - Criado composable `useFloatingToast.ts` com gerenciamento de estado reativo e cancelamento atômico de timers.
+   - Exibição de micro-toast posicionado no topo da área ativa de leitura (`top: 1rem; left: 50%; transform: translateX(-50%)`) com `pointer-events: none` absoluto.
+   - Duração exata de 1.8 segundos (1800ms) com animação suave de fade-out de 250ms e suporte a `prefers-reduced-motion`.
+   - Disparo instantâneo com mensagens canônicas para cada ferramenta ("Destaque aplicado", "Cor alterada", "Adicionar anotação", "Anotação salva", "Citação copiada", "Trecho ocultado para revisão", "Criar pergunta", "Pergunta cadastrada").
+   - Acessibilidade para leitores de tela com `role="status"` e `aria-live="polite"`.
+5. **Validação e Suítes de Testes:**
+   - 420 testes de backend passando (`pytest backend/tests` / 420 passed, 1 skipped).
+   - 381 testes de frontend passando (`npm test` / 381 passed), incluindo novos testes em `floating_toast.test.mjs`, `mobile_touch_selection.test.mjs` e `mobile_toolbar_actions.test.mjs`.
+   - Compilação de produção e checagem de tipos estritos (`npm run build` / `vue-tsc -b && vite build`) concluídos com sucesso (código 0).
+   - Proteção absoluta do acervo e zero alterações no banco de produção.
+6. **Próximos Passos:**
+   - Commit atômico da Feature F 0.7.2: `git commit -m "feature — responsividade mobile, toque nativo e micro-toast de ferramentas"`.
+   - Prosseguir para a Feature F 0.7.3: *Floating Actions Toolbar Dinâmica e Menos Clumsy* (`speckit-specify F 0.7.3`).
