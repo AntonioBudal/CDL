@@ -2,7 +2,7 @@
   "schema": "leitorum-di-candidates/1",
   "experiment": "EXP-002",
   "verified_on": "2026-10-02",
-  "note": "Licenças conforme declaradas nas fontes oficiais na data indicada; não constitui parecer jurídico. Nenhum peso foi baixado.",
+  "note": "Licenças conforme declaradas nas fontes oficiais; não constitui parecer jurídico. Pesos baixados em 2026-10-03 para models/exp-002/ (fora do Git), SHA-256 conferidos.",
   "candidates": [
     {
       "id": "classic",
@@ -17,10 +17,10 @@
       "weights": null,
       "license_status": "VERIFIED",
       "benchmark_allowed": true,
-      "product_allowed": false
+      "product_allowed": false,
+      "adapter": "adapters.classic:ClassicDetector"
     },
     {
-      "id": "docufcn-line",
       "stage": "linhas",
       "family": "FCN (Doc-UFCN)",
       "environment": "envs/docufcn",
@@ -30,34 +30,61 @@
         "source": "https://pypi.org/project/doc-ufcn/",
         "remarks": "Licença declarada nos metadados do PyPI; o repositório oficial (gitlab.teklia.com) bloqueia acesso automatizado. Conferir o arquivo LICENSE dentro do pacote na instalação (T020)."
       },
-      "weights_options": [
-        {
-          "repository": "https://huggingface.co/Teklia/doc-ufcn-generic-historical-line",
-          "revision": "3338539ef366fa0d963e87de675bc431183a7c80",
-          "license": "MIT",
-          "files": {
-            "model.pth": {
-              "bytes": 49198561,
-              "sha256": "b5d0659a29638446f573bec8928f3380f8643f4bee5c9ea7b8e64ae813dcc6f5"
-            }
-          }
-        },
-        {
-          "repository": "https://huggingface.co/Teklia/doc-ufcn-norhand-v1-line",
-          "revision": "43ec736950e268798802a5499318f1183276f0ff",
-          "license": "MIT",
-          "files": {
-            "model.pth": {
-              "bytes": 49115013,
-              "sha256": "8e6e5e4f272a9b43a98de036c9164fdc522d2780e2e66dd601bde930bb14a950"
-            }
-          }
-        }
-      ],
       "license_status": "VERIFIED",
       "benchmark_allowed": true,
       "product_allowed": false,
-      "remarks": "model.pth é pickle: carregar só após conferir o SHA-256."
+      "remarks": "model.pth é pickle: carregar só após conferir o SHA-256.",
+      "id": "docufcn-historical-line",
+      "adapter": "adapters.docufcn:DocUFCNDetector",
+      "weights": {
+        "repository": "https://huggingface.co/Teklia/doc-ufcn-generic-historical-line",
+        "revision": "3338539ef366fa0d963e87de675bc431183a7c80",
+        "license": "MIT",
+        "files": {
+          "model.pth": {
+            "bytes": 49198561,
+            "sha256": "b5d0659a29638446f573bec8928f3380f8643f4bee5c9ea7b8e64ae813dcc6f5"
+          },
+          "parameters.yml": {
+            "bytes": 151,
+            "sha256": "10d02400932639334ab11bb41325b6a43ac176d18d15e61501b64916cb9d9641"
+          }
+        },
+        "local_dir": "models/exp-002/docufcn-historical-line"
+      }
+    },
+    {
+      "stage": "linhas",
+      "family": "FCN (Doc-UFCN)",
+      "environment": "envs/docufcn",
+      "code": {
+        "package": "doc-ufcn==0.1.9",
+        "license": "BSD-3-Clause",
+        "source": "https://pypi.org/project/doc-ufcn/",
+        "remarks": "Licença declarada nos metadados do PyPI; o repositório oficial (gitlab.teklia.com) bloqueia acesso automatizado. Conferir o arquivo LICENSE dentro do pacote na instalação (T020)."
+      },
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "remarks": "model.pth é pickle: carregar só após conferir o SHA-256.",
+      "id": "docufcn-norhand-line",
+      "adapter": "adapters.docufcn:DocUFCNDetector",
+      "weights": {
+        "repository": "https://huggingface.co/Teklia/doc-ufcn-norhand-v1-line",
+        "revision": "43ec736950e268798802a5499318f1183276f0ff",
+        "license": "MIT",
+        "files": {
+          "model.pth": {
+            "bytes": 49115013,
+            "sha256": "8e6e5e4f272a9b43a98de036c9164fdc522d2780e2e66dd601bde930bb14a950"
+          },
+          "parameters.yml": {
+            "bytes": 186,
+            "sha256": "c3cdabdd8503e517f9470c63ceefc788ad545574bd793248279ae1429650d5d7"
+          }
+        },
+        "local_dir": "models/exp-002/docufcn-norhand-line"
+      }
     },
     {
       "id": "docufcn-page",
@@ -76,12 +103,18 @@
           "model.pth": {
             "bytes": 49204383,
             "sha256": "ab9036a138c9792d433edd02ac3c744745c0b06f01fc50e973c2b92d9e0dfd83"
+          },
+          "parameters.yml": {
+            "bytes": 145,
+            "sha256": "e63f1c76eb41a1d336953f7f7661709d6018b80a904ec183a133e112fa75390f"
           }
-        }
+        },
+        "local_dir": "models/exp-002/docufcn-page"
       },
       "license_status": "VERIFIED",
       "benchmark_allowed": true,
-      "product_allowed": false
+      "product_allowed": false,
+      "adapter": "adapters.docufcn:DocUFCNDetector"
     },
     {
       "id": "heron",
@@ -100,9 +133,18 @@
           "model.safetensors": {
             "bytes": 171658996,
             "sha256": "00333a43451945aaf89db8ca9c0a17e75d1537c17db60fdb91aa95f4c7929e0c"
+          },
+          "config.json": {
+            "bytes": 3268,
+            "sha256": "fdea30805ce2f5666b147fca941dcdd27ad468e27d6ed21902207d3da056a97d"
+          },
+          "preprocessor_config.json": {
+            "bytes": 444,
+            "sha256": "cd38cd59999e7a95d68e487fbe5132df3d4e5c32a0836add57e6126ba0c4eaf1"
           }
         },
-        "training_data": "documentos impressos (ver relatório técnico do Docling; não verificado)"
+        "training_data": "documentos impressos (ver relatório técnico do Docling; não verificado)",
+        "local_dir": "models/exp-002/heron"
       },
       "license_status": "VERIFIED",
       "benchmark_allowed": true,
@@ -116,7 +158,8 @@
         "Page-header": "margin_note",
         "Page-footer": "margin_note"
       },
-      "remarks": "Treinado em documentos impressos; testa se um detector de layout genérico transfere para caderno manuscrito. Pesos em safetensors (sem pickle)."
+      "remarks": "Treinado em documentos impressos; testa se um detector de layout genérico transfere para caderno manuscrito. Pesos em safetensors (sem pickle).",
+      "adapter": "adapters.heron:HeronDetector"
     },
     {
       "id": "doctr",
@@ -130,13 +173,22 @@
       },
       "weights": {
         "host": "https://doctr-static.mindee.com/models (fast_base-688a8b34.pt, db_resnet50-79bd7d70.pt)",
-        "license": null
+        "license": null,
+        "local_dir": "models/exp-002/doctr",
+        "files": {
+          "fast_base-688a8b34.pt": {
+            "bytes": 65814772,
+            "sha256": "688a8b3489e9f5d0290c476c6272ec3b18de3ee646c8a0dc158203b1a9c62ace"
+          }
+        },
+        "sha256_source": "calculado localmente; prefixo 688a8b34 confere com o nome publicado"
       },
       "license_status": "NEEDS VALIDATION",
       "benchmark_allowed": true,
       "product_allowed": false,
       "remarks": "A documentação não declara licença para os pesos pré-treinados, servidos por um domínio da Mindee. Executado sob exceção do usuário.",
-      "user_exception": "Autorizado pelo usuário em 2026-10-02 para uso estritamente experimental e local no EXP-002, mantendo LICENSE STATUS: NEEDS VALIDATION. Não pode ser promovido a produto."
+      "user_exception": "Autorizado pelo usuário em 2026-10-02 para uso estritamente experimental e local no EXP-002, mantendo LICENSE STATUS: NEEDS VALIDATION. Não pode ser promovido a produto.",
+      "adapter": "adapters.doctr_det:DocTRDetector"
     }
   ],
   "excluded": [

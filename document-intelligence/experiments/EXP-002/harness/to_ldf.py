@@ -70,9 +70,7 @@ def to_ldf(
     for index, block in enumerate(prediction.get("blocks", []), start=1):
         if block["type"] == "graphic_box":
             diagrams.append({"id": f"diagram_{index:03d}", "nodes": [], "edges": []})
-            gaps.append(
-                f"diagram_{index:03d}: região {_ints(block['bbox'])} sem campo no LDF 1.0"
-            )
+            gaps.append(f"diagram_{index:03d}: região {_ints(block['bbox'])} sem campo no LDF 1.0")
             continue
         item = {
             "id": f"block_{index:03d}",

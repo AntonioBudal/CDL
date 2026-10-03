@@ -1,0 +1,281 @@
+{
+  "dataset": "exp-002-dev",
+  "classic_params": {
+    "block_size": 41,
+    "offset": 30,
+    "rule_kernel": 90,
+    "dilate_width": 15,
+    "dilate_height": 3,
+    "min_area": 120,
+    "max_height_factor": 3.0,
+    "merge_gap_factor": 4.0,
+    "max_side": 2500
+  },
+  "classic_dev_f1": 0.6308032424465733,
+  "classic_history": [
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 18,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.4027355623100304
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 18,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.4027355623100304
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 25,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.5323624595469255
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 30,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.5800162469536961
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 38,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.5086136177194422
+    },
+    {
+      "params": {
+        "block_size": 61,
+        "offset": 18,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.31299353912419237
+    },
+    {
+      "params": {
+        "block_size": 61,
+        "offset": 25,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.5270935960591133
+    },
+    {
+      "params": {
+        "block_size": 61,
+        "offset": 30,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.5093268450932684
+    },
+    {
+      "params": {
+        "block_size": 61,
+        "offset": 38,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.5580246913580247
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 30,
+        "rule_kernel": 90,
+        "dilate_width": 15,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 1.5,
+        "max_side": 2500
+      },
+      "f1": 0.6180257510729613
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 30,
+        "rule_kernel": 90,
+        "dilate_width": 15,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.6289034132171387
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 30,
+        "rule_kernel": 90,
+        "dilate_width": 15,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 4.0,
+        "max_side": 2500
+      },
+      "f1": 0.6308032424465733
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 30,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 1.5,
+        "max_side": 2500
+      },
+      "f1": 0.5741626794258373
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 30,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.5800162469536961
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 30,
+        "rule_kernel": 90,
+        "dilate_width": 21,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 4.0,
+        "max_side": 2500
+      },
+      "f1": 0.5829228243021346
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 30,
+        "rule_kernel": 90,
+        "dilate_width": 31,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 1.5,
+        "max_side": 2500
+      },
+      "f1": 0.5340909090909091
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 30,
+        "rule_kernel": 90,
+        "dilate_width": 31,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 2.5,
+        "max_side": 2500
+      },
+      "f1": 0.5281220209723547
+    },
+    {
+      "params": {
+        "block_size": 41,
+        "offset": 30,
+        "rule_kernel": 90,
+        "dilate_width": 31,
+        "dilate_height": 3,
+        "min_area": 120,
+        "max_height_factor": 3.0,
+        "merge_gap_factor": 4.0,
+        "max_side": 2500
+      },
+      "f1": 0.5276190476190477
+    }
+  ],
+  "block_params": {
+    "margin_gap": 0.2,
+    "title_height": 1.0,
+    "title_gap": 1.4,
+    "paragraph_gap": 1.3,
+    "graphic_min_area": 10.0,
+    "graphic_join": 1.5
+  },
+  "block_dev_map50_on_true_lines": 0.7126809678922078,
+  "block_combinations_tried": 243,
+  "note": "Calibração só no dev; regras de blocos ajustadas sobre as linhas verdadeiras do dev.",
+  "elapsed_s": 1996.1
+}

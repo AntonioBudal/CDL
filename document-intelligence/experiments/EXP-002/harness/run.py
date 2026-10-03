@@ -23,6 +23,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from blocks import BlockParams, assemble_for_image
+from classic import ClassicParams
 from evaluate import evaluate_pages, latency_stats, verdicts
 from supervisor import Limits, RunResult, run_candidate
 from to_ldf import to_ldf, validation_errors
@@ -36,6 +38,7 @@ EXPERIMENT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = ROOT / "dataset" / "fixtures" / "exp-002" / "test-manifest.json"
 PREDICTIONS_DIR = ROOT / "dataset" / "processed" / "exp-002" / "reports"
 CANDIDATES_FILE = EXPERIMENT / "candidates.json"
+CALIBRATION_FILE = EXPERIMENT / "calibration.json"
 
 BUILTIN = {
     "reference": {
@@ -114,6 +117,26 @@ def ldf_check(manifest: dict[str, Any], result: RunResult, detector: str) -> dic
     }
 
 
+def calibration() -> dict[str, Any]:
+    return json.loads(CALIBRATION_FILE.read_text(encoding="utf-8"))
+
+
+def assemble_blocks_for_run(result: RunResult, manifest: dict[str, Any]) -> list[float]:
+    """Aplica as regras de blocos (calibradas no dev) às linhas; devolve ms por página."""
+    calib = calibration()
+    block_params = BlockParams(**calib["block_params"])
+    classic_params = ClassicParams(**calib["classic_params"])
+    images = {page["id"]: str(ROOT / page["image"]) for page in manifest["pages"]}
+    timings = []
+    for prediction in result.predictions:
+        started = time.perf_counter_ns()
+        prediction["result"]["blocks"] = assemble_for_image(
+            images[prediction["id"]], prediction["result"]["lines"], block_params, classic_params
+        )
+        timings.append((time.perf_counter_ns() - started) / 1e6)
+    return timings
+
+
 def summarize_run(result: RunResult, manifest: dict[str, Any]) -> dict[str, Any]:
     predictions = {p["id"]: p["result"] for p in result.predictions}
     metrics = evaluate_pages(manifest, predictions)
@@ -138,6 +161,7 @@ def build_report(
     python_exe: str | None = None,
     weights_dir: Path | None = None,
     wait_free_s: float = 0.0,
+    assemble: bool = False,
 ) -> tuple[dict[str, Any], list[list[dict[str, Any]]]]:
     manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
     seed_record = freeze_seeds(seed)
@@ -153,7 +177,14 @@ def build_report(
             seed=seed,
             weights_dir=weights_dir,
         )
-        runs.append({**summarize_run(result, manifest), "waited_for_memory_s": waited})
+        block_ms = assemble_blocks_for_run(result, manifest) if assemble else []
+        runs.append(
+            {
+                **summarize_run(result, manifest),
+                "waited_for_memory_s": waited,
+                "block_assembly_latency": latency_stats(block_ms) if assemble else None,
+            }
+        )
         raw.append(result.predictions)
 
     ok = [run for run in runs if run["status"] == "OK"]
@@ -178,6 +209,7 @@ def build_report(
         "candidate": {k: v for k, v in candidate.items() if k != "options"},
         "license_status": candidate.get("license_status", ""),
         "repeats": repeats,
+        "blocks_source": "regras (calibration.json)" if assemble else "detector",
         "summary": {
             "statuses": [run["status"] for run in runs],
             "lines_f1_bbox50": first["lines"]["bbox"]["0.5"]["f1"] if first else None,
@@ -203,6 +235,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--predictions-out", default=None)
     parser.add_argument("--min-free-mib", type=int, default=1024)
     parser.add_argument("--wait-free-s", type=float, default=180.0)
+    parser.add_argument("--assemble-blocks", action="store_true", help="monta blocos por regras")
+    parser.add_argument("--tag", default="", help="sufixo dos arquivos de predição")
     args = parser.parse_args(argv)
 
     candidate = load_candidate(args.candidate)
@@ -210,6 +244,8 @@ def main(argv: list[str] | None = None) -> int:
     local_dir = (candidate.get("weights") or {}).get("local_dir")
     if local_dir:
         weights_dir = ROOT / local_dir
+    if candidate["id"] == "classic":
+        candidate.setdefault("options", {})["classic_params"] = calibration()["classic_params"]
     candidate.setdefault("options", {}).update(
         {
             "id": candidate["id"],
@@ -226,8 +262,9 @@ def main(argv: list[str] | None = None) -> int:
         python_exe=candidate_python(candidate),
         weights_dir=weights_dir,
         wait_free_s=args.wait_free_s,
+        assemble=args.assemble_blocks,
     )
-    stem = f"{candidate['id']}-{Path(args.manifest).stem}"
+    stem = f"{candidate['id']}-{Path(args.manifest).stem}{args.tag}"
     predictions_out = Path(args.predictions_out or PREDICTIONS_DIR / f"{stem}-predictions.json")
     predictions_out.parent.mkdir(parents=True, exist_ok=True)
     predictions_out.write_text(
