@@ -207,3 +207,50 @@ def get_app_base_url() -> str:
     """Retorna a URL base pública do Leitorum configurada no ambiente."""
     return os.environ.get("APP_BASE_URL", "https://leitorum.com").strip().rstrip("/")
 
+
+# Configurações de Segurança e CORS (F0.6.9)
+DEFAULT_CORS_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+DEFAULT_DEVELOPMENT_SESSION_SECRET = "caderno-secret-key-development-change-me"
+
+
+def get_cors_allowed_origins() -> list[str]:
+    """Retorna lista de origens autorizadas para CORS a partir de CADERNO_CORS_ORIGINS."""
+    val = os.environ.get("CADERNO_CORS_ORIGINS", "").strip()
+    if not val:
+        return list(DEFAULT_CORS_ORIGINS)
+    origins = [item.strip() for item in val.split(",") if item.strip()]
+    # Nunca permitir '*' com credentials
+    return [orig for orig in origins if orig != "*"]
+
+
+def get_session_secret() -> str:
+    """Retorna a chave secreta de sessão configurada no ambiente."""
+    return os.environ.get("CADERNO_SESSION_SECRET", DEFAULT_DEVELOPMENT_SESSION_SECRET).strip()
+
+
+def is_production_environment() -> bool:
+    """Informa se a aplicação está operando em modo de produção explícito."""
+    env = os.environ.get("ENVIRONMENT", "").strip().lower()
+    return env in ("production", "prod")
+
+
+def audit_session_secret() -> tuple[bool, str | None]:
+    """Audita a segurança da chave de sessão configurada.
+    
+    Retorna (is_safe, warning_message). Se for chave padrão em produção ou chave curta (<16 chars), emite aviso.
+    """
+    secret = get_session_secret()
+    if secret == DEFAULT_DEVELOPMENT_SESSION_SECRET:
+        if is_production_environment():
+            return False, "CADERNO_SESSION_SECRET está utilizando a chave padrão insegura em ambiente de produção!"
+        return True, "CADERNO_SESSION_SECRET utilizando chave de desenvolvimento padrão."
+    if len(secret) < 16:
+        return False, "CADERNO_SESSION_SECRET é muito curta (menos de 16 caracteres); recomenda-se ao menos 32 caracteres."
+    return True, None
+
+

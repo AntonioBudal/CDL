@@ -1,0 +1,65 @@
+openapi: 3.1.0
+info:
+  title: Leitorum Security Headers and Error Contract
+  version: 0.6.9
+  description: Contrato de cabeçalhos HTTP de segurança obrigatórios e tratamento padronizado de erro 500 para o Leitorum.
+
+paths:
+  /api/{any_path}:
+    get:
+      summary: Endpoint genérico com garantia de cabeçalhos de segurança
+      responses:
+        '200':
+          description: Resposta com cabeçalhos de proteção injetados
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+              example: "default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://accounts.google.com; frame-src 'self' https://accounts.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
+            X-Content-Type-Options:
+              schema:
+                type: string
+              example: "nosniff"
+            Referrer-Policy:
+              schema:
+                type: string
+              example: "strict-origin-when-cross-origin"
+            Permissions-Policy:
+              schema:
+                type: string
+              example: "camera=(), microphone=(), geolocation=()"
+            X-Frame-Options:
+              schema:
+                type: string
+              example: "SAMEORIGIN"
+            X-Robots-Tag:
+              schema:
+                type: string
+              example: "noindex, nofollow"
+        '500':
+          description: Erro interno no servidor mascarado sem vazamento de traceback
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              example: "application/json"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityErrorResponse'
+
+components:
+  schemas:
+    SecurityErrorResponse:
+      type: object
+      required:
+        - detail
+        - error_id
+      properties:
+        detail:
+          type: string
+          example: "Ocorreu um erro interno no servidor."
+        error_id:
+          type: string
+          format: uuid
+          example: "e2f1d932-b7b5-4b05-a3eb-b83c509e51c8"

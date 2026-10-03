@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { renderMarkdown } from '../services/markdown'
+import { sanitizeHtml } from '../services/sanitizer'
 import type { StudyHighlight } from '../types.ts'
 import { applyHighlightsToDom, type HighlightClickEvent } from '../utils/highlightRenderer.ts'
 
@@ -21,7 +22,7 @@ const emit = defineEmits<{
 const containerRef = ref<HTMLElement | null>(null)
 let cleanupHighlights: (() => void) | null = null
 
-const rendered = computed(() => renderMarkdown(props.content))
+const rendered = computed(() => sanitizeHtml(renderMarkdown(props.content)))
 
 function updateHighlights() {
   if (cleanupHighlights) {

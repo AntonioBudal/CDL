@@ -14,6 +14,21 @@ BUILD_MISSING = (
     "A interface ainda não está compilada. Na pasta frontend, execute "
     "npm run build e abra novamente este endereço."
 )
+BLOCKED_EXTENSIONS = {
+    ".env",
+    ".db",
+    ".sqlite",
+    ".sqlite3",
+    ".py",
+    ".pyc",
+    ".ini",
+    ".bak",
+    ".log",
+    ".sh",
+    ".bash",
+    ".yml",
+    ".yaml",
+}
 
 
 def accepts_html(headers: Headers) -> bool:
@@ -59,11 +74,15 @@ class LocalFrontend:
 
         path = scope["path"].lstrip("/")
         parts = path.split("/")
+        path_lower = path.lower()
         if (
             scope["method"] not in {"GET", "HEAD"}
             or parts[0].casefold() in RESERVED_PREFIXES
             or any(part.startswith(".") for part in parts if part)
+            or any(part == ".." for part in parts)
             or any(character in path for character in ("\\", "\x00", ":"))
+            or any(path_lower.endswith(ext) for ext in BLOCKED_EXTENSIONS)
+            or any(part.lower().endswith(tuple(BLOCKED_EXTENSIONS)) for part in parts)
         ):
             await self.not_found(scope, receive, send)
             return
