@@ -79,8 +79,8 @@ def test_rate_limit_on_login_endpoint(tmp_path, monkeypatch):
 
     try:
         with TestClient(app) as client:
-            # 5 tentativas permitidas (mesmo que com credenciais inválidas)
-            for _ in range(5):
+            # 4 tentativas permitidas (mesmo que com credenciais inválidas)
+            for _ in range(4):
                 resp = client.post(
                     "/api/auth/login",
                     json={"username_or_email": "usuario_teste", "password": "senha_incorreta_123"},
@@ -88,7 +88,7 @@ def test_rate_limit_on_login_endpoint(tmp_path, monkeypatch):
                 )
                 assert resp.status_code != 429
 
-            # 6ª tentativa deve estourar o limite (HTTP 429)
+            # 5ª tentativa consecutiva com erro deve estourar o limite (HTTP 429)
             resp = client.post(
                 "/api/auth/login",
                 json={"username_or_email": "usuario_teste", "password": "senha_incorreta_123"},

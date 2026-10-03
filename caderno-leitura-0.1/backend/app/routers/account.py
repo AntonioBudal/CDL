@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 
-from app.core.rate_limiter import rate_limit_auth_endpoint
+from app.core.rate_limiter import get_client_ip, rate_limit_auth_endpoint
 from app.dependencies import CurrentUser, DatabaseSession
 from app.schemas.account import (
     AccountLifecycleResponse,
@@ -22,10 +22,7 @@ router = APIRouter(prefix="/account", tags=["Ciclo de Vida da Conta"])
 
 
 def _get_client_ip(request: Request) -> str:
-    forwarded_for = request.headers.get("x-forwarded-for")
-    if forwarded_for:
-        return forwarded_for.split(",")[0].strip()
-    return request.client.host if request.client else "127.0.0.1"
+    return get_client_ip(request)
 
 
 @router.post(

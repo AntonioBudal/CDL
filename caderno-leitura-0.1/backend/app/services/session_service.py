@@ -175,6 +175,11 @@ def resolve_cookie_secure(request: Request | None = None) -> bool:
         proto = request.headers.get("x-forwarded-proto", "").lower()
         if proto == "https" or request.url.scheme == "https":
             return True
+        cf_visitor = request.headers.get("cf-visitor", "")
+        if '"scheme":"https"' in cf_visitor.replace(" ", ""):
+            return True
+        if request.headers.get("x-forwarded-ssl", "").lower() == "on":
+            return True
     return False
 
 

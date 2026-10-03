@@ -68,10 +68,15 @@ def is_google_auth_enabled() -> bool:
     return get_google_client_id() is not None
 
 
-# Configurações de Rate Limiting e Proteção de Autenticação (F10)
+# Configurações de Rate Limiting e Proteção de Autenticação (F0.6.10)
 DEFAULT_RATE_LIMIT_ATTEMPTS = 5
 DEFAULT_RATE_LIMIT_WINDOW_SECONDS = 300  # 5 minutos
 DEFAULT_LOCKOUT_DURATION_SECONDS = 900   # 15 minutos
+
+# Políticas de Rate Limiting por IP (F0.6.10 - Decisão Q1: A)
+DEFAULT_AUTH_MAX_ATTEMPTS_PER_MINUTE = 30
+DEFAULT_AUTH_MAX_CONSECUTIVE_FAILURES = 5
+DEFAULT_AUTH_FAILURE_LOCKOUT_SECONDS = 60
 
 
 def get_rate_limit_max_attempts() -> int:
@@ -96,6 +101,31 @@ def get_lockout_duration_seconds() -> int:
         return int(os.environ.get("LOCKOUT_DURATION_SECONDS", str(DEFAULT_LOCKOUT_DURATION_SECONDS)))
     except ValueError:
         return DEFAULT_LOCKOUT_DURATION_SECONDS
+
+
+def get_auth_max_attempts_per_minute() -> int:
+    """Teto global de requisições por minuto por IP em endpoints de autenticação."""
+    try:
+        return int(os.environ.get("CADERNO_AUTH_MAX_ATTEMPTS_PER_MINUTE", str(DEFAULT_AUTH_MAX_ATTEMPTS_PER_MINUTE)))
+    except ValueError:
+        return DEFAULT_AUTH_MAX_ATTEMPTS_PER_MINUTE
+
+
+def get_auth_max_consecutive_failures() -> int:
+    """Número máximo de falhas consecutivas de senha antes do bloqueio temporário do IP."""
+    try:
+        return int(os.environ.get("CADERNO_AUTH_MAX_CONSECUTIVE_FAILURES", str(DEFAULT_AUTH_MAX_CONSECUTIVE_FAILURES)))
+    except ValueError:
+        return DEFAULT_AUTH_MAX_CONSECUTIVE_FAILURES
+
+
+def get_auth_failure_lockout_seconds() -> int:
+    """Tempo de bloqueio temporário (segundos) ao atingir o limite de falhas consecutivas."""
+    try:
+        return int(os.environ.get("CADERNO_AUTH_FAILURE_LOCKOUT_SECONDS", str(DEFAULT_AUTH_FAILURE_LOCKOUT_SECONDS)))
+    except ValueError:
+        return DEFAULT_AUTH_FAILURE_LOCKOUT_SECONDS
+
 
 
 def get_session_cookie_secure() -> bool | None:

@@ -87,6 +87,15 @@ export class ConcurrencyConflictApiError extends ApiError {
   }
 }
 
+export class RateLimitApiError extends ApiError {
+  retryAfter: number
+  constructor(message: string, retryAfter: number, data?: unknown) {
+    super(message, 429, data)
+    this.name = 'RateLimitApiError'
+    this.retryAfter = retryAfter
+  }
+}
+
 export function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : 'Não foi possível concluir. Tente novamente.'
 }
@@ -190,6 +199,12 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       'server_version' in data
     ) {
       throw new ConcurrencyConflictApiError(detailMessage(data, 409), data as ConflictData)
+    }
+    if (response.status === 429) {
+      const retryHeader = response.headers.get('Retry-After')
+      const retrySeconds = retryHeader ? parseInt(retryHeader, 10) : 60
+      const parsedRetry = isNaN(retrySeconds) ? 60 : retrySeconds
+      throw new RateLimitApiError(detailMessage(data, 429), parsedRetry, data)
     }
     throw new ApiError(detailMessage(data, response.status), response.status, data)
   }

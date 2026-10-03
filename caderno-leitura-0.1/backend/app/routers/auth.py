@@ -19,7 +19,12 @@ from app.core.config import (
     get_google_client_id,
     is_google_auth_enabled,
 )
-from app.core.rate_limiter import rate_limit_auth_endpoint
+from app.core.rate_limiter import (
+    get_client_ip,
+    rate_limit_auth_endpoint,
+    record_auth_failure,
+    record_auth_success,
+)
 from app.core.security import hash_password, hash_session_token, needs_rehash, verify_password
 from app.dependencies import CurrentUser, DatabaseSession
 from app.models.local_credential import LocalCredential
@@ -70,10 +75,7 @@ router = APIRouter(prefix="/auth", tags=["Autenticação"])
 
 
 def _get_client_ip(request: Request) -> str:
-    forwarded_for = request.headers.get("x-forwarded-for")
-    if forwarded_for:
-        return forwarded_for.split(",")[0].strip()
-    return request.client.host if request.client else "127.0.0.1"
+    return get_client_ip(request)
 
 
 @router.get("/config", response_model=AuthConfigResponse, summary="Obter configurações públicas de autenticação")
@@ -126,6 +128,7 @@ def login(
     """
     identifier = login_req.username_or_email.strip()
     if not identifier:
+        record_auth_failure(request)
         log_security_event(session, "login_failure", request=request, details={"reason": "empty_identifier"})
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -153,6 +156,7 @@ def login(
         check_account_lockout(user)
 
     if user is None or user.credential is None:
+        record_auth_failure(request)
         log_security_event(
             session,
             "login_failure",
@@ -166,6 +170,7 @@ def login(
         )
 
     if not verify_password(user.credential.password_hash, login_req.password):
+        record_auth_failure(request)
         handle_failed_login(session, user)
         commit_changes(session)
         log_security_event(
@@ -212,7 +217,8 @@ def login(
             detail="Conta de usuário suspensa ou inativa.",
         )
 
-    # Sucesso: limpa contadores de falhas
+    # Sucesso: limpa contadores de falhas e de rate limit
+    record_auth_success(request)
     handle_successful_login(session, user)
 
     if needs_rehash(user.credential.password_hash):
@@ -239,6 +245,7 @@ def login(
 @router.post(
     "/setup-owner",
     response_model=AuthSuccessResponse,
+    dependencies=[Depends(rate_limit_auth_endpoint)],
     summary="Definir senha mestra inicial do proprietário canônico",
 )
 def setup_owner(
@@ -422,14 +429,13 @@ def logout(
     current_session_id = getattr(request.state, "current_session_id", None)
     if current_session_id:
         revoke_session(session, current_user.id, current_session_id)
-    else:
-        raw_token = request.cookies.get(SESSION_COOKIE_NAME)
-        if raw_token:
-            token_hash = hash_session_token(raw_token.strip())
-            session.execute(
-                delete(UserSession).where(UserSession.session_token_hash == token_hash)
-            )
-            session.flush()
+    raw_token = request.cookies.get(SESSION_COOKIE_NAME)
+    if raw_token:
+        token_hash = hash_session_token(raw_token.strip())
+        session.execute(
+            delete(UserSession).where(UserSession.session_token_hash == token_hash)
+        )
+        session.flush()
 
     commit_changes(session)
     clear_session_cookie(response, request)

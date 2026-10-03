@@ -9,6 +9,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile, status
 from fastapi.responses import FileResponse
 
+from app.dependencies import AdminUser
 from app.schemas.backups import RestoreResultResponse
 from app.services.backups import create_backup_bundle, create_database_backup
 from app.services.restore_service import restore_backup_package
@@ -123,6 +124,7 @@ def temporary_backup_bundle(request: Request) -> Iterator[Path]:
 )
 def download_backup(
     path: Annotated[Path, Depends(temporary_backup, scope="request")],
+    _admin: AdminUser,
 ) -> FileResponse:
     timestamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S-%fZ")
     return FileResponse(
@@ -143,6 +145,7 @@ def download_backup(
 )
 def download_backup_bundle_endpoint(
     path: Annotated[Path, Depends(temporary_backup_bundle, scope="request")],
+    _admin: AdminUser,
 ) -> FileResponse:
     return FileResponse(
         path=path,
@@ -161,6 +164,7 @@ def download_backup_bundle_endpoint(
     summary="Restaurar acervo a partir de pacote de backup (.zip ou .db)",
 )
 def restore_backup_endpoint(
+    _admin: AdminUser,
     file: UploadFile = File(...),
 ) -> RestoreResultResponse:
     if not file.filename:

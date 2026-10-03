@@ -5,7 +5,11 @@ import zipfile
 import pytest
 from fastapi.testclient import TestClient
 
-from app.core.config import get_covers_dir
+from sqlalchemy import text
+
+from app.core.config import DEFAULT_OWNER_ID, DEFAULT_OWNER_USERNAME, get_covers_dir
+from app.db.base import Base
+from app.db.session import create_sqlite_engine
 from app.main import app
 from app.services.backups import (
     calculate_file_sha256,
@@ -90,14 +94,26 @@ def test_api_backup_bundle_endpoint(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     monkeypatch.setenv("CADERNO_DATABASE_PATH", str(source_db))
     monkeypatch.setenv("CADERNO_COVERS_DIR", str(tmp_path / "covers"))
 
-    client = TestClient(app)
-    response = client.get("/api/backup/bundle")
+    from app.dependencies import require_admin
+    from app.models.user import User
 
-    assert response.status_code == 200
-    assert response.headers["content-type"] == "application/zip"
-    assert "caderno-backup-" in response.headers.get("content-disposition", "")
-    assert len(response.content) > 0
+    app.dependency_overrides[require_admin] = lambda: User(
+        id="00000000-0000-0000-0000-000000000001",
+        username="proprietario",
+        role="admin",
+        status="ativo",
+    )
+    try:
+        client = TestClient(app)
+        response = client.get("/api/backup/bundle")
 
-    downloaded_zip = tmp_path / "downloaded.zip"
-    downloaded_zip.write_bytes(response.content)
-    assert zipfile.is_zipfile(downloaded_zip)
+        assert response.status_code == 200
+        assert response.headers["content-type"] == "application/zip"
+        assert "caderno-backup-" in response.headers.get("content-disposition", "")
+        assert len(response.content) > 0
+
+        downloaded_zip = tmp_path / "downloaded.zip"
+        downloaded_zip.write_bytes(response.content)
+        assert zipfile.is_zipfile(downloaded_zip)
+    finally:
+        app.dependency_overrides.pop(require_admin, None)

@@ -47,6 +47,7 @@ def get_or_create_default_owner(session: Session) -> User:
             id=DEFAULT_OWNER_ID,
             username=DEFAULT_OWNER_USERNAME,
             display_name=DEFAULT_OWNER_DISPLAY_NAME,
+            role="admin",
             status="ativo",
         )
         session.add(owner)

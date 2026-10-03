@@ -12,3 +12,17 @@ class SecurityErrorResponse(BaseModel):
         default=None,
         description="Identificador único anônimo (UUID) para correlação no log do servidor.",
     )
+
+
+class RateLimitExceededResponse(BaseModel):
+    """Contrato padronizado de resposta quando o limite de requisições ou tentativas é excedido."""
+
+    detail: str = Field(
+        default="Muitas tentativas. Aguarde antes de tentar novamente.",
+        description="Mensagem informativa em português sobre o bloqueio temporário.",
+    )
+    retry_after: int = Field(
+        ...,
+        description="Tempo em segundos até que novas requisições sejam autorizadas.",
+    )
+

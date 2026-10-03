@@ -1,0 +1,119 @@
+openapi: 3.1.0
+info:
+  title: Leitorum - Contratos de Segurança de Autenticação e Rate Limiting
+  version: 0.6.10
+  description: Contratos de cabeçalhos de segurança, rate limiting e governança de sessão (F0.6.10).
+
+paths:
+  /api/auth/login:
+    post:
+      summary: Autenticação de Usuário com Rate Limiting e Proteção contra Força Bruta
+      description: Endpoint sensível protegido por limite de taxa e bloqueio escalonado após 5 falhas consecutivas.
+      responses:
+        '200':
+          description: Login bem-sucedido
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: caderno_session=s_abc123...; Max-Age=2592000; Path=/; HttpOnly; SameSite=Lax; Secure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '401':
+          description: Credenciais incorretas (contabiliza tentativa no rastreador de falhas)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityErrorResponse'
+        '429':
+          description: Limite de tentativas ou requisições excedido
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                example: 60
+              description: Número de segundos até que novas requisições sejam permitidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitExceededResponse'
+
+  /api/auth/logout:
+    post:
+      summary: Encerramento de Sessão com Invalidação e Limpeza de Cookies
+      responses:
+        '200':
+          description: Sessão invalidada com sucesso no servidor e no cliente
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: caderno_session=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax; Secure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Sessão encerrada com sucesso.
+
+  /api/backups:
+    get:
+      summary: Acesso a Backups Restrito a Administradores
+      responses:
+        '200':
+          description: Lista de backups autorizada para administrador
+        '401':
+          description: Não autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityErrorResponse'
+        '403':
+          description: Proibido para usuários comuns
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityErrorResponse'
+
+components:
+  schemas:
+    AuthSuccessResponse:
+      type: object
+      required:
+        - user
+      properties:
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            role:
+              type: string
+
+    RateLimitExceededResponse:
+      type: object
+      required:
+        - detail
+        - retry_after
+      properties:
+        detail:
+          type: string
+          example: Muitas tentativas. Aguarde 60 segundos antes de tentar novamente.
+        retry_after:
+          type: integer
+          example: 60
+
+    SecurityErrorResponse:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          example: Credenciais inválidas.

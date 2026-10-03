@@ -139,18 +139,30 @@ def test_api_restore_endpoint_success(tmp_path: Path, monkeypatch: pytest.Monkey
     pkg_zip = tmp_path / "backup.zip"
     create_backup_bundle(destination=pkg_zip, source_db=new_db)
 
-    client = TestClient(app)
-    with open(pkg_zip, "rb") as f:
-        response = client.post(
-            "/api/backup/restore",
-            files={"file": ("backup.zip", f, "application/zip")},
-        )
+    from app.dependencies import require_admin
+    from app.models.user import User
 
-    assert response.status_code == 200
-    data = response.json()
-    assert data["success"] is True
-    assert "caderno-pre-restauracao-" in data["pre_restore_snapshot"]
+    app.dependency_overrides[require_admin] = lambda: User(
+        id="00000000-0000-0000-0000-000000000001",
+        username="proprietario",
+        role="admin",
+        status="ativo",
+    )
+    try:
+        client = TestClient(app)
+        with open(pkg_zip, "rb") as f:
+            response = client.post(
+                "/api/backup/restore",
+                files={"file": ("backup.zip", f, "application/zip")},
+            )
 
-    with sqlite3.connect(active_db) as conn:
-        row = conn.execute("SELECT title FROM books WHERE id=1").fetchone()
-        assert row[0] == "Acervo Pós API"
+        assert response.status_code == 200
+        data = response.json()
+        assert data["success"] is True
+        assert "caderno-pre-restauracao-" in data["pre_restore_snapshot"]
+
+        with sqlite3.connect(active_db) as conn:
+            row = conn.execute("SELECT title FROM books WHERE id=1").fetchone()
+            assert row[0] == "Acervo Pós API"
+    finally:
+        app.dependency_overrides.pop(require_admin, None)
