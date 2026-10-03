@@ -669,3 +669,28 @@ Com a conclusão da Feature 10 (F10), **todas as dez features do Roadmap 0.5 (F0
    - Preservação estrita e integridade do banco de produção (`backend/data/caderno.db`), com testes operando hermeticamente em diretórios temporários (`tmp_path`).
 6. **Commit Atômico:**
    - Commit `a4a81fe`: `feature — segurança de autenticação, abuso e infraestrutura`.
+
+---
+
+## Sessão: Planejamento Arquitetural do Roadmap 0.7 (03/10/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Elaboração Canônica do Roadmap 0.7:**
+   - Documento oficial criado em `docs/contexto/ROADMAP-0.7.md`.
+   - Escopo delimitado e estruturado em exatamente **15 features (F 0.7.1 a F 0.7.15)**, distribuídas em três categorias:
+     - *Refinamento e Correção de UX:* F 0.7.1 (Header Actions), F 0.7.2 (Mobile Touch & Micro-Toast), F 0.7.3 (Floating Toolbar Dinâmica), F 0.7.9 (Refinamento do Editor & Ícones).
+     - *Reestruturação e Diferenciação das 5 Views:* F 0.7.4 (Grid View / Reconhecimento Visual), F 0.7.5 (List View / Busca & Comparação), F 0.7.6 (Tree View / Hierarquia), F 0.7.7 (Map View / Grafo Relacional), F 0.7.8 (Canvas View / Pensamento Espacial).
+     - *Novas Capacidades Cognitivas de Estudo:* F 0.7.10 (Central de Revisão), F 0.7.11 (Biblioteca de Highlights), F 0.7.12 (Backlinks & Menções), F 0.7.13 (Inbox de Capturas), F 0.7.14 (Sessões de Estudo), F 0.7.15 (Templates de Estudo).
+2. **Análise Técnica Exaustiva (19 Seções por Feature):**
+   - Cada uma das 15 features detalhada com os 19 tópicos obrigatórios (Objetivo, Problema atual, Experiência desejada, Componentes afetados, Backend, Banco de dados, API, Dependências, Regras de negócio, Estados e comportamentos, Desktop, Mobile, Acessibilidade, Persistência, Migrações, Riscos técnicos, Riscos de UX, Critérios de aceitação, O que explicitamente NÃO faz parte).
+3. **Decisões Arquiteturais Fundamentais:**
+   - Diferenciação inequívoca de responsabilidades entre as 5 visualizações (`Grid`, `List`, `Tree`, `Map`, `Canvas`).
+   - Reutilização da infraestrutura do modelo `StudyHighlight` para a Central de Revisão e Sessões de Estudo, prevenindo tabelas ou subsistemas paralelos redundantes.
+   - Separação estrita entre Relações Semânticas formais (`study_relations`), Menções/Backlinks textuais (`study_mentions`) e nós espaciais do Canvas.
+4. **Governança e Estado das Features:**
+   - **F 0.7.1 a F 0.7.15 estão estritamente NÃO INICIADAS.**
+   - Nenhuma linha de código foi implementada antecipadamente.
+5. **Próximos Passos:**
+   - Aguardar validação do usuário sobre o Roadmap 0.7.
+   - Iniciar o ciclo formal do Spec Kit para a primeira fatia de entrega: **Feature F 0.7.1** (`speckit-specify F 0.7.1`).
+
