@@ -165,6 +165,8 @@ def inspect_snapshot(snapshot_path: Path) -> dict:
             "books": table_count("books"),
             "chapters": table_count("chapters"),
             "studies": table_count("studies"),
+            "categories": table_count("categories"),
+            "book_categories": table_count("book_categories"),
         }
 
     created_at = datetime.fromtimestamp(stat.st_mtime, tz=UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -242,6 +244,8 @@ def _cli_verificar(args: argparse.Namespace) -> int:
             print(f"Total de Livros: {result['counts']['books']}")
             print(f"Total de Capítulos: {result['counts']['chapters']}")
             print(f"Total de Estudos: {result['counts']['studies']}")
+            if "categories" in result["counts"]:
+                print(f"Total de Categorias: {result['counts']['categories']}")
         return 0
     except Exception as exc:
         if args.json:

@@ -93,6 +93,23 @@ export interface Category {
   parent_id: string | null
   path: string
   user_id?: string | null
+  is_canonical?: boolean
+  books_count?: number
+  created_at?: string | null
+}
+
+export interface CategorySuggestion {
+  input_term: string
+  suggested_canonical: string
+  is_exact_match: boolean
+  matching_candidates: Category[]
+}
+
+export interface CategoryStats {
+  total_categories: number
+  canonical_categories: number
+  unused_categories: number
+  total_book_associations: number
 }
 
 export interface Book {

@@ -1,0 +1,184 @@
+openapi: 3.0.3
+info:
+  title: Categories Normalization API
+  description: Endpoints para consulta, sugestão e gerenciamento da taxonomia canônica do Leitorum.
+  version: 1.0.0
+paths:
+  /api/categories:
+    get:
+      summary: Listar categorias canônicas
+      description: Retorna a lista de categorias canônicas ativas, opcionalmente filtradas por termo de busca, com contagem de livros associados.
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Termo de busca textual para autocompletar ou filtro.
+        - name: canonical_only
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+          description: Filtra apenas categorias canônicas oficiais.
+      responses:
+        '200':
+          description: Lista de categorias retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryResponse'
+
+    post:
+      summary: Criar ou validar categoria canônica
+      description: Cria uma nova categoria aplicando normalização de singular e formato conciso, ou retorna a categoria canônica existente equivalente.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreateRequest'
+      responses:
+        '200':
+          description: Categoria existente equivalente retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '201':
+          description: Nova categoria canônica criada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '400':
+          description: Nome inválido (ex.: múltiplos termos, símbolos não permitidos ou tentativa de bypass).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/categories/suggest:
+    get:
+      summary: Sugestão e normalização assistida de termos
+      description: Recebe um termo digitado pelo leitor e retorna a sugestão canônica singular mais próxima e termos correlatos.
+      parameters:
+        - name: term
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Termo bruto digitado pelo usuário.
+      responses:
+        '200':
+          description: Sugestões geradas com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategorySuggestionResponse'
+
+  /api/categories/stats:
+    get:
+      summary: Estatísticas de conformidade taxonômica
+      description: Retorna métricas globais de categorias (total, média de livros/categoria, categorias vazias e índice de reutilização).
+      responses:
+        '200':
+          description: Estatísticas consolidadas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryStatsResponse'
+
+components:
+  schemas:
+    CategoryResponse:
+      type: object
+      required:
+        - id
+        - name
+        - is_canonical
+        - books_count
+        - created_at
+      properties:
+        id:
+          type: string
+          example: filosofia
+        name:
+          type: string
+          example: Filosofia
+        is_canonical:
+          type: boolean
+          example: true
+        books_count:
+          type: integer
+          example: 14
+        created_at:
+          type: string
+          format: date-time
+          example: '2026-10-02T10:00:00Z'
+
+    CategoryCreateRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 30
+          example: Filosofia
+
+    CategorySuggestionResponse:
+      type: object
+      required:
+        - input_term
+        - suggested_canonical
+        - is_exact_match
+        - matching_candidates
+      properties:
+        input_term:
+          type: string
+          example: Filosofias
+        suggested_canonical:
+          type: string
+          example: Filosofia
+        is_exact_match:
+          type: boolean
+          example: false
+        matching_candidates:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryResponse'
+
+    CategoryStatsResponse:
+      type: object
+      required:
+        - total_categories
+        - canonical_categories
+        - unused_categories
+        - total_book_associations
+      properties:
+        total_categories:
+          type: integer
+          example: 18
+        canonical_categories:
+          type: integer
+          example: 18
+        unused_categories:
+          type: integer
+          example: 2
+        total_book_associations:
+          type: integer
+          example: 85
+
+    ErrorResponse:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          example: "O nome da categoria deve ser um termo único no singular."

@@ -3,7 +3,18 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, Column, ForeignKey, Index, Integer, String, Table, Text, text
+from sqlalchemy import (
+    Boolean,
+    CheckConstraint,
+    Column,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Table,
+    Text,
+    text,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -29,6 +40,7 @@ class Category(Base):
         Index("ix_categories_parent_id", "parent_id"),
         Index("ix_categories_path", "path"),
         Index("ix_categories_user_id", "user_id"),
+        Index("ix_categories_normalized_name", "normalized_name"),
     )
 
     id: Mapped[str] = mapped_column(Text, primary_key=True)
@@ -36,10 +48,16 @@ class Category(Base):
         String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=True, default=None
     )
     name: Mapped[str] = mapped_column(Text, nullable=False)
+    normalized_name: Mapped[str] = mapped_column(
+        Text, nullable=False, default="", server_default=text("''")
+    )
+    is_canonical: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, server_default=text("0")
+    )
     parent_id: Mapped[str | None] = mapped_column(
         Text, ForeignKey("categories.id", ondelete="RESTRICT"), nullable=True, default=None
     )
-    path: Mapped[str] = mapped_column(Text, nullable=False)
+    path: Mapped[str] = mapped_column(Text, nullable=False, default="")
     created_at: Mapped[datetime] = mapped_column(
         UTCDateTime(), default=utc_now, server_default=text("CURRENT_TIMESTAMP"), nullable=False
     )

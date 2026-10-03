@@ -10,6 +10,20 @@ from sqlalchemy.orm import Session
 
 from app.models import Book
 from app.models.category import Category, book_categories
+from app.schemas.category import CategoryRead, CategoryStats, CategorySuggestion
+from app.services.canonical_categories import (
+    CANONICAL_CATEGORIES,
+    CANONICAL_INDEX_BY_NAME_LOWER,
+    CANONICAL_INDEX_BY_SLUG,
+    is_canonical_slug,
+    resolve_legacy_mapping,
+)
+from app.services.category_normalizer import (
+    canonicalize_name,
+    normalize_for_search,
+    slugify_category,
+    validate_category_name,
+)
 
 
 def validate_and_build_hierarchy(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -113,23 +127,61 @@ def sync_canonical_categories(session: Session, file_path: Path | None = None) -
     count = 0
     for data in categories_data:
         cid = data["id"]
+        is_canon = is_canonical_slug(cid)
         if cid in existing:
             cat = existing[cid]
-            cat.name = data["name"]
-            cat.parent_id = data["parent_id"]
-            cat.path = data["path"]
+            if is_canon:
+                canon_def = CANONICAL_INDEX_BY_SLUG[cid]
+                cat.name = canon_def.name
+                cat.parent_id = None
+                cat.path = cid
+                cat.is_canonical = True
+                cat.normalized_name = normalize_for_search(canon_def.name)
+            else:
+                cat.name = data["name"]
+                cat.parent_id = data.get("parent_id")
+                cat.path = data["path"]
+                cat.is_canonical = False
+                cat.normalized_name = normalize_for_search(data["name"])
         else:
             cat = Category(
                 id=cid,
-                name=data["name"],
-                parent_id=data["parent_id"],
-                path=data["path"],
+                name=CANONICAL_INDEX_BY_SLUG[cid].name if is_canon else data["name"],
+                parent_id=None if is_canon else data.get("parent_id"),
+                path=cid if is_canon else data["path"],
+                is_canonical=is_canon,
+                normalized_name=normalize_for_search(
+                    CANONICAL_INDEX_BY_SLUG[cid].name if is_canon else data["name"]
+                ),
             )
             session.add(cat)
+            existing[cid] = cat
         count += 1
 
+    # Inserir também as categorias do catálogo canônico oficial que não estavam no json legado
+    for can_def in CANONICAL_CATEGORIES:
+        if can_def.id not in existing:
+            cat = Category(
+                id=can_def.id,
+                name=can_def.name,
+                parent_id=None,
+                path=can_def.id,
+                is_canonical=True,
+                normalized_name=normalize_for_search(can_def.name),
+            )
+            session.add(cat)
+            existing[can_def.id] = cat
+            count += 1
+        else:
+            cat = existing[can_def.id]
+            cat.name = can_def.name
+            cat.parent_id = None
+            cat.path = can_def.id
+            cat.is_canonical = True
+            cat.normalized_name = normalize_for_search(can_def.name)
+
     session.commit()
-    return count
+    return len(existing)
 
 
 def get_descendant_category_ids(session: Session, category_id: str) -> set[str]:
@@ -147,6 +199,241 @@ def get_descendant_category_ids(session: Session, category_id: str) -> set[str]:
     )
     rows = session.execute(query, {"cat_id": category_id}).fetchall()
     return {row[0] for row in rows}
+
+
+def get_categories_with_books_count(
+    session: Session,
+    user_id: str | None = None,
+    q: str | None = None,
+    canonical_only: bool = False,
+) -> list[CategoryRead]:
+    """Lista categorias ordenadas alfabeticamente com contagem de livros associados."""
+    from sqlalchemy import func, or_
+
+    # Subquery para contagem de livros por categoria
+    count_subq = (
+        select(
+            book_categories.c.category_id,
+            func.count(book_categories.c.book_id).label("books_count"),
+        )
+        .group_by(book_categories.c.category_id)
+        .subquery()
+    )
+
+    query = (
+        select(
+            Category,
+            func.coalesce(count_subq.c.books_count, 0).label("books_count"),
+        )
+        .outerjoin(count_subq, Category.id == count_subq.c.category_id)
+    )
+
+    if canonical_only or user_id is None:
+        query = query.where(Category.is_canonical.is_(True))
+    else:
+        query = query.where(
+            or_(
+                Category.is_canonical.is_(True),
+                Category.user_id == user_id,
+            )
+        )
+
+    if q and q.strip():
+        norm_q = normalize_for_search(q)
+        term = f"%{norm_q}%"
+        query = query.where(
+            or_(
+                Category.normalized_name.ilike(term),
+                Category.name.ilike(f"%{q.strip()}%"),
+                Category.id.ilike(f"%{q.strip()}%"),
+            )
+        )
+
+    # Ordenação alfabética estrita por nome
+    query = query.order_by(Category.name.asc())
+
+    results = session.execute(query).all()
+    output: list[CategoryRead] = []
+    for cat, b_count in results:
+        output.append(
+            CategoryRead(
+                id=cat.id,
+                name=cat.name,
+                parent_id=cat.parent_id,
+                path=cat.path,
+                user_id=cat.user_id,
+                is_canonical=cat.is_canonical,
+                books_count=int(b_count),
+                created_at=cat.created_at,
+            )
+        )
+    return output
+
+
+def get_category_suggestions(
+    session: Session,
+    query_text: str,
+    user_id: str | None = None,
+) -> CategorySuggestion:
+    """Gera sugestões automáticas e determinísticas de categorias canônicas."""
+    from sqlalchemy import or_
+
+    clean_term = query_text.strip()
+    if not clean_term:
+        return CategorySuggestion(
+            input_term="",
+            suggested_canonical="",
+            is_exact_match=False,
+            matching_candidates=[],
+        )
+
+    suggested = canonicalize_name(clean_term)
+    norm_input = normalize_for_search(clean_term)
+    norm_suggested = normalize_for_search(suggested)
+
+    # Buscar candidatos no banco correspondendo ao termo normalizado ou termo sugerido
+    db_query = (
+        select(Category)
+        .where(
+            or_(
+                Category.user_id.is_(None),
+                Category.user_id == user_id,
+            )
+        )
+        .where(
+            or_(
+                Category.normalized_name.ilike(f"%{norm_suggested}%"),
+                Category.normalized_name.ilike(f"%{norm_input}%"),
+                Category.name.ilike(f"%{suggested}%"),
+                Category.name.ilike(f"%{clean_term}%"),
+            )
+        )
+        .order_by(Category.is_canonical.desc(), Category.name.asc())
+        .limit(10)
+    )
+    candidates = session.scalars(db_query).all()
+
+    candidate_reads = [
+        CategoryRead(
+            id=c.id,
+            name=c.name,
+            parent_id=c.parent_id,
+            path=c.path,
+            user_id=c.user_id,
+            is_canonical=c.is_canonical,
+            books_count=0,
+            created_at=c.created_at,
+        )
+        for c in candidates
+    ]
+
+    is_exact = any(c.normalized_name == norm_suggested for c in candidates)
+
+    return CategorySuggestion(
+        input_term=clean_term,
+        suggested_canonical=suggested,
+        is_exact_match=is_exact,
+        matching_candidates=candidate_reads,
+    )
+
+
+def get_or_create_canonical_category(
+    session: Session,
+    name: str,
+    user_id: str | None = None,
+    category_id: str | None = None,
+    parent_id: str | None = None,
+) -> tuple[Category, bool]:
+    """Cria ou retorna uma categoria aplicando normalização canônica singular.
+
+    Retorna tupla: (categoria, criado_agora: bool).
+    """
+    from sqlalchemy import or_
+
+    is_valid, error_msg = validate_category_name(name)
+    if not is_valid:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=error_msg,
+        )
+
+    canon_name = canonicalize_name(name)
+    norm_name = normalize_for_search(canon_name)
+    target_id = category_id.strip() if category_id and category_id.strip() else slugify_category(canon_name)
+
+    # Verificar se já existe categoria canônica ou com mesmo normalized_name
+    if category_id and category_id.strip():
+        existing = session.get(Category, target_id)
+    else:
+        existing = session.scalars(
+            select(Category)
+            .where(
+                or_(
+                    Category.id == target_id,
+                    Category.normalized_name == norm_name,
+                )
+            )
+            .where(
+                or_(
+                    Category.user_id.is_(None),
+                    Category.user_id == user_id,
+                )
+            )
+        ).first()
+
+    if existing is not None:
+        return existing, False
+
+    # Determinar caminho e parentesco se informado
+    path = canon_name
+    clean_parent_id = parent_id.strip() if parent_id and parent_id.strip() else None
+    if clean_parent_id:
+        parent = session.get(Category, clean_parent_id)
+        if parent:
+            path = f"{parent.path} / {canon_name}"
+
+    is_canon = is_canonical_slug(target_id)
+    new_cat = Category(
+        id=target_id,
+        name=canon_name,
+        normalized_name=norm_name,
+        is_canonical=is_canon,
+        parent_id=clean_parent_id,
+        path=path,
+        user_id=None if is_canon else user_id,
+    )
+    session.add(new_cat)
+    return new_cat, True
+
+
+def get_taxonomy_stats(session: Session) -> CategoryStats:
+    """Calcula estatísticas agregadas da taxonomia para o painel de conformidade."""
+    from sqlalchemy import func
+
+    total_cats = session.scalar(select(func.count(Category.id))) or 0
+    canonical_cats = (
+        session.scalar(
+            select(func.count(Category.id)).where(Category.is_canonical.is_(True))
+        )
+        or 0
+    )
+    total_assocs = session.scalar(select(func.count()).select_from(book_categories)) or 0
+
+    # Categorias sem nenhum livro associado
+    used_cats_subq = select(book_categories.c.category_id).distinct()
+    unused_cats = (
+        session.scalar(
+            select(func.count(Category.id)).where(Category.id.not_in(used_cats_subq))
+        )
+        or 0
+    )
+
+    return CategoryStats(
+        total_categories=int(total_cats),
+        canonical_categories=int(canonical_cats),
+        unused_categories=int(unused_cats),
+        total_book_associations=int(total_assocs),
+    )
 
 
 def assign_book_categories(session: Session, book: Book, category_ids: list[str]) -> None:

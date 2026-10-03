@@ -1,5 +1,5 @@
 import type {
-  Book, BookPatch, Category, Chapter, ChapterPatch, CoverResponse, DashboardParams, DashboardResponse, ExportConfig, ImportPreview, RestoreResult, Study, StudyCreate, StudyPatch, StudySummary,
+  Book, BookPatch, Category, CategorySuggestion, CategoryStats, Chapter, ChapterPatch, CoverResponse, DashboardParams, DashboardResponse, ExportConfig, ImportPreview, RestoreResult, Study, StudyCreate, StudyPatch, StudySummary,
   TrashSummary, TrashEmptyResponse, BookCanvasResponse, CanvasBatchUpdatePayload, CanvasBatchUpdateItem, StudyCanvasNode,
   StudyRelationsResponse, StudyRelationItem, CreateStudyRelationPayload, UpdateStudyRelationPayload, CandidateStudyItem, BookCanvasRelationItem,
   StudyStatusUpdatePayload, StudyStatusResponse, CanvasFrameItem, CreateCanvasFramePayload, UpdateCanvasFramePayload,
@@ -207,10 +207,25 @@ export const api = {
       category_ids: category_ids || [],
     }),
   }),
-  listCategories: (q?: string, signal?: AbortSignal) => {
-    const url = q && q.trim() ? `/categories?q=${encodeURIComponent(q.trim())}` : '/categories'
-    return request<Category[]>(url, { signal })
+  listCategories: (params?: string | { q?: string; canonical_only?: boolean }, signal?: AbortSignal) => {
+    let q: string | undefined
+    let canonicalOnly: boolean | undefined
+    if (typeof params === 'string') {
+      q = params
+    } else if (params) {
+      q = params.q
+      canonicalOnly = params.canonical_only
+    }
+    const queryParts: string[] = []
+    if (q && q.trim()) queryParts.push(`q=${encodeURIComponent(q.trim())}`)
+    if (canonicalOnly !== undefined) queryParts.push(`canonical_only=${canonicalOnly}`)
+    const qs = queryParts.length ? `?${queryParts.join('&')}` : ''
+    return request<Category[]>(`/categories${qs}`, { signal })
   },
+  suggestCategories: (q: string, signal?: AbortSignal) =>
+    request<CategorySuggestion>(`/categories/suggest?q=${encodeURIComponent(q.trim())}`, { signal }),
+  getCategoryStats: (signal?: AbortSignal) =>
+    request<CategoryStats>('/categories/stats', { signal }),
   updateBook: (id: number, payload: BookPatch) => request<Book>(`/books/${id}`, {
     method: 'PATCH', body: JSON.stringify(payload),
   }),

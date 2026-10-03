@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from 'vue'
 import BookCover from './BookCover.vue'
-import CategorySelector from './CategorySelector.vue'
+import CategoryInput from './CategoryInput.vue'
 import Icon from './ui/Icon.vue'
 import { api, errorMessage } from '../services/api'
 import type { Book } from '../types'
@@ -259,7 +259,7 @@ async function save() {
             <label>
               Categorias <span class="optional">(opcional)</span>
             </label>
-            <CategorySelector
+            <CategoryInput
               v-model="selectedCategoryIds"
               :disabled="saving"
             />

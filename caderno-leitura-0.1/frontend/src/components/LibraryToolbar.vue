@@ -36,7 +36,7 @@ const selectedCategoryName = computed(() => {
   if (!props.selectedCategory) return null
   if (props.selectedCategory === '__uncategorized__') return 'Sem categoria'
   const cat = getCategoryById(props.selectedCategory)
-  return cat ? (cat.path || cat.name) : props.selectedCategory
+  return cat ? cat.name : props.selectedCategory
 })
 
 const searchInput = ref<HTMLInputElement | null>(null)
@@ -133,7 +133,7 @@ function onClearClick() {
               :key="cat.id"
               :value="cat.id"
             >
-              {{ cat.path }}
+              {{ cat.name }}
             </option>
           </select>
           <button

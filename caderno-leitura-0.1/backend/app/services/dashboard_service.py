@@ -80,10 +80,15 @@ def get_dashboard_data(
 
     avg_studies = round(total_studies / total_books, 1) if total_books > 0 else 0.0
 
-    # 1.1 Contagem de Categorias (globais ou do usuário)
-    categories_count_stmt = select(func.count(Category.id))
+    # 1.1 Contagem de Categorias (canônicas ou do usuário)
     if user_id is not None:
-        categories_count_stmt = categories_count_stmt.where((Category.user_id.is_(None)) | (Category.user_id == user_id))
+        categories_count_stmt = select(func.count(Category.id)).where(
+            (Category.is_canonical.is_(True)) | (Category.user_id == user_id)
+        )
+    else:
+        categories_count_stmt = select(func.count(Category.id)).where(
+            Category.is_canonical.is_(True)
+        )
     total_categories = session.scalar(categories_count_stmt) or 0
 
     # 1.2 Aliases para Relações e Integridade de Soft Delete

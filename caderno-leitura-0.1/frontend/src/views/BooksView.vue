@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import BookCover from '../components/BookCover.vue'
 import CategoryBadge from '../components/CategoryBadge.vue'
-import CategorySelector from '../components/CategorySelector.vue'
+import CategoryInput from '../components/CategoryInput.vue'
 import LibraryToolbar from '../components/LibraryToolbar.vue'
 import EmptyState from '../components/ui/EmptyState.vue'
 import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
@@ -17,6 +17,7 @@ import type { Book } from '../types'
 const { handlePointerMove, handlePointerLeave } = useMagneticHover()
 
 const router = useRouter()
+const route = useRoute()
 const activeTab = ref<'meus-livros' | 'compartilhados'>('meus-livros')
 const books = ref<Book[]>([])
 const loading = ref(true)
@@ -80,7 +81,21 @@ async function createBook() {
   if (created && !disposed) await router.push({ name: 'book', params: { bookId: created.id } })
 }
 
-onMounted(load)
+onMounted(async () => {
+  await load()
+  if (route.query.categoria && typeof route.query.categoria === 'string') {
+    setSelectedCategory(route.query.categoria)
+  }
+})
+
+watch(() => route.query.categoria, (newCat) => {
+  if (typeof newCat === 'string' && newCat) {
+    setSelectedCategory(newCat)
+  } else if (!newCat) {
+    clearCategory()
+  }
+})
+
 onBeforeUnmount(() => { disposed = true; request?.abort() })
 </script>
 
@@ -273,7 +288,7 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
           </div>
           <div class="field">
             <label>Categorias <span class="optional">opcional</span></label>
-            <CategorySelector v-model="newBookCategoryIds" :disabled="saving" />
+            <CategoryInput v-model="newBookCategoryIds" :disabled="saving" />
           </div>
           <p v-if="saveError" class="notice error" role="alert">{{ saveError }}</p>
           <button class="primary full-width" :disabled="saving || !title.trim()">{{ saving ? 'Cadastrando…' : 'Cadastrar livro' }}</button>

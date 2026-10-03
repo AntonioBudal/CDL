@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { adminApi } from '../api/admin.ts'
+import { categoriesApi } from '../api/categories.ts'
 import AdminConfirmModal from '../components/admin/AdminConfirmModal.vue'
 import AdminUsersTable from '../components/admin/AdminUsersTable.vue'
 import Icon from '../components/ui/Icon.vue'
 import { useAuth } from '../composables/useAuth.ts'
 import { getAdminSupportConfig, updateAdminSupportConfig } from '../services/api.ts'
-import type { SupportAdminConfig, SupportConfigUpdate } from '../types.ts'
+import type { CategoryStats, SupportAdminConfig, SupportConfigUpdate } from '../types.ts'
 import type {
   AdminStatsSummary,
   AdminUserItem,
@@ -21,6 +22,7 @@ const currentUserId = computed(() => auth.currentUser.value?.id)
 const users = ref<AdminUserItem[]>([])
 const totalUsers = ref(0)
 const stats = ref<AdminStatsSummary | null>(null)
+const categoryStats = ref<CategoryStats | null>(null)
 const loading = ref(false)
 const statsLoading = ref(false)
 const actionLoading = ref(false)
@@ -125,7 +127,12 @@ const modalConfirmLabel = computed(() => {
 async function fetchStats() {
   statsLoading.value = true
   try {
-    stats.value = await adminApi.getStats()
+    const [adminStats, catStats] = await Promise.all([
+      adminApi.getStats(),
+      categoriesApi.getStats().catch(() => null),
+    ])
+    stats.value = adminStats
+    categoryStats.value = catStats
   } catch (err: any) {
     showFeedback(err?.message || 'Falha ao carregar indicadores administrativos.', 'error')
   } finally {
@@ -458,6 +465,19 @@ onMounted(() => {
         <div class="stat-details">
           <span class="stat-label">Total de Estudos</span>
           <strong class="stat-value">{{ stats?.total_studies ?? '—' }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrapper icon-taxonomy">
+          <Icon name="folder" :size="20" />
+        </div>
+        <div class="stat-details">
+          <span class="stat-label">Categorias Canônicas</span>
+          <strong class="stat-value">{{ categoryStats?.canonical_categories ?? '—' }}</strong>
+          <span v-if="categoryStats" class="text-xs text-muted">
+            {{ categoryStats.total_book_associations }} {{ categoryStats.total_book_associations === 1 ? 'vínculo' : 'vínculos' }}
+          </span>
         </div>
       </div>
     </section>
@@ -905,6 +925,11 @@ onMounted(() => {
 .icon-studies {
   background-color: #fffbeb;
   color: #d97706;
+}
+
+.icon-taxonomy {
+  background-color: #eef2ff;
+  color: #4f46e5;
 }
 
 .stat-details {

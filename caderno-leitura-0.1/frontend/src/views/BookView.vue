@@ -291,7 +291,10 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
               v-for="cat in book.categories"
               :key="cat.id"
               :category="cat"
+              clickable
               size="sm"
+              title="Filtrar por esta categoria na biblioteca"
+              @click="router.push({ path: '/books', query: { categoria: cat.id } })"
             />
           </div>
         </div>
