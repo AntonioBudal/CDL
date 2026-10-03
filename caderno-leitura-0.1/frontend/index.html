@@ -1,42 +1,70 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
-      <meta charset="UTF-8" />
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-/>
-<title>Leitorum</title>
-<meta name="description" content="Ambiente dedicado ao registro, estudo e organização de livros e reflexões de leitura." />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Leitorum — Caderno de Leitura</title>
+    <meta name="description" content="Caderno pessoal de leitura e estudos em camadas. Metodologia em 4 partes, privacidade total, zero anúncios e dados sob seu controle." />
+    <meta name="theme-color" content="#09090b" />
+    <link rel="canonical" href="https://leitorum.com" />
 
-<!-- Open Graph -->
-<meta property="og:site_name" content="Leitorum" />
-<meta property="og:title" content="Leitorum" />
-<meta property="og:description" content="Ambiente dedicado ao registro, estudo e organização de livros e reflexões de leitura." />
-<meta property="og:url" content="https://leitorum.com" />
-<meta property="og:type" content="website" />
+    <!-- Google Favicon Guidelines & Apple Touch Icon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="Leitorum" />
-<meta name="twitter:description" content="Ambiente dedicado ao registro, estudo e organização de livros e reflexões de leitura." />
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="Leitorum" />
+    <meta property="og:title" content="Leitorum — Caderno de Leitura" />
+    <meta property="og:description" content="Caderno pessoal de leitura e estudos em camadas. Metodologia em 4 partes, privacidade total, zero anúncios e dados sob seu controle." />
+    <meta property="og:url" content="https://leitorum.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://leitorum.com/assets/og-cover.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
-<!-- appearance-bootstrap -->
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Leitorum — Caderno de Leitura" />
+    <meta name="twitter:description" content="Caderno pessoal de leitura e estudos em camadas. Metodologia em 4 partes, privacidade total, zero anúncios e dados sob seu controle." />
+    <meta name="twitter:image" content="https://leitorum.com/assets/og-cover.png" />
 
-<link rel="stylesheet" href="/src/tokens.css" />
-<link rel="stylesheet" href="/src/palettes.css" />
-<link rel="stylesheet" href="/src/style.css" />
-<link rel="stylesheet" href="/src/themes.css" />
-<link rel="stylesheet" href="/src/appearance-advanced.css" />
-<link rel="stylesheet" href="/src/styles/superclasses/zero-g.css" />
-<link rel="stylesheet" href="/src/mobile-navigation.css" />
-<link rel="stylesheet" href="/src/reading.css" />
-<link rel="stylesheet" href="/src/fonts.css" />
-<link rel="stylesheet" href="/src/font-picker.css" />
+    <!-- Schema.org JSON-LD Baseline -->
+    <script id="schema-json-ld" type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Leitorum",
+      "url": "https://leitorum.com",
+      "description": "Caderno pessoal de leitura e estudos em camadas.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BRL"
+      }
+    }
+    </script>
 
+    <!-- appearance-bootstrap -->
 
-    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/src/tokens.css" />
+    <link rel="stylesheet" href="/src/palettes.css" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="/src/themes.css" />
+    <link rel="stylesheet" href="/src/appearance-advanced.css" />
+    <link rel="stylesheet" href="/src/styles/superclasses/zero-g.css" />
+    <link rel="stylesheet" href="/src/mobile-navigation.css" />
+    <link rel="stylesheet" href="/src/reading.css" />
+    <link rel="stylesheet" href="/src/fonts.css" />
+    <link rel="stylesheet" href="/src/font-picker.css" />
   </head>
   <body> 
     <div id="app"></div>

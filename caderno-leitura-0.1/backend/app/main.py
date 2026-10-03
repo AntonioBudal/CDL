@@ -24,6 +24,7 @@ from app.routers import (
     preferences,
     profile,
     search,
+    seo,
     sharing,
     studies,
     study_highlights,
@@ -92,6 +93,22 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(sharing.router, prefix="/api")
     application.include_router(notifications.router, prefix="/api")
     application.include_router(support.router, prefix="/api")
+    application.include_router(seo.router)
+
+    @application.middleware("http")
+    async def add_security_and_robots_headers(request, call_next):
+        response = await call_next(request)
+        path = request.url.path
+        if (
+            path.startswith("/api/")
+            or path.startswith("/dashboard")
+            or path.startswith("/livros")
+            or path.startswith("/admin")
+            or path.startswith("/estudos/")
+        ):
+            response.headers["X-Robots-Tag"] = "noindex, nofollow"
+        return response
+
     register_database_error_handlers(application)
     register_frontend(application, frontend_dist)
     return application

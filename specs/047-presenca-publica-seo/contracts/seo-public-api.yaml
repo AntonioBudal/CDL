@@ -1,0 +1,102 @@
+openapi: 3.0.3
+info:
+  title: Leitorum SEO & Public Presence API
+  description: Endpoints públicos e contratos semânticos para indexação e presença pública do Leitorum.
+  version: 0.6.8
+paths:
+  /robots.txt:
+    get:
+      summary: Instruções para robôs de busca (Googlebot, Bingbot, etc.)
+      description: Retorna regras de rastreamento permitindo rotas públicas e bloqueando estritamente áreas privadas do acervo.
+      responses:
+        '200':
+          description: Arquivo robots.txt em texto puro.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |
+                  User-agent: *
+                  Allow: /
+                  Allow: /sobre
+                  Allow: /apoie
+                  Allow: /compartilhado/
+                  Disallow: /api/
+                  Disallow: /dashboard
+                  Disallow: /livros
+                  Disallow: /admin
+                  Disallow: /estudos/
+                  Sitemap: https://leitorum.com/sitemap.xml
+
+  /sitemap.xml:
+    get:
+      summary: Mapa dinâmico do site (Sitemap XML)
+      description: Gera mapa XML de páginas públicas ativas e estudos com visibilidade pública, omitindo conteúdo privado.
+      responses:
+        '200':
+          description: Arquivo sitemap.xml no padrão oficial sitemaps.org.
+          content:
+            application/xml:
+              schema:
+                type: string
+                example: |
+                  <?xml version="1.0" encoding="UTF-8"?>
+                  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+                    <url>
+                      <loc>https://leitorum.com/</loc>
+                      <changefreq>weekly</changefreq>
+                      <priority>1.0</priority>
+                    </url>
+                    <url>
+                      <loc>https://leitorum.com/sobre</loc>
+                      <changefreq>monthly</changefreq>
+                      <priority>0.8</priority>
+                    </url>
+                    <url>
+                      <loc>https://leitorum.com/apoie</loc>
+                      <changefreq>monthly</changefreq>
+                      <priority>0.8</priority>
+                    </url>
+                  </urlset>
+
+  /site.webmanifest:
+    get:
+      summary: Manifesto da aplicação web (PWA / atalhos móveis)
+      description: Retorna metadados para instalação e identidade de atalho em navegadores móveis e desktop.
+      responses:
+        '200':
+          description: Web Manifest JSON.
+          content:
+            application/manifest+json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Leitorum
+                  short_name:
+                    type: string
+                    example: Leitorum
+                  start_url:
+                    type: string
+                    example: /
+                  display:
+                    type: string
+                    example: standalone
+                  background_color:
+                    type: string
+                    example: "#ffffff"
+                  theme_color:
+                    type: string
+                    example: "#18181b"
+                  icons:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        src:
+                          type: string
+                        sizes:
+                          type: string
+                        type:
+                          type: string

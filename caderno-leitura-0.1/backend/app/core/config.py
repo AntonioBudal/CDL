@@ -202,3 +202,8 @@ def get_avatars_dir(database_path: Path | None = None) -> Path:
     avatars_dir.mkdir(parents=True, exist_ok=True)
     return avatars_dir
 
+
+def get_app_base_url() -> str:
+    """Retorna a URL base pública do Leitorum configurada no ambiente."""
+    return os.environ.get("APP_BASE_URL", "https://leitorum.com").strip().rstrip("/")
+

@@ -16,6 +16,9 @@ import UserProfileView from '../views/UserProfileView.vue'
 import FriendsView from '../views/FriendsView.vue'
 import AdminView from '../views/AdminView.vue'
 import SupportView from '../views/SupportView.vue'
+import LandingView from '../views/LandingView.vue'
+import AboutView from '../views/AboutView.vue'
+import { updateSeoMeta } from '../composables/useSeoMeta'
 import { useAuthStore } from '../stores/auth.ts'
 
 export const router = createRouter({
@@ -24,8 +27,27 @@ export const router = createRouter({
     { path: '/login', name: 'login', component: LoginView, meta: { title: 'Identificação', public: true } },
     { path: '/registro', name: 'register', component: RegisterView, meta: { title: 'Criar Conta', public: true } },
     { path: '/primeiro-acesso', name: 'setup-owner', component: SetupOwnerView, meta: { title: 'Primeiro Acesso', public: true } },
-    { path: '/', name: 'dashboard', component: DashboardView, meta: { title: 'Dashboard' } },
-    { path: '/dashboard', redirect: '/' },
+    {
+      path: '/',
+      name: 'landing',
+      component: LandingView,
+      meta: {
+        title: 'Início',
+        public: true,
+        description: 'Caderno pessoal de leitura e estudos em camadas. Metodologia em 4 partes, privacidade total e zero anúncios.',
+      },
+    },
+    {
+      path: '/sobre',
+      name: 'about',
+      component: AboutView,
+      meta: {
+        title: 'Sobre o Leitorum',
+        public: true,
+        description: 'Conheça o Leitorum, sua metodologia de leitura em 4 partes, princípios de privacidade e arquitetura local-first.',
+      },
+    },
+    { path: '/dashboard', name: 'dashboard', component: DashboardView, meta: { title: 'Dashboard' } },
     { path: '/books', alias: ['/livros'], name: 'books', component: BooksView, meta: { title: 'Livros' } },
     { path: '/livros/:bookId', alias: ['/books/:bookId'], name: 'book', component: BookView, meta: { title: 'Livro' } },
     { path: '/livros/:bookId/estudos/:studyId', alias: ['/books/:bookId/estudos/:studyId'], name: 'study', component: StudyView, meta: { title: 'Ler estudo' } },
@@ -37,7 +59,17 @@ export const router = createRouter({
     { path: '/lixeira', name: 'trash', component: TrashView, meta: { title: 'Lixeira' } },
     { path: '/@:username', alias: ['/u/:username'], name: 'user-profile', component: UserProfileView, meta: { title: 'Perfil do Leitor' } },
     { path: '/admin', name: 'admin', component: AdminView, meta: { title: 'Administração', requiresAdmin: true } },
-    { path: '/apoie', alias: ['/apoiar'], name: 'support', component: SupportView, meta: { title: 'Apoie o Leitorum', public: true } },
+    {
+      path: '/apoie',
+      alias: ['/apoiar'],
+      name: 'support',
+      component: SupportView,
+      meta: {
+        title: 'Apoie o Leitorum',
+        public: true,
+        description: 'Apoie o desenvolvimento contínuo e independente do Leitorum.',
+      },
+    },
     { path: '/:pathMatch(.*)*', component: NotFoundView, meta: { title: 'Página não encontrada' } },
   ],
   scrollBehavior(to, from, savedPosition) {
@@ -63,33 +95,46 @@ router.beforeEach(async (to, _from, next) => {
     return next({ path: '/login', query: to.fullPath !== '/' ? { redirect: to.fullPath } : undefined })
   }
 
-  // Se já estiver autenticado e tentar acessar telas de login/registro/primeiro-acesso
-  if (auth.isAuthenticated.value && ['/login', '/registro', '/primeiro-acesso'].includes(to.path)) {
-    return next('/')
+  // Se usuário autenticado tentar acessar raiz (Landing Page) ou telas de login/registro
+  if (auth.isAuthenticated.value) {
+    if (to.path === '/' || ['/login', '/registro', '/primeiro-acesso'].includes(to.path)) {
+      let target = '/livros'
+      try {
+        const pref = typeof window !== 'undefined' && window.localStorage
+          ? window.localStorage.getItem('caderno_home_view')
+          : null
+        if (pref === 'dashboard') {
+          target = '/dashboard'
+        }
+      } catch {
+        // ignore
+      }
+      return next(target)
+    }
   }
 
   // Se rota requer privilégios de administrador (RBAC)
   if (to.meta.requiresAdmin === true || to.path === '/admin') {
     if (!auth.isAdmin.value) {
-      return next({ path: '/', query: { aviso: 'acesso-restrito' } })
-    }
-  }
-
-  // Preferência de tela inicial (Dashboard vs Livros)
-  if (to.path === '/') {
-    try {
-      const pref = typeof window !== 'undefined' && window.localStorage
-        ? window.localStorage.getItem('caderno_home_view')
-        : null
-      if (pref === 'books') {
-        return next('/books')
-      }
-    } catch {
-      // ignore
+      return next({ path: '/livros', query: { aviso: 'acesso-restrito' } })
     }
   }
 
   next()
 })
 
-router.afterEach((to) => { document.title = `${String(to.meta.title)} · Leitorum` })
+router.afterEach((to) => {
+  const isPublic = to.meta.public === true
+  const title = String(to.meta.title || 'Caderno de Leitura')
+  const description = typeof to.meta.description === 'string' ? to.meta.description : ''
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://leitorum.com'
+  const canonicalUrl = `${origin}${to.path}`
+
+  updateSeoMeta({
+    title,
+    description,
+    canonicalUrl,
+    robots: isPublic ? 'index, follow' : 'noindex, nofollow',
+    ogType: 'website',
+  })
+})

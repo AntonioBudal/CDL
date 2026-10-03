@@ -107,7 +107,7 @@ interface NavLinkItem {
 
 const mainLinks: NavLinkItem[] = [
   {
-    to: '/',
+    to: '/livros',
     label: 'Livros',
     routes: ['books', 'book', 'study', 'study-edit'],
     icon: 'book-open',
@@ -176,8 +176,8 @@ const visibleMainLinks = computed(() => {
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
   <header class="app-header">
     <div class="header-inner">
-      <RouterLink class="brand" to="/">Leitorum</RouterLink>
-      <nav v-if="!isAuthPage" class="main-nav" aria-label="Navegação principal">
+      <RouterLink class="brand" :to="isAuthenticated ? (homeViewPreference === 'dashboard' ? '/dashboard' : '/livros') : '/'">Leitorum</RouterLink>
+      <nav v-if="!isAuthPage && isAuthenticated" class="main-nav" aria-label="Navegação principal">
         <RouterLink
           v-for="item in visibleMainLinks"
           :key="item.to"
@@ -217,10 +217,28 @@ const visibleMainLinks = computed(() => {
           <span>Mais</span>
         </button>
       </nav>
+      <nav v-else-if="!isAuthPage && !isAuthenticated" class="main-nav public-nav" aria-label="Navegação institucional">
+        <RouterLink
+          to="/sobre"
+          :class="{ selected: route.name === 'about' }"
+          :aria-current="route.name === 'about' ? 'page' : undefined"
+        >
+          <Icon name="book-open" :size="18" :stroke-width="1.8" class="nav-icon" />
+          <span>Sobre</span>
+        </RouterLink>
+        <RouterLink
+          to="/apoie"
+          :class="{ selected: route.name === 'support' }"
+          :aria-current="route.name === 'support' ? 'page' : undefined"
+        >
+          <Icon name="sliders" :size="18" :stroke-width="1.8" class="nav-icon" />
+          <span>Apoie</span>
+        </RouterLink>
+      </nav>
       <div class="header-actions">
-        <SyncStatusBadge v-if="!isAuthPage" />
+        <SyncStatusBadge v-if="!isAuthPage && isAuthenticated" />
         <button
-          v-if="!isAuthPage"
+          v-if="!isAuthPage && isAuthenticated"
           type="button"
           class="search-trigger-btn"
           aria-label="Abrir busca global de estudos (Ctrl+K)"
@@ -230,6 +248,12 @@ const visibleMainLinks = computed(() => {
           <span class="search-label">Buscar</span>
           <kbd class="search-kbd">Ctrl K</kbd>
         </button>
+
+        <!-- Ações para Visitantes (Público) -->
+        <div v-if="!isAuthenticated && !isAuthPage" class="public-auth-actions">
+          <RouterLink to="/login" class="public-login-link">Entrar</RouterLink>
+          <RouterLink to="/registro" class="public-register-btn">Criar Conta</RouterLink>
+        </div>
 
         <!-- Centro de Notificações (F09) -->
         <div v-if="isAuthenticated && !isAuthPage" class="notifications-nav-container">
@@ -298,11 +322,15 @@ const visibleMainLinks = computed(() => {
       </Transition>
     </RouterView>
   </main>
-  <footer class="app-footer">
+  <footer class="app-footer" role="contentinfo">
     <div class="footer-inner">
-      <span>Leitorum</span>
+      <span class="footer-brand">Leitorum</span>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <RouterLink to="/sobre" class="footer-link">Sobre o Leitorum</RouterLink>
       <span class="footer-sep" aria-hidden="true">·</span>
       <RouterLink to="/apoie" class="footer-support-link">Apoie o Leitorum</RouterLink>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span class="footer-license">Software Livre</span>
     </div>
   </footer>
   <GlobalSearchModal />
@@ -319,26 +347,39 @@ const visibleMainLinks = computed(() => {
 </template>
 
 <style scoped>
-.footer-inner {
+.public-auth-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5rem;
 }
 
-.footer-sep {
-  opacity: 0.5;
-}
-
-.footer-support-link {
-  color: inherit;
+.public-login-link {
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-control, 6px);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 600;
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
-.footer-support-link:hover {
-  text-decoration: underline;
-  color: var(--primary, #4338ca);
+.public-login-link:hover {
+  background: var(--color-surface-hover);
+}
+
+.public-register-btn {
+  padding: 0.4rem 0.9rem;
+  background: var(--color-accent);
+  color: var(--color-on-accent, #fff);
+  border-radius: var(--radius-button, 8px);
+  font-size: 0.875rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.public-register-btn:hover {
+  background: var(--color-accent-hover);
 }
 
 .mobile-more-trigger {
