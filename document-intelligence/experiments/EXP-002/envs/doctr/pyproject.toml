@@ -1,5 +1,5 @@
 # Ambiente isolado do EXP-002 para o docTR (detecção de texto + agrupamento em linhas).
-# Pesos pré-treinados com licença em aberto: só será instalado com exceção do usuário.
+# Pesos pré-treinados sem licença declarada (NEEDS VALIDATION): uso experimental local por exceção do usuário.
 [project]
 name = "exp-002-doctr"
 version = "0.0.0"

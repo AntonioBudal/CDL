@@ -67,7 +67,7 @@ de uso próprios — ponto a revalidar antes de qualquer adoção em produto.
 | Doc-UFCN — linhas (`Teklia/doc-ufcn-generic-historical-line`, `Teklia/doc-ufcn-norhand-v1-line`) | `doc-ufcn` 0.1.9; pesos rev. `3338539e` / `43ec7369` | BSD-3-Clause (metadados do PyPI; LICENSE do pacote a conferir na instalação) | MIT (declarada no card) | Sim | `LICENSE STATUS: VERIFIED` — só benchmark EXP-002 |
 | Doc-UFCN — página (`Teklia/doc-ufcn-generic-page`) | pesos rev. `0bdb94c3` | BSD-3-Clause | MIT (declarada no card) | Sim | `LICENSE STATUS: VERIFIED` — só benchmark EXP-002 |
 | Docling Heron (`docling-project/docling-layout-heron`) | rev. `8f39ad3c`; `transformers` 5.18.0 | Apache-2.0 | Apache-2.0 (declarada no card; safetensors) | Sim | `LICENSE STATUS: VERIFIED` — só benchmark EXP-002 |
-| docTR (`python-doctr`) | 1.1.0 | Apache-2.0 | **não declarada** (pesos servidos por `doctr-static.mindee.com`) | Sim | `LICENSE STATUS: NEEDS VALIDATION` — fora, salvo exceção do usuário |
+| docTR (`python-doctr`) | 1.1.0 | Apache-2.0 | **não declarada** (pesos servidos por `doctr-static.mindee.com`) | Sim | `LICENSE STATUS: NEEDS VALIDATION` — uso experimental local autorizado pelo usuário em 2026-10-02; **proibido promover a produto** |
 | Kraken | 7.1.1 / 5.3.0 | Apache-2.0 | — | Sim | **Excluído**: depende de `coremltools`, sem wheels para Windows |
 | Teklia YOLOv11 (`ultralytics`) | — | AGPL-3.0 | MIT | Sim | **Excluído** por decisão do usuário (AGPL) |
 

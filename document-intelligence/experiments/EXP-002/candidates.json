@@ -133,9 +133,10 @@
         "license": null
       },
       "license_status": "NEEDS VALIDATION",
-      "benchmark_allowed": false,
+      "benchmark_allowed": true,
       "product_allowed": false,
-      "remarks": "A documentação não declara licença para os pesos pré-treinados, servidos por um domínio da Mindee (não por um repositório versionado). Só entra com exceção do usuário."
+      "remarks": "A documentação não declara licença para os pesos pré-treinados, servidos por um domínio da Mindee. Executado sob exceção do usuário.",
+      "user_exception": "Autorizado pelo usuário em 2026-10-02 para uso estritamente experimental e local no EXP-002, mantendo LICENSE STATUS: NEEDS VALIDATION. Não pode ser promovido a produto."
     }
   ],
   "excluded": [
