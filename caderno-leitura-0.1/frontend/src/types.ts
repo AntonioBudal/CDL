@@ -205,6 +205,9 @@ export interface StudySummary {
   effective_visibility?: 'inherit' | 'private' | 'friends' | 'custom' | 'public'
   can_edit?: boolean
   owner?: { id: string; username: string; display_name: string; avatar_url?: string | null } | null
+  summary_preview?: string
+  highlights_count?: number
+  relations_count?: number
 }
 
 export interface StudyTreeNode extends StudySummary {

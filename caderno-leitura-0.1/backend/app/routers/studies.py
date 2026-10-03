@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Response, status
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
-from app.models import Chapter, Study, User
+from app.models import Book, Chapter, Study, StudyHighlight, StudyRelation, User
 from app.schemas.export import ExportFormat, ExportOptions, ExportType
 from app.schemas.sharing import (
     GrantPermissionRequest,
@@ -70,6 +70,60 @@ def check_study_mutation_permission(session: DatabaseSession, study_id: int, use
     raise HTTPException(status_code=404, detail="Estudo não encontrado.")
 
 
+def _populate_study_summaries(
+    session: DatabaseSession,
+    studies: list[Study],
+    book: Book,
+    current_user_id: str,
+) -> list[StudySummary]:
+    if not studies:
+        return []
+
+    study_ids = [s.id for s in studies]
+
+    # Agregação em lote de destaques
+    hl_stmt = (
+        select(StudyHighlight.study_id, func.count(StudyHighlight.id))
+        .where(StudyHighlight.study_id.in_(study_ids))
+        .group_by(StudyHighlight.study_id)
+    )
+    hl_counts = dict(session.execute(hl_stmt).all())
+
+    # Agregação em lote de relações (outbound e inbound)
+    rel_out_stmt = (
+        select(StudyRelation.source_study_id, func.count(StudyRelation.id))
+        .where(StudyRelation.source_study_id.in_(study_ids))
+        .group_by(StudyRelation.source_study_id)
+    )
+    rel_out_counts = dict(session.execute(rel_out_stmt).all())
+
+    rel_in_stmt = (
+        select(StudyRelation.target_study_id, func.count(StudyRelation.id))
+        .where(StudyRelation.target_study_id.in_(study_ids))
+        .group_by(StudyRelation.target_study_id)
+    )
+    rel_in_counts = dict(session.execute(rel_in_stmt).all())
+
+    result = []
+    for s in studies:
+        sr = StudySummary.model_validate(s)
+        sr.book_id = book.id
+        sr.effective_visibility = resolve_effective_visibility(s, book)
+        sr.can_edit = (s.user_id == current_user_id)
+
+        # Prévia tipográfica: prioriza summary, fallback para explanation, truncada em até 240 caracteres
+        raw_text = (s.summary or "").strip()
+        if not raw_text:
+            raw_text = (s.explanation or "").strip()
+        sr.summary_preview = raw_text[:240]
+
+        sr.highlights_count = hl_counts.get(s.id, 0)
+        sr.relations_count = rel_out_counts.get(s.id, 0) + rel_in_counts.get(s.id, 0)
+        result.append(sr)
+
+    return result
+
+
 @router.get("/chapters/{chapter_id}/studies", response_model=list[StudySummary], summary="Listar estudos de um capítulo")
 def list_studies(chapter_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
     chapter = get_or_404(session, Chapter, chapter_id, "Capítulo")
@@ -83,15 +137,8 @@ def list_studies(chapter_id: Identifier, session: DatabaseSession, current_user:
             Study.deleted_at.is_(None),
             Study.user_id == current_user.id,
         ).order_by(Study.parent_study_id.nullsfirst(), Study.position, Study.id)
-        studies = session.scalars(statement).all()
-        result = []
-        for s in studies:
-            sr = StudySummary.model_validate(s)
-            sr.book_id = book.id
-            sr.effective_visibility = resolve_effective_visibility(s, book)
-            sr.can_edit = True
-            result.append(sr)
-        return result
+        studies = list(session.scalars(statement).all())
+        return _populate_study_summaries(session, studies, book, current_user.id)
 
     if not can_read_book(session, current_user.id, book):
         raise HTTPException(status_code=404, detail="Capítulo não encontrado.")
@@ -100,16 +147,9 @@ def list_studies(chapter_id: Identifier, session: DatabaseSession, current_user:
         Study.chapter_id == chapter_id,
         Study.deleted_at.is_(None),
     ).order_by(Study.parent_study_id.nullsfirst(), Study.position, Study.id)
-    studies = session.scalars(statement).all()
-    result = []
-    for s in studies:
-        if can_read_study(session, current_user.id, s, book=book):
-            sr = StudySummary.model_validate(s)
-            sr.book_id = book.id
-            sr.effective_visibility = resolve_effective_visibility(s, book)
-            sr.can_edit = (s.user_id == current_user.id)
-            result.append(sr)
-    return result
+    studies = list(session.scalars(statement).all())
+    visible_studies = [s for s in studies if can_read_study(session, current_user.id, s, book=book)]
+    return _populate_study_summaries(session, visible_studies, book, current_user.id)
 
 
 @router.post("/studies/{study_id}/move", response_model=list[StudySummary], summary="Mover e reposicionar estudo na hierarquia")

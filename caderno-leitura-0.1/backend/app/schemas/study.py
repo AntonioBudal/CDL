@@ -83,6 +83,18 @@ class StudySummary(OutputModel):
     effective_visibility: str = "private"
     can_edit: bool = True
     owner: ResourceOwnerSummary | None = None
+    summary_preview: str = Field(
+        default="",
+        description="Prévia tipográfica do resumo (ou da explicação como fallback), truncada em até 240 caracteres.",
+    )
+    highlights_count: int = Field(
+        default=0,
+        description="Quantidade total de trechos destacados ou anotados no estudo.",
+    )
+    relations_count: int = Field(
+        default=0,
+        description="Quantidade total de relações semânticas ativas (de saída ou de entrada).",
+    )
 
 
 class StudyRead(StudySummary):
