@@ -2,7 +2,7 @@
 
 **Input**: [spec.md](./spec.md), [plan.md](./plan.md)
 
-**Status**: `APPROVED` em 2026-10-02. **Fases 0 e 1 concluídas**; Fase 2 aguardando autorização.
+**Status**: `APPROVED` em 2026-10-02. **Fases 0, 1 e 2 concluídas**; Fase 3 aguardando autorização.
 
 **Formato**: `[ID] [P?] [Cenário] Descrição` — `[P]` = pode rodar em paralelo; C1–C4 = cenários da spec.
 
@@ -39,18 +39,35 @@ Resultado da Fase 1 (detalhes em `candidates.json`, `environment.md` e `docs/mod
 
 ## Fase 2 — Cenário 1: gerador de páginas e harness (sem modelos)
 
-- [ ] T008 [C1] Ampliar as frases fictícias PT-BR e gerar o conteúdo das páginas (títulos, parágrafos, notas, rótulos de diagrama) em `dataset/fixtures/exp-002/`.
-- [ ] T009 [C1] Gerador de página limpa com pauta, margem, fontes e verdade de chão por máscara de tinta (`harness/pages/`), com testes de geometria.
-- [ ] T010 [C1] Degradações fotográficas (fundo, homografia, curvatura, iluminação, sombra, desfoque, ruído, JPEG) aplicadas à imagem e aos polígonos, com testes de que a geometria acompanha a imagem; cantos da folha no manifesto.
-- [ ] T011 [C1] Gerar e congelar os conjuntos `dev` (30), `test` (180, 3 níveis) e `large` (10) com manifestos e SHA-256; imagens em `dataset/processed/exp-002/`.
-- [ ] T012 [P] [C1] `src/leitorum_di/metrics/detection.py`: casamento guloso por IoU, Precision/Recall/F1, IoU médio, AP/mAP — com testes de valores calculados à mão em `tests/`.
-- [ ] T013 [C1] IoU de polígono por rasterização e regiões "ignorar" no avaliador do harness, com testes.
-- [ ] T014 [C1] Supervisor e worker derivados do EXP-001, devolvendo geometria; detector de referência e detectores falsos (memória, tempo, falha, deslocamento conhecido).
-- [ ] T015 [C1] `harness/to_ldf.py`: conversão para o LDF 1.0 (tabela de correspondência do plano) e validação pelo contrato; registrar se `graphic_box` cabe em `diagrams[]`.
-- [ ] T016 [C1] Testes do harness: referência dá F1 = mAP = 1,0; deslocamentos conhecidos dão os valores esperados; limites geram `ABORTED`; candidato sem licença gera `REFUSED`; saída válida no LDF.
-- [ ] T017 [C1] `pytest`, `ruff`; executar o benchmark com o detector de referência no `test` e guardar o log.
+- [x] T008 [C1] Ampliar as frases fictícias PT-BR e gerar o conteúdo das páginas (títulos, parágrafos, notas, rótulos de diagrama) em `dataset/fixtures/exp-002/`.
+- [x] T009 [C1] Gerador de página limpa com pauta, margem, fontes e verdade de chão por máscara de tinta (`harness/pages/`), com testes de geometria.
+- [x] T010 [C1] Degradações fotográficas (fundo, homografia, curvatura, iluminação, sombra, desfoque, ruído, JPEG) aplicadas à imagem e aos polígonos, com testes de que a geometria acompanha a imagem; cantos da folha no manifesto.
+- [x] T011 [C1] Gerar e congelar os conjuntos `dev` (30), `test` (180, 3 níveis) e `large` (10) com manifestos e SHA-256; imagens em `dataset/processed/exp-002/`.
+- [x] T012 [P] [C1] `src/leitorum_di/metrics/detection.py`: casamento guloso por IoU, Precision/Recall/F1, IoU médio, AP/mAP — com testes de valores calculados à mão em `tests/`.
+- [x] T013 [C1] IoU de polígono por rasterização e regiões "ignorar" no avaliador do harness, com testes.
+- [x] T014 [C1] Supervisor e worker derivados do EXP-001, devolvendo geometria; detector de referência e detectores falsos (memória, tempo, falha, deslocamento conhecido).
+- [x] T015 [C1] `harness/to_ldf.py`: conversão para o LDF 1.0 (tabela de correspondência do plano) e validação pelo contrato; registrar se `graphic_box` cabe em `diagrams[]`.
+- [x] T016 [C1] Testes do harness: referência dá F1 = mAP = 1,0; deslocamentos conhecidos dão os valores esperados; limites geram `ABORTED`; candidato sem licença gera `REFUSED`; saída válida no LDF.
+- [x] T017 [C1] `pytest`, `ruff`; executar o benchmark com o detector de referência no `test` e guardar o log.
 
-**Checkpoint 2**: harness demonstrado sem modelos. Reportar.
+**Checkpoint 2**: harness demonstrado sem modelos. Reportar. *(Atingido em 2026-10-02.)*
+
+Resultado da Fase 2:
+
+- docTR autorizado pelo usuário como exceção experimental (2026-10-02), mantendo `NEEDS VALIDATION`.
+- Conjuntos congelados (manifestos em `dataset/fixtures/exp-002/`, imagens em `dataset/processed/exp-002/`, 177 MiB):
+  `dev` 30 páginas / 589 linhas; `test` 180 páginas / 3.548 linhas (60 por nível; 180 títulos, 1.310 parágrafos,
+  161 notas de margem, 86 caixas gráficas; 5 fontes; alfabeto PT-BR completo); `large` 10 páginas de 3192 × 4517 px.
+- Métricas de detecção genéricas em `src/leitorum_di/metrics/detection.py` (9 testes); harness com 25 testes.
+- Detector de referência no `test`: F1 = 1,0 (caixa e polígono, IoU 0,5 e 0,75), mAP@0,5 = 1,0; 180/180 documentos
+  válidos no JSON Schema do LDF; mediana de 3–15 ms por página, 31 MiB. Duas repetições `OK`, uma `SKIPPED`.
+- **RAM livre:** a primeira rodada (limite padrão de 1 GiB) foi toda `SKIPPED`; a máquina chegou a 434 MiB livres.
+  A referência rodou com `--min-free-mib 256` (registrado no relatório). Para os modelos da Fase 3 o limite de 1 GiB
+  será mantido.
+- **Achados sobre o contrato LDF:**
+  1. `graphic_box` não tem como guardar a região no LDF 1.0 (`diagrams[]` não tem bbox) — 86 lacunas no `test`.
+  2. O modelo Pydantic `leitorum_di.contracts.ldf` diverge do JSON Schema versionado (estrutura `document`, tipos de
+     bloco `title`/`diagram_region`, sem bbox). O harness valida contra o JSON Schema; nada foi alterado.
 
 ## Fase 3 — Cenários 2 e 3: detectores de linhas e blocos
 

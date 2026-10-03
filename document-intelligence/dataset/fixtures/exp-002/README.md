@@ -16,4 +16,16 @@ ficam em `dataset/processed/exp-002/` (fora do Git) e são regeneráveis a parti
 O texto de cada licença acompanha as fontes (`fonts/OFL-*.txt`). Todas têm glifos para `á é í ó ú â ê ô ã õ à ç`,
 suas maiúsculas, dígitos e a pontuação exigida (conferido com fontTools).
 
+## Manifestos (gerados por `experiments/EXP-002/harness/generate.py`)
+
+| Arquivo | Páginas | Linhas | Uso |
+| :--- | ---: | ---: | :--- |
+| `dev-manifest.json` | 30 (10 por nível, seeds 10000+) | 589 | **só** calibração do baseline clássico e das regras de blocos |
+| `test-manifest.json` | 180 (60 por nível, seeds 20000+) | 3.548 | avaliação congelada; nunca usado para ajuste |
+| `large-manifest.json` | 10 (nível leve, ~12 MP, seeds 30000+) | 187 | caso de borda de memória e tempo |
+
+Cada página traz SHA-256 da imagem, nível e parâmetros de degradação, fonte, cantos da folha, linhas (bbox,
+polígono, bloco, texto fictício), blocos (`title`, `paragraph`, `margin_note`, `graphic_box`) e regiões "ignorar"
+(diagramas). As imagens são regeneráveis; os SHA-256 valem para Pillow 12.3.0, OpenCV 5.0.0 e NumPy 2.5.3.
+
 Nenhum texto do acervo do usuário ou de cadernos reais entra aqui.

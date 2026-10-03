@@ -10,7 +10,7 @@ O `pyproject.toml` e o `uv.lock` principais de `document-intelligence/` não for
 
 | Ambiente | Python | Dependência direta | Versões resolvidas (principais) | Pacotes no lock | Situação |
 | :--- | :--- | :--- | :--- | ---: | :--- |
-| [`envs/harness/`](./envs/harness/pyproject.toml) | 3.14 | `leitorum-di` (local), `pillow`, `numpy`, `opencv-python-headless`, `fonttools`, `pytest` | opencv-python-headless 5.0.0.93, numpy 2.5.3, pillow 12.3.0 | 17 | será instalado na Fase 2 |
+| [`envs/harness/`](./envs/harness/pyproject.toml) | 3.14 | `leitorum-di` (local), `pillow`, `numpy`, `opencv-python-headless`, `fonttools`, `pytest` | opencv-python-headless 5.0.0.93, numpy 2.5.3, pillow 12.3.0 | 20 (+`jsonschema`) | **instalado** (Fase 2) |
 | [`envs/docufcn/`](./envs/docufcn/pyproject.toml) | 3.10 | `doc-ufcn==0.1.9` | torch 2.1.0, numpy 1.26.2, opencv-python-headless 4.7.0.72 | 37 | Fase 3 |
 | [`envs/heron/`](./envs/heron/pyproject.toml) | 3.14 | `torch`, `transformers`, `pillow` | torch 2.14.1, transformers 5.18.0 | 56 | Fase 3 |
 | [`envs/doctr/`](./envs/doctr/pyproject.toml) | 3.14 | `python-doctr==1.1.0` | torch 2.14.1, opencv-python 5.0.0.93 | 61 | exceção do usuário concedida em 2026-10-02; Fase 3 |
