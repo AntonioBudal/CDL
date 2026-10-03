@@ -1,0 +1,13 @@
+# Ambiente isolado do EXP-002 para o Doc-UFCN (segmentação de linhas e de página).
+# doc-ufcn 0.1.9 exige Python 3.10 e fixa torch 2.1.0. NÃO faz parte do pacote leitorum-di.
+[project]
+name = "exp-002-docufcn"
+version = "0.0.0"
+description = "EXP-002: ambiente isolado do Doc-UFCN (CPU-only)"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "doc-ufcn==0.1.9",
+]
+
+[tool.uv]
+package = false

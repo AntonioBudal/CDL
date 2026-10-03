@@ -1,0 +1,15 @@
+# Ambiente isolado do EXP-002 para o detector de layout Docling Heron (RT-DETRv2, pesos safetensors).
+# NÃO faz parte do pacote leitorum-di.
+[project]
+name = "exp-002-heron"
+version = "0.0.0"
+description = "EXP-002: ambiente isolado do Docling Heron (CPU-only)"
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    "torch",
+    "transformers",
+    "pillow",
+]
+
+[tool.uv]
+package = false

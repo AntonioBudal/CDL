@@ -42,7 +42,7 @@ uv run python -m leitorum_di
 
 - **Status**: **`EXP-000` aceito pelo usuário em 2026-09-30** (ver [`experiments/EXP-000/RESULTS.md`](./experiments/EXP-000/RESULTS.md)).
 - **EXP-001 aceito em 2026-10-02**, com o [ADR-001](./docs/adr/ADR-001-nao-adotar-htr-pronto-sem-portugues.md) aceito: nenhum HTR pronto sem treino em português é adotado.
-- **Tarefa Atual**: **`EXP-002`** (layout e segmentação), em especificação: só [`spec.md`](./experiments/EXP-002/spec.md), aguardando revisão. Não escreva plan/tasks antes da aprovação.
+- **Tarefa Atual**: **`EXP-002`** (layout e segmentação). [`spec.md`](./experiments/EXP-002/spec.md) aprovada em 2026-10-02; [`plan.md`](./experiments/EXP-002/plan.md) e [`tasks.md`](./experiments/EXP-002/tasks.md) aprovados; Fase 1 concluída. Não inicie a Fase 2 sem autorização.
   - **Regra de workflow (usuário, 2026-09-30):** todo experimento segue o ciclo Spec Kit adaptado — Specify → Plan → Tasks — e a especificação/plano é apresentada **antes** de qualquer código de avaliação, script de inferência ou download de pesos.
   - **Ritmo fatiado (usuário, 2026-09-30):** nos próximos experimentos e features, produza **um artefato por vez** e aguarde a revisão antes do seguinte (Specify → aprovação → Plan → aprovação → Tasks → aprovação). Na execução, pare em cada checkpoint de fase e reporte.
   - Commits: padrão `FNN(document-inteligence) <nome da fase>`, definido pelo usuário em 2026-09-30.

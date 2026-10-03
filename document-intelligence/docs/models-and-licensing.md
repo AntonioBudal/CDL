@@ -59,12 +59,27 @@ significa o que o repositório oficial publica; não é parecer jurídico. Revis
 `experiments/EXP-001/candidates.json`. Os pesos de PyLaia e TrOCR foram treinados em RIMES/IAM, que têm termos
 de uso próprios — ponto a revalidar antes de qualquer adoção em produto.
 
+### EXP-002 — layout e segmentação (consulta em 2026-10-02)
+
+| Identificador | Versão | Licença do código | Licença dos pesos | Local-First? | Status |
+| :--- | :--- | :--- | :--- | :---: | :--- |
+| Baseline clássico (OpenCV) | `opencv-python-headless` 5.0.0.93 | Apache-2.0 | — (sem pesos) | Sim | `LICENSE STATUS: VERIFIED` |
+| Doc-UFCN — linhas (`Teklia/doc-ufcn-generic-historical-line`, `Teklia/doc-ufcn-norhand-v1-line`) | `doc-ufcn` 0.1.9; pesos rev. `3338539e` / `43ec7369` | BSD-3-Clause (metadados do PyPI; LICENSE do pacote a conferir na instalação) | MIT (declarada no card) | Sim | `LICENSE STATUS: VERIFIED` — só benchmark EXP-002 |
+| Doc-UFCN — página (`Teklia/doc-ufcn-generic-page`) | pesos rev. `0bdb94c3` | BSD-3-Clause | MIT (declarada no card) | Sim | `LICENSE STATUS: VERIFIED` — só benchmark EXP-002 |
+| Docling Heron (`docling-project/docling-layout-heron`) | rev. `8f39ad3c`; `transformers` 5.18.0 | Apache-2.0 | Apache-2.0 (declarada no card; safetensors) | Sim | `LICENSE STATUS: VERIFIED` — só benchmark EXP-002 |
+| docTR (`python-doctr`) | 1.1.0 | Apache-2.0 | **não declarada** (pesos servidos por `doctr-static.mindee.com`) | Sim | `LICENSE STATUS: NEEDS VALIDATION` — fora, salvo exceção do usuário |
+| Kraken | 7.1.1 / 5.3.0 | Apache-2.0 | — | Sim | **Excluído**: depende de `coremltools`, sem wheels para Windows |
+| Teklia YOLOv11 (`ultralytics`) | — | AGPL-3.0 | MIT | Sim | **Excluído** por decisão do usuário (AGPL) |
+
+Revisões completas e SHA-256: `experiments/EXP-002/candidates.json`.
+
 ### Datasets e fontes
 
 | Recurso | Versão | Licença | Origem | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | BRESSAY (manuscrito PT-BR, 1.000 autores) | v1, DOI 10.5281/zenodo.11637681 | **Conflitante**: CC-BY-4.0 nos metadados do Zenodo; o `README.md` do arquivo restringe a "non-commercial research and teaching purposes only" | Zenodo, acesso aberto | `LICENSE STATUS: NEEDS VALIDATION` — uso experimental local autorizado pelo usuário em 2026-10-01; conteúdo fora do Git; **não pode embasar produto nem ser redistribuído** |
 | Fonte Caveat (linhas sintéticas) | `googlefonts/caveat` | OFL-1.1 | GitHub | `LICENSE STATUS: VERIFIED` |
+| Fontes Indie Flower, Kalam, Patrick Hand, Shadows Into Light (páginas sintéticas do EXP-002) | `google/fonts` @ `a0e3dbcd` | OFL-1.1 | GitHub | `LICENSE STATUS: VERIFIED`; glifos PT-BR completos |
 
 ---
 

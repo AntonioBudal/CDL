@@ -1,0 +1,197 @@
+{
+  "schema": "leitorum-di-candidates/1",
+  "experiment": "EXP-002",
+  "verified_on": "2026-10-02",
+  "note": "Licenças conforme declaradas nas fontes oficiais na data indicada; não constitui parecer jurídico. Nenhum peso foi baixado.",
+  "candidates": [
+    {
+      "id": "classic",
+      "stage": "linhas e blocos",
+      "family": "sem aprendizado (OpenCV + NumPy)",
+      "environment": "envs/harness",
+      "code": {
+        "package": "opencv-python-headless 5.0.0.93",
+        "license": "Apache-2.0",
+        "source": "https://github.com/opencv/opencv"
+      },
+      "weights": null,
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false
+    },
+    {
+      "id": "docufcn-line",
+      "stage": "linhas",
+      "family": "FCN (Doc-UFCN)",
+      "environment": "envs/docufcn",
+      "code": {
+        "package": "doc-ufcn==0.1.9",
+        "license": "BSD-3-Clause",
+        "source": "https://pypi.org/project/doc-ufcn/",
+        "remarks": "Licença declarada nos metadados do PyPI; o repositório oficial (gitlab.teklia.com) bloqueia acesso automatizado. Conferir o arquivo LICENSE dentro do pacote na instalação (T020)."
+      },
+      "weights_options": [
+        {
+          "repository": "https://huggingface.co/Teklia/doc-ufcn-generic-historical-line",
+          "revision": "3338539ef366fa0d963e87de675bc431183a7c80",
+          "license": "MIT",
+          "files": {
+            "model.pth": {
+              "bytes": 49198561,
+              "sha256": "b5d0659a29638446f573bec8928f3380f8643f4bee5c9ea7b8e64ae813dcc6f5"
+            }
+          }
+        },
+        {
+          "repository": "https://huggingface.co/Teklia/doc-ufcn-norhand-v1-line",
+          "revision": "43ec736950e268798802a5499318f1183276f0ff",
+          "license": "MIT",
+          "files": {
+            "model.pth": {
+              "bytes": 49115013,
+              "sha256": "8e6e5e4f272a9b43a98de036c9164fdc522d2780e2e66dd601bde930bb14a950"
+            }
+          }
+        }
+      ],
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "remarks": "model.pth é pickle: carregar só após conferir o SHA-256."
+    },
+    {
+      "id": "docufcn-page",
+      "stage": "retificação (detecção da folha)",
+      "family": "FCN (Doc-UFCN)",
+      "environment": "envs/docufcn",
+      "code": {
+        "package": "doc-ufcn==0.1.9",
+        "license": "BSD-3-Clause"
+      },
+      "weights": {
+        "repository": "https://huggingface.co/Teklia/doc-ufcn-generic-page",
+        "revision": "0bdb94c369a902c0f7ffa864d744afa00128308c",
+        "license": "MIT",
+        "files": {
+          "model.pth": {
+            "bytes": 49204383,
+            "sha256": "ab9036a138c9792d433edd02ac3c744745c0b06f01fc50e973c2b92d9e0dfd83"
+          }
+        }
+      },
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false
+    },
+    {
+      "id": "heron",
+      "stage": "blocos (detector de layout)",
+      "family": "RT-DETRv2 (Docling Heron)",
+      "environment": "envs/heron",
+      "code": {
+        "package": "transformers 5.18.0",
+        "license": "Apache-2.0"
+      },
+      "weights": {
+        "repository": "https://huggingface.co/docling-project/docling-layout-heron",
+        "revision": "8f39ad3c0b4c58e9c2d2c84a38465abf757272d8",
+        "license": "Apache-2.0",
+        "files": {
+          "model.safetensors": {
+            "bytes": 171658996,
+            "sha256": "00333a43451945aaf89db8ca9c0a17e75d1537c17db60fdb91aa95f4c7929e0c"
+          }
+        },
+        "training_data": "documentos impressos (ver relatório técnico do Docling; não verificado)"
+      },
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "class_mapping": {
+        "Title": "title",
+        "Section-header": "title",
+        "Text": "paragraph",
+        "Picture": "graphic_box",
+        "Footnote": "margin_note",
+        "Page-header": "margin_note",
+        "Page-footer": "margin_note"
+      },
+      "remarks": "Treinado em documentos impressos; testa se um detector de layout genérico transfere para caderno manuscrito. Pesos em safetensors (sem pickle)."
+    },
+    {
+      "id": "doctr",
+      "stage": "linhas",
+      "family": "detecção de texto (FAST/DBNet) + agrupamento em linhas",
+      "environment": "envs/doctr",
+      "code": {
+        "package": "python-doctr==1.1.0",
+        "license": "Apache-2.0",
+        "source": "https://github.com/mindee/doctr"
+      },
+      "weights": {
+        "host": "https://doctr-static.mindee.com/models (fast_base-688a8b34.pt, db_resnet50-79bd7d70.pt)",
+        "license": null
+      },
+      "license_status": "NEEDS VALIDATION",
+      "benchmark_allowed": false,
+      "product_allowed": false,
+      "remarks": "A documentação não declara licença para os pesos pré-treinados, servidos por um domínio da Mindee (não por um repositório versionado). Só entra com exceção do usuário."
+    }
+  ],
+  "excluded": [
+    {
+      "id": "kraken",
+      "reason": "Kraken 7.1.1 e 5.3.0 dependem de coremltools, sem wheels para Windows (FR-006)."
+    },
+    {
+      "id": "teklia-yolov11-generic-page",
+      "reason": "Depende de ultralytics (AGPL-3.0); excluído por decisão do usuário."
+    },
+    {
+      "id": "pp-doclayout",
+      "reason": "Exige PaddlePaddle; não avaliado nesta rodada (Heron cobre o papel de detector de layout com instalação por wheels)."
+    }
+  ],
+  "fonts": {
+    "Caveat-Regular.ttf": {
+      "bytes": 297900,
+      "sha256": "7af58d70e539c9195cc328617a68c9961ed804a4404b0b818989ba7c013e8776",
+      "source": "https://github.com/googlefonts/caveat @ 59745e81",
+      "license": "OFL-1.1",
+      "license_status": "VERIFIED",
+      "pt_br_glyphs": "completo"
+    },
+    "IndieFlower-Regular.ttf": {
+      "bytes": 108196,
+      "sha256": "ccc94b22b156e9c5dfe50fd051f01b097600b252c24473e624bb43a143140a94",
+      "source": "https://github.com/google/fonts @ a0e3dbcdc3a3ecfafff3f071159ae0221628922d",
+      "license": "OFL-1.1",
+      "license_status": "VERIFIED",
+      "pt_br_glyphs": "completo"
+    },
+    "Kalam-Regular.ttf": {
+      "bytes": 427360,
+      "sha256": "57cecb63d4608019371954274ae1d8c397764debd5b19d4a33c1efa4dc923c0b",
+      "source": "https://github.com/google/fonts @ a0e3dbcdc3a3ecfafff3f071159ae0221628922d",
+      "license": "OFL-1.1",
+      "license_status": "VERIFIED",
+      "pt_br_glyphs": "completo"
+    },
+    "PatrickHand-Regular.ttf": {
+      "bytes": 214772,
+      "sha256": "0f173b3e6cb6d1af25babf7f0057c5ac4ee11f9992b0469bb817e967ef4ad0fc",
+      "source": "https://github.com/google/fonts @ a0e3dbcdc3a3ecfafff3f071159ae0221628922d",
+      "license": "OFL-1.1",
+      "license_status": "VERIFIED",
+      "pt_br_glyphs": "completo"
+    },
+    "ShadowsIntoLight.ttf": {
+      "bytes": 54304,
+      "sha256": "1347863151acdc00fa281daaba1a3543dbce5870b55f9cf7479a15bb84007681",
+      "source": "https://github.com/google/fonts @ a0e3dbcdc3a3ecfafff3f071159ae0221628922d",
+      "license": "OFL-1.1",
+      "license_status": "VERIFIED",
+      "pt_br_glyphs": "completo"
+    }
+  }
+}
