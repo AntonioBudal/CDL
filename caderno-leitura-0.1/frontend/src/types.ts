@@ -981,7 +981,8 @@ export * from './types/profile.ts'
 export * from './types/friendship.ts'
 export * from './types/sharing.ts'
 
-export type HighlightColor = 'yellow' | 'green' | 'blue' | 'pink' | 'purple'
+import type { HighlightColor } from './types/toolbar.ts'
+export * from './types/toolbar.ts'
 export type HighlightKind = 'highlight' | 'note' | 'quote' | 'hidden' | 'question'
 export type StudySectionKey = 'summary' | 'explanation' | 'concepts' | 'references' | 'source_response'
 

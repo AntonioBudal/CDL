@@ -14,11 +14,13 @@ import StudyStatusBadge from '../components/StudyStatusBadge.vue'
 import ShareModal from '../components/sharing/ShareModal.vue'
 import StudyHistoryModal from '../components/StudyHistoryModal.vue'
 import FloatingActionsToolbar from '../components/FloatingActionsToolbar.vue'
+import NoteQuestionPopover from '../components/NoteQuestionPopover.vue'
 import HighlightActionPopover from '../components/HighlightActionPopover.vue'
 import { useStudyHighlights } from '../composables/useStudyHighlights'
 import { useActiveReadingSession } from '../composables/useActiveReadingSession'
 import { formatQuoteText, useTextSelection } from '../composables/useTextSelection'
 import { useFloatingToast } from '../composables/useFloatingToast'
+import { useHighlightColorPreference } from '../composables/useHighlightColorPreference'
 import type { HighlightClickEvent } from '../utils/highlightRenderer'
 import type { HighlightColor, ResourceVisibility, Study, StudySectionKey, TextSelectionContext } from '../types.ts'
 
@@ -129,6 +131,83 @@ const highlightColorMap: Record<HighlightColor, string> = {
 }
 
 const floatingToast = useFloatingToast()
+const { activeColor: lastUsedColor } = useHighlightColorPreference()
+
+const isNotePopoverOpen = ref(false)
+const activePopoverKind = ref<'note' | 'question'>('note')
+const popoverSelection = ref<TextSelectionContext | null>(null)
+
+function handleOpenNote(payload: { selection: TextSelectionContext }) {
+  popoverSelection.value = payload.selection
+  activePopoverKind.value = 'note'
+  isNotePopoverOpen.value = true
+}
+
+function handleOpenQuestion(payload: { selection: TextSelectionContext }) {
+  popoverSelection.value = payload.selection
+  activePopoverKind.value = 'question'
+  isNotePopoverOpen.value = true
+}
+
+async function handlePopoverSave(payload: {
+  text: string
+  color: HighlightColor
+  kind: 'note' | 'question'
+  selection: TextSelectionContext
+}) {
+  const sel = payload.selection
+  if (!sel || !state.context) return
+
+  if (payload.kind === 'note') {
+    const result = await addHighlight({
+      section: sel.section,
+      start_offset: sel.start_offset,
+      end_offset: sel.end_offset,
+      selected_text: sel.selected_text,
+      prefix: sel.prefix,
+      suffix: sel.suffix,
+      color: payload.color,
+      kind: 'note',
+      note: payload.text,
+    })
+    if (result) {
+      floatingToast.showToast({
+        message: 'Anotação salva',
+      })
+    } else {
+      showToast('Não foi possível salvar a anotação.')
+    }
+  } else {
+    const result = await addHighlight({
+      section: sel.section,
+      start_offset: sel.start_offset,
+      end_offset: sel.end_offset,
+      selected_text: sel.selected_text,
+      prefix: sel.prefix,
+      suffix: sel.suffix,
+      color: 'yellow',
+      kind: 'question',
+      note: payload.text,
+    })
+    if (result) {
+      floatingToast.showToast({
+        message: 'Pergunta cadastrada',
+      })
+    } else {
+      showToast('Não foi possível criar a pergunta.')
+    }
+  }
+
+  isNotePopoverOpen.value = false
+  popoverSelection.value = null
+  clearSelection()
+}
+
+function handlePopoverCancel() {
+  isNotePopoverOpen.value = false
+  popoverSelection.value = null
+  clearSelection()
+}
 
 function showToast(message: string) {
   toastMessage.value = message
@@ -577,9 +656,9 @@ onBeforeUnmount(() => {
     />
 
 
-    <!-- Barra Flutuante Contextual de Ações (F0.6.2) -->
+    <!-- Barra Flutuante Contextual de Ações (F0.6.2 / F0.7.3) -->
     <FloatingActionsToolbar
-      :visible="Boolean(selectionContext)"
+      :visible="Boolean(selectionContext) && !isNotePopoverOpen"
       :selection="selectionContext"
       :study-title="state.context.study.title"
       :book-title="state.context.book.title"
@@ -590,8 +669,21 @@ onBeforeUnmount(() => {
       @copy-quote="handleCopyQuote"
       @occlude="handleOcclude"
       @ask-question="handleAskQuestion"
+      @open-note="handleOpenNote"
+      @open-question="handleOpenQuestion"
       @tool-selected="handleToolSelected"
       @close="clearSelection"
+    />
+
+    <!-- Popover Desacoplado de Anotação e Pergunta (F 0.7.3) -->
+    <NoteQuestionPopover
+      :visible="isNotePopoverOpen"
+      :kind="activePopoverKind"
+      :selection="popoverSelection || selectionContext"
+      :active-color="lastUsedColor"
+      :anchor-rect="(popoverSelection || selectionContext)?.boundingRect"
+      @save="handlePopoverSave"
+      @cancel="handlePopoverCancel"
     />
 
     <!-- Popover de Gestão de Destaque Clicado (F0.6.2) -->
