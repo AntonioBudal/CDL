@@ -580,6 +580,8 @@ export type IconName =
   | 'check'
   | 'flame'
   | 'folder'
+  | 'folder-plus'
+  | 'minus'
   | 'calendar'
   | 'download'
   | 'upload'

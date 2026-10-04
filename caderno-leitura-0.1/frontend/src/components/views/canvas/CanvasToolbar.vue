@@ -43,8 +43,7 @@ const emit = defineEmits<{
         :aria-checked="activeTool === 'select'"
         @click="emit('set-tool', 'select')"
       >
-        <Icon name="grid" :size="15" />
-        <span class="btn-label">Selecionar</span>
+        <Icon name="grid" :size="16" />
       </button>
 
       <button
@@ -57,8 +56,7 @@ const emit = defineEmits<{
         :aria-checked="activeTool === 'pan'"
         @click="emit('set-tool', 'pan')"
       >
-        <Icon name="grip-vertical" :size="15" />
-        <span class="btn-label">Mão</span>
+        <Icon name="grip-vertical" :size="16" />
       </button>
 
       <button
@@ -71,8 +69,7 @@ const emit = defineEmits<{
         :aria-checked="activeTool === 'frame'"
         @click="emit('set-tool', 'frame')"
       >
-        <Icon name="folder" :size="15" />
-        <span class="btn-label">Moldura</span>
+        <Icon name="folder" :size="16" />
       </button>
 
       <button
@@ -85,8 +82,7 @@ const emit = defineEmits<{
         :aria-checked="activeTool === 'connect'"
         @click="emit('set-tool', 'connect')"
       >
-        <Icon name="link" :size="15" />
-        <span class="btn-label">Conectar</span>
+        <Icon name="link" :size="16" />
       </button>
     </div>
 
@@ -101,8 +97,7 @@ const emit = defineEmits<{
         aria-label="Novo Estudo"
         @click="emit('quick-create')"
       >
-        <Icon name="plus" :size="15" />
-        <span class="btn-label">Novo Estudo</span>
+        <Icon name="plus" :size="16" />
       </button>
     </div>
 
@@ -112,7 +107,7 @@ const emit = defineEmits<{
     <div class="zoom-controls">
       <button
         type="button"
-        class="canvas-tool-btn"
+        class="canvas-tool-btn zoom-btn"
         title="Aproximar visualização (+)"
         aria-label="Aumentar zoom"
         @click="emit('zoom-in')"
@@ -126,12 +121,12 @@ const emit = defineEmits<{
 
       <button
         type="button"
-        class="canvas-tool-btn"
+        class="canvas-tool-btn zoom-btn"
         title="Afastar visualização (-)"
         aria-label="Diminuir zoom"
         @click="emit('zoom-out')"
       >
-        <span class="zoom-minus" aria-hidden="true">−</span>
+        <Icon name="minus" :size="15" />
       </button>
 
       <button
@@ -141,7 +136,7 @@ const emit = defineEmits<{
         aria-label="Resetar zoom para 100%"
         @click="emit('reset-zoom')"
       >
-        100%
+        <Icon name="rotate-ccw" :size="14" />
       </button>
 
       <button
@@ -153,7 +148,6 @@ const emit = defineEmits<{
         @click="emit('fit-to-view')"
       >
         <Icon name="maximize-2" :size="15" />
-        <span class="btn-label">Ajustar</span>
       </button>
 
       <button
@@ -163,14 +157,13 @@ const emit = defineEmits<{
         aria-label="Adicionar moldura manual"
         @click="emit('add-frame')"
       >
-        <Icon name="folder" :size="15" />
-        <span class="btn-label">Moldura +</span>
+        <Icon name="folder-plus" :size="15" />
       </button>
     </div>
 
     <!-- Indicador de Seleção Múltipla -->
     <div v-if="hasSelection && selectedCount > 0" class="selection-badge" role="status">
-      <span class="badge-text">{{ selectedCount }} selecionado{{ selectedCount > 1 ? 's' : '' }}</span>
+      <span class="badge-text">{{ selectedCount }} sel.</span>
       <button
         type="button"
         class="clear-sel-btn"
@@ -186,10 +179,12 @@ const emit = defineEmits<{
 
 <style scoped>
 .canvas-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.5rem;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 0.35rem;
+  padding: 0.3rem 0.5rem;
   background: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border, #e2e8f0);
   border-radius: 9999px;
@@ -198,14 +193,19 @@ const emit = defineEmits<{
   z-index: 40;
   max-width: 100%;
   overflow-x: auto;
+  white-space: nowrap !important;
+  box-sizing: border-box;
 }
 
 .tool-mode-group,
 .quick-action-group,
 .zoom-controls {
-  display: flex;
-  align-items: center;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
   gap: 0.25rem;
+  flex-shrink: 0 !important;
 }
 
 .toolbar-divider {
@@ -213,117 +213,130 @@ const emit = defineEmits<{
   height: 20px;
   background-color: var(--color-border, #e2e8f0);
   margin: 0 0.15rem;
+  flex-shrink: 0;
 }
 
-.canvas-tool-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  min-width: 38px;
-  min-height: 38px;
-  padding: 0.35rem 0.5rem;
-  background: transparent;
-  border: none;
-  border-radius: 9999px;
-  color: var(--color-text-primary, #1e293b);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  cursor: pointer;
+/* Blindagem total contra seletores globais como :root :is(button, .button) */
+:root .canvas-toolbar :is(button, .button).canvas-tool-btn,
+.canvas-toolbar .canvas-tool-btn {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 36px !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  max-width: 36px !important;
+  max-height: 36px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 50% !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  color: var(--color-text-primary, #1e293b) !important;
+  cursor: pointer !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-.canvas-tool-btn:hover {
-  background: var(--color-surface-hover, #f1f5f9);
-  color: var(--color-primary, #2563eb);
+:root .canvas-toolbar :is(button, .button).canvas-tool-btn:hover,
+.canvas-toolbar .canvas-tool-btn:hover {
+  background: var(--color-surface-hover, #f1f5f9) !important;
+  color: var(--color-primary, #2563eb) !important;
 }
 
-.canvas-tool-btn:focus-visible {
-  outline: 2px solid var(--color-primary, #2563eb);
-  outline-offset: 2px;
+:root .canvas-toolbar :is(button, .button).canvas-tool-btn:focus-visible,
+.canvas-toolbar .canvas-tool-btn:focus-visible {
+  outline: 2px solid var(--color-primary, #2563eb) !important;
+  outline-offset: 2px !important;
 }
 
-.tool-mode-btn.is-active {
-  background: color-mix(in srgb, var(--color-primary, #2563eb) 12%, var(--color-surface, #ffffff));
-  color: var(--color-primary, #2563eb);
-  font-weight: 600;
+:root .canvas-toolbar :is(button, .button).canvas-tool-btn.tool-mode-btn.is-active,
+.canvas-toolbar .canvas-tool-btn.tool-mode-btn.is-active {
+  background: color-mix(in srgb, var(--color-primary, #2563eb) 14%, var(--color-surface, #ffffff)) !important;
+  color: var(--color-primary, #2563eb) !important;
+  border-color: color-mix(in srgb, var(--color-primary, #2563eb) 30%, transparent) !important;
 }
 
-.primary-action-btn {
-  background: var(--color-primary, #2563eb);
-  color: #ffffff;
+:root .canvas-toolbar :is(button, .button).canvas-tool-btn.primary-action-btn,
+.canvas-toolbar .canvas-tool-btn.primary-action-btn {
+  background: var(--color-primary, #2563eb) !important;
+  color: #ffffff !important;
+  border-color: var(--color-primary, #2563eb) !important;
 }
 
-.primary-action-btn:hover {
+:root .canvas-toolbar :is(button, .button).canvas-tool-btn.primary-action-btn:hover,
+.canvas-toolbar .canvas-tool-btn.primary-action-btn:hover {
   filter: brightness(1.08);
-  color: #ffffff;
+  background: var(--color-primary, #2563eb) !important;
+  color: #ffffff !important;
 }
 
-.zoom-indicator {
-  min-width: 44px;
+.canvas-toolbar .zoom-indicator {
+  min-width: 42px;
   text-align: center;
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--color-text-muted, #64748b);
   font-variant-numeric: tabular-nums;
+  user-select: none;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
-.zoom-minus {
-  font-size: 1.15rem;
-  line-height: 1;
-  font-weight: 600;
-}
-
-.reset-btn {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-text-muted, #64748b);
-}
-
-.fit-btn {
-  padding: 0.35rem 0.65rem;
-}
-
-.btn-label {
-  font-size: 0.75rem;
-}
-
-.selection-badge {
-  display: flex;
+.canvas-toolbar .selection-badge {
+  display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.2rem 0.6rem;
+  padding: 0.2rem 0.55rem;
   background: var(--color-primary-light, #eff6ff);
   border: 1px solid var(--color-primary-border, #bfdbfe);
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--color-primary, #2563eb);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
-.clear-sel-btn {
+.canvas-toolbar .clear-sel-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: transparent;
   border: none;
-  padding: 2px;
+  padding: 0;
   cursor: pointer;
   color: var(--color-primary, #2563eb);
   border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  flex-shrink: 0;
 }
 
-.clear-sel-btn:hover {
+.canvas-toolbar .clear-sel-btn:hover {
   background: rgba(37, 99, 235, 0.15);
 }
 
 @media (max-width: 768px) {
-  .canvas-tool-btn {
-    min-width: 44px;
-    min-height: 44px;
-  }
-  .btn-label {
-    display: none;
+  :root .canvas-toolbar :is(button, .button).canvas-tool-btn,
+  .canvas-toolbar .canvas-tool-btn {
+    flex: 0 0 44px !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    max-width: 44px !important;
+    max-height: 44px !important;
   }
 }
 </style>
