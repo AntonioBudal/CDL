@@ -163,3 +163,24 @@ test('startDragNode e updateDragNode movem múltiplos cards selecionados pelo me
   // A distância relativa entre n1 e n2 (350px) permaneceu exatamente invariante!
   assert.equal(n2.x - n1.x, 350)
 })
+
+test('setNodePosition adiciona e atualiza nós diretamente no mapa com persistência livre', () => {
+  const canvasNodes = useCanvasNodes({
+    bookId: ref(1),
+    studies: ref([]),
+  })
+
+  // Adiciona novo nó
+  canvasNodes.setNodePosition(99, 450, 600, true)
+  const n99 = canvasNodes.positionedNodes.value.get(99)
+  assert.ok(n99)
+  assert.equal(n99.study_id, 99)
+  assert.equal(n99.x, 450)
+  assert.equal(n99.y, 600)
+  assert.equal(n99.is_persisted, true)
+
+  // Atualiza nó existente
+  canvasNodes.setNodePosition(99, 480, 620)
+  assert.equal(n99.x, 480)
+  assert.equal(n99.y, 620)
+})

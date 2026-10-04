@@ -23,6 +23,7 @@ const emit = defineEmits<{
   (e: 'drag-start', studyId: number, screenX: number, screenY: number): void
   (e: 'move-keyboard', studyId: number, deltaX: number, deltaY: number): void
   (e: 'trash', study: StudySummary): void
+  (e: 'start-connect', studyId: number, event: MouseEvent): void
 }>()
 
 const nodeElementRef = ref<HTMLElement | null>(null)
@@ -121,6 +122,18 @@ const cardStyle = computed(() => {
       <time :datetime="study.created_at" class="node-date">
         {{ formatDate(study.created_at) }}
       </time>
+
+      <!-- Alça de Conexão Semântica -->
+      <button
+        type="button"
+        class="node-connect-handle"
+        title="Conectar a outro estudo"
+        aria-label="Conectar a outro estudo"
+        @pointerdown.stop
+        @click.stop="emit('start-connect', study.id, $event)"
+      >
+        <Icon name="link" :size="13" />
+      </button>
     </div>
 
     <!-- Título do Estudo -->
@@ -299,8 +312,33 @@ const cardStyle = computed(() => {
   background: rgba(239, 68, 68, 0.1);
 }
 
+.node-connect-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  margin-left: 0.35rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--color-text-muted, #94a3b8);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.node-connect-handle:hover {
+  background: var(--color-primary-light, #eff6ff);
+  color: var(--color-primary, #2563eb);
+  border-color: var(--color-primary-border, #bfdbfe);
+}
+
 @media (max-width: 768px) {
-  .node-action-trash {
+  .node-action-trash,
+  .node-connect-handle {
     min-width: 44px;
     min-height: 44px;
     justify-content: center;

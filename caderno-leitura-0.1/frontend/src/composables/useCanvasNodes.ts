@@ -18,6 +18,7 @@ export const CARD_WIDTH = 280
 export const CARD_HEIGHT = 200
 export const GRID_GAP = 24
 export const COLS_PER_CHAPTER = 3
+export const DEBOUNCE_DELAY_MS = 500
 
 export function computeAutoGridPositions(
   studies: StudySummary[],
@@ -121,6 +122,26 @@ export function useCanvasNodes(options: UseCanvasNodesOptions) {
     }
   }
 
+  function setNodePosition(studyId: number, x: number, y: number, isPersisted = false): void {
+    const existing = positionedNodes.value.get(studyId)
+    if (existing) {
+      existing.x = Math.round(x * 10) / 10
+      existing.y = Math.round(y * 10) / 10
+      if (isPersisted) existing.is_persisted = true
+    } else {
+      positionedNodes.value.set(studyId, {
+        study_id: studyId,
+        x: Math.round(x * 10) / 10,
+        y: Math.round(y * 10) / 10,
+        width: CARD_WIDTH,
+        height: CARD_HEIGHT,
+        z_index: 0,
+        color_tag: null,
+        is_persisted: isPersisted,
+      })
+    }
+  }
+
   function scheduleBatchSave(): void {
     if (saveDebounceTimer) {
       clearTimeout(saveDebounceTimer)
@@ -160,7 +181,7 @@ export function useCanvasNodes(options: UseCanvasNodesOptions) {
       } finally {
         isSaving.value = false
       }
-    }, 300)
+    }, DEBOUNCE_DELAY_MS)
   }
 
   function startDragNode(
@@ -256,6 +277,7 @@ export function useCanvasNodes(options: UseCanvasNodesOptions) {
     dragStudyId,
     boundingBox,
     loadNodes,
+    setNodePosition,
     startDragNode,
     updateDragNode,
     endDragNode,

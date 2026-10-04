@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import Icon from '../../ui/Icon.vue'
+import type { CanvasToolMode } from '../../../types.ts'
 
 interface Props {
   zoomLevel: number
   hasSelection?: boolean
   selectedCount?: number
   hasNodes?: boolean
+  activeTool?: CanvasToolMode
 }
 
 withDefaults(defineProps<Props>(), {
   hasSelection: false,
   selectedCount: 0,
   hasNodes: true,
+  activeTool: 'select',
 })
 
 const emit = defineEmits<{
@@ -21,11 +24,91 @@ const emit = defineEmits<{
   (e: 'fit-to-view'): void
   (e: 'clear-selection'): void
   (e: 'add-frame'): void
+  (e: 'quick-create'): void
+  (e: 'set-tool', tool: CanvasToolMode): void
 }>()
 </script>
 
 <template>
   <div class="canvas-toolbar" role="toolbar" aria-label="Ferramentas e navegação do Canvas">
+    <!-- Grupo de Ferramentas Modais -->
+    <div class="tool-mode-group" role="radiogroup" aria-label="Modo de interação">
+      <button
+        type="button"
+        class="canvas-tool-btn tool-mode-btn"
+        :class="{ 'is-active': activeTool === 'select' }"
+        title="Ferramenta de Seleção e Mover (V)"
+        aria-label="Selecionar"
+        role="radio"
+        :aria-checked="activeTool === 'select'"
+        @click="emit('set-tool', 'select')"
+      >
+        <Icon name="grid" :size="15" />
+        <span class="btn-label">Selecionar</span>
+      </button>
+
+      <button
+        type="button"
+        class="canvas-tool-btn tool-mode-btn"
+        :class="{ 'is-active': activeTool === 'pan' }"
+        title="Ferramenta Mão / Navegação Livre (H ou Espaço)"
+        aria-label="Mão"
+        role="radio"
+        :aria-checked="activeTool === 'pan'"
+        @click="emit('set-tool', 'pan')"
+      >
+        <Icon name="grip-vertical" :size="15" />
+        <span class="btn-label">Mão</span>
+      </button>
+
+      <button
+        type="button"
+        class="canvas-tool-btn tool-mode-btn"
+        :class="{ 'is-active': activeTool === 'frame' }"
+        title="Desenhar Moldura Espacial (F)"
+        aria-label="Moldura"
+        role="radio"
+        :aria-checked="activeTool === 'frame'"
+        @click="emit('set-tool', 'frame')"
+      >
+        <Icon name="folder" :size="15" />
+        <span class="btn-label">Moldura</span>
+      </button>
+
+      <button
+        type="button"
+        class="canvas-tool-btn tool-mode-btn"
+        :class="{ 'is-active': activeTool === 'connect' }"
+        title="Ferramenta de Conexão Semântica (C)"
+        aria-label="Conectar"
+        role="radio"
+        :aria-checked="activeTool === 'connect'"
+        @click="emit('set-tool', 'connect')"
+      >
+        <Icon name="link" :size="15" />
+        <span class="btn-label">Conectar</span>
+      </button>
+    </div>
+
+    <div class="toolbar-divider" aria-hidden="true" />
+
+    <!-- Ação de Criação Rápida de Estudo -->
+    <div class="quick-action-group">
+      <button
+        type="button"
+        class="canvas-tool-btn primary-action-btn quick-create-btn"
+        title="Criar novo estudo no Canvas (Duplo clique ou botão)"
+        aria-label="Novo Estudo"
+        @click="emit('quick-create')"
+      >
+        <Icon name="plus" :size="15" />
+        <span class="btn-label">Novo Estudo</span>
+      </button>
+    </div>
+
+    <div class="toolbar-divider" aria-hidden="true" />
+
+    <!-- Controles de Zoom e Enquadramento -->
     <div class="zoom-controls">
       <button
         type="button"
@@ -34,7 +117,7 @@ const emit = defineEmits<{
         aria-label="Aumentar zoom"
         @click="emit('zoom-in')"
       >
-        <Icon name="plus" :size="16" />
+        <Icon name="plus" :size="15" />
       </button>
 
       <span class="zoom-indicator" aria-live="polite" aria-atomic="true">
@@ -76,12 +159,12 @@ const emit = defineEmits<{
       <button
         type="button"
         class="canvas-tool-btn add-frame-btn"
-        title="Criar moldura manual delimitadora"
+        title="Criar moldura delimitadora"
         aria-label="Adicionar moldura manual"
         @click="emit('add-frame')"
       >
         <Icon name="folder" :size="15" />
-        <span class="btn-label">Moldura</span>
+        <span class="btn-label">Moldura +</span>
       </button>
     </div>
 
@@ -105,7 +188,7 @@ const emit = defineEmits<{
 .canvas-toolbar {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   padding: 0.35rem 0.5rem;
   background: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border, #e2e8f0);
@@ -113,12 +196,23 @@ const emit = defineEmits<{
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   user-select: none;
   z-index: 40;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
+.tool-mode-group,
+.quick-action-group,
 .zoom-controls {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background-color: var(--color-border, #e2e8f0);
+  margin: 0 0.15rem;
 }
 
 .canvas-tool-btn {
@@ -136,7 +230,7 @@ const emit = defineEmits<{
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .canvas-tool-btn:hover {
@@ -147,6 +241,22 @@ const emit = defineEmits<{
 .canvas-tool-btn:focus-visible {
   outline: 2px solid var(--color-primary, #2563eb);
   outline-offset: 2px;
+}
+
+.tool-mode-btn.is-active {
+  background: color-mix(in srgb, var(--color-primary, #2563eb) 12%, var(--color-surface, #ffffff));
+  color: var(--color-primary, #2563eb);
+  font-weight: 600;
+}
+
+.primary-action-btn {
+  background: var(--color-primary, #2563eb);
+  color: #ffffff;
+}
+
+.primary-action-btn:hover {
+  filter: brightness(1.08);
+  color: #ffffff;
 }
 
 .zoom-indicator {

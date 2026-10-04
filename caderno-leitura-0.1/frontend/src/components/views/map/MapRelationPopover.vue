@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import type { StudySummary, StudyRelationItem, StudyRelationType } from '../../../types.ts'
+import type { StudySummary, StudyRelationItem, BookCanvasRelationItem, StudyRelationType } from '../../../types.ts'
 import Icon from '../../ui/Icon.vue'
 import { RELATION_TYPE_LABELS } from '../../../composables/useStudyRelations.ts'
 
@@ -8,7 +8,7 @@ interface Props {
   isOpen: boolean
   sourceStudy: StudySummary | null
   targetStudy: StudySummary | null
-  existingRelation?: StudyRelationItem | null
+  existingRelation?: StudyRelationItem | BookCanvasRelationItem | null
   position: { x: number; y: number }
 }
 

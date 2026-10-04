@@ -938,6 +938,41 @@ export interface UpdateCanvasFramePayload {
   height?: number
 }
 
+// --- Tipos de Mesa Espacial e Smart Snapping (F 0.7.8) ---
+
+export type CanvasToolMode = 'select' | 'pan' | 'frame' | 'connect'
+
+export interface SnappingTarget {
+  x: number
+  y: number
+  width: number
+  height: number
+  id?: number | string
+}
+
+export interface SmartGuide {
+  type: 'horizontal' | 'vertical'
+  coordinate: number
+  start: number
+  end: number
+}
+
+export interface SnappedPosition {
+  x: number
+  y: number
+  guides: SmartGuide[]
+}
+
+export interface CanvasQuickCreateState {
+  isOpen: boolean
+  worldX: number
+  worldY: number
+  clientX: number
+  clientY: number
+  connectedSourceId?: number | null
+}
+
+
 export interface StudyGroup<T = any> {
   id: string
   title: string
