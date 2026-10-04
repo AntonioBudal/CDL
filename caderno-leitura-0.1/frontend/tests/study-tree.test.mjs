@@ -29,6 +29,7 @@ globalThis.window = {
 const {
   buildStudyTree,
   useStudyHierarchy,
+  calculateBranchProgress,
   MAX_TREE_DEPTH,
   getSubtreeHeight,
   getNodeDepth,
@@ -166,4 +167,63 @@ test('canNestUnder respeita o limite de profundidade de 5 níveis', () => {
 
   // Aninhar sob N3 cria nó em profundidade 4 (5 níveis no total: 0,1,2,3,4) -> Permitido
   assert.equal(hierarchy.canNestUnder(6, 4), true)
+})
+
+// ==========================================
+// User Story 2: Percepção e Progresso Agregado por Ramo
+// ==========================================
+
+test('calculateBranchProgress e buildStudyTree calculam progresso agregado recursivo em tempo linear', () => {
+  const studies = [
+    { id: 1, title: 'Tópico 1', parent_study_id: null, position: 0, reading_status: 'rascunho' },
+    { id: 2, title: 'Subtópico 1.1', parent_study_id: 1, position: 0, reading_status: 'concluido' },
+    { id: 3, title: 'Subtópico 1.2', parent_study_id: 1, position: 1, reading_status: 'revisado' },
+    { id: 4, title: 'Detalhe 1.2.1', parent_study_id: 3, position: 0, reading_status: 'rascunho' },
+    { id: 5, title: 'Tópico 2 (Folha)', parent_study_id: null, position: 1, reading_status: 'concluido' },
+  ]
+
+  const tree = buildStudyTree(studies)
+
+  // Tópico 2 é folha (sem filhos): progress deve ser null
+  assert.equal(tree[1].progress, null)
+
+  // Subtópico 1.2 tem 1 filho (Detalhe 1.2.1 - rascunho)
+  assert.ok(tree[0].children[1].progress)
+  assert.equal(tree[0].children[1].progress.total, 1)
+  assert.equal(tree[0].children[1].progress.completed, 0)
+  assert.equal(tree[0].children[1].progress.percent, 0)
+  assert.equal(tree[0].children[1].progress.label, '0/1 concluídos')
+
+  // Tópico 1 tem 3 descendentes no total (2, 3 e 4).
+  // Status: 2 é concluido, 3 é revisado, 4 é rascunho.
+  // Concluidos consolidado: 2 (concluido + revisado).
+  assert.ok(tree[0].progress)
+  assert.equal(tree[0].progress.total, 3)
+  assert.equal(tree[0].progress.completed, 2)
+  assert.equal(tree[0].progress.percent, 67)
+  assert.equal(tree[0].progress.label, '2/3 concluídos')
+  assert.equal(tree[0].progress.details.concluido, 1)
+  assert.equal(tree[0].progress.details.revisado, 1)
+  assert.equal(tree[0].progress.details.rascunho, 1)
+})
+
+test('useStudyHierarchy suporta bookId como chave de persistência de nós expandidos', () => {
+  globalThis.localStorage.clear()
+
+  const studies = ref([
+    { id: 10, title: 'Pai', parent_study_id: null, position: 0 },
+    { id: 11, title: 'Filho', parent_study_id: 10, position: 0 },
+  ])
+  const bookId = ref(55)
+
+  const hierarchy = useStudyHierarchy(studies, null, bookId)
+
+  // Padrão: pai inicia expandido
+  assert.equal(hierarchy.isNodeExpanded(10), true)
+
+  hierarchy.toggleNode(10)
+  assert.equal(hierarchy.isNodeExpanded(10), false)
+
+  const saved = globalThis.localStorage.getItem('caderno_tree_expanded_55')
+  assert.ok(saved)
 })

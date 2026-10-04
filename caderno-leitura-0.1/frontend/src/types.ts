@@ -224,11 +224,27 @@ export interface StudyListFilterState {
   sortDirection: SortDirection
 }
 
+export interface BranchProgressDetails {
+  rascunho: number
+  em_andamento: number
+  revisado: number
+  concluido: number
+}
+
+export interface BranchProgress {
+  total: number
+  completed: number
+  percent: number
+  label: string
+  details: BranchProgressDetails
+}
+
 export interface StudyTreeNode extends StudySummary {
   parent_study_id: number | null
   position: number
   depth: number
   children: StudyTreeNode[]
+  progress?: BranchProgress | null
 }
 
 export interface StudyMovePayload {

@@ -30,6 +30,7 @@ const emit = defineEmits<{
 
 const studiesRef = toRef(props, 'studies')
 const chapterIdRef = toRef(props, 'chapterId')
+const bookIdRef = toRef(props, 'bookId')
 
 const {
   treeRoots,
@@ -39,7 +40,7 @@ const {
   expandAll,
   collapseAll,
   canNestUnder,
-} = useStudyHierarchy(studiesRef, chapterIdRef)
+} = useStudyHierarchy(studiesRef, chapterIdRef, bookIdRef)
 
 const physics = useSuperclassPhysics()
 

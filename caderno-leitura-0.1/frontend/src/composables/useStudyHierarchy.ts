@@ -1,5 +1,10 @@
 import { computed, ref, watch, type Ref } from 'vue'
-import type { StudySummary, StudyTreeNode } from '../types.ts'
+import type {
+  StudySummary,
+  StudyTreeNode,
+  BranchProgress,
+  BranchProgressDetails,
+} from '../types.ts'
 
 export const MAX_TREE_DEPTH = 5 // Níveis de 0 a 4
 
@@ -13,11 +18,62 @@ function getStorage(): Storage | null {
   return null
 }
 
+export function calculateBranchProgress(node: StudyTreeNode): BranchProgress | null {
+  if (!node.children || node.children.length === 0) {
+    return null
+  }
+
+  const details: BranchProgressDetails = {
+    rascunho: 0,
+    em_andamento: 0,
+    revisado: 0,
+    concluido: 0,
+  }
+
+  function collect(children: StudyTreeNode[]) {
+    for (const child of children) {
+      const st = (child.reading_status || 'rascunho').toLowerCase()
+      if (st === 'concluido') {
+        details.concluido++
+      } else if (st === 'revisado') {
+        details.revisado++
+      } else if (st === 'em_andamento' || st === 'em_estudo') {
+        details.em_andamento++
+      } else {
+        details.rascunho++
+      }
+
+      if (child.children && child.children.length > 0) {
+        collect(child.children)
+      }
+    }
+  }
+
+  collect(node.children)
+
+  const total =
+    details.rascunho +
+    details.em_andamento +
+    details.revisado +
+    details.concluido
+  const completed = details.concluido + details.revisado
+  const percent = total > 0 ? Math.round((completed / total) * 100) : 0
+  const label = `${completed}/${total} concluídos`
+
+  return {
+    total,
+    completed,
+    percent,
+    label,
+    details,
+  }
+}
+
 export function buildStudyTree(studies: StudySummary[]): StudyTreeNode[] {
   if (!studies || studies.length === 0) return []
 
   const nodeMap = new Map<number, StudyTreeNode>()
-  
+
   // 1. Cria objetos TreeNode para todos os estudos
   for (const s of studies) {
     nodeMap.set(s.id, {
@@ -26,6 +82,7 @@ export function buildStudyTree(studies: StudySummary[]): StudyTreeNode[] {
       position: s.position ?? 0,
       depth: 0,
       children: [],
+      progress: null,
     })
   }
 
@@ -61,7 +118,20 @@ export function buildStudyTree(studies: StudySummary[]): StudyTreeNode[] {
     }
   }
 
+  // 4. Anexa métricas de progresso de baixo para cima
+  function attachBranchProgress(nodes: StudyTreeNode[]) {
+    for (const n of nodes) {
+      if (n.children.length > 0) {
+        attachBranchProgress(n.children)
+        n.progress = calculateBranchProgress(n)
+      } else {
+        n.progress = null
+      }
+    }
+  }
+
   sortAndSetDepth(roots, 0)
+  attachBranchProgress(roots)
   return roots
 }
 
@@ -105,12 +175,16 @@ export function getNodeDepth(nodeId: number, nodeMap: Map<number, StudyTreeNode>
 
 export function useStudyHierarchy(
   studiesRef: Ref<StudySummary[]>,
-  chapterIdRef?: Ref<number | null | undefined>
+  chapterIdRef?: Ref<number | null | undefined> | null,
+  bookIdRef?: Ref<number | null | undefined> | null
 ) {
   const expandedNodeIds = ref<Set<number>>(new Set())
   const storageKey = computed(() => {
     const chId = chapterIdRef?.value
-    return chId ? `caderno_tree_expanded_ch_${chId}` : null
+    if (chId) return `caderno_tree_expanded_ch_${chId}`
+    const bId = bookIdRef?.value
+    if (bId) return `caderno_tree_expanded_${bId}`
+    return null
   })
 
   // Carrega nós expandidos do localStorage

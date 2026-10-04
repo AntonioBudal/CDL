@@ -45,6 +45,13 @@ const isMobileMenuOpen = ref(false)
 const hasChildren = computed(() => props.node.children && props.node.children.length > 0)
 const childCount = computed(() => props.node.children?.length ?? 0)
 
+const progressTooltip = computed(() => {
+  if (!props.node.progress) return ''
+  const p = props.node.progress
+  const d = p.details
+  return `Ramo: ${p.label} (${p.percent}%)\n${d.concluido} concluídos • ${d.revisado} revisados • ${d.em_andamento} em andamento • ${d.rascunho} rascunhos`
+})
+
 function formatDate(isoStr: string): string {
   try {
     return new Date(isoStr).toLocaleDateString('pt-BR')
@@ -143,9 +150,25 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
                 {{ node.title }}
               </RouterLink>
             </h4>
-            <!-- Badge de contagem de filhos (quando recolhido ou como resumo) -->
+            <!-- Micro-badge de progresso agregado do ramo temático (User Story 2) -->
+            <div
+              v-if="node.progress"
+              class="branch-progress-badge"
+              role="status"
+              :title="progressTooltip"
+              :aria-label="`Progresso do ramo: ${node.progress.label}`"
+            >
+              <span class="progress-fraction">{{ node.progress.label }}</span>
+              <div class="progress-bar-track" aria-hidden="true">
+                <div
+                  class="progress-bar-fill"
+                  :style="{ width: `${node.progress.percent}%` }"
+                ></div>
+              </div>
+            </div>
+            <!-- Badge de contagem de filhos (quando não possui métricas de progresso) -->
             <span
-              v-if="hasChildren"
+              v-else-if="hasChildren"
               class="child-count-badge"
               :class="{ 'is-collapsed-badge': !isExpanded }"
               :title="`${childCount} sub-estudo(s) subordinado(s)`"
@@ -298,10 +321,12 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
 .tree-node-connector {
   position: absolute;
   left: -1rem;
-  top: 1.4rem;
+  top: 0;
   width: 0.9rem;
-  height: 2px;
-  background-color: var(--color-border, #e2e8f0);
+  height: 1.4rem;
+  border-left: 2px solid var(--color-border, #e2e8f0);
+  border-bottom: 2px solid var(--color-border, #e2e8f0);
+  border-bottom-left-radius: 4px;
 }
 
 .tree-node-card {
@@ -342,10 +367,10 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
 }
 
 .tree-node-item.drop-inside > .tree-node-card {
-  border-color: var(--color-accent, #3b82f6);
-  border-style: dashed;
-  background-color: color-mix(in srgb, var(--color-accent) 15%, var(--color-surface));
-  box-shadow: 0 0 0 2px var(--color-accent, #3b82f6);
+  border: 2px dashed var(--color-accent, #3b82f6);
+  background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+  box-shadow: 0 0 0 2px var(--color-accent, #3b82f6),
+              inset 0 0 8px color-mix(in srgb, var(--color-accent) 15%, transparent);
 }
 
 .drop-line {
@@ -455,6 +480,41 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
 
 .node-title-link:hover {
   color: var(--color-accent);
+}
+
+.branch-progress-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  background-color: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  font-size: 0.72rem;
+  color: var(--color-muted, #64748b);
+  cursor: help;
+  flex-shrink: 0;
+}
+
+.progress-fraction {
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-bar-track {
+  width: 32px;
+  height: 5px;
+  background-color: var(--color-border-divider, #e2e8f0);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--color-accent, #3b82f6);
+  border-radius: 999px;
+  transition: width 0.25s ease;
 }
 
 .child-count-badge {
@@ -593,7 +653,8 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
 /* Ergonomia móvel: alvos mínimos de 44x44px */
 @media (max-width: 768px) {
   .touch-target,
-  .mobile-menu-toggle-btn {
+  .mobile-menu-toggle-btn,
+  .tree-chevron-btn {
     min-width: 44px;
     min-height: 44px;
   }
