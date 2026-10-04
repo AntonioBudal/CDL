@@ -876,6 +876,10 @@ export async function getStudyRelations(studyId: number, signal?: AbortSignal): 
   return request<StudyRelationsResponse>(`/studies/${studyId}/relations`, { signal })
 }
 
+export async function createStudy(payload: StudyCreate): Promise<Study> {
+  return api.createStudy(payload)
+}
+
 export async function createStudyRelation(
   studyId: number,
   payload: CreateStudyRelationPayload,

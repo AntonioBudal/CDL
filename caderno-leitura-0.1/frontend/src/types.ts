@@ -837,6 +837,59 @@ export interface BookCanvasRelationItem {
   description: string
 }
 
+// --- Grafo Semântico e Map View (F 0.7.7) ---
+
+export interface MapNodeItem {
+  study: StudySummary
+  x: number
+  y: number
+  angle: number
+  ring: 'core' | 'primary' | 'secondary'
+  isCore: boolean
+  degree: number
+}
+
+export interface MapConnectionEdge {
+  id: number
+  sourceStudyId: number
+  targetStudyId: number
+  relationType: StudyRelationType
+  description: string | null
+  path: string
+  label: string
+  badgeX: number
+  badgeY: number
+  isContradiction: boolean
+}
+
+export interface RelationPopoverState {
+  isOpen: boolean
+  sourceNode: MapNodeItem | null
+  targetNode: MapNodeItem | null
+  existingRelationId: number | null
+  selectedType: StudyRelationType
+  description: string
+  isReversed: boolean
+  anchorX: number
+  anchorY: number
+}
+
+export interface QuickCreateState {
+  isOpen: boolean
+  x: number
+  y: number
+  sourceNodeId: number | null
+  title: string
+  sectionKey: 'summary' | 'concepts' | 'explanation'
+  sectionContent: string
+}
+
+export interface MapViewportState {
+  panX: number
+  panY: number
+  zoomLevel: number
+}
+
 // --- Agrupamento Visual e Status de Leitura (F05) ---
 
 export type ReadingStatus = 'rascunho' | 'em_estudo' | 'em_andamento' | 'revisado' | 'concluido'
