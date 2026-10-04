@@ -5,10 +5,11 @@ import { api } from '../services/api'
 import { useStudyResource } from '../composables/useStudyResource'
 import { useStudyEdit } from '../composables/useStudyEdit'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
+import { useStudyDraft } from '../composables/useStudyDraft'
 import StudyEditorFields from '../components/StudyEditorFields.vue'
 import ConflictResolutionModal from '../components/sync/ConflictResolutionModal.vue'
 import StudyHistoryModal from '../components/StudyHistoryModal.vue'
-import type { Study } from '../types.ts'
+import type { Study, StudyEditorDraftPayload } from '../types.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -20,10 +21,33 @@ const historyModalOpen = ref(false)
 let disposed = false
 useUnsavedChanges(() => dirty.value, () => state.saving)
 
+const draft = useStudyDraft({
+  studyId: () => resourceState.context?.study?.id,
+  getCurrentData: () => ({
+    title: state.title,
+    location: state.location,
+    sections: state.sections,
+    notes: state.notes,
+  }),
+  onRestore: (savedDraft: StudyEditorDraftPayload) => {
+    state.title = savedDraft.title
+    state.location = savedDraft.location
+    state.sections = { ...savedDraft.sections }
+    state.notes = savedDraft.notes
+  },
+})
+const { isDraftRestored, saveDraft, restoreDraft, discardDraft, clearDraft } = draft
+
 function handleStudyRestored(updatedStudy: Study) {
   editor.load(updatedStudy)
 }
 
+function handleDiscardDraft() {
+  discardDraft()
+  if (resourceState.context?.study) {
+    editor.load(resourceState.context.study)
+  }
+}
 
 const localFormData = computed(() => ({
   title: state.title,
@@ -38,7 +62,10 @@ const localFormData = computed(() => ({
 async function load() {
   editor.clear()
   const context = await resource.load(route.params.bookId, route.params.studyId)
-  if (context) editor.load(context.study)
+  if (context) {
+    editor.load(context.study)
+    restoreDraft()
+  }
 }
 
 async function save() {
@@ -46,6 +73,7 @@ async function save() {
   if (!context) return
   const saved = await editor.save()
   if (saved && !disposed) {
+    clearDraft()
     await router.push({ name: 'study', params: { bookId: context.book.id, studyId: saved.id } })
   }
 }
@@ -55,6 +83,7 @@ async function handleOverwrite() {
   if (!context) return
   const saved = await editor.overwrite()
   if (saved && !disposed) {
+    clearDraft()
     await router.push({ name: 'study', params: { bookId: context.book.id, studyId: saved.id } })
   }
 }
@@ -62,6 +91,23 @@ async function handleOverwrite() {
 async function handleReload() {
   await editor.reload()
 }
+
+watch(
+  [
+    () => state.title,
+    () => state.location,
+    () => state.sections.summary,
+    () => state.sections.explanation,
+    () => state.sections.concepts,
+    () => state.sections.references,
+    () => state.notes,
+  ],
+  () => {
+    if (dirty.value && resourceState.context?.study?.id) {
+      saveDraft()
+    }
+  }
+)
 
 watch([() => route.params.bookId, () => route.params.studyId], load, { immediate: true })
 onBeforeUnmount(() => { disposed = true; resource.cancel() })
@@ -104,6 +150,16 @@ onBeforeUnmount(() => { disposed = true; resource.cancel() })
           Histórico de versões
         </button>
       </header>
+
+      <!-- Banner de rascunho recuperado automaticamente da sessão -->
+      <div v-if="isDraftRestored" class="draft-recovery-banner notice info" role="status" aria-live="polite">
+        <div class="banner-content">
+          <span>Rascunho recuperado automaticamente da sua sessão anterior.</span>
+          <button type="button" class="text-link discard-btn" @click="handleDiscardDraft">
+            Descartar rascunho
+          </button>
+        </div>
+      </div>
 
       <form class="import-form panel import-step" @submit.prevent="save">
         <fieldset :disabled="state.saving">
@@ -154,6 +210,28 @@ onBeforeUnmount(() => { disposed = true; resource.cancel() })
         @restored="handleStudyRestored"
       />
     </template>
-
   </div>
 </template>
+
+<style scoped>
+.draft-recovery-banner {
+  margin-bottom: 1rem;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.discard-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  font-size: 0.875rem;
+}
+</style>

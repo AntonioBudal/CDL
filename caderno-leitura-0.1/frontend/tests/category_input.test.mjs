@@ -69,3 +69,28 @@ test('addCategoryTag garante unicidade e integridade da lista de seleção', () 
   ids = removeCategoryTag(ids, 'filosofia')
   assert.deepEqual(ids, ['historia'])
 })
+
+test('CategoryBadge.vue utiliza o componente canônico Icon name="x" para remoção', async () => {
+  const fs = await import('node:fs')
+  const path = await import('node:path')
+  const badgePath = path.resolve('src/components/CategoryBadge.vue')
+  const content = fs.readFileSync(badgePath, 'utf-8')
+
+  assert.ok(content.includes("import Icon from './ui/Icon.vue'"), 'Deve importar o componente Icon canônico')
+  assert.ok(content.includes('<Icon name="x"'), 'Deve renderizar <Icon name="x"')
+  assert.ok(!content.includes('<svg class="w-3.5 h-3.5"'), 'Não deve conter SVG cru inline anterior')
+  assert.ok(content.includes(':aria-label="`Remover categoria ${category.name}`"'), 'Deve manter rótulo acessível')
+})
+
+test('CategoryInput.vue integra CategoryBadge removível e suporta controle por teclado', async () => {
+  const fs = await import('node:fs')
+  const path = await import('node:path')
+  const inputPath = path.resolve('src/components/CategoryInput.vue')
+  const content = fs.readFileSync(inputPath, 'utf-8')
+
+  assert.ok(content.includes('<CategoryBadge'), 'Deve renderizar CategoryBadge')
+  assert.ok(content.includes('removable'), 'CategoryBadge deve ser removível')
+  assert.ok(content.includes('onKeyDown'), 'Deve gerenciar navegação por teclado')
+  assert.ok(content.includes('removeCategory'), 'Deve suportar remoção via evento')
+})
+

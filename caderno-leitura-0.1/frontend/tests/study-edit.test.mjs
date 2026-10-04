@@ -150,3 +150,17 @@ test('cliente usa GET e PATCH no estudo correto, sem substituir campos não envi
   assert.equal(calls[1].options.method, 'PATCH')
   assert.deepEqual(JSON.parse(calls[1].options.body), { notes: '' })
 })
+
+test('StudyEditView.vue integra useStudyDraft com banner de recuperação e ação de descarte', async () => {
+  const fs = await import('node:fs')
+  const path = await import('node:path')
+  const viewPath = path.resolve('src/views/StudyEditView.vue')
+  const content = fs.readFileSync(viewPath, 'utf-8')
+
+  assert.ok(content.includes('useStudyDraft'), 'Deve importar e utilizar useStudyDraft')
+  assert.ok(content.includes('isDraftRestored'), 'Deve controlar visibilidade do banner via isDraftRestored')
+  assert.ok(content.includes('Descartar rascunho'), 'Deve conter botão de descarte do rascunho')
+  assert.ok(content.includes('discardDraft'), 'Deve chamar método de descarte do rascunho')
+  assert.ok(content.includes('clearDraft'), 'Deve limpar rascunho após salvar com sucesso')
+})
+

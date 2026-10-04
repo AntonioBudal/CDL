@@ -304,6 +304,35 @@ export const SECTION_LABELS = [
   { key: 'references', label: 'Referências' },
 ] as const
 
+export type EditorSectionTabKey = 'summary' | 'explanation' | 'concepts' | 'references' | 'notes'
+export type EditorViewMode = 'focused' | 'all'
+
+export interface EditorSectionTab {
+  key: EditorSectionTabKey
+  label: string
+  hasContent: boolean
+  isPreviewing?: boolean
+}
+
+export const EDITOR_SECTION_TABS = [
+  { key: 'summary', label: 'Resumo' },
+  { key: 'explanation', label: 'Explicação' },
+  { key: 'concepts', label: 'Conceitos' },
+  { key: 'references', label: 'Referências' },
+  { key: 'notes', label: 'Notas' },
+] as const
+
+export interface StudyEditorDraftPayload {
+  studyId: number
+  title: string
+  location: string
+  sections: AnalysisSections
+  notes: string
+  savedAt: number
+}
+
+export type StudyEditorDraft = StudyEditorDraftPayload
+
 export function positiveId(value: unknown): number | null {
   if (typeof value !== 'string' || !/^\d+$/.test(value)) return null
   const id = Number(value)

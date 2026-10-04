@@ -213,4 +213,31 @@ onMounted(() => {
   background: var(--color-border, #e4e4e7);
   margin: 0 4px;
 }
+
+@media (max-width: 768px) {
+  .markdown-toolbar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 6px 4px;
+    gap: 4px;
+  }
+
+  .markdown-toolbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .toolbar-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px;
+    touch-action: manipulation;
+  }
+
+  .toolbar-separator {
+    height: 24px;
+    margin: 0 2px;
+  }
+}
 </style>

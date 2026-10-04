@@ -121,3 +121,40 @@ test('FloatingActionsToolbar.vue emite payload com selection e previne perda de 
   assert.ok(content.includes('@mousedown="handleToolbarMouseDown"'), 'Deve prevenir perda de foco na toolbar')
   assert.ok(content.includes('currentSelection'), 'Deve preservar seleção capturada localmente')
 })
+
+test('MarkdownToolbar.vue implementa atalhos de teclado Ctrl+B, Ctrl+I e Ctrl+K', async () => {
+  const fs = await import('node:fs')
+  const path = await import('node:path')
+  const toolbarPath = path.resolve('src/components/MarkdownToolbar.vue')
+  const content = fs.readFileSync(toolbarPath, 'utf-8')
+
+  assert.ok(content.includes("e.key === 'b' || e.key === 'B'"), 'Deve responder a Ctrl+B')
+  assert.ok(content.includes("e.key === 'i' || e.key === 'I'"), 'Deve responder a Ctrl+I')
+  assert.ok(content.includes("e.key === 'k' || e.key === 'K'"), 'Deve responder a Ctrl+K')
+  assert.ok(content.includes("e.preventDefault()"), 'Deve prevenir comportamento padrão nos atalhos')
+})
+
+test('MarkdownToolbar.vue atende ergonomia tátil móvel com alvos >= 44x44px e rolagem horizontal', async () => {
+  const fs = await import('node:fs')
+  const path = await import('node:path')
+  const toolbarPath = path.resolve('src/components/MarkdownToolbar.vue')
+  const content = fs.readFileSync(toolbarPath, 'utf-8')
+
+  assert.ok(content.includes('min-width: 44px') || content.includes('44px'), 'Botões móveis devem ter min-width >= 44px')
+  assert.ok(content.includes('min-height: 44px') || content.includes('44px'), 'Botões móveis devem ter min-height >= 44px')
+  assert.ok(content.includes('touch-action: manipulation'), 'Deve ter touch-action manipulation para resposta tátil rápida')
+  assert.ok(content.includes('overflow-x: auto'), 'Deve ter suporte a rolagem horizontal suave no mobile')
+})
+
+test('StudyEditorFields.vue possui botão toggle Editar / Prévia in-place com renderizador de markdown', async () => {
+  const fs = await import('node:fs')
+  const path = await import('node:path')
+  const fieldsPath = path.resolve('src/components/StudyEditorFields.vue')
+  const content = fs.readFileSync(fieldsPath, 'utf-8')
+
+  assert.ok(content.includes('preview-toggle-btn'), 'Deve possuir botão de toggle de prévia')
+  assert.ok(content.includes('MarkdownContent'), 'Deve integrar componente de renderização segura')
+  assert.ok(content.includes('togglePreview'), 'Deve possuir função de toggle de prévia')
+  assert.ok(content.includes('preview-box'), 'Deve exibir caixa de prévia renderizada')
+})
+
