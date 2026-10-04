@@ -2,7 +2,7 @@
 
 **Input**: [spec.md](./spec.md), [plan.md](./plan.md)
 
-**Status**: `APPROVED` em 2026-10-02. **Fases 0–2 concluídas; Fase 3 em andamento** — T018–T022 concluídas; T023 (medições) bloqueada por falta de RAM livre.
+**Status**: `APPROVED` em 2026-10-02. **Fases 0–3 concluídas** (2026-10-04). Fase 4 (retificação) aguardando autorização.
 
 **Formato**: `[ID] [P?] [Cenário] Descrição` — `[P]` = pode rodar em paralelo; C1–C4 = cenários da spec.
 
@@ -76,7 +76,7 @@ Resultado da Fase 2:
 - [x] T020 [C2] Instalar `envs/docufcn` e `envs/doctr`; baixar pesos das revisões fixadas para `models/exp-002/`, conferindo SHA-256 antes da carga. **Primeira etapa com download de pesos.** Medir o disco antes.
 - [x] T021 [P] [C2] Adaptador `docufcn-line`.
 - [x] T022 [P] [C2] Adaptador `doctr` (detecção + agrupamento em linhas).
-- [ ] T023 [C2] Commit limpo; executar os 3 detectores × 3 níveis de degradação (sem retificação), 3 repetições, e a montagem de blocos sobre cada saída; validar as saídas no LDF.
+- [x] T023 [C2] Commit limpo; executar os 3 detectores × 3 níveis de degradação (sem retificação), 3 repetições, e a montagem de blocos sobre cada saída; validar as saídas no LDF.
 
 **Checkpoint 3**: tabela de linhas e blocos sem retificação. Reportar.
 
@@ -92,7 +92,38 @@ Andamento da Fase 3 (2026-10-03):
 - Teste rápido em 2 páginas do `dev`: Doc-UFCN (as duas variantes), Heron e docTR carregam e produzem saídas
   coerentes (carga de 17–58 s).
 - **T023 interrompida:** a máquina ficou com 250–500 MiB de RAM disponível; com o mínimo de 1 GiB para iniciar, as
-  execuções ficariam esperando e seriam puladas. Nenhum relatório de medição foi gerado. Decisão pedida ao usuário.
+  execuções ficariam esperando e seriam puladas. O usuário liberou memória (3 GB disponíveis) e a rodada foi
+  refeita em 2026-10-03/04, com o mínimo de 1 GiB mantido e sem nenhuma espera.
+
+**Checkpoint 3 atingido em 2026-10-04.** Conjunto `test` (180 páginas, 3.548 linhas), sem retificação, CPU, 4 threads,
+3 repetições `OK` por candidato, métricas idênticas entre repetições, árvore limpa, 180/180 saídas válidas no LDF.
+
+Linhas (F1 com caixa, IoU ≥ 0,5):
+
+| Detector | Licença | Limpo | Leve | Forte | Geral | F1 polígono | ms/página (mediana) | Pico |
+| :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `classic` | `VERIFIED` | 0,847 | 0,743 | 0,397 | 0,645 | 0,616 | 596–652 | 93 MiB |
+| `doctr` | `NEEDS VALIDATION` (exceção) | 0,842 | 0,694 | 0,391 | 0,622 | 0,525 | 2.126–2.143 | 923 MiB |
+| `docufcn-historical-line` | `VERIFIED` | 0,917 | 0,863 | 0,799 | 0,860 | 0,603 | 2.430–2.458 | 649 MiB |
+| `docufcn-norhand-line` | `VERIFIED` | 0,928 | 0,883 | 0,784 | 0,864 | 0,821 | 2.498–2.528 | 652 MiB |
+
+Blocos (AP@0,5):
+
+| Fonte dos blocos | `title` | `paragraph` | `margin_note` | `graphic_box` | mAP | ms/página |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `heron` (detector de layout, `VERIFIED`) | 0,985 | 0,910 | 0,533 | 0,697 | **0,781** | 1.729–1.942 (758 MiB) |
+| regras sobre `doctr` | 0,864 | 0,642 | 0,246 | 0,038 | 0,447 | +205 |
+| regras sobre `docufcn-historical-line` | 0,624 | 0,573 | 0,150 | 0,001 | 0,337 | +204 |
+| regras sobre `docufcn-norhand-line` | 0,791 | 0,288 | 0,087 | 0,011 | 0,294 | +207 |
+| regras sobre `classic` | 0,448 | 0,469 | 0,047 | 0,069 | 0,258 | +205 |
+| (referência: regras sobre linhas verdadeiras, `dev`) | | | | | 0,713 | |
+
+Leitura preliminar (o veredito formal fica para a Fase 5):
+
+- H1: só o Doc-UFCN passa em páginas limpas (≥ 0,90); nenhum passa na camada degradada (o nível forte fica em 0,78–0,80).
+- H2: o Heron passa (0,78 ≥ 0,70); as regras ficam muito abaixo, e a regra de `graphic_box` gera centenas a milhares de falsos positivos.
+- H3: `classic` e Heron cabem em 2 s; Doc-UFCN (2,4–2,5 s) e docTR (2,1 s) passam do limite. Todos abaixo de 2 GB.
+- H4: o baseline clássico **não** atinge a meta nem em páginas limpas (0,85) e despenca no nível forte (0,40).
 
 ## Fase 4 — Cenário 4: retificação de perspectiva
 
