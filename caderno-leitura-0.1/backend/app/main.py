@@ -27,6 +27,7 @@ from app.routers import (
     notifications,
     preferences,
     profile,
+    review,
     search,
     seo,
     sharing,
@@ -118,6 +119,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(sharing.router, prefix="/api")
     application.include_router(notifications.router, prefix="/api")
     application.include_router(support.router, prefix="/api")
+    application.include_router(review.router, prefix="/api")
     application.include_router(seo.router)
 
     # Registro de manipuladores de erro de banco e mascaramento global 500 (T007, T018)

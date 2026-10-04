@@ -119,6 +119,12 @@ const mainLinks: NavLinkItem[] = [
     icon: 'layout-dashboard',
   },
   {
+    to: '/review',
+    label: 'Revisão',
+    routes: ['review'],
+    icon: 'rotate-ccw',
+  },
+  {
     to: '/importar',
     label: 'Importar',
     routes: ['import'],

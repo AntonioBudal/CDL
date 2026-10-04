@@ -29,9 +29,14 @@ class StudyHighlight(Base):
         CheckConstraint("length(trim(selected_text)) > 0", name="chk_highlight_text_not_blank"),
         CheckConstraint("start_offset >= 0", name="chk_highlight_start_offset_non_negative"),
         CheckConstraint("end_offset >= start_offset", name="chk_highlight_offsets_valid"),
+        CheckConstraint(
+            "last_rating IS NULL OR last_rating IN ('easy', 'medium', 'hard')",
+            name="chk_highlight_last_rating",
+        ),
         Index("ix_study_highlights_study_id", "study_id"),
         Index("ix_study_highlights_user_id", "user_id"),
         Index("ix_study_highlights_study_section", "study_id", "section"),
+        Index("ix_study_highlights_review", "user_id", "kind", "last_reviewed_at"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -56,6 +61,9 @@ class StudyHighlight(Base):
     color: Mapped[str] = mapped_column(String(30), default="yellow", server_default=text("'yellow'"), nullable=False)
     kind: Mapped[str] = mapped_column(String(30), default="highlight", server_default=text("'highlight'"), nullable=False)
     note: Mapped[str] = mapped_column(Text, default="", server_default=text("''"), nullable=False)
+    last_reviewed_at: Mapped[datetime | None] = mapped_column(UTCDateTime(), nullable=True)
+    review_count: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+    last_rating: Mapped[str | None] = mapped_column(String(20), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         UTCDateTime(), default=utc_now, server_default=text("CURRENT_TIMESTAMP"), nullable=False
     )

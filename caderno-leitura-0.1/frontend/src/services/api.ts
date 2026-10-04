@@ -9,6 +9,7 @@ import type {
   SearchResponse, SearchHistoryResponse, UserRead,
   AuthConfigResponse, AuthSuccessResponse, SessionItem, ExternalIdentityRead,
   AuditLogListResponse, DeactivateAccountRequest, ReactivateAccountRequest, DeleteAccountRequest,
+  ReviewItemRead, ReviewRating, ReviewStatsResponse,
 } from '../types.ts'
 
 
@@ -241,6 +242,33 @@ export const api = {
     request<CategorySuggestion>(`/categories/suggest?q=${encodeURIComponent(q.trim())}`, { signal }),
   getCategoryStats: (signal?: AbortSignal) =>
     request<CategoryStats>('/categories/stats', { signal }),
+  getReviewStats: (signal?: AbortSignal) =>
+    request<ReviewStatsResponse>('/review/stats', { signal }),
+  getReviewItems: (
+    params?: { book_id?: number; chapter_id?: number; kind?: string; limit?: number },
+    signal?: AbortSignal,
+  ) => {
+    const queryParts: string[] = []
+    if (params?.book_id !== undefined) queryParts.push(`book_id=${params.book_id}`)
+    if (params?.chapter_id !== undefined) queryParts.push(`chapter_id=${params.chapter_id}`)
+    if (params?.kind && params.kind !== 'all') queryParts.push(`kind=${encodeURIComponent(params.kind)}`)
+    if (params?.limit !== undefined) queryParts.push(`limit=${params.limit}`)
+    const qs = queryParts.length ? `?${queryParts.join('&')}` : ''
+    return request<ReviewItemRead[]>(`/review/items${qs}`, { signal })
+  },
+  recordReviewRating: (
+    highlightId: number,
+    rating: ReviewRating,
+    signal?: AbortSignal,
+  ) =>
+    request<{ id: number; last_reviewed_at: string; review_count: number; last_rating: ReviewRating }>(
+      `/review/items/${highlightId}/record`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ rating }),
+        signal,
+      },
+    ),
   updateBook: (id: number, payload: BookPatch) => request<Book>(`/books/${id}`, {
     method: 'PATCH', body: JSON.stringify(payload),
   }),

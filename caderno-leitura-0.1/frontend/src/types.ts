@@ -1152,7 +1152,51 @@ export interface StudyHighlight {
   note: string
   created_at: string
   updated_at: string
+  last_reviewed_at?: string | null
+  review_count?: number
+  last_rating?: ReviewRating | null
 }
+
+export type ReviewRating = 'easy' | 'medium' | 'hard'
+
+export interface ReviewBookItem {
+  book_id: number
+  title: string
+  items_count: number
+}
+
+export interface ReviewStatsResponse {
+  total_eligible: number
+  total_questions: number
+  total_hidden: number
+  reviewed_today: number
+  pending_review: number
+  books: ReviewBookItem[]
+}
+
+export interface ReviewItemRead {
+  id: number
+  study_id: number
+  study_title: string
+  book_id: number
+  book_title: string
+  chapter_id: number
+  chapter_name: string
+  kind: 'question' | 'hidden'
+  section: string
+  question_text: string
+  expected_answer: string
+  context_prefix: string
+  context_suffix: string
+  last_reviewed_at: string | null
+  review_count: number
+  last_rating: ReviewRating | null
+}
+
+export interface ReviewRecordRequest {
+  rating: ReviewRating
+}
+
 
 export interface StudyHighlightCreatePayload {
   section: StudySectionKey
