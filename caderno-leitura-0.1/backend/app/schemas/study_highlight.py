@@ -45,3 +45,51 @@ class StudyHighlightRead(OutputModel):
     note: str
     created_at: datetime
     updated_at: datetime
+
+
+class HighlightLibraryItemRead(OutputModel):
+    id: RecordId
+    study_id: RecordId
+    study_title: str
+    chapter_id: RecordId
+    chapter_title: str
+    book_id: RecordId
+    book_title: str
+    book_author: str | None = None
+    section: SectionName
+    start_offset: int
+    end_offset: int
+    selected_text: str
+    prefix: str
+    suffix: str
+    color: HighlightColor
+    kind: HighlightKind
+    note: str
+    created_at: datetime
+    updated_at: datetime
+
+
+class HighlightLibraryFilterOption(OutputModel):
+    id: RecordId
+    title: str
+    count: int
+
+
+class HighlightLibrarySummary(OutputModel):
+    total_highlights: int
+    total_notes: int
+    total_quotes: int
+    total_hidden: int
+    total_questions: int
+
+
+class HighlightLibraryResponse(OutputModel):
+    items: list[HighlightLibraryItemRead]
+    total: int
+    page: int
+    per_page: int
+    pages: int
+    has_next: bool
+    has_prev: bool
+    available_books: list[HighlightLibraryFilterOption]
+    summary: HighlightLibrarySummary

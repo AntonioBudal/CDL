@@ -171,4 +171,26 @@ onBeforeUnmount(() => {
   border-radius: 4px;
   cursor: pointer;
 }
+
+:deep(.study-highlight-focused),
+:deep(.highlight-glow-pulse) {
+  animation: highlight-glow-pulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes highlight-glow-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.85);
+    outline: 2px solid rgba(234, 179, 8, 0.9);
+  }
+  30% {
+    box-shadow: 0 0 16px 5px rgba(234, 179, 8, 0.6);
+    outline: 3px solid rgba(234, 179, 8, 1);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(234, 179, 8, 0);
+    outline: 2px solid transparent;
+  }
+}
 </style>

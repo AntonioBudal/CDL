@@ -19,6 +19,7 @@ import SupportView from '../views/SupportView.vue'
 import LandingView from '../views/LandingView.vue'
 import AboutView from '../views/AboutView.vue'
 import ReviewHubView from '../views/ReviewHubView.vue'
+import HighlightsLibraryView from '../views/HighlightsLibraryView.vue'
 import { updateSeoMeta } from '../composables/useSeoMeta'
 import { useAuthStore } from '../stores/auth.ts'
 
@@ -50,6 +51,7 @@ export const router = createRouter({
     },
     { path: '/dashboard', name: 'dashboard', component: DashboardView, meta: { title: 'Dashboard' } },
     { path: '/books', alias: ['/livros'], name: 'books', component: BooksView, meta: { title: 'Livros' } },
+    { path: '/highlights', alias: ['/destaques', '/anotacoes'], name: 'highlights', component: HighlightsLibraryView, meta: { title: 'Destaques e Anotações' } },
     { path: '/review', alias: ['/revisao'], name: 'review', component: ReviewHubView, meta: { title: 'Central de Revisão' } },
     { path: '/livros/:bookId', alias: ['/books/:bookId'], name: 'book', component: BookView, meta: { title: 'Livro' } },
     { path: '/livros/:bookId/estudos/:studyId', alias: ['/books/:bookId/estudos/:studyId'], name: 'study', component: StudyView, meta: { title: 'Ler estudo' } },
@@ -76,6 +78,9 @@ export const router = createRouter({
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition
+    if (to.hash) {
+      return { el: to.hash, behavior: 'smooth' }
+    }
     if (to.path === from.path) return false
     return { top: 0 }
   },

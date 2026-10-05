@@ -4,6 +4,7 @@ from fastapi import APIRouter, Query, Response, status
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
 from app.schemas.study_highlight import (
+    HighlightLibraryResponse,
     StudyHighlightCreate,
     StudyHighlightRead,
     StudyHighlightUpdate,
@@ -11,11 +12,43 @@ from app.schemas.study_highlight import (
 from app.services.study_highlight_service import (
     create_study_highlight,
     delete_study_highlight,
+    list_library_highlights,
     list_study_highlights,
     update_study_highlight,
 )
 
 router = APIRouter(tags=["Destaques de Estudos"])
+
+
+@router.get(
+    "/highlights/library",
+    response_model=HighlightLibraryResponse,
+    summary="Listar biblioteca transversal de destaques e notas",
+)
+def get_highlights_library(
+    session: DatabaseSession,
+    current_user: CurrentUser,
+    q: str | None = Query(default=None, description="Termo de busca textual"),
+    book_id: int | None = Query(default=None, description="Filtrar por livro"),
+    chapter_id: int | None = Query(default=None, description="Filtrar por capítulo"),
+    kind: str | None = Query(default=None, description="Filtrar por tipo"),
+    color: str | None = Query(default=None, description="Filtrar por cor"),
+    view_mode: str = Query(default="recent", description="Modo de ordenação ('recent' ou 'by_book')"),
+    page: int = Query(default=1, ge=1, description="Número da página"),
+    per_page: int = Query(default=20, ge=1, le=100, description="Itens por página"),
+):
+    return list_library_highlights(
+        session=session,
+        user_id=current_user.id,
+        q=q,
+        book_id=book_id,
+        chapter_id=chapter_id,
+        kind=kind,
+        color=color,
+        view_mode=view_mode,
+        page=page,
+        per_page=per_page,
+    )
 
 
 @router.get(

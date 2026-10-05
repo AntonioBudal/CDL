@@ -1,0 +1,218 @@
+openapi: 3.1.0
+info:
+  title: API de Biblioteca Transversal de Highlights e Anotações
+  version: 0.7.11
+  description: Endpoint consolidado para busca, filtragem e paginação transversal de destaques e notas de estudo.
+
+paths:
+  /api/highlights/library:
+    get:
+      summary: Listar biblioteca de destaques e anotações do usuário autenticado
+      description: Retorna lista paginada de marcações cruzando livro, capítulo e estudo, com filtros por busca textual, livro, tipo, cor e modo de visão.
+      operationId: getHighlightLibrary
+      tags:
+        - Destaques de Estudos
+      security:
+        - SessionCookie: []
+        - BearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Termo de busca textual para selected_text ou note
+        - name: book_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Filtrar por identificador de livro
+        - name: chapter_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Filtrar por identificador de capítulo
+        - name: kind
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [highlight, note, quote, hidden, question]
+          description: Filtrar por tipo de marcação
+        - name: color
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [yellow, green, blue, pink, purple]
+          description: Filtrar por cor semântica
+        - name: view_mode
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [recent, by_book]
+            default: recent
+          description: Modo de ordenação e apresentação
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+          description: Número da página
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+          description: Quantidade de itens por página
+      responses:
+        '200':
+          description: Lista paginada de destaques e metadados de filtro
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HighlightLibraryResponse'
+        '401':
+          description: Não autenticado
+
+components:
+  schemas:
+    HighlightLibraryItemRead:
+      type: object
+      required:
+        - id
+        - study_id
+        - study_title
+        - chapter_id
+        - chapter_title
+        - book_id
+        - book_title
+        - section
+        - start_offset
+        - end_offset
+        - selected_text
+        - color
+        - kind
+        - note
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: integer
+        study_id:
+          type: integer
+        study_title:
+          type: string
+        chapter_id:
+          type: integer
+        chapter_title:
+          type: string
+        book_id:
+          type: integer
+        book_title:
+          type: string
+        book_author:
+          type: string
+          nullable: true
+        section:
+          type: string
+        start_offset:
+          type: integer
+        end_offset:
+          type: integer
+        selected_text:
+          type: string
+        prefix:
+          type: string
+        suffix:
+          type: string
+        color:
+          type: string
+        kind:
+          type: string
+        note:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    HighlightLibraryFilterOption:
+      type: object
+      required:
+        - id
+        - title
+        - count
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        count:
+          type: integer
+
+    HighlightLibrarySummary:
+      type: object
+      required:
+        - total_highlights
+        - total_notes
+        - total_quotes
+        - total_hidden
+        - total_questions
+      properties:
+        total_highlights:
+          type: integer
+        total_notes:
+          type: integer
+        total_quotes:
+          type: integer
+        total_hidden:
+          type: integer
+        total_questions:
+          type: integer
+
+    HighlightLibraryResponse:
+      type: object
+      required:
+        - items
+        - total
+        - page
+        - per_page
+        - pages
+        - has_next
+        - has_prev
+        - available_books
+        - summary
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/HighlightLibraryItemRead'
+        total:
+          type: integer
+        page:
+          type: integer
+        per_page:
+          type: integer
+        pages:
+          type: integer
+        has_next:
+          type: boolean
+        has_prev:
+          type: boolean
+        available_books:
+          type: array
+          items:
+            $ref: '#/components/schemas/HighlightLibraryFilterOption'
+        summary:
+          $ref: '#/components/schemas/HighlightLibrarySummary'

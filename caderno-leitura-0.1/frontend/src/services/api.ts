@@ -4,6 +4,7 @@ import type {
   StudyRelationsResponse, StudyRelationItem, CreateStudyRelationPayload, UpdateStudyRelationPayload, CandidateStudyItem, BookCanvasRelationItem,
   StudyStatusUpdatePayload, StudyStatusResponse, CanvasFrameItem, CreateCanvasFramePayload, UpdateCanvasFramePayload,
   StudyHighlight, StudyHighlightCreatePayload, StudyHighlightUpdatePayload,
+  HighlightLibraryQuery, HighlightLibraryResponse,
   StudyVersionSummary, StudyVersionDetail, StudyDiffResult,
   SupportPublicInfo, SupportAdminConfig, SupportConfigUpdate,
   SearchResponse, SearchHistoryResponse, UserRead,
@@ -326,6 +327,20 @@ export const api = {
   deleteStudyHighlight: (studyId: number, highlightId: number) => request<void>(`/studies/${studyId}/highlights/${highlightId}`, {
     method: 'DELETE',
   }),
+  getHighlightLibrary: (query: HighlightLibraryQuery = {}, signal?: AbortSignal) => {
+    const params = new URLSearchParams()
+    if (query.q && query.q.trim()) params.set('q', query.q.trim())
+    if (query.book_id !== undefined && query.book_id !== null) params.set('book_id', String(query.book_id))
+    if (query.chapter_id !== undefined && query.chapter_id !== null) params.set('chapter_id', String(query.chapter_id))
+    if (query.kind) params.set('kind', query.kind)
+    if (query.color) params.set('color', query.color)
+    if (query.view_mode) params.set('view_mode', query.view_mode)
+    if (query.page) params.set('page', String(query.page))
+    if (query.per_page) params.set('per_page', String(query.per_page))
+
+    const qs = params.toString()
+    return request<HighlightLibraryResponse>(qs ? `/highlights/library?${qs}` : '/highlights/library', { signal })
+  },
 
   // Métodos de Histórico e Versões de Estudos (F0.6.5)
   listStudyVersions: (studyId: number, signal?: AbortSignal) =>
@@ -1086,4 +1101,24 @@ export async function getAdminSupportConfig(signal?: AbortSignal): Promise<Suppo
 export async function updateAdminSupportConfig(payload: SupportConfigUpdate): Promise<SupportAdminConfig> {
   return api.updateAdminSupportConfig(payload)
 }
+
+export async function getHighlightLibrary(query: HighlightLibraryQuery = {}, signal?: AbortSignal): Promise<HighlightLibraryResponse> {
+  return api.getHighlightLibrary(query, signal)
+}
+
+export async function updateStudyHighlight(
+  studyId: number,
+  highlightId: number,
+  payload: StudyHighlightUpdatePayload
+): Promise<StudyHighlight> {
+  return api.updateStudyHighlight(studyId, highlightId, payload)
+}
+
+export async function deleteStudyHighlight(
+  studyId: number,
+  highlightId: number
+): Promise<void> {
+  return api.deleteStudyHighlight(studyId, highlightId)
+}
+
 

@@ -232,6 +232,11 @@ export function scrollAndFocusHighlight(
   })
 
   mark.classList.add('study-highlight-focused')
+  mark.classList.add('highlight-glow-pulse')
+  setTimeout(() => {
+    mark.classList.remove('highlight-glow-pulse')
+  }, 2000)
+
   if (typeof mark.scrollIntoView === 'function') {
     mark.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
@@ -290,6 +295,7 @@ function wrapSingleHighlight(root: HTMLElement, hl: StudyHighlight, fullText: st
     }
 
     const wrapper = document.createElement(hl.kind === 'hidden' || hl.kind === 'question' ? 'span' : 'mark')
+    wrapper.id = `highlight-${hl.id}`
     wrapper.setAttribute('data-highlight-id', String(hl.id))
     wrapper.setAttribute('data-kind', hl.kind)
     wrapper.className = getHighlightClassNames(hl)

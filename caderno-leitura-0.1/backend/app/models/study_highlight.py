@@ -37,6 +37,7 @@ class StudyHighlight(Base):
         Index("ix_study_highlights_user_id", "user_id"),
         Index("ix_study_highlights_study_section", "study_id", "section"),
         Index("ix_study_highlights_review", "user_id", "kind", "last_reviewed_at"),
+        Index("ix_study_highlights_user_kind_color", "user_id", "kind", "color"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)

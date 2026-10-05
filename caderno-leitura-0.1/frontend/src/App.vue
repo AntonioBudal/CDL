@@ -119,6 +119,12 @@ const mainLinks: NavLinkItem[] = [
     icon: 'layout-dashboard',
   },
   {
+    to: '/highlights',
+    label: 'Destaques',
+    routes: ['highlights'],
+    icon: 'pencil',
+  },
+  {
     to: '/review',
     label: 'Revisão',
     routes: ['review'],

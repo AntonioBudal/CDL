@@ -409,8 +409,47 @@ watch(activeSection, async () => {
   }
 })
 
+async function scrollToHighlightFromHash(hashStr?: string) {
+  const hash = hashStr ?? route.hash
+  if (!hash || !hash.startsWith('#highlight-')) return
+  const idStr = hash.replace('#highlight-', '')
+  const id = Number(idStr)
+  if (Number.isNaN(id) || !highlights.value.length) return
+
+  const targetHighlight = highlights.value.find((h) => h.id === id)
+  if (!targetHighlight) return
+
+  if (studyTabsRef.value?.setActiveSection && targetHighlight.section) {
+    studyTabsRef.value.setActiveSection(targetHighlight.section as StudySectionKey)
+  }
+
+  await nextTick()
+  setTimeout(() => {
+    const el = document.getElementById(`highlight-${id}`) || document.querySelector<HTMLElement>(`[data-highlight-id="${id}"]`)
+    if (el) {
+      el.classList.add('study-highlight-focused')
+      el.classList.add('highlight-glow-pulse')
+      if (typeof el.scrollIntoView === 'function') {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+      setTimeout(() => {
+        el.classList.remove('highlight-glow-pulse')
+      }, 2000)
+    }
+  }, 120)
+}
+
+watch([() => route.hash, () => highlights.value], async ([newHash]) => {
+  if (newHash && newHash.startsWith('#highlight-')) {
+    await scrollToHighlightFromHash(newHash)
+  }
+})
+
 onMounted(() => {
   window.addEventListener('keydown', onActiveReadingKeydown)
+  if (route.hash && route.hash.startsWith('#highlight-')) {
+    void scrollToHighlightFromHash(route.hash)
+  }
 })
 
 onBeforeUnmount(() => {
@@ -1116,6 +1155,28 @@ onBeforeUnmount(() => {
   .floating-toast-fade-leave-active {
     transition: opacity 0.05s ease !important;
     transform: translateX(-50%) !important;
+  }
+}
+
+:deep(.study-highlight-focused),
+:deep(.highlight-glow-pulse) {
+  animation: highlight-glow-pulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes highlight-glow-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.85);
+    outline: 2px solid rgba(234, 179, 8, 0.9);
+  }
+  30% {
+    box-shadow: 0 0 16px 5px rgba(234, 179, 8, 0.6);
+    outline: 3px solid rgba(234, 179, 8, 1);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(234, 179, 8, 0);
+    outline: 2px solid transparent;
   }
 }
 </style>

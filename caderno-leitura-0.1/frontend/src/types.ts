@@ -1327,3 +1327,66 @@ export interface SupportConfigUpdate {
   alternative_url?: string | null
   custom_message?: string | null
 }
+
+// --- Biblioteca Transversal de Highlights e Anotações (F0.7.11) ---
+
+export type HighlightViewMode = 'recent' | 'by_book'
+
+export interface HighlightLibraryItem {
+  id: number
+  study_id: number
+  study_title: string
+  chapter_id: number
+  chapter_title: string
+  book_id: number
+  book_title: string
+  book_author?: string | null
+  section: string
+  start_offset: number
+  end_offset: number
+  selected_text: string
+  prefix: string
+  suffix: string
+  color: HighlightColor
+  kind: HighlightKind
+  note: string
+  created_at: string
+  updated_at: string
+}
+
+export interface HighlightLibraryFilterOption {
+  id: number
+  title: string
+  count: number
+}
+
+export interface HighlightLibrarySummary {
+  total_highlights: number
+  total_notes: number
+  total_quotes: number
+  total_hidden: number
+  total_questions: number
+}
+
+export interface HighlightLibraryResponse {
+  items: HighlightLibraryItem[]
+  total: number
+  page: number
+  per_page: number
+  pages: number
+  has_next: boolean
+  has_prev: boolean
+  available_books: HighlightLibraryFilterOption[]
+  summary: HighlightLibrarySummary
+}
+
+export interface HighlightLibraryQuery {
+  q?: string
+  book_id?: number | null
+  chapter_id?: number | null
+  kind?: HighlightKind | null
+  color?: HighlightColor | null
+  view_mode?: HighlightViewMode
+  page?: number
+  per_page?: number
+}

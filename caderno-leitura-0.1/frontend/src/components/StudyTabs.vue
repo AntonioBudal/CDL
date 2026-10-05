@@ -42,9 +42,17 @@ async function onKeydown(event: KeyboardEvent, index: number) {
   tabList.value?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next]?.focus()
 }
 
+function setActiveSection(key: StudySectionKey) {
+  const idx = SECTION_LABELS.findIndex((s) => s.key === key)
+  if (idx !== -1) {
+    active.value = idx
+  }
+}
+
 defineExpose({
   activeSectionKey,
   activePanelEl,
+  setActiveSection,
 })
 </script>
 
