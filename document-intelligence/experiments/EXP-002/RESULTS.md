@@ -1,6 +1,6 @@
 # EXP-002: Relatório de Resultados — Detecção de Layout e Segmentação de Linhas e Blocos
 
-* **Status:** `AWAITING USER ACCEPTANCE`
+* **Status:** `ACCEPTED` / `CONCLUÍDO` (aceito pelo usuário em 2026-10-05)
 * **Período de execução:** 2026-10-02 a 2026-10-05
 * **Executor:** Claude Code
 * **Decisão arquitetural gerada:** [ADR-002](../../docs/adr/ADR-002-segmentacao-de-layout-doc-ufcn-heron.md) (`PROPOSED`)
