@@ -2,7 +2,7 @@
 
 **Input**: [spec.md](./spec.md), [plan.md](./plan.md)
 
-**Status**: `APPROVED` em 2026-10-02. **Fases 0–6 concluídas** em 2026-10-05 (o usuário autorizou avançar todas as fases). Aguardando aceite (T033). EXP-003 não iniciado.
+**Status**: `APPROVED` em 2026-10-02. **Fases 0–6 concluídas** em 2026-10-05 (o usuário autorizou avançar todas as fases). EXP-002 **aceito** pelo usuário em 2026-10-05.
 
 **Formato**: `[ID] [P?] [Cenário] Descrição` — `[P]` = pode rodar em paralelo; C1–C4 = cenários da spec.
 
@@ -149,7 +149,7 @@ Com `contour`, o `docufcn-norhand-line` vai a 0,920 / 0,845 (leve / forte). Tabe
 - [x] T030 `experiments/EXP-002/RESULTS.md` com manifesto de reprodutibilidade, desvios e limitações.
 - [x] T031 ADR em `docs/adr/` com a decisão sobre segmentação e retificação.
 - [x] T032 Conferência final: testes, `ruff`, nada fora de `document-intelligence/`, pesos e páginas fora do Git, disco abaixo de 20 GB.
-- [ ] T033 *(submetido em 2026-10-05; aguardando resposta)* Submeter ao usuário para aceite. **Não iniciar o EXP-003 antes do aceite.**
+- [x] T033 *(aceito em 2026-10-05)* Submeter ao usuário para aceite. **Não iniciar o EXP-003 antes do aceite.**
 
 ---
 

@@ -1,6 +1,6 @@
 # ADR-002: Direção para segmentação de layout — Doc-UFCN para linhas, Heron para blocos, retificação por contorno
 
-* **Status:** PROPOSED
+* **Status:** ACCEPTED (aceito pelo usuário em 2026-10-05)
 * **Data:** 2026-10-05
 * **Decisores:** Usuário (decisão); Claude Code (proposta)
 * **Experimento de Suporte:** [EXP-002](../../experiments/EXP-002/RESULTS.md)
@@ -63,7 +63,7 @@ isso exige validação em fotos reais e uma especificação própria no ciclo Sp
 
 ## 4. Decisão Escolhida
 
-Propõe-se a **Opção C como direção de trabalho**, com estas condições:
+Aprovamos a **Opção C como direção de trabalho**, com estas condições:
 
 1. **Linhas:** Doc-UFCN `norhand` é o candidato de referência para os próximos experimentos. O baseline clássico e
    o docTR ficam descartados (o docTR também pela licença).

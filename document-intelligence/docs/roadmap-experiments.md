@@ -64,11 +64,11 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 - **Métricas**: CER, WER, latência de inferência e consumo de VRAM.
 - **Critério**: Não escolher modelos por popularidade; auditar candidatos (ex.: TrOCR, PyLaia, CTC/CRNN) em dataset controlado.
 
-### `EXP-002` — Detecção de Layout e Segmentação de Blocos/Regiões *(EXECUTADO — aguardando aceite, ver `experiments/EXP-002/RESULTS.md`)*
+### `EXP-002` — Detecção de Layout e Segmentação de Blocos/Regiões *(CONCLUÍDO — aceito em 2026-10-05; direção no ADR-002)*
 - **Objetivo**: Localizar na página fotográfica os limites das linhas, parágrafos, cabeçalhos, notas de margem e caixas gráficas.
 - **Métricas**: IoU, mAP, Precision e Recall de detecção de caixas.
 
-### `EXP-003` — Reconstrução Espacial e Ordem de Leitura
+### `EXP-003` — Reconstrução Espacial e Ordem de Leitura *(FASE ATUAL — em especificação)*
 - **Objetivo**: Algoritmos topológicos para ordenar blocos e linhas em sequência lógica de leitura coerente, resolvendo colunas múltiplas, anotações marginais inseridas lateralmente e interrupções visuais.
 - **Métricas**: Edit Distance da ordem de leitura (*Reading Order Accuracy*).
 

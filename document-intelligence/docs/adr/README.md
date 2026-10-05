@@ -64,4 +64,4 @@ Um ADR passa pelos seguintes status:
 | :--- | :--- | :--- | :--- | :--- |
 | `ADR-000` | *Adoção de Arquitetura Local-First e Formato LDF* | *DRAFT* | N/A (Fundacional) | 2026-09-30 |
 | [`ADR-001`](./ADR-001-nao-adotar-htr-pronto-sem-portugues.md) | Não adotar reconhecedores de manuscrito prontos sem treino em português | ACCEPTED | EXP-001 | 2026-10-02 |
-| [`ADR-002`](./ADR-002-segmentacao-de-layout-doc-ufcn-heron.md) | Direção para segmentação de layout — Doc-UFCN para linhas, Heron para blocos, retificação por contorno | PROPOSED | EXP-002 | 2026-10-05 |
+| [`ADR-002`](./ADR-002-segmentacao-de-layout-doc-ufcn-heron.md) | Direção para segmentação de layout — Doc-UFCN para linhas, Heron para blocos, retificação por contorno | ACCEPTED | EXP-002 | 2026-10-05 |

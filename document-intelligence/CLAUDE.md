@@ -42,7 +42,8 @@ uv run python -m leitorum_di
 
 - **Status**: **`EXP-000` aceito pelo usuário em 2026-09-30** (ver [`experiments/EXP-000/RESULTS.md`](./experiments/EXP-000/RESULTS.md)).
 - **EXP-001 aceito em 2026-10-02**, com o [ADR-001](./docs/adr/ADR-001-nao-adotar-htr-pronto-sem-portugues.md) aceito: nenhum HTR pronto sem treino em português é adotado.
-- **Tarefa Atual**: **`EXP-002`** (layout e segmentação) executado (Fases 0 a 6); [`RESULTS.md`](./experiments/EXP-002/RESULTS.md) e ADR-002 (`PROPOSED`) **aguardando aceite do usuário**. Não inicie o EXP-003 antes disso. Exceção de licença adicional em vigor: pesos do docTR (`NEEDS VALIDATION`, só uso experimental local).
+- **EXP-002 aceito em 2026-10-05**, com o [ADR-002](./docs/adr/ADR-002-segmentacao-de-layout-doc-ufcn-heron.md) aceito: Doc-UFCN `norhand` (linhas), Docling Heron (blocos) e retificação por contorno são a direção de trabalho; nada entra em `src/` sem validação em fotos reais e spec de produto. A exceção de licença do docTR (`NEEDS VALIDATION`) valeu só para o EXP-002.
+- **Tarefa Atual**: **`EXP-003`** (ordem de leitura), em especificação: só [`spec.md`](./experiments/EXP-003/spec.md), aguardando revisão. Não escreva plan/tasks antes da aprovação.
   - **Regra de workflow (usuário, 2026-09-30):** todo experimento segue o ciclo Spec Kit adaptado — Specify → Plan → Tasks — e a especificação/plano é apresentada **antes** de qualquer código de avaliação, script de inferência ou download de pesos.
   - **Ritmo fatiado (usuário, 2026-09-30):** nos próximos experimentos e features, produza **um artefato por vez** e aguarde a revisão antes do seguinte (Specify → aprovação → Plan → aprovação → Tasks → aprovação). Na execução, pare em cada checkpoint de fase e reporte.
   - Commits: padrão `FNN(document-inteligence) <nome da fase>`, definido pelo usuário em 2026-09-30.

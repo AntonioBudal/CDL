@@ -3,7 +3,7 @@
 * **Status:** `ACCEPTED` / `CONCLUÍDO` (aceito pelo usuário em 2026-10-05)
 * **Período de execução:** 2026-10-02 a 2026-10-05
 * **Executor:** Claude Code
-* **Decisão arquitetural gerada:** [ADR-002](../../docs/adr/ADR-002-segmentacao-de-layout-doc-ufcn-heron.md) (`PROPOSED`)
+* **Decisão arquitetural gerada:** [ADR-002](../../docs/adr/ADR-002-segmentacao-de-layout-doc-ufcn-heron.md) (`ACCEPTED`)
 * **Artefatos do ciclo:** [spec.md](./spec.md) · [plan.md](./plan.md) · [tasks.md](./tasks.md) · [failure-analysis.md](./failure-analysis.md)
 
 > **Licenças.** Doc-UFCN (código BSD-3-Clause, pesos MIT), Docling Heron (Apache-2.0) e OpenCV (Apache-2.0):
@@ -81,7 +81,7 @@ Tabelas completas, F1 por inclinação e curvatura e modos de falha: [failure-an
 | SC-002 — P/R/F1, mAP, latência e memória, com veredito de H1–H4 (e H5) | Atendido |
 | SC-003 — análise de falhas por degradação e por tipo de bloco | **Atendido em parte:** por nível, inclinação, curvatura e tipo de bloco; sombra e desfoque não foram isolados por página |
 | SC-004 — saídas validadas contra o schema do LDF | Atendido: 100 % válidas; lacuna de `graphic_box` registrada (§5) |
-| SC-005 — ADR; `docs/models-and-licensing.md` atualizado | Atendido: ADR-002 `PROPOSED` |
+| SC-005 — ADR; `docs/models-and-licensing.md` atualizado | Atendido: ADR-002 `ACCEPTED` em 2026-10-05 |
 | SC-006 — escopo, testes, `ruff`, teto de 20 GB | Atendido (§7) |
 
 ---
@@ -178,8 +178,8 @@ experimento; nenhum binário instalado no sistema; nenhuma biblioteca AGPL.
 ## 9. Homologação
 
 - [x] Entregáveis do EXP-002 concluídos e submetidos ao usuário.
-- [ ] EXP-002 **ACEITO** — decisão do usuário.
-- [ ] ADR-002 aceito, rejeitado ou ajustado — decisão do usuário.
-- [ ] Próximo passo — decisão do usuário. **EXP-003 não iniciado.**
+- [x] EXP-002 **ACEITO** pelo usuário em 2026-10-05.
+- [x] ADR-002 **ACEITO** pelo usuário em 2026-10-05.
+- [x] Próximo passo autorizado em 2026-10-05: EXP-003, começando só pela especificação.
 
 *Assinatura do agente executor:* `Claude Code (claude-opus-5-5), 2026-10-05`
