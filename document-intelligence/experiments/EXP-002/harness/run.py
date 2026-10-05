@@ -26,6 +26,7 @@ from typing import Any
 from blocks import BlockParams, assemble_for_image
 from classic import ClassicParams
 from evaluate import evaluate_pages, latency_stats, verdicts
+from rectify import map_points
 from supervisor import Limits, RunResult, run_candidate
 from to_ldf import to_ldf, validation_errors
 
@@ -137,6 +138,26 @@ def assemble_blocks_for_run(result: RunResult, manifest: dict[str, Any]) -> list
     return timings
 
 
+def map_back(result: RunResult, rectified: dict[str, Any]) -> None:
+    """Leva as predições feitas na imagem retificada de volta às coordenadas da imagem original."""
+    import numpy as np
+
+    inverse = {p["id"]: np.linalg.inv(np.array(p["homography"])) for p in rectified["pages"]}
+    for prediction in result.predictions:
+        matrix = inverse[prediction["id"]]
+        for item in prediction["result"]["lines"] + prediction["result"]["blocks"]:
+            x0, y0, x1, y1 = item["bbox"]
+            polygon = item.get("polygon") or [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
+            mapped = map_points(polygon, matrix)
+            item["polygon"] = [[round(float(x)), round(float(y))] for x, y in mapped]
+            item["bbox"] = [
+                round(float(mapped[:, 0].min())),
+                round(float(mapped[:, 1].min())),
+                round(float(mapped[:, 0].max())),
+                round(float(mapped[:, 1].max())),
+            ]
+
+
 def summarize_run(result: RunResult, manifest: dict[str, Any]) -> dict[str, Any]:
     predictions = {p["id"]: p["result"] for p in result.predictions}
     metrics = evaluate_pages(manifest, predictions)
@@ -162,8 +183,20 @@ def build_report(
     weights_dir: Path | None = None,
     wait_free_s: float = 0.0,
     assemble: bool = False,
+    truth_path: Path | None = None,
 ) -> tuple[dict[str, Any], list[list[dict[str, Any]]]]:
-    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    """Executa o candidato sobre ``manifest_path``.
+
+    Se ``truth_path`` for dado, ``manifest_path`` é um manifesto de páginas retificadas: as
+    predições são levadas de volta às coordenadas originais e avaliadas contra as páginas
+    correspondentes de ``truth_path``.
+    """
+    worker_manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    manifest = worker_manifest
+    if truth_path is not None:
+        truth = json.loads(Path(truth_path).read_text(encoding="utf-8"))
+        ids = {page["id"] for page in worker_manifest["pages"]}
+        manifest = {**truth, "pages": [page for page in truth["pages"] if page["id"] in ids]}
     seed_record = freeze_seeds(seed)
     runs, raw = [], []
     for _ in range(repeats):
@@ -177,6 +210,8 @@ def build_report(
             seed=seed,
             weights_dir=weights_dir,
         )
+        if truth_path is not None:
+            map_back(result, worker_manifest)
         block_ms = assemble_blocks_for_run(result, manifest) if assemble else []
         runs.append(
             {
@@ -210,6 +245,7 @@ def build_report(
         "license_status": candidate.get("license_status", ""),
         "repeats": repeats,
         "blocks_source": "regras (calibration.json)" if assemble else "detector",
+        "rectifier": worker_manifest.get("rectifier", "none"),
         "summary": {
             "statuses": [run["status"] for run in runs],
             "lines_f1_bbox50": first["lines"]["bbox"]["0.5"]["f1"] if first else None,
@@ -237,6 +273,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--wait-free-s", type=float, default=180.0)
     parser.add_argument("--assemble-blocks", action="store_true", help="monta blocos por regras")
     parser.add_argument("--tag", default="", help="sufixo dos arquivos de predição")
+    parser.add_argument(
+        "--truth-manifest",
+        default=None,
+        help="manifesto original, quando --manifest aponta para páginas retificadas",
+    )
     args = parser.parse_args(argv)
 
     candidate = load_candidate(args.candidate)
@@ -263,6 +304,7 @@ def main(argv: list[str] | None = None) -> int:
         weights_dir=weights_dir,
         wait_free_s=args.wait_free_s,
         assemble=args.assemble_blocks,
+        truth_path=Path(args.truth_manifest) if args.truth_manifest else None,
     )
     stem = f"{candidate['id']}-{Path(args.manifest).stem}{args.tag}"
     predictions_out = Path(args.predictions_out or PREDICTIONS_DIR / f"{stem}-predictions.json")
