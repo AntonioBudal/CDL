@@ -2,7 +2,7 @@
 
 **Diretório**: `experiments/EXP-002/` | **Date**: 2026-10-02 | **Spec**: [spec.md](./spec.md)
 
-**Status**: `APPROVED` pelo usuário em 2026-10-02 (incluindo `graphic_box` → `structure.diagrams[]`).
+**Status**: `APPROVED` pelo usuário em 2026-10-02 (incluindo `graphic_box` → `structure.diagrams[]`); executado — ver [RESULTS.md](./RESULTS.md).
 
 ## Revisão pós-Fase 1 (2026-10-02)
 

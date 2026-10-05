@@ -112,6 +112,7 @@ document-intelligence/
 ├── experiments/               # Rastreamento de pesquisa e experimentos
 │   ├── EXP-000/               # Fundação de ambiente e reprodutibilidade (ACEITO em 2026-09-30)
 │   ├── EXP-001/               # HTR de linhas isoladas: spec, plano, harness, RESULTS.md (ACEITO em 2026-10-02)
+│   ├── EXP-002/               # Layout e segmentação: spec, plano, harness, RESULTS.md (AGUARDANDO ACEITE)
 │   └── EXP-001-context.md     # Contexto original do EXP-001
 │
 ├── dataset/                   # Gestão de dados sintéticos (dados reais NUNCA versionados)

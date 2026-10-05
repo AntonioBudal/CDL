@@ -42,7 +42,7 @@ uv run python -m leitorum_di
 
 - **Status**: **`EXP-000` aceito pelo usuário em 2026-09-30** (ver [`experiments/EXP-000/RESULTS.md`](./experiments/EXP-000/RESULTS.md)).
 - **EXP-001 aceito em 2026-10-02**, com o [ADR-001](./docs/adr/ADR-001-nao-adotar-htr-pronto-sem-portugues.md) aceito: nenhum HTR pronto sem treino em português é adotado.
-- **Tarefa Atual**: **`EXP-002`** (layout e segmentação). [`spec.md`](./experiments/EXP-002/spec.md) aprovada em 2026-10-02; [`plan.md`](./experiments/EXP-002/plan.md) e [`tasks.md`](./experiments/EXP-002/tasks.md) aprovados; Fases 1 e 2 concluídas. Não inicie a Fase 3 (instalação de modelos e download de pesos) sem autorização.
+- **Tarefa Atual**: **`EXP-002`** (layout e segmentação) executado (Fases 0 a 6); [`RESULTS.md`](./experiments/EXP-002/RESULTS.md) e ADR-002 (`PROPOSED`) **aguardando aceite do usuário**. Não inicie o EXP-003 antes disso. Exceção de licença adicional em vigor: pesos do docTR (`NEEDS VALIDATION`, só uso experimental local).
   - **Regra de workflow (usuário, 2026-09-30):** todo experimento segue o ciclo Spec Kit adaptado — Specify → Plan → Tasks — e a especificação/plano é apresentada **antes** de qualquer código de avaliação, script de inferência ou download de pesos.
   - **Ritmo fatiado (usuário, 2026-09-30):** nos próximos experimentos e features, produza **um artefato por vez** e aguarde a revisão antes do seguinte (Specify → aprovação → Plan → aprovação → Tasks → aprovação). Na execução, pare em cada checkpoint de fase e reporte.
   - Commits: padrão `FNN(document-inteligence) <nome da fase>`, definido pelo usuário em 2026-09-30.
@@ -50,7 +50,7 @@ uv run python -m leitorum_di
   - **Armazenamento local (usuário, 2026-10-02):** ambientes, pesos e datasets de experimentos podem ocupar no
     máximo **20 GB** em `document-intelligence/` (unidade C:). Antes de ultrapassar, **pergunte ao usuário**; o plano é
     passar a armazenar no HD (unidade D:, ~880 GB livres). Meça o uso antes de cada download grande. Uso em
-    2026-10-02: ~3,5 GB.
+    2026-10-05: 7,5 GB.
   - Normalização do WER (pontuação de borda removida; acentos e caixa preservados) foi **aprovada** e deve ser mantida.
 
 ---

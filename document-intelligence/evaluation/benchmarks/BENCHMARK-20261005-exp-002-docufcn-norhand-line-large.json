@@ -1,0 +1,738 @@
+{
+  "schema": "leitorum-di-layout-benchmark/1",
+  "created_utc": "2026-10-05T04:30:06+00:00",
+  "experiment": "EXP-002",
+  "git": {
+    "commit": "9b1f64cc1ec5314241b88a22b0f510934d26a9cb",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "seed": {
+    "seed": 1234,
+    "seeded": [
+      "random",
+      "numpy"
+    ],
+    "pythonhashseed_effective": false
+  },
+  "limits": {
+    "memory_bytes": 2147483648,
+    "load_timeout_s": 120.0,
+    "latency_probe_lines": 10,
+    "latency_abort_ms": 20000.0,
+    "wall_timeout_s": 1800.0,
+    "min_free_system_bytes": 1073741824,
+    "poll_interval_s": 0.05
+  },
+  "dataset": {
+    "id": "exp-002-large",
+    "manifest": "large-manifest.json",
+    "manifest_sha256": "59370a10263457a471114076b336058934870565a9d7f400fb44368e7333ced8",
+    "pages": 10,
+    "lines": 187
+  },
+  "candidate": {
+    "stage": "linhas",
+    "family": "FCN (Doc-UFCN)",
+    "environment": "envs/docufcn",
+    "code": {
+      "package": "doc-ufcn==0.1.9",
+      "license": "BSD-3-Clause",
+      "source": "https://pypi.org/project/doc-ufcn/",
+      "remarks": "Licença declarada nos metadados do PyPI; o repositório oficial (gitlab.teklia.com) bloqueia acesso automatizado. Conferir o arquivo LICENSE dentro do pacote na instalação (T020)."
+    },
+    "license_status": "VERIFIED",
+    "benchmark_allowed": true,
+    "product_allowed": false,
+    "remarks": "model.pth é pickle: carregar só após conferir o SHA-256.",
+    "id": "docufcn-norhand-line",
+    "adapter": "adapters.docufcn:DocUFCNDetector",
+    "weights": {
+      "repository": "https://huggingface.co/Teklia/doc-ufcn-norhand-v1-line",
+      "revision": "43ec736950e268798802a5499318f1183276f0ff",
+      "license": "MIT",
+      "files": {
+        "model.pth": {
+          "bytes": 49115013,
+          "sha256": "8e6e5e4f272a9b43a98de036c9164fdc522d2780e2e66dd601bde930bb14a950"
+        },
+        "parameters.yml": {
+          "bytes": 186,
+          "sha256": "c3cdabdd8503e517f9470c63ceefc788ad545574bd793248279ae1429650d5d7"
+        }
+      },
+      "local_dir": "models/exp-002/docufcn-norhand-line"
+    }
+  },
+  "license_status": "VERIFIED",
+  "repeats": 3,
+  "blocks_source": "detector",
+  "rectifier": "none",
+  "summary": {
+    "statuses": [
+      "OK",
+      "OK",
+      "OK"
+    ],
+    "lines_f1_bbox50": 0.8839779005524862,
+    "lines_f1_by_level": {
+      "light": 0.8839779005524862
+    },
+    "blocks_map50": null,
+    "median_ms_of_medians": 2597.04915,
+    "peak_rss_bytes_max": 717807616
+  },
+  "runs": [
+    {
+      "candidate_id": "docufcn-norhand-line",
+      "status": "OK",
+      "reason": "LICENSE STATUS: VERIFIED",
+      "license_status": "VERIFIED",
+      "load_ms": 4699.5876,
+      "peak_rss_bytes": 717807616,
+      "wall_s": 38.17339439998614,
+      "exit_code": 0,
+      "describe": {
+        "id": "docufcn-norhand-line",
+        "family": "Doc-UFCN",
+        "library": "doc-ufcn 0.1.9",
+        "torch": "2.1.0+cpu",
+        "threads": 4,
+        "input_size": 768,
+        "classes": [
+          "background",
+          "text_line_horizontal",
+          "text_line_vertical"
+        ]
+      },
+      "stderr_tail": [],
+      "metrics": {
+        "pages": 10,
+        "missing": [],
+        "lines": {
+          "bbox": {
+            "0.5": {
+              "tp": 160,
+              "fp": 15,
+              "fn": 27,
+              "precision": 0.9142857142857143,
+              "recall": 0.8556149732620321,
+              "f1": 0.8839779005524862,
+              "mean_iou": 0.7704351068433885
+            },
+            "0.75": {
+              "tp": 103,
+              "fp": 72,
+              "fn": 84,
+              "precision": 0.5885714285714285,
+              "recall": 0.5508021390374331,
+              "f1": 0.569060773480663,
+              "mean_iou": 0.8300321529725719
+            }
+          },
+          "polygon": {
+            "0.5": {
+              "tp": 148,
+              "fp": 27,
+              "fn": 39,
+              "precision": 0.8457142857142858,
+              "recall": 0.7914438502673797,
+              "f1": 0.8176795580110499,
+              "mean_iou": 0.7106955627422843
+            },
+            "0.75": {
+              "tp": 62,
+              "fp": 113,
+              "fn": 125,
+              "precision": 0.35428571428571426,
+              "recall": 0.3315508021390374,
+              "f1": 0.34254143646408836,
+              "mean_iou": 0.8090635524347035
+            }
+          }
+        },
+        "lines_by_level": {
+          "light": {
+            "tp": 160,
+            "fp": 15,
+            "fn": 27,
+            "precision": 0.9142857142857143,
+            "recall": 0.8556149732620321,
+            "f1": 0.8839779005524862,
+            "mean_iou": 0.7704351068433885
+          }
+        },
+        "blocks": null,
+        "per_page": [
+          {
+            "id": "large-light-001",
+            "level": "light",
+            "tp": 16,
+            "fp": 3,
+            "fn": 5,
+            "precision": 0.8421052631578947,
+            "recall": 0.7619047619047619,
+            "f1": 0.8,
+            "mean_iou": 0.7481082873177434
+          },
+          {
+            "id": "large-light-002",
+            "level": "light",
+            "tp": 15,
+            "fp": 2,
+            "fn": 3,
+            "precision": 0.8823529411764706,
+            "recall": 0.8333333333333334,
+            "f1": 0.8571428571428571,
+            "mean_iou": 0.7382875406073496
+          },
+          {
+            "id": "large-light-003",
+            "level": "light",
+            "tp": 14,
+            "fp": 0,
+            "fn": 2,
+            "precision": 1.0,
+            "recall": 0.875,
+            "f1": 0.9333333333333333,
+            "mean_iou": 0.7619546603615756
+          },
+          {
+            "id": "large-light-004",
+            "level": "light",
+            "tp": 17,
+            "fp": 7,
+            "fn": 5,
+            "precision": 0.7083333333333334,
+            "recall": 0.7727272727272727,
+            "f1": 0.7391304347826088,
+            "mean_iou": 0.7972193574886529
+          },
+          {
+            "id": "large-light-005",
+            "level": "light",
+            "tp": 15,
+            "fp": 1,
+            "fn": 3,
+            "precision": 0.9375,
+            "recall": 0.8333333333333334,
+            "f1": 0.8823529411764706,
+            "mean_iou": 0.7412236317830445
+          },
+          {
+            "id": "large-light-006",
+            "level": "light",
+            "tp": 14,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "mean_iou": 0.7723415963519065
+          },
+          {
+            "id": "large-light-007",
+            "level": "light",
+            "tp": 11,
+            "fp": 2,
+            "fn": 2,
+            "precision": 0.8461538461538461,
+            "recall": 0.8461538461538461,
+            "f1": 0.8461538461538461,
+            "mean_iou": 0.7885934082967048
+          },
+          {
+            "id": "large-light-008",
+            "level": "light",
+            "tp": 19,
+            "fp": 0,
+            "fn": 2,
+            "precision": 1.0,
+            "recall": 0.9047619047619048,
+            "f1": 0.9500000000000001,
+            "mean_iou": 0.7348302051069897
+          },
+          {
+            "id": "large-light-009",
+            "level": "light",
+            "tp": 18,
+            "fp": 0,
+            "fn": 3,
+            "precision": 1.0,
+            "recall": 0.8571428571428571,
+            "f1": 0.923076923076923,
+            "mean_iou": 0.8086874880624207
+          },
+          {
+            "id": "large-light-010",
+            "level": "light",
+            "tp": 21,
+            "fp": 0,
+            "fn": 2,
+            "precision": 1.0,
+            "recall": 0.9130434782608695,
+            "f1": 0.9545454545454545,
+            "mean_iou": 0.8038887651088745
+          }
+        ]
+      },
+      "latency": {
+        "pages": 10,
+        "median_ms": 2630.3132,
+        "p95_ms": 2901.298,
+        "max_ms": 2901.298
+      },
+      "partial": false,
+      "verdicts": {
+        "h1_lines_clean": null,
+        "h1_lines_degraded": true,
+        "h2_blocks": null,
+        "h3_cost": false
+      },
+      "ldf": {
+        "documents": 10,
+        "invalid": 0,
+        "graphic_box_gaps": 0,
+        "error_examples": []
+      },
+      "waited_for_memory_s": 0.002151900000171736,
+      "block_assembly_latency": null
+    },
+    {
+      "candidate_id": "docufcn-norhand-line",
+      "status": "OK",
+      "reason": "LICENSE STATUS: VERIFIED",
+      "license_status": "VERIFIED",
+      "load_ms": 4706.2573,
+      "peak_rss_bytes": 709939200,
+      "wall_s": 37.262621800007764,
+      "exit_code": 0,
+      "describe": {
+        "id": "docufcn-norhand-line",
+        "family": "Doc-UFCN",
+        "library": "doc-ufcn 0.1.9",
+        "torch": "2.1.0+cpu",
+        "threads": 4,
+        "input_size": 768,
+        "classes": [
+          "background",
+          "text_line_horizontal",
+          "text_line_vertical"
+        ]
+      },
+      "stderr_tail": [],
+      "metrics": {
+        "pages": 10,
+        "missing": [],
+        "lines": {
+          "bbox": {
+            "0.5": {
+              "tp": 160,
+              "fp": 15,
+              "fn": 27,
+              "precision": 0.9142857142857143,
+              "recall": 0.8556149732620321,
+              "f1": 0.8839779005524862,
+              "mean_iou": 0.7704351068433885
+            },
+            "0.75": {
+              "tp": 103,
+              "fp": 72,
+              "fn": 84,
+              "precision": 0.5885714285714285,
+              "recall": 0.5508021390374331,
+              "f1": 0.569060773480663,
+              "mean_iou": 0.8300321529725719
+            }
+          },
+          "polygon": {
+            "0.5": {
+              "tp": 148,
+              "fp": 27,
+              "fn": 39,
+              "precision": 0.8457142857142858,
+              "recall": 0.7914438502673797,
+              "f1": 0.8176795580110499,
+              "mean_iou": 0.7106955627422843
+            },
+            "0.75": {
+              "tp": 62,
+              "fp": 113,
+              "fn": 125,
+              "precision": 0.35428571428571426,
+              "recall": 0.3315508021390374,
+              "f1": 0.34254143646408836,
+              "mean_iou": 0.8090635524347035
+            }
+          }
+        },
+        "lines_by_level": {
+          "light": {
+            "tp": 160,
+            "fp": 15,
+            "fn": 27,
+            "precision": 0.9142857142857143,
+            "recall": 0.8556149732620321,
+            "f1": 0.8839779005524862,
+            "mean_iou": 0.7704351068433885
+          }
+        },
+        "blocks": null,
+        "per_page": [
+          {
+            "id": "large-light-001",
+            "level": "light",
+            "tp": 16,
+            "fp": 3,
+            "fn": 5,
+            "precision": 0.8421052631578947,
+            "recall": 0.7619047619047619,
+            "f1": 0.8,
+            "mean_iou": 0.7481082873177434
+          },
+          {
+            "id": "large-light-002",
+            "level": "light",
+            "tp": 15,
+            "fp": 2,
+            "fn": 3,
+            "precision": 0.8823529411764706,
+            "recall": 0.8333333333333334,
+            "f1": 0.8571428571428571,
+            "mean_iou": 0.7382875406073496
+          },
+          {
+            "id": "large-light-003",
+            "level": "light",
+            "tp": 14,
+            "fp": 0,
+            "fn": 2,
+            "precision": 1.0,
+            "recall": 0.875,
+            "f1": 0.9333333333333333,
+            "mean_iou": 0.7619546603615756
+          },
+          {
+            "id": "large-light-004",
+            "level": "light",
+            "tp": 17,
+            "fp": 7,
+            "fn": 5,
+            "precision": 0.7083333333333334,
+            "recall": 0.7727272727272727,
+            "f1": 0.7391304347826088,
+            "mean_iou": 0.7972193574886529
+          },
+          {
+            "id": "large-light-005",
+            "level": "light",
+            "tp": 15,
+            "fp": 1,
+            "fn": 3,
+            "precision": 0.9375,
+            "recall": 0.8333333333333334,
+            "f1": 0.8823529411764706,
+            "mean_iou": 0.7412236317830445
+          },
+          {
+            "id": "large-light-006",
+            "level": "light",
+            "tp": 14,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "mean_iou": 0.7723415963519065
+          },
+          {
+            "id": "large-light-007",
+            "level": "light",
+            "tp": 11,
+            "fp": 2,
+            "fn": 2,
+            "precision": 0.8461538461538461,
+            "recall": 0.8461538461538461,
+            "f1": 0.8461538461538461,
+            "mean_iou": 0.7885934082967048
+          },
+          {
+            "id": "large-light-008",
+            "level": "light",
+            "tp": 19,
+            "fp": 0,
+            "fn": 2,
+            "precision": 1.0,
+            "recall": 0.9047619047619048,
+            "f1": 0.9500000000000001,
+            "mean_iou": 0.7348302051069897
+          },
+          {
+            "id": "large-light-009",
+            "level": "light",
+            "tp": 18,
+            "fp": 0,
+            "fn": 3,
+            "precision": 1.0,
+            "recall": 0.8571428571428571,
+            "f1": 0.923076923076923,
+            "mean_iou": 0.8086874880624207
+          },
+          {
+            "id": "large-light-010",
+            "level": "light",
+            "tp": 21,
+            "fp": 0,
+            "fn": 2,
+            "precision": 1.0,
+            "recall": 0.9130434782608695,
+            "f1": 0.9545454545454545,
+            "mean_iou": 0.8038887651088745
+          }
+        ]
+      },
+      "latency": {
+        "pages": 10,
+        "median_ms": 2597.04915,
+        "p95_ms": 2861.5252,
+        "max_ms": 2861.5252
+      },
+      "partial": false,
+      "verdicts": {
+        "h1_lines_clean": null,
+        "h1_lines_degraded": true,
+        "h2_blocks": null,
+        "h3_cost": false
+      },
+      "ldf": {
+        "documents": 10,
+        "invalid": 0,
+        "graphic_box_gaps": 0,
+        "error_examples": []
+      },
+      "waited_for_memory_s": 0.0002728000108618289,
+      "block_assembly_latency": null
+    },
+    {
+      "candidate_id": "docufcn-norhand-line",
+      "status": "OK",
+      "reason": "LICENSE STATUS: VERIFIED",
+      "license_status": "VERIFIED",
+      "load_ms": 4730.2062,
+      "peak_rss_bytes": 710303744,
+      "wall_s": 37.75940880001872,
+      "exit_code": 0,
+      "describe": {
+        "id": "docufcn-norhand-line",
+        "family": "Doc-UFCN",
+        "library": "doc-ufcn 0.1.9",
+        "torch": "2.1.0+cpu",
+        "threads": 4,
+        "input_size": 768,
+        "classes": [
+          "background",
+          "text_line_horizontal",
+          "text_line_vertical"
+        ]
+      },
+      "stderr_tail": [],
+      "metrics": {
+        "pages": 10,
+        "missing": [],
+        "lines": {
+          "bbox": {
+            "0.5": {
+              "tp": 160,
+              "fp": 15,
+              "fn": 27,
+              "precision": 0.9142857142857143,
+              "recall": 0.8556149732620321,
+              "f1": 0.8839779005524862,
+              "mean_iou": 0.7704351068433885
+            },
+            "0.75": {
+              "tp": 103,
+              "fp": 72,
+              "fn": 84,
+              "precision": 0.5885714285714285,
+              "recall": 0.5508021390374331,
+              "f1": 0.569060773480663,
+              "mean_iou": 0.8300321529725719
+            }
+          },
+          "polygon": {
+            "0.5": {
+              "tp": 148,
+              "fp": 27,
+              "fn": 39,
+              "precision": 0.8457142857142858,
+              "recall": 0.7914438502673797,
+              "f1": 0.8176795580110499,
+              "mean_iou": 0.7106955627422843
+            },
+            "0.75": {
+              "tp": 62,
+              "fp": 113,
+              "fn": 125,
+              "precision": 0.35428571428571426,
+              "recall": 0.3315508021390374,
+              "f1": 0.34254143646408836,
+              "mean_iou": 0.8090635524347035
+            }
+          }
+        },
+        "lines_by_level": {
+          "light": {
+            "tp": 160,
+            "fp": 15,
+            "fn": 27,
+            "precision": 0.9142857142857143,
+            "recall": 0.8556149732620321,
+            "f1": 0.8839779005524862,
+            "mean_iou": 0.7704351068433885
+          }
+        },
+        "blocks": null,
+        "per_page": [
+          {
+            "id": "large-light-001",
+            "level": "light",
+            "tp": 16,
+            "fp": 3,
+            "fn": 5,
+            "precision": 0.8421052631578947,
+            "recall": 0.7619047619047619,
+            "f1": 0.8,
+            "mean_iou": 0.7481082873177434
+          },
+          {
+            "id": "large-light-002",
+            "level": "light",
+            "tp": 15,
+            "fp": 2,
+            "fn": 3,
+            "precision": 0.8823529411764706,
+            "recall": 0.8333333333333334,
+            "f1": 0.8571428571428571,
+            "mean_iou": 0.7382875406073496
+          },
+          {
+            "id": "large-light-003",
+            "level": "light",
+            "tp": 14,
+            "fp": 0,
+            "fn": 2,
+            "precision": 1.0,
+            "recall": 0.875,
+            "f1": 0.9333333333333333,
+            "mean_iou": 0.7619546603615756
+          },
+          {
+            "id": "large-light-004",
+            "level": "light",
+            "tp": 17,
+            "fp": 7,
+            "fn": 5,
+            "precision": 0.7083333333333334,
+            "recall": 0.7727272727272727,
+            "f1": 0.7391304347826088,
+            "mean_iou": 0.7972193574886529
+          },
+          {
+            "id": "large-light-005",
+            "level": "light",
+            "tp": 15,
+            "fp": 1,
+            "fn": 3,
+            "precision": 0.9375,
+            "recall": 0.8333333333333334,
+            "f1": 0.8823529411764706,
+            "mean_iou": 0.7412236317830445
+          },
+          {
+            "id": "large-light-006",
+            "level": "light",
+            "tp": 14,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "mean_iou": 0.7723415963519065
+          },
+          {
+            "id": "large-light-007",
+            "level": "light",
+            "tp": 11,
+            "fp": 2,
+            "fn": 2,
+            "precision": 0.8461538461538461,
+            "recall": 0.8461538461538461,
+            "f1": 0.8461538461538461,
+            "mean_iou": 0.7885934082967048
+          },
+          {
+            "id": "large-light-008",
+            "level": "light",
+            "tp": 19,
+            "fp": 0,
+            "fn": 2,
+            "precision": 1.0,
+            "recall": 0.9047619047619048,
+            "f1": 0.9500000000000001,
+            "mean_iou": 0.7348302051069897
+          },
+          {
+            "id": "large-light-009",
+            "level": "light",
+            "tp": 18,
+            "fp": 0,
+            "fn": 3,
+            "precision": 1.0,
+            "recall": 0.8571428571428571,
+            "f1": 0.923076923076923,
+            "mean_iou": 0.8086874880624207
+          },
+          {
+            "id": "large-light-010",
+            "level": "light",
+            "tp": 21,
+            "fp": 0,
+            "fn": 2,
+            "precision": 1.0,
+            "recall": 0.9130434782608695,
+            "f1": 0.9545454545454545,
+            "mean_iou": 0.8038887651088745
+          }
+        ]
+      },
+      "latency": {
+        "pages": 10,
+        "median_ms": 2579.563,
+        "p95_ms": 2831.4094,
+        "max_ms": 2831.4094
+      },
+      "partial": false,
+      "verdicts": {
+        "h1_lines_clean": null,
+        "h1_lines_degraded": true,
+        "h2_blocks": null,
+        "h3_cost": false
+      },
+      "ldf": {
+        "documents": 10,
+        "invalid": 0,
+        "graphic_box_gaps": 0,
+        "error_examples": []
+      },
+      "waited_for_memory_s": 0.0003206999972462654,
+      "block_assembly_latency": null
+    }
+  ]
+}

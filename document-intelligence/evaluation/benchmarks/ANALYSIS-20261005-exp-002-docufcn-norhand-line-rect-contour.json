@@ -1,0 +1,118 @@
+{
+  "schema": "leitorum-di-layout-failure-analysis/1",
+  "candidate": "docufcn-norhand-line+contour",
+  "manifest": "test-manifest.json",
+  "pages": 120,
+  "f1_by": {
+    "level": {
+      "light": {
+        "tp": 1043,
+        "fp": 27,
+        "fn": 155,
+        "precision": 0.974766355140187,
+        "recall": 0.8706176961602671,
+        "f1": 0.9197530864197531,
+        "mean_iou": 0.7915399416134569
+      },
+      "strong": {
+        "tp": 967,
+        "fp": 165,
+        "fn": 191,
+        "precision": 0.8542402826855123,
+        "recall": 0.8350604490500864,
+        "f1": 0.8445414847161573,
+        "mean_iou": 0.8184996516819468
+      }
+    },
+    "rotation": {
+      "0–1°": {
+        "tp": 801,
+        "fp": 43,
+        "fn": 127,
+        "precision": 0.9490521327014217,
+        "recall": 0.8631465517241379,
+        "f1": 0.9040632054176071,
+        "mean_iou": 0.7916849738167506
+      },
+      "1–3°": {
+        "tp": 516,
+        "fp": 36,
+        "fn": 80,
+        "precision": 0.9347826086956522,
+        "recall": 0.8657718120805369,
+        "f1": 0.8989547038327527,
+        "mean_iou": 0.8032661499668113
+      },
+      "3–6°": {
+        "tp": 404,
+        "fp": 65,
+        "fn": 86,
+        "precision": 0.8614072494669509,
+        "recall": 0.8244897959183674,
+        "f1": 0.8425443169968717,
+        "mean_iou": 0.808718478215527
+      },
+      "≥6°": {
+        "tp": 289,
+        "fp": 48,
+        "fn": 53,
+        "precision": 0.857566765578635,
+        "recall": 0.8450292397660819,
+        "f1": 0.8512518409425626,
+        "mean_iou": 0.8363946701387993
+      }
+    },
+    "curvature": {
+      "0.004–0.012": {
+        "tp": 1095,
+        "fp": 29,
+        "fn": 157,
+        "precision": 0.9741992882562278,
+        "recall": 0.8746006389776357,
+        "f1": 0.9217171717171717,
+        "mean_iou": 0.7924427085949893
+      },
+      "0–0.004": {
+        "tp": 33,
+        "fp": 0,
+        "fn": 5,
+        "precision": 1.0,
+        "recall": 0.868421052631579,
+        "f1": 0.9295774647887324,
+        "mean_iou": 0.798202995606589
+      },
+      "≥0.012": {
+        "tp": 882,
+        "fp": 163,
+        "fn": 184,
+        "precision": 0.8440191387559809,
+        "recall": 0.8273921200750469,
+        "f1": 0.8356229275225013,
+        "mean_iou": 0.8197277296062896
+      }
+    }
+  },
+  "unmatched_truth_modes": {
+    "fundida": 147,
+    "perdida": 129,
+    "fragmentada": 35,
+    "deslocada": 35
+  },
+  "unmatched_truth_modes_by_level": {
+    "light": {
+      "fundida": 96,
+      "perdida": 44,
+      "fragmentada": 5,
+      "deslocada": 10
+    },
+    "strong": {
+      "perdida": 85,
+      "fragmentada": 30,
+      "fundida": 51,
+      "deslocada": 25
+    }
+  },
+  "isolated_false_positives": {
+    "na_folha": 111
+  }
+}

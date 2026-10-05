@@ -2,7 +2,7 @@
 
 **Input**: [spec.md](./spec.md), [plan.md](./plan.md)
 
-**Status**: `APPROVED` em 2026-10-02. **Fases 0–3 concluídas** (2026-10-04). Fase 4 (retificação) aguardando autorização.
+**Status**: `APPROVED` em 2026-10-02. **Fases 0–6 concluídas** em 2026-10-05 (o usuário autorizou avançar todas as fases). Aguardando aceite (T033). EXP-003 não iniciado.
 
 **Formato**: `[ID] [P?] [Cenário] Descrição` — `[P]` = pode rodar em paralelo; C1–C4 = cenários da spec.
 
@@ -127,26 +127,29 @@ Leitura preliminar (o veredito formal fica para a Fase 5):
 
 ## Fase 4 — Cenário 4: retificação de perspectiva
 
-- [ ] T024 [C4] Retificador `contour` (OpenCV) e, se a licença fechar, `docufcn-page`; inversão da homografia para avaliar nas coordenadas originais; testes com cantos conhecidos.
-- [ ] T025 [C4] Medir a retificação isolada: erro dos cantos (px), ms por página, pico de memória.
-- [ ] T026 [C4] Executar os detectores com cada retificador na camada degradada e comparar com `none`; registrar o custo total (retificação + detecção).
-- [ ] T027 [C4] Caso de borda `large` (~12 MP): memória e tempo da melhor combinação.
+- [x] T024 [C4] Retificador `contour` (OpenCV) e, se a licença fechar, `docufcn-page`; inversão da homografia para avaliar nas coordenadas originais; testes com cantos conhecidos.
+- [x] T025 [C4] Medir a retificação isolada: erro dos cantos (px), ms por página, pico de memória.
+- [x] T026 [C4] Executar os detectores com cada retificador na camada degradada e comparar com `none`; registrar o custo total (retificação + detecção).
+- [x] T027 [C4] Caso de borda `large` (~12 MP): memória e tempo da melhor combinação.
 
-**Checkpoint 4**: tabela com × sem retificação e custo isolado. Reportar.
+**Checkpoint 4** atingido em 2026-10-05. Retificação isolada: `contour` 124–133 ms e 60 MiB (erro mediano dos
+cantos de 5,9 px no nível leve e 30,7 px no forte); `docufcn-page` 2,5 s e 657 MiB (erro ~75 px, estável).
+Com `contour`, o `docufcn-norhand-line` vai a 0,920 / 0,845 (leve / forte). Tabelas em
+[`failure-analysis.md`](./failure-analysis.md). Blocos não foram medidos com retificação.
 
 ## Fase 5 — Análise de falhas
 
-- [ ] T028 F1 por tipo de degradação (perspectiva, curvatura, sombra, desfoque) e por tipo de bloco; principais modos de falha (linhas fundidas, quebradas, perdidas, falsos positivos na pauta).
-- [ ] T029 Veredito de H1–H5 com os critérios de avaliação aprovados.
+- [x] T028 F1 por tipo de degradação (perspectiva, curvatura, sombra, desfoque) e por tipo de bloco; principais modos de falha (linhas fundidas, quebradas, perdidas, falsos positivos na pauta).
+- [x] T029 Veredito de H1–H5 com os critérios de avaliação aprovados.
 
-**Checkpoint 5**: análise concluída. Reportar.
+**Checkpoint 5** atingido em 2026-10-05: [`failure-analysis.md`](./failure-analysis.md). Sombra e desfoque não foram isolados por página (limitação).
 
 ## Fase 6 — Relatório e decisão
 
-- [ ] T030 `experiments/EXP-002/RESULTS.md` com manifesto de reprodutibilidade, desvios e limitações.
-- [ ] T031 ADR em `docs/adr/` com a decisão sobre segmentação e retificação.
-- [ ] T032 Conferência final: testes, `ruff`, nada fora de `document-intelligence/`, pesos e páginas fora do Git, disco abaixo de 20 GB.
-- [ ] T033 Submeter ao usuário para aceite. **Não iniciar o EXP-003 antes do aceite.**
+- [x] T030 `experiments/EXP-002/RESULTS.md` com manifesto de reprodutibilidade, desvios e limitações.
+- [x] T031 ADR em `docs/adr/` com a decisão sobre segmentação e retificação.
+- [x] T032 Conferência final: testes, `ruff`, nada fora de `document-intelligence/`, pesos e páginas fora do Git, disco abaixo de 20 GB.
+- [ ] T033 *(submetido em 2026-10-05; aguardando resposta)* Submeter ao usuário para aceite. **Não iniciar o EXP-003 antes do aceite.**
 
 ---
 

@@ -1,0 +1,213 @@
+{
+  "schema": "leitorum-di-rectification-benchmark/1",
+  "created_utc": "2026-10-05T02:04:11+00:00",
+  "experiment": "EXP-002",
+  "git": {
+    "commit": "9b1f64cc1ec5314241b88a22b0f510934d26a9cb",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "seed": {
+    "seed": 1234,
+    "seeded": [
+      "random",
+      "numpy"
+    ],
+    "pythonhashseed_effective": false
+  },
+  "limits": {
+    "memory_bytes": 2147483648,
+    "load_timeout_s": 120.0,
+    "latency_probe_lines": 10,
+    "latency_abort_ms": 20000.0,
+    "wall_timeout_s": 1800.0,
+    "min_free_system_bytes": 1073741824,
+    "poll_interval_s": 0.05
+  },
+  "dataset": {
+    "manifest": "test-manifest.json",
+    "levels": [
+      "light",
+      "strong"
+    ],
+    "pages": 120
+  },
+  "rectifier": {
+    "id": "docufcn-page",
+    "stage": "retificação (detecção da folha)",
+    "family": "FCN (Doc-UFCN)",
+    "environment": "envs/docufcn",
+    "code": {
+      "package": "doc-ufcn==0.1.9",
+      "license": "BSD-3-Clause"
+    },
+    "weights": {
+      "repository": "https://huggingface.co/Teklia/doc-ufcn-generic-page",
+      "revision": "0bdb94c369a902c0f7ffa864d744afa00128308c",
+      "license": "MIT",
+      "files": {
+        "model.pth": {
+          "bytes": 49204383,
+          "sha256": "ab9036a138c9792d433edd02ac3c744745c0b06f01fc50e973c2b92d9e0dfd83"
+        },
+        "parameters.yml": {
+          "bytes": 145,
+          "sha256": "e63f1c76eb41a1d336953f7f7661709d6018b80a904ec183a133e112fa75390f"
+        }
+      },
+      "local_dir": "models/exp-002/docufcn-page"
+    },
+    "license_status": "VERIFIED",
+    "benchmark_allowed": true,
+    "product_allowed": false,
+    "adapter": "adapters.rectifiers:DocUFCNPageRectifier"
+  },
+  "summary": {
+    "statuses": [
+      "OK",
+      "OK",
+      "OK"
+    ],
+    "median_ms": [
+      2537.60505,
+      2452.8928,
+      2461.303
+    ],
+    "peak_rss_bytes_max": 688594944,
+    "corner_error_px": {
+      "light": {
+        "mean_px": 75.25541224835358,
+        "median_px": 78.70766962136072,
+        "max_px": 94.91018430943147
+      },
+      "strong": {
+        "mean_px": 74.70588644679216,
+        "median_px": 75.77091370519996,
+        "max_px": 162.3019051762017
+      }
+    },
+    "pages_found": 120
+  },
+  "runs": [
+    {
+      "candidate_id": "docufcn-page",
+      "status": "OK",
+      "reason": "LICENSE STATUS: VERIFIED",
+      "license_status": "VERIFIED",
+      "load_ms": 17677.1176,
+      "peak_rss_bytes": 688041984,
+      "wall_s": 342.1012463000079,
+      "exit_code": 0,
+      "describe": {
+        "id": "docufcn-page",
+        "family": "máscara de página Doc-UFCN",
+        "torch": "2.1.0+cpu",
+        "threads": 4
+      },
+      "stderr_tail": [],
+      "waited_for_memory_s": 0.0028738999972119927,
+      "latency": {
+        "pages": 120,
+        "median_ms": 2537.60505,
+        "p95_ms": 2980.8856,
+        "max_ms": 4206.6312
+      },
+      "pages_found": 120,
+      "corner_error_px": {
+        "light": {
+          "mean_px": 75.25541224835358,
+          "median_px": 78.70766962136072,
+          "max_px": 94.91018430943147
+        },
+        "strong": {
+          "mean_px": 74.70588644679216,
+          "median_px": 75.77091370519996,
+          "max_px": 162.3019051762017
+        }
+      },
+      "corner_error_mean_px": 74.98064934757286
+    },
+    {
+      "candidate_id": "docufcn-page",
+      "status": "OK",
+      "reason": "LICENSE STATUS: VERIFIED",
+      "license_status": "VERIFIED",
+      "load_ms": 13460.5351,
+      "peak_rss_bytes": 686043136,
+      "wall_s": 316.439787100011,
+      "exit_code": 0,
+      "describe": {
+        "id": "docufcn-page",
+        "family": "máscara de página Doc-UFCN",
+        "torch": "2.1.0+cpu",
+        "threads": 4
+      },
+      "stderr_tail": [],
+      "waited_for_memory_s": 0.0002398999931756407,
+      "latency": {
+        "pages": 120,
+        "median_ms": 2452.8928,
+        "p95_ms": 2673.5165,
+        "max_ms": 2885.4631
+      },
+      "pages_found": 120,
+      "corner_error_px": {
+        "light": {
+          "mean_px": 75.25541224835358,
+          "median_px": 78.70766962136072,
+          "max_px": 94.91018430943147
+        },
+        "strong": {
+          "mean_px": 74.70588644679216,
+          "median_px": 75.77091370519996,
+          "max_px": 162.3019051762017
+        }
+      },
+      "corner_error_mean_px": 74.98064934757286
+    },
+    {
+      "candidate_id": "docufcn-page",
+      "status": "OK",
+      "reason": "LICENSE STATUS: VERIFIED",
+      "license_status": "VERIFIED",
+      "load_ms": 5227.385,
+      "peak_rss_bytes": 688594944,
+      "wall_s": 310.01773690001573,
+      "exit_code": 0,
+      "describe": {
+        "id": "docufcn-page",
+        "family": "máscara de página Doc-UFCN",
+        "torch": "2.1.0+cpu",
+        "threads": 4
+      },
+      "stderr_tail": [],
+      "waited_for_memory_s": 0.0002776999899651855,
+      "latency": {
+        "pages": 120,
+        "median_ms": 2461.303,
+        "p95_ms": 2704.1593,
+        "max_ms": 3330.314
+      },
+      "pages_found": 120,
+      "corner_error_px": {
+        "light": {
+          "mean_px": 75.25541224835358,
+          "median_px": 78.70766962136072,
+          "max_px": 94.91018430943147
+        },
+        "strong": {
+          "mean_px": 74.70588644679216,
+          "median_px": 75.77091370519996,
+          "max_px": 162.3019051762017
+        }
+      },
+      "corner_error_mean_px": 74.98064934757286
+    }
+  ]
+}

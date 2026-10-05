@@ -5,7 +5,7 @@
 **Created**: 2026-10-02
 
 **Status**: `APPROVED` pelo usuário em 2026-10-02, com ajustes (§6). Plano e tarefas autorizados na mesma resposta.
-Nenhum código, instalação ou download foi feito.
+Execução concluída em 2026-10-05; resultados em [RESULTS.md](./RESULTS.md).
 
 **Input**: `docs/roadmap-experiments.md` §3 (EXP-002), `docs/ldf.md`, `docs/schemas/ldf-1.0.schema.json`, resultados e
 infraestrutura do EXP-001 (aceito em 2026-10-02) e ADR-001.

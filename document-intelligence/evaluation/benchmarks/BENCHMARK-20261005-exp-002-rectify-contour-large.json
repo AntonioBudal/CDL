@@ -1,0 +1,165 @@
+{
+  "schema": "leitorum-di-rectification-benchmark/1",
+  "created_utc": "2026-10-05T04:22:32+00:00",
+  "experiment": "EXP-002",
+  "git": {
+    "commit": "9b1f64cc1ec5314241b88a22b0f510934d26a9cb",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "seed": {
+    "seed": 1234,
+    "seeded": [
+      "random",
+      "numpy"
+    ],
+    "pythonhashseed_effective": false
+  },
+  "limits": {
+    "memory_bytes": 2147483648,
+    "load_timeout_s": 120.0,
+    "latency_probe_lines": 10,
+    "latency_abort_ms": 20000.0,
+    "wall_timeout_s": 1800.0,
+    "min_free_system_bytes": 1073741824,
+    "poll_interval_s": 0.05
+  },
+  "dataset": {
+    "manifest": "large-manifest.json",
+    "levels": [
+      "light"
+    ],
+    "pages": 10
+  },
+  "rectifier": {
+    "id": "rectify-contour",
+    "kind": "reference",
+    "adapter": "adapters.rectifiers:ContourRectifier",
+    "license_status": "VERIFIED (OpenCV, Apache-2.0; sem pesos)"
+  },
+  "summary": {
+    "statuses": [
+      "OK",
+      "OK",
+      "OK"
+    ],
+    "median_ms": [
+      527.011,
+      524.45265,
+      529.01005
+    ],
+    "peak_rss_bytes_max": 127590400,
+    "corner_error_px": {
+      "light": {
+        "mean_px": 13.650427246865473,
+        "median_px": 13.434817036114445,
+        "max_px": 15.371634099867652
+      }
+    },
+    "pages_found": 10
+  },
+  "runs": [
+    {
+      "candidate_id": "rectify-contour",
+      "status": "OK",
+      "reason": "reconhecedor de referência (sem modelo)",
+      "license_status": "VERIFIED (OpenCV, Apache-2.0; sem pesos)",
+      "load_ms": 0.2368,
+      "peak_rss_bytes": 127475712,
+      "wall_s": 6.773611100012204,
+      "exit_code": 0,
+      "describe": {
+        "id": "rectify-contour",
+        "family": "contorno da folha (OpenCV)",
+        "opencv": "5.0.0"
+      },
+      "stderr_tail": [],
+      "waited_for_memory_s": 0.0028522000066004694,
+      "latency": {
+        "pages": 10,
+        "median_ms": 527.011,
+        "p95_ms": 563.0355,
+        "max_ms": 563.0355
+      },
+      "pages_found": 10,
+      "corner_error_px": {
+        "light": {
+          "mean_px": 13.650427246865473,
+          "median_px": 13.434817036114445,
+          "max_px": 15.371634099867652
+        }
+      },
+      "corner_error_mean_px": 13.650427246865473
+    },
+    {
+      "candidate_id": "rectify-contour",
+      "status": "OK",
+      "reason": "reconhecedor de referência (sem modelo)",
+      "license_status": "VERIFIED (OpenCV, Apache-2.0; sem pesos)",
+      "load_ms": 0.2159,
+      "peak_rss_bytes": 127590400,
+      "wall_s": 6.669773700006772,
+      "exit_code": 0,
+      "describe": {
+        "id": "rectify-contour",
+        "family": "contorno da folha (OpenCV)",
+        "opencv": "5.0.0"
+      },
+      "stderr_tail": [],
+      "waited_for_memory_s": 0.00048080002306960523,
+      "latency": {
+        "pages": 10,
+        "median_ms": 524.45265,
+        "p95_ms": 539.927,
+        "max_ms": 539.927
+      },
+      "pages_found": 10,
+      "corner_error_px": {
+        "light": {
+          "mean_px": 13.650427246865473,
+          "median_px": 13.434817036114445,
+          "max_px": 15.371634099867652
+        }
+      },
+      "corner_error_mean_px": 13.650427246865473
+    },
+    {
+      "candidate_id": "rectify-contour",
+      "status": "OK",
+      "reason": "reconhecedor de referência (sem modelo)",
+      "license_status": "VERIFIED (OpenCV, Apache-2.0; sem pesos)",
+      "load_ms": 0.3183,
+      "peak_rss_bytes": 127524864,
+      "wall_s": 6.806749200011836,
+      "exit_code": 0,
+      "describe": {
+        "id": "rectify-contour",
+        "family": "contorno da folha (OpenCV)",
+        "opencv": "5.0.0"
+      },
+      "stderr_tail": [],
+      "waited_for_memory_s": 0.00021469997591339052,
+      "latency": {
+        "pages": 10,
+        "median_ms": 529.01005,
+        "p95_ms": 620.6362,
+        "max_ms": 620.6362
+      },
+      "pages_found": 10,
+      "corner_error_px": {
+        "light": {
+          "mean_px": 13.650427246865473,
+          "median_px": 13.434817036114445,
+          "max_px": 15.371634099867652
+        }
+      },
+      "corner_error_mean_px": 13.650427246865473
+    }
+  ]
+}

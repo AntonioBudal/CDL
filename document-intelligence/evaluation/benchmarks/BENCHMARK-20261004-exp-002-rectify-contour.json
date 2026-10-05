@@ -1,0 +1,186 @@
+{
+  "schema": "leitorum-di-rectification-benchmark/1",
+  "created_utc": "2026-10-05T01:47:59+00:00",
+  "experiment": "EXP-002",
+  "git": {
+    "commit": "9b1f64cc1ec5314241b88a22b0f510934d26a9cb",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "seed": {
+    "seed": 1234,
+    "seeded": [
+      "random",
+      "numpy"
+    ],
+    "pythonhashseed_effective": false
+  },
+  "limits": {
+    "memory_bytes": 2147483648,
+    "load_timeout_s": 120.0,
+    "latency_probe_lines": 10,
+    "latency_abort_ms": 20000.0,
+    "wall_timeout_s": 1800.0,
+    "min_free_system_bytes": 1073741824,
+    "poll_interval_s": 0.05
+  },
+  "dataset": {
+    "manifest": "test-manifest.json",
+    "levels": [
+      "light",
+      "strong"
+    ],
+    "pages": 120
+  },
+  "rectifier": {
+    "id": "rectify-contour",
+    "kind": "reference",
+    "adapter": "adapters.rectifiers:ContourRectifier",
+    "license_status": "VERIFIED (OpenCV, Apache-2.0; sem pesos)"
+  },
+  "summary": {
+    "statuses": [
+      "OK",
+      "OK",
+      "OK"
+    ],
+    "median_ms": [
+      124.2448,
+      131.1319,
+      133.3894
+    ],
+    "peak_rss_bytes_max": 63041536,
+    "corner_error_px": {
+      "light": {
+        "mean_px": 8.60166068949319,
+        "median_px": 5.905189497559608,
+        "max_px": 98.00845482292213
+      },
+      "strong": {
+        "mean_px": 73.25323327121585,
+        "median_px": 30.72460835667306,
+        "max_px": 380.8696113268236
+      }
+    },
+    "pages_found": 120
+  },
+  "runs": [
+    {
+      "candidate_id": "rectify-contour",
+      "status": "OK",
+      "reason": "reconhecedor de referência (sem modelo)",
+      "license_status": "VERIFIED (OpenCV, Apache-2.0; sem pesos)",
+      "load_ms": 0.2297,
+      "peak_rss_bytes": 62799872,
+      "wall_s": 15.876748199982103,
+      "exit_code": 0,
+      "describe": {
+        "id": "rectify-contour",
+        "family": "contorno da folha (OpenCV)",
+        "opencv": "5.0.0"
+      },
+      "stderr_tail": [],
+      "waited_for_memory_s": 0.0025818000140134245,
+      "latency": {
+        "pages": 120,
+        "median_ms": 124.2448,
+        "p95_ms": 138.316,
+        "max_ms": 189.9686
+      },
+      "pages_found": 120,
+      "corner_error_px": {
+        "light": {
+          "mean_px": 8.60166068949319,
+          "median_px": 5.905189497559608,
+          "max_px": 98.00845482292213
+        },
+        "strong": {
+          "mean_px": 73.25323327121585,
+          "median_px": 30.72460835667306,
+          "max_px": 380.8696113268236
+        }
+      },
+      "corner_error_mean_px": 40.92744698035452
+    },
+    {
+      "candidate_id": "rectify-contour",
+      "status": "OK",
+      "reason": "reconhecedor de referência (sem modelo)",
+      "license_status": "VERIFIED (OpenCV, Apache-2.0; sem pesos)",
+      "load_ms": 0.2265,
+      "peak_rss_bytes": 63041536,
+      "wall_s": 17.19245649999357,
+      "exit_code": 0,
+      "describe": {
+        "id": "rectify-contour",
+        "family": "contorno da folha (OpenCV)",
+        "opencv": "5.0.0"
+      },
+      "stderr_tail": [],
+      "waited_for_memory_s": 0.00044919998617842793,
+      "latency": {
+        "pages": 120,
+        "median_ms": 131.1319,
+        "p95_ms": 164.3241,
+        "max_ms": 275.057
+      },
+      "pages_found": 120,
+      "corner_error_px": {
+        "light": {
+          "mean_px": 8.60166068949319,
+          "median_px": 5.905189497559608,
+          "max_px": 98.00845482292213
+        },
+        "strong": {
+          "mean_px": 73.25323327121585,
+          "median_px": 30.72460835667306,
+          "max_px": 380.8696113268236
+        }
+      },
+      "corner_error_mean_px": 40.92744698035452
+    },
+    {
+      "candidate_id": "rectify-contour",
+      "status": "OK",
+      "reason": "reconhecedor de referência (sem modelo)",
+      "license_status": "VERIFIED (OpenCV, Apache-2.0; sem pesos)",
+      "load_ms": 0.2848,
+      "peak_rss_bytes": 62963712,
+      "wall_s": 17.54096430001664,
+      "exit_code": 0,
+      "describe": {
+        "id": "rectify-contour",
+        "family": "contorno da folha (OpenCV)",
+        "opencv": "5.0.0"
+      },
+      "stderr_tail": [],
+      "waited_for_memory_s": 0.00028490001568570733,
+      "latency": {
+        "pages": 120,
+        "median_ms": 133.3894,
+        "p95_ms": 174.7586,
+        "max_ms": 302.7677
+      },
+      "pages_found": 120,
+      "corner_error_px": {
+        "light": {
+          "mean_px": 8.60166068949319,
+          "median_px": 5.905189497559608,
+          "max_px": 98.00845482292213
+        },
+        "strong": {
+          "mean_px": 73.25323327121585,
+          "median_px": 30.72460835667306,
+          "max_px": 380.8696113268236
+        }
+      },
+      "corner_error_mean_px": 40.92744698035452
+    }
+  ]
+}

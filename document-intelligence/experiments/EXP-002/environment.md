@@ -1,6 +1,6 @@
 # EXP-002: Ambientes Isolados do Experimento
 
-* **Status:** resolvidos por `uv lock` em 2026-10-02 — **nada instalado, nenhum peso baixado**
+* **Status:** os quatro ambientes instalados (harness em 2026-10-02; `docufcn`, `heron` e `doctr` em 2026-10-03); pesos em `models/exp-002/` (fora do Git), SHA-256 conferidos
 * **Hardware e sistema:** os de [`../EXP-000/environment.md`](../EXP-000/environment.md) (CPU-only)
 * **`uv`:** 0.11.21
 

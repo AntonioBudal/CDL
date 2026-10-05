@@ -64,7 +64,7 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 - **Métricas**: CER, WER, latência de inferência e consumo de VRAM.
 - **Critério**: Não escolher modelos por popularidade; auditar candidatos (ex.: TrOCR, PyLaia, CTC/CRNN) em dataset controlado.
 
-### `EXP-002` — Detecção de Layout e Segmentação de Blocos/Regiões *(FASE ATUAL — em especificação)*
+### `EXP-002` — Detecção de Layout e Segmentação de Blocos/Regiões *(EXECUTADO — aguardando aceite, ver `experiments/EXP-002/RESULTS.md`)*
 - **Objetivo**: Localizar na página fotográfica os limites das linhas, parágrafos, cabeçalhos, notas de margem e caixas gráficas.
 - **Métricas**: IoU, mAP, Precision e Recall de detecção de caixas.
 
