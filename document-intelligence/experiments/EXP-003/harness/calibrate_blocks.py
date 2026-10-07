@@ -59,7 +59,7 @@ def main() -> int:
     CALIBRATION.write_text(
         json.dumps(calibration, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n"
     )
-    print(f"melhor: {best.to_dict()} → acurácia de ponta a ponta no dev {best_score:.4f}")
+    print(f"melhor: {best.to_dict()} - acurácia de ponta a ponta no dev {best_score:.4f}")
     return 0
 
 

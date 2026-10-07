@@ -68,7 +68,7 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 - **Objetivo**: Localizar na página fotográfica os limites das linhas, parágrafos, cabeçalhos, notas de margem e caixas gráficas.
 - **Métricas**: IoU, mAP, Precision e Recall de detecção de caixas.
 
-### `EXP-003` — Reconstrução Espacial e Ordem de Leitura *(FASE ATUAL — em especificação)*
+### `EXP-003` — Reconstrução Espacial e Ordem de Leitura *(EXECUTADO — aguardando aceite, ver `experiments/EXP-003/RESULTS.md`)*
 - **Objetivo**: Algoritmos topológicos para ordenar blocos e linhas em sequência lógica de leitura coerente, resolvendo colunas múltiplas, anotações marginais inseridas lateralmente e interrupções visuais.
 - **Métricas**: Edit Distance da ordem de leitura (*Reading Order Accuracy*).
 

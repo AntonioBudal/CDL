@@ -18,49 +18,59 @@ só a Fase 3 usa modelos (os do EXP-002, já instalados) e precisa de RAM livre.
 
 ## Fase 1 — Cenário 1: dados com ordem de leitura e métricas (sem modelos)
 
-- [ ] T003 [C1] Copiar do EXP-002 para `experiments/EXP-003/harness/` o gerador (`pages/`, `generate.py`), `supervisor.py`, `worker.py`, `rectify.py`, `evaluate.py`, `to_ldf.py` e os adaptadores `reference`, `docufcn`, `heron` e `rectifiers`; conferir que os testes copiados passam sem alterar nada no EXP-002.
-- [ ] T004 [C1] Gerador: registrar `reading_order` dos blocos, a ordem das linhas em cada bloco e o parágrafo-âncora de cada nota de margem; testes de consistência (todo bloco aparece uma vez; âncoras válidas).
-- [ ] T005 [C1] Gerador: famílias `single`, `margin` (2–4 notas ancoradas, horizontais e verticais) e `callout` (parágrafo estreitado + caixa de destaque com moldura à direita); testes de geometria e de ordem por família.
-- [ ] T006 [P] [C1] `src/leitorum_di/metrics/ordering.py`: acurácia de ordem (distância de edição normalizada) e tau de Kendall, com testes de valores calculados à mão em `tests/`.
-- [ ] T007 [C1] Gerar e congelar `dev` (30 páginas) e `test` (180: 3 famílias × 3 níveis × 20) em `dataset/fixtures/exp-003/` e `dataset/processed/exp-003/`; conferir visualmente uma página de cada família com a ordem desenhada.
-- [ ] T008 [C1] `harness/order_eval.py`: avaliação de ordem de blocos e de linhas sobre layout verdadeiro; ordenador de referência dá 1,0 e permutações conhecidas dão o valor esperado.
-- [ ] T009 [C1] `to_ldf.py`: preencher `structure.reading_order` e validar contra o JSON Schema; contar as caixas gráficas que não cabem no campo.
-- [ ] T010 [C1] `pytest`, `ruff`; commit da fase.
+- [x] T003 [C1] Copiar do EXP-002 para `experiments/EXP-003/harness/` o gerador (`pages/`, `generate.py`), `supervisor.py`, `worker.py`, `rectify.py`, `evaluate.py`, `to_ldf.py` e os adaptadores `reference`, `docufcn`, `heron` e `rectifiers`; conferir que os testes copiados passam sem alterar nada no EXP-002.
+- [x] T004 [C1] Gerador: registrar `reading_order` dos blocos, a ordem das linhas em cada bloco e o parágrafo-âncora de cada nota de margem; testes de consistência (todo bloco aparece uma vez; âncoras válidas).
+- [x] T005 [C1] Gerador: famílias `single`, `margin` (2–4 notas ancoradas, horizontais e verticais) e `callout` (parágrafo estreitado + caixa de destaque com moldura à direita); testes de geometria e de ordem por família.
+- [x] T006 [P] [C1] `src/leitorum_di/metrics/ordering.py`: acurácia de ordem (distância de edição normalizada) e tau de Kendall, com testes de valores calculados à mão em `tests/`.
+- [x] T007 [C1] Gerar e congelar `dev` (30 páginas) e `test` (180: 3 famílias × 3 níveis × 20) em `dataset/fixtures/exp-003/` e `dataset/processed/exp-003/`; conferir visualmente uma página de cada família com a ordem desenhada.
+- [x] T008 [C1] `harness/order_eval.py`: avaliação de ordem de blocos e de linhas sobre layout verdadeiro; ordenador de referência dá 1,0 e permutações conhecidas dão o valor esperado.
+- [x] T009 [C1] `to_ldf.py`: preencher `structure.reading_order` e validar contra o JSON Schema; contar as caixas gráficas que não cabem no campo.
+- [x] T010 [C1] `pytest`, `ruff`; commit da fase.
 
 **Checkpoint 1**: dados e métricas prontos, sem modelos. Reportar.
 
 ## Fase 2 — Cenário 2: ordenadores sobre o layout verdadeiro
 
-- [ ] T011 [C2] `harness/orderers.py`: `naive`, `xycut` e `anchored`, com testes em layouts pequenos construídos à mão (coluna única, nota de margem, destaque lateral).
-- [ ] T012 [C2] `harness/calibrate.py`: calibrar os parâmetros de cada ordenador **só** no `dev`; gravar `calibration.json`.
-- [ ] T013 [C2] Commit limpo; medir os três ordenadores no `test` com layout verdadeiro: acurácia de blocos e tau de Kendall por família e por nível, ms por página (mediana de 3 repetições) e pico de alocação; saídas validadas no LDF.
+- [x] T011 [C2] `harness/orderers.py`: `naive`, `xycut` e `anchored`, com testes em layouts pequenos construídos à mão (coluna única, nota de margem, destaque lateral).
+- [x] T012 [C2] `harness/calibrate.py`: calibrar os parâmetros de cada ordenador **só** no `dev`; gravar `calibration.json`.
+- [x] T013 [C2] Commit limpo; medir os três ordenadores no `test` com layout verdadeiro: acurácia de blocos e tau de Kendall por família e por nível, ms por página (mediana de 3 repetições) e pico de alocação; saídas validadas no LDF.
 
 **Checkpoint 2**: tabela dos ordenadores com layout verdadeiro e veredito parcial de H1, H3 e H4. Reportar.
 
 ## Fase 3 — Cenário 3: layout detectado (precisa de RAM livre)
 
-- [ ] T014 [C3] `harness/detect.py`: nas 180 páginas do `test`, rodar retificação por contorno → Doc-UFCN `norhand` (linhas levadas de volta às coordenadas originais) e Heron na imagem original (blocos), uma execução cada, com o supervisor e os limites do EXP-002; guardar o layout detectado fora do Git.
-- [ ] T015 [C3] `order_eval.py`: casamento de blocos previstos com verdadeiros (IoU ≥ 0,5), reescrita da sequência com ids verdadeiros, contagem de blocos sem par e as três acurácias da decomposição da perda; testes com casos à mão.
-- [ ] T016 [C3] Commit limpo; medir os três ordenadores sobre o layout detectado e montar a tabela de ponta a ponta com a decomposição (ordenação × detecção), por família e por nível.
+- [x] T014 [C3] `harness/detect.py`: nas 180 páginas do `test`, rodar retificação por contorno → Doc-UFCN `norhand` (linhas levadas de volta às coordenadas originais) e Heron na imagem original (blocos), uma execução cada, com o supervisor e os limites do EXP-002; guardar o layout detectado fora do Git.
+- [x] T015 [C3] `order_eval.py`: casamento de blocos previstos com verdadeiros (IoU ≥ 0,5), reescrita da sequência com ids verdadeiros, contagem de blocos sem par e as três acurácias da decomposição da perda; testes com casos à mão.
+- [x] T016 [C3] Commit limpo; medir os três ordenadores sobre o layout detectado e montar a tabela de ponta a ponta com a decomposição (ordenação × detecção), por família e por nível.
 
 **Checkpoint 3**: resultado de ponta a ponta e veredito de H2. Reportar.
 
 ## Fase 4 — Cenário 4: linhas dentro do bloco
 
-- [ ] T017 [C4] Ordenação de linhas dentro do bloco pela projeção perpendicular à linha de base; testes com blocos inclinados e nota vertical.
-- [ ] T018 [C4] Medir a acurácia de ordem de linhas com layout verdadeiro e com layout detectado, com e sem retificação das linhas.
+- [x] T017 [C4] Ordenação de linhas dentro do bloco pela projeção perpendicular à linha de base; testes com blocos inclinados e nota vertical.
+- [x] T018 [C4] Medir a acurácia de ordem de linhas com layout verdadeiro e com layout detectado, com e sem retificação das linhas.
 
 **Checkpoint 4**: ordem de linhas. Reportar.
 
 ## Fase 5 — Análise, relatório e decisão
 
-- [ ] T019 `harness/analyze.py`: erros por família, por tipo de bloco deslocado na ordem e por inclinação da folha.
-- [ ] T020 `experiments/EXP-003/RESULTS.md` com veredito de H1–H4, desvios, limitações e manifesto de reprodutibilidade.
-- [ ] T021 ADR em `docs/adr/` com a decisão sobre o método de ordenação.
-- [ ] T022 Conferência final: testes, `ruff`, nada fora de `document-intelligence/`, dados gerados fora do Git, disco abaixo de 20 GB, EXP-001 e EXP-002 intocados.
-- [ ] T023 Submeter ao usuário para aceite. **Não iniciar o EXP-004 antes do aceite.**
+- [x] T019 `harness/analyze.py`: erros por família, por tipo de bloco deslocado na ordem e por inclinação da folha.
+- [x] T020 `experiments/EXP-003/RESULTS.md` com veredito de H1–H4, desvios, limitações e manifesto de reprodutibilidade.
+- [x] T021 ADR em `docs/adr/` com a decisão sobre o método de ordenação.
+- [x] T022 Conferência final: testes, `ruff`, nada fora de `document-intelligence/`, dados gerados fora do Git, disco abaixo de 20 GB, EXP-001 e EXP-002 intocados.
+- [ ] T023 *(submetido em 2026-10-07; aguardando resposta)* Submeter ao usuário para aceite. **Não iniciar o EXP-004 antes do aceite.**
 
 ---
+
+## Resultado da execução (2026-10-07)
+
+- Fases 1 a 5 executadas em sequência, sem parada em checkpoint (instrução do usuário).
+- Layout verdadeiro: `anchored` 0,983; `naive` 0,954; `xycut` 0,816 (acurácia de ordem de blocos).
+- Layout detectado (ADR-002, com ponto de operação dos blocos calibrado no `dev`): `naive` 0,777; `anchored` 0,773;
+  entre os blocos casados, 0,95. A perda vem sobretudo da detecção de blocos.
+- Desvios: seis variantes de ordenador em vez de três; etapa extra de calibração do ponto de operação do Heron
+  (com detecção também no `dev`); T019 analisou por nível e por tipo de bloco, não por inclinação da folha.
+- Detalhes em [`RESULTS.md`](./RESULTS.md) e ADR-003.
 
 ## Dependências
 

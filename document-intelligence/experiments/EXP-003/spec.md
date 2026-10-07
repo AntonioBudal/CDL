@@ -5,7 +5,7 @@
 **Created**: 2026-10-05
 
 **Status**: `APPROVED` pelo usuário em 2026-10-05 ("pode continuar"), sem ajustes: valem as propostas
-recomendadas em §6. Nenhum código, instalação ou download foi feito.
+recomendadas em §6. Execução concluída em 2026-10-07; resultados em [RESULTS.md](./RESULTS.md).
 
 **Input**: `docs/roadmap-experiments.md` §3 (EXP-003), `docs/ldf.md`, resultados do EXP-002 (aceito em 2026-10-05)
 e ADR-002.

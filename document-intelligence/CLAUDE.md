@@ -43,7 +43,7 @@ uv run python -m leitorum_di
 - **Status**: **`EXP-000` aceito pelo usuário em 2026-09-30** (ver [`experiments/EXP-000/RESULTS.md`](./experiments/EXP-000/RESULTS.md)).
 - **EXP-001 aceito em 2026-10-02**, com o [ADR-001](./docs/adr/ADR-001-nao-adotar-htr-pronto-sem-portugues.md) aceito: nenhum HTR pronto sem treino em português é adotado.
 - **EXP-002 aceito em 2026-10-05**, com o [ADR-002](./docs/adr/ADR-002-segmentacao-de-layout-doc-ufcn-heron.md) aceito: Doc-UFCN `norhand` (linhas), Docling Heron (blocos) e retificação por contorno são a direção de trabalho; nada entra em `src/` sem validação em fotos reais e spec de produto. A exceção de licença do docTR (`NEEDS VALIDATION`) valeu só para o EXP-002.
-- **Tarefa Atual**: **`EXP-003`** (ordem de leitura), [`spec.md`](./experiments/EXP-003/spec.md) aprovada em 2026-10-05; [`plan.md`](./experiments/EXP-003/plan.md) aprovado em 2026-10-07 (sem módulo comum: copiar o harness para dentro do EXP-003); [`tasks.md`](./experiments/EXP-003/tasks.md) aprovado em 2026-10-07; execução em andamento.
+- **Tarefa Atual**: **`EXP-003`** (ordem de leitura) executado; [`RESULTS.md`](./experiments/EXP-003/RESULTS.md) e ADR-003 (`PROPOSED`) **aguardando aceite do usuário**. Não inicie o EXP-004 antes disso.
   - **Regra de workflow (usuário, 2026-09-30):** todo experimento segue o ciclo Spec Kit adaptado — Specify → Plan → Tasks — e a especificação/plano é apresentada **antes** de qualquer código de avaliação, script de inferência ou download de pesos.
   - **Ritmo fatiado (usuário, 2026-09-30):** nos próximos experimentos e features, produza **um artefato por vez** e aguarde a revisão antes do seguinte (Specify → aprovação → Plan → aprovação → Tasks → aprovação). Na execução, desde 2026-10-07 **não é preciso parar a cada checkpoint**: siga pelas fases com o próprio julgamento e pare só no aceite final ou em bloqueio real (licença em aberto, disco acima do teto, RAM insuficiente, decisão do usuário).
   - Commits: padrão `FNN(document-inteligence) <nome da fase>`, definido pelo usuário em 2026-09-30.
@@ -51,7 +51,7 @@ uv run python -m leitorum_di
   - **Armazenamento local (usuário, 2026-10-02):** ambientes, pesos e datasets de experimentos podem ocupar no
     máximo **20 GB** em `document-intelligence/` (unidade C:). Antes de ultrapassar, **pergunte ao usuário**; o plano é
     passar a armazenar no HD (unidade D:, ~880 GB livres). Meça o uso antes de cada download grande. Uso em
-    2026-10-05: 7,5 GB.
+    2026-10-07: 8,2 GB.
   - Normalização do WER (pontuação de borda removida; acentos e caixa preservados) foi **aprovada** e deve ser mantida.
 
 ---

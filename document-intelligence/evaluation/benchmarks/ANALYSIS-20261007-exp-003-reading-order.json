@@ -1,0 +1,1238 @@
+{
+  "schema": "leitorum-di-reading-order-analysis/1",
+  "true_layout": {
+    "naive": {
+      "blocks_accuracy": 0.953501400560224,
+      "blocks_accuracy_matched": 0.953501400560224,
+      "lines_accuracy": 0.9635210150674068,
+      "lines_accuracy_matched": 0.9635210150674068,
+      "perfect_pages": 0.8166666666666667,
+      "tau_blocks_mean": 0.9891925975259309,
+      "unmatched_predicted": 0,
+      "unmatched_truth": 0,
+      "truth_blocks": 1785,
+      "order_ms_median": 1.4409999999999998,
+      "order_ms_max": 2.0871,
+      "by_family": {
+        "callout": 0.8979238754325259,
+        "margin": 0.9649122807017544,
+        "single": 1.0
+      },
+      "by_level": {
+        "clean": 0.9800332778702163,
+        "light": 0.9644670050761421,
+        "strong": 0.9156829679595279
+      },
+      "lines_by_level": {
+        "clean": 0.9841646872525732,
+        "light": 0.9649960222752586,
+        "strong": 0.9414093428345209
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 25,
+          "lateral:margin_note": 3,
+          "lateral:paragraph": 2
+        },
+        "margin": {
+          "paragraph": 13
+        },
+        "single": {}
+      },
+      "pages_with_errors": {
+        "callout/clean": 6,
+        "callout/light": 8,
+        "callout/strong": 11,
+        "margin/strong": 8
+      },
+      "verdicts": {
+        "accuracy_target": 0.95,
+        "meets_accuracy": true,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 102
+      }
+    },
+    "naive+deskew": {
+      "blocks_accuracy": 0.9484593837535014,
+      "blocks_accuracy_matched": 0.9484593837535014,
+      "lines_accuracy": 0.9611419508326725,
+      "lines_accuracy_matched": 0.9611419508326725,
+      "perfect_pages": 0.7888888888888889,
+      "tau_blocks_mean": 0.987426585759919,
+      "unmatched_predicted": 0,
+      "unmatched_truth": 0,
+      "truth_blocks": 1785,
+      "order_ms_median": 3.96225,
+      "order_ms_max": 10.0667,
+      "by_family": {
+        "callout": 0.8961937716262975,
+        "margin": 0.9532163742690059,
+        "single": 1.0
+      },
+      "by_level": {
+        "clean": 0.978369384359401,
+        "light": 0.9407783417935702,
+        "strong": 0.9258010118043845
+      },
+      "lines_by_level": {
+        "clean": 0.9817893903404592,
+        "light": 0.9514717581543357,
+        "strong": 0.9501187648456058
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 23,
+          "lateral:margin_note": 7,
+          "lateral:paragraph": 3
+        },
+        "margin": {
+          "paragraph": 18
+        },
+        "single": {}
+      },
+      "pages_with_errors": {
+        "callout/clean": 6,
+        "callout/light": 9,
+        "callout/strong": 12,
+        "margin/light": 5,
+        "margin/strong": 6
+      },
+      "verdicts": {
+        "accuracy_target": 0.95,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 102
+      }
+    },
+    "xycut": {
+      "blocks_accuracy": 0.8162464985994398,
+      "blocks_accuracy_matched": 0.8162464985994398,
+      "lines_accuracy": 0.9164684113137721,
+      "lines_accuracy_matched": 0.9164684113137721,
+      "perfect_pages": 0.5166666666666667,
+      "tau_blocks_mean": 0.9583359850026517,
+      "unmatched_predicted": 0,
+      "unmatched_truth": 0,
+      "truth_blocks": 1785,
+      "order_ms_median": 1.60155,
+      "order_ms_max": 2.6399,
+      "by_family": {
+        "callout": 0.903114186851211,
+        "margin": 0.6023391812865497,
+        "single": 1.0
+      },
+      "by_level": {
+        "clean": 0.8202995008319467,
+        "light": 0.8138747884940778,
+        "strong": 0.8145025295109612
+      },
+      "lines_by_level": {
+        "clean": 0.9160728424386382,
+        "light": 0.9164677804295943,
+        "strong": 0.9168646080760094
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 27,
+          "lateral:margin_note": 1
+        },
+        "margin": {
+          "paragraph": 169,
+          "lateral:margin_note": 5
+        },
+        "single": {}
+      },
+      "pages_with_errors": {
+        "callout/clean": 10,
+        "callout/light": 7,
+        "callout/strong": 10,
+        "margin/clean": 20,
+        "margin/light": 20,
+        "margin/strong": 20
+      },
+      "verdicts": {
+        "accuracy_target": 0.95,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 102
+      }
+    },
+    "xycut+deskew": {
+      "blocks_accuracy": 0.8162464985994398,
+      "blocks_accuracy_matched": 0.8162464985994398,
+      "lines_accuracy": 0.9164684113137721,
+      "lines_accuracy_matched": 0.9164684113137721,
+      "perfect_pages": 0.5166666666666667,
+      "tau_blocks_mean": 0.9580786497453164,
+      "unmatched_predicted": 0,
+      "unmatched_truth": 0,
+      "truth_blocks": 1785,
+      "order_ms_median": 3.9577,
+      "order_ms_max": 6.8773,
+      "by_family": {
+        "callout": 0.9065743944636678,
+        "margin": 0.5994152046783625,
+        "single": 1.0
+      },
+      "by_level": {
+        "clean": 0.8202995008319467,
+        "light": 0.8104906937394247,
+        "strong": 0.8178752107925801
+      },
+      "lines_by_level": {
+        "clean": 0.9160728424386382,
+        "light": 0.9140811455847255,
+        "strong": 0.9192399049881235
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 27
+        },
+        "margin": {
+          "paragraph": 169,
+          "lateral:margin_note": 5
+        },
+        "single": {}
+      },
+      "pages_with_errors": {
+        "callout/clean": 10,
+        "callout/light": 7,
+        "callout/strong": 10,
+        "margin/clean": 20,
+        "margin/light": 20,
+        "margin/strong": 20
+      },
+      "verdicts": {
+        "accuracy_target": 0.95,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 102
+      }
+    },
+    "anchored": {
+      "blocks_accuracy": 0.9831932773109243,
+      "blocks_accuracy_matched": 0.9831932773109243,
+      "lines_accuracy": 0.9912767644726408,
+      "lines_accuracy_matched": 0.9912767644726408,
+      "perfect_pages": 0.9333333333333333,
+      "tau_blocks_mean": 0.9966299749633083,
+      "unmatched_predicted": 0,
+      "unmatched_truth": 0,
+      "truth_blocks": 1785,
+      "order_ms_median": 2.17425,
+      "order_ms_max": 3.7828,
+      "by_family": {
+        "callout": 0.9705882352941176,
+        "margin": 0.9809941520467836,
+        "single": 1.0
+      },
+      "by_level": {
+        "clean": 0.9900166389351082,
+        "light": 0.9932318104906938,
+        "strong": 0.9662731871838112
+      },
+      "lines_by_level": {
+        "clean": 0.995249406175772,
+        "light": 0.9968178202068417,
+        "strong": 0.9817893903404592
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "lateral:margin_note": 5,
+          "paragraph": 3,
+          "lateral:paragraph": 1
+        },
+        "margin": {
+          "paragraph": 7
+        },
+        "single": {}
+      },
+      "pages_with_errors": {
+        "callout/clean": 3,
+        "callout/light": 2,
+        "callout/strong": 3,
+        "margin/strong": 4
+      },
+      "verdicts": {
+        "accuracy_target": 0.95,
+        "meets_accuracy": true,
+        "meets_accuracy_in_every_family": true,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 102
+      }
+    },
+    "anchored+deskew": {
+      "blocks_accuracy": 0.9809523809523809,
+      "blocks_accuracy_matched": 0.9809523809523809,
+      "lines_accuracy": 0.9888977002379065,
+      "lines_accuracy_matched": 0.9888977002379065,
+      "perfect_pages": 0.9166666666666666,
+      "tau_blocks_mean": 0.9954545454545455,
+      "unmatched_predicted": 0,
+      "unmatched_truth": 0,
+      "truth_blocks": 1785,
+      "order_ms_median": 4.18835,
+      "order_ms_max": 7.836,
+      "by_family": {
+        "callout": 0.9567474048442907,
+        "margin": 0.9868421052631579,
+        "single": 1.0
+      },
+      "by_level": {
+        "clean": 0.9900166389351082,
+        "light": 0.9932318104906938,
+        "strong": 0.9595278246205734
+      },
+      "lines_by_level": {
+        "clean": 0.995249406175772,
+        "light": 0.9968178202068417,
+        "strong": 0.9746634996041171
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "lateral:margin_note": 10,
+          "paragraph": 3
+        },
+        "margin": {
+          "paragraph": 5
+        },
+        "single": {}
+      },
+      "pages_with_errors": {
+        "callout/clean": 3,
+        "callout/light": 2,
+        "callout/strong": 7,
+        "margin/strong": 3
+      },
+      "verdicts": {
+        "accuracy_target": 0.95,
+        "meets_accuracy": true,
+        "meets_accuracy_in_every_family": true,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 102
+      }
+    }
+  },
+  "detected_layout": {
+    "naive": {
+      "blocks_accuracy": 0.776673640167364,
+      "blocks_accuracy_matched": 0.9532237673830595,
+      "lines_accuracy": 0.7026420737786641,
+      "lines_accuracy_matched": 0.9426591052299937,
+      "perfect_pages": 0.3,
+      "tau_blocks_mean": 0.9888555888555889,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 5.62725,
+      "order_ms_max": 12.8706,
+      "by_family": {
+        "callout": 0.7618296529968455,
+        "margin": 0.7136871508379888,
+        "single": 0.8736654804270463
+      },
+      "by_level": {
+        "clean": 0.7557251908396947,
+        "light": 0.8386075949367089,
+        "strong": 0.736
+      },
+      "lines_by_level": {
+        "clean": 0.7705426356589147,
+        "light": 0.7465331278890601,
+        "strong": 0.601123595505618
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 39,
+          "graphic_box": 10,
+          "lateral:margin_note": 9,
+          "lateral:paragraph": 4,
+          "title": 2
+        },
+        "margin": {
+          "lateral:margin_note": 69,
+          "paragraph": 64,
+          "graphic_box": 9,
+          "title": 4
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 15,
+        "callout/light": 13,
+        "callout/strong": 19,
+        "margin/clean": 20,
+        "margin/light": 14,
+        "margin/strong": 18,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    },
+    "naive+deskew": {
+      "blocks_accuracy": 0.7740585774058577,
+      "blocks_accuracy_matched": 0.9494310998735778,
+      "lines_accuracy": 0.7018943170488534,
+      "lines_accuracy_matched": 0.941398865784499,
+      "perfect_pages": 0.29444444444444445,
+      "tau_blocks_mean": 0.9868145188145189,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 11.89745,
+      "order_ms_max": 27.0333,
+      "by_family": {
+        "callout": 0.7712933753943217,
+        "margin": 0.6983240223463687,
+        "single": 0.8736654804270463
+      },
+      "by_level": {
+        "clean": 0.7526717557251908,
+        "light": 0.8306962025316456,
+        "strong": 0.7392000000000001
+      },
+      "lines_by_level": {
+        "clean": 0.7705426356589147,
+        "light": 0.7442218798151001,
+        "strong": 0.601123595505618
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 34,
+          "graphic_box": 10,
+          "lateral:margin_note": 8,
+          "lateral:paragraph": 7,
+          "title": 2
+        },
+        "margin": {
+          "paragraph": 72,
+          "lateral:margin_note": 69,
+          "graphic_box": 9,
+          "title": 4
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 15,
+        "callout/light": 14,
+        "callout/strong": 18,
+        "margin/clean": 20,
+        "margin/light": 14,
+        "margin/strong": 19,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    },
+    "xycut": {
+      "blocks_accuracy": 0.6976987447698745,
+      "blocks_accuracy_matched": 0.8470290771175727,
+      "lines_accuracy": 0.7008973080757727,
+      "lines_accuracy_matched": 0.941398865784499,
+      "perfect_pages": 0.25,
+      "tau_blocks_mean": 0.9536295450581166,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 5.91835,
+      "order_ms_max": 32.3024,
+      "by_family": {
+        "callout": 0.7444794952681388,
+        "margin": 0.5181564245810055,
+        "single": 0.8736654804270463
+      },
+      "by_level": {
+        "clean": 0.683969465648855,
+        "light": 0.7215189873417722,
+        "strong": 0.688
+      },
+      "lines_by_level": {
+        "clean": 0.7697674418604651,
+        "light": 0.7395993836671803,
+        "strong": 0.6032303370786517
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 45,
+          "lateral:margin_note": 11,
+          "graphic_box": 10,
+          "lateral:paragraph": 4,
+          "title": 2
+        },
+        "margin": {
+          "paragraph": 138,
+          "lateral:margin_note": 83,
+          "graphic_box": 9,
+          "title": 4
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 16,
+        "callout/light": 14,
+        "callout/strong": 18,
+        "margin/clean": 20,
+        "margin/light": 20,
+        "margin/strong": 20,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    },
+    "xycut+deskew": {
+      "blocks_accuracy": 0.7170502092050209,
+      "blocks_accuracy_matched": 0.8729456384323641,
+      "lines_accuracy": 0.7028913260219343,
+      "lines_accuracy_matched": 0.9448645242596093,
+      "perfect_pages": 0.25,
+      "tau_blocks_mean": 0.9692749155606298,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 12.8767,
+      "order_ms_max": 68.1317,
+      "by_family": {
+        "callout": 0.7539432176656151,
+        "margin": 0.5614525139664804,
+        "single": 0.8736654804270463
+      },
+      "by_level": {
+        "clean": 0.6870229007633588,
+        "light": 0.7563291139240507,
+        "strong": 0.7088
+      },
+      "lines_by_level": {
+        "clean": 0.7713178294573644,
+        "light": 0.7449922958397535,
+        "strong": 0.6025280898876404
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 42,
+          "graphic_box": 10,
+          "lateral:margin_note": 7,
+          "lateral:paragraph": 5,
+          "title": 2
+        },
+        "margin": {
+          "paragraph": 135,
+          "lateral:margin_note": 71,
+          "graphic_box": 9,
+          "title": 4
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 16,
+        "callout/light": 14,
+        "callout/strong": 18,
+        "margin/clean": 20,
+        "margin/light": 20,
+        "margin/strong": 20,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    },
+    "anchored": {
+      "blocks_accuracy": 0.772489539748954,
+      "blocks_accuracy_matched": 0.950063211125158,
+      "lines_accuracy": 0.7028913260219343,
+      "lines_accuracy_matched": 0.9458097038437303,
+      "perfect_pages": 0.32222222222222224,
+      "tau_blocks_mean": 0.9679184942042085,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 6.754,
+      "order_ms_max": 23.4327,
+      "by_family": {
+        "callout": 0.7602523659305993,
+        "margin": 0.7067039106145252,
+        "single": 0.8701067615658363
+      },
+      "by_level": {
+        "clean": 0.7633587786259541,
+        "light": 0.8322784810126582,
+        "strong": 0.7216
+      },
+      "lines_by_level": {
+        "clean": 0.7728682170542636,
+        "light": 0.7426810477657935,
+        "strong": 0.6032303370786517
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "lateral:paragraph": 21,
+          "paragraph": 17,
+          "graphic_box": 11,
+          "lateral:margin_note": 11,
+          "title": 4
+        },
+        "margin": {
+          "lateral:margin_note": 74,
+          "paragraph": 60,
+          "graphic_box": 9,
+          "title": 5
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 14,
+        "callout/light": 12,
+        "callout/strong": 17,
+        "margin/clean": 20,
+        "margin/light": 14,
+        "margin/strong": 18,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    },
+    "anchored+deskew": {
+      "blocks_accuracy": 0.768305439330544,
+      "blocks_accuracy_matched": 0.9418457648546144,
+      "lines_accuracy": 0.6999002991026919,
+      "lines_accuracy_matched": 0.9417139256458728,
+      "perfect_pages": 0.31666666666666665,
+      "tau_blocks_mean": 0.9657258931544646,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 12.46095,
+      "order_ms_max": 30.2574,
+      "by_family": {
+        "callout": 0.7570977917981072,
+        "margin": 0.696927374301676,
+        "single": 0.8718861209964412
+      },
+      "by_level": {
+        "clean": 0.7603053435114504,
+        "light": 0.8291139240506329,
+        "strong": 0.7152000000000001
+      },
+      "lines_by_level": {
+        "clean": 0.772093023255814,
+        "light": 0.7380585516178737,
+        "strong": 0.5997191011235955
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 20,
+          "lateral:paragraph": 15,
+          "lateral:margin_note": 14,
+          "graphic_box": 10,
+          "title": 8
+        },
+        "margin": {
+          "lateral:margin_note": 78,
+          "paragraph": 62,
+          "graphic_box": 9,
+          "title": 5
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 14,
+        "callout/light": 12,
+        "callout/strong": 18,
+        "margin/clean": 20,
+        "margin/light": 14,
+        "margin/strong": 18,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    }
+  },
+  "decomposition": {
+    "naive": {
+      "true_layout": 0.953501400560224,
+      "detected_layout": 0.776673640167364,
+      "detected_layout_matched_only": 0.9532237673830595,
+      "loss_total": 0.17682776039286008,
+      "loss_from_ordering": 0.00027763317716456015,
+      "loss_from_detection": 0.17655012721569552
+    },
+    "naive+deskew": {
+      "true_layout": 0.9484593837535014,
+      "detected_layout": 0.7740585774058577,
+      "detected_layout_matched_only": 0.9494310998735778,
+      "loss_total": 0.17440080634764366,
+      "loss_from_ordering": -0.0009717161200764046,
+      "loss_from_detection": 0.17537252246772006
+    },
+    "xycut": {
+      "true_layout": 0.8162464985994398,
+      "detected_layout": 0.6976987447698745,
+      "detected_layout_matched_only": 0.8470290771175727,
+      "loss_total": 0.11854775382956528,
+      "loss_from_ordering": -0.03078257851813293,
+      "loss_from_detection": 0.1493303323476982
+    },
+    "xycut+deskew": {
+      "true_layout": 0.8162464985994398,
+      "detected_layout": 0.7170502092050209,
+      "detected_layout_matched_only": 0.8729456384323641,
+      "loss_total": 0.09919628939441882,
+      "loss_from_ordering": -0.056699139832924295,
+      "loss_from_detection": 0.15589542922734312
+    },
+    "anchored": {
+      "true_layout": 0.9831932773109243,
+      "detected_layout": 0.772489539748954,
+      "detected_layout_matched_only": 0.950063211125158,
+      "loss_total": 0.21070373756197036,
+      "loss_from_ordering": 0.033130066185766305,
+      "loss_from_detection": 0.17757367137620406
+    },
+    "anchored+deskew": {
+      "true_layout": 0.9809523809523809,
+      "detected_layout": 0.768305439330544,
+      "detected_layout_matched_only": 0.9418457648546144,
+      "loss_total": 0.21264694162183695,
+      "loss_from_ordering": 0.039106616097766556,
+      "loss_from_detection": 0.1735403255240704
+    }
+  },
+  "detected_layout_lines_without_rectification": {
+    "naive": {
+      "blocks_accuracy": 0.776673640167364,
+      "blocks_accuracy_matched": 0.9532237673830595,
+      "lines_accuracy": 0.689344672336168,
+      "lines_accuracy_matched": 0.94304,
+      "perfect_pages": 0.3,
+      "tau_blocks_mean": 0.9888555888555889,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 5.6965,
+      "order_ms_max": 26.7514,
+      "by_family": {
+        "callout": 0.7618296529968455,
+        "margin": 0.7136871508379888,
+        "single": 0.8736654804270463
+      },
+      "by_level": {
+        "clean": 0.7557251908396947,
+        "light": 0.8386075949367089,
+        "strong": 0.736
+      },
+      "lines_by_level": {
+        "clean": 0.7666666666666666,
+        "light": 0.7255956956187548,
+        "strong": 0.5849324804548686
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 39,
+          "graphic_box": 10,
+          "lateral:margin_note": 9,
+          "lateral:paragraph": 4,
+          "title": 2
+        },
+        "margin": {
+          "lateral:margin_note": 69,
+          "paragraph": 64,
+          "graphic_box": 9,
+          "title": 4
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 15,
+        "callout/light": 13,
+        "callout/strong": 19,
+        "margin/clean": 20,
+        "margin/light": 14,
+        "margin/strong": 18,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    },
+    "naive+deskew": {
+      "blocks_accuracy": 0.7792887029288703,
+      "blocks_accuracy_matched": 0.9563843236409608,
+      "lines_accuracy": 0.6915957978989495,
+      "lines_accuracy_matched": 0.9456,
+      "perfect_pages": 0.3,
+      "tau_blocks_mean": 0.988901257472686,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 12.925,
+      "order_ms_max": 30.2612,
+      "by_family": {
+        "callout": 0.7712933753943217,
+        "margin": 0.7122905027932961,
+        "single": 0.8736654804270463
+      },
+      "by_level": {
+        "clean": 0.7541984732824427,
+        "light": 0.8370253164556962,
+        "strong": 0.7472
+      },
+      "lines_by_level": {
+        "clean": 0.7651162790697674,
+        "light": 0.7294388931591084,
+        "strong": 0.5891968727789623
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 36,
+          "graphic_box": 10,
+          "lateral:margin_note": 9,
+          "lateral:paragraph": 5,
+          "title": 2
+        },
+        "margin": {
+          "lateral:margin_note": 69,
+          "paragraph": 66,
+          "graphic_box": 9,
+          "title": 4
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 15,
+        "callout/light": 13,
+        "callout/strong": 19,
+        "margin/clean": 20,
+        "margin/light": 14,
+        "margin/strong": 18,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    },
+    "xycut": {
+      "blocks_accuracy": 0.6976987447698745,
+      "blocks_accuracy_matched": 0.8470290771175727,
+      "lines_accuracy": 0.6828414207103553,
+      "lines_accuracy_matched": 0.93856,
+      "perfect_pages": 0.25,
+      "tau_blocks_mean": 0.9536295450581166,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 5.6827000000000005,
+      "order_ms_max": 10.797,
+      "by_family": {
+        "callout": 0.7444794952681388,
+        "margin": 0.5181564245810055,
+        "single": 0.8736654804270463
+      },
+      "by_level": {
+        "clean": 0.683969465648855,
+        "light": 0.7215189873417722,
+        "strong": 0.688
+      },
+      "lines_by_level": {
+        "clean": 0.7682170542635659,
+        "light": 0.7025365103766333,
+        "strong": 0.5863539445628998
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 45,
+          "lateral:margin_note": 11,
+          "graphic_box": 10,
+          "lateral:paragraph": 4,
+          "title": 2
+        },
+        "margin": {
+          "paragraph": 138,
+          "lateral:margin_note": 83,
+          "graphic_box": 9,
+          "title": 4
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 16,
+        "callout/light": 14,
+        "callout/strong": 18,
+        "margin/clean": 20,
+        "margin/light": 20,
+        "margin/strong": 20,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    },
+    "xycut+deskew": {
+      "blocks_accuracy": 0.7191422594142259,
+      "blocks_accuracy_matched": 0.8761061946902655,
+      "lines_accuracy": 0.6875937968984492,
+      "lines_accuracy_matched": 0.94336,
+      "perfect_pages": 0.25,
+      "tau_blocks_mean": 0.9706533466533467,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 13.0669,
+      "order_ms_max": 56.2988,
+      "by_family": {
+        "callout": 0.7555205047318612,
+        "margin": 0.5656424581005586,
+        "single": 0.8736654804270463
+      },
+      "by_level": {
+        "clean": 0.6870229007633588,
+        "light": 0.7579113924050633,
+        "strong": 0.7136
+      },
+      "lines_by_level": {
+        "clean": 0.7697674418604651,
+        "light": 0.7171406610299769,
+        "strong": 0.5849324804548686
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 44,
+          "graphic_box": 10,
+          "lateral:margin_note": 6,
+          "lateral:paragraph": 4,
+          "title": 2
+        },
+        "margin": {
+          "paragraph": 134,
+          "lateral:margin_note": 70,
+          "graphic_box": 9,
+          "title": 4
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 16,
+        "callout/light": 14,
+        "callout/strong": 18,
+        "margin/clean": 20,
+        "margin/light": 20,
+        "margin/strong": 20,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    },
+    "anchored": {
+      "blocks_accuracy": 0.772489539748954,
+      "blocks_accuracy_matched": 0.950063211125158,
+      "lines_accuracy": 0.6898449224612306,
+      "lines_accuracy_matched": 0.9456,
+      "perfect_pages": 0.32222222222222224,
+      "tau_blocks_mean": 0.9679184942042085,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 6.8399,
+      "order_ms_max": 31.2584,
+      "by_family": {
+        "callout": 0.7602523659305993,
+        "margin": 0.7067039106145252,
+        "single": 0.8701067615658363
+      },
+      "by_level": {
+        "clean": 0.7633587786259541,
+        "light": 0.8322784810126582,
+        "strong": 0.7216
+      },
+      "lines_by_level": {
+        "clean": 0.7682170542635659,
+        "light": 0.7202152190622598,
+        "strong": 0.589907604832978
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "lateral:paragraph": 21,
+          "paragraph": 17,
+          "graphic_box": 11,
+          "lateral:margin_note": 11,
+          "title": 4
+        },
+        "margin": {
+          "lateral:margin_note": 74,
+          "paragraph": 60,
+          "graphic_box": 9,
+          "title": 5
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 14,
+        "callout/light": 12,
+        "callout/strong": 17,
+        "margin/clean": 20,
+        "margin/light": 14,
+        "margin/strong": 18,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    },
+    "anchored+deskew": {
+      "blocks_accuracy": 0.770397489539749,
+      "blocks_accuracy_matched": 0.9456384323640961,
+      "lines_accuracy": 0.6868434217108554,
+      "lines_accuracy_matched": 0.94112,
+      "perfect_pages": 0.31666666666666665,
+      "tau_blocks_mean": 0.9667632050489193,
+      "unmatched_predicted": 188,
+      "unmatched_truth": 203,
+      "truth_blocks": 1785,
+      "order_ms_median": 12.185649999999999,
+      "order_ms_max": 30.4227,
+      "by_family": {
+        "callout": 0.7570977917981072,
+        "margin": 0.7039106145251397,
+        "single": 0.8701067615658363
+      },
+      "by_level": {
+        "clean": 0.7603053435114504,
+        "light": 0.8322784810126582,
+        "strong": 0.7183999999999999
+      },
+      "lines_by_level": {
+        "clean": 0.7674418604651163,
+        "light": 0.7109915449654112,
+        "strong": 0.5906183368869936
+      },
+      "displaced_types_by_family": {
+        "callout": {
+          "paragraph": 20,
+          "lateral:paragraph": 15,
+          "lateral:margin_note": 13,
+          "graphic_box": 10,
+          "title": 9
+        },
+        "margin": {
+          "lateral:margin_note": 77,
+          "paragraph": 59,
+          "graphic_box": 9,
+          "title": 5
+        },
+        "single": {
+          "paragraph": 21,
+          "graphic_box": 7,
+          "title": 3
+        }
+      },
+      "pages_with_errors": {
+        "callout/clean": 14,
+        "callout/light": 12,
+        "callout/strong": 18,
+        "margin/clean": 20,
+        "margin/light": 14,
+        "margin/strong": 18,
+        "single/clean": 9,
+        "single/light": 9,
+        "single/strong": 9
+      },
+      "verdicts": {
+        "accuracy_target": 0.85,
+        "meets_accuracy": false,
+        "meets_accuracy_in_every_family": false,
+        "h4_cost": true
+      },
+      "ldf": {
+        "documents": 180,
+        "invalid": 0,
+        "graphic_box_outside_reading_order": 140
+      }
+    }
+  }
+}
