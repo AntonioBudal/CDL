@@ -23,6 +23,7 @@ from typing import Any
 
 from order_eval import evaluate_manifest, predict_sequences, true_layout
 from orderers import OrderParams
+from postprocess import BlockFilter, filter_blocks
 from to_ldf import to_ldf, validation_errors
 
 from leitorum_di.reproducibility import DEFAULT_SEED, environment_snapshot, freeze_seeds
@@ -93,6 +94,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--layout-key", default="rectified", help="variante de linhas do layout detectado"
     )
+    parser.add_argument(
+        "--raw-blocks",
+        action="store_true",
+        help="usa todos os blocos do detector, sem o ponto de operação calibrado",
+    )
     parser.add_argument("--out", required=True)
     args = parser.parse_args(argv)
 
@@ -102,11 +108,20 @@ def main(argv: list[str] | None = None) -> int:
     source = "true"
     if args.detected:
         raw = json.loads(Path(args.detected).read_text(encoding="utf-8"))
+        block_filter = None
+        if not args.raw_blocks:
+            block_filter = BlockFilter(**calibration["block_filter"]["params"])
         detected = {
-            pid: {"blocks": item["blocks"], "lines": item["lines"][args.layout_key]}
+            pid: {
+                "blocks": filter_blocks(item["blocks"], block_filter)
+                if block_filter
+                else item["blocks"],
+                "lines": item["lines"][args.layout_key],
+            }
             for pid, item in raw["pages"].items()
         }
-        source = f"detected ({args.layout_key})"
+        mode = "blocos brutos" if args.raw_blocks else f"filtro {block_filter.to_dict()}"
+        source = f"detected ({args.layout_key}; {mode})"
 
     seed_record = freeze_seeds(DEFAULT_SEED)
     orderers = {}
