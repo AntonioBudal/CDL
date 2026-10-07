@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { renderMarkdown } from '../services/markdown'
 import { sanitizeHtml } from '../services/sanitizer'
 import type { StudyHighlight } from '../types.ts'
 import { applyHighlightsToDom, type HighlightClickEvent } from '../utils/highlightRenderer.ts'
+
+const router = useRouter()
 
 const props = withDefaults(
   defineProps<{
@@ -23,6 +26,21 @@ const containerRef = ref<HTMLElement | null>(null)
 let cleanupHighlights: (() => void) | null = null
 
 const rendered = computed(() => sanitizeHtml(renderMarkdown(props.content)))
+
+function handleContentClick(event: MouseEvent) {
+  const target = (event.target as HTMLElement).closest('.study-internal-mention') as HTMLElement | null
+  if (!target) return
+
+  event.preventDefault()
+  const studyId = target.dataset.studyId
+  const studyTitle = target.dataset.studyTitle
+
+  if (studyId) {
+    router?.push(`/estudos/${studyId}`)
+  } else if (studyTitle) {
+    router?.push({ path: '/livros', query: { q: studyTitle } })
+  }
+}
 
 function updateHighlights() {
   if (cleanupHighlights) {
@@ -64,12 +82,40 @@ onBeforeUnmount(() => {
     role="region"
     aria-label="Conteúdo da seção"
     v-html="rendered"
+    @click="handleContentClick"
   ></div>
 </template>
 
 <style scoped>
 .markdown-content:focus {
   outline: none;
+}
+
+:deep(.study-internal-mention) {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.08em 0.35em;
+  border-radius: 4px;
+  background-color: var(--color-surface-hover, rgba(59, 130, 246, 0.08));
+  color: var(--color-primary, #3b82f6);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--color-primary, #3b82f6);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+:deep(.study-internal-mention:hover) {
+  background-color: var(--color-primary, #3b82f6);
+  color: #ffffff;
+  border-bottom-color: transparent;
+  text-decoration: none;
+}
+
+:deep(.study-internal-mention.is-archived) {
+  opacity: 0.6;
+  text-decoration: line-through;
+  cursor: not-allowed;
 }
 
 :deep(.study-highlight) {

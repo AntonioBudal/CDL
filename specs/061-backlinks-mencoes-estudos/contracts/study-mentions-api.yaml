@@ -1,0 +1,134 @@
+openapi: 3.1.0
+info:
+  title: API de Backlinks e Menções entre Estudos (F0.7.12)
+  version: 1.0.0
+  description: Endpoints para consulta de backlinks reversos e busca de estudos candidatos para autocomplete.
+
+paths:
+  /api/studies/{study_id}/backlinks:
+    get:
+      summary: Listar estudos que mencionam o estudo indicado
+      operationId: getStudyBacklinks
+      parameters:
+        - name: study_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Identificador do estudo de destino
+      responses:
+        '200':
+          description: Lista de backlinks reversos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BacklinksResponse'
+        '401':
+          description: Não autenticado
+        '404':
+          description: Estudo não encontrado
+
+  /api/studies/search-candidates:
+    get:
+      summary: Buscar estudos candidatos para menção no editor (autocomplete)
+      operationId: searchStudyCandidates
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Termo de busca textual para filtrar títulos de estudos
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+          description: Quantidade máxima de sugestões
+      responses:
+        '200':
+          description: Lista de estudos candidatos compatíveis
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudyCandidateOption'
+
+components:
+  schemas:
+    BacklinkItemRead:
+      type: object
+      required:
+        - id
+        - source_study_id
+        - source_study_title
+        - book_id
+        - book_title
+        - chapter_id
+        - chapter_name
+        - section
+        - mention_text
+        - context_snippet
+        - created_at
+      properties:
+        id:
+          type: integer
+        source_study_id:
+          type: integer
+        source_study_title:
+          type: string
+        book_id:
+          type: integer
+        book_title:
+          type: string
+        chapter_id:
+          type: integer
+        chapter_name:
+          type: string
+        section:
+          type: string
+        mention_text:
+          type: string
+        context_snippet:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    BacklinksResponse:
+      type: object
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BacklinkItemRead'
+        total:
+          type: integer
+
+    StudyCandidateOption:
+      type: object
+      required:
+        - id
+        - title
+        - book_id
+        - book_title
+        - chapter_id
+        - chapter_name
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        book_id:
+          type: integer
+        book_title:
+          type: string
+        chapter_id:
+          type: integer
+        chapter_name:
+          type: string

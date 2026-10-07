@@ -8,6 +8,7 @@ import ReaderTools from '../components/ReaderTools.vue'
 import ActiveReadingBar from '../components/ActiveReadingBar.vue'
 import ExportModal from '../components/ExportModal.vue'
 import TrashConfirmModal from '../components/TrashConfirmModal.vue'
+import StudyBacklinksList from '../components/studies/StudyBacklinksList.vue'
 import StudyRelationsList from '../components/relations/StudyRelationsList.vue'
 import CreateRelationModal from '../components/relations/CreateRelationModal.vue'
 import StudyStatusBadge from '../components/StudyStatusBadge.vue'
@@ -639,6 +640,10 @@ onBeforeUnmount(() => {
       </aside>
     </div>
     <details class="original-response"><summary>Consultar Fichamento da Fonte</summary><pre>{{ state.context.study.source_response }}</pre></details>
+
+    <StudyBacklinksList
+      :study-id="state.context.study.id"
+    />
 
     <StudyRelationsList
       ref="relationsListRef"

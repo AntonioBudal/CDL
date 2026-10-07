@@ -14,6 +14,7 @@ from app.models.search_history import SearchHistory
 from app.models.study import Study
 from app.models.study_canvas_node import StudyCanvasNode
 from app.models.study_highlight import StudyHighlight
+from app.models.study_mention import StudyMention
 from app.models.study_relation import StudyRelation
 from app.models.study_version import StudyVersion
 from app.models.support_setting import SupportSetting
@@ -37,6 +38,7 @@ __all__ = [
     "Study",
     "StudyCanvasNode",
     "StudyHighlight",
+    "StudyMention",
     "StudyRelation",
     "StudyVersion",
     "SupportSetting",

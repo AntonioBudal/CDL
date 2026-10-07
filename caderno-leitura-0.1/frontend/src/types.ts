@@ -1390,3 +1390,34 @@ export interface HighlightLibraryQuery {
   page?: number
   per_page?: number
 }
+
+// --- Backlinks e Menções entre Estudos (F 0.7.12) ---
+
+export interface BacklinkItem {
+  id: number
+  source_study_id: number
+  source_study_title: string
+  book_id: number
+  book_title: string
+  chapter_id: number
+  chapter_name: string
+  section: string
+  mention_text: string
+  context_snippet: string
+  created_at: string
+}
+
+export interface BacklinksResponse {
+  items: BacklinkItem[]
+  total: number
+}
+
+export interface StudyCandidateOption {
+  id: number
+  title: string
+  book_id: number
+  book_title: string
+  chapter_id: number
+  chapter_name: string
+}
+

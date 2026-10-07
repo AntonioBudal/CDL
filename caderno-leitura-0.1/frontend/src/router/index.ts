@@ -22,6 +22,7 @@ import ReviewHubView from '../views/ReviewHubView.vue'
 import HighlightsLibraryView from '../views/HighlightsLibraryView.vue'
 import { updateSeoMeta } from '../composables/useSeoMeta'
 import { useAuthStore } from '../stores/auth.ts'
+import { api } from '../services/api'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -55,6 +56,25 @@ export const router = createRouter({
     { path: '/review', alias: ['/revisao'], name: 'review', component: ReviewHubView, meta: { title: 'Central de Revisão' } },
     { path: '/livros/:bookId', alias: ['/books/:bookId'], name: 'book', component: BookView, meta: { title: 'Livro' } },
     { path: '/livros/:bookId/estudos/:studyId', alias: ['/books/:bookId/estudos/:studyId'], name: 'study', component: StudyView, meta: { title: 'Ler estudo' } },
+    {
+      path: '/estudos/:studyId',
+      name: 'study-direct',
+      beforeEnter: async (to, _from, next) => {
+        try {
+          const studyId = Number(to.params.studyId)
+          if (!studyId) return next('/livros')
+          const study = await api.getStudy(studyId)
+          const bookId = study.book_id || (study as any).chapter?.book_id
+          if (bookId) {
+            return next(`/livros/${bookId}/estudos/${studyId}`)
+          }
+        } catch {
+          // ignore
+        }
+        next('/livros')
+      },
+      component: StudyView,
+    },
     { path: '/livros/:bookId/estudos/:studyId/editar', alias: ['/books/:bookId/estudos/:studyId/editar'], name: 'study-edit', component: StudyEditView, meta: { title: 'Editar estudo' } },
     { path: '/importar', name: 'import', component: ImportView, meta: { title: 'Importar estudo' } },
     { path: '/amigos', alias: ['/friends'], name: 'friends', component: FriendsView, meta: { title: 'Amigos e Leitores' } },

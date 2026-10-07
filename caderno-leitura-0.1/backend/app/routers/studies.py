@@ -39,6 +39,7 @@ from app.services.sharing_service import (
     revoke_permission,
     update_study_visibility,
 )
+from app.services.study_mention_service import sync_study_mentions
 from app.services.study_service import move_study, update_study_status
 from app.services.study_version_service import record_study_version_on_change
 from app.services.trash_service import permanent_delete_study, restore_study, trash_study
@@ -197,6 +198,8 @@ def create_study(payload: StudyCreate, session: DatabaseSession, current_user: C
         values["title"] = f"{chapter.name} — {location}" if location else chapter.name
     study = Study(**values, user_id=current_user.id)
     session.add(study)
+    session.flush()
+    sync_study_mentions(session, study, current_user.id)
     commit_changes(session)
     session.refresh(study)
     study_read = StudyRead.model_validate(study)
@@ -361,6 +364,7 @@ def update_study(study_id: Identifier, payload: StudyPatch, session: DatabaseSes
     for name, value in changes.items():
         setattr(study, name, value)
     study.version += 1
+    sync_study_mentions(session, study, current_user.id)
 
     commit_changes(session)
     session.refresh(study)

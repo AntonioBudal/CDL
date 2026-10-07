@@ -33,6 +33,7 @@ from app.routers import (
     sharing,
     studies,
     study_highlights,
+    study_mentions,
     study_relations,
     study_versions,
     support,
@@ -100,6 +101,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(categories.router, prefix="/api")
     application.include_router(books.router, prefix="/api")
     application.include_router(chapters.router, prefix="/api")
+    application.include_router(study_mentions.router, prefix="/api")
     application.include_router(study_relations.router, prefix="/api")
     application.include_router(studies.router, prefix="/api")
     application.include_router(study_highlights.router, prefix="/api")

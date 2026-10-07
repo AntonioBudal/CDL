@@ -1,9 +1,8 @@
-from fastapi import APIRouter, Query, status
+from fastapi import APIRouter, status
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
 from app.schemas.study_relation import (
     BookCanvasRelationItem,
-    CandidateStudyItem,
     StudyRelationCreate,
     StudyRelationItem,
     StudyRelationsResponse,
@@ -14,32 +13,10 @@ from app.services.study_relation_service import (
     delete_study_relation,
     get_book_canvas_relations,
     get_study_relations,
-    search_candidate_studies,
     update_study_relation,
 )
 
 router = APIRouter(tags=["Relações entre Estudos"])
-
-
-@router.get(
-    "/studies/search-candidates",
-    response_model=list[CandidateStudyItem],
-    summary="Buscar estudos candidatos no acervo para criação de relação",
-)
-def search_candidates(
-    session: DatabaseSession,
-    current_user: CurrentUser,
-    exclude_study_id: int = Query(..., gt=0, description="ID do estudo de origem a ser excluído"),
-    query: str = Query(default="", description="Termo de busca por título ou capítulo"),
-    limit: int = Query(default=20, ge=1, le=50, description="Limite máximo de resultados"),
-):
-    return search_candidate_studies(
-        session=session,
-        exclude_study_id=exclude_study_id,
-        query=query,
-        limit=limit,
-        user_id=current_user.id,
-    )
 
 
 @router.get(

@@ -11,6 +11,7 @@ import type {
   AuthConfigResponse, AuthSuccessResponse, SessionItem, ExternalIdentityRead,
   AuditLogListResponse, DeactivateAccountRequest, ReactivateAccountRequest, DeleteAccountRequest,
   ReviewItemRead, ReviewRating, ReviewStatsResponse,
+  BacklinksResponse, StudyCandidateOption,
 } from '../types.ts'
 
 
@@ -412,6 +413,14 @@ export const api = {
     if (query.trim()) params.set('query', query.trim())
     params.set('limit', String(limit))
     return request<CandidateStudyItem[]>(`/studies/search-candidates?${params.toString()}`, { signal })
+  },
+  getStudyBacklinks: (studyId: number, signal?: AbortSignal) =>
+    request<BacklinksResponse>(`/studies/${studyId}/backlinks`, { signal }),
+  searchStudyCandidates: (q = '', limit = 10, signal?: AbortSignal) => {
+    const params = new URLSearchParams()
+    if (q.trim()) params.set('q', q.trim())
+    params.set('limit', String(limit))
+    return request<StudyCandidateOption[]>(`/studies/search-candidates?${params.toString()}`, { signal })
   },
   getBookRelations: (bookId: number, signal?: AbortSignal) =>
     request<BookCanvasRelationItem[]>(`/books/${bookId}/relations`, { signal }),
@@ -1120,5 +1129,21 @@ export async function deleteStudyHighlight(
 ): Promise<void> {
   return api.deleteStudyHighlight(studyId, highlightId)
 }
+
+export async function getStudyBacklinks(
+  studyId: number,
+  signal?: AbortSignal
+): Promise<BacklinksResponse> {
+  return api.getStudyBacklinks(studyId, signal)
+}
+
+export async function searchStudyCandidates(
+  q = '',
+  limit = 10,
+  signal?: AbortSignal
+): Promise<StudyCandidateOption[]> {
+  return api.searchStudyCandidates(q, limit, signal)
+}
+
 
 
