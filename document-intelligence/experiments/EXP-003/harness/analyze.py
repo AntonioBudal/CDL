@@ -62,7 +62,7 @@ def summarize(report: dict[str, Any]) -> dict[str, Any]:
 
 
 def decomposition(true: dict[str, Any], detected: dict[str, Any]) -> dict[str, dict[str, float]]:
-    """Perda de ponta a ponta separada em ordenação (geometria imprecisa) e detecção (faltas/sobras)."""
+    """Perda de ponta a ponta separada em ordenação e detecção (faltas e sobras de blocos)."""
     out = {}
     for name in true:
         a = true[name]["blocks_accuracy"]
