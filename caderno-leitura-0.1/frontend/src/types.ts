@@ -627,6 +627,7 @@ export type IconName =
   | 'user-x'
   | 'bell'
   | 'bell-ring'
+  | 'inbox'
 
 export interface IconProps {
   name: IconName
@@ -1419,5 +1420,49 @@ export interface StudyCandidateOption {
   book_title: string
   chapter_id: number
   chapter_name: string
+}
+
+// --- Caixa de Entrada de Capturas / Inbox (F 0.7.13) ---
+
+export type InboxStatus = 'inbox' | 'promoted' | 'linked' | 'archived'
+
+export interface InboxCapture {
+  id: number
+  user_id: string
+  book_id: number | null
+  book_title?: string | null
+  content: string
+  source_hint: string | null
+  status: InboxStatus
+  promoted_study_id: number | null
+  promoted_study_title?: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface InboxCaptureCreatePayload {
+  content: string
+  source_hint?: string | null
+  book_id?: number | null
+}
+
+export interface InboxCapturePatchPayload {
+  content?: string
+  source_hint?: string | null
+  book_id?: number | null
+  status?: InboxStatus
+}
+
+export interface InboxCountResponse {
+  count: number
+}
+
+export interface InboxPromotePayload {
+  study_id: number
+}
+
+export interface InboxLinkPayload {
+  target_study_id: number
+  target_section?: 'summary' | 'explanation' | 'concepts' | 'references' | 'notes'
 }
 

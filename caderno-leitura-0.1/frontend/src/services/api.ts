@@ -12,6 +12,7 @@ import type {
   AuditLogListResponse, DeactivateAccountRequest, ReactivateAccountRequest, DeleteAccountRequest,
   ReviewItemRead, ReviewRating, ReviewStatsResponse,
   BacklinksResponse, StudyCandidateOption,
+  InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
 } from '../types.ts'
 
 
@@ -422,6 +423,50 @@ export const api = {
     params.set('limit', String(limit))
     return request<StudyCandidateOption[]>(`/studies/search-candidates?${params.toString()}`, { signal })
   },
+
+  // --- Caixa de Entrada de Capturas / Inbox (F 0.7.13) ---
+  getInboxCaptures: (
+    params?: { status?: string; q?: string; book_id?: number; limit?: number; offset?: number },
+    signal?: AbortSignal,
+  ) => {
+    const searchParams = new URLSearchParams()
+    if (params?.status && params.status !== 'all') searchParams.set('status', params.status)
+    if (params?.q?.trim()) searchParams.set('q', params.q.trim())
+    if (params?.book_id != null) searchParams.set('book_id', String(params.book_id))
+    if (params?.limit != null) searchParams.set('limit', String(params.limit))
+    if (params?.offset != null) searchParams.set('offset', String(params.offset))
+    const queryStr = searchParams.toString()
+    return request<InboxCapture[]>(`/inbox${queryStr ? `?${queryStr}` : ''}`, { signal })
+  },
+  getInboxCount: (signal?: AbortSignal) =>
+    request<InboxCountResponse>('/inbox/count', { signal }),
+  getInboxCapture: (id: number, signal?: AbortSignal) =>
+    request<InboxCapture>(`/inbox/${id}`, { signal }),
+  createInboxCapture: (payload: InboxCaptureCreatePayload) =>
+    request<InboxCapture>('/inbox', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  updateInboxCapture: (id: number, payload: InboxCapturePatchPayload) =>
+    request<InboxCapture>(`/inbox/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    }),
+  deleteInboxCapture: (id: number) =>
+    request<void>(`/inbox/${id}`, {
+      method: 'DELETE',
+    }),
+  promoteInboxCapture: (id: number, payload: InboxPromotePayload) =>
+    request<InboxCapture>(`/inbox/${id}/promote`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  linkInboxCapture: (id: number, payload: InboxLinkPayload) =>
+    request<InboxCapture>(`/inbox/${id}/link`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
   getBookRelations: (bookId: number, signal?: AbortSignal) =>
     request<BookCanvasRelationItem[]>(`/books/${bookId}/relations`, { signal }),
   // Agrupamento Visual e Status de Leitura (F05)
@@ -1145,5 +1190,40 @@ export async function searchStudyCandidates(
   return api.searchStudyCandidates(q, limit, signal)
 }
 
+// --- Funções de Inbox (F 0.7.13) ---
 
+export async function getInboxCaptures(
+  params?: { status?: string; q?: string; book_id?: number; limit?: number; offset?: number },
+  signal?: AbortSignal,
+): Promise<InboxCapture[]> {
+  return api.getInboxCaptures(params, signal)
+}
+
+export async function getInboxCount(signal?: AbortSignal): Promise<InboxCountResponse> {
+  return api.getInboxCount(signal)
+}
+
+export async function getInboxCapture(id: number, signal?: AbortSignal): Promise<InboxCapture> {
+  return api.getInboxCapture(id, signal)
+}
+
+export async function createInboxCapture(payload: InboxCaptureCreatePayload): Promise<InboxCapture> {
+  return api.createInboxCapture(payload)
+}
+
+export async function updateInboxCapture(id: number, payload: InboxCapturePatchPayload): Promise<InboxCapture> {
+  return api.updateInboxCapture(id, payload)
+}
+
+export async function deleteInboxCapture(id: number): Promise<void> {
+  return api.deleteInboxCapture(id)
+}
+
+export async function promoteInboxCapture(id: number, payload: InboxPromotePayload): Promise<InboxCapture> {
+  return api.promoteInboxCapture(id, payload)
+}
+
+export async function linkInboxCapture(id: number, payload: InboxLinkPayload): Promise<InboxCapture> {
+  return api.linkInboxCapture(id, payload)
+}
 

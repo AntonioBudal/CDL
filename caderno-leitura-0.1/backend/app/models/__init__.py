@@ -7,6 +7,7 @@ from app.models.category import Category, book_categories
 from app.models.chapter import Chapter
 from app.models.external_identity import ExternalIdentity
 from app.models.friendship import Friendship
+from app.models.inbox_capture import InboxCapture
 from app.models.local_credential import LocalCredential
 from app.models.notification import Notification
 from app.models.resource_permission import ResourcePermission
@@ -31,6 +32,7 @@ __all__ = [
     "Chapter",
     "ExternalIdentity",
     "Friendship",
+    "InboxCapture",
     "LocalCredential",
     "Notification",
     "ResourcePermission",

@@ -22,6 +22,23 @@ const label = computed(() => {
   }
 })
 
+const shortLabel = computed(() => {
+  if (!isOnline.value || status.value === 'offline') {
+    return 'Offline'
+  }
+  switch (status.value) {
+    case 'syncing':
+      return 'Sincronizando'
+    case 'conflict':
+      return 'Conflito'
+    case 'error':
+      return 'Falha'
+    case 'idle':
+    default:
+      return 'Sincronizado'
+  }
+})
+
 function handleManualSync() {
   if (!isSyncing.value && isOnline.value) {
     syncNow(false, 0)
@@ -46,7 +63,8 @@ function handleManualSync() {
       <AlertCircle v-else-if="status === 'error'" :size="13" />
       <Check v-else :size="13" />
     </span>
-    <span class="badge-text">{{ label }}</span>
+    <span class="badge-text badge-text-full">{{ label }}</span>
+    <span class="badge-text badge-text-short">{{ shortLabel }}</span>
   </button>
 </template>
 
@@ -123,5 +141,33 @@ function handleManualSync() {
 
 .badge-text {
   white-space: nowrap;
+}
+
+.badge-text-full {
+  display: inline;
+}
+
+.badge-text-short {
+  display: none;
+}
+
+@media (max-width: 1240px) {
+  .badge-text-full {
+    display: none;
+  }
+  .badge-text-short {
+    display: inline;
+  }
+}
+
+@media (max-width: 640px) {
+  .badge-text {
+    display: none !important;
+  }
+  .sync-status-badge {
+    padding: 0.35rem;
+    min-width: 32px;
+    justify-content: center;
+  }
 }
 </style>

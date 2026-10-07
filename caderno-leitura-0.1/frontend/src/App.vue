@@ -12,6 +12,9 @@ import { useAuthStore } from './stores/auth.ts'
 import { useProfile } from './composables/useProfile.ts'
 import { useFriends } from './composables/useFriends.ts'
 import { useNotifications } from './composables/useNotifications.ts'
+import { useQuickCapture } from './composables/useQuickCapture.ts'
+import { useInboxCount } from './composables/useInboxCount.ts'
+import QuickCaptureModal from './components/inbox/QuickCaptureModal.vue'
 import NotificationsDropdown from './components/notifications/NotificationsDropdown.vue'
 import MobileMoreMenu from './components/navigation/MobileMoreMenu.vue'
 
@@ -24,6 +27,16 @@ const notificationsService = useNotifications()
 const { openSearch } = useGlobalSearch()
 const sync = useSync()
 const preferences = usePreferences()
+const quickCapture = useQuickCapture()
+const inboxService = useInboxCount()
+const inboxCount = computed(() => inboxService.count.value)
+
+function handleGlobalShortcut(e: KeyboardEvent) {
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
+    e.preventDefault()
+    quickCapture.open()
+  }
+}
 
 const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(String(route.name)))
 const currentUser = computed(() => auth.user.value)
@@ -60,12 +73,14 @@ onMounted(() => {
   readHomeViewPreference()
   window.addEventListener('storage', handleStorageChange)
   window.addEventListener('caderno_home_view_changed', handleStorageChange)
+  window.addEventListener('keydown', handleGlobalShortcut)
   sync.attachListeners()
   sync.syncNow(false, 1000)
   preferences.loadPreferences()
   if (auth.isAuthenticated.value) {
     void profileService.fetchProfile()
     void friendsService.fetchSummary()
+    void inboxService.refreshCount()
     notificationsService.startPolling(45000)
   }
 })
@@ -76,6 +91,7 @@ watch(
     if (isAuth) {
       void profileService.fetchProfile()
       void friendsService.fetchSummary()
+      void inboxService.refreshCount()
       notificationsService.startPolling(45000)
     } else {
       notificationsService.stopPolling()
@@ -86,6 +102,7 @@ watch(
 onUnmounted(() => {
   window.removeEventListener('storage', handleStorageChange)
   window.removeEventListener('caderno_home_view_changed', handleStorageChange)
+  window.removeEventListener('keydown', handleGlobalShortcut)
   sync.detachListeners()
   notificationsService.stopPolling()
 })
@@ -129,6 +146,12 @@ const mainLinks: NavLinkItem[] = [
     label: 'Revisão',
     routes: ['review'],
     icon: 'rotate-ccw',
+  },
+  {
+    to: '/inbox',
+    label: 'Inbox',
+    routes: ['inbox'],
+    icon: 'inbox',
   },
   {
     to: '/importar',
@@ -186,7 +209,7 @@ const visibleMainLinks = computed(() => {
 
 <template>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-  <header class="app-header">
+  <header v-if="!route.meta?.cleanScreen" class="app-header">
     <div class="header-inner">
       <RouterLink class="brand" :to="isAuthenticated ? (homeViewPreference === 'dashboard' ? '/dashboard' : '/livros') : '/'">Leitorum</RouterLink>
       <nav v-if="!isAuthPage && isAuthenticated" class="main-nav" aria-label="Navegação principal">
@@ -212,6 +235,13 @@ const visibleMainLinks = computed(() => {
             aria-label="Novas solicitações pendentes"
           >
             {{ pendingReceivedCount }}
+          </span>
+          <span
+            v-if="item.routes.includes('inbox') && inboxCount > 0"
+            class="nav-badge"
+            aria-label="Capturas pendentes no Inbox"
+          >
+            {{ inboxCount }}
           </span>
         </RouterLink>
 
@@ -259,6 +289,18 @@ const visibleMainLinks = computed(() => {
           <Icon name="search" :size="15" />
           <span class="search-label">Buscar</span>
           <kbd class="search-kbd">Ctrl K</kbd>
+        </button>
+        <button
+          v-if="!isAuthPage && isAuthenticated"
+          type="button"
+          class="quick-capture-trigger-btn"
+          aria-label="Captura rápida no Inbox (Ctrl+Shift+C)"
+          title="Captura rápida (Ctrl+Shift+C)"
+          @click="quickCapture.open()"
+        >
+          <Icon name="pencil" :size="15" />
+          <span class="quick-capture-label">Capturar</span>
+          <kbd class="quick-capture-kbd">Ctrl+Shift+C</kbd>
         </button>
 
         <!-- Ações para Visitantes (Público) -->
@@ -327,14 +369,14 @@ const visibleMainLinks = computed(() => {
       </div>
     </div>
   </header>
-  <main id="conteudo" class="workspace" tabindex="-1">
+  <main id="conteudo" class="workspace" :class="{ 'clean-screen': route.meta?.cleanScreen }" tabindex="-1">
     <RouterView v-slot="{ Component }">
       <Transition name="page" mode="out-in">
         <component :is="Component" :key="$route.fullPath" />
       </Transition>
     </RouterView>
   </main>
-  <footer class="app-footer" role="contentinfo">
+  <footer v-if="!route.meta?.cleanScreen" class="app-footer" role="contentinfo">
     <div class="footer-inner">
       <span class="footer-brand">Leitorum</span>
       <span class="footer-sep" aria-hidden="true">·</span>
@@ -346,6 +388,7 @@ const visibleMainLinks = computed(() => {
     </div>
   </footer>
   <GlobalSearchModal />
+  <QuickCaptureModal />
   <MobileMoreMenu
     :open="isMoreMenuOpen"
     :is-admin="auth.isAdmin.value"
@@ -359,6 +402,12 @@ const visibleMainLinks = computed(() => {
 </template>
 
 <style scoped>
+.workspace.clean-screen {
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+}
+
 .public-auth-actions {
   display: flex;
   align-items: center;
@@ -488,6 +537,7 @@ const visibleMainLinks = computed(() => {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .logout-btn:hover {
@@ -496,17 +546,11 @@ const visibleMainLinks = computed(() => {
   background: #fef2f2;
 }
 
-@media (max-width: 640px) {
-  .user-display-name {
-    display: none;
-  }
-}
-
 .search-trigger-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.75rem;
+  gap: 0.45rem;
+  padding: 0.35rem 0.65rem;
   min-height: 38px;
   border-radius: var(--radius-control, 6px);
   border: 1px solid var(--color-border);
@@ -516,6 +560,8 @@ const visibleMainLinks = computed(() => {
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .search-trigger-btn:hover {
@@ -539,12 +585,98 @@ const visibleMainLinks = computed(() => {
   color: var(--color-muted);
 }
 
-@media (max-width: 640px) {
-  .search-label {
+.quick-capture-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.65rem;
+  min-height: 38px;
+  border-radius: var(--radius-control, 6px);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.quick-capture-trigger-btn:hover {
+  background: var(--color-surface-hover, rgba(0, 0, 0, 0.08));
+  border-color: var(--color-border-hover, var(--color-accent));
+  color: var(--color-text);
+}
+
+.quick-capture-label {
+  display: inline;
+}
+
+.quick-capture-kbd {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 0.6875rem;
+  font-family: monospace;
+  color: var(--color-muted);
+}
+
+/* Telas médias (laptops menores e tablets grandes): esconde os atalhos kbd */
+@media (max-width: 1200px) {
+  .search-kbd,
+  .quick-capture-kbd {
     display: none;
   }
-  .search-kbd {
+}
+
+/* Telas intermediárias (tablets portrait e viewports compactas): transforma busca e captura em botões de ícone elegantes de 38x38px */
+@media (max-width: 920px) {
+  .search-label,
+  .quick-capture-label {
     display: none;
+  }
+  .search-trigger-btn,
+  .quick-capture-trigger-btn {
+    padding: 0.35rem;
+    min-width: 38px;
+    justify-content: center;
+  }
+  .user-display-name {
+    display: none;
+  }
+  .user-chip {
+    padding: 0.35rem;
+    min-width: 38px;
+    max-width: none;
+    justify-content: center;
+  }
+}
+
+/* Viewport móvel (< 768px): logout vai para o menu Mais, preservando ações principais no topo */
+@media (max-width: 767px) {
+  .logout-btn {
+    display: none !important;
+  }
+  .search-label,
+  .quick-capture-label,
+  .search-kbd,
+  .quick-capture-kbd {
+    display: none !important;
+  }
+  .search-trigger-btn,
+  .quick-capture-trigger-btn {
+    padding: 0.35rem;
+    min-width: 38px;
+    justify-content: center;
+  }
+  .user-display-name {
+    display: none !important;
+  }
+  .header-actions {
+    gap: 0.35rem;
   }
 }
 

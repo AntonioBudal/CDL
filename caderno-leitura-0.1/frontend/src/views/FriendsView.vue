@@ -1,17 +1,41 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useFriends } from '../composables/useFriends.ts'
 import { profileApi } from '../api/profile.ts'
 import type { UserSearchItem } from '../types.ts'
 import FriendActionButtons from '../components/FriendActionButtons.vue'
 import Icon from '../components/ui/Icon.vue'
-import { getInitials } from '../composables/useProfile.ts'
+import { getInitials, useProfile } from '../composables/useProfile.ts'
+import { useAuthStore } from '../stores/auth.ts'
 
 type ActiveTab = 'friends' | 'requests' | 'blocked' | 'discover'
 
 const activeTab = ref<ActiveTab>('friends')
 const friendsService = useFriends()
+const authStore = useAuthStore()
+const profileService = useProfile()
+
+const userHandle = computed(() => {
+  return profileService.profile.value?.username || authStore.user.value?.username || ''
+})
+
+const copyFeedback = ref(false)
+let copyTimeout: ReturnType<typeof setTimeout> | null = null
+
+async function copyUserHandle() {
+  if (!userHandle.value) return
+  try {
+    await navigator.clipboard.writeText(`@${userHandle.value}`)
+    copyFeedback.value = true
+    if (copyTimeout) clearTimeout(copyTimeout)
+    copyTimeout = setTimeout(() => {
+      copyFeedback.value = false
+    }, 2000)
+  } catch {
+    // Falha silenciosa de clipboard
+  }
+}
 
 // Estado da busca de descobríveis
 const searchQuery = ref('')
@@ -69,6 +93,9 @@ function formatDate(dateString?: string | null): string {
 }
 
 onMounted(async () => {
+  if (!profileService.profile.value) {
+    void profileService.fetchProfile()
+  }
   await Promise.all([
     friendsService.fetchSummary(),
     friendsService.fetchFriends(),
@@ -190,20 +217,41 @@ onMounted(async () => {
       aria-labelledby="tab-friends"
       class="tab-content"
     >
-      <div v-if="friends.length === 0" class="empty-state panel">
-        <Icon name="users" :size="48" class="empty-icon muted" />
-        <h2>Nenhum amigo conectado ainda</h2>
-        <p class="muted">
-          Você ainda não possui amigos no seu caderno. Descubra outros leitores ou compartilhe seu handle @{{ summary }} para começar.
+      <div v-if="friends.length === 0" class="empty-state panel friends-empty-state">
+        <div class="empty-icon-wrapper">
+          <Icon name="users" :size="36" class="empty-icon" />
+        </div>
+        <h2 class="empty-title">Seu círculo de leitura ainda está começando</h2>
+        <p class="empty-desc muted">
+          Você ainda não adicionou outros leitores ao seu caderno. Conecte-se com pessoas para acompanhar leituras em comum e trocar anotações literárias.
         </p>
-        <button
-          type="button"
-          class="button primary action-btn"
-          @click="switchTab('discover')"
-        >
-          <Icon name="search" :size="16" />
-          <span>Buscar leitores</span>
-        </button>
+
+        <div v-if="userHandle" class="handle-share-card">
+          <span class="handle-label muted">Seu identificador no Leitorum:</span>
+          <div class="handle-pill">
+            <span class="handle-text">@{{ userHandle }}</span>
+            <button
+              type="button"
+              class="copy-handle-btn"
+              :aria-label="copyFeedback ? 'Identificador copiado' : 'Copiar meu identificador'"
+              @click="copyUserHandle"
+            >
+              <Icon :name="copyFeedback ? 'check' : 'copy'" :size="14" />
+              <span>{{ copyFeedback ? 'Copiado!' : 'Copiar' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="empty-actions">
+          <button
+            type="button"
+            class="button primary action-btn"
+            @click="switchTab('discover')"
+          >
+            <Icon name="search" :size="16" />
+            <span>Descobrir leitores</span>
+          </button>
+        </div>
       </div>
 
       <div v-else class="friends-grid">
@@ -795,5 +843,103 @@ onMounted(async () => {
   to {
     transform: rotate(360deg);
   }
+}
+
+.friends-empty-state {
+  max-width: 540px;
+  margin: 1.5rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.empty-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
+  color: var(--color-primary, #2563eb);
+  margin-bottom: 0.25rem;
+}
+
+.empty-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text, #111827);
+}
+
+.empty-desc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 440px;
+}
+
+.handle-share-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--color-surface-soft, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--color-border, #e5e5e5);
+  border-radius: var(--radius-surface, 10px);
+  padding: 0.75rem 1.25rem;
+  margin: 0.5rem 0;
+  width: 100%;
+  max-width: 360px;
+}
+
+.handle-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.handle-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.handle-text {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text, #111827);
+}
+
+.copy-handle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: var(--radius-sm, 6px);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text, #374151);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 36px;
+}
+
+.copy-handle-btn:hover {
+  background: var(--color-surface-hover, #f3f4f6);
+  border-color: var(--color-primary, #2563eb);
+  color: var(--color-primary, #2563eb);
+}
+
+.empty-actions {
+  margin-top: 0.5rem;
 }
 </style>

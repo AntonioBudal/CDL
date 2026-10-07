@@ -66,6 +66,7 @@ import {
   UserX,
   Bell,
   BellRing,
+  Inbox,
 } from 'lucide-vue-next'
 
 const props = withDefaults(defineProps<IconProps>(), {
@@ -141,7 +142,33 @@ const iconMap: Record<string, Component> = {
   'user-x': UserX,
   'bell': Bell,
   'bell-ring': BellRing,
+  'inbox': Inbox,
 }
+
+const ICON_SIZE_TOKENS: Record<string, number> = {
+  xs: 14,
+  sm: 16,
+  md: 20,
+  lg: 24,
+  xl: 32,
+}
+
+const resolvedSize = computed<number>(() => {
+  if (typeof props.size === 'string') {
+    const key = props.size.trim().toLowerCase()
+    if (key in ICON_SIZE_TOKENS) {
+      return ICON_SIZE_TOKENS[key]!
+    }
+    const parsed = Number(props.size)
+    if (!Number.isNaN(parsed) && parsed > 0) {
+      return parsed
+    }
+  }
+  if (typeof props.size === 'number' && props.size > 0) {
+    return props.size
+  }
+  return 20
+})
 
 const currentComponent = computed(() => iconMap[props.name] || BookOpen)
 </script>
@@ -149,7 +176,7 @@ const currentComponent = computed(() => iconMap[props.name] || BookOpen)
 <template>
   <component
     :is="currentComponent"
-    :size="size"
+    :size="resolvedSize"
     :stroke-width="strokeWidth"
     :class="['ui-icon', props.class]"
     :role="ariaLabel ? 'img' : undefined"
@@ -165,5 +192,7 @@ const currentComponent = computed(() => iconMap[props.name] || BookOpen)
   vertical-align: middle;
   flex-shrink: 0;
   color: currentColor;
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>

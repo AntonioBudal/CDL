@@ -1,5 +1,14 @@
 """Modelos de entrada e saida da API."""
 
+from app.schemas.inbox_capture import (
+    InboxCaptureCreate,
+    InboxCapturePatch,
+    InboxCaptureRead,
+    InboxCountResponse,
+    InboxLinkRequest,
+    InboxPromoteRequest,
+    InboxStatus,
+)
 from app.schemas.notification import (
     NotificationActorRead,
     NotificationBroadcastRequest,
@@ -13,6 +22,13 @@ from app.schemas.notification import (
 )
 
 __all__ = [
+    "InboxCaptureCreate",
+    "InboxCapturePatch",
+    "InboxCaptureRead",
+    "InboxCountResponse",
+    "InboxLinkRequest",
+    "InboxPromoteRequest",
+    "InboxStatus",
     "NotificationActorRead",
     "NotificationBroadcastRequest",
     "NotificationBroadcastResponse",
