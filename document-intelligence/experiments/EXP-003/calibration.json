@@ -1,0 +1,363 @@
+{
+  "dataset": "exp-003-dev",
+  "note": "Calibração só no dev, sobre o layout verdadeiro.",
+  "orderers": {
+    "naive": {
+      "params": {
+        "method": "naive",
+        "deskew": false,
+        "tie": 0.0,
+        "min_gap": 0.15,
+        "shrink": 0.1,
+        "lateral_offset": 0.08,
+        "side_overlap": 0.3
+      },
+      "dev_blocks_accuracy": 0.9667774086378738,
+      "grid": [
+        {
+          "tie": 0.0,
+          "blocks_accuracy": 0.9667774086378738
+        },
+        {
+          "tie": 0.25,
+          "blocks_accuracy": 0.893687707641196
+        },
+        {
+          "tie": 0.5,
+          "blocks_accuracy": 0.823920265780731
+        },
+        {
+          "tie": 1.0,
+          "blocks_accuracy": 0.6843853820598007
+        }
+      ]
+    },
+    "naive+deskew": {
+      "params": {
+        "method": "naive",
+        "deskew": true,
+        "tie": 0.0,
+        "min_gap": 0.15,
+        "shrink": 0.1,
+        "lateral_offset": 0.08,
+        "side_overlap": 0.3
+      },
+      "dev_blocks_accuracy": 0.9867109634551495,
+      "grid": [
+        {
+          "tie": 0.0,
+          "blocks_accuracy": 0.9867109634551495
+        },
+        {
+          "tie": 0.25,
+          "blocks_accuracy": 0.8637873754152824
+        },
+        {
+          "tie": 0.5,
+          "blocks_accuracy": 0.7973421926910299
+        },
+        {
+          "tie": 1.0,
+          "blocks_accuracy": 0.7541528239202657
+        }
+      ]
+    },
+    "xycut": {
+      "params": {
+        "method": "xycut",
+        "deskew": false,
+        "tie": 0.5,
+        "min_gap": 0.05,
+        "shrink": 0.25,
+        "lateral_offset": 0.08,
+        "side_overlap": 0.3
+      },
+      "dev_blocks_accuracy": 0.7940199335548173,
+      "grid": [
+        {
+          "min_gap": 0.05,
+          "shrink": 0.0,
+          "blocks_accuracy": 0.7740863787375415
+        },
+        {
+          "min_gap": 0.05,
+          "shrink": 0.1,
+          "blocks_accuracy": 0.7840531561461794
+        },
+        {
+          "min_gap": 0.05,
+          "shrink": 0.25,
+          "blocks_accuracy": 0.7940199335548173
+        },
+        {
+          "min_gap": 0.15,
+          "shrink": 0.0,
+          "blocks_accuracy": 0.7641196013289037
+        },
+        {
+          "min_gap": 0.15,
+          "shrink": 0.1,
+          "blocks_accuracy": 0.7840531561461794
+        },
+        {
+          "min_gap": 0.15,
+          "shrink": 0.25,
+          "blocks_accuracy": 0.7807308970099668
+        },
+        {
+          "min_gap": 0.3,
+          "shrink": 0.0,
+          "blocks_accuracy": 0.7674418604651163
+        },
+        {
+          "min_gap": 0.3,
+          "shrink": 0.1,
+          "blocks_accuracy": 0.7674418604651163
+        },
+        {
+          "min_gap": 0.3,
+          "shrink": 0.25,
+          "blocks_accuracy": 0.7840531561461794
+        },
+        {
+          "min_gap": 0.6,
+          "shrink": 0.0,
+          "blocks_accuracy": 0.7807308970099668
+        },
+        {
+          "min_gap": 0.6,
+          "shrink": 0.1,
+          "blocks_accuracy": 0.7674418604651163
+        },
+        {
+          "min_gap": 0.6,
+          "shrink": 0.25,
+          "blocks_accuracy": 0.7707641196013288
+        }
+      ]
+    },
+    "xycut+deskew": {
+      "params": {
+        "method": "xycut",
+        "deskew": true,
+        "tie": 0.5,
+        "min_gap": 0.3,
+        "shrink": 0.0,
+        "lateral_offset": 0.08,
+        "side_overlap": 0.3
+      },
+      "dev_blocks_accuracy": 0.7906976744186046,
+      "grid": [
+        {
+          "min_gap": 0.05,
+          "shrink": 0.0,
+          "blocks_accuracy": 0.787375415282392
+        },
+        {
+          "min_gap": 0.05,
+          "shrink": 0.1,
+          "blocks_accuracy": 0.787375415282392
+        },
+        {
+          "min_gap": 0.05,
+          "shrink": 0.25,
+          "blocks_accuracy": 0.787375415282392
+        },
+        {
+          "min_gap": 0.15,
+          "shrink": 0.0,
+          "blocks_accuracy": 0.787375415282392
+        },
+        {
+          "min_gap": 0.15,
+          "shrink": 0.1,
+          "blocks_accuracy": 0.787375415282392
+        },
+        {
+          "min_gap": 0.15,
+          "shrink": 0.25,
+          "blocks_accuracy": 0.787375415282392
+        },
+        {
+          "min_gap": 0.3,
+          "shrink": 0.0,
+          "blocks_accuracy": 0.7906976744186046
+        },
+        {
+          "min_gap": 0.3,
+          "shrink": 0.1,
+          "blocks_accuracy": 0.787375415282392
+        },
+        {
+          "min_gap": 0.3,
+          "shrink": 0.25,
+          "blocks_accuracy": 0.787375415282392
+        },
+        {
+          "min_gap": 0.6,
+          "shrink": 0.0,
+          "blocks_accuracy": 0.787375415282392
+        },
+        {
+          "min_gap": 0.6,
+          "shrink": 0.1,
+          "blocks_accuracy": 0.787375415282392
+        },
+        {
+          "min_gap": 0.6,
+          "shrink": 0.25,
+          "blocks_accuracy": 0.787375415282392
+        }
+      ]
+    },
+    "anchored": {
+      "params": {
+        "method": "anchored",
+        "deskew": false,
+        "tie": 0.5,
+        "min_gap": 0.15,
+        "shrink": 0.1,
+        "lateral_offset": 0.04,
+        "side_overlap": 0.5
+      },
+      "dev_blocks_accuracy": 0.9867109634551495,
+      "grid": [
+        {
+          "lateral_offset": 0.04,
+          "side_overlap": 0.15,
+          "blocks_accuracy": 0.9700996677740864
+        },
+        {
+          "lateral_offset": 0.04,
+          "side_overlap": 0.3,
+          "blocks_accuracy": 0.973421926910299
+        },
+        {
+          "lateral_offset": 0.04,
+          "side_overlap": 0.5,
+          "blocks_accuracy": 0.9867109634551495
+        },
+        {
+          "lateral_offset": 0.08,
+          "side_overlap": 0.15,
+          "blocks_accuracy": 0.973421926910299
+        },
+        {
+          "lateral_offset": 0.08,
+          "side_overlap": 0.3,
+          "blocks_accuracy": 0.973421926910299
+        },
+        {
+          "lateral_offset": 0.08,
+          "side_overlap": 0.5,
+          "blocks_accuracy": 0.9867109634551495
+        },
+        {
+          "lateral_offset": 0.12,
+          "side_overlap": 0.15,
+          "blocks_accuracy": 0.9867109634551495
+        },
+        {
+          "lateral_offset": 0.12,
+          "side_overlap": 0.3,
+          "blocks_accuracy": 0.9867109634551495
+        },
+        {
+          "lateral_offset": 0.12,
+          "side_overlap": 0.5,
+          "blocks_accuracy": 0.9867109634551495
+        },
+        {
+          "lateral_offset": 0.2,
+          "side_overlap": 0.15,
+          "blocks_accuracy": 0.9800664451827242
+        },
+        {
+          "lateral_offset": 0.2,
+          "side_overlap": 0.3,
+          "blocks_accuracy": 0.9800664451827242
+        },
+        {
+          "lateral_offset": 0.2,
+          "side_overlap": 0.5,
+          "blocks_accuracy": 0.9800664451827242
+        }
+      ]
+    },
+    "anchored+deskew": {
+      "params": {
+        "method": "anchored",
+        "deskew": true,
+        "tie": 0.5,
+        "min_gap": 0.15,
+        "shrink": 0.1,
+        "lateral_offset": 0.04,
+        "side_overlap": 0.15
+      },
+      "dev_blocks_accuracy": 0.9933554817275747,
+      "grid": [
+        {
+          "lateral_offset": 0.04,
+          "side_overlap": 0.15,
+          "blocks_accuracy": 0.9933554817275747
+        },
+        {
+          "lateral_offset": 0.04,
+          "side_overlap": 0.3,
+          "blocks_accuracy": 0.9933554817275747
+        },
+        {
+          "lateral_offset": 0.04,
+          "side_overlap": 0.5,
+          "blocks_accuracy": 0.9867109634551495
+        },
+        {
+          "lateral_offset": 0.08,
+          "side_overlap": 0.15,
+          "blocks_accuracy": 0.9933554817275747
+        },
+        {
+          "lateral_offset": 0.08,
+          "side_overlap": 0.3,
+          "blocks_accuracy": 0.9933554817275747
+        },
+        {
+          "lateral_offset": 0.08,
+          "side_overlap": 0.5,
+          "blocks_accuracy": 0.9867109634551495
+        },
+        {
+          "lateral_offset": 0.12,
+          "side_overlap": 0.15,
+          "blocks_accuracy": 0.9933554817275747
+        },
+        {
+          "lateral_offset": 0.12,
+          "side_overlap": 0.3,
+          "blocks_accuracy": 0.9933554817275747
+        },
+        {
+          "lateral_offset": 0.12,
+          "side_overlap": 0.5,
+          "blocks_accuracy": 0.9867109634551495
+        },
+        {
+          "lateral_offset": 0.2,
+          "side_overlap": 0.15,
+          "blocks_accuracy": 0.9933554817275747
+        },
+        {
+          "lateral_offset": 0.2,
+          "side_overlap": 0.3,
+          "blocks_accuracy": 0.9933554817275747
+        },
+        {
+          "lateral_offset": 0.2,
+          "side_overlap": 0.5,
+          "blocks_accuracy": 0.9867109634551495
+        }
+      ]
+    }
+  },
+  "elapsed_s": 2.2
+}
