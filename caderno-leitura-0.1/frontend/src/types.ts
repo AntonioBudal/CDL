@@ -1466,3 +1466,61 @@ export interface InboxLinkPayload {
   target_section?: 'summary' | 'explanation' | 'concepts' | 'references' | 'notes'
 }
 
+// --- Sessões Estruturadas de Estudo e Auditoria (F 0.7.14) ---
+
+export type SessionScopeType = 'quick' | 'book' | 'all'
+export type SessionStatus = 'in_progress' | 'completed' | 'interrupted'
+export type SessionRating = 'easy' | 'medium' | 'hard'
+
+export interface StudySessionItem {
+  id: number
+  session_id: number
+  highlight_id: number
+  rating: SessionRating
+  time_spent_seconds: number
+  answered_at: string
+}
+
+export interface StudySession {
+  id: number
+  user_id: string
+  book_id?: number | null
+  book_title?: string | null
+  scope_type: SessionScopeType
+  status: SessionStatus
+  started_at: string
+  completed_at?: string | null
+  total_items: number
+  completed_items: number
+  easy_count: number
+  medium_count: number
+  hard_count: number
+  duration_seconds: number
+}
+
+export interface StudySessionDetail extends StudySession {
+  items: StudySessionItem[]
+  pending_cards: ReviewItemRead[]
+}
+
+export interface StudySessionSummary {
+  session: StudySession
+  accuracy_rate: number
+  next_reviews_summary: Record<string, number>
+}
+
+export interface StudySessionStartPayload {
+  scope_type?: SessionScopeType
+  book_id?: number | null
+  limit?: number
+}
+
+export interface StudySessionAnswerPayload {
+  highlight_id: number
+  rating: SessionRating
+  time_spent_seconds?: number
+}
+
+export interface StudySessionCompletePayload {
+  duration_seconds?: number
+}

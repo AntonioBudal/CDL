@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: API de Sessões Estruturadas de Estudo (F0.7.14)
+  version: 0.1.0
+  description: Endpoints para criação, progresso, auditoria e histórico de blocos delimitados de estudo.
+paths:
+  /api/study-sessions/start:
+    post:
+      summary: Iniciar uma nova sessão de estudo
+      description: Inicializa um bloco delimitado de estudo com escopo definido, selecionando cartões pendentes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope_type:
+                  type: string
+                  enum: [quick, book, all]
+                  default: quick
+                book_id:
+                  type: integer
+                  nullable: true
+                limit:
+                  type: integer
+                  default: 10
+      responses:
+        '201':
+          description: Sessão iniciada com sucesso
+        '400':
+          description: Nenhum item disponível para o escopo selecionado
+
+  /api/study-sessions/{id}:
+    get:
+      summary: Obter estado detalhado de uma sessão
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalhes da sessão e cartões
+        '404':
+          description: Sessão não encontrada
+
+  /api/study-sessions/{id}/items:
+    post:
+      summary: Registrar resposta de um cartão na sessão
+      description: Atualiza o destaque correspondente com a avaliação de recall e registra o item da sessão.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [highlight_id, rating]
+              properties:
+                highlight_id:
+                  type: integer
+                rating:
+                  type: string
+                  enum: [easy, medium, hard]
+                time_spent_seconds:
+                  type: integer
+                  default: 0
+      responses:
+        '200':
+          description: Item registrado e carimbos atualizados
+        '400':
+          description: Sessão não está em andamento
+
+  /api/study-sessions/{id}/complete:
+    post:
+      summary: Concluir formalmente uma sessão
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                duration_seconds:
+                  type: integer
+      responses:
+        '200':
+          description: Sessão concluída com resumo estatístico consolidado
+
+  /api/study-sessions/{id}/interrupt:
+    post:
+      summary: Interromper uma sessão em andamento
+      description: Registra que a sessão foi cancelada antes do término, preservando os itens já respondidos.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sessão marcada como interrompida
+
+  /api/study-sessions/history:
+    get:
+      summary: Listar histórico retrospectivo de sessões
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Lista paginada de sessões do leitor

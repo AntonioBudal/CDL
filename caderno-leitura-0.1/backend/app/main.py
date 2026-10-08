@@ -36,6 +36,7 @@ from app.routers import (
     study_highlights,
     study_mentions,
     study_relations,
+    study_sessions,
     study_versions,
     support,
     sync,
@@ -124,6 +125,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(notifications.router, prefix="/api")
     application.include_router(support.router, prefix="/api")
     application.include_router(review.router, prefix="/api")
+    application.include_router(study_sessions.router, prefix="/api")
     application.include_router(seo.router)
 
     # Registro de manipuladores de erro de banco e mascaramento global 500 (T007, T018)

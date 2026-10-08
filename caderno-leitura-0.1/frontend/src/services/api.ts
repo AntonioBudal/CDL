@@ -13,6 +13,7 @@ import type {
   ReviewItemRead, ReviewRating, ReviewStatsResponse,
   BacklinksResponse, StudyCandidateOption,
   InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
+  StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
 } from '../types.ts'
 
 
@@ -466,6 +467,41 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
+
+  // --- Sessões Estruturadas de Estudo (F 0.7.14) ---
+  startStudySession: (payload: StudySessionStartPayload) =>
+    request<StudySessionDetail>('/study-sessions/start', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  getStudySession: (id: number, signal?: AbortSignal) =>
+    request<StudySessionDetail>(`/study-sessions/${id}`, { signal }),
+  answerStudySessionItem: (id: number, payload: StudySessionAnswerPayload) =>
+    request<StudySessionItem>(`/study-sessions/${id}/items`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  completeStudySession: (id: number, payload?: StudySessionCompletePayload) =>
+    request<StudySessionSummary>(`/study-sessions/${id}/complete`, {
+      method: 'POST',
+      body: JSON.stringify(payload || {}),
+    }),
+  interruptStudySession: (id: number) =>
+    request<StudySession>(`/study-sessions/${id}/interrupt`, {
+      method: 'POST',
+    }),
+  getStudySessionSummary: (id: number, signal?: AbortSignal) =>
+    request<StudySessionSummary>(`/study-sessions/${id}/summary`, { signal }),
+  getStudySessionsHistory: (
+    params?: { limit?: number; offset?: number },
+    signal?: AbortSignal,
+  ) => {
+    const searchParams = new URLSearchParams()
+    if (params?.limit != null) searchParams.set('limit', String(params.limit))
+    if (params?.offset != null) searchParams.set('offset', String(params.offset))
+    const queryStr = searchParams.toString()
+    return request<StudySession[]>(`/study-sessions/history${queryStr ? `?${queryStr}` : ''}`, { signal })
+  },
 
   getBookRelations: (bookId: number, signal?: AbortSignal) =>
     request<BookCanvasRelationItem[]>(`/books/${bookId}/relations`, { signal }),
@@ -1226,4 +1262,41 @@ export async function promoteInboxCapture(id: number, payload: InboxPromotePaylo
 export async function linkInboxCapture(id: number, payload: InboxLinkPayload): Promise<InboxCapture> {
   return api.linkInboxCapture(id, payload)
 }
+
+// --- Funções de Sessões Estruturadas de Estudo (F 0.7.14) ---
+
+export async function startStudySession(payload: StudySessionStartPayload): Promise<StudySessionDetail> {
+  return api.startStudySession(payload)
+}
+
+export async function getStudySession(id: number, signal?: AbortSignal): Promise<StudySessionDetail> {
+  return api.getStudySession(id, signal)
+}
+
+export async function answerStudySessionItem(id: number, payload: StudySessionAnswerPayload): Promise<StudySessionItem> {
+  return api.answerStudySessionItem(id, payload)
+}
+
+export async function completeStudySession(id: number, payload?: StudySessionCompletePayload): Promise<StudySessionSummary> {
+  return api.completeStudySession(id, payload)
+}
+
+export async function interruptStudySession(id: number): Promise<StudySession> {
+  return api.interruptStudySession(id)
+}
+
+export async function getStudySessionSummary(id: number, signal?: AbortSignal): Promise<StudySessionSummary> {
+  return api.getStudySessionSummary(id, signal)
+}
+
+export async function getStudySessionsHistory(
+  params?: { limit?: number; offset?: number },
+  signal?: AbortSignal,
+): Promise<StudySession[]> {
+  return api.getStudySessionsHistory(params, signal)
+}
+
+
+
+
 

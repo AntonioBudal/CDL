@@ -20,6 +20,19 @@ from app.schemas.notification import (
     NotificationReadAllResponse,
     UnreadCountResponse,
 )
+from app.schemas.study_session import (
+    ItemRating,
+    SessionRating,
+    SessionScopeType,
+    SessionStatus,
+    StudySessionCompleteRequest,
+    StudySessionDetailResponse,
+    StudySessionItemAnswerRequest,
+    StudySessionItemResponse,
+    StudySessionResponse,
+    StudySessionStartRequest,
+    StudySessionSummaryResponse,
+)
 
 __all__ = [
     "InboxCaptureCreate",
@@ -29,6 +42,7 @@ __all__ = [
     "InboxLinkRequest",
     "InboxPromoteRequest",
     "InboxStatus",
+    "ItemRating",
     "NotificationActorRead",
     "NotificationBroadcastRequest",
     "NotificationBroadcastResponse",
@@ -37,5 +51,15 @@ __all__ = [
     "NotificationListResponse",
     "NotificationPurgeResponse",
     "NotificationReadAllResponse",
+    "SessionRating",
+    "SessionScopeType",
+    "SessionStatus",
+    "StudySessionCompleteRequest",
+    "StudySessionDetailResponse",
+    "StudySessionItemAnswerRequest",
+    "StudySessionItemResponse",
+    "StudySessionResponse",
+    "StudySessionStartRequest",
+    "StudySessionSummaryResponse",
     "UnreadCountResponse",
 ]

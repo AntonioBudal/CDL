@@ -1,4 +1,4 @@
-import { ref, computed, type Ref } from 'vue'
+import { ref, computed, onUnmounted, type Ref } from 'vue'
 import type {
   ActiveStudyNode,
   StudyHighlight,
@@ -207,3 +207,254 @@ export function useActiveReadingSession(options: UseActiveReadingSessionOptions 
     syncFromDom,
   }
 }
+
+// --- Composable para Sessões Estruturadas de Estudo (F 0.7.14) ---
+
+import {
+  startStudySession as apiStartSession,
+  getStudySession as apiGetSession,
+  answerStudySessionItem as apiAnswerItem,
+  completeStudySession as apiCompleteSession,
+  interruptStudySession as apiInterruptSession,
+} from '../services/api.ts'
+import type {
+  ReviewItemRead,
+  SessionRating,
+  StudySessionDetail,
+  StudySessionStartPayload,
+  StudySessionSummary,
+} from '../types.ts'
+
+export function useStructuredStudySession() {
+  const session = ref<StudySessionDetail | null>(null)
+  const loading = ref(false)
+  const submitting = ref(false)
+  const error = ref<string | null>(null)
+  const currentIndex = ref(0)
+  const isRevealed = ref(false)
+  const showConfirmExit = ref(false)
+  const elapsedSeconds = ref(0)
+  const cardElapsedSeconds = ref(0)
+  const summary = ref<StudySessionSummary | null>(null)
+  const showSummaryModal = ref(false)
+
+  let timerHandle: ReturnType<typeof setInterval> | null = null
+
+  function startTimer() {
+    stopTimer()
+    timerHandle = setInterval(() => {
+      elapsedSeconds.value++
+      cardElapsedSeconds.value++
+    }, 1000)
+  }
+
+  function stopTimer() {
+    if (timerHandle) {
+      clearInterval(timerHandle)
+      timerHandle = null
+    }
+  }
+
+  const formattedTimer = computed(() => {
+    const mins = Math.floor(elapsedSeconds.value / 60)
+    const secs = elapsedSeconds.value % 60
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+  })
+
+  const currentCard = computed<ReviewItemRead | null>(() => {
+    if (!session.value || !session.value.pending_cards) return null
+    if (currentIndex.value >= session.value.pending_cards.length) return null
+    return session.value.pending_cards[currentIndex.value]
+  })
+
+  const progress = computed(() => {
+    const total = session.value?.total_items || 0
+    const current = Math.min(currentIndex.value + 1, total)
+    const percent = total > 0 ? Math.round((currentIndex.value / total) * 100) : 0
+    return { current, total, percent }
+  })
+
+  async function loadSession(sessionId: number) {
+    loading.value = true
+    error.value = null
+    try {
+      const data = await apiGetSession(sessionId)
+      session.value = data
+      currentIndex.value = data.completed_items
+      isRevealed.value = false
+      if (data.status === 'completed') {
+        showSummaryModal.value = true
+      } else {
+        startTimer()
+      }
+    } catch (err: unknown) {
+      error.value = err instanceof Error ? err.message : 'Falha ao carregar a sessão de estudo.'
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function startNewSession(payload: StudySessionStartPayload) {
+    loading.value = true
+    error.value = null
+    try {
+      const data = await apiStartSession(payload)
+      session.value = data
+      currentIndex.value = 0
+      isRevealed.value = false
+      elapsedSeconds.value = 0
+      cardElapsedSeconds.value = 0
+      startTimer()
+      return data
+    } catch (err: unknown) {
+      error.value = err instanceof Error ? err.message : 'Falha ao iniciar nova sessão de estudo.'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  function revealAnswer() {
+    isRevealed.value = true
+  }
+
+  async function answerCard(rating: SessionRating) {
+    if (!session.value || !currentCard.value || submitting.value) return
+    const card = currentCard.value
+    const timeSpent = cardElapsedSeconds.value
+
+    submitting.value = true
+    error.value = null
+
+    try {
+      await apiAnswerItem(session.value.id, {
+        highlight_id: card.id,
+        rating,
+        time_spent_seconds: timeSpent,
+      })
+
+      // Incrementa índice e zera tempo do cartão
+      currentIndex.value++
+      cardElapsedSeconds.value = 0
+      isRevealed.value = false
+
+      // Se concluiu todos os itens
+      if (currentIndex.value >= (session.value.pending_cards?.length || 0)) {
+        stopTimer()
+        await finalizeSession()
+      }
+    } catch (err: unknown) {
+      error.value = err instanceof Error ? err.message : 'Falha ao registrar resposta do cartão.'
+    } finally {
+      submitting.value = false
+    }
+  }
+
+  async function finalizeSession() {
+    if (!session.value) return
+    try {
+      const res = await apiCompleteSession(session.value.id, {
+        duration_seconds: elapsedSeconds.value,
+      })
+      summary.value = res
+      showSummaryModal.value = true
+    } catch (err: unknown) {
+      error.value = err instanceof Error ? err.message : 'Falha ao finalizar sessão.'
+    }
+  }
+
+  async function interruptAndExit(onDone?: () => void) {
+    stopTimer()
+    if (session.value && session.value.status === 'in_progress') {
+      try {
+        await apiInterruptSession(session.value.id)
+      } catch {
+        // silencioso
+      }
+    }
+    showConfirmExit.value = false
+    if (onDone) onDone()
+  }
+
+  function requestExit() {
+    if (session.value && session.value.status === 'in_progress') {
+      showConfirmExit.value = true
+    }
+  }
+
+  function cancelExit() {
+    showConfirmExit.value = false
+  }
+
+  function handleKeydown(e: KeyboardEvent, onExitApproved?: () => void) {
+    if (showConfirmExit.value) {
+      if (e.key === 'Escape') {
+        cancelExit()
+      } else if (e.key === 'Enter') {
+        void interruptAndExit(onExitApproved)
+      }
+      return
+    }
+
+    if (showSummaryModal.value) {
+      return
+    }
+
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      requestExit()
+      return
+    }
+
+    if (e.key === ' ' || e.code === 'Space') {
+      if (!isRevealed.value) {
+        e.preventDefault()
+        revealAnswer()
+      }
+      return
+    }
+
+    if (isRevealed.value && !submitting.value) {
+      if (e.key === '1' || e.key === 'f' || e.key === 'F') {
+        e.preventDefault()
+        void answerCard('easy')
+      } else if (e.key === '2' || e.key === 'm' || e.key === 'M') {
+        e.preventDefault()
+        void answerCard('medium')
+      } else if (e.key === '3' || e.key === 'd' || e.key === 'D') {
+        e.preventDefault()
+        void answerCard('hard')
+      }
+    }
+  }
+
+  onUnmounted(() => {
+    stopTimer()
+  })
+
+  return {
+    session,
+    loading,
+    submitting,
+    error,
+    currentIndex,
+    isRevealed,
+    showConfirmExit,
+    elapsedSeconds,
+    formattedTimer,
+    summary,
+    showSummaryModal,
+    currentCard,
+    progress,
+    loadSession,
+    startNewSession,
+    revealAnswer,
+    answerCard,
+    finalizeSession,
+    requestExit,
+    cancelExit,
+    interruptAndExit,
+    handleKeydown,
+  }
+}
+

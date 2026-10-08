@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { api } from '../services/api.ts'
+import { api, startStudySession, getStudySessionsHistory } from '../services/api.ts'
 import { reviewApi } from '../api/review.ts'
 import { useReviewSession } from '../composables/useReviewSession.ts'
-import type { Chapter, ReviewStatsResponse } from '../types.ts'
+import type { Chapter, ReviewStatsResponse, StudySession, SessionScopeType } from '../types.ts'
 import ReviewStatsHeader from '../components/review/ReviewStatsHeader.vue'
 import ReviewCard from '../components/review/ReviewCard.vue'
 import ReviewSummaryModal from '../components/review/ReviewSummaryModal.vue'
 
 const router = useRouter()
 const session = useReviewSession()
+
+const activeTab = ref<'practice' | 'history'>('practice')
+const sessionHistory = ref<StudySession[]>([])
+const loadingHistory = ref(false)
+const startingStructured = ref(false)
 
 const loadingStats = ref(false)
 const stats = ref<ReviewStatsResponse>({
@@ -94,6 +99,63 @@ function handleFinishSession() {
   void router.push('/livros')
 }
 
+async function fetchHistory() {
+  loadingHistory.value = true
+  try {
+    sessionHistory.value = await getStudySessionsHistory({ limit: 30 })
+  } catch (err: unknown) {
+    console.error('Erro ao carregar histórico de sessões:', err)
+  } finally {
+    loadingHistory.value = false
+  }
+}
+
+watch(activeTab, (tab) => {
+  if (tab === 'history') {
+    void fetchHistory()
+  }
+})
+
+async function startStructuredSession(scope: SessionScopeType = 'quick') {
+  startingStructured.value = true
+  try {
+    const payload = {
+      scope_type: scope,
+      book_id: scope === 'book' ? selectedBookId.value : null,
+      limit: 10,
+    }
+    const created = await startStudySession(payload)
+    void router.push(`/estudo/sessao/${created.id}`)
+  } catch (err: unknown) {
+    alert(err instanceof Error ? err.message : 'Não foi possível iniciar a sessão de estudo.')
+  } finally {
+    startingStructured.value = false
+  }
+}
+
+function formatDuration(totalSecs: number): string {
+  if (!totalSecs || totalSecs <= 0) return '0 s'
+  const minutes = Math.floor(totalSecs / 60)
+  const seconds = totalSecs % 60
+  if (minutes === 0) return `${seconds} s`
+  return `${minutes} min ${seconds} s`
+}
+
+function formatDate(isoStr: string): string {
+  try {
+    const date = new Date(isoStr)
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  } catch {
+    return isoStr
+  }
+}
+
 onMounted(() => {
   void fetchStats()
 })
@@ -110,66 +172,163 @@ onMounted(() => {
         </p>
       </div>
 
-      <!-- Cabeçalho de Estatísticas e Filtros -->
-      <ReviewStatsHeader
-        :stats="stats"
-        :selected-book-id="selectedBookId"
-        :selected-chapter-id="selectedChapterId"
-        :selected-kind="selectedKind"
-        :chapters="chapters"
-        :loading="loadingStats"
-        @update:selected-book-id="selectedBookId = $event"
-        @update:selected-chapter-id="selectedChapterId = $event"
-        @update:selected-kind="selectedKind = $event"
-      />
+      <!-- Abas da Central de Revisão -->
+      <div class="hub-tabs-nav" role="tablist" aria-label="Navegação da Central de Revisão">
+        <button
+          type="button"
+          role="tab"
+          class="hub-tab-item"
+          :class="{ active: activeTab === 'practice' }"
+          :aria-selected="activeTab === 'practice'"
+          @click="activeTab = 'practice'"
+        >
+          Prática de Revisão
+        </button>
+        <button
+          type="button"
+          role="tab"
+          class="hub-tab-item"
+          :class="{ active: activeTab === 'history' }"
+          :aria-selected="activeTab === 'history'"
+          @click="activeTab = 'history'"
+        >
+          Histórico de Sessões
+        </button>
+      </div>
 
-      <!-- ESTADO VAZIO: Nenhum item elegível -->
-      <section
-        v-if="!loadingStats && stats.total_eligible === 0"
-        class="empty-state empty-review"
-        aria-label="Nenhum item para revisão"
-      >
-        <div class="empty-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
+      <!-- ABA 1: PRÁTICA DE REVISÃO -->
+      <div v-if="activeTab === 'practice'" class="practice-tab-content">
+        <!-- Cabeçalho de Estatísticas e Filtros -->
+        <ReviewStatsHeader
+          :stats="stats"
+          :selected-book-id="selectedBookId"
+          :selected-chapter-id="selectedChapterId"
+          :selected-kind="selectedKind"
+          :chapters="chapters"
+          :loading="loadingStats"
+          @update:selected-book-id="selectedBookId = $event"
+          @update:selected-chapter-id="selectedChapterId = $event"
+          @update:selected-kind="selectedKind = $event"
+        />
+
+        <!-- ESTADO VAZIO: Nenhum item elegível -->
+        <section
+          v-if="!loadingStats && stats.total_eligible === 0"
+          class="empty-state empty-review"
+          aria-label="Nenhum item para revisão"
+        >
+          <div class="empty-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <h2 class="empty-title">Nenhum item interativo para revisar</h2>
+          <p class="empty-description">
+            Você ainda não possui perguntas ou termos ocultos criados. Ao ler seus estudos,
+            selecione qualquer trecho e transforme-o em uma <strong>Pergunta</strong> ou <strong>Termo Oculto</strong>.
+          </p>
+          <router-link to="/livros" class="btn-goto-books">
+            Explorar meus Livros
+          </router-link>
+        </section>
+
+        <!-- AVISO: Todos revisados hoje -->
+        <div
+          v-else-if="!loadingStats && stats.total_eligible > 0 && stats.pending_review === 0"
+          class="all-reviewed-banner"
+        >
+          <span class="banner-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </span>
+          <div class="banner-text">
+            <strong>Parabéns!</strong> Todos os seus itens prioritários foram revisados hoje.
+            Você pode revisar novamente para reforçar a memória ou praticar outro livro.
+          </div>
         </div>
-        <h2 class="empty-title">Nenhum item interativo para revisar</h2>
-        <p class="empty-description">
-          Você ainda não possui perguntas ou termos ocultos criados. Ao ler seus estudos,
-          selecione qualquer trecho e transforme-o em uma <strong>Pergunta</strong> ou <strong>Termo Oculto</strong>.
-        </p>
-        <router-link to="/livros" class="btn-goto-books">
-          Explorar meus Livros
-        </router-link>
-      </section>
 
-      <!-- AVISO: Todos revisados hoje -->
-      <div
-        v-else-if="!loadingStats && stats.total_eligible > 0 && stats.pending_review === 0"
-        class="all-reviewed-banner"
-      >
-        <span class="banner-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </span>
-        <div class="banner-text">
-          <strong>Parabéns!</strong> Todos os seus itens prioritários foram revisados hoje.
-          Você pode revisar novamente para reforçar a memória ou praticar outro livro.
+        <!-- BOTÕES DE INÍCIO DE SESSÃO -->
+        <div v-if="stats.total_eligible > 0" class="start-session-bar">
+          <button
+            type="button"
+            class="start-structured-btn"
+            :disabled="loadingStats || startingStructured"
+            @click="startStructuredSession(selectedBookId ? 'book' : 'quick')"
+          >
+            <svg class="play-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+            <span>
+              Iniciar Sessão de Estudo
+              <template v-if="selectedBookId">do Livro</template>
+              <template v-else>Rápida (10 itens)</template>
+            </span>
+          </button>
+          <button
+            type="button"
+            class="start-review-btn secondary-mode"
+            :disabled="loadingStats || session.state.loading"
+            @click="startReview"
+          >
+            Prática Rápida neste Hub ({{ Math.min(10, eligibleCountForSelection) }} itens)
+          </button>
         </div>
       </div>
 
-      <!-- BOTÃO DE INÍCIO DE RODADA -->
-      <div v-if="stats.total_eligible > 0" class="start-session-bar">
-        <button
-          type="button"
-          class="start-review-btn"
-          :disabled="loadingStats || session.state.loading"
-          @click="startReview"
-        >
-          Iniciar Revisão ({{ Math.min(10, eligibleCountForSelection) }} de {{ eligibleCountForSelection }} itens)
-        </button>
+      <!-- ABA 2: HISTÓRICO DE SESSÕES (F0.7.14) -->
+      <div v-else class="history-tab-content">
+        <div v-if="loadingHistory" class="history-loading">
+          <div class="spinner" aria-hidden="true" />
+          <p>Carregando histórico de sessões...</p>
+        </div>
+        <div v-else-if="sessionHistory.length === 0" class="empty-state empty-history">
+          <h2 class="empty-title">Nenhuma sessão registrada</h2>
+          <p class="empty-description">
+            Complete sua primeira sessão estruturada de estudo para acompanhar aqui seu histórico auditável de aprendizado e dedicação.
+          </p>
+        </div>
+        <div v-else class="history-list">
+          <div
+            v-for="item in sessionHistory"
+            :key="item.id"
+            class="history-card"
+          >
+            <div class="history-card-header">
+              <span class="history-date">{{ formatDate(item.started_at) }}</span>
+              <span
+                class="history-status-badge"
+                :class="item.status"
+              >
+                {{ item.status === 'completed' ? 'Concluída' : 'Interrompida' }}
+              </span>
+            </div>
+            <div class="history-card-body">
+              <div class="history-detail-item">
+                <span class="detail-label">Escopo</span>
+                <span class="detail-value">
+                  {{ item.book_title ? `Livro: ${item.book_title}` : (item.scope_type === 'quick' ? 'Sessão Rápida' : 'Geral') }}
+                </span>
+              </div>
+              <div class="history-detail-item">
+                <span class="detail-label">Itens</span>
+                <span class="detail-value">{{ item.completed_items }} de {{ item.total_items }}</span>
+              </div>
+              <div class="history-detail-item">
+                <span class="detail-label">Duração</span>
+                <span class="detail-value">{{ formatDuration(item.duration_seconds) }}</span>
+              </div>
+              <div class="history-detail-item">
+                <span class="detail-label">Recordação</span>
+                <span class="detail-value">
+                  <span class="count-easy">{{ item.easy_count }} fácil</span> ·
+                  <span class="count-medium">{{ item.medium_count }} médio</span> ·
+                  <span class="count-hard">{{ item.hard_count }} difícil</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -447,4 +606,208 @@ onMounted(() => {
   background: transparent;
   cursor: pointer;
 }
+
+/* Abas do Hub */
+.hub-tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--color-border-subtle, #e2e8f0);
+  margin-bottom: 1.5rem;
+}
+
+.hub-tab-item {
+  min-height: 44px;
+  padding: 0.625rem 1.25rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-secondary, #64748b);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hub-tab-item:hover {
+  color: var(--color-text-primary, #0f172a);
+}
+
+.hub-tab-item.active {
+  color: var(--color-primary, #2563eb);
+  border-bottom-color: var(--color-primary, #2563eb);
+}
+
+.hub-tab-item:focus-visible {
+  outline: 2px solid var(--color-primary, #2563eb);
+  outline-offset: -2px;
+}
+
+/* Barra de Início e Botões */
+.start-session-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.start-structured-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  min-height: 48px;
+  padding: 0.75rem 1.75rem;
+  background-color: var(--color-primary, #2563eb);
+  color: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.start-structured-btn:hover {
+  background-color: var(--color-primary-dark, #1d4ed8);
+}
+
+.start-structured-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.start-structured-btn:focus-visible {
+  outline: 2px solid var(--color-primary, #2563eb);
+  outline-offset: 2px;
+}
+
+.start-review-btn.secondary-mode {
+  background-color: transparent;
+  color: var(--color-text-secondary, #475569);
+  border: 1px solid var(--color-border-subtle, #cbd5e1);
+  box-shadow: none;
+}
+
+.start-review-btn.secondary-mode:hover {
+  background-color: var(--color-bg-subtle, #f1f5f9);
+  color: var(--color-text-primary, #0f172a);
+}
+
+/* Histórico de Sessões */
+.history-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  color: var(--color-text-secondary, #64748b);
+  gap: 1rem;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-border-subtle, #e2e8f0);
+  border-top-color: var(--color-primary, #2563eb);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.history-card {
+  background-color: var(--color-bg, #ffffff);
+  border: 1px solid var(--color-border-subtle, #e2e8f0);
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.history-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.875rem;
+}
+
+.history-date {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #1e293b);
+}
+
+.history-status-badge {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.history-status-badge.completed {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.history-status-badge.interrupted {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.history-card-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.75rem;
+}
+
+.history-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.detail-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted, #94a3b8);
+  font-weight: 600;
+}
+
+.detail-value {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #334155);
+  font-weight: 500;
+}
+
+.count-easy {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.count-medium {
+  color: #d97706;
+  font-weight: 600;
+}
+
+.count-hard {
+  color: #dc2626;
+  font-weight: 600;
+}
 </style>
+
