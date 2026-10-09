@@ -8,6 +8,7 @@ from app.schemas.sharing import ResourceOwnerSummary
 
 ANALYSIS_FIELDS = ("summary", "explanation", "concepts", "references")
 ANALYSIS_REQUIRED_MESSAGE = "Preencha pelo menos uma das quatro seções da análise."
+VALID_TEMPLATES = {"classico", "conceito", "argumento", "comparativo", "resenha"}
 
 
 class StudyCreate(InputModel):
@@ -20,11 +21,19 @@ class StudyCreate(InputModel):
     concepts: str = ""
     references: str = ""
     notes: str = ""
+    template_id: str = Field(default="classico", description="Identificador canônico do template estruturado.")
 
     @field_validator("title")
     @classmethod
     def normalize_title(cls, value: str | None) -> str | None:
         return value.strip() or None if value is not None else None
+
+    @field_validator("template_id")
+    @classmethod
+    def normalize_template_id(cls, value: str | None) -> str:
+        if not value or value.strip() not in VALID_TEMPLATES:
+            return "classico"
+        return value.strip()
 
     @model_validator(mode="after")
     def require_analysis(self) -> Self:
@@ -45,8 +54,19 @@ class StudyPatch(InputModel):
     concepts: str | None = None
     references: str | None = None
     notes: str | None = None
+    template_id: str | None = None
     expected_updated_at: datetime | None = Field(default=None, strict=False)
     expected_version: int | None = Field(default=None, ge=1, strict=False, description="Versão esperada do estudo para controle de concorrência")
+
+    @field_validator("template_id")
+    @classmethod
+    def validate_patch_template_id(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        val = value.strip()
+        if val not in VALID_TEMPLATES:
+            return "classico"
+        return val
 
     @model_validator(mode="after")
     def require_changes_without_null(self) -> Self:
@@ -71,6 +91,7 @@ class StudySummary(OutputModel):
     chapter_id: int
     title: str
     location: str
+    template_id: str = "classico"
     parent_study_id: int | None = None
     position: int = 0
     reading_status: str = "rascunho"
@@ -79,6 +100,13 @@ class StudySummary(OutputModel):
     updated_at: datetime
     deleted_at: datetime | None = None
     book_id: int | None = None
+
+    @field_validator("template_id", mode="before")
+    @classmethod
+    def normalize_summary_template_id(cls, value: str | None) -> str:
+        if not value or str(value).strip() not in VALID_TEMPLATES:
+            return "classico"
+        return str(value).strip()
     visibility: str = "inherit"
     effective_visibility: str = "private"
     can_edit: bool = True

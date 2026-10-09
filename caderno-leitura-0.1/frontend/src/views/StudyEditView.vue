@@ -28,12 +28,16 @@ const draft = useStudyDraft({
     location: state.location,
     sections: state.sections,
     notes: state.notes,
+    template_id: state.template_id,
   }),
   onRestore: (savedDraft: StudyEditorDraftPayload) => {
     state.title = savedDraft.title
     state.location = savedDraft.location
     state.sections = { ...savedDraft.sections }
     state.notes = savedDraft.notes
+    if (savedDraft.template_id) {
+      state.template_id = savedDraft.template_id
+    }
   },
 })
 const { isDraftRestored, saveDraft, restoreDraft, discardDraft, clearDraft } = draft
@@ -96,6 +100,7 @@ watch(
   [
     () => state.title,
     () => state.location,
+    () => state.template_id,
     () => state.sections.summary,
     () => state.sections.explanation,
     () => state.sections.concepts,
@@ -168,6 +173,7 @@ onBeforeUnmount(() => { disposed = true; resource.cancel() })
             show-metadata
             v-model:title="state.title"
             v-model:location="state.location"
+            v-model:template-id="state.template_id"
             v-model:sections="state.sections"
             v-model:notes="state.notes"
           />

@@ -1,6 +1,6 @@
 import { computed, reactive } from 'vue'
 import { ApiError, ConcurrencyConflictApiError, errorMessage } from '../services/api.ts'
-import { SECTION_LABELS, type AnalysisSections, type ConflictData, type Study, type StudyPatch } from '../types.ts'
+import { SECTION_LABELS, type AnalysisSections, type ConflictData, type Study, type StudyPatch, type StudyTemplateId } from '../types.ts'
 
 interface EditGateway {
   updateStudy: (id: number, patch: StudyPatch) => Promise<Study>
@@ -20,6 +20,7 @@ export function useStudyEdit(gateway: EditGateway) {
     title: '',
     location: '',
     notes: '',
+    template_id: 'classico' as StudyTemplateId,
     sections: emptySections(),
     saving: false,
     error: '',
@@ -33,6 +34,7 @@ export function useStudyEdit(gateway: EditGateway) {
     state.title = study.title
     state.location = study.location
     state.notes = study.notes
+    state.template_id = (study.template_id || 'classico') as StudyTemplateId
     for (const { key } of SECTION_LABELS) state.sections[key] = study[key]
     state.error = ''
     state.isConflict = false
@@ -45,6 +47,7 @@ export function useStudyEdit(gateway: EditGateway) {
     state.title = ''
     state.location = ''
     state.notes = ''
+    state.template_id = 'classico'
     state.sections = emptySections()
     state.error = ''
     state.isConflict = false
@@ -59,6 +62,8 @@ export function useStudyEdit(gateway: EditGateway) {
     if (state.title.trim() !== original.title) changes.title = state.title.trim()
     if (state.location !== original.location) changes.location = state.location
     if (state.notes !== original.notes) changes.notes = state.notes
+    const origTemplate = (original.template_id || 'classico') as StudyTemplateId
+    if (state.template_id !== origTemplate) changes.template_id = state.template_id
     for (const { key } of SECTION_LABELS) {
       if (state.sections[key] !== original[key]) changes[key] = state.sections[key]
     }

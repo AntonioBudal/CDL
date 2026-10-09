@@ -322,6 +322,7 @@ def trash_study_endpoint(study_id: Identifier, session: DatabaseSession, current
     return trash_study(session, study_id, user_id=current_user.id)
 
 
+@router.put("/studies/{study_id}", response_model=StudyRead, summary="Editar campos de um estudo")
 @router.patch("/studies/{study_id}", response_model=StudyRead, summary="Editar campos de um estudo")
 def update_study(study_id: Identifier, payload: StudyPatch, session: DatabaseSession, current_user: CurrentUser):
     study = check_study_mutation_permission(session, study_id, current_user.id)

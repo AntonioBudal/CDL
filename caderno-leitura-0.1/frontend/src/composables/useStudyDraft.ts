@@ -1,5 +1,5 @@
 import { ref, toValue, type MaybeRefOrGetter } from 'vue'
-import type { AnalysisSections, StudyEditorDraftPayload } from '../types'
+import type { AnalysisSections, StudyEditorDraftPayload, StudyTemplateId } from '../types'
 
 export interface UseStudyDraftOptions {
   studyId: MaybeRefOrGetter<number | undefined>
@@ -8,6 +8,7 @@ export interface UseStudyDraftOptions {
     location: string
     sections: AnalysisSections
     notes: string
+    template_id?: StudyTemplateId
   }
   onRestore?: (draft: StudyEditorDraftPayload) => void
   debounceMs?: number
@@ -70,6 +71,7 @@ export function useStudyDraft(options: UseStudyDraftOptions) {
         location: current.location,
         sections: current.sections,
         notes: current.notes,
+        template_id: current.template_id,
         savedAt: Date.now(),
       }
       try {

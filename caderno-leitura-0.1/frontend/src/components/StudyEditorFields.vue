@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import {
   SECTION_LABELS,
   EDITOR_SECTION_TABS,
@@ -7,7 +7,10 @@ import {
   type EditorSectionTabKey,
   type EditorViewMode,
   type StudyCandidateOption,
+  type StudyTemplateId,
 } from '../types'
+import { getStudyTemplate } from '../constants/studyTemplates'
+import TemplateSelectorModal from './studies/TemplateSelectorModal.vue'
 import MarkdownToolbar from './MarkdownToolbar.vue'
 import MarkdownContent from './MarkdownContent.vue'
 import { searchStudyCandidates } from '../services/api'
@@ -17,6 +20,7 @@ const title = defineModel<string>('title', { required: true })
 const location = defineModel<string>('location', { required: true })
 const notes = defineModel<string>('notes', { required: true })
 const sections = defineModel<AnalysisSections>('sections', { required: true })
+const templateId = defineModel<StudyTemplateId>('templateId', { default: 'classico' })
 
 const activeTab = ref<EditorSectionTabKey>('summary')
 const viewMode = ref<EditorViewMode>('focused')
@@ -191,6 +195,109 @@ function selectMentionCandidate(candidate: StudyCandidateOption) {
     textarea.setSelectionRange(nextPos, nextPos)
   })
 }
+
+// Gerenciamento e Aplicação de Templates Estruturados (F0.7.15)
+const isTemplateModalOpen = ref(false)
+const isConfirmSwitchModalOpen = ref(false)
+const pendingTemplateId = ref<StudyTemplateId | null>(null)
+
+const activeTemplateDef = computed(() => {
+  return getStudyTemplate(templateId.value)
+})
+
+const pendingTemplateDef = computed(() => {
+  return pendingTemplateId.value ? getStudyTemplate(pendingTemplateId.value) : null
+})
+
+function hasAnyAnalysisContent(): boolean {
+  return Boolean(
+    sections.value.summary?.trim() ||
+    sections.value.explanation?.trim() ||
+    sections.value.concepts?.trim() ||
+    sections.value.references?.trim()
+  )
+}
+
+function handleOpenTemplateModal() {
+  isTemplateModalOpen.value = true
+}
+
+function handleCloseTemplateModal() {
+  isTemplateModalOpen.value = false
+}
+
+function handleSelectTemplate(newTemplateId: StudyTemplateId) {
+  isTemplateModalOpen.value = false
+  if (newTemplateId === templateId.value) return
+
+  if (hasAnyAnalysisContent()) {
+    pendingTemplateId.value = newTemplateId
+    isConfirmSwitchModalOpen.value = true
+  } else {
+    applyTemplateDirectly(newTemplateId)
+  }
+}
+
+function applyTemplateDirectly(targetId: StudyTemplateId) {
+  templateId.value = targetId
+  const tpl = getStudyTemplate(targetId)
+  sections.value = {
+    summary: tpl.sections.summary.skeleton,
+    explanation: tpl.sections.explanation.skeleton,
+    concepts: tpl.sections.concepts.skeleton,
+    references: tpl.sections.references.skeleton,
+  }
+}
+
+function handleConfirmReplace() {
+  if (pendingTemplateId.value) {
+    applyTemplateDirectly(pendingTemplateId.value)
+  }
+  isConfirmSwitchModalOpen.value = false
+  pendingTemplateId.value = null
+}
+
+function appendToSection(existing: string, skeleton: string): string {
+  const trimmed = (existing || '').trim()
+  if (!trimmed) return skeleton
+  return `${trimmed}\n\n---\n\n${skeleton}`
+}
+
+function handleConfirmAppend() {
+  if (pendingTemplateId.value) {
+    const targetId = pendingTemplateId.value
+    templateId.value = targetId
+    const tpl = getStudyTemplate(targetId)
+    sections.value = {
+      summary: appendToSection(sections.value.summary, tpl.sections.summary.skeleton),
+      explanation: appendToSection(sections.value.explanation, tpl.sections.explanation.skeleton),
+      concepts: appendToSection(sections.value.concepts, tpl.sections.concepts.skeleton),
+      references: appendToSection(sections.value.references, tpl.sections.references.skeleton),
+    }
+  }
+  isConfirmSwitchModalOpen.value = false
+  pendingTemplateId.value = null
+}
+
+function handleCancelSwitch() {
+  isConfirmSwitchModalOpen.value = false
+  pendingTemplateId.value = null
+}
+
+function onWindowKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape' && isConfirmSwitchModalOpen.value) {
+    e.preventDefault()
+    handleCancelSwitch()
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', onWindowKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', onWindowKeydown)
+})
 </script>
 
 <template>
@@ -203,6 +310,24 @@ function selectMentionCandidate(candidate: StudyCandidateOption) {
       <label :for="`${idPrefix}-location`">Página ou localização <span class="optional">opcional</span></label>
       <input :id="`${idPrefix}-location`" v-model="location" placeholder="Ex.: p. 32–34 ou Loc. 1820" />
     </div>
+  </div>
+
+  <!-- Barra de Modelo Estruturado de Estudo (F0.7.15) -->
+  <div class="template-selector-banner">
+    <div class="template-current-meta">
+      <span class="template-category-pill">Modelo</span>
+      <span class="template-active-name">{{ activeTemplateDef.name }}</span>
+      <span class="template-active-desc">{{ activeTemplateDef.shortDescription }}</span>
+    </div>
+    <button
+      type="button"
+      class="template-change-btn secondary"
+      aria-haspopup="dialog"
+      aria-label="Alterar modelo analítico de estudo"
+      @click="handleOpenTemplateModal"
+    >
+      Trocar Modelo
+    </button>
   </div>
 
   <div class="editor-tabs-bar">
@@ -402,6 +527,76 @@ function selectMentionCandidate(candidate: StudyCandidateOption) {
         </div>
       </div>
     </template>
+  </div>
+
+  <!-- Modal de Seleção de Template -->
+  <TemplateSelectorModal
+    v-if="isTemplateModalOpen"
+    :current-template-id="templateId"
+    @select="handleSelectTemplate"
+    @close="handleCloseTemplateModal"
+  />
+
+  <!-- Modal de Salvaguarda na Troca de Template (Q1: A) -->
+  <div
+    v-if="isConfirmSwitchModalOpen && pendingTemplateDef"
+    class="template-confirm-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="confirm-switch-title"
+    @click.self="handleCancelSwitch"
+  >
+    <div class="template-confirm-container">
+      <header class="confirm-header">
+        <span class="confirm-pill">Atenção</span>
+        <h3 id="confirm-switch-title" class="confirm-title">
+          Alteração de Modelo Analítico
+        </h3>
+        <p class="confirm-subtitle">
+          Você já possui anotações registradas nas seções deste estudo. Como deseja aplicar a estrutura de <strong>{{ pendingTemplateDef.name }}</strong>?
+        </p>
+      </header>
+
+      <div class="confirm-options">
+        <button
+          type="button"
+          class="confirm-choice-card append-choice"
+          @click="handleConfirmAppend"
+        >
+          <div class="choice-tag-wrap">
+            <span class="choice-tag recommended">Recomendado</span>
+          </div>
+          <strong class="choice-title">Anexar ao Final</strong>
+          <p class="choice-desc">
+            Preserva 100% das suas anotações atuais intactas e adiciona o roteiro do novo modelo ao final de cada seção com um separador divisório.
+          </p>
+        </button>
+
+        <button
+          type="button"
+          class="confirm-choice-card replace-choice"
+          @click="handleConfirmReplace"
+        >
+          <div class="choice-tag-wrap">
+            <span class="choice-tag warning">Sobrescrita</span>
+          </div>
+          <strong class="choice-title">Substituir Conteúdo</strong>
+          <p class="choice-desc">
+            Substitui todo o conteúdo das quatro seções analíticas pelos esqueletos em branco do novo modelo.
+          </p>
+        </button>
+      </div>
+
+      <footer class="confirm-footer">
+        <button
+          type="button"
+          class="btn-cancel-switch secondary"
+          @click="handleCancelSwitch"
+        >
+          Cancelar
+        </button>
+      </footer>
+    </div>
   </div>
 </template>
 
@@ -604,5 +799,204 @@ function selectMentionCandidate(candidate: StudyCandidateOption) {
 
 .mention-candidate-sep {
   opacity: 0.6;
+}
+
+/* Banner de Modelo Estruturado (F0.7.15) */
+.template-selector-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  background-color: var(--color-surface, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.template-current-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 240px;
+}
+
+.template-category-pill {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background-color: var(--color-accent-subtle, #eff6ff);
+  color: var(--color-accent, #2563eb);
+}
+
+.template-active-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text, #0f172a);
+}
+
+.template-active-desc {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted, #64748b);
+}
+
+.template-change-btn {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Modal de Salvaguarda na Troca de Template */
+.template-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.template-confirm-container {
+  width: 100%;
+  max-width: 580px;
+  background-color: var(--color-bg, #ffffff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.confirm-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.confirm-pill {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-warning-text, #b45309);
+  background-color: var(--color-warning-subtle, #fef3c7);
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.confirm-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text, #0f172a);
+  margin: 0;
+}
+
+.confirm-subtitle {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--color-text-muted, #4b5563);
+  margin: 0;
+}
+
+.confirm-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.confirm-choice-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 1rem;
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  background-color: var(--color-surface, #f9fafb);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.confirm-choice-card:hover,
+.confirm-choice-card:focus-visible {
+  border-color: var(--color-accent, #2563eb);
+  background-color: var(--color-surface-hover, #f3f4f6);
+  outline: 2px solid var(--color-accent, #2563eb);
+  outline-offset: 1px;
+}
+
+.choice-tag-wrap {
+  margin-bottom: 0.375rem;
+}
+
+.choice-tag {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+.choice-tag.recommended {
+  background-color: var(--color-accent-subtle, #eff6ff);
+  color: var(--color-accent, #2563eb);
+}
+
+.choice-tag.warning {
+  background-color: var(--color-danger-subtle, #fee2e2);
+  color: var(--color-danger-text, #b91c1c);
+}
+
+.choice-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text, #111827);
+  margin-bottom: 0.25rem;
+}
+
+.choice-desc {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--color-text-muted, #6b7280);
+  margin: 0;
+}
+
+.confirm-footer {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--color-border-subtle, #f3f4f6);
+  padding-top: 1rem;
+}
+
+.btn-cancel-switch {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  cursor: pointer;
 }
 </style>

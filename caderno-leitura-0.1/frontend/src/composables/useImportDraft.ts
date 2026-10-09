@@ -1,7 +1,7 @@
 import { computed, reactive } from 'vue'
 import { ApiError, errorMessage } from '../services/api.ts'
 import { positiveId, SECTION_LABELS } from '../types.ts'
-import type { AnalysisSections, ImportPreview, Study, StudyCreate } from '../types.ts'
+import type { AnalysisSections, ImportPreview, Study, StudyCreate, StudyTemplateId } from '../types.ts'
 
 interface ImportGateway {
   preview: (source: string) => Promise<ImportPreview>
@@ -13,6 +13,7 @@ const emptySections = (): AnalysisSections => ({ summary: '', explanation: '', c
 export function useImportDraft(gateway: ImportGateway) {
   const state = reactive({
     bookId: '', chapterId: '', title: '', location: '', sourceResponse: '', notes: '',
+    template_id: 'classico' as StudyTemplateId,
     sections: emptySections(), preview: null as ImportPreview | null, saved: null as Study | null,
     preparing: false, saving: false, previewError: '', saveError: '',
   })
@@ -69,6 +70,7 @@ export function useImportDraft(gateway: ImportGateway) {
     const payload: StudyCreate = {
       chapter_id: positiveId(state.chapterId)!, title: state.title.trim() || null, location: state.location,
       source_response: state.preview.source_response, ...sectionsToSave, notes: state.notes,
+      template_id: state.template_id || 'classico',
     }
     state.saving = true
     state.saveError = ''
@@ -102,6 +104,7 @@ export function useImportDraft(gateway: ImportGateway) {
   function reset() {
     if (state.saving || state.preparing) return
     state.title = ''; state.location = ''; state.sourceResponse = ''; state.notes = ''
+    state.template_id = 'classico'
     state.sections = emptySections(); state.preview = null; state.saved = null
     state.previewError = ''; state.saveError = ''
   }

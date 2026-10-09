@@ -37,6 +37,7 @@ class Study(Base):
         Index("ix_studies_user_deleted", "user_id", "deleted_at"),
         Index("ix_studies_sync", "user_id", "updated_at"),
         Index("ix_studies_visibility", "visibility"),
+        Index("ix_studies_template_id", "template_id"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -53,6 +54,9 @@ class Study(Base):
     reading_status: Mapped[str] = mapped_column(String(20), default="rascunho", server_default=text("'rascunho'"), nullable=False)
     visibility: Mapped[str] = mapped_column(
         String(20), default="inherit", server_default=text("'inherit'"), nullable=False
+    )
+    template_id: Mapped[str | None] = mapped_column(
+        String(30), default="classico", server_default=text("'classico'"), nullable=True
     )
     title: Mapped[str] = mapped_column(Text, nullable=False)
     location: Mapped[str] = mapped_column(Text, default="", server_default=text("''"), nullable=False)

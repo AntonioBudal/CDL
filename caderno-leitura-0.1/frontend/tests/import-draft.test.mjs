@@ -38,6 +38,7 @@ test('salva as correções, as anotações e a origem literal sem reprocessar a 
     chapter_id: 7, title: null, location: 'p. 32–34', source_response: source,
     summary: '  Resumo revisado.\nOutra linha.  ', explanation: 'Interpretação corrigida.',
     concepts: '', references: 'Nenhuma fonte externa.\r\n', notes: 'Minha interpretação.',
+    template_id: 'classico',
   })
   assert.equal(result.id, 12)
   assert.equal(draft.state.saved.source_response, source)

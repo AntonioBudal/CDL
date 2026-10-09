@@ -22,6 +22,7 @@ import { useActiveReadingSession } from '../composables/useActiveReadingSession'
 import { formatQuoteText, useTextSelection } from '../composables/useTextSelection'
 import { useFloatingToast } from '../composables/useFloatingToast'
 import { useHighlightColorPreference } from '../composables/useHighlightColorPreference'
+import { getStudyTemplate } from '../constants/studyTemplates'
 import type { HighlightClickEvent } from '../utils/highlightRenderer'
 import type { HighlightColor, ResourceVisibility, Study, StudySectionKey, TextSelectionContext } from '../types.ts'
 
@@ -30,6 +31,12 @@ const route = useRoute()
 const router = useRouter()
 const resource = useStudyResource(api)
 const { state } = resource
+
+const templateBadgeInfo = computed(() => {
+  const tid = state.context?.study.template_id
+  if (!tid || tid === 'classico') return null
+  return getStudyTemplate(tid)
+})
 
 const exportModalOpen = ref(false)
 const confirmTrashOpen = ref(false)
@@ -516,6 +523,16 @@ onBeforeUnmount(() => {
             :interactive="canEdit"
             @change="(newSt) => { if (state.context) state.context.study.reading_status = newSt }"
           />
+          <template v-if="templateBadgeInfo">
+            <span class="meta-dot-separator" aria-hidden="true">•</span>
+            <span
+              class="study-template-badge"
+              :title="templateBadgeInfo.shortDescription"
+              :aria-label="`Modelo estruturado de estudo: ${templateBadgeInfo.name}`"
+            >
+              {{ templateBadgeInfo.badgeLabel }}
+            </span>
+          </template>
           <span class="meta-dot-separator" aria-hidden="true">•</span>
           <span class="reader-location intro">{{ state.context.study.location || 'Localização não informada' }}</span>
         </div>
@@ -978,6 +995,19 @@ onBeforeUnmount(() => {
   font-size: 0.75rem;
   line-height: 1;
   user-select: none;
+}
+
+.study-template-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  background-color: var(--color-accent-subtle, #eff6ff);
+  color: var(--color-accent, #2563eb);
+  border: 1px solid var(--color-border-subtle, rgba(37, 99, 235, 0.2));
+  letter-spacing: 0.02em;
 }
 
 .reader-location {

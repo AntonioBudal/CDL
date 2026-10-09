@@ -193,6 +193,7 @@ export interface StudySummary {
   chapter_id: number
   title: string
   location: string
+  template_id?: StudyTemplateId
   parent_study_id?: number | null
   position?: number
   reading_status?: ReadingStatus
@@ -268,6 +269,7 @@ export interface Study extends StudySummary, AnalysisSections {
 export type StudyPatch = Partial<AnalysisSections & Pick<Study, 'title' | 'location' | 'notes'>> & {
   expected_updated_at?: string | null
   expected_version?: number | null
+  template_id?: StudyTemplateId | null
 }
 
 export interface StudyContext {
@@ -282,6 +284,7 @@ export interface StudyCreate extends AnalysisSections {
   location: string
   source_response: string
   notes: string
+  template_id?: StudyTemplateId
 }
 
 export interface ImportWarning {
@@ -328,6 +331,7 @@ export interface StudyEditorDraftPayload {
   location: string
   sections: AnalysisSections
   notes: string
+  template_id?: StudyTemplateId
   savedAt: number
 }
 
@@ -1524,3 +1528,31 @@ export interface StudySessionAnswerPayload {
 export interface StudySessionCompletePayload {
   duration_seconds?: number
 }
+
+// --- Templates Estruturados de Estudo (F 0.7.15) ---
+
+export type StudyTemplateId =
+  | 'classico'
+  | 'conceito'
+  | 'argumento'
+  | 'comparativo'
+  | 'resenha'
+
+export interface StudyTemplateSectionGuide {
+  key: 'summary' | 'explanation' | 'concepts' | 'references'
+  label: string
+  hint: string
+  skeleton: string
+}
+
+export interface StudyTemplateDefinition {
+  id: StudyTemplateId
+  name: string
+  badgeLabel: string
+  shortDescription: string
+  detailedPurpose: string
+  sections: Record<'summary' | 'explanation' | 'concepts' | 'references', StudyTemplateSectionGuide>
+}
+
+
+

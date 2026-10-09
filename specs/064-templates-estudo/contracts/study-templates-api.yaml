@@ -1,0 +1,164 @@
+openapi: 3.1.0
+info:
+  title: API de Estudos com Templates Estruturados (F0.7.15)
+  version: 0.7.15
+  description: Contrato de API para criação, atualização e leitura de estudos com metadados de template analítico.
+paths:
+  /api/studies:
+    post:
+      summary: Criar novo estudo
+      operationId: createStudy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - chapter_id
+              properties:
+                chapter_id:
+                  type: integer
+                  description: ID do capítulo ao qual o estudo pertence
+                title:
+                  type: string
+                  nullable: true
+                  description: Título do estudo
+                location:
+                  type: string
+                  default: ""
+                source_response:
+                  type: string
+                  default: ""
+                summary:
+                  type: string
+                  default: ""
+                explanation:
+                  type: string
+                  default: ""
+                concepts:
+                  type: string
+                  default: ""
+                references:
+                  type: string
+                  default: ""
+                notes:
+                  type: string
+                  default: ""
+                template_id:
+                  type: string
+                  enum: [classico, conceito, argumento, comparativo, resenha]
+                  default: classico
+                  description: Identificador canônico do template estruturado utilizado
+      responses:
+        '201':
+          description: Estudo criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyRead'
+
+  /api/studies/{study_id}:
+    get:
+      summary: Obter detalhes do estudo
+      operationId: getStudy
+      parameters:
+        - name: study_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Estudo encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyRead'
+    put:
+      summary: Atualizar estudo (Patch/Update)
+      operationId: updateStudy
+      parameters:
+        - name: study_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                location:
+                  type: string
+                summary:
+                  type: string
+                explanation:
+                  type: string
+                concepts:
+                  type: string
+                references:
+                  type: string
+                notes:
+                  type: string
+                template_id:
+                  type: string
+                  enum: [classico, conceito, argumento, comparativo, resenha]
+                  nullable: true
+                expected_version:
+                  type: integer
+                  nullable: true
+      responses:
+        '200':
+          description: Estudo atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyRead'
+
+components:
+  schemas:
+    StudyRead:
+      type: object
+      required:
+        - id
+        - chapter_id
+        - title
+        - template_id
+      properties:
+        id:
+          type: integer
+        chapter_id:
+          type: integer
+        title:
+          type: string
+        location:
+          type: string
+        template_id:
+          type: string
+          enum: [classico, conceito, argumento, comparativo, resenha]
+          default: classico
+        summary:
+          type: string
+        explanation:
+          type: string
+        concepts:
+          type: string
+        references:
+          type: string
+        notes:
+          type: string
+        version:
+          type: integer
+        reading_status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time

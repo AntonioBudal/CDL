@@ -6,12 +6,20 @@ import { useImportDraft } from '../composables/useImportDraft'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import StudyEditorFields from '../components/StudyEditorFields.vue'
 import MarkdownToolbar from '../components/MarkdownToolbar.vue'
-import { positiveId, SECTION_LABELS, type Book, type Chapter } from '../types'
+import { useInboxCount } from '../composables/useInboxCount'
+import { positiveId, SECTION_LABELS, type Book, type Chapter, type InboxCapture } from '../types'
 
 const route = useRoute()
 const draft = useImportDraft(api)
 const { state, stale, hasManualChanges, hasAnalysis, canSave, assignUnassignedToSection } = draft
 useUnsavedChanges(() => draft.dirty.value, () => state.preparing || state.saving)
+const { refreshCount: refreshInboxCount } = useInboxCount()
+const promotingInboxId = computed(() => {
+  const param = route.query.promote_inbox_id
+  return param ? positiveId(param) : null
+})
+const promotingCapture = ref<InboxCapture | null>(null)
+const loadingPromotionCapture = ref(false)
 const books = ref<Book[]>([])
 const chapters = ref<Chapter[]>([])
 const booksLoading = ref(true)
@@ -83,12 +91,54 @@ async function onPaste(event: ClipboardEvent) {
   }
 }
 
+async function loadPromotionCapture() {
+  if (!promotingInboxId.value) return
+  loadingPromotionCapture.value = true
+  try {
+    const capture = await api.getInboxCapture(promotingInboxId.value)
+    promotingCapture.value = capture
+    if (capture.content) {
+      state.sourceResponse = capture.content
+      state.sections.summary = capture.content
+      state.sections.references = capture.source_hint || ''
+      state.preview = {
+        source_response: capture.content,
+        summary: capture.content,
+        explanation: '',
+        concepts: '',
+        references: capture.source_hint || '',
+        warnings: [],
+        unassigned_text: '',
+      }
+    }
+    if (capture.book_id && !state.bookId) {
+      state.bookId = String(capture.book_id)
+    }
+  } catch {
+    // Silencioso se não encontrar captura
+  } finally {
+    loadingPromotionCapture.value = false
+  }
+}
+
 async function save() {
   if (!selectedBook.value || !selectedChapter.value || chaptersLoading.value) {
     state.saveError = 'Selecione um livro e um capítulo disponíveis.'
     return
   }
-  if (await draft.save()) { await nextTick(); successHeading.value?.focus() }
+  const saved = await draft.save()
+  if (saved) {
+    if (promotingInboxId.value) {
+      try {
+        await api.promoteInboxCapture(promotingInboxId.value, { study_id: saved.id })
+        await refreshInboxCount()
+      } catch {
+        // Falha não-fatal no vínculo da promoção
+      }
+    }
+    await nextTick()
+    successHeading.value?.focus()
+  }
 }
 
 async function startAnother() {
@@ -98,13 +148,25 @@ async function startAnother() {
 }
 
 watch(() => state.bookId, loadChapters, { immediate: true })
-onMounted(loadBooks)
+onMounted(async () => {
+  await loadBooks()
+  if (promotingInboxId.value) {
+    await loadPromotionCapture()
+  }
+})
 onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
 </script>
 
 <template>
   <div class="import-view">
     <header class="page-header"><p class="eyebrow">Novo estudo</p><h1>Importar Fichamento</h1></header>
+    <div v-if="promotingCapture" class="notice info promotion-banner" role="status">
+      <p>
+        <strong>Promovendo Captura do Inbox:</strong>
+        "{{ promotingCapture.content.length > 120 ? promotingCapture.content.slice(0, 120) + '...' : promotingCapture.content }}"
+      </p>
+      <RouterLink to="/inbox" class="text-link">Cancelar promoção e voltar ao Inbox</RouterLink>
+    </div>
   <section v-if="state.saved" class="panel saved-panel" aria-labelledby="saved-heading">
     <p class="success-label" role="status">Salvamento concluído</p>
     <h2 id="saved-heading" ref="successHeading" tabindex="-1">{{ state.saved.title }}</h2>
@@ -219,8 +281,14 @@ onBeforeUnmount(() => { bookRequest?.abort(); chapterRequest?.abort() })
             <span>Ajuste manual detalhado e anotações pessoais (opcional)</span>
           </summary>
           <div class="manual-adjustment-body">
-            <p class="field-hint">Caso deseje editar o texto de cada seção individualmente ou incluir anotações adicionais antes de salvar:</p>
-            <StudyEditorFields id-prefix="import" v-model:title="state.title" v-model:location="state.location" v-model:sections="state.sections" v-model:notes="state.notes" />
+            <StudyEditorFields
+              id-prefix="import"
+              v-model:title="state.title"
+              v-model:location="state.location"
+              v-model:template-id="state.template_id"
+              v-model:sections="state.sections"
+              v-model:notes="state.notes"
+            />
           </div>
         </details>
       </section>
