@@ -1,0 +1,51 @@
+openapi: 3.1.0
+info:
+  title: Import Studio UI Contracts
+  version: 1.0.0
+  description: Contratos de componentes e interação para o Ateliê de Fichamento (Feature 05)
+components:
+  schemas:
+    ViewModeToggle:
+      type: object
+      properties:
+        currentMode:
+          type: string
+          enum: [split, source, preview]
+        onModeChange:
+          type: string
+          description: Evento emitido na troca de modo
+    FloatingMarkdownToolbar:
+      type: object
+      properties:
+        targetId:
+          type: string
+          description: ID do textarea alvo
+        visible:
+          type: boolean
+        actions:
+          type: array
+          items:
+            type: string
+            enum: [bold, italic, heading, table, code, link]
+    SectionPreviewCard:
+      type: object
+      properties:
+        sectionKey:
+          type: string
+          enum: [summary, explanation, concepts, references]
+        label:
+          type: string
+        content:
+          type: string
+        empty:
+          type: boolean
+        pulsing:
+          type: boolean
+    UnassignedContentCard:
+      type: object
+      properties:
+        unassignedText:
+          type: string
+        onAssign:
+          type: string
+          description: Atribui trecho a uma das quatro seções com 1 clique

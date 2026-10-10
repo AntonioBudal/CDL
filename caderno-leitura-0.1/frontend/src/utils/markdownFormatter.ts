@@ -6,6 +6,7 @@ export type MarkdownFormatAction =
   | 'quote'
   | 'code'
   | 'link'
+  | 'table'
 
 export interface MarkdownFormatResult {
   newText: string
@@ -182,6 +183,15 @@ export function formatMarkdown(
       newText: text.slice(0, lineStart) + newBlock + text.slice(lineEnd),
       newSelectionStart: Math.max(lineStart, start + (allHavePrefix ? -prefix.length : prefix.length)),
       newSelectionEnd: Math.max(lineStart, end + diff),
+    }
+  }
+
+  if (action === 'table') {
+    const tableTemplate = `\n| Coluna 1 | Coluna 2 |\n| --- | --- |\n| Item 1 | Item 2 |\n`
+    return {
+      newText: text.slice(0, start) + tableTemplate + text.slice(end),
+      newSelectionStart: start + tableTemplate.length,
+      newSelectionEnd: start + tableTemplate.length,
     }
   }
 

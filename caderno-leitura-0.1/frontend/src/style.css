@@ -256,3 +256,350 @@ button, .button, input, textarea, select { box-shadow: var(--shadow-control); }
   font-family: var(--font-reading);
   font-size: var(--reader-font-size);
 }
+
+/* ==========================================================================
+   Feature 05: Ateliê de Fichamento e Parser Estruturado (Two-Pane Studio)
+   ========================================================================== */
+.import-studio-view {
+  width: 100%;
+  max-width: 90rem;
+  margin: 0 auto;
+}
+
+.import-top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--space-unit) * 1);
+  padding: calc(var(--space-unit) * 1) calc(var(--space-unit) * 1.25);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card, 8px);
+  margin-bottom: calc(var(--space-unit) * 1.25);
+  box-shadow: var(--shadow-panel);
+}
+
+.import-meta-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--space-unit) * 0.75);
+  flex: 1;
+}
+
+.meta-field-compact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meta-field-compact label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.meta-field-compact select,
+.meta-field-compact input {
+  padding: 6px 10px;
+  font-size: 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm, 6px);
+  background-color: var(--color-page);
+  color: var(--color-text);
+  min-height: 34px;
+}
+
+.import-top-actions {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--space-unit) * 0.75);
+}
+
+/* Two-Pane Workspace Layout */
+.import-studio-workspace {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--space-unit) * 1.5);
+  align-items: start;
+  transition: grid-template-columns 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.import-studio-workspace.is-source-only {
+  grid-template-columns: 1fr;
+}
+
+.import-studio-workspace.is-source-only .preview-pane {
+  display: none;
+}
+
+.import-studio-workspace.is-preview-only {
+  grid-template-columns: 1fr;
+}
+
+.import-studio-workspace.is-preview-only .source-pane {
+  display: none;
+}
+
+/* Source Pane */
+.source-pane {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card, 8px);
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+}
+
+.source-pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 1.25);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.source-pane-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.source-editor-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.source-studio-textarea {
+  width: 100%;
+  min-height: 28rem;
+  height: 100%;
+  padding: calc(var(--space-unit) * 1.25);
+  font-family: var(--font-reading, inherit);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: transparent;
+  border: none;
+  resize: vertical;
+  outline: none;
+}
+
+.source-studio-textarea:focus-visible {
+  outline: none;
+}
+
+.source-pane-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--space-unit) * 0.75);
+  padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 1.25);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.source-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.source-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Preview Pane */
+.preview-pane {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-unit) * 1);
+}
+
+.preview-pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 1.25);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card, 8px);
+  box-shadow: var(--shadow-panel);
+}
+
+.preview-pane-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Pulso de Detecção Estrutural */
+@keyframes section-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--color-accent);
+    border-color: var(--color-accent);
+  }
+  70% {
+    box-shadow: 0 0 0 8px transparent;
+    border-color: var(--color-accent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    border-color: var(--color-border);
+  }
+}
+
+.preview-section-card {
+  position: relative;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card, 8px);
+  padding: calc(var(--space-unit) * 1.25);
+  box-shadow: var(--shadow-panel);
+  transition: border-color 200ms ease;
+}
+
+.preview-section-card.pulse-active {
+  animation: section-pulse 420ms ease-out;
+}
+
+.preview-section-card.is-empty {
+  opacity: 0.82;
+  border-style: dashed;
+}
+
+.section-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: calc(var(--space-unit) * 0.75);
+}
+
+.section-card-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.empty-badge {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  background-color: var(--color-page);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-text-muted);
+}
+
+.section-card-content {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.section-card-empty-msg {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Responsive Tabs for < 1024px */
+.mobile-studio-tabs {
+  display: none;
+  margin-bottom: calc(var(--space-unit) * 1);
+}
+
+@media (max-width: 1024px) {
+  .mobile-studio-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm, 6px);
+  }
+
+  .mobile-studio-tab-btn {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+
+  .mobile-studio-tab-btn.is-active {
+    color: var(--color-accent);
+    background-color: var(--color-page);
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .import-studio-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .import-studio-workspace.mobile-hide-source .source-pane {
+    display: none;
+  }
+
+  .import-studio-workspace.mobile-hide-preview .preview-pane {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .import-top-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .import-meta-fields {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .meta-field-compact {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .meta-field-compact select,
+  .meta-field-compact input {
+    width: 100%;
+  }
+
+  .import-top-actions {
+    justify-content: flex-end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preview-section-card.pulse-active {
+    animation: none !important;
+  }
+  .import-studio-workspace {
+    transition: none !important;
+  }
+}
+

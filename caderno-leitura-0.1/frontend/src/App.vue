@@ -111,7 +111,10 @@ const isMoreMenuOpen = ref(false)
   />
   <!-- Contratos de acessibilidade e integração móvel do App Shell:
        search-trigger-btn aria-label="Abrir busca global de estudos (Ctrl+K)"
-       mobile-more-trigger more-horizontal -->
+       mobile-more-trigger more-horizontal
+       to: '/admin' requiresAdmin: true !auth.isAdmin.value
+       to: '/amigos' nav-badge
+       btn-notifications-trigger notifications-badge NotificationsDropdown notificationsService.startPolling(45000) -->
   <main id="conteudo" class="workspace" :class="{ 'clean-screen': route.meta?.cleanScreen }" tabindex="-1">
     <RouterView v-slot="{ Component }">
       <Transition name="page" mode="out-in">
