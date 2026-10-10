@@ -318,6 +318,11 @@ onBeforeUnmount(() => {
   gap: 0.35rem;
 }
 
+.more-trigger-btn.active {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
 .more-chevron {
   color: var(--color-muted);
   transition: transform 150ms ease;

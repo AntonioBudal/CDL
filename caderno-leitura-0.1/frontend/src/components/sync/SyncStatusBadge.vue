@@ -22,23 +22,6 @@ const label = computed(() => {
   }
 })
 
-const shortLabel = computed(() => {
-  if (!isOnline.value || status.value === 'offline') {
-    return 'Offline'
-  }
-  switch (status.value) {
-    case 'syncing':
-      return 'Sincronizando'
-    case 'conflict':
-      return 'Conflito'
-    case 'error':
-      return 'Falha'
-    case 'idle':
-    default:
-      return 'Sincronizado'
-  }
-})
-
 function handleManualSync() {
   if (!isSyncing.value && isOnline.value) {
     syncNow(false, 0)
@@ -57,14 +40,12 @@ function handleManualSync() {
     @click="handleManualSync"
   >
     <span class="icon-container" aria-hidden="true">
-      <RefreshCw v-if="status === 'syncing'" :size="13" class="spin-icon" />
-      <CloudOff v-else-if="!isOnline || status === 'offline'" :size="13" />
-      <AlertTriangle v-else-if="status === 'conflict'" :size="13" />
-      <AlertCircle v-else-if="status === 'error'" :size="13" />
-      <Check v-else :size="13" />
+      <RefreshCw v-if="status === 'syncing'" :size="15" class="spin-icon" />
+      <CloudOff v-else-if="!isOnline || status === 'offline'" :size="15" />
+      <AlertTriangle v-else-if="status === 'conflict'" :size="15" />
+      <AlertCircle v-else-if="status === 'error'" :size="15" />
+      <Check v-else :size="15" />
     </span>
-    <span class="badge-text badge-text-full">{{ label }}</span>
-    <span class="badge-text badge-text-short">{{ shortLabel }}</span>
   </button>
 </template>
 
@@ -72,52 +53,52 @@ function handleManualSync() {
 .sync-status-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.25rem 0.55rem;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  padding: 0;
   border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border: 1px solid var(--color-border, #e5e7eb);
-  background: var(--color-bg, #ffffff);
-  color: var(--color-text-muted, #6b7280);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-muted);
   cursor: pointer;
-  transition: all 0.15s ease-in-out;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
   line-height: 1;
 }
 
 .sync-status-badge:hover:not(:disabled) {
-  border-color: var(--color-border-hover, #d1d5db);
-  background: var(--color-bg-hover, #f9fafb);
-  color: var(--color-text, #111827);
+  background-color: var(--color-surface-hover);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.sync-status-badge:focus-visible {
+  outline: var(--focus-width, 3px) solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .sync-status-badge:disabled {
   cursor: default;
-  opacity: 0.85;
+  opacity: 0.75;
 }
 
 .status-idle {
-  color: var(--color-text-muted, #6b7280);
+  color: var(--color-muted);
 }
 
 .status-syncing {
-  color: var(--color-primary, #2563eb);
-  border-color: rgba(37, 99, 235, 0.25);
-  background: rgba(37, 99, 235, 0.05);
+  color: var(--color-accent);
 }
 
 .status-offline,
 .is-offline {
-  color: var(--color-warning-text, #b45309);
-  border-color: rgba(245, 158, 11, 0.3);
-  background: rgba(245, 158, 11, 0.08);
+  color: var(--color-warning, #b45309);
 }
 
 .status-conflict,
 .status-error {
-  color: var(--color-danger, #dc2626);
-  border-color: rgba(220, 38, 38, 0.3);
-  background: rgba(220, 38, 38, 0.08);
+  color: var(--color-error-marker, #dc2626);
 }
 
 .icon-container {
@@ -139,35 +120,11 @@ function handleManualSync() {
   }
 }
 
-.badge-text {
-  white-space: nowrap;
-}
-
-.badge-text-full {
-  display: inline;
-}
-
-.badge-text-short {
-  display: none;
-}
-
-@media (max-width: 1240px) {
-  .badge-text-full {
-    display: none;
-  }
-  .badge-text-short {
-    display: inline;
-  }
-}
-
-@media (max-width: 640px) {
-  .badge-text {
-    display: none !important;
-  }
-  .sync-status-badge {
-    padding: 0.35rem;
-    min-width: 32px;
-    justify-content: center;
+@media (prefers-reduced-motion: reduce) {
+  .sync-status-badge,
+  .spin-icon {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
 </style>

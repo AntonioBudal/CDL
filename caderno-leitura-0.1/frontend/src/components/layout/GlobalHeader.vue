@@ -76,10 +76,10 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
       <!-- Bloco 3: Direito (Centro de Ferramentas e Identidade) -->
       <div class="header-block header-right">
         <template v-if="!isAuthPage && isAuthenticated">
-          <!-- Sincronização -->
+          <!-- Sincronização (Apenas Ícone Discreto com Tooltip) -->
           <SyncStatusBadge />
 
-          <!-- Busca Global (Ctrl+K) -->
+          <!-- Busca Global (Pílula translúcida sem atalho Ctrl+K visual) -->
           <button
             type="button"
             class="header-tool-btn search-trigger-btn"
@@ -89,10 +89,9 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
           >
             <Icon name="search" :size="15" />
             <span class="tool-label search-label">Buscar</span>
-            <kbd class="tool-kbd search-kbd">Ctrl K</kbd>
           </button>
 
-          <!-- Captura Rápida (Ctrl+Shift+C) -->
+          <!-- Captura Rápida (Apenas o + com destaque primário) -->
           <button
             type="button"
             class="header-tool-btn quick-capture-trigger-btn"
@@ -100,9 +99,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
             title="Captura rápida (Ctrl+Shift+C)"
             @click="quickCapture.open()"
           >
-            <Icon name="pencil" :size="15" />
-            <span class="tool-label quick-capture-label">Capturar</span>
-            <kbd class="tool-kbd quick-capture-kbd">Ctrl+Shift+C</kbd>
+            <Icon name="plus" :size="18" :stroke-width="2.5" />
           </button>
 
           <!-- Notificações -->
@@ -180,31 +177,32 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
 .header-inner {
   width: min(100% - var(--page-gutter, 2rem), var(--workspace-max-width, 74rem));
   margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: calc(var(--space-unit, 1rem) * 1);
+  gap: calc(var(--space-unit, 1rem) * 0.75);
   min-height: 3.75rem;
-  flex-wrap: nowrap;
 }
 
 /* 3 Zonas Operacionais */
 .header-block {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
+  min-width: 0;
 }
 
 .header-left {
+  justify-self: start;
   justify-content: flex-start;
 }
 
 .header-center {
+  justify-self: center;
   justify-content: center;
-  flex: 1 1 auto;
 }
 
 .header-right {
+  justify-self: end;
   justify-content: flex-end;
   gap: calc(var(--space-unit, 1rem) * 0.45);
 }
@@ -258,12 +256,13 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
 .header-tool-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.6rem;
-  min-height: 44px;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  min-height: 36px;
+  height: 36px;
   background-color: var(--color-surface-soft, var(--color-surface));
   border: var(--border-width, 1px) solid var(--color-border);
-  border-radius: var(--radius-button, 0.4rem);
+  border-radius: 9999px;
   color: var(--color-muted);
   font-family: inherit;
   font-size: 0.8125rem;
@@ -283,15 +282,33 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
   outline-offset: 2px;
 }
 
-.tool-kbd {
-  font-size: 0.6875rem;
-  font-family: var(--font-mono, monospace);
-  padding: 0.15rem 0.3rem;
-  border-radius: var(--radius-small, 0.25rem);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-subtle);
-  line-height: 1;
+.quick-capture-trigger-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  color: var(--color-on-accent, #ffffff);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--color-accent) 25%, transparent);
+}
+
+.quick-capture-trigger-btn:hover {
+  background-color: var(--color-accent-hover, var(--color-accent));
+  border-color: var(--color-accent-hover, var(--color-accent));
+  color: var(--color-on-accent, #ffffff);
+  transform: translateY(-1px);
+}
+
+.quick-capture-trigger-btn:active {
+  transform: translateY(0);
+}
+
+.quick-capture-trigger-btn:focus-visible {
+  outline: var(--focus-width, 3px) solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .notifications-nav-container {
@@ -305,12 +322,13 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
   padding: 0;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: var(--radius-button, 0.4rem);
+  border-radius: 9999px;
   color: var(--color-muted);
   cursor: pointer;
   transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
@@ -330,8 +348,8 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
 
 .notifications-badge {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 2px;
+  right: 2px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -404,9 +422,10 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
   background-color: var(--color-accent-hover);
 }
 
-@media (max-width: 1024px) {
-  .tool-kbd {
-    display: none;
+@media (max-width: 900px) {
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
   }
 }
 
@@ -415,15 +434,26 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
     display: none;
   }
 
-  .header-tool-btn {
-    width: 44px;
-    height: 44px;
+  .search-trigger-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
     padding: 0;
     justify-content: center;
   }
 
   .mobile-more-trigger {
     display: inline-flex;
+  }
+}
+
+@media (pointer: coarse) {
+  .quick-capture-trigger-btn,
+  .search-trigger-btn,
+  .btn-notifications-trigger,
+  .mobile-more-trigger {
+    min-width: 44px;
+    min-height: 44px;
   }
 }
 </style>

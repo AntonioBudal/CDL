@@ -10,7 +10,7 @@ const srcDir = path.resolve(__dirname, '../src')
 
 // Testes da Feature 01 (Roadmap 0.8) - Curadoria Editorial, Biblioteca Ativa e Novo Header Global
 
-test('F0.8.01 - GlobalHeader.vue estrutura 3 blocos semânticos e ferramentas', () => {
+test('F0.8.01 - GlobalHeader.vue estrutura 3 blocos semânticos, centralização CSS Grid e ferramentas', () => {
   const file = path.resolve(srcDir, 'components/layout/GlobalHeader.vue')
   assert.ok(fs.existsSync(file), 'GlobalHeader.vue deve existir em components/layout/')
 
@@ -18,14 +18,31 @@ test('F0.8.01 - GlobalHeader.vue estrutura 3 blocos semânticos e ferramentas', 
   assert.ok(content.includes('header-left'), 'Deve conter bloco esquerdo (marca)')
   assert.ok(content.includes('header-center'), 'Deve conter bloco central (navegação)')
   assert.ok(content.includes('header-right'), 'Deve conter bloco direito (ferramentas e usuário)')
+  assert.ok(content.includes('grid-template-columns: 1fr auto 1fr'), 'Deve utilizar CSS Grid 1fr auto 1fr para centralização matemática')
   assert.ok(content.includes('NavigationTabs'), 'Deve integrar o componente NavigationTabs')
   assert.ok(content.includes('UserDropdown'), 'Deve integrar o componente UserDropdown')
   assert.ok(content.includes('search-trigger-btn'), 'Deve conter botão de busca rápida')
   assert.ok(content.includes('quick-capture-trigger-btn'), 'Deve conter botão de captura rápida')
   assert.ok(content.includes('SyncStatusBadge'), 'Deve conter badge de sincronização')
+
+  // Refinamentos visuais da Diretiva 0.8
+  assert.ok(!content.includes('search-kbd'), 'Botão de busca não deve exibir badge de teclado Ctrl K')
+  assert.ok(content.includes(':name="\'plus\'"') || content.includes('name="plus"'), 'Botão de captura rápida deve renderizar ícone plus (+)')
+  assert.ok(!content.includes('quick-capture-label'), 'Botão de captura rápida deve conter apenas o + sem texto longo')
 })
 
-test('F0.8.01 - NavigationTabs.vue expõe 4 abas primárias e menu retrátil Mais', () => {
+test('F0.8.01 - SyncStatusBadge.vue opera estritamente em modo ícone discreto', () => {
+  const file = path.resolve(srcDir, 'components/sync/SyncStatusBadge.vue')
+  assert.ok(fs.existsSync(file), 'SyncStatusBadge.vue deve existir em components/sync/')
+
+  const content = fs.readFileSync(file, 'utf-8')
+  assert.ok(!content.includes('badge-text-full'), 'Não deve conter spans de texto longo (apenas ícone discreto)')
+  assert.ok(!content.includes('badge-text-short'), 'Não deve conter spans de texto curto (apenas ícone discreto)')
+  assert.ok(content.includes('aria-label'), 'Deve manter aria-label para acessibilidade')
+  assert.ok(content.includes(':title'), 'Deve manter tooltip descritivo nativo')
+})
+
+test('F0.8.01 - NavigationTabs.vue expõe 4 abas primárias e menu retrátil Mais harmonizado', () => {
   const file = path.resolve(srcDir, 'components/layout/NavigationTabs.vue')
   assert.ok(fs.existsSync(file), 'NavigationTabs.vue deve existir em components/layout/')
 
@@ -42,6 +59,7 @@ test('F0.8.01 - NavigationTabs.vue expõe 4 abas primárias e menu retrátil Mai
   assert.ok(content.includes('Ajustes'), 'Menu Mais deve conter Ajustes')
   assert.ok(content.includes('Lixeira'), 'Menu Mais deve conter Lixeira')
   assert.ok(content.includes('aria-expanded'), 'Menu Mais deve gerenciar aria-expanded')
+  assert.ok(content.includes('.more-trigger-btn.active'), 'Gatilho Mais deve estilizar estado active de forma consistente')
 })
 
 test('F0.8.01 - UserDropdown.vue encapsula botão Sair de forma segura e acessível', () => {
@@ -99,6 +117,7 @@ test('F0.8.01 - Conformidade Constitucional: Ausência de emojis nos novos arqui
     'components/layout/NavigationTabs.vue',
     'components/layout/UserDropdown.vue',
     'components/library/BookHeroCard.vue',
+    'components/sync/SyncStatusBadge.vue',
   ]
 
   const emojiRegex = /[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u

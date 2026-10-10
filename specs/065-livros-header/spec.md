@@ -4,156 +4,156 @@
 
 **Created**: 2026-10-10
 
-**Status**: Draft
+**Status**: Ready for Implementation Refinement
 
-**Input**: User description: "Feature 01: Livros — Curadoria Editorial, Biblioteca Ativa e Novo Header Global (Roadmap 0.8 — Redesign Estrutural e Arquitetura Visual)"
+**Input**: User description: "Feature 01: Header Global & Livros (Mesa Curatorial) — Resolução da fragmentação visual do cabeçalho e estante fluida com drawer de cadastro"
 
-## User Scenarios & Testing *(mandatory)*
+---
 
-### User Story 1 - Header Global em 3 Zonas Operacionais e Menu do Usuário (Priority: P1) [MVP]
+## 1. Diagnóstico Visual Crítico: O Problema do Header Atual
 
-O leitor acessa a aplicação e encontra um cabeçalho global reestruturado de forma limpa, desobstruída e hierarquizada em 3 blocos semânticos:
-1. **Bloco Esquerdo (Marca):** Logotipo minimalista `Leitorum` com link para a raiz/acervo.
-2. **Bloco Central (Navegação Primária + Menu 'Mais'):**
-   - 4 abas diretas reservadas ao ciclo ativo de leitura diária: **Livros**, **Destaques**, **Revisão**, **Inbox**.
-   - Menu suspenso retrátil **"Mais ▾"**: agrupa utilitários secundários e de ciclo estendido: **Importar**, **Amigos**, **Ajustes**, **Lixeira** (e **Administração** para administradores).
-3. **Bloco Direito (Centro de Ferramentas e Identidade):**
-   - Pílula de comando para **Busca Global** (`Ctrl+K`).
-   - Botão de ação rápida de **Captura** (`Ctrl+Shift+C`).
-   - Indicador discreto de **Sincronização** com pulso e tooltip contextual.
-   - Centro de **Notificações** (sino com badge).
-   - **Menu do Usuário (Avatar/Iniciais):** Dropdown unificado contendo o perfil do leitor, identificador, status da conta e, obrigatoriamente, a ação de **Sair** (`handleLogout`), removendo o botão solto de logout do topo do header.
+A análise da implementação visual revela um problema de **fragmentação e peso visual excessivo** decorrente do enfileiramento de elementos no cabeçalho:
 
-**Why this priority**: O Header Global constitui a moldura mestre de navegação (*App Shell*) de todo o sistema. Sua consolidação em 3 zonas elimina a superlotação horizontal e serve de fundação estável para todas as rotas e features subsequentes do Roadmap 0.8.
+```text
+[Leitorum]  [Livros] [Destaques] [Revisão] [Inbox] [Mais v]  [Sync]  [Buscar Ctrl K]  [Capturar Ctrl+Shift+C]  [Sino]  [Antonio v]
+```
 
-**Independent Test**: Navegar por todas as rotas autenticadas verificando a presença e consistência dos 3 blocos, abertura e navegação pelo menu retrátil "Mais ▾", e acionamento de logout seguro de dentro do dropdown do usuário.
+1. **Efeito "Blocos de Lego":** Os botões da direita (`Sincronizado`, `Buscar`, `Capturar`, `Notificações`, `Perfil`) e o menu `Mais ▾` foram estilizados como retângulos escuros maciços enfileirados lado a lado. Parecem blocos industriais isolados, e não elementos de uma barra de navegação integrada e elegante.
+2. **Quebra de Linguagem entre Abas e Menus:** As abas principais (`Livros`, `Destaques`, `Revisão`, `Inbox`) usam fundo claro/transparente com tipografia limpa, enquanto o botão `Mais ▾` adjacente recebeu preenchimento escuro pesado, parecendo uma ação de outra categoria em vez de uma extensão natural da navegação.
+3. **Ausência de Hierarquia de Atenção e Sobrecarga de Atalhos:** Elementos de pesos cognitivos totalmente distintos receberam o mesmo tratamento visual pesado:
+   - *Status de Sincronização:* É apenas uma informação passiva de telemetria. Deve ser estritamente um **ícone pequeno** discreto (nuvem/check) com cor semântica suave e tooltip informativo, sem caixa escura, sem bordas pesadas e sem texto ao redor.
+   - *Busca:* Deve funcionar como um campo/pílula sutil de pesquisa, integrado suavemente ao fundo da barra com fundo neutro translúcido (`--bg-subtle`), ícone de lupa e rótulo 'Buscar' — **sem o badge `Ctrl K`** visível poluindo a pílula.
+   - *Captura Rápida:* Esta sim é a ação primária, merecendo destaque intencional como botão real, contendo **apenas o `+`** (ícone vetorial de adição em botão circular/arredondado de destaque suave), eliminando textos compridos e atalhos visuais pesados.
+   - *Sininho e Avatar:* Devem ser ícones de utilidade limpos sobre superfície transparente, acionando seus respectivos popovers sem bordas de botão duro.
+   - *Perfil e Logout:* Pílula simples com as iniciais `AN` e nome; o clique abre menu suspenso contendo "Ajustes rápidos", "Meu Perfil" e a ação de Sair da conta (eliminando de vez o botão `Sair` solto no header).
+4. **Centralização Perfeita:** A barra de navegação central (`Livros`, `Destaques`, `Revisão`, `Inbox`, `Mais ▾`) deve possuir **centralização horizontal matemática**, usando CSS Grid (`1fr auto 1fr`), para que permaneça rigorosamente no centro exato da tela independente da assimetria entre o logotipo à esquerda e as ferramentas à direita.
+
+---
+
+## 2. User Scenarios & Testing *(mandatory)*
+
+### User Story 1 - Header Global Fluido, Leve e Hierarquizado (Priority: P1) [MVP]
+
+O leitor acessa a aplicação e encontra um cabeçalho global reestruturado de forma leve, fluida e integrada (*App Shell*):
+1. **Zona de Navegação:**
+   - Centralização horizontal matemática via CSS Grid (`1fr auto 1fr`).
+   - Abas em texto com indicador sutil inferior ou pílula suave com cantos arredondados no item ativo.
+   - O menu retrátil **"Mais ▾"** segue exatamente a mesma tipografia, altura e estados de hover/ativo das abas principais (`Livros`, `Destaques`, `Revisão`, `Inbox`), diferenciando-se unicamente pelo glifo sutil de seta `▾`.
+   - Agrupa utilitários secundários e de ciclo estendido: `Importar`, `Amigos`, `Ajustes`, `Lixeira` (e `Administração` quando aplicável).
+2. **Zona de Status (Sincronização):**
+   - **Apenas um ícone pequeno** discreto (nuvem/check) com cor semântica suave de sucesso e tooltip informativo, sem texto, sem caixa retangular escura e sem bordas duras.
+3. **Zona de Busca Global:**
+   - Pílula minimalista com fundo neutro translúcido (`--bg-subtle` / `--color-surface-soft`), ícone de lupa e rótulo 'Buscar' — **sem o badge `Ctrl K`** para uma estética limpa e refinada.
+4. **Ação Primária (Captura Rápida):**
+   - Botão de ação primária destacado contendo **apenas o `+`** (ícone vetorial de adição em formato circular/arredondado elegante), com tooltip informativo (`title="Captura rápida (Ctrl+Shift+C)"`).
+5. **Utilitários e Identidade (Sininho e Perfil):**
+   - Sino de notificações sobre superfície limpa/transparente com badge numérico quando houver avisos não lidos.
+   - Pílula de perfil com as iniciais e nome do leitor, cujo clique abre menu suspenso contendo "Ajustes rápidos", "Meu Perfil" e a ação de **Sair da conta** (eliminando o botão solto `Sair`).
+
+**Why this priority**: Elimina a fragmentação visual e o efeito "blocos de lego", estabelecendo a fundação ergonômica e a hierarquia correta de atenção para todo o sistema.
+
+**Independent Test**: Navegar por todas as páginas autenticadas verificando ausência de caixas escuras pesadas enfileiradas, integração perfeita do gatilho "Mais ▾" com as abas, presença do botão de captura com destaque intencional e acionamento de logout seguro de dentro do dropdown do usuário.
 
 **Acceptance Scenarios**:
 
-1. **Given** um usuário autenticado em qualquer página, **When** visualiza o header global, **Then** apenas as 4 abas de leitura ativa (`Livros`, `Destaques`, `Revisão`, `Inbox`) estão expostas diretamente, e as abas estendidas estão acessíveis no menu "Mais ▾".
-2. **Given** o header global exibido, **When** o usuário inspeciona o topo direito, **Then** o botão solto "Sair" não existe no nível superior, residindo exclusivamente dentro do dropdown acionado pelo avatar/iniciais do leitor.
-3. **Given** o menu suspenso do usuário aberto, **When** o leitor clica em "Sair", **Then** a confirmação é apresentada e a sessão é encerrada com redirecionamento para `/login`.
+1. **Given** um usuário autenticado no sistema, **When** visualiza o header global, **Then** as abas centrais e o botão "Mais ▾" compartilham a mesma tipografia, alinhamento e estilo visual transparente/leve.
+2. **Given** o status de sincronização, **When** renderizado no header, **Then** ele surge como ícone discreto com tooltip, sem caixa retangular escura ao redor.
+3. **Given** o botão de Busca Global, **When** inspecionado, **Then** exibe formato de pílula minimalista com fundo translúcido sutil e badge de `Ctrl K` discreto.
+4. **Given** o menu suspenso do usuário aberto, **When** o usuário examina suas opções, **Then** encontra links de perfil, ajustes e o botão "Sair da conta" com confirmação de saída.
 
 ---
 
 ### User Story 2 - Biblioteca Ativa em Largura Total e Drawer Deslizante de Cadastro (Priority: P1) [MVP]
 
-Ao acessar `/livros`, o usuário encontra a biblioteca ocupando a largura total do espaço de leitura, sem a coluna lateral estática de formulário (que anteriormente ocupava ~35% da tela).
-No lugar do painel rígido fixo, a página disponibiliza um botão proeminente e tátil `+ Adicionar Livro` na barra de ações da biblioteca. Ao ser clicado:
-- Abre um **Drawer lateral deslizante** acessível a partir da direita (420px de largura no desktop, 100% no mobile).
-- O Drawer retém o foco do teclado no primeiro campo (`Título do livro`).
-- O leitor pode preencher título, autor e categorias e salvar o livro, ou fechar o Drawer pressionando `Esc`, clicando no botão fechar ou clicando no backdrop escurecido suave.
-- Ao salvar, o livro é criado via API existente e o leitor é conduzido ao livro recém-criado ou vê o acervo atualizado sem quebras de validação.
+Ao acessar `/livros`, o leitor encontra a biblioteca ocupando a largura total do espaço de leitura, com as seguintes transformações:
+1. **Extinção Imediata da Barra Lateral:** A coluna fixa de cadastro (que ocupava cerca de 35% da tela) é completamente removida do layout desktop.
+2. **Botão "+ Adicionar Livro":** Posicionado estrategicamente no topo da estante de livros, aciona um painel lateral deslizante (*drawer*).
+3. **Drawer Lateral Deslizante:**
+   - Ocupa 420px de largura no desktop e 100% no mobile.
+   - Transição suave acelerada por GPU (`transform: translateX(0)` em $\le 220$ms).
+   - Backdrop escurecido suave e retenção de foco do teclado no primeiro campo (`Título do livro`).
+   - Fechamento imediato via tecla `Esc`, clique no botão de fechar ou clique no backdrop.
+   - Campos essenciais: Título (obrigatório), Autor (opcional) e Categorias (opcional).
 
-**Why this priority**: Devolve mais de um terço da tela à exploração dos livros e substitui uma experiência rígida de formulário CRUD por um fluxo focado, imersivo e livre de distrações visuais.
+**Why this priority**: Devolve mais de um terço do espaço útil à contemplação e estudo das obras, substituindo uma tela transacional rígida por um ambiente focado e imersivo.
 
-**Independent Test**: Acessar `/livros`, verificar ausência de formulário estático lateral, clicar em `+ Adicionar Livro`, validar abertura suave do Drawer em 220ms, preencher os campos, salvar com sucesso e testar fechamento via `Esc` e backdrop.
+**Independent Test**: Acessar `/livros`, certificar ausência de formulário lateral visível, clicar em "+ Adicionar Livro", conferir abertura suave do Drawer em 220ms, preencher os campos, salvar com sucesso e validar fechamento via `Esc` e backdrop.
 
 **Acceptance Scenarios**:
 
-1. **Given** a página `/livros` carregada, **When** o usuário inspeciona o layout da página, **Then** o acervo de livros ocupa a largura útil total sem painel lateral estático permanente.
-2. **Given** o botão `+ Adicionar Livro` acionado, **When** o Drawer é aberto, **Then** ele surge com deslizamento lateral suave da direita para a esquerda, exibe backdrop atenuado e direciona o foco para o campo de título.
-3. **Given** o Drawer aberto, **When** o usuário pressiona a tecla `Esc` ou clica fora da gaveta no backdrop, **Then** o Drawer se fecha e o foco retorna ao botão que o disparou.
-4. **Given** o formulário no Drawer preenchido com dados válidos, **When** o usuário clica em "Cadastrar livro", **Then** a requisição é submetida com estado de carregamento e o livro é criado sem erros.
+1. **Given** a página `/livros` carregada no desktop, **When** examinada a composição da tela, **Then** o acervo ocupa 100% da largura útil sem qualquer formulário fixo lateral.
+2. **Given** o botão "+ Adicionar Livro" clicado, **When** o Drawer é exibido, **Then** o foco vai automaticamente para o campo de título e o backdrop atenuado cobre o restante da tela.
+3. **Given** o Drawer aberto, **When** o leitor pressiona a tecla `Esc` ou clica fora da gaveta no backdrop, **Then** o Drawer se fecha suavemente e o foco retorna ao botão disparador.
+4. **Given** os dados de um novo livro preenchidos no Drawer, **When** o formulário é submetido, **Then** o livro é cadastrado via API e a estante é atualizada sem recarga de página.
 
 ---
 
-### User Story 3 - Hero de Leitura Ativa ("Em Andamento") e Estante Fluida (Priority: P2)
+### User Story 3 - Hero "Lendo Agora" e Estante Fluida Editorial (Priority: P2)
 
-No topo da página de livros (acima da grade geral), o sistema destaca a seção **"Em Andamento"** com um *Hero Card* dedicado à leitura mais recente ou à obra com estudo ativo mais recente. O Hero Card exibe:
-- Capa do livro com proporção realista e elevação sutil.
-- Título em destaque tipográfico e autor.
-- Indicador visual de progresso e atalho direto para "Continuar leitura".
-
-Abaixo da seção em andamento, o acervo é apresentado em uma grade fluida curatorial com:
-- Proporção visual realista de livros e acabamento editorial.
-- Chips de filtragem rápida por categoria e barra integrada de busca e ordenação.
-- Alternância rápida e suave entre modos **Grade** e **Lista** sem recarga da página.
-- Efeito tátil suave de elevação no hover (`transform: translateY(-4px)` em 150ms).
+No topo da estante de livros, o sistema destaca a seção **"Lendo Agora"** (*Active Reading Hero*):
+1. **Hero "Lendo Agora":**
+   - Cartão assimétrico no topo destacando o livro com estudo ou leitura mais recente.
+   - Capa com proporção realista e elevação tátil.
+   - Tipografia editorial para título e autor, indicador de progresso e botão direto de "Continuar Leitura".
+2. **Estante Fluida do Acervo:**
+   - Grade responsiva preenchendo a largura total da página.
+   - Capas dos livros com proporção realista, acabamento editorial e elevação sutil no hover (`transform: translateY(-4px)` em 150ms).
+   - Badges sutis de contagem de destaques e estudos sem poluição visual.
+   - Preservação dos filtros por categoria, busca por texto, ordenação e alternância entre modos Grade e Lista.
 
 **Why this priority**: Conecta o leitor imediatamente ao seu foco intelectual do momento, eliminando atrito para retomar a leitura ativa.
 
-**Independent Test**: Carregar a biblioteca com livros existentes, conferir destaque da obra mais recente no Hero Card, alternar entre grade e lista, e validar preservação de filtros por categoria e busca.
+**Independent Test**: Carregar a biblioteca com livros cadastrados, validar destaque da obra em andamento no Hero Card, alternar entre modos Grade e Lista e conferir filtros por categoria e busca.
 
 **Acceptance Scenarios**:
 
-1. **Given** uma biblioteca com pelo menos um livro, **When** a página é carregada, **Then** o livro com atividade mais recente é destacado no Hero Card de leitura ativa no topo.
-2. **Given** a grade de livros exibida, **When** o usuário alterna o modo para Lista, **Then** a visualização se transforma suavemente sem recarga e mantém os filtros aplicados.
-3. **Given** um cartão de livro na grade, **When** o ponteiro passa sobre ele, **Then** ocorre elevação sutil de 4px com transição suave respeitando `--radius-card` e variáveis do tema ativo.
+1. **Given** uma biblioteca com pelo menos um livro, **When** a página `/livros` é carregada, **Then** a obra mais recente é destacada no cartão Hero "Lendo Agora" no topo da estante.
+2. **Given** a estante de livros, **When** o ponteiro passa sobre a capa de um livro, **Then** ocorre elevação suave de 4px com transição de sombra em 150ms.
+3. **Given** os controles de visualização, **When** o usuário alterna entre Grade e Lista, **Then** o layout se reorganiza de forma suave mantendo todos os filtros e seleções.
 
 ---
 
-### User Story 4 - Responsividade e Acessibilidade (Mobile, Teclado, Reduced Motion) (Priority: P3)
+### User Story 4 - Responsividade, Acessibilidade e Imunidade Cromática (Priority: P3)
 
-A interface se adapta com perfeição a qualquer resolução:
-- **Desktop e Laptops (1280px - 1920px):** Layout espaçoso de 3 blocos no Header, Drawer de 420px, grade de 3 a 4 colunas.
-- **Tablets e Telas Intermediárias (768px - 1024px):** Header preserva os 3 blocos sem quebra de linha com espacamentos proporcionais; grade de 2 a 3 colunas.
-- **Mobile (< 768px):** Header compacto com navegação primária adaptada, alvos táteis mínimos de $44 \times 44$px, Drawer ocupando 100% da largura.
-- **Preferência por Movimento Reduzido (`prefers-reduced-motion`):** As transições do Drawer e animações de hover são reduzidas para 0.01ms instantâneo para conforto visual.
-- **Imunidade Cromática:** O novo layout e todos os novos componentes utilizam exclusivamente variáveis CSS semânticas (`--color-surface`, `--color-page`, `--color-text`, `--color-border`, etc.) sem valores fixos de cor, preservando integralmente os 10 temas canônicos.
+A interface se adapta com perfeição a qualquer resolução e dispositivo:
+1. **Responsividade:**
+   - *Desktop Amplo (1440px+)* e *Laptops (1024px a 1280px)*: Header preserva os 3 blocos sem estouro horizontal (*overflow-x*) e sem quebra de linha.
+   - *Mobile (< 768px)*: Alvos de toque $\ge 44 \times 44$px e Drawer ocupando 100% da largura.
+2. **Acessibilidade Universal & Reduced Motion:**
+   - Suporte pleno a navegação por teclado sem armadilhas de foco (*focus traps*).
+   - Sob `prefers-reduced-motion: reduce`, todas as transições de movimento são suprimidas (duração $\le 0.01$ms).
+3. **Imunidade Cromática & Zero Emojis:**
+   - Uso exclusivo dos tokens semânticos dos 10 temas nativos (`--color-surface`, `--color-page`, `--color-text`, `--color-text-muted`, `--color-border`, `--color-accent`, etc.).
+   - Ausência absoluta de emojis literais em favor do catálogo vetorial SVG `Icon.vue`.
 
-**Why this priority**: Garante ergonomia universal, conformidade estrita com as diretrizes de acessibilidade e preservação absoluta do sistema visual dos 10 temas.
+**Why this priority**: Garante que o redesenho atenda a padrões rigorosos de acessibilidade, ergonomia e consistência com os 10 temas da aplicação.
 
-**Independent Test**: Testar em resoluções de 375px, 768px, 1280px e 1920px, auditar conformidade com `prefers-reduced-motion`, verificar ausência de valores hexadecimais no CSS dos novos componentes e validar que todos os botões possuem área $\ge 44 \times 44$px.
+**Independent Test**: Testar em resoluções de 375px, 768px, 1280px e 1920px, alternar entre temas Claro, Escuro e Sépia, e verificar respeito a movimento reduzido.
 
 **Acceptance Scenarios**:
 
-1. **Given** tela mobile (< 768px), **When** o Drawer de novo livro é aberto, **Then** ele ocupa 100% da largura da tela com controles de toque $\ge 44 \times 44$px.
-2. **Given** o sistema operacional configurado com movimento reduzido, **When** elementos são abertos ou focados, **Then** transições de movimento são instantâneas sem deslizamentos prolongados.
-3. **Given** qualquer um dos 10 temas cromáticos ativos, **When** a biblioteca e o novo header são renderizados, **Then** todos os tons, bordas e superfícies refletem as variáveis daquele tema sem desvios ou cores duras.
+1. **Given** o sistema operacional configurado com movimento reduzido, **When** o Drawer é acionado, **Then** ele surge de forma instantânea sem deslizamentos.
+2. **Given** alternância entre temas Claro, Noturno e Sépia, **When** o Header e a página de Livros são inspecionados, **Then** nenhuma cor dura ou bloco escuro fixo destoa da paleta ativa.
 
 ---
 
-### Edge Cases
+## 3. Checklist Sequencial de Execução (Tasks da Feature 01)
 
-- **Biblioteca Vazia (Zero Livros):** Quando não há livros cadastrados, o Hero Card é suprimido graciosamente e o estado vazio orienta o leitor a clicar no botão "+ Adicionar Livro", abrindo o Drawer.
-- **Apenas Um Livro no Acervo:** O único livro é exibido tanto no Hero quanto na estante, sem quebras de layout ou duplicação indevida de dados.
-- **Título com Nome Excessivamente Longo no Drawer:** O campo de texto acomoda quebra visual de linha sem vazar as margens do Drawer (420px).
-- **Tentativa de Sair com Drawer Aberto:** Ao fechar o Drawer via `Esc` ou backdrop, alterações pendentes nos campos disparam a proteção de dados não salvos (`useUnsavedChanges`).
-- **Resoluções Intermediárias (ex.: 1024px com zoom de 125%):** O Header Global não sofre estouro horizontal (*overflow-x*), acomodando os 3 blocos sem quebra de linha desagradável.
-
----
-
-## Requirements *(mandatory)*
-
-### Functional Requirements
-
-- **FR-001**: O sistema DEVE refatorar o Header Global (`App Shell`) em 3 zonas operacionais independentes: Marca (esquerda), Navegação Primária e Menu 'Mais' (centro), Centro de Ferramentas e Identidade (direita).
-- **FR-002**: O Header DEVE expor na navegação central direta exclusivamente as 4 rotas de leitura ativa: Livros, Destaques, Revisão e Inbox, agrupando Importar, Amigos, Ajustes, Lixeira e Administração dentro do menu retrátil "Mais ▾".
-- **FR-003**: O botão avulso "Sair" DEVE ser removido do plano superior do Header e encapsulado no menu suspenso do usuário (`UserDropdown`), preservando a confirmação de logout e o redirecionamento.
-- **FR-004**: O layout principal de `/livros` DEVE remover a coluna estática lateral de cadastro, exibindo o acervo em largura total com composição de mesa do leitor.
-- **FR-005**: O sistema DEVE fornecer um componente reutilizável e acessível de `Drawer` lateral deslizante com animação acelerada por GPU (`transform`, $\le 220$ms), backdrop suave, retenção de foco e fechamento via `Esc` e clique no backdrop.
-- **FR-006**: O cadastro de novo livro DEVE ser realizado integralmente dentro do `Drawer`, mantendo campos de Título (obrigatório), Autor (opcional) e Categorias (opcional) e integração com `api.createBook`.
-- **FR-007**: A página `/livros` DEVE exibir na seção de topo um Hero Card da leitura ativa ("Em Andamento") baseado na obra aberta mais recente ou na primeira obra do acervo com estudos ativos.
-- **FR-008**: O acervo DEVE manter integralmente os modos de visualização Grade e Lista, busca rápida por texto, filtro por categorias e abas "Meu Acervo" e "Compartilhados Comigo".
-- **FR-009**: Todos os botões, links e gatilhos DEVEM possuir alvo tátil mínimo de $44 \times 44$px em resoluções móveis, além de atributos `aria-label`, `aria-expanded` e `aria-haspopup` semânticos.
-- **FR-010**: A estilização do novo Header e da página de Livros DEVE consumir exclusivamente as variáveis semânticas CSS dos 10 temas nativos, proibindo valores hexadecimais fixos nos estilos dos novos componentes.
-- **FR-011**: O sistema DEVE fornecer suporte obrigatório a `prefers-reduced-motion`, neutralizando transições de movimento para usuários que requisitarem.
-- **FR-012**: O código-fonte dos novos componentes DEVE respeitar a regra constitucional de ZERO EMOJIS, utilizando exclusivamente ícones SVG semânticos do catálogo `Icon.vue`.
-
-### Key Entities
-
-- **GlobalHeader**: Componente do App Shell unificado divido em 3 zonas: marca, abas principais com menu retrátil "Mais", e utilitários com menu do usuário.
-- **UserDropdown**: Menu contextual do leitor autenticado contendo perfil, identificador, status da conta e a ação segura de logout.
-- **Drawer**: Componente estrutural compartilhado de gaveta lateral deslizante acessível com gerenciamento de foco e backdrop modal.
-- **BookHeroCard**: Cartão editorial destacado de leitura ativa no topo da biblioteca.
+- [ ] **Task 1.1:** Refatorar o Header no layout base: remover fundos escuros pesados dos utilitários da direita, convertendo `Sincronizado` em badge informativo e `Buscar` em pílula de busca refinada.
+- [ ] **Task 1.2:** Padronizar visualmente o gatilho `Mais ▾` para seguir a mesma tipografia e estado de hover das abas `Livros`, `Destaques`, `Revisão` e `Inbox`.
+- [ ] **Task 1.3:** Agrupar `Sair da conta` dentro do dropdown do avatar do usuário.
+- [ ] **Task 1.4:** Remover o formulário estático lateral da tela de Livros.
+- [ ] **Task 1.5:** Criar o componente `Drawer` acessível para o cadastro de novo livro, disparado por "+ Adicionar Livro".
+- [ ] **Task 1.6:** Implementar a seção Hero do "Livro em Leitura Ativa" no topo do acervo.
+- [ ] **Task 1.7:** Reorganizar o grid da biblioteca para preencher a largura total, com animações suaves de hover nas capas.
 
 ---
 
-## Success Criteria *(mandatory)*
+## 4. Critérios de Homologação (Verify)
 
-### Measurable Outcomes
-
-- **SC-001**: O Header Global reduz seus elementos concorrentes diretos no plano horizontal de 15 para 3 blocos coesos, eliminando quebras de layout em resoluções entre 1024px e 1280px.
-- **SC-002**: A área útil dedicada à exploração do acervo na página `/livros` aumenta em mais de 35% com a eliminação da coluna estática de formulário.
-- **SC-003**: O tempo para abrir o Drawer de novo livro, preencher o título e confirmar o cadastro é inferior a 10 segundos, com transição fluida de abertura em $\le 220$ms.
-- **SC-004**: 100% dos testes da suíte de frontend (`npm test`) continuam passando sem regressões em rotas existentes ou fluxos de biblioteca.
-- **SC-005**: 100% de conformidade cromática: todos os 10 temas canônicos mantêm contraste e identidade visual impecáveis sem estilos corrompidos.
-
----
-
-## Assumptions
-
-- A API backend de livros (`POST /api/books`, `GET /api/books`, etc.) e modelos de dados já existentes permanecem inalterados e plenamente compatíveis.
-- O catálogo de ícones do componente `Icon.vue` já fornece todos os ícones necessários (`book-open`, `pencil`, `rotate-ccw`, `inbox`, `more-horizontal`, `search`, `bell`, `sliders`, `trash`, `users`, `plus`, `x`, `log-out`, etc.).
-- A preferência de leitura ativa pode derivar do livro com atualização mais recente (`updated_at`) ou do último livro acessado registrado em `localStorage`.
+- [ ] O header não apresenta botões pesados em sequência estilo "tijolos escuros".
+- [ ] O menu `Mais ▾` está visualmente integrado à linha de abas de navegação.
+- [ ] A página de Livros não possui formulário visível ocupando espaço lateral no desktop.
+- [ ] O cadastro de livros abre e fecha via drawer lateral com foco retido e tecla `Esc` ativa.
+- [ ] O layout funciona perfeitamente nos temas claro, escuro e sépia.
+- [ ] 100% dos testes automatizados continuam passando sem regressões (`npm test` e `npm run build`).

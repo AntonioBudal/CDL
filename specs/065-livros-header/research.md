@@ -19,14 +19,15 @@ A feature F0.8.01 inaugura o Roadmap 0.8 (v1.1.0-EXEC), executando duas grandes 
      - Menu suspenso retrátil **"Mais ▾"**: reúne utilitários secundários e de ciclo estendido: **Importar**, **Amigos**, **Ajustes**, **Lixeira** e **Administração** (exclusivo para administradores).
      - Badges de notificação/pendências em `Amigos` e `Inbox` continuam plenamente visíveis e reativos.
   3. **Bloco Direito (Centro de Ferramentas e Identidade)**:
-     - Pílula de comando para **Busca Global** (`Ctrl+K`).
-     - Botão de ação rápida de **Captura** (`Ctrl+Shift+C`).
-     - Indicador discreto de **Sincronização** (`SyncStatusBadge`).
-     - Centro de **Notificações** (sino com badge).
+     - Pílula minimalista de **Busca Global**: sem o badge textual `Ctrl K`, apenas ícone e texto suave 'Buscar' para manter o cabeçalho leve.
+     - Botão de ação primária de **Captura**: contendo **apenas o `+`** com destaque intencional arredondado/circular e tooltip contextual (`Ctrl+Shift+C`).
+     - Indicador discreto de **Sincronização** (`SyncStatusBadge`): **estritamente um ícone pequeno** com cor semântica e tooltip explicativo, sem caixas escuras, bordas duras ou textos.
+     - Centro de **Notificações** (sino sobre superfície transparente com badge).
      - **Menu do Usuário (Avatar/Iniciais)**: Dropdown suspenso unificado (`UserDropdown.vue`) contendo identificação do usuário, link de perfil e botão de encerramento seguro de sessão ("Sair").
-- **Racional**:
-  - Elimina a disputa visual e horizontal de 15 elementos concorrentes no mesmo plano.
-  - Resguarda resoluções intermediárias (laptops e tablets entre 1024px e 1280px) contra quebras ou estouros de layout (*overflow*).
+- **Racional de Centralização e Hierarquia**:
+  - Centralização horizontal matemática via CSS Grid (`1fr auto 1fr`): resolve a assimetria entre o bloco esquerdo (marca ~100px) e o bloco direito (~350px), garantindo que as abas fiquem matematicamente centradas na viewport.
+  - Eliminação do badge `Ctrl K` e textos compridos no botão de captura: limpa a densidade cognitiva, reservando destaque de botão real exclusivamente para a captura (`+`).
+  - Redução de `SyncStatusBadge` a apenas um ícone: trata telemetria passiva com a sutileza que lhe cabe, sem disputar atenção com as ações primárias.
   - Trata o logout como ação administrativa/de conta, removendo uma ação destrutiva solta concorrendo com o foco de estudo.
 - **Alternativas consideradas**:
   - *Manter abas em rolagem horizontal (overflow-x)*: Rejeitada porque oculta itens vitais e degrada a usabilidade no desktop.
