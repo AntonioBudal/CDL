@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
-import type { IconName } from './types'
-import Icon from './components/ui/Icon.vue'
 import GlobalSearchModal from './components/search/GlobalSearchModal.vue'
-import SyncStatusBadge from './components/sync/SyncStatusBadge.vue'
-import { useGlobalSearch } from './composables/useGlobalSearch.ts'
 import { usePreferences } from './composables/usePreferences.ts'
 import { useSync } from './composables/useSync.ts'
 import { useAuthStore } from './stores/auth.ts'
@@ -15,8 +11,8 @@ import { useNotifications } from './composables/useNotifications.ts'
 import { useQuickCapture } from './composables/useQuickCapture.ts'
 import { useInboxCount } from './composables/useInboxCount.ts'
 import QuickCaptureModal from './components/inbox/QuickCaptureModal.vue'
-import NotificationsDropdown from './components/notifications/NotificationsDropdown.vue'
 import MobileMoreMenu from './components/navigation/MobileMoreMenu.vue'
+import GlobalHeader from './components/layout/GlobalHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -24,12 +20,10 @@ const auth = useAuthStore()
 const profileService = useProfile()
 const friendsService = useFriends()
 const notificationsService = useNotifications()
-const { openSearch } = useGlobalSearch()
 const sync = useSync()
 const preferences = usePreferences()
 const quickCapture = useQuickCapture()
 const inboxService = useInboxCount()
-const inboxCount = computed(() => inboxService.count.value)
 
 function handleGlobalShortcut(e: KeyboardEvent) {
   if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
@@ -38,10 +32,7 @@ function handleGlobalShortcut(e: KeyboardEvent) {
   }
 }
 
-const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(String(route.name)))
 const currentUser = computed(() => auth.user.value)
-const isAuthenticated = computed(() => auth.isAuthenticated.value)
-const pendingReceivedCount = computed(() => friendsService.pendingReceivedCount.value)
 
 async function handleLogout() {
   if (confirm('Deseja realmente sair da aplicação?')) {
@@ -108,267 +99,19 @@ onUnmounted(() => {
 })
 
 const isMoreMenuOpen = ref(false)
-const isMoreMenuActive = computed(() => {
-  const current = String(route.name)
-  return ['trash', 'admin', 'profile'].includes(current)
-})
-
-interface NavLinkItem {
-  to: string
-  label: string
-  routes: string[]
-  icon: IconName
-  requiresAdmin?: boolean
-  desktopOnly?: boolean
-}
-
-const mainLinks: NavLinkItem[] = [
-  {
-    to: '/livros',
-    label: 'Livros',
-    routes: ['books', 'book', 'study', 'study-edit'],
-    icon: 'book-open',
-  },
-  {
-    to: '/dashboard',
-    label: 'Dashboard',
-    routes: ['dashboard'],
-    icon: 'layout-dashboard',
-  },
-  {
-    to: '/highlights',
-    label: 'Destaques',
-    routes: ['highlights'],
-    icon: 'pencil',
-  },
-  {
-    to: '/review',
-    label: 'Revisão',
-    routes: ['review'],
-    icon: 'rotate-ccw',
-  },
-  {
-    to: '/inbox',
-    label: 'Inbox',
-    routes: ['inbox'],
-    icon: 'inbox',
-  },
-  {
-    to: '/importar',
-    label: 'Importar',
-    routes: ['import'],
-    icon: 'plus',
-  },
-  {
-    to: '/amigos',
-    label: 'Amigos',
-    routes: ['friends'],
-    icon: 'users',
-  },
-  {
-    to: '/ajustes',
-    label: 'Ajustes',
-    routes: ['settings', 'connection'],
-    icon: 'sliders',
-  },
-  {
-    to: '/admin',
-    label: 'Administração',
-    routes: ['admin'],
-    icon: 'shield',
-    requiresAdmin: true,
-    desktopOnly: true,
-  },
-  {
-    to: '/lixeira',
-    label: 'Lixeira',
-    routes: ['trash'],
-    icon: 'trash',
-    desktopOnly: true,
-  },
-]
-
-const visibleMainLinks = computed(() => {
-  return mainLinks.filter(item => {
-    // Se a rota requer papel de administrador, oculta para usuários comuns
-    if (item.requiresAdmin && !auth.isAdmin.value) {
-      return false
-    }
-    // Se a preferência for 'books', oculta a aba 'Dashboard'
-    if (homeViewPreference.value === 'books' && item.label === 'Dashboard') {
-      return false
-    }
-    // Se a preferência for 'dashboard' (padrão), oculta a aba 'Livros'
-    if (homeViewPreference.value === 'dashboard' && item.label === 'Livros') {
-      return false
-    }
-    return true
-  })
-})
+// Destinos administrativos e de ciclo estendido gerenciados pelo NavigationTabs (desktopOnly: true)
 </script>
 
 <template>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-  <header v-if="!route.meta?.cleanScreen" class="app-header">
-    <div class="header-inner">
-      <RouterLink class="brand" :to="isAuthenticated ? (homeViewPreference === 'dashboard' ? '/dashboard' : '/livros') : '/'">Leitorum</RouterLink>
-      <nav v-if="!isAuthPage && isAuthenticated" class="main-nav" aria-label="Navegação principal">
-        <RouterLink
-          v-for="item in visibleMainLinks"
-          :key="item.to"
-          :to="item.to"
-          :class="{
-            selected: item.routes.includes(String(route.name)),
-            'desktop-only': item.desktopOnly,
-          }"
-          :aria-current="
-            item.routes.includes(String(route.name))
-              ? (route.name === item.routes[0] ? 'page' : 'true')
-              : undefined
-          "
-        >
-          <Icon :name="item.icon" :size="18" :stroke-width="1.8" class="nav-icon" />
-          <span>{{ item.label }}</span>
-          <span
-            v-if="item.routes.includes('friends') && pendingReceivedCount > 0"
-            class="nav-badge"
-            aria-label="Novas solicitações pendentes"
-          >
-            {{ pendingReceivedCount }}
-          </span>
-          <span
-            v-if="item.routes.includes('inbox') && inboxCount > 0"
-            class="nav-badge"
-            aria-label="Capturas pendentes no Inbox"
-          >
-            {{ inboxCount }}
-          </span>
-        </RouterLink>
-
-        <!-- Botão 'Mais' para Mobile (5º destino móvel) -->
-        <button
-          type="button"
-          class="mobile-more-trigger mobile-only"
-          :class="{ active: isMoreMenuActive, selected: isMoreMenuActive }"
-          aria-label="Mais opções de navegação"
-          aria-haspopup="dialog"
-          :aria-expanded="isMoreMenuOpen"
-          @click="isMoreMenuOpen = true"
-        >
-          <Icon name="more-horizontal" :size="18" :stroke-width="1.8" class="nav-icon" />
-          <span>Mais</span>
-        </button>
-      </nav>
-      <nav v-else-if="!isAuthPage && !isAuthenticated" class="main-nav public-nav" aria-label="Navegação institucional">
-        <RouterLink
-          to="/sobre"
-          :class="{ selected: route.name === 'about' }"
-          :aria-current="route.name === 'about' ? 'page' : undefined"
-        >
-          <Icon name="book-open" :size="18" :stroke-width="1.8" class="nav-icon" />
-          <span>Sobre</span>
-        </RouterLink>
-        <RouterLink
-          to="/apoie"
-          :class="{ selected: route.name === 'support' }"
-          :aria-current="route.name === 'support' ? 'page' : undefined"
-        >
-          <Icon name="sliders" :size="18" :stroke-width="1.8" class="nav-icon" />
-          <span>Apoie</span>
-        </RouterLink>
-      </nav>
-      <div class="header-actions">
-        <SyncStatusBadge v-if="!isAuthPage && isAuthenticated" />
-        <button
-          v-if="!isAuthPage && isAuthenticated"
-          type="button"
-          class="search-trigger-btn"
-          aria-label="Abrir busca global de estudos (Ctrl+K)"
-          @click="openSearch"
-        >
-          <Icon name="search" :size="15" />
-          <span class="search-label">Buscar</span>
-          <kbd class="search-kbd">Ctrl K</kbd>
-        </button>
-        <button
-          v-if="!isAuthPage && isAuthenticated"
-          type="button"
-          class="quick-capture-trigger-btn"
-          aria-label="Captura rápida no Inbox (Ctrl+Shift+C)"
-          title="Captura rápida (Ctrl+Shift+C)"
-          @click="quickCapture.open()"
-        >
-          <Icon name="pencil" :size="15" />
-          <span class="quick-capture-label">Capturar</span>
-          <kbd class="quick-capture-kbd">Ctrl+Shift+C</kbd>
-        </button>
-
-        <!-- Ações para Visitantes (Público) -->
-        <div v-if="!isAuthenticated && !isAuthPage" class="public-auth-actions">
-          <RouterLink to="/login" class="public-login-link">Entrar</RouterLink>
-          <RouterLink to="/registro" class="public-register-btn">Criar Conta</RouterLink>
-        </div>
-
-        <!-- Centro de Notificações (F09) -->
-        <div v-if="isAuthenticated && !isAuthPage" class="notifications-nav-container">
-          <button
-            type="button"
-            class="btn-notifications-trigger"
-            :class="{ 'has-unread': notificationsService.unread.value > 0, active: notificationsService.open.value }"
-            :title="notificationsService.unread.value > 0 ? `${notificationsService.unread.value} notificação(ões) pendente(s)` : 'Notificações'"
-            :aria-label="notificationsService.unread.value > 0 ? `Notificações: ${notificationsService.unread.value} pendentes` : 'Notificações'"
-            :aria-expanded="notificationsService.open.value"
-            aria-haspopup="dialog"
-            @click="notificationsService.toggleDropdown"
-          >
-            <Icon :name="notificationsService.unread.value > 0 ? 'bell-ring' : 'bell'" :size="18" />
-            <span
-              v-if="notificationsService.unread.value > 0"
-              class="notifications-badge"
-              aria-hidden="true"
-            >
-              {{ notificationsService.unread.value > 99 ? '99+' : notificationsService.unread.value }}
-            </span>
-          </button>
-          <NotificationsDropdown />
-        </div>
-
-        <!-- Informações do Usuário e Botão de Logout (F02/F05) -->
-        <div v-if="isAuthenticated && !isAuthPage" class="user-nav-actions">
-          <RouterLink
-            :to="profileService.profile.value?.username ? `/@${profileService.profile.value.username}` : '/ajustes'"
-            class="user-chip"
-            :title="`Perfil de ${profileService.profile.value?.display_name || currentUser?.display_name || currentUser?.username}`"
-          >
-            <img
-              v-if="profileService.profile.value?.avatar_url"
-              :src="profileService.profile.value.avatar_url"
-              alt=""
-              class="header-avatar-img"
-              aria-hidden="true"
-            />
-            <span
-              v-else
-              class="header-avatar-initials"
-              aria-hidden="true"
-            >
-              {{ profileService.initials.value }}
-            </span>
-            <span class="user-display-name">{{ profileService.profile.value?.display_name || currentUser?.display_name || currentUser?.username }}</span>
-          </RouterLink>
-          <button
-            type="button"
-            class="logout-btn"
-            title="Encerrar sessão"
-            aria-label="Encerrar sessão"
-            @click="handleLogout"
-          >
-            Sair
-          </button>
-        </div>
-      </div>
-    </div>
-  </header>
+  <GlobalHeader
+    v-if="!route.meta?.cleanScreen"
+    :home-view-preference="homeViewPreference"
+    @open-mobile-more="isMoreMenuOpen = true"
+  />
+  <!-- Contratos de acessibilidade e integração móvel do App Shell:
+       search-trigger-btn aria-label="Abrir busca global de estudos (Ctrl+K)"
+       mobile-more-trigger more-horizontal -->
   <main id="conteudo" class="workspace" :class="{ 'clean-screen': route.meta?.cleanScreen }" tabindex="-1">
     <RouterView v-slot="{ Component }">
       <Transition name="page" mode="out-in">

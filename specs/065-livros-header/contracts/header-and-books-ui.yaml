@@ -1,0 +1,96 @@
+openapi: 3.0.3
+info:
+  title: Leitorum - Contratos de API da Feature 01 (Livros e Header)
+  description: Contratos de API REST consumidos pela interface redesenhada do Header e da Biblioteca.
+  version: 1.0.0
+paths:
+  /api/books:
+    get:
+      summary: Lista todos os livros ativos do usuário autenticado
+      responses:
+        '200':
+          description: Lista de livros com categorias associadas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    post:
+      summary: Cadastra um novo livro a partir do Drawer lateral
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+              properties:
+                title:
+                  type: string
+                  description: Título da obra
+                author:
+                  type: string
+                  nullable: true
+                  description: Nome do autor
+                category_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: Lista de UUIDs ou identificadores de categorias
+      responses:
+        '201':
+          description: Livro criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '422':
+          description: Erro de validação de campos
+
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        color:
+          type: string
+          nullable: true
+
+    Book:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        author:
+          type: string
+          nullable: true
+        subtitle:
+          type: string
+          nullable: true
+        year:
+          type: integer
+          nullable: true
+        cover_image:
+          type: string
+          nullable: true
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time

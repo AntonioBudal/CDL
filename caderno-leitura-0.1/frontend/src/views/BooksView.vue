@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import BookCover from '../components/BookCover.vue'
 import CategoryBadge from '../components/CategoryBadge.vue'
@@ -7,6 +7,9 @@ import CategoryInput from '../components/CategoryInput.vue'
 import LibraryToolbar from '../components/LibraryToolbar.vue'
 import EmptyState from '../components/ui/EmptyState.vue'
 import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
+import Drawer from '../components/ui/Drawer.vue'
+import BookHeroCard from '../components/library/BookHeroCard.vue'
+import Icon from '../components/ui/Icon.vue'
 import SharedStudiesList from '../components/library/SharedStudiesList.vue'
 import { api, errorMessage } from '../services/api'
 import { useLibraryFilter } from '../composables/useLibraryFilter'
@@ -22,6 +25,7 @@ const activeTab = ref<'meus-livros' | 'compartilhados'>('meus-livros')
 const books = ref<Book[]>([])
 const loading = ref(true)
 const loadError = ref('')
+const isDrawerOpen = ref(false)
 const title = ref('')
 const titleInput = ref<HTMLInputElement | null>(null)
 const author = ref('')
@@ -31,6 +35,23 @@ const saveError = ref('')
 let request: AbortController | null = null
 let disposed = false
 useUnsavedChanges(() => !!(title.value || author.value || newBookCategoryIds.value.length > 0), () => saving.value)
+
+const activeBook = computed<Book | null>(() => {
+  if (books.value.length === 0) return null
+  return [...books.value].sort((a, b) => {
+    const timeA = new Date(a.updated_at || a.created_at || 0).getTime()
+    const timeB = new Date(b.updated_at || b.created_at || 0).getTime()
+    return timeB - timeA
+  })[0] || null
+})
+
+watch(isDrawerOpen, (isOpen) => {
+  if (isOpen) {
+    setTimeout(() => {
+      titleInput.value?.focus()
+    }, 50)
+  }
+})
 
 const {
   searchQuery,
@@ -75,6 +96,7 @@ async function createBook() {
   try {
     created = await api.createBook(title.value, author.value, newBookCategoryIds.value)
     title.value = ''; author.value = ''; newBookCategoryIds.value = []
+    isDrawerOpen.value = false
   } catch (error) {
     if (!disposed) saveError.value = errorMessage(error)
   } finally { saving.value = false }
@@ -162,12 +184,35 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
         v-else-if="books.length === 0"
         icon="book-open"
         title="Seu primeiro livro começa aqui"
-        description="Cadastre o livro abaixo e, em seguida, adicione um capítulo para organizar seus estudos."
+        description="Cadastre seu primeiro livro para começar a organizar capítulos e estudos."
         heading-level="h2"
       >
-        <a href="#book-title" class="button primary" @click.prevent="titleInput?.focus()">Cadastrar meu primeiro livro</a>
+        <button type="button" class="button primary" @click="isDrawerOpen = true">Cadastrar meu primeiro livro</button>
       </EmptyState>
       <template v-else>
+        <!-- Seção de Leitura Ativa ("Em Andamento") -->
+        <BookHeroCard
+          v-if="activeBook"
+          :book="activeBook"
+          @select-category="setSelectedCategory"
+        />
+
+        <div class="library-header-actions">
+          <div class="library-section-meta">
+            <h2 class="library-section-title">Estante de Livros</h2>
+            <span class="library-section-count">{{ filteredCount }} {{ filteredCount === 1 ? 'obra' : 'obras' }}</span>
+          </div>
+          <button
+            type="button"
+            class="button primary add-book-btn"
+            aria-label="Adicionar novo livro (+ Adicionar Livro)"
+            @click="isDrawerOpen = true"
+          >
+            <Icon name="plus" :size="16" :stroke-width="2" />
+            <span>+ Adicionar Livro</span>
+          </button>
+        </div>
+
         <LibraryToolbar
           :search-query="searchQuery"
           :selected-category="selectedCategory"
@@ -274,8 +319,14 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
         </ul>
       </template>
     </section>
-    <aside class="panel form-panel" aria-labelledby="new-book-heading">
-      <h2 id="new-book-heading">Novo livro</h2>
+
+    <!-- Drawer Lateral Deslizante de Cadastro de Novo Livro -->
+    <Drawer
+      :open="isDrawerOpen"
+      title="Novo livro"
+      description="Cadastre uma nova obra para organizar capítulos e estudos com curadoria pessoal."
+      @close="isDrawerOpen = false"
+    >
       <form @submit.prevent="createBook">
         <fieldset :disabled="saving">
           <div class="field">
@@ -291,10 +342,12 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
             <CategoryInput v-model="newBookCategoryIds" :disabled="saving" />
           </div>
           <p v-if="saveError" class="notice error" role="alert">{{ saveError }}</p>
-          <button class="primary full-width" :disabled="saving || !title.trim()">{{ saving ? 'Cadastrando…' : 'Cadastrar livro' }}</button>
+          <button class="primary full-width" :disabled="saving || !title.trim()">
+            {{ saving ? 'Cadastrando…' : 'Cadastrar livro' }}
+          </button>
         </fieldset>
       </form>
-    </aside>
+    </Drawer>
   </div>
 
   <!-- Painel de Estudos Compartilhados -->
@@ -368,6 +421,62 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 .shared-tab-panel {
   padding-top: 1.5rem;
 }
+
+.library-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.library-section-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.library-section-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.015em;
+}
+
+.library-section-count {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.add-book-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  font-weight: 650;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border-radius: var(--radius-button, 0.4rem);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent, #fff);
+  border: 1px solid transparent;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.add-book-btn:hover {
+  background-color: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+
+.add-book-btn:focus-visible {
+  outline: var(--focus-width, 3px) solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .book-card-cover-wrapper {
   display: flex;
   justify-content: center;
@@ -377,19 +486,20 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 .search-empty-state {
   text-align: center;
   padding: 2.5rem 1.5rem;
-  background-color: var(--bg-surface, var(--card, #fff));
-  border-radius: var(--radius, 8px);
-  border: 1px dashed var(--border, #ccc);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-panel, 0.5rem);
+  border: 1px dashed var(--color-border);
   margin-top: 1rem;
 }
 
 .search-empty-state h2 {
   font-size: 1.15rem;
   margin-bottom: 0.5rem;
+  color: var(--color-text);
 }
 
 .search-empty-state p {
-  color: var(--muted, #666);
+  color: var(--color-muted);
   margin-bottom: 1rem;
 }
 
@@ -404,16 +514,16 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 }
 
 .book-list-item {
-  border-radius: var(--radius, 8px);
-  background-color: var(--bg-surface, var(--card, #fff));
-  border: 1px solid var(--border, #e5e5e5);
+  border-radius: var(--radius-card, 0.5rem);
+  background-color: var(--color-surface);
+  border: var(--border-width, 1px) solid var(--color-border);
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
 .book-list-item:hover {
-  transform: translateY(-1px);
-  border-color: var(--accent, #3b82f6);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+  border-color: var(--color-border-hover, var(--color-border));
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-inverse-bg, #000) 8%, transparent);
 }
 
 .book-list-link {
@@ -423,6 +533,7 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
   padding: 0.75rem 1.25rem;
   text-decoration: none;
   color: inherit;
+  min-height: 44px;
 }
 
 .book-list-cover {
@@ -449,7 +560,7 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
   font-size: 1.05rem;
   font-weight: 600;
   margin: 0;
-  color: var(--text, #222);
+  color: var(--color-text);
   line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -458,13 +569,13 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 
 .book-list-year {
   font-size: 0.85rem;
-  color: var(--muted, #777);
+  color: var(--color-muted);
   font-weight: 400;
 }
 
 .book-list-subtitle {
   font-size: 0.85rem;
-  color: var(--muted, #666);
+  color: var(--color-muted);
   margin: 0.15rem 0 0 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -473,17 +584,25 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 
 .book-list-author {
   font-size: 0.88rem;
-  color: var(--muted, #666);
+  color: var(--color-subtle, var(--color-muted));
   margin: 0.2rem 0 0 0;
 }
 
 .book-list-action {
   flex-shrink: 0;
   font-size: 0.88rem;
-  color: var(--accent, #3b82f6);
-  font-weight: 500;
+  color: var(--color-accent);
+  font-weight: 600;
   margin-left: auto;
   padding-left: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .add-book-btn,
+  .book-list-item {
+    transition: none !important;
+    transform: none !important;
+  }
 }
 
 @media (max-width: 640px) {
