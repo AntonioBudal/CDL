@@ -1,16 +1,26 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { api, errorMessage } from '../../services/api'
+import { api, errorMessage } from '../../services/api.ts'
 import Icon from '../ui/Icon.vue'
-import type { InboxCapture } from '../../types'
+import type { InboxCapture } from '../../types.ts'
 
-const props = defineProps<{
-  capture: InboxCapture
-}>()
+const props = withDefaults(
+  defineProps<{
+    capture: InboxCapture
+    isSelected?: boolean
+    isExiting?: boolean
+  }>(),
+  {
+    isSelected: false,
+    isExiting: false,
+  }
+)
 
 const emit = defineEmits<{
   (e: 'promote', capture: InboxCapture): void
   (e: 'link', capture: InboxCapture): void
+  (e: 'archive', capture: InboxCapture): void
+  (e: 'unarchive', capture: InboxCapture): void
   (e: 'updated', capture: InboxCapture): void
   (e: 'deleted', captureId: number): void
 }>()
@@ -22,6 +32,9 @@ const isSaving = ref(false)
 const isDeleting = ref(false)
 const isExpanded = ref(false)
 const actionError = ref<string | null>(null)
+const localExiting = ref(false)
+
+const isCardExiting = computed(() => props.isExiting || localExiting.value)
 
 const isLongText = computed(() => props.capture.content.length > 280)
 const displayContent = computed(() => {
@@ -90,15 +103,34 @@ async function saveEdit() {
   }
 }
 
+function handleArchive() {
+  localExiting.value = true
+  emit('archive', props.capture)
+}
+
+function handleUnarchive() {
+  emit('unarchive', props.capture)
+}
+
+function handlePromote() {
+  emit('promote', props.capture)
+}
+
+function handleLink() {
+  emit('link', props.capture)
+}
+
 async function handleDelete() {
   if (isDeleting.value) return
   if (!confirm('Deseja realmente excluir esta captura do Inbox?')) return
   isDeleting.value = true
   actionError.value = null
+  localExiting.value = true
   try {
     await api.deleteInboxCapture(props.capture.id)
     emit('deleted', props.capture.id)
   } catch (err) {
+    localExiting.value = false
     actionError.value = errorMessage(err)
     isDeleting.value = false
   }
@@ -109,10 +141,15 @@ async function handleDelete() {
   <article
     class="capture-card"
     :class="{
+      'is-keyboard-selected': isSelected,
+      'is-exiting': isCardExiting,
       'status-promoted': capture.status === 'promoted',
       'status-linked': capture.status === 'linked',
       'status-archived': capture.status === 'archived',
     }"
+    :tabindex="0"
+    role="article"
+    :aria-label="`Captura: ${capture.content.slice(0, 60)}`"
   >
     <header class="card-header">
       <div class="card-meta">
@@ -188,6 +225,7 @@ async function handleDelete() {
         rows="3"
         required
         :disabled="isSaving"
+        aria-label="Editar conteúdo da captura"
       ></textarea>
       <div class="edit-source-row">
         <label for="edit-source-input" class="visually-hidden">Fonte</label>
@@ -200,7 +238,7 @@ async function handleDelete() {
           :disabled="isSaving"
         />
       </div>
-      <div v-if="actionError" class="card-error">{{ actionError }}</div>
+      <div v-if="actionError" class="card-error" role="alert">{{ actionError }}</div>
       <div class="edit-actions">
         <button
           type="button"
@@ -222,45 +260,115 @@ async function handleDelete() {
     </div>
 
     <!-- Rodapé de Ações de Triagem -->
-    <footer v-if="!isEditing && capture.status === 'inbox'" class="card-footer">
-      <button
-        type="button"
-        class="button button-sm button-primary promote-action-btn"
-        title="Transformar esta captura em um novo estudo formal"
-        @click="emit('promote', capture)"
-      >
-        <Icon name="plus" size="xs" />
-        <span>Promover para Estudo</span>
-      </button>
+    <footer v-if="!isEditing" class="card-footer">
+      <!-- Se pendente: Promover, Vincular, Arquivar -->
+      <template v-if="capture.status === 'inbox'">
+        <button
+          type="button"
+          class="button button-sm button-primary promote-action-btn"
+          title="Transformar esta captura em um novo estudo formal"
+          @click="handlePromote"
+        >
+          <Icon name="plus" size="xs" />
+          <span>Promover para Estudo</span>
+        </button>
 
-      <button
-        type="button"
-        class="button button-sm button-outline link-action-btn"
-        title="Anexar esta captura a um estudo existente no acervo"
-        @click="emit('link', capture)"
-      >
-        <Icon name="link" size="xs" />
-        <span>Vincular a Estudo</span>
-      </button>
+        <button
+          type="button"
+          class="button button-sm button-outline link-action-btn"
+          title="Anexar esta captura a um estudo existente no acervo"
+          @click="handleLink"
+        >
+          <Icon name="link" size="xs" />
+          <span>Vincular a Estudo</span>
+        </button>
+
+        <button
+          type="button"
+          class="button button-sm button-ghost archive-action-btn"
+          title="Arquivar captura (E)"
+          @click="handleArchive"
+        >
+          <Icon name="inbox" size="xs" />
+          <span>Arquivar</span>
+        </button>
+      </template>
+
+      <!-- Se arquivado: Desarquivar, Promover -->
+      <template v-else-if="capture.status === 'archived'">
+        <button
+          type="button"
+          class="button button-sm button-outline unarchive-action-btn"
+          title="Retornar para a caixa de pendentes"
+          @click="handleUnarchive"
+        >
+          <Icon name="inbox" size="xs" />
+          <span>Mover para Pendentes</span>
+        </button>
+
+        <button
+          type="button"
+          class="button button-sm button-primary promote-action-btn"
+          title="Transformar esta captura em um novo estudo formal"
+          @click="handlePromote"
+        >
+          <Icon name="plus" size="xs" />
+          <span>Promover para Estudo</span>
+        </button>
+      </template>
+
+      <!-- Se promovido ou vinculado: Ações secundárias -->
+      <template v-else>
+        <button
+          type="button"
+          class="button button-sm button-outline link-action-btn"
+          title="Vincular a outro estudo ou livro"
+          @click="handleLink"
+        >
+          <Icon name="link" size="xs" />
+          <span>Reassociar</span>
+        </button>
+      </template>
     </footer>
   </article>
 </template>
 
 <style scoped>
 .capture-card {
-  background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border, #e5e7eb);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md, 8px);
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 180ms cubic-bezier(0.2, 0, 0, 1), opacity 180ms ease;
+  position: relative;
 }
 
 .capture-card:hover {
-  border-color: var(--color-border-hover, #d1d5db);
+  border-color: var(--color-border-hover, var(--color-border));
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.capture-card.is-keyboard-selected {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Transição de Saída Acelerada por GPU */
+.capture-card.is-exiting {
+  transform: translateX(30px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capture-card.is-exiting {
+    transform: none;
+    opacity: 0;
+    transition: opacity 100ms ease;
+  }
 }
 
 .card-header {
@@ -286,33 +394,34 @@ async function handleDelete() {
   border-radius: 4px;
 }
 
+/* Imunidade cromática total aos 10 temas */
 .badge-inbox {
-  background-color: #eff6ff;
-  color: #2563eb;
-  border: 1px solid #bfdbfe;
+  background-color: var(--color-surface-hover);
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
 }
 
 .badge-promoted {
-  background-color: #ecfdf5;
-  color: #059669;
-  border: 1px solid #a7f3d0;
+  background-color: var(--color-surface-hover);
+  color: var(--color-accent);
+  border: 1px solid var(--color-border);
 }
 
 .badge-linked {
-  background-color: #f5f3ff;
-  color: #7c3aed;
-  border: 1px solid #ddd6fe;
+  background-color: var(--color-surface-hover);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
 }
 
 .badge-archived {
-  background-color: #f3f4f6;
-  color: #6b7280;
-  border: 1px solid #e5e7eb;
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-subtle);
 }
 
 .card-date {
   font-size: 0.75rem;
-  color: var(--color-text-muted, #9ca3af);
+  color: var(--color-text-muted);
 }
 
 .book-badge {
@@ -320,11 +429,12 @@ async function handleDelete() {
   align-items: center;
   gap: 4px;
   font-size: 0.75rem;
-  background-color: var(--color-surface-hover, #f3f4f6);
+  color: var(--color-text-muted);
+  background-color: var(--color-bg);
   padding: 2px 6px;
   border-radius: 4px;
-  color: var(--color-text-muted, #4b5563);
-  max-width: 180px;
+  border: 1px solid var(--color-border-subtle);
+  max-width: 200px;
 }
 
 .truncate {
@@ -342,26 +452,24 @@ async function handleDelete() {
 .card-action-btn {
   background: transparent;
   border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
   padding: 6px;
   border-radius: 4px;
-  color: var(--color-text-muted, #9ca3af);
-  cursor: pointer;
-  min-height: 36px;
-  min-width: 36px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
+  min-width: 32px;
+  min-height: 32px;
 }
 
 .card-action-btn:hover {
-  background-color: var(--color-surface-hover, #f3f4f6);
-  color: var(--color-text-main, #111827);
+  background-color: var(--color-surface-hover);
+  color: var(--color-text);
 }
 
-.card-action-btn.delete-btn:hover {
-  background-color: #fef2f2;
-  color: #dc2626;
+.delete-btn:hover {
+  color: var(--color-accent);
 }
 
 .card-body {
@@ -371,27 +479,22 @@ async function handleDelete() {
 }
 
 .capture-text {
-  margin: 0;
   font-size: 0.95rem;
-  line-height: 1.55;
-  color: var(--color-text-main, #1f2937);
+  line-height: 1.5;
+  color: var(--color-text);
+  margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
 .expand-text-btn {
-  background: none;
+  align-self: flex-start;
+  background: transparent;
   border: none;
-  padding: 0;
+  color: var(--color-primary);
   font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--color-primary, #4f46e5);
   cursor: pointer;
-  text-align: left;
-  margin-top: 2px;
-}
-
-.expand-text-btn:hover {
+  padding: 0;
   text-decoration: underline;
 }
 
@@ -400,134 +503,89 @@ async function handleDelete() {
   align-items: baseline;
   gap: 6px;
   font-size: 0.8rem;
-  color: var(--color-text-muted, #6b7280);
-  background-color: var(--color-surface-input, #fafafa);
-  padding: 4px 8px;
-  border-radius: 4px;
-  border-left: 3px solid var(--color-border, #d1d5db);
+  color: var(--color-text-muted);
 }
 
 .source-label {
-  font-weight: 600;
+  font-weight: 500;
+}
+
+.source-value {
+  font-style: italic;
 }
 
 .promoted-reference {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: 0.8rem;
-  color: var(--color-text-muted, #6b7280);
-  margin-top: 4px;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border-subtle);
+  align-self: flex-start;
 }
 
 .promoted-study-link {
-  color: var(--color-primary, #4f46e5);
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.promoted-study-link:hover {
+  color: var(--color-accent);
   text-decoration: underline;
 }
 
-.card-edit-form {
+.card-footer {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 .edit-textarea {
   width: 100%;
-  padding: 8px 10px;
-  border: 1px solid var(--color-border, #d1d5db);
-  border-radius: 6px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md, 6px);
+  background-color: var(--color-bg);
+  color: var(--color-text);
   font-family: inherit;
-  font-size: 0.925rem;
-  color: var(--color-text-main, #111827);
+  font-size: 0.95rem;
+  line-height: 1.4;
   resize: vertical;
+}
+
+.edit-source-row {
+  margin-top: 6px;
 }
 
 .edit-source-input {
   width: 100%;
   padding: 6px 10px;
-  border: 1px solid var(--color-border, #d1d5db);
-  border-radius: 6px;
-  font-size: 0.825rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md, 6px);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.85rem;
 }
 
 .edit-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+  margin-top: 8px;
 }
 
 .card-error {
-  font-size: 0.75rem;
-  color: #dc2626;
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--color-accent);
 }
 
-.card-footer {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--color-border-subtle, #f3f4f6);
-}
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 500;
-  border-radius: 6px;
-  cursor: pointer;
-  min-height: 40px;
-  padding: 6px 12px;
-  font-size: 0.825rem;
-  transition: all 0.15s ease;
-  border: 1px solid transparent;
-}
-
-.button-sm {
-  min-height: 38px;
-  padding: 4px 10px;
-}
-
-.button-primary {
-  background-color: var(--color-accent, #2563eb);
-  color: #ffffff;
-}
-
-.button-primary:hover:not(:disabled) {
-  background-color: var(--color-accent-hover, #1d4ed8);
-}
-
-.button-outline {
-  background-color: transparent;
-  border-color: var(--color-border, #d1d5db);
-  color: var(--color-text, #374151);
-}
-
-.button-outline:hover:not(:disabled) {
-  background-color: var(--color-surface-hover, #f3f4f6);
-  border-color: var(--color-border-hover, #9ca3af);
-  color: var(--color-text, #111827);
-}
-
-.button-ghost {
-  background-color: transparent;
-  color: var(--color-muted, #6b7280);
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
+/* Responsividade móvel para alvos táteis */
+@media (max-width: 640px) {
+  .card-footer button {
+    min-height: 44px;
+    padding: 8px 14px;
+  }
 }
 </style>

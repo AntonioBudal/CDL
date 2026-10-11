@@ -1492,6 +1492,13 @@ export interface InboxLinkPayload {
   target_section?: 'summary' | 'explanation' | 'concepts' | 'references' | 'notes'
 }
 
+export type TriageFilterTab = 'inbox' | 'promoted' | 'linked' | 'archived' | 'all'
+
+export interface TriageKeyboardState {
+  selectedIndex: number
+  isInputFocused: boolean
+}
+
 // --- Sessões Estruturadas de Estudo e Auditoria (F 0.7.14) ---
 
 export type SessionScopeType = 'quick' | 'book' | 'all'
