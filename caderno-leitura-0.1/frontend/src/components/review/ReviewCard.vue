@@ -7,9 +7,11 @@ const props = withDefaults(
     item: ReviewItemRead
     isRevealed: boolean
     busy?: boolean
+    progress?: { current: number; total: number; percent: number }
   }>(),
   {
     busy: false,
+    progress: undefined,
   },
 )
 
@@ -48,7 +50,14 @@ function handleKeydown(event: KeyboardEvent) {
     } else if (event.key === '2' || event.code === 'Digit2' || event.code === 'Numpad2') {
       event.preventDefault()
       emit('rate', 'medium')
-    } else if (event.key === '3' || event.code === 'Digit3' || event.code === 'Numpad3') {
+    } else if (
+      event.key === '3' ||
+      event.code === 'Digit3' ||
+      event.code === 'Numpad3' ||
+      event.key === '4' ||
+      event.code === 'Digit4' ||
+      event.code === 'Numpad4'
+    ) {
       event.preventDefault()
       emit('rate', 'easy')
     }
@@ -66,13 +75,18 @@ onUnmounted(() => {
 
 <template>
   <article
-    class="review-card"
+    class="review-card review-flip-card"
     role="region"
-    aria-label="Card de revisão atual"
+    aria-label="Card de estudo ativo e fixação cognitiva"
   >
     <!-- Anúncio de leitor de tela -->
     <div class="sr-only" aria-live="polite" aria-atomic="true">
       {{ liveAnnouncement }}
+    </div>
+
+    <!-- Barra de Progresso da Rodada (se fornecida) -->
+    <div v-if="progress && progress.total > 0" class="card-progress-bar" aria-hidden="true">
+      <div class="progress-fill" :style="{ width: `${progress.percent}%` }" />
     </div>
 
     <!-- Cabeçalho do Card: Origem e Metadados -->
@@ -94,6 +108,9 @@ onUnmounted(() => {
         </span>
         <span v-if="item.last_rating" class="history-badge">
           Última: {{ item.last_rating === 'easy' ? 'Fácil' : item.last_rating === 'medium' ? 'Médio' : 'Difícil' }}
+        </span>
+        <span v-if="progress && progress.total > 0" class="round-counter">
+          {{ progress.current }} / {{ progress.total }}
         </span>
       </div>
     </div>
@@ -118,7 +135,7 @@ onUnmounted(() => {
       </div>
 
       <!-- Resposta Revelada (para tipo question) -->
-      <transition name="fade">
+      <transition name="card-reveal">
         <div
           v-if="isRevealed && item.kind === 'question'"
           class="revealed-answer-box"
@@ -185,20 +202,34 @@ onUnmounted(() => {
 .review-card {
   display: flex;
   flex-direction: column;
-  background-color: var(--color-bg-surface, #ffffff);
+  background-color: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border-subtle, #e2e8f0);
-  border-radius: 1rem;
+  border-radius: var(--radius-card, 1rem);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   min-height: 380px;
+  position: relative;
+}
+
+.card-progress-bar {
+  width: 100%;
+  height: 4px;
+  background-color: var(--color-border-subtle, #e2e8f0);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--color-accent, #3b82f6);
+  transition: width 220ms ease;
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 1.75rem;
-  background-color: var(--color-bg-surface-secondary, #f8fafc);
+  padding: 1.15rem 1.5rem;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.02));
   border-bottom: 1px solid var(--color-border-subtle, #e2e8f0);
   gap: 1rem;
 }
@@ -216,11 +247,11 @@ onUnmounted(() => {
 
 .breadcrumb-book {
   font-weight: 600;
-  color: var(--color-text-primary, #0f172a);
+  color: var(--color-text, #0f172a);
 }
 
 .breadcrumb-separator {
-  color: var(--color-text-muted, #94a3b8);
+  opacity: 0.6;
 }
 
 .card-badges {
@@ -233,104 +264,116 @@ onUnmounted(() => {
 .kind-badge {
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 0.25rem 0.625rem;
+  padding: 0.2rem 0.55rem;
   border-radius: 9999px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 .badge-question {
-  background-color: #e0e7ff;
-  color: #3730a3;
+  background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.12));
+  color: var(--color-accent, #3b82f6);
 }
 
 .badge-hidden {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.06));
+  color: var(--color-text-secondary, #475569);
 }
 
-.history-badge {
+.history-badge,
+.round-counter {
   font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
-  background-color: var(--color-bg-surface, #ffffff);
+  color: var(--color-text-secondary, #64748b);
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  background-color: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border-subtle, #e2e8f0);
-  color: var(--color-text-muted, #64748b);
 }
 
+/* Corpo Cognitivo */
 .cognitive-body {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 2.5rem 2rem;
+  padding: 2.25rem 2rem;
   gap: 1.5rem;
 }
 
 .question-text {
-  font-size: 1.375rem;
-  line-height: 1.6;
-  font-weight: 600;
-  color: var(--color-text-primary, #0f172a);
-  text-align: center;
+  font-family: var(--font-serif, "EB Garamond", Garamond, Georgia, serif);
+  font-size: 1.45rem;
+  line-height: 1.55;
+  color: var(--color-text, #0f172a);
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
 .cloze-text {
-  font-size: 1.25rem;
-  line-height: 1.7;
-  color: var(--color-text-primary, #0f172a);
-  text-align: center;
+  font-family: var(--font-serif, "EB Garamond", Garamond, Georgia, serif);
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: var(--color-text, #0f172a);
   margin: 0;
 }
 
 .cloze-gap {
   display: inline-block;
-  padding: 0.125rem 0.625rem;
-  border-radius: 0.375rem;
-  background-color: #fef3c7;
-  color: #b45309;
-  font-weight: 700;
-  transition: all 0.2s ease;
-  border-bottom: 2px solid #f59e0b;
+  padding: 0.15rem 0.55rem;
+  border-radius: 6px;
+  background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.12));
+  color: var(--color-accent, #3b82f6);
+  font-weight: 600;
+  border: 1px dashed var(--color-accent, currentColor);
+  transition: all 220ms ease;
 }
 
 .cloze-gap.revealed {
-  background-color: #dcfce7;
-  color: #15803d;
-  border-bottom-color: #22c55e;
+  border-style: solid;
+  border-color: var(--color-border-subtle, #cbd5e1);
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
+  color: var(--color-text, #0f172a);
 }
 
 .revealed-answer-box {
-  background-color: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: 0.75rem;
   padding: 1.25rem 1.5rem;
-  text-align: center;
-  margin-top: 1rem;
+  border-radius: 10px;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--color-border-subtle, #e2e8f0);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .answer-label {
-  display: block;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #166534;
   letter-spacing: 0.05em;
-  margin-bottom: 0.375rem;
+  color: var(--color-accent, #3b82f6);
 }
 
 .expected-answer {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #14532d;
-  margin: 0;
+  font-family: var(--font-serif, "EB Garamond", Garamond, Georgia, serif);
+  font-size: 1.25rem;
   line-height: 1.5;
+  color: var(--color-text, #0f172a);
+  margin: 0;
 }
 
+/* Transição de Revelação */
+.card-reveal-enter-active {
+  transition: opacity 220ms ease, transform 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-reveal-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+/* Rodapé */
 .card-footer {
-  padding: 1.5rem 2rem;
-  background-color: var(--color-bg-surface-secondary, #f8fafc);
+  padding: 1.25rem 2rem;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.02));
   border-top: 1px solid var(--color-border-subtle, #e2e8f0);
 }
 
@@ -340,36 +383,34 @@ onUnmounted(() => {
 }
 
 .btn-reveal {
-  min-height: 48px;
-  min-width: 200px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 0.75rem;
+  min-height: 44px;
   padding: 0.75rem 2rem;
-  background-color: var(--color-primary, #2563eb);
-  color: #ffffff;
-  border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-button, 10px);
+  background-color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-on-accent, #ffffff);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
-  transition: all 0.15s ease;
+  border: none;
+  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.08);
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
 .btn-reveal:hover:not(:disabled) {
-  background-color: var(--color-primary-hover, #1d4ed8);
+  opacity: 0.92;
   transform: translateY(-1px);
 }
 
 .kbd-shortcut {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 0.125rem 0.5rem;
-  border-radius: 0.25rem;
+  font-family: monospace;
   font-size: 0.75rem;
-  font-family: inherit;
-  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.25);
+  color: inherit;
 }
 
 .rating-actions {
@@ -380,82 +421,62 @@ onUnmounted(() => {
 }
 
 .rating-prompt {
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.85rem;
   color: var(--color-text-secondary, #64748b);
+  font-weight: 500;
 }
 
 .rating-buttons {
   display: flex;
-  justify-content: center;
   gap: 1rem;
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
 }
 
 .rating-btn {
   flex: 1;
-  min-height: 48px;
-  min-width: 44px;
-  display: flex;
+  display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
+  min-height: 44px;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-subtle, #e2e8f0);
+  background-color: var(--color-surface, #ffffff);
   cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.15s ease;
+  gap: 0.25rem;
+  transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease;
 }
 
-.rate-hard {
-  background-color: #fee2e2;
-  color: #991b1b;
-  border-color: #fca5a5;
+.rating-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-.rate-hard:hover:not(:disabled) {
-  background-color: #fecaca;
+.rate-hard:hover {
+  border-color: var(--color-error, #ef4444);
+}
+.rate-medium:hover {
+  border-color: var(--color-warning, #f59e0b);
+}
+.rate-easy:hover {
+  border-color: var(--color-success, #10b981);
 }
 
-.rate-medium {
-  background-color: #fef3c7;
-  color: #92400e;
-  border-color: #fcd34d;
-}
-
-.rate-medium:hover:not(:disabled) {
-  background-color: #fde68a;
-}
-
-.rate-easy {
-  background-color: #dcfce7;
-  color: #166534;
-  border-color: #86efac;
-}
-
-.rate-easy:hover:not(:disabled) {
-  background-color: #bbf7d0;
+.rate-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text, #0f172a);
 }
 
 .rate-kbd {
-  background: rgba(0, 0, 0, 0.08);
-  padding: 0.125rem 0.375rem;
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(-4px);
+  font-family: monospace;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.06));
+  color: var(--color-text-secondary, #64748b);
 }
 
 .sr-only {
@@ -472,25 +493,16 @@ onUnmounted(() => {
 
 @media (max-width: 640px) {
   .cognitive-body {
-    padding: 1.5rem 1rem;
+    padding: 1.5rem 1.25rem;
   }
-
-  .question-text {
-    font-size: 1.125rem;
+  .question-text, .cloze-text {
+    font-size: 1.2rem;
   }
-
-  .cloze-text {
-    font-size: 1.0625rem;
+  .card-footer {
+    padding: 1rem 1.25rem;
   }
-
   .rating-buttons {
     gap: 0.5rem;
-  }
-
-  .rating-btn {
-    min-height: 44px;
-    padding: 0.625rem 0.5rem;
-    font-size: 0.875rem;
   }
 }
 </style>

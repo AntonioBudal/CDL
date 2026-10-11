@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Chapter, ReviewStatsResponse } from '../../types.ts'
 
 const props = withDefaults(
@@ -23,7 +24,14 @@ const emit = defineEmits<{
   (e: 'update:selectedBookId', value: number | null): void
   (e: 'update:selectedChapterId', value: number | null): void
   (e: 'update:selectedKind', value: string): void
+  (e: 'start-practice'): void
 }>()
+
+const estimatedMinutes = computed(() => {
+  const count = props.stats?.pending_review ?? 0
+  if (count <= 0) return 0
+  return Math.max(1, Math.ceil(count * 0.6))
+})
 
 function setKind(kind: string) {
   emit('update:selectedKind', kind)
@@ -41,40 +49,68 @@ function onChapterChange(event: Event) {
   const val = target.value ? Number(target.value) : null
   emit('update:selectedChapterId', val)
 }
+
+function onStartPractice() {
+  emit('start-practice')
+}
 </script>
 
 <template>
-  <header class="review-stats-header" role="region" aria-label="Painel de Métricas e Filtros de Revisão">
-    <!-- Grade de Métricas Resumidas -->
-    <div class="metrics-grid">
-      <div class="metric-card metric-total">
-        <span class="metric-label">Total Elegível</span>
-        <span class="metric-value" data-testid="total-eligible">{{ stats.total_eligible }}</span>
-        <span class="metric-caption">Destaques interativos</span>
+  <header class="review-stats-header" role="region" aria-label="Bancada de Prontidão e Filtros de Revisão">
+    <!-- Barra Unificada de Prontidão Intelectual (Substitui os 5 cards isolados de estilo SaaS) -->
+    <div class="readiness-banner">
+      <div class="readiness-summary">
+        <div class="readiness-headline">
+          <div class="readiness-pill" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="readiness-core">
+            <span class="readiness-title">
+              <strong class="pending-count" data-testid="pending-review">{{ stats.pending_review }}</strong>
+              {{ stats.pending_review === 1 ? 'cartão pendente' : 'cartões prontos para hoje' }}
+            </span>
+            <span v-if="stats.pending_review > 0" class="estimated-time">
+              • ~{{ estimatedMinutes }} min sugeridos
+            </span>
+          </div>
+        </div>
+
+        <!-- Metadados de Distribuição Semântica (mantém identificadores para compatibilidade) -->
+        <div class="readiness-breakdown">
+          <span class="breakdown-item">
+            <strong data-testid="total-questions">{{ stats.total_questions }}</strong> perguntas
+          </span>
+          <span class="breakdown-separator" aria-hidden="true">•</span>
+          <span class="breakdown-item">
+            <strong data-testid="total-hidden">{{ stats.total_hidden }}</strong> termos ocultos
+          </span>
+          <span class="breakdown-separator" aria-hidden="true">•</span>
+          <span class="breakdown-item">
+            <strong data-testid="reviewed-today">{{ stats.reviewed_today }}</strong> revisados hoje
+          </span>
+          <span class="breakdown-separator" aria-hidden="true">•</span>
+          <span class="breakdown-item subtle">
+            Total elegível: <span data-testid="total-eligible">{{ stats.total_eligible }}</span>
+          </span>
+        </div>
       </div>
 
-      <div class="metric-card metric-questions">
-        <span class="metric-label">Perguntas</span>
-        <span class="metric-value" data-testid="total-questions">{{ stats.total_questions }}</span>
-        <span class="metric-caption">Fixação ativa</span>
-      </div>
-
-      <div class="metric-card metric-hidden">
-        <span class="metric-label">Termos Ocultos</span>
-        <span class="metric-value" data-testid="total-hidden">{{ stats.total_hidden }}</span>
-        <span class="metric-caption">Clozes na leitura</span>
-      </div>
-
-      <div class="metric-card metric-reviewed">
-        <span class="metric-label">Revisados Hoje</span>
-        <span class="metric-value" data-testid="reviewed-today">{{ stats.reviewed_today }}</span>
-        <span class="metric-caption">Itens praticados</span>
-      </div>
-
-      <div class="metric-card metric-pending">
-        <span class="metric-label">Pendentes</span>
-        <span class="metric-value" data-testid="pending-review">{{ stats.pending_review }}</span>
-        <span class="metric-caption">Aguardando rodada</span>
+      <!-- Disparador de Ação Primária Centralizado/Destacado -->
+      <div class="readiness-action">
+        <button
+          type="button"
+          class="btn-start-practice"
+          data-testid="start-practice-btn"
+          :disabled="loading || stats.pending_review === 0"
+          @click="onStartPractice"
+        >
+          <svg class="practice-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          <span>Praticar Revisão Agora</span>
+        </button>
       </div>
     </div>
 
@@ -168,58 +204,130 @@ function onChapterChange(event: Event) {
   margin-bottom: 2rem;
 }
 
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+/* Barra Unificada de Prontidão Intelectual */
+.readiness-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 1.75rem;
+  background-color: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border-subtle, #e2e8f0);
+  border-radius: var(--radius-card, 14px);
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.04);
+}
+
+.readiness-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.readiness-headline {
+  display: flex;
+  align-items: center;
   gap: 0.75rem;
 }
 
-.metric-card {
+.readiness-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.1));
+  color: var(--color-accent, var(--color-primary, #3b82f6));
+}
+
+.readiness-core {
   display: flex;
-  flex-direction: column;
-  padding: 1rem 1.125rem;
-  border-radius: 0.75rem;
-  background-color: var(--color-bg-surface, #ffffff);
-  border: 1px solid var(--color-border-subtle, #e2e8f0);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-.metric-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
-}
-
-.metric-label {
-  font-size: 0.75rem;
+.readiness-title {
+  font-family: var(--font-serif, "EB Garamond", Garamond, Georgia, serif);
+  font-size: 1.25rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-text-muted, #64748b);
-  margin-bottom: 0.25rem;
+  color: var(--color-text, #0f172a);
+  letter-spacing: -0.01em;
 }
 
-.metric-value {
-  font-size: 1.75rem;
+.pending-count {
+  font-size: 1.45rem;
   font-weight: 700;
-  line-height: 1.2;
-  color: var(--color-text-primary, #0f172a);
+  color: var(--color-accent, var(--color-primary, #3b82f6));
 }
 
-.metric-caption {
-  font-size: 0.75rem;
-  color: var(--color-text-secondary, #94a3b8);
-  margin-top: 0.25rem;
+.estimated-time {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #64748b);
+  font-weight: 500;
 }
 
-.metric-total .metric-value {
-  color: var(--color-primary, #2563eb);
+.readiness-breakdown {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary, #64748b);
+  flex-wrap: wrap;
 }
 
-.metric-reviewed .metric-value {
-  color: #16a34a;
+.breakdown-item strong {
+  color: var(--color-text, #0f172a);
+  font-weight: 600;
 }
 
+.breakdown-item.subtle {
+  opacity: 0.8;
+}
+
+.breakdown-separator {
+  color: var(--color-border-strong, #cbd5e1);
+}
+
+/* Disparador de Ação Primária */
+.readiness-action {
+  flex-shrink: 0;
+}
+
+.btn-start-practice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 46px;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-button, 10px);
+  background-color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-on-accent, #ffffff);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.08);
+  transition: transform 180ms ease, opacity 180ms ease, box-shadow 180ms ease;
+}
+
+.btn-start-practice:hover:not(:disabled) {
+  opacity: 0.93;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.12);
+}
+
+.btn-start-practice:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.practice-icon {
+  flex-shrink: 0;
+}
+
+/* Barra de Filtros e Escopo */
 .filters-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -227,7 +335,7 @@ function onChapterChange(event: Event) {
   justify-content: space-between;
   gap: 1rem;
   padding: 0.75rem 1rem;
-  background-color: var(--color-bg-surface-secondary, #f8fafc);
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.02));
   border: 1px solid var(--color-border-subtle, #e2e8f0);
   border-radius: 0.75rem;
 }
@@ -235,7 +343,7 @@ function onChapterChange(event: Event) {
 .kind-filter {
   display: flex;
   gap: 0.375rem;
-  background-color: var(--color-bg-surface, #ffffff);
+  background-color: var(--color-surface, #ffffff);
   padding: 0.25rem;
   border-radius: 0.5rem;
   border: 1px solid var(--color-border-subtle, #e2e8f0);
@@ -259,13 +367,13 @@ function onChapterChange(event: Event) {
 }
 
 .filter-pill:hover {
-  color: var(--color-text-primary, #0f172a);
-  background-color: var(--color-bg-hover, #f1f5f9);
+  color: var(--color-text, #0f172a);
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
 }
 
 .filter-pill.active {
-  background-color: var(--color-primary, #2563eb);
-  color: #ffffff;
+  background-color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-on-accent, #ffffff);
   font-weight: 600;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
@@ -287,9 +395,9 @@ function onChapterChange(event: Event) {
   font-size: 0.875rem;
   font-weight: 500;
   border-radius: 0.5rem;
-  border: 1px solid var(--color-border-subtle, #cbd5e1);
-  background-color: var(--color-bg-surface, #ffffff);
-  color: var(--color-text-primary, #0f172a);
+  border: 1px solid var(--color-border-strong, #cbd5e1);
+  background-color: var(--color-surface, #ffffff);
+  color: var(--color-text, #0f172a);
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
@@ -299,7 +407,7 @@ function onChapterChange(event: Event) {
 }
 
 .review-select:focus {
-  outline: 2px solid var(--color-primary, #2563eb);
+  outline: 2px solid var(--color-accent, #3b82f6);
   outline-offset: 1px;
 }
 
@@ -315,7 +423,18 @@ function onChapterChange(event: Event) {
   border-width: 0;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .readiness-banner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+
+  .btn-start-practice {
+    width: 100%;
+    justify-content: center;
+  }
+
   .filters-toolbar {
     flex-direction: column;
     align-items: stretch;

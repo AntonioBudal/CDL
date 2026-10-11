@@ -6,9 +6,11 @@ const props = withDefaults(
     isOpen: boolean
     summary: { easy: number; medium: number; hard: number; total: number }
     hasMoreItems?: boolean
+    elapsedSeconds?: number
   }>(),
   {
     hasMoreItems: true,
+    elapsedSeconds: 0,
   },
 )
 
@@ -26,6 +28,14 @@ const mediumPercent = computed(() =>
 const hardPercent = computed(() =>
   props.summary.total > 0 ? Math.round((props.summary.hard / props.summary.total) * 100) : 0,
 )
+
+const formattedTime = computed(() => {
+  if (!props.elapsedSeconds || props.elapsedSeconds <= 0) return ''
+  const mins = Math.floor(props.elapsedSeconds / 60)
+  const secs = props.elapsedSeconds % 60
+  if (mins === 0) return `${secs}s de foco`
+  return `${mins}m ${secs}s de foco`
+})
 </script>
 
 <template>
@@ -45,7 +55,7 @@ const hardPercent = computed(() =>
         </div>
         <h2 id="summary-title" class="modal-title">Rodada Concluída!</h2>
         <p class="modal-subtitle">
-          Você praticou {{ summary.total }} itens nesta sessão. Confira o balanço de retenção:
+          Você praticou {{ summary.total }} itens nesta sessão<template v-if="formattedTime"> em {{ formattedTime }}</template>.
         </p>
       </header>
 
@@ -102,7 +112,7 @@ const hardPercent = computed(() =>
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(15, 23, 42, 0.6);
+  background-color: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -114,9 +124,9 @@ const hardPercent = computed(() =>
 .summary-modal-card {
   width: 100%;
   max-width: 480px;
-  background-color: var(--color-bg-surface, #ffffff);
+  background-color: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border-subtle, #e2e8f0);
-  border-radius: 1.25rem;
+  border-radius: var(--radius-card, 1.25rem);
   padding: 2rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   display: flex;
@@ -126,19 +136,28 @@ const hardPercent = computed(() =>
 }
 
 .celebration-badge {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.1));
+  color: var(--color-accent, var(--color-primary, #3b82f6));
+  margin: 0 auto 0.5rem;
 }
 
 .modal-title {
-  font-size: 1.5rem;
+  font-family: var(--font-serif, "EB Garamond", Garamond, Georgia, serif);
+  font-size: 1.6rem;
   font-weight: 700;
-  color: var(--color-text-primary, #0f172a);
+  color: var(--color-text, #0f172a);
   margin: 0 0 0.5rem;
+  letter-spacing: -0.015em;
 }
 
 .modal-subtitle {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   color: var(--color-text-secondary, #64748b);
   margin: 0;
 }
@@ -152,27 +171,22 @@ const hardPercent = computed(() =>
 .retention-card {
   display: flex;
   flex-direction: column;
-  padding: 1rem 0.5rem;
+  padding: 0.85rem 0.5rem;
   border-radius: 0.75rem;
-  border: 1px solid transparent;
+  border: 1px solid var(--color-border-subtle, #e2e8f0);
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.02));
 }
 
 .card-easy {
-  background-color: #f0fdf4;
-  border-color: #bbf7d0;
-  color: #166534;
+  color: var(--color-success);
 }
 
 .card-medium {
-  background-color: #fefce8;
-  border-color: #fef08a;
-  color: #854d0e;
+  color: var(--color-warning);
 }
 
 .card-hard {
-  background-color: #fef2f2;
-  border-color: #fecaca;
-  color: #991b1b;
+  color: var(--color-error);
 }
 
 .retention-label {
@@ -199,19 +213,19 @@ const hardPercent = computed(() =>
   height: 8px;
   border-radius: 9999px;
   overflow: hidden;
-  background-color: #e2e8f0;
+  background-color: var(--color-border-subtle, #e2e8f0);
 }
 
 .bar-easy {
-  background-color: #22c55e;
+  background-color: var(--color-success);
 }
 
 .bar-medium {
-  background-color: #eab308;
+  background-color: var(--color-warning);
 }
 
 .bar-hard {
-  background-color: #ef4444;
+  background-color: var(--color-error);
 }
 
 .modal-actions {
@@ -223,31 +237,32 @@ const hardPercent = computed(() =>
 .btn-action {
   min-height: 44px;
   padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-button, 0.5rem);
   font-size: 0.9375rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
-  border: none;
 }
 
 .btn-primary {
-  background-color: var(--color-primary, #2563eb);
-  color: #ffffff;
+  background-color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-on-accent, #ffffff);
+  border: 1px solid transparent;
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-hover, #1d4ed8);
+  opacity: 0.92;
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
   background-color: transparent;
   color: var(--color-text-secondary, #64748b);
-  border: 1px solid var(--color-border-subtle, #cbd5e1);
+  border: 1px solid var(--color-border-strong, #cbd5e1);
 }
 
 .btn-secondary:hover {
-  background-color: var(--color-bg-surface-secondary, #f8fafc);
-  color: var(--color-text-primary, #0f172a);
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
+  color: var(--color-text, #0f172a);
 }
 </style>

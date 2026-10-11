@@ -1181,6 +1181,28 @@ export interface ReviewStatsResponse {
   books: ReviewBookItem[]
 }
 
+export interface ReviewReadinessMetrics {
+  total_eligible: number
+  total_questions: number
+  total_hidden: number
+  reviewed_today: number
+  pending_review: number
+  estimated_minutes: number
+  books_summary?: Array<{
+    id: number
+    title: string
+    pending_count: number
+  }>
+}
+
+export interface PedagogicalClozeDemo {
+  passagePrefix: string
+  hiddenTerm: string
+  passageSuffix: string
+  isRevealed: boolean
+  explanation: string
+}
+
 export interface ReviewItemRead {
   id: number
   study_id: number

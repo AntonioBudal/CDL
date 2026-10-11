@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { api, startStudySession, getStudySessionsHistory } from '../services/api.ts'
 import { reviewApi } from '../api/review.ts'
@@ -7,6 +7,7 @@ import { useReviewSession } from '../composables/useReviewSession.ts'
 import type { Chapter, ReviewStatsResponse, StudySession, SessionScopeType } from '../types.ts'
 import ReviewStatsHeader from '../components/review/ReviewStatsHeader.vue'
 import ReviewCard from '../components/review/ReviewCard.vue'
+import ReviewPedagogicalEmpty from '../components/review/ReviewPedagogicalEmpty.vue'
 import ReviewSummaryModal from '../components/review/ReviewSummaryModal.vue'
 
 const router = useRouter()
@@ -32,6 +33,23 @@ const selectedChapterId = ref<number | null>(null)
 const selectedKind = ref<string>('all')
 const chapters = ref<Chapter[]>([])
 const isSessionActive = ref(false)
+const sessionElapsedSeconds = ref(0)
+let timerId: ReturnType<typeof setInterval> | null = null
+
+function startTimer() {
+  stopTimer()
+  sessionElapsedSeconds.value = 0
+  timerId = setInterval(() => {
+    sessionElapsedSeconds.value++
+  }, 1000)
+}
+
+function stopTimer() {
+  if (timerId !== null) {
+    clearInterval(timerId)
+    timerId = null
+  }
+}
 
 async function fetchStats() {
   loadingStats.value = true
@@ -71,6 +89,7 @@ const eligibleCountForSelection = computed(() => {
 
 async function startReview() {
   isSessionActive.value = true
+  startTimer()
   await session.loadItems({
     book_id: selectedBookId.value ?? undefined,
     chapter_id: selectedChapterId.value ?? undefined,
@@ -80,12 +99,14 @@ async function startReview() {
 }
 
 function exitSession() {
+  stopTimer()
   session.reset()
   isSessionActive.value = false
   void fetchStats()
 }
 
 async function handleReviewMore() {
+  startTimer()
   await session.restartOrContinue({
     book_id: selectedBookId.value ?? undefined,
     chapter_id: selectedChapterId.value ?? undefined,
@@ -159,6 +180,10 @@ function formatDate(isoStr: string): string {
 onMounted(() => {
   void fetchStats()
 })
+
+onUnmounted(() => {
+  stopTimer()
+})
 </script>
 
 <template>
@@ -168,7 +193,7 @@ onMounted(() => {
       <div class="hub-header">
         <h1 class="page-title">Central de Revisão</h1>
         <p class="page-subtitle">
-          Pratique Active Recall com perguntas de fixação e termos ocultos dos seus estudos.
+          Bancada de Fixação Cognitiva: pratique Active Recall com perguntas e termos ocultos.
         </p>
       </div>
 
@@ -198,7 +223,7 @@ onMounted(() => {
 
       <!-- ABA 1: PRÁTICA DE REVISÃO -->
       <div v-if="activeTab === 'practice'" class="practice-tab-content">
-        <!-- Cabeçalho de Estatísticas e Filtros -->
+        <!-- Cabeçalho de Estatísticas e Barra de Prontidão -->
         <ReviewStatsHeader
           :stats="stats"
           :selected-book-id="selectedBookId"
@@ -209,47 +234,26 @@ onMounted(() => {
           @update:selected-book-id="selectedBookId = $event"
           @update:selected-chapter-id="selectedChapterId = $event"
           @update:selected-kind="selectedKind = $event"
+          @start-practice="startReview"
         />
 
-        <!-- ESTADO VAZIO: Nenhum item elegível -->
-        <section
+        <!-- ESTADO VAZIO PEDAGÓGICO: Nenhum item elegível no acervo -->
+        <ReviewPedagogicalEmpty
           v-if="!loadingStats && stats.total_eligible === 0"
-          class="empty-state empty-review"
-          aria-label="Nenhum item para revisão"
-        >
-          <div class="empty-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-          </div>
-          <h2 class="empty-title">Nenhum item interativo para revisar</h2>
-          <p class="empty-description">
-            Você ainda não possui perguntas ou termos ocultos criados. Ao ler seus estudos,
-            selecione qualquer trecho e transforme-o em uma <strong>Pergunta</strong> ou <strong>Termo Oculto</strong>.
-          </p>
-          <router-link to="/livros" class="btn-goto-books">
-            Explorar meus Livros
-          </router-link>
-        </section>
+          :has-eligible-items="false"
+          @go-to-books="router.push('/livros')"
+        />
 
-        <!-- AVISO: Todos revisados hoje -->
-        <div
+        <!-- ESTADO VAZIO PEDAGÓGICO: Todos já revisados hoje -->
+        <ReviewPedagogicalEmpty
           v-else-if="!loadingStats && stats.total_eligible > 0 && stats.pending_review === 0"
-          class="all-reviewed-banner"
-        >
-          <span class="banner-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </span>
-          <div class="banner-text">
-            <strong>Parabéns!</strong> Todos os seus itens prioritários foram revisados hoje.
-            Você pode revisar novamente para reforçar a memória ou praticar outro livro.
-          </div>
-        </div>
+          :has-eligible-items="true"
+          @go-to-books="router.push('/livros')"
+          @review-again="handleReviewMore"
+        />
 
-        <!-- BOTÕES DE INÍCIO DE SESSÃO -->
-        <div v-if="stats.total_eligible > 0" class="start-session-bar">
+        <!-- AÇÕES SECUNDÁRIAS (Sessão Estruturada / Prática Rápida Hub) -->
+        <div v-if="stats.pending_review > 0" class="start-session-bar">
           <button
             type="button"
             class="start-structured-btn"
@@ -260,7 +264,7 @@ onMounted(() => {
               <polygon points="5 3 19 12 5 21 5 3" />
             </svg>
             <span>
-              Iniciar Sessão de Estudo
+              Iniciar Sessão Estruturada
               <template v-if="selectedBookId">do Livro</template>
               <template v-else>Rápida (10 itens)</template>
             </span>
@@ -276,7 +280,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- ABA 2: HISTÓRICO DE SESSÕES (F0.7.14) -->
+      <!-- ABA 2: HISTÓRICO DE SESSÕES -->
       <div v-else class="history-tab-content">
         <div v-if="loadingHistory" class="history-loading">
           <div class="spinner" aria-hidden="true" />
@@ -285,7 +289,7 @@ onMounted(() => {
         <div v-else-if="sessionHistory.length === 0" class="empty-state empty-history">
           <h2 class="empty-title">Nenhuma sessão registrada</h2>
           <p class="empty-description">
-            Complete sua primeira sessão estruturada de estudo para acompanhar aqui seu histórico auditável de aprendizado e dedicação.
+            Complete sua primeira sessão de estudo para acompanhar aqui seu histórico auditável de aprendizado e dedicação.
           </p>
         </div>
         <div v-else class="history-list">
@@ -374,6 +378,7 @@ onMounted(() => {
           :item="session.currentItem.value"
           :is-revealed="session.state.isRevealed"
           :busy="session.state.submitting"
+          :progress="session.progress.value"
           @reveal="session.revealAnswer"
           @rate="session.submitRating"
         />
@@ -383,7 +388,8 @@ onMounted(() => {
       <ReviewSummaryModal
         :is-open="session.state.isCompleted"
         :summary="session.summary.value"
-        :has-more-items="stats.total_eligible > 0"
+        :has-more-items="stats.pending_review > 0"
+        :elapsed-seconds="sessionElapsedSeconds"
         @review-more="handleReviewMore"
         @finish="handleFinishSession"
       />
@@ -408,14 +414,16 @@ onMounted(() => {
 }
 
 .page-title {
-  font-size: 1.75rem;
+  font-family: var(--font-serif, "EB Garamond", Garamond, Georgia, serif);
+  font-size: 1.85rem;
   font-weight: 700;
-  color: var(--color-text-primary, #0f172a);
+  color: var(--color-text, #0f172a);
   margin: 0 0 0.375rem;
+  letter-spacing: -0.015em;
 }
 
 .page-subtitle {
-  font-size: 0.9375rem;
+  font-size: 0.95rem;
   color: var(--color-text-secondary, #64748b);
   margin: 0;
 }
@@ -428,20 +436,15 @@ onMounted(() => {
   text-align: center;
   padding: 3.5rem 1.5rem;
   border-radius: 1rem;
-  background-color: var(--color-bg-surface, #ffffff);
+  background-color: var(--color-surface, #ffffff);
   border: 1px dashed var(--color-border-subtle, #cbd5e1);
   margin: 2rem 0;
-}
-
-.empty-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
 }
 
 .empty-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--color-text-primary, #0f172a);
+  color: var(--color-text, #0f172a);
   margin: 0 0 0.5rem;
 }
 
@@ -450,78 +453,7 @@ onMounted(() => {
   font-size: 0.9375rem;
   line-height: 1.6;
   color: var(--color-text-secondary, #64748b);
-  margin: 0 0 1.5rem;
-}
-
-.btn-goto-books {
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.625rem 1.5rem;
-  border-radius: 0.5rem;
-  background-color: var(--color-primary, #2563eb);
-  color: #ffffff;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.15s ease;
-}
-
-.btn-goto-books:hover {
-  background-color: var(--color-primary-hover, #1d4ed8);
-}
-
-.all-reviewed-banner {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  border-radius: 0.75rem;
-  background-color: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  color: #166534;
-  margin-bottom: 1.5rem;
-  font-size: 0.875rem;
-}
-
-.banner-icon {
-  font-size: 1.5rem;
-}
-
-.start-session-bar {
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-}
-
-.start-review-btn {
-  min-height: 52px;
-  width: 100%;
-  max-width: 480px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.875rem 2rem;
-  border-radius: 0.75rem;
-  background-color: var(--color-primary, #2563eb);
-  color: #ffffff;
-  font-size: 1.125rem;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25);
-  transition: all 0.15s ease;
-}
-
-.start-review-btn:hover:not(:disabled) {
-  background-color: var(--color-primary-hover, #1d4ed8);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
-}
-
-.start-review-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  margin: 0;
 }
 
 .session-container {
@@ -551,8 +483,8 @@ onMounted(() => {
 }
 
 .btn-exit-session:hover {
-  background-color: var(--color-bg-hover, #f1f5f9);
-  color: var(--color-text-primary, #0f172a);
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
+  color: var(--color-text, #0f172a);
 }
 
 .session-progress-info {
@@ -579,7 +511,7 @@ onMounted(() => {
 
 .session-progress-fill {
   height: 100%;
-  background-color: var(--color-primary, #2563eb);
+  background-color: var(--color-accent, var(--color-primary, #3b82f6));
   transition: width 0.3s ease;
 }
 
@@ -605,6 +537,7 @@ onMounted(() => {
   border: 1px solid var(--color-border-subtle, #cbd5e1);
   background: transparent;
   cursor: pointer;
+  color: var(--color-text, inherit);
 }
 
 /* Abas do Hub */
@@ -630,16 +563,16 @@ onMounted(() => {
 }
 
 .hub-tab-item:hover {
-  color: var(--color-text-primary, #0f172a);
+  color: var(--color-text, #0f172a);
 }
 
 .hub-tab-item.active {
-  color: var(--color-primary, #2563eb);
-  border-bottom-color: var(--color-primary, #2563eb);
+  color: var(--color-accent, var(--color-primary, #3b82f6));
+  border-bottom-color: var(--color-accent, var(--color-primary, #3b82f6));
 }
 
 .hub-tab-item:focus-visible {
-  outline: 2px solid var(--color-primary, #2563eb);
+  outline: 2px solid var(--color-accent, #3b82f6);
   outline-offset: -2px;
 }
 
@@ -659,8 +592,8 @@ onMounted(() => {
   gap: 0.625rem;
   min-height: 48px;
   padding: 0.75rem 1.75rem;
-  background-color: var(--color-primary, #2563eb);
-  color: #ffffff;
+  background-color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-on-accent, #ffffff);
   border: 1px solid transparent;
   border-radius: 8px;
   font-family: inherit;
@@ -672,7 +605,8 @@ onMounted(() => {
 }
 
 .start-structured-btn:hover {
-  background-color: var(--color-primary-dark, #1d4ed8);
+  opacity: 0.92;
+  transform: translateY(-1px);
 }
 
 .start-structured-btn:disabled {
@@ -681,20 +615,26 @@ onMounted(() => {
 }
 
 .start-structured-btn:focus-visible {
-  outline: 2px solid var(--color-primary, #2563eb);
+  outline: 2px solid var(--color-accent, #3b82f6);
   outline-offset: 2px;
 }
 
 .start-review-btn.secondary-mode {
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
   background-color: transparent;
   color: var(--color-text-secondary, #475569);
-  border: 1px solid var(--color-border-subtle, #cbd5e1);
-  box-shadow: none;
+  border: 1px solid var(--color-border-strong, #cbd5e1);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 .start-review-btn.secondary-mode:hover {
-  background-color: var(--color-bg-subtle, #f1f5f9);
-  color: var(--color-text-primary, #0f172a);
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
+  color: var(--color-text, #0f172a);
 }
 
 /* Histórico de Sessões */
@@ -712,7 +652,7 @@ onMounted(() => {
   width: 32px;
   height: 32px;
   border: 3px solid var(--color-border-subtle, #e2e8f0);
-  border-top-color: var(--color-primary, #2563eb);
+  border-top-color: var(--color-accent, #3b82f6);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -730,7 +670,7 @@ onMounted(() => {
 }
 
 .history-card {
-  background-color: var(--color-bg, #ffffff);
+  background-color: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border-subtle, #e2e8f0);
   border-radius: 8px;
   padding: 1.25rem;
@@ -747,7 +687,7 @@ onMounted(() => {
 .history-date {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-text-primary, #1e293b);
+  color: var(--color-text, #1e293b);
 }
 
 .history-status-badge {
@@ -760,13 +700,13 @@ onMounted(() => {
 }
 
 .history-status-badge.completed {
-  background-color: #dcfce7;
-  color: #15803d;
+  background-color: var(--color-surface-soft, rgba(34, 197, 94, 0.12));
+  color: var(--color-success, #15803d);
 }
 
 .history-status-badge.interrupted {
-  background-color: #fef3c7;
-  color: #b45309;
+  background-color: var(--color-surface-soft, rgba(245, 158, 11, 0.12));
+  color: var(--color-warning, #b45309);
 }
 
 .history-card-body {
@@ -785,29 +725,28 @@ onMounted(() => {
   font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-muted, #94a3b8);
+  color: var(--color-text-secondary, #94a3b8);
   font-weight: 600;
 }
 
 .detail-value {
   font-size: 0.875rem;
-  color: var(--color-text-secondary, #334155);
+  color: var(--color-text, #334155);
   font-weight: 500;
 }
 
 .count-easy {
-  color: #16a34a;
+  color: var(--color-success, #16a34a);
   font-weight: 600;
 }
 
 .count-medium {
-  color: #d97706;
+  color: var(--color-warning, #d97706);
   font-weight: 600;
 }
 
 .count-hard {
-  color: #dc2626;
+  color: var(--color-error, #dc2626);
   font-weight: 600;
 }
 </style>
-
