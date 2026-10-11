@@ -2,14 +2,39 @@
 import { computed } from 'vue'
 import StudyTabs from './StudyTabs.vue'
 import BookCover from './BookCover.vue'
+import Icon from './ui/Icon.vue'
 import type { AnalysisSections } from '../types'
 import type { AppearancePreferences } from '../appearance'
 
-const props = defineProps<{
-  preferences?: AppearancePreferences
+const props = withDefaults(
+  defineProps<{
+    preferences?: AppearancePreferences
+    isMobileDrawer?: boolean
+  }>(),
+  {
+    isMobileDrawer: false,
+  }
+)
+
+defineEmits<{
+  closeDrawer: []
 }>()
 
 const isListView = computed(() => props.preferences?.library === 'list')
+
+const studyPreviewStyle = computed(() => {
+  const size = props.preferences?.['reader-size'] ? `${props.preferences['reader-size']}%` : '100%'
+  const align = props.preferences?.align || 'left'
+  const density = props.preferences?.density
+  const lineHeight = density === 'comfortable' ? '1.8' : density === 'compact' ? '1.4' : '1.6'
+  
+  return {
+    fontSize: size,
+    textAlign: align as any,
+    lineHeight: lineHeight,
+    transition: 'font-size 0.15s ease, line-height 0.15s ease',
+  }
+})
 
 const sections: AnalysisSections = {
   summary:
@@ -31,19 +56,33 @@ const books = [
 <template>
   <aside
     class="appearance-preview panel"
+    :class="{ 'is-drawer': isMobileDrawer }"
     aria-labelledby="appearance-preview-title"
   >
     <div class="preview-header">
-      <h2 id="appearance-preview-title">Amostra ao Vivo</h2>
-      <span class="preview-badge">Preview</span>
+      <div class="preview-title-wrap">
+        <h2 id="appearance-preview-title">Amostra ao Vivo</h2>
+        <span class="preview-badge">Preview</span>
+      </div>
+      <button
+        v-if="isMobileDrawer"
+        type="button"
+        class="preview-close-btn"
+        aria-label="Fechar amostra de leitura"
+        @click="$emit('closeDrawer')"
+      >
+        <Icon name="x" :size="18" />
+      </button>
     </div>
 
     <div class="preview-section">
       <h3 class="preview-subtitle">Leitor de Estudo</h3>
-      <StudyTabs
-        :sections="sections"
-        id-prefix="appearance-preview"
-      />
+      <div class="preview-study-container" :style="studyPreviewStyle">
+        <StudyTabs
+          :sections="sections"
+          id-prefix="appearance-preview"
+        />
+      </div>
     </div>
 
     <div class="preview-section">
@@ -118,9 +157,42 @@ const books = [
   padding-bottom: calc(var(--space-unit) * 0.5);
 }
 
-.preview-header h2 {
-  margin: 0;
-  font-size: var(--text-h2, 1.25rem);
+.preview-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.preview-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm, 6px);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.preview-close-btn:hover {
+  background: var(--color-surface-hover, var(--color-border));
+}
+
+.preview-study-container {
+  width: 100%;
+}
+
+.appearance-preview.is-drawer {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
 }
 
 .preview-badge {

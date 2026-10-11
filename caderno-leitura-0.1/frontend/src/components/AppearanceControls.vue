@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import type { AppearancePreferences } from '../appearance'
 import ReadingSizeControl from './ReadingSizeControl.vue'
 import FontPicker from './FontPicker.vue'
+import ThemePreviewGrid from './ThemePreviewGrid.vue'
+import type { CanonicalThemeId } from '../types/settings'
 import { useSuperclassPhysics } from '../composables/useSuperclassPhysics'
 
 const props = withDefaults(
@@ -66,6 +68,12 @@ function change(event: Event, key: keyof AppearancePreferences) {
   }
 }
 
+function onThemeChange(newTheme: CanonicalThemeId) {
+  emit('change', {
+    theme: newTheme,
+  } as Partial<AppearancePreferences>)
+}
+
 function ignored(key: keyof AppearancePreferences) {
   return props.preferences.theme === 'e-ink'
     && ['accent', 'superclass-intensity'].includes(key)
@@ -86,6 +94,7 @@ function ignored(key: keyof AppearancePreferences) {
           v-for="field in visibleFields.filter(item => item.group === group)"
           :key="field.key"
           class="field"
+          :class="{ 'field-full-width': field.key === 'theme' }"
         >
           <FontPicker
             v-if="field.key === 'font'"
@@ -99,6 +108,17 @@ function ignored(key: keyof AppearancePreferences) {
             :value="preferences['reader-size']"
             @change="emit('change', { 'reader-size': $event })"
           />
+
+          <div v-else-if="field.key === 'theme'" class="theme-field-wrapper">
+            <label :for="`pref-${field.key}`" class="field-label-prominent">
+              {{ field.label }}
+            </label>
+            <ThemePreviewGrid
+              :model-value="preferences.theme"
+              :disabled="ignored('theme')"
+              @update:model-value="onThemeChange"
+            />
+          </div>
 
           <template v-else>
             <label :for="`pref-${field.key}`">
@@ -146,3 +166,19 @@ function ignored(key: keyof AppearancePreferences) {
     A fonte selecionada aplica-se a toda a interface literária. O tamanho do texto e o espaçamento ajustam a leitura confortavelmente.
   </p>
 </template>
+
+<style scoped>
+.field-full-width,
+.theme-field-wrapper {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.field-label-prominent {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--color-text);
+  font-size: 0.95rem;
+}
+</style>

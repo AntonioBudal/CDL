@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import AppearanceControls from '../components/AppearanceControls.vue'
 import AppearancePreview from '../components/AppearancePreview.vue'
@@ -119,13 +119,14 @@ async function handleSaveProfile() {
 }
 
 const activeTab = ref<SettingsTabId>('perfil')
+const isMobilePreviewOpen = ref(false)
 
 const tabs: SettingsTab[] = [
-  { id: 'perfil', label: 'Perfil & Privacidade', description: 'Identidade pública, avatar e visibilidade' },
-  { id: 'aparencia', label: 'Aparência', description: 'Paleta cromática, Superclasse e dimensões' },
-  { id: 'leitura', label: 'Leitura', description: 'Tipografia literária, tamanho e destaques' },
-  { id: 'sistema', label: 'Sistema', description: 'Diagnóstico, conexão, armazenamento e backup' },
-  { id: 'conta', label: 'Conta & Dispositivos', description: 'Sessões ativas e dispositivos conectados' },
+  { id: 'perfil', label: 'Perfil & Privacidade', description: 'Identidade pública, avatar e visibilidade', icon: 'user' },
+  { id: 'aparencia', label: 'Aparência', description: 'Paleta cromática, Superclasse e dimensões', icon: 'sliders' },
+  { id: 'leitura', label: 'Leitura', description: 'Tipografia literária, tamanho e destaques', icon: 'book-open' },
+  { id: 'sistema', label: 'Sistema', description: 'Diagnóstico, conexão, armazenamento e backup', icon: 'monitor' },
+  { id: 'conta', label: 'Conta & Dispositivos', description: 'Sessões ativas e dispositivos conectados', icon: 'shield' },
 ]
 
 function save() {
@@ -180,10 +181,22 @@ function onTabKeydown(event: KeyboardEvent, currentId: SettingsTabId) {
 
 function selectTab(id: SettingsTabId, event?: MouseEvent) {
   activeTab.value = id
+  if (route.query.tab !== id) {
+    router.replace({ query: { ...route.query, tab: id } })
+  }
   if (event?.currentTarget) {
     physics.triggerHapticPulse(event.currentTarget as HTMLElement, 'step')
   }
 }
+
+watch(
+  () => route.query.tab,
+  (newTab) => {
+    if (newTab && tabs.some(t => t.id === newTab) && activeTab.value !== newTab) {
+      activeTab.value = newTab as SettingsTabId
+    }
+  }
+)
 
 // Diagnóstico de Armazenamento
 const storageDiag = ref<StorageDiagnostic>({
@@ -451,28 +464,32 @@ onBeforeUnmount(() => {
       </p>
     </header>
 
-    <!-- Barra de Abas Segmentadas WAI-ARIA -->
-    <nav class="settings-nav" aria-label="Seções de Ajustes">
-      <div class="settings-tabs" role="tablist">
-        <button
-          v-for="tab in tabs"
-          :id="`tab-${tab.id}`"
-          :key="tab.id"
-          type="button"
-          role="tab"
-          class="settings-tab"
-          :aria-selected="activeTab === tab.id"
-          :aria-controls="`panel-${tab.id}`"
-          :tabindex="activeTab === tab.id ? 0 : -1"
-          @click="selectTab(tab.id, $event)"
-          @keydown="onTabKeydown($event, tab.id)"
-        >
-          {{ tab.label }}
-        </button>
-      </div>
-    </nav>
-
     <div class="settings-layout">
+      <!-- Coluna Esquerda: Menu Lateral Vertical de Navegação -->
+      <nav class="settings-nav" aria-label="Seções de Ajustes">
+        <div class="settings-tabs" role="tablist" aria-orientation="vertical">
+          <button
+            v-for="tab in tabs"
+            :id="`tab-${tab.id}`"
+            :key="tab.id"
+            type="button"
+            role="tab"
+            class="settings-tab"
+            :aria-selected="activeTab === tab.id"
+            :aria-controls="`panel-${tab.id}`"
+            :tabindex="activeTab === tab.id ? 0 : -1"
+            @click="selectTab(tab.id, $event)"
+            @keydown="onTabKeydown($event, tab.id)"
+          >
+            <Icon v-if="tab.icon" :name="tab.icon" :size="18" class="tab-icon" />
+            <div class="tab-text-wrap">
+              <span class="tab-label">{{ tab.label }}</span>
+              <span class="tab-desc font-small">{{ tab.description }}</span>
+            </div>
+          </button>
+        </div>
+      </nav>
+
       <!-- Coluna Principal (Controles e Painéis da Aba Ativa) -->
       <div class="settings-main">
         <!-- Aba 0: Perfil & Privacidade (F05) -->
@@ -1108,6 +1125,34 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
+    <!-- Gatilho Flutuante da Amostra Viva no Mobile -->
+    <div class="mobile-preview-fab-wrap">
+      <button
+        type="button"
+        class="mobile-preview-fab"
+        aria-label="Abrir demonstração ao vivo de leitura"
+        @click="isMobilePreviewOpen = true"
+      >
+        <Icon name="eye" :size="18" />
+        <span>Demonstração de Leitura</span>
+      </button>
+    </div>
+
+    <!-- Gaveta Retrátil (Bottom Sheet) no Mobile -->
+    <div
+      v-if="isMobilePreviewOpen"
+      class="mobile-preview-overlay"
+      @click="isMobilePreviewOpen = false"
+    >
+      <div class="mobile-preview-sheet" @click.stop>
+        <AppearancePreview
+          :preferences="preferences"
+          :is-mobile-drawer="true"
+          @close-drawer="isMobilePreviewOpen = false"
+        />
+      </div>
+    </div>
+
     <!-- Modal de Confirmação de Reset -->
     <ConfirmResetModal
       :open="isResetModalOpen"
@@ -1623,6 +1668,183 @@ onBeforeUnmount(() => {
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* --- Layout em 3 colunas e Menu Vertical de Ajustes (Feature 072) --- */
+.settings-layout {
+  display: grid;
+  gap: calc(var(--space-unit, 1rem) * 1.5);
+  align-items: start;
+}
+
+@media (min-width: 1025px) {
+  .settings-layout {
+    grid-template-columns: 240px minmax(0, 1fr) 380px;
+  }
+
+  .settings-nav {
+    position: sticky;
+    top: 1.5rem;
+  }
+
+  .settings-nav .settings-tabs {
+    display: flex;
+    flex-direction: column;
+    border-bottom: none;
+    gap: 0.5rem;
+    padding: 0;
+  }
+
+  .settings-nav .settings-tab {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md, 8px);
+    border-bottom: none;
+    border-left: 3px solid transparent;
+    text-align: left;
+    white-space: normal;
+    color: var(--color-text-muted);
+    background: transparent;
+  }
+
+  .settings-nav .settings-tab:hover:not(:disabled) {
+    background-color: var(--color-tab-hover, var(--color-surface-hover));
+    color: var(--color-tab-hover-text, var(--color-text));
+  }
+
+  .settings-nav .settings-tab[aria-selected="true"] {
+    border-left-color: var(--color-accent);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .tab-icon {
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+    color: var(--color-accent);
+  }
+
+  .tab-text-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .tab-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2;
+  }
+
+  .tab-desc {
+    font-size: 0.775rem;
+    color: var(--color-text-muted);
+    line-height: 1.3;
+  }
+
+  .settings-sidebar {
+    position: sticky;
+    top: 1.5rem;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+  }
+
+  .mobile-preview-fab-wrap {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .settings-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .settings-nav .settings-tabs {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--color-border);
+    gap: 0.5rem;
+    padding-bottom: 0.25rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .settings-nav .settings-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+
+  .settings-nav .settings-tab[aria-selected="true"] {
+    border-bottom-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .tab-desc {
+    display: none;
+  }
+
+  .settings-sidebar {
+    display: none;
+  }
+
+  .mobile-preview-fab-wrap {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 40;
+  }
+
+  .mobile-preview-fab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.65rem 1.25rem;
+    border-radius: 9999px;
+    background-color: var(--color-accent);
+    color: var(--color-on-accent, #ffffff);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .mobile-preview-fab:active {
+    transform: scale(0.96);
+  }
+
+  .mobile-preview-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 50;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+  }
+
+  .mobile-preview-sheet {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-top: 2px solid var(--color-border);
+    border-radius: 16px 16px 0 0;
+    padding: 1.25rem;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
   }
 }
 </style>

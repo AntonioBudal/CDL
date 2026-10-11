@@ -483,6 +483,7 @@ export interface SettingsTab {
   id: SettingsTabId
   label: string
   description: string
+  icon?: IconName
 }
 
 export interface StorageDiagnostic {
@@ -1585,6 +1586,9 @@ export interface StudyTemplateDefinition {
 
 // --- Digitalização de Caderno Manuscrito (Document Intelligence Placeholder) ---
 export * from './types/digitize.ts'
+
+// --- Ateliê de Preferências e Leitura Viva (Feature 072) ---
+export * from './types/settings.ts'
 
 
 
