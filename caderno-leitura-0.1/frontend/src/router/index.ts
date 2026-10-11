@@ -22,6 +22,7 @@ import ReviewHubView from '../views/ReviewHubView.vue'
 import HighlightsLibraryView from '../views/HighlightsLibraryView.vue'
 import InboxView from '../views/InboxView.vue'
 import StudySessionView from '../views/StudySessionView.vue'
+import DigitizeNotebookView from '../views/DigitizeNotebookView.vue'
 import { updateSeoMeta } from '../composables/useSeoMeta'
 import { useAuthStore } from '../stores/auth.ts'
 import { api } from '../services/api'
@@ -87,6 +88,13 @@ export const router = createRouter({
     },
     { path: '/livros/:bookId/estudos/:studyId/editar', alias: ['/books/:bookId/estudos/:studyId/editar'], name: 'study-edit', component: StudyEditView, meta: { title: 'Editar estudo' } },
     { path: '/importar', name: 'import', component: ImportView, meta: { title: 'Importar estudo' } },
+    {
+      path: '/digitalizar',
+      alias: ['/scan'],
+      name: 'digitize-notebook',
+      component: DigitizeNotebookView,
+      meta: { title: 'Digitalizar Caderno' },
+    },
     { path: '/amigos', alias: ['/friends'], name: 'friends', component: FriendsView, meta: { title: 'Amigos e Leitores' } },
     { path: '/conexao', name: 'connection', component: ConnectionView, meta: { title: 'Conexão' } },
     { path: '/ajustes', name: 'settings', component: SettingsView, meta: { title: 'Ajustes' } },

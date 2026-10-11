@@ -237,9 +237,35 @@ onBeforeUnmount(() => {
   <div class="import-view">
     <div class="import-studio-view">
       <header class="page-header">
-      <p class="eyebrow">Ateliê de Fichamento</p>
-      <h1>Importar Fichamento</h1>
-    </header>
+        <p class="eyebrow">Ateliê de Fichamento</p>
+        <h1>Importar Fichamento</h1>
+      </header>
+
+      <!-- Card Editorial de Convite: Digitalizar Caderno Manuscrito (Em Pesquisa) -->
+      <div class="digitize-invitation-card" role="region" aria-label="Digitalizar Caderno Manuscrito">
+        <div class="invitation-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </div>
+        <div class="invitation-content">
+          <div class="invitation-headline">
+            <h2 class="invitation-title">Caderno Manuscrito</h2>
+            <span class="invitation-badge">Em Pesquisa</span>
+          </div>
+          <p class="invitation-desc">
+            Transforme páginas físicas de cadernos em estudos estruturados com processamento 100% local no seu computador.
+          </p>
+        </div>
+        <div class="invitation-action">
+          <RouterLink to="/digitalizar" class="btn-invitation-link">
+            <span>Conhecer a proposta</span>
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </RouterLink>
+        </div>
+      </div>
 
     <!-- Banner de Promoção de Captura do Inbox -->
     <div v-if="promotingCapture" class="notice info promotion-banner" role="status">
@@ -626,5 +652,111 @@ onBeforeUnmount(() => {
   border-top: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text);
+}
+
+/* Card Editorial de Convite: Digitalizar Caderno Manuscrito */
+.digitize-invitation-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.15rem 1.35rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--radius-card, 12px);
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border-subtle, #e2e8f0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.invitation-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.03));
+  color: var(--color-accent, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.invitation-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.invitation-headline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.invitation-title {
+  font-family: var(--font-serif, "EB Garamond", Garamond, Georgia, serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text, #0f172a);
+  margin: 0;
+}
+
+.invitation-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.05));
+  color: var(--color-warning, #d97706);
+  border: 1px solid var(--color-warning, #fcd34d);
+}
+
+.invitation-desc {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary, #64748b);
+  margin: 0;
+}
+
+.invitation-action {
+  flex-shrink: 0;
+}
+
+.btn-invitation-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-button, 8px);
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
+  color: var(--color-text, #0f172a);
+  border: 1px solid var(--color-border-subtle, #e2e8f0);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 150ms ease;
+}
+
+.btn-invitation-link:hover {
+  background-color: var(--color-accent, #3b82f6);
+  color: var(--color-on-accent, #ffffff);
+  border-color: transparent;
+}
+
+@media (max-width: 768px) {
+  .digitize-invitation-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .invitation-action {
+    width: 100%;
+  }
+
+  .btn-invitation-link {
+    width: 100%;
+    justify-content: center;
+  }
 }
 </style>

@@ -1576,5 +1576,8 @@ export interface StudyTemplateDefinition {
   sections: Record<'summary' | 'explanation' | 'concepts' | 'references', StudyTemplateSectionGuide>
 }
 
+// --- Digitalização de Caderno Manuscrito (Document Intelligence Placeholder) ---
+export * from './types/digitize.ts'
+
 
 
