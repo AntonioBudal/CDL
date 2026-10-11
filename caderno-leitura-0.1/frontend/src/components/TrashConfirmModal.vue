@@ -48,6 +48,19 @@ watch(
 function onKeyDown(event: KeyboardEvent) {
   if (event.key === 'Escape') {
     close()
+  } else if (event.key === 'Tab') {
+    const buttons = [cancelButton.value, confirmButton.value].filter(Boolean) as HTMLButtonElement[]
+    if (buttons.length >= 2) {
+      const first = buttons[0]
+      const last = buttons[buttons.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        last.focus()
+        event.preventDefault()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        first.focus()
+        event.preventDefault()
+      }
+    }
   }
 }
 
@@ -72,7 +85,7 @@ function confirm() {
     >
       <div
         class="modal-dialog panel"
-        role="dialog"
+        :role="danger ? 'alertdialog' : 'dialog'"
         aria-modal="true"
         :aria-labelledby="'confirm-title'"
       >
@@ -162,7 +175,7 @@ function confirm() {
 }
 
 .text-danger {
-  color: #c53030;
+  color: var(--color-danger, #c53030);
 }
 
 .modal-close {
@@ -194,12 +207,12 @@ function confirm() {
 }
 
 .danger-warning {
-  background-color: #fff5f5;
-  border-left: 4px solid #e53e3e;
+  background-color: var(--color-danger-subtle, rgba(229, 62, 62, 0.08));
+  border-left: 4px solid var(--color-danger, #e53e3e);
   padding: 0.75rem 1rem;
   border-radius: 4px;
   font-size: 0.88rem;
-  color: #9b2c2c;
+  color: var(--color-danger-text, var(--color-text));
 }
 
 .modal-actions {
@@ -248,12 +261,12 @@ button.primary:hover:not(:disabled) {
 }
 
 button.danger-button {
-  background: #c53030;
+  background: var(--color-danger, #c53030);
   color: #fff;
 }
 
 button.danger-button:hover:not(:disabled) {
-  background: #9b2c2c;
+  background: var(--color-danger-hover, #9b2c2c);
 }
 
 .spinner {

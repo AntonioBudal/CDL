@@ -1590,5 +1590,8 @@ export * from './types/digitize.ts'
 // --- Ateliê de Preferências e Leitura Viva (Feature 072) ---
 export * from './types/settings.ts'
 
+// --- Lixeira: Arquivo de Salvaguarda e Segurança (Feature 073) ---
+export * from './types/trash.ts'
+
 
 
