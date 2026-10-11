@@ -3,15 +3,14 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useFriends } from '../composables/useFriends.ts'
 import { profileApi } from '../api/profile.ts'
-import type { UserSearchItem } from '../types.ts'
+import type { SocialActiveTab, UserSearchItem } from '../types.ts'
+import BookplateCard from '../components/BookplateCard.vue'
 import FriendActionButtons from '../components/FriendActionButtons.vue'
 import Icon from '../components/ui/Icon.vue'
 import { getInitials, useProfile } from '../composables/useProfile.ts'
 import { useAuthStore } from '../stores/auth.ts'
 
-type ActiveTab = 'friends' | 'requests' | 'blocked' | 'discover'
-
-const activeTab = ref<ActiveTab>('friends')
+const activeTab = ref<SocialActiveTab>('friends')
 const friendsService = useFriends()
 const authStore = useAuthStore()
 const profileService = useProfile()
@@ -20,22 +19,17 @@ const userHandle = computed(() => {
   return profileService.profile.value?.username || authStore.user.value?.username || ''
 })
 
-const copyFeedback = ref(false)
-let copyTimeout: ReturnType<typeof setTimeout> | null = null
+const userDisplayName = computed(() => {
+  return profileService.profile.value?.display_name || authStore.user.value?.display_name || userHandle.value
+})
 
-async function copyUserHandle() {
-  if (!userHandle.value) return
-  try {
-    await navigator.clipboard.writeText(`@${userHandle.value}`)
-    copyFeedback.value = true
-    if (copyTimeout) clearTimeout(copyTimeout)
-    copyTimeout = setTimeout(() => {
-      copyFeedback.value = false
-    }, 2000)
-  } catch {
-    // Falha silenciosa de clipboard
-  }
-}
+const userAvatarUrl = computed(() => {
+  return profileService.profile.value?.avatar_url || null
+})
+
+const userBio = computed(() => {
+  return profileService.profile.value?.bio || null
+})
 
 // Estado da busca de descobríveis
 const searchQuery = ref('')
@@ -50,7 +44,19 @@ const summary = friendsService.summary
 const loading = friendsService.loading
 const error = friendsService.error
 
-async function switchTab(tab: ActiveTab) {
+const suggestedThemes = [
+  'Literatura Clássica',
+  'Filosofia & Ensaio',
+  'História & Humanidades',
+  'Ficção & Narrativa',
+  'Poesia & Crítica',
+]
+
+function applyThemeSuggestion(theme: string) {
+  searchQuery.value = theme
+}
+
+async function switchTab(tab: SocialActiveTab) {
   activeTab.value = tab
   if (tab === 'friends') {
     await friendsService.fetchFriends()
@@ -58,8 +64,8 @@ async function switchTab(tab: ActiveTab) {
     await friendsService.fetchRequests()
   } else if (tab === 'blocked') {
     await friendsService.fetchBlocked()
-  } else if (tab === 'discover' && searchResults.value.length === 0) {
-    await executeSearch('')
+  } else if (tab === 'discover' && searchResults.value.length === 0 && searchQuery.value) {
+    await executeSearch(searchQuery.value)
   }
 }
 
@@ -105,15 +111,15 @@ onMounted(async () => {
 
 <template>
   <main class="friends-view wrap">
-    <!-- Cabeçalho Principal -->
+    <!-- Cabeçalho Principal do Salão Literário -->
     <header class="friends-header">
       <div class="header-titles">
         <h1 class="page-title">
           <Icon name="users" :size="28" />
-          <span>Amizades e Leitores</span>
+          <span>Salão Literário & Círculos de Estudo</span>
         </h1>
         <p class="header-subtitle muted">
-          Conecte-se com outros leitores, acompanhe estudos mútuos e gerencie sua rede social no Leitorum.
+          Conecte-se com outros leitores, acompanhe estudos mútuos e gerencie sua correspondência intelectual no Leitorum.
         </p>
       </div>
 
@@ -121,7 +127,7 @@ onMounted(async () => {
       <div class="summary-chips" aria-label="Resumo social">
         <div class="chip">
           <span class="chip-number">{{ summary.friends_count }}</span>
-          <span class="chip-label">{{ summary.friends_count === 1 ? 'amigo' : 'amigos' }}</span>
+          <span class="chip-label">{{ summary.friends_count === 1 ? 'conexão' : 'conexões' }}</span>
         </div>
         <div v-if="summary.pending_received_count > 0" class="chip highlight">
           <span class="chip-number">{{ summary.pending_received_count }}</span>
@@ -130,13 +136,24 @@ onMounted(async () => {
       </div>
     </header>
 
+    <!-- Cartão de Identidade do Leitor (Ex-Líbris Digital Permanente no Topo) -->
+    <BookplateCard
+      v-if="userHandle"
+      :username="userHandle"
+      :display-name="userDisplayName"
+      :avatar-url="userAvatarUrl"
+      :bio="userBio"
+      :friends-count="summary.friends_count"
+      :pending-count="summary.pending_received_count"
+    />
+
     <!-- Alerta de Erro -->
     <div v-if="error" class="error-banner panel" role="alert">
       <Icon name="alert-triangle" :size="20" />
       <span>{{ error }}</span>
     </div>
 
-    <!-- Navegação de Abas -->
+    <!-- Navegação de Abas WAI-ARIA -->
     <nav class="tabs-nav" role="tablist" aria-label="Abas da comunidade de amigos">
       <button
         id="tab-friends"
@@ -149,7 +166,8 @@ onMounted(async () => {
         @click="switchTab('friends')"
       >
         <Icon name="users" :size="18" />
-        <span>Meus Amigos</span>
+        <span class="tab-label">Círculo de Leitura</span>
+        <span class="sr-only">Meus Amigos</span>
         <span class="tab-badge">{{ summary.friends_count }}</span>
       </button>
 
@@ -205,11 +223,11 @@ onMounted(async () => {
 
     <!-- Indicador de Carregamento -->
     <div v-if="loading" class="loading-state" role="status" aria-live="polite">
-      <Icon name="search" :size="24" class="spinning-icon" />
-      <span>Carregando informações…</span>
+      <Icon name="clock" :size="24" class="spinning-icon" />
+      <span>Carregando informações do salão…</span>
     </div>
 
-    <!-- Conteúdo da Aba 1: Meus Amigos -->
+    <!-- Conteúdo da Aba 1: Círculo de Leitura (Meus Amigos) -->
     <section
       v-else-if="activeTab === 'friends'"
       id="panel-friends"
@@ -217,30 +235,15 @@ onMounted(async () => {
       aria-labelledby="tab-friends"
       class="tab-content"
     >
+      <!-- Estado Vazio Acolhedor: Círculo em Formação -->
       <div v-if="friends.length === 0" class="empty-state panel friends-empty-state">
         <div class="empty-icon-wrapper">
           <Icon name="users" :size="36" class="empty-icon" />
         </div>
-        <h2 class="empty-title">Seu círculo de leitura ainda está começando</h2>
+        <h2 class="empty-title">Círculo de Leitura em Formação</h2>
         <p class="empty-desc muted">
-          Você ainda não adicionou outros leitores ao seu caderno. Conecte-se com pessoas para acompanhar leituras em comum e trocar anotações literárias.
+          Seu salão literário ainda não possui conexões ativas. Compartilhe seu Ex-Líbris digital acima com colegas ou explore outros leitores para trocar anotações e estudos mútuos.
         </p>
-
-        <div v-if="userHandle" class="handle-share-card">
-          <span class="handle-label muted">Seu identificador no Leitorum:</span>
-          <div class="handle-pill">
-            <span class="handle-text">@{{ userHandle }}</span>
-            <button
-              type="button"
-              class="copy-handle-btn"
-              :aria-label="copyFeedback ? 'Identificador copiado' : 'Copiar meu identificador'"
-              @click="copyUserHandle"
-            >
-              <Icon :name="copyFeedback ? 'check' : 'copy'" :size="14" />
-              <span>{{ copyFeedback ? 'Copiado!' : 'Copiar' }}</span>
-            </button>
-          </div>
-        </div>
 
         <div class="empty-actions">
           <button
@@ -249,41 +252,50 @@ onMounted(async () => {
             @click="switchTab('discover')"
           >
             <Icon name="search" :size="16" />
-            <span>Descobrir leitores</span>
+            <span>Descobrir Leitores</span>
           </button>
         </div>
       </div>
 
+      <!-- Grid de Cartões de Conexão Literária -->
       <div v-else class="friends-grid">
         <article
           v-for="item in friends"
           :key="item.friendship_id"
           class="person-card panel"
         >
-          <div class="person-avatar">
-            <img
-              v-if="item.user.avatar_url"
-              :src="item.user.avatar_url"
-              :alt="item.user.display_name"
-              class="avatar-img"
-            />
-            <div v-else class="avatar-initials" aria-hidden="true">
-              {{ getInitials(item.user.display_name || item.user.username) }}
-            </div>
-          </div>
-
-          <div class="person-info">
+          <div class="person-card-top">
             <RouterLink
-              :to="`/@${item.user.username}`"
-              class="person-name-link"
+              :to="`/u/${item.user.username}`"
+              class="person-avatar-link"
+              :aria-label="`Ver estante de ${item.user.display_name}`"
             >
-              <h3 class="person-name">{{ item.user.display_name }}</h3>
-              <span class="person-handle muted">@{{ item.user.username }}</span>
+              <div class="person-avatar">
+                <img
+                  v-if="item.user.avatar_url"
+                  :src="item.user.avatar_url"
+                  :alt="item.user.display_name"
+                  class="avatar-img"
+                />
+                <div v-else class="avatar-initials" aria-hidden="true">
+                  {{ getInitials(item.user.display_name || item.user.username) }}
+                </div>
+              </div>
             </RouterLink>
-            <p v-if="item.user.bio" class="person-bio muted">{{ item.user.bio }}</p>
-            <span v-if="item.since" class="meta-since muted">
-              Amigos desde {{ formatDate(item.since) }}
-            </span>
+
+            <div class="person-info">
+              <RouterLink
+                :to="`/u/${item.user.username}`"
+                class="person-name-link"
+              >
+                <h3 class="person-name">{{ item.user.display_name }}</h3>
+                <span class="person-handle muted">@{{ item.user.username }}</span>
+              </RouterLink>
+              <p v-if="item.user.bio" class="person-bio muted">{{ item.user.bio }}</p>
+              <span v-if="item.since" class="meta-since muted">
+                Amigos desde {{ formatDate(item.since) }}
+              </span>
+            </div>
           </div>
 
           <div class="person-actions">
@@ -314,7 +326,7 @@ onMounted(async () => {
         </h2>
 
         <div v-if="requests.received.length === 0" class="empty-substate muted">
-          Nenhuma solicitação de amizade recebida no momento.
+          Nenhuma solicitação de correspondência literária recebida no momento.
         </div>
 
         <div v-else class="requests-grid">
@@ -323,30 +335,38 @@ onMounted(async () => {
             :key="req.request_id"
             class="person-card panel"
           >
-            <div class="person-avatar">
-              <img
-                v-if="req.user.avatar_url"
-                :src="req.user.avatar_url"
-                :alt="req.user.display_name"
-                class="avatar-img"
-              />
-              <div v-else class="avatar-initials" aria-hidden="true">
-                {{ getInitials(req.user.display_name || req.user.username) }}
-              </div>
-            </div>
-
-            <div class="person-info">
+            <div class="person-card-top">
               <RouterLink
-                :to="`/@${req.user.username}`"
-                class="person-name-link"
+                :to="`/u/${req.user.username}`"
+                class="person-avatar-link"
+                :aria-label="`Ver estante de ${req.user.display_name}`"
               >
-                <h3 class="person-name">{{ req.user.display_name }}</h3>
-                <span class="person-handle muted">@{{ req.user.username }}</span>
+                <div class="person-avatar">
+                  <img
+                    v-if="req.user.avatar_url"
+                    :src="req.user.avatar_url"
+                    :alt="req.user.display_name"
+                    class="avatar-img"
+                  />
+                  <div v-else class="avatar-initials" aria-hidden="true">
+                    {{ getInitials(req.user.display_name || req.user.username) }}
+                  </div>
+                </div>
               </RouterLink>
-              <p v-if="req.user.bio" class="person-bio muted">{{ req.user.bio }}</p>
-              <span class="meta-since muted">
-                Recebida em {{ formatDate(req.created_at) }}
-              </span>
+
+              <div class="person-info">
+                <RouterLink
+                  :to="`/u/${req.user.username}`"
+                  class="person-name-link"
+                >
+                  <h3 class="person-name">{{ req.user.display_name }}</h3>
+                  <span class="person-handle muted">@{{ req.user.username }}</span>
+                </RouterLink>
+                <p v-if="req.user.bio" class="person-bio muted">{{ req.user.bio }}</p>
+                <span class="meta-since muted">
+                  Recebida em {{ formatDate(req.created_at) }}
+                </span>
+              </div>
             </div>
 
             <div class="person-actions">
@@ -377,29 +397,37 @@ onMounted(async () => {
             :key="req.request_id"
             class="person-card panel"
           >
-            <div class="person-avatar">
-              <img
-                v-if="req.user.avatar_url"
-                :src="req.user.avatar_url"
-                :alt="req.user.display_name"
-                class="avatar-img"
-              />
-              <div v-else class="avatar-initials" aria-hidden="true">
-                {{ getInitials(req.user.display_name || req.user.username) }}
-              </div>
-            </div>
-
-            <div class="person-info">
+            <div class="person-card-top">
               <RouterLink
-                :to="`/@${req.user.username}`"
-                class="person-name-link"
+                :to="`/u/${req.user.username}`"
+                class="person-avatar-link"
+                :aria-label="`Ver estante de ${req.user.display_name}`"
               >
-                <h3 class="person-name">{{ req.user.display_name }}</h3>
-                <span class="person-handle muted">@{{ req.user.username }}</span>
+                <div class="person-avatar">
+                  <img
+                    v-if="req.user.avatar_url"
+                    :src="req.user.avatar_url"
+                    :alt="req.user.display_name"
+                    class="avatar-img"
+                  />
+                  <div v-else class="avatar-initials" aria-hidden="true">
+                    {{ getInitials(req.user.display_name || req.user.username) }}
+                  </div>
+                </div>
               </RouterLink>
-              <span class="meta-since muted">
-                Enviada em {{ formatDate(req.created_at) }}
-              </span>
+
+              <div class="person-info">
+                <RouterLink
+                  :to="`/u/${req.user.username}`"
+                  class="person-name-link"
+                >
+                  <h3 class="person-name">{{ req.user.display_name }}</h3>
+                  <span class="person-handle muted">@{{ req.user.username }}</span>
+                </RouterLink>
+                <span class="meta-since muted">
+                  Enviada em {{ formatDate(req.created_at) }}
+                </span>
+              </div>
             </div>
 
             <div class="person-actions">
@@ -436,41 +464,82 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div v-if="searchResults.length === 0 && !isSearching" class="empty-state panel">
+      <!-- Guia Acolhedor de Exploração e Sugestões Temáticas (quando busca vazia) -->
+      <div v-if="!searchQuery" class="discover-guide panel">
+        <div class="guide-header">
+          <div class="guide-icon-wrapper">
+            <Icon name="globe" :size="24" class="guide-icon" />
+          </div>
+          <div>
+            <h3 class="guide-title">Descubra Leitores e Parceiros de Estudo</h3>
+            <p class="guide-desc muted">
+              Explore outros cadernos literários e conecte-se com pesquisadores que leem e investigam temas afins.
+            </p>
+          </div>
+        </div>
+
+        <div class="suggestions-wrapper">
+          <span class="suggestions-label muted">Sugestões de temas e interesses:</span>
+          <div class="suggestions-chips">
+            <button
+              v-for="theme in suggestedThemes"
+              :key="theme"
+              type="button"
+              class="suggestion-chip"
+              @click="applyThemeSuggestion(theme)"
+            >
+              <Icon name="book" :size="12" />
+              <span>{{ theme }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado: Busca vazia sem resultados -->
+      <div v-else-if="searchResults.length === 0 && !isSearching" class="empty-state panel">
         <Icon name="search" :size="40" class="muted" />
-        <h3>Nenhum leitor encontrado</h3>
-        <p class="muted">
-          {{ searchQuery ? 'Nenhum leitor descobrível corresponde à sua pesquisa.' : 'Busque por amigos ou conhecidos para conectar.' }}
+        <h3 class="empty-title">Nenhum leitor encontrado</h3>
+        <p class="empty-desc muted">
+          Nenhum leitor descobrível corresponde à sua pesquisa "{{ searchQuery }}". Tente buscar por outro termo ou nome de usuário.
         </p>
       </div>
 
+      <!-- Resultados Encontrados -->
       <div v-else class="friends-grid">
         <article
           v-for="u in searchResults"
           :key="u.username"
           class="person-card panel"
         >
-          <div class="person-avatar">
-            <img
-              v-if="u.avatar_url"
-              :src="u.avatar_url"
-              :alt="u.display_name"
-              class="avatar-img"
-            />
-            <div v-else class="avatar-initials" aria-hidden="true">
-              {{ getInitials(u.display_name || u.username) }}
-            </div>
-          </div>
-
-          <div class="person-info">
+          <div class="person-card-top">
             <RouterLink
-              :to="`/@${u.username}`"
-              class="person-name-link"
+              :to="`/u/${u.username}`"
+              class="person-avatar-link"
+              :aria-label="`Ver estante de ${u.display_name}`"
             >
-              <h3 class="person-name">{{ u.display_name }}</h3>
-              <span class="person-handle muted">@{{ u.username }}</span>
+              <div class="person-avatar">
+                <img
+                  v-if="u.avatar_url"
+                  :src="u.avatar_url"
+                  :alt="u.display_name"
+                  class="avatar-img"
+                />
+                <div v-else class="avatar-initials" aria-hidden="true">
+                  {{ getInitials(u.display_name || u.username) }}
+                </div>
+              </div>
             </RouterLink>
-            <p v-if="u.bio" class="person-bio muted">{{ u.bio }}</p>
+
+            <div class="person-info">
+              <RouterLink
+                :to="`/u/${u.username}`"
+                class="person-name-link"
+              >
+                <h3 class="person-name">{{ u.display_name }}</h3>
+                <span class="person-handle muted">@{{ u.username }}</span>
+              </RouterLink>
+              <p v-if="u.bio" class="person-bio muted">{{ u.bio }}</p>
+            </div>
           </div>
 
           <div class="person-actions">
@@ -493,9 +562,9 @@ onMounted(async () => {
     >
       <div v-if="blockedUsers.length === 0" class="empty-state panel">
         <Icon name="ban" :size="48" class="empty-icon muted" />
-        <h2>Nenhum usuário bloqueado</h2>
-        <p class="muted">
-          Você não bloqueou nenhum usuário. Leitores bloqueados não podem visualizar seus estudos, perfis ou enviar solicitações.
+        <h2 class="empty-title">Nenhum usuário bloqueado</h2>
+        <p class="empty-desc muted">
+          Você não bloqueou nenhum usuário. Leitores bloqueados não podem visualizar seus estudos, perfis ou enviar solicitações de correspondência.
         </p>
       </div>
 
@@ -505,24 +574,26 @@ onMounted(async () => {
           :key="item.friendship_id"
           class="person-card panel"
         >
-          <div class="person-avatar">
-            <img
-              v-if="item.user.avatar_url"
-              :src="item.user.avatar_url"
-              :alt="item.user.display_name"
-              class="avatar-img"
-            />
-            <div v-else class="avatar-initials" aria-hidden="true">
-              {{ getInitials(item.user.display_name || item.user.username) }}
+          <div class="person-card-top">
+            <div class="person-avatar">
+              <img
+                v-if="item.user.avatar_url"
+                :src="item.user.avatar_url"
+                :alt="item.user.display_name"
+                class="avatar-img"
+              />
+              <div v-else class="avatar-initials" aria-hidden="true">
+                {{ getInitials(item.user.display_name || item.user.username) }}
+              </div>
             </div>
-          </div>
 
-          <div class="person-info">
-            <h3 class="person-name">{{ item.user.display_name }}</h3>
-            <span class="person-handle muted">@{{ item.user.username }}</span>
-            <span class="meta-since muted">
-              Bloqueado em {{ formatDate(item.blocked_at) }}
-            </span>
+            <div class="person-info">
+              <h3 class="person-name">{{ item.user.display_name }}</h3>
+              <span class="person-handle muted">@{{ item.user.username }}</span>
+              <span class="meta-since muted">
+                Bloqueado em {{ formatDate(item.blocked_at) }}
+              </span>
+            </div>
           </div>
 
           <div class="person-actions">
@@ -551,7 +622,7 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: flex-start;
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
 
@@ -561,12 +632,14 @@ onMounted(async () => {
   gap: 0.75rem;
   font-size: 1.75rem;
   margin: 0 0 0.5rem;
+  color: var(--color-text);
 }
 
 .header-subtitle {
   margin: 0;
   max-width: 36rem;
   font-size: 0.95rem;
+  color: var(--color-text-muted);
 }
 
 .summary-chips {
@@ -581,9 +654,10 @@ onMounted(async () => {
   gap: 0.4rem;
   padding: 0.4rem 0.85rem;
   border-radius: 9999px;
-  background-color: var(--color-surface, #fff);
-  border: 1px solid var(--color-border, #e5e5e5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   font-size: 0.875rem;
+  color: var(--color-text);
 }
 
 .chip-number {
@@ -592,9 +666,9 @@ onMounted(async () => {
 }
 
 .chip.highlight {
-  background-color: rgba(239, 68, 68, 0.1);
-  color: #dc2626;
-  border-color: rgba(239, 68, 68, 0.3);
+  background-color: var(--color-surface-soft);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .error-banner {
@@ -603,16 +677,16 @@ onMounted(async () => {
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   margin-bottom: 1.5rem;
-  background-color: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #dc2626;
+  background-color: var(--color-surface-soft);
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
   border-radius: var(--radius-sm, 6px);
 }
 
 .tabs-nav {
   display: flex;
   gap: 0.5rem;
-  border-bottom: 1px solid var(--color-border, #e5e5e5);
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 1.5rem;
   overflow-x: auto;
 }
@@ -628,7 +702,7 @@ onMounted(async () => {
   border-bottom: 2px solid transparent;
   font-size: 0.95rem;
   font-weight: 500;
-  color: var(--color-muted, #666);
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
@@ -644,8 +718,9 @@ onMounted(async () => {
 }
 
 .tab-btn.active {
-  color: var(--color-accent, #2563eb);
-  border-bottom-color: var(--color-accent, #2563eb);
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: 600;
 }
 
 .tab-badge {
@@ -656,12 +731,13 @@ onMounted(async () => {
   font-weight: 600;
   padding: 0.1rem 0.5rem;
   border-radius: 9999px;
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.06));
+  background-color: var(--color-surface-soft);
+  color: var(--color-text);
 }
 
 .tab-badge.alert {
-  background-color: #dc2626;
-  color: #fff;
+  background-color: var(--color-accent);
+  color: var(--color-surface);
 }
 
 .loading-state {
@@ -670,7 +746,7 @@ onMounted(async () => {
   justify-content: center;
   gap: 0.75rem;
   padding: 3rem;
-  color: var(--color-text-muted, #666);
+  color: var(--color-text-muted);
 }
 
 .friends-grid,
@@ -690,6 +766,7 @@ onMounted(async () => {
   gap: 0.5rem;
   font-size: 1.15rem;
   margin-bottom: 1rem;
+  color: var(--color-text);
 }
 
 .count-badge {
@@ -697,15 +774,17 @@ onMounted(async () => {
   font-weight: 600;
   padding: 0.1rem 0.45rem;
   border-radius: 9999px;
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.06));
+  background-color: var(--color-surface-soft);
+  color: var(--color-text);
 }
 
 .empty-substate {
   padding: 1.5rem;
   text-align: center;
-  background-color: var(--color-surface, #fff);
-  border: 1px dashed var(--color-border, #e5e5e5);
+  background-color: var(--color-surface);
+  border: 1px dashed var(--color-border);
   border-radius: var(--radius-surface, 10px);
+  color: var(--color-text-muted);
 }
 
 .person-card {
@@ -713,31 +792,32 @@ onMounted(async () => {
   flex-direction: column;
   padding: 1.25rem;
   border-radius: var(--radius-surface, 10px);
-  background-color: var(--color-surface, #fff);
-  border: 1px solid var(--color-border, #e5e5e5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   gap: 1rem;
   transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .person-card:hover {
-  background-color: var(--color-surface-hover);
-  border-color: var(--color-border-hover);
+  background-color: var(--color-surface-hover, var(--color-surface-soft));
+  border-color: var(--color-border-hover, var(--color-primary));
 }
 
-.person-card:hover .person-name {
-  color: var(--color-hover-text);
+.person-card-top {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
 }
 
-.person-card:hover .person-handle,
-.person-card:hover .person-bio,
-.person-card:hover .meta-since {
-  color: var(--color-hover-text);
-  opacity: 0.9;
+.person-avatar-link {
+  text-decoration: none;
+  display: block;
 }
 
 .person-avatar {
   width: 52px;
   height: 52px;
+  flex-shrink: 0;
 }
 
 .avatar-img {
@@ -745,22 +825,25 @@ onMounted(async () => {
   height: 52px;
   border-radius: 50%;
   object-fit: cover;
+  border: 1px solid var(--color-border);
 }
 
 .avatar-initials {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background-color: var(--color-surface-soft, #f0f0f0);
+  background-color: var(--color-surface-soft);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  color: var(--color-text-muted, #555);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
 }
 
 .person-info {
   flex: 1;
+  min-width: 0;
 }
 
 .person-name-link {
@@ -770,35 +853,43 @@ onMounted(async () => {
 }
 
 .person-name-link:hover .person-name {
-  color: var(--color-primary, #2563eb);
+  color: var(--color-primary);
 }
 
 .person-name {
   margin: 0;
   font-size: 1.05rem;
+  color: var(--color-text);
 }
 
 .person-handle {
   font-size: 0.85rem;
   display: block;
   margin-bottom: 0.35rem;
+  color: var(--color-text-muted);
 }
 
 .person-bio {
   font-size: 0.85rem;
   margin: 0.25rem 0 0.5rem;
-  line-height: 1.3;
+  line-height: 1.35;
+  color: var(--color-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .meta-since {
   font-size: 0.75rem;
   display: block;
+  color: var(--color-text-muted);
 }
 
 .person-actions {
   margin-top: auto;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--color-border, #f0f0f0);
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border-subtle, var(--color-border));
 }
 
 .search-bar {
@@ -807,8 +898,8 @@ onMounted(async () => {
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   margin-bottom: 1.5rem;
-  background-color: var(--color-surface, #fff);
-  border: 1px solid var(--color-border, #e5e5e5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-surface, 10px);
 }
 
@@ -818,14 +909,95 @@ onMounted(async () => {
   background: transparent;
   font-size: 1rem;
   outline: none;
+  color: var(--color-text);
+}
+
+.discover-guide {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--radius-surface, 10px);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.guide-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.guide-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--color-surface-soft);
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.guide-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.15rem;
+  color: var(--color-text);
+}
+
+.guide-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+.suggestions-wrapper {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.suggestions-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.suggestions-chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.suggestion-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background-color: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 0.825rem;
+  cursor: pointer;
+  min-height: 36px;
+  transition: all 0.15s ease;
+}
+
+.suggestion-chip:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .empty-state {
   text-align: center;
   padding: 3.5rem 1.5rem;
   border-radius: var(--radius-surface, 12px);
-  background-color: var(--color-surface, #fff);
-  border: 1px solid var(--color-border, #e5e5e5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
 }
 
 .empty-icon {
@@ -862,8 +1034,8 @@ onMounted(async () => {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
-  color: var(--color-primary, #2563eb);
+  background: var(--color-surface-soft);
+  color: var(--color-primary);
   margin-bottom: 0.25rem;
 }
 
@@ -871,7 +1043,7 @@ onMounted(async () => {
   font-size: 1.35rem;
   font-weight: 700;
   margin: 0;
-  color: var(--color-text, #111827);
+  color: var(--color-text);
 }
 
 .empty-desc {
@@ -879,67 +1051,36 @@ onMounted(async () => {
   line-height: 1.5;
   margin: 0;
   max-width: 440px;
-}
-
-.handle-share-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  background: var(--color-surface-soft, rgba(0, 0, 0, 0.03));
-  border: 1px solid var(--color-border, #e5e5e5);
-  border-radius: var(--radius-surface, 10px);
-  padding: 0.75rem 1.25rem;
-  margin: 0.5rem 0;
-  width: 100%;
-  max-width: 360px;
-}
-
-.handle-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: 600;
-}
-
-.handle-pill {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  width: 100%;
-}
-
-.handle-text {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-text, #111827);
-}
-
-.copy-handle-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: var(--color-surface, #fff);
-  border: 1px solid var(--color-border, #d1d5db);
-  border-radius: var(--radius-sm, 6px);
-  padding: 0.35rem 0.75rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--color-text, #374151);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  min-height: 36px;
-}
-
-.copy-handle-btn:hover {
-  background: var(--color-surface-hover, #f3f4f6);
-  border-color: var(--color-primary, #2563eb);
-  color: var(--color-primary, #2563eb);
+  color: var(--color-text-muted);
 }
 
 .empty-actions {
   margin-top: 0.5rem;
+}
+
+.action-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.5rem 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm, 6px);
+  cursor: pointer;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 </style>

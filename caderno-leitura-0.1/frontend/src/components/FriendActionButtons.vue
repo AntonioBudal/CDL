@@ -406,38 +406,38 @@ async function handleUnblock() {
 }
 
 .pending-pill {
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
-  color: var(--color-text-muted, #666);
-  border: 1px solid var(--color-border, #e5e5e5);
+  background-color: var(--color-surface-soft);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
 }
 
 .friends-pill {
-  background-color: rgba(34, 197, 94, 0.1);
-  color: #16a34a;
-  border: 1px solid rgba(34, 197, 94, 0.25);
+  background-color: var(--color-surface-soft);
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
 }
 
 .blocked-pill {
-  background-color: rgba(239, 68, 68, 0.1);
-  color: #dc2626;
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  background-color: var(--color-surface-soft);
+  color: var(--color-accent);
+  border: 1px solid var(--color-border);
 }
 
 .subtle {
   background: transparent;
-  border-color: var(--color-border, #e5e5e5);
-  color: var(--color-text-muted, #666);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
 }
 
 .danger-hover:hover {
-  border-color: rgba(239, 68, 68, 0.5);
-  color: #dc2626;
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .dialog-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -450,7 +450,8 @@ async function handleUnblock() {
   width: 100%;
   padding: 1.5rem;
   border-radius: var(--radius-surface, 12px);
-  background-color: var(--color-surface, #fff);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 

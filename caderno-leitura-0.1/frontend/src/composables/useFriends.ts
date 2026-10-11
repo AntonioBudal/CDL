@@ -30,6 +30,12 @@ export function useFriends() {
   const loading = computed(() => isLoading.value)
   const error = computed(() => friendsError.value)
   const pendingReceivedCount = computed(() => summaryData.value.pending_received_count)
+  const friendsCount = computed(() => summaryData.value.friends_count || friendsList.value.length)
+
+  function getProfileShareUrl(username: string): string {
+    const origin = typeof window !== 'undefined' ? window.location.origin : ''
+    return `${origin}/u/${username}`
+  }
 
   async function fetchSummary(signal?: AbortSignal): Promise<FriendsSummary | null> {
     try {
@@ -228,6 +234,8 @@ export function useFriends() {
     loading,
     error,
     pendingReceivedCount,
+    friendsCount,
+    getProfileShareUrl,
     fetchSummary,
     fetchFriends,
     fetchRequests,

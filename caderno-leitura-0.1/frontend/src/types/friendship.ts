@@ -57,3 +57,25 @@ export interface FriendshipActionResponse {
   message: string;
   status: 'none' | 'pending' | 'accepted' | 'blocked';
 }
+
+export type SocialActiveTab = 'friends' | 'requests' | 'discover' | 'blocked';
+
+export interface BookplateCardProps {
+  username: string;
+  displayName: string;
+  avatarUrl?: string | null;
+  bio?: string | null;
+  friendsCount: number;
+  pendingCount?: number;
+}
+
+export interface BookplateCardEmits {
+  (e: 'copied', handle: string): void;
+  (e: 'shared', url: string): void;
+}
+
+export interface BookplateCardState {
+  isStamped: boolean;
+  isSharing: boolean;
+  shareFeedback: string | null;
+}
