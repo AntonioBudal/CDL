@@ -2,9 +2,9 @@
 
 **Feature Branch**: `066-importar-atelie-parser`
 
-**Created**: 2026-10-10
+**Created**: 2026-10-11
 
-**Status**: Draft
+**Status**: Ready for Planning
 
 **Input**: User description: "Feature 05: Importar — Ateliê de Fichamento e Parser Estruturado (Roadmap 0.8 — Redesign Estrutural e Arquitetura Visual)"
 
@@ -22,14 +22,14 @@ O leitor acessa a rota `/importar` para fichar uma leitura e encontra um ateliê
 2. **Painel Esquerdo (Editor da Fonte Bruta):**
    - Área de edição ampla, confortável e imersiva para o texto-base da fonte colada ou digitada.
    - Contador dinâmico de palavras e caracteres no rodapé do editor.
-   - Suporte a colar texto (`Ctrl+V`) com processamento imediato sem travar o navegador.
+   - Suporte a colar texto (`Ctrl+V`) com processamento imediato sem travar a interface.
    - Indicador de estado desatualizado (*stale*) discreto quando o texto for modificado após a análise preliminar.
 
 3. **Painel Direito (Prévia Estruturada Viva das Seções):**
-   - Exibição em tempo real ou sob demanda das quatro seções semânticas do fichamento: **Resumo**, **Explicação**, **Conceitos-chave** e **Referências/Citações**.
+   - Exibição sob demanda e em tempo real das quatro seções semânticas do fichamento: **Resumo**, **Explicação**, **Conceitos-chave** e **Referências/Citações**.
    - Cartões estruturados elegantes que indicam claramente o conteúdo parseado e status vazio (*Vazia*) para seções ainda não detectadas.
    - Bloco de **Conteúdo Não Classificado** com botões rápidos de 1 clique para atribuir trechos residuais a qualquer uma das quatro seções.
-   - Painel de avisos da análise (`warnings`) formatado de maneira acolhedora e integrada ao tema.
+   - Painel de avisos da análise (*warnings*) formatado de maneira acolhedora e integrada ao tema ativo.
 
 **Why this priority**: Substitui um formulário transacional monótono por um ambiente de ateliê imersivo, fornecendo feedback visual imediato de como o texto da fonte se organiza no modelo de estudo de quatro dimensões do Leitorum.
 
@@ -60,7 +60,7 @@ Para manter a área de escrita desobstruída e zen, a antiga barra estática de 
      - **Dividido (50/50):** Edição e prévia lado a lado (modo padrão em telas amplas).
      - **Apenas Fonte (100% Editor):** Modo de foco total na escrita ou leitura da fonte bruta.
      - **Apenas Prévia (100% Prévia):** Foco na conferência da nota sintetizada e refinamento das 4 seções.
-   - Transição suave entre modos em 180ms acelerada por GPU.
+   - Transição suave entre modos em até 180ms acelerada por GPU.
 
 **Why this priority**: Reduz a poluição visual na digitação, garantindo ergonomia moderna similar a editores reflexivos e concedendo controle total sobre a divisão de espaço visual.
 
@@ -125,7 +125,19 @@ O ateliê se integra perfeitamente com o fluxo de triagem e adapta-se a disposit
 
 ---
 
-## Functional Requirements
+### Edge Cases
+
+- **Texto bruto sem títulos ou marcadores de seção**: O parser aloca o texto na seção Resumo por padrão e disponibiliza o card de Conteúdo Não Classificado com botões rápidos para realocação manual sem perda de conteúdo.
+- **Livro selecionado sem nenhum capítulo cadastrado**: A faixa superior exibe aviso orientando o cadastro de capítulos ou permitindo salvar como nota avulsa do livro se configurado.
+- **Colar texto com caracteres de controle ou HTML cru**: O editor sanitiza o texto bruto convertendo tags em Markdown limpo ou texto plano para evitar quebras de renderização.
+- **Navegador sob preferência `prefers-reduced-motion`**: O pulso luminoso de detecção e transições de modo de visualização operam instantaneamente (0.01ms) sem animações cinéticas.
+- **Queda de conexão durante a edição**: O rascunho de texto digitado é retido localmente no estado reativo do composable, evitando perda de dados caso a página seja recarregada involuntariamente.
+
+---
+
+## Requirements *(mandatory)*
+
+### Functional Requirements
 
 - **FR-001**: O cabeçalho de metadados deve ser uma barra horizontal compacta no topo contendo seleção de Livro (obrigatório), Capítulo (obrigatório), Página/Localização (opcional) e Título do estudo (opcional).
 - **FR-002**: A área principal de trabalho deve adotar a arquitetura *Two-Pane Studio*, dividida em painel de edição da fonte (à esquerda) e painel de prévia estruturada viva (à direita).
@@ -140,12 +152,32 @@ O ateliê se integra perfeitamente com o fluxo de triagem e adapta-se a disposit
 - **FR-011**: O fluxo de promoção de capturas do Inbox (`promote_inbox_id`) deve ser plenamente suportado e acionar `promoteInboxCapture` ao salvar com sucesso.
 - **FR-012**: Todos os elementos estilizados devem consumir estritamente as variáveis semânticas dos 10 temas nativos, com zero emojis literais em templates e código.
 
+### Key Entities
+
+- **Obra/Livro**: Objeto de vinculação primário do estudo (`book_id`), obrigatório para o salvamento do fichamento.
+- **Capítulo**: Unidade analítica de contexto (`chapter_id`), vinculada à obra selecionada.
+- **Fichamento Estruturado**: Estudo resultante contendo metadados (título, página) e o conteúdo sintetizado em 4 dimensões analíticas.
+- **Seção do Estudo**: Cada uma das 4 dimensões semânticas (*Resumo*, *Explicação*, *Conceitos-chave*, *Referências/Citações*), com status de preenchimento e conteúdo em Markdown.
+- **Captura Promovida**: Item originário do Inbox (`inbox_id`) cujo texto foi importado e promovido para se tornar um estudo permanente.
+
 ---
 
-## Success Criteria
+## Success Criteria *(mandatory)*
 
-- **SC-001**: O formulário vertical monolítico é 100% substituído pelo ateliê *Two-Pane Studio*, liberando a área de trabalho para foco de leitura e escrita.
+### Measurable Outcomes
+
+- **SC-001**: O formulário vertical monolítico é 100% substituído pelo ateliê *Two-Pane Studio*, liberando mais de 80% da altura da viewport para o foco de escrita e conferência.
 - **SC-002**: A barra estática cinza de formatação Markdown é substituída pela barra contextual flutuante com suporte a seleção de texto e atalhos universais.
-- **SC-003**: Testes com textos longos (> 2.000 palavras) ocorrem sem travamentos de digitação (latência de input < 50ms) e a prévia é atualizada de forma suave.
-- **SC-004**: 100% dos testes unitários e de integração de `/importar` passam com sucesso (`npm test` e `pytest`), sem quebras de build (`npm run build`).
-- **SC-005**: A interface mantém conformidade total com os 10 temas cromáticos e atende a `prefers-reduced-motion` com fallbacks imediatos.
+- **SC-003**: A transição entre os modos de visualização (50/50, 100% Fonte, 100% Prévia) ocorre de forma fluida em menos de 180ms a 60 FPS estáveis.
+- **SC-004**: Testes com textos longos (> 2.000 palavras) ocorrem sem travamentos de digitação (latência de input inferior a 50ms) com debounce de atualização.
+- **SC-005**: 100% dos testes unitários e de integração de `/importar` passam com sucesso (`npm test` e `pytest`), sem quebras de build (`npm run build`).
+- **SC-006**: A interface mantém conformidade total com os 10 temas cromáticos e atende a `prefers-reduced-motion` com fallbacks imediatos.
+
+---
+
+## Assumptions
+
+- O Leitorum continuará operando com o modelo analítico de 4 seções (*Resumo*, *Explicação*, *Conceitos-chave*, *Referências/Citações*).
+- O backend já possui endpoint capaz de criar estudos e vincular promoções do Inbox via `POST /api/studies` e `POST /api/inbox/{id}/promote`.
+- O navegador do leitor suporta Selection API e eventos de clipboard (`paste`) para posicionamento da barra flutuante contextual.
+- O catálogo de ícones SVG `Icon.vue` possui todos os glifos necessários (negrito, itálico, link, tabela, código, fechar, verificar), dispensando qualquer emoji ou biblioteca externa.

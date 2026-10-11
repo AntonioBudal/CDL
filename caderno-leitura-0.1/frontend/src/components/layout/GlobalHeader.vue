@@ -79,7 +79,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
           <!-- Sincronização (Apenas Ícone Discreto com Tooltip) -->
           <SyncStatusBadge />
 
-          <!-- Busca Global (Pílula translúcida sem atalho Ctrl+K visual) -->
+          <!-- Busca Global (Apenas Ícone de Busca) -->
           <button
             type="button"
             class="header-tool-btn search-trigger-btn"
@@ -87,8 +87,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
             title="Buscar (Ctrl+K)"
             @click="openSearch"
           >
-            <Icon name="search" :size="15" />
-            <span class="tool-label search-label">Buscar</span>
+            <Icon name="search" :size="16" />
           </button>
 
           <!-- Captura Rápida (Apenas o + com destaque primário) -->
@@ -280,6 +279,15 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
 .header-tool-btn:focus-visible {
   outline: var(--focus-width, 3px) solid var(--color-accent);
   outline-offset: 2px;
+}
+
+.search-trigger-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 9999px;
 }
 
 .quick-capture-trigger-btn {

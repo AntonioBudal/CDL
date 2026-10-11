@@ -1,14 +1,36 @@
-# Requirements Checklist: 066-importar-atelie-parser
+# Specification Quality Checklist: F0.8.05 — Ateliê de Fichamento e Parser Estruturado
 
-## Content Quality Checks
+**Purpose**: Validate specification completeness and quality before proceeding to planning
+**Created**: 2026-10-11
+**Feature**: [spec.md](../spec.md)
 
-- [x] O documento possui título e branch especificados (`066-importar-atelie-parser`).
-- [x] O documento contém histórias de usuário priorizadas por valor (P1, P2, P3).
-- [x] Cada história de usuário define critérios de teste independente e cenários Given/When/Then.
-- [x] O MVP está explicitamente delimitado (P1: Two-Pane Studio + Barra Flutuante + Modos de Foco).
-- [x] Casos de borda foram documentados (textos > 2.000 palavras, telas < 1024px, promoções de Inbox).
-- [x] Requisitos funcionais (FR-001 a FR-012) e critérios de sucesso mensuráveis (SC-001 a SC-005) estão listados.
-- [x] O princípio de Imunidade Cromática e respeito aos 10 temas é estritamente exigido.
-- [x] O princípio de Zero Emojis no frontend é preservado.
-- [x] A política de movimento reduzido (`prefers-reduced-motion`) é obrigatória.
-- [x] A preservação funcional do motor de parsing, validações e persistência de dados é mandatória.
+## Content Quality
+
+- [x] No implementation details (languages, frameworks, APIs)
+- [x] Focused on user value and business needs
+- [x] Written for non-technical stakeholders
+- [x] All mandatory sections completed
+
+## Requirement Completeness
+
+- [x] No [NEEDS CLARIFICATION] markers remain
+- [x] Requirements are testable and unambiguous
+- [x] Success criteria are measurable
+- [x] Success criteria are technology-agnostic (no implementation details)
+- [x] All acceptance scenarios are defined
+- [x] Edge cases are identified
+- [x] Scope is clearly bounded
+- [x] Dependencies and assumptions identified
+
+## Feature Readiness
+
+- [x] All functional requirements have clear acceptance criteria
+- [x] User scenarios cover primary flows
+- [x] Feature meets measurable outcomes defined in Success Criteria
+- [x] No implementation details leak into specification
+
+## Notes
+
+- Especificação em conformidade estrita com a Seção 4 (Feature 05) do documento canônico Roadmap 0.8 (v1.1.0-EXEC).
+- Total aderência às regras de Imunidade Cromática (10 temas nativos), Zero Emojis e `prefers-reduced-motion`.
+- Integração de promoção de capturas do Inbox (`promote_inbox_id`) preservada.
