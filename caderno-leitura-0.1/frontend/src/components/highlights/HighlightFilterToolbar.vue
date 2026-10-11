@@ -7,6 +7,7 @@ import type {
   HighlightLibrarySummary,
   HighlightViewMode,
 } from '../../types'
+import { HIGHLIGHT_SEMANTIC_CATEGORIES } from '../../types'
 import Icon from '../ui/Icon.vue'
 
 const props = withDefaults(
@@ -86,13 +87,12 @@ function onColorChange(color: HighlightColor | null) {
   emit('update:selectedColor', color)
 }
 
-const colorsList: { key: HighlightColor; label: string; hex: string }[] = [
-  { key: 'yellow', label: 'Amarelo', hex: '#eab308' },
-  { key: 'green', label: 'Verde', hex: '#22c55e' },
-  { key: 'blue', label: 'Azul', hex: '#3b82f6' },
-  { key: 'pink', label: 'Rosa', hex: '#ec4899' },
-  { key: 'purple', label: 'Roxo', hex: '#a855f7' },
-]
+const semanticCategoriesList = computed(() => {
+  return (Object.keys(HIGHLIGHT_SEMANTIC_CATEGORIES) as HighlightColor[]).map((key) => {
+    return HIGHLIGHT_SEMANTIC_CATEGORIES[key]
+  })
+})
+const colorsList = semanticCategoriesList
 
 const kindsList: { key: HighlightKind; label: string }[] = [
   { key: 'highlight', label: 'Destaques' },
@@ -159,7 +159,7 @@ const mobileDrawerOpen = ref(false)
           title="Limpar busca"
           @click="clearSearch"
         >
-          <Icon name="x" :size="14" />
+          <Icon name="x" :size="14" aria-hidden="true" />
         </button>
       </div>
 
@@ -173,7 +173,7 @@ const mobileDrawerOpen = ref(false)
           title="Exibir em ordem cronológica de criação"
           @click="emit('update:viewMode', 'recent')"
         >
-          <Icon name="list" :size="16" />
+          <Icon name="list" :size="16" aria-hidden="true" />
           <span class="mode-label">Recentes</span>
         </button>
         <button
@@ -184,7 +184,7 @@ const mobileDrawerOpen = ref(false)
           title="Exibir agrupado por livro e obra"
           @click="emit('update:viewMode', 'by_book')"
         >
-          <Icon name="book-open" :size="16" />
+          <Icon name="book-open" :size="16" aria-hidden="true" />
           <span class="mode-label">Por Obra</span>
         </button>
       </div>
@@ -198,7 +198,7 @@ const mobileDrawerOpen = ref(false)
         aria-label="Abrir opções de filtro"
         @click="mobileDrawerOpen = !mobileDrawerOpen"
       >
-        <Icon name="sliders" :size="18" />
+        <Icon name="sliders" :size="18" aria-hidden="true" />
         <span>Filtros</span>
         <span v-if="activeFilterCount > 0" class="filter-count-badge">
           {{ activeFilterCount }}
@@ -206,7 +206,7 @@ const mobileDrawerOpen = ref(false)
       </button>
     </div>
 
-    <!-- Linha Secundária: Filtros por Livro, Tipo, Cores e Botão Limpar (Desktop e gaveta móvel) -->
+    <!-- Linha Secundária: Filtros por Livro, Tipo, Categorias Semânticas e Botão Limpar -->
     <div
       class="toolbar-filters-row"
       :class="{ 'mobile-open': mobileDrawerOpen }"
@@ -256,31 +256,32 @@ const mobileDrawerOpen = ref(false)
         </select>
       </div>
 
-      <!-- Paleta Cromática de Cores -->
-      <div class="filter-control filter-colors" role="radiogroup" aria-label="Filtrar por cor">
-        <span class="filter-label">Cor:</span>
-        <div class="color-swatches">
+      <!-- Categorias Intelectuais de Grifo -->
+      <div class="filter-control filter-categories" role="group" aria-label="Filtrar por intenção de estudo">
+        <span class="filter-label">Intenção:</span>
+        <div class="category-pills color-swatches">
           <button
             type="button"
-            class="swatch-btn swatch-all"
+            class="pill-btn swatch-btn pill-all"
             :class="{ 'is-selected': selectedColor === null }"
-            title="Todas as cores"
-            aria-label="Todas as cores"
+            title="Todas as categorias de grifo"
+            aria-label="Todas as categorias de grifo"
             @click="onColorChange(null)"
           >
             Todas
           </button>
           <button
-            v-for="c in colorsList"
-            :key="c.key"
+            v-for="cat in colorsList"
+            :key="cat.key"
             type="button"
-            class="swatch-btn swatch-color"
-            :class="[`swatch-${c.key}`, { 'is-selected': selectedColor === c.key }]"
-            :title="`Filtrar por ${c.label}`"
-            :aria-label="`Filtrar por cor ${c.label}`"
-            @click="onColorChange(selectedColor === c.key ? null : c.key)"
+            class="pill-btn swatch-btn pill-category"
+            :class="[`pill-${cat.key}`, { 'is-selected': selectedColor === cat.key }]"
+            :title="`${cat.semanticName} (${cat.label}): ${cat.description}`"
+            :aria-label="`Filtrar por ${cat.semanticName} (destaques em ${cat.label})`"
+            @click="onColorChange(selectedColor === cat.key ? null : cat.key)"
           >
-            <span class="swatch-circle" :style="{ backgroundColor: c.hex }" />
+            <span class="pill-dot" aria-hidden="true" />
+            <span class="pill-name">{{ cat.semanticName }}</span>
           </button>
         </div>
       </div>
@@ -294,7 +295,7 @@ const mobileDrawerOpen = ref(false)
           aria-label="Limpar filtros"
           @click="emit('reset-filters')"
         >
-          <Icon name="rotate-ccw" :size="14" />
+          <Icon name="rotate-ccw" :size="14" aria-hidden="true" />
           <span>Limpar</span>
         </button>
       </div>
@@ -307,33 +308,34 @@ const mobileDrawerOpen = ref(false)
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
+  padding: 1rem 1.25rem;
   background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border, #e4e4e7);
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--color-border-subtle, var(--color-border, #e2e8f0));
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  margin-bottom: 1.5rem;
 }
 
 /* Linha Principal */
 .toolbar-primary-row {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
 }
 
 .search-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  flex: 1;
-  min-width: 240px;
+  flex-grow: 1;
+  min-width: 220px;
 }
 
 .search-icon {
   position: absolute;
   left: 0.75rem;
-  color: var(--color-text-muted, #a1a1aa);
+  color: var(--color-text-secondary, #64748b);
   pointer-events: none;
 }
 
@@ -341,20 +343,19 @@ const mobileDrawerOpen = ref(false)
   width: 100%;
   height: 38px;
   padding: 0 2rem 0 2.25rem;
-  border: 1px solid var(--color-border, #d4d4d8);
-  border-radius: 6px;
-  background-color: var(--color-surface-subtle, #f8fafc);
-  color: var(--color-text-primary, #0f172a);
   font-size: 0.875rem;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-  box-sizing: border-box;
+  color: var(--color-text-primary, #0f172a);
+  background-color: var(--color-surface-soft, #f8fafc);
+  border: 1px solid var(--color-border, #cbd5e1);
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.15s ease;
 }
 
 .search-input:focus {
-  outline: none;
-  border-color: var(--color-primary, #3b82f6);
   background-color: var(--color-surface, #ffffff);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+  border-color: var(--color-accent, var(--color-primary, #2563eb));
+  box-shadow: 0 0 0 2px var(--ring-focus, rgba(37, 99, 235, 0.2));
 }
 
 .btn-clear-search {
@@ -363,97 +364,100 @@ const mobileDrawerOpen = ref(false)
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
   background: none;
   border: none;
-  border-radius: 50%;
-  color: var(--color-text-muted, #a1a1aa);
+  padding: 0.25rem;
+  color: var(--color-text-secondary, #94a3b8);
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  border-radius: 4px;
 }
 
 .btn-clear-search:hover {
-  background-color: var(--color-surface-hover, #e2e8f0);
   color: var(--color-text-primary, #0f172a);
+  background-color: var(--color-surface-hover, #e2e8f0);
 }
 
-/* Alternador de Modo */
+/* Alternador de Modo de Visualização */
 .view-mode-toggle {
   display: inline-flex;
-  background-color: var(--color-surface-subtle, #f1f5f9);
-  padding: 3px;
+  align-items: center;
+  background-color: var(--color-surface-soft, #f1f5f9);
+  padding: 0.2rem;
   border-radius: 6px;
-  border: 1px solid var(--color-border, #e2e8f0);
+  border: 1px solid var(--color-border-subtle, #e2e8f0);
+  flex-shrink: 0;
 }
 
 .btn-mode {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.35rem 0.65rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-secondary, #64748b);
+  background: none;
   border: none;
   border-radius: 4px;
-  background: none;
-  color: var(--color-text-secondary, #64748b);
-  font-size: 0.8125rem;
-  font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
   min-height: 32px;
 }
 
+.btn-mode:hover {
+  color: var(--color-text-primary, #0f172a);
+}
+
 .btn-mode.is-active {
   background-color: var(--color-surface, #ffffff);
   color: var(--color-text-primary, #0f172a);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   font-weight: 600;
 }
 
-.btn-mode:hover:not(.is-active) {
-  color: var(--color-text-primary, #0f172a);
-}
-
-/* Botão Mobile de Toggle */
+/* Botão Mobile */
 .btn-mobile-filter-toggle {
   display: none;
   align-items: center;
   gap: 0.4rem;
-  background-color: var(--color-surface-subtle, #f8fafc);
-  border: 1px solid var(--color-border, #cbd5e1);
-  border-radius: 6px;
   padding: 0.4rem 0.75rem;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--color-text-secondary, #475569);
+  color: var(--color-text-primary, #0f172a);
+  background-color: var(--color-surface-soft, #f8fafc);
+  border: 1px solid var(--color-border, #cbd5e1);
+  border-radius: 6px;
   cursor: pointer;
-  min-height: 44px;
 }
 
 .filter-count-badge {
-  background-color: var(--color-primary, #2563eb);
-  color: #ffffff;
-  font-size: 0.75rem;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background-color: var(--color-accent, var(--color-primary, #2563eb));
+  color: var(--color-on-accent, #ffffff);
   border-radius: 9999px;
-  padding: 0.1rem 0.4rem;
-  line-height: 1;
 }
 
-/* Linha de Filtros */
+/* Linha Secundária de Filtros */
 .toolbar-filters-row {
   display: flex;
   align-items: center;
-  gap: 1rem;
   flex-wrap: wrap;
-  padding-top: 0.65rem;
+  gap: 1.25rem;
+  padding-top: 0.5rem;
   border-top: 1px solid var(--color-border-subtle, #f1f5f9);
 }
 
 .filter-control {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .filter-label {
@@ -464,74 +468,73 @@ const mobileDrawerOpen = ref(false)
 }
 
 .filter-select {
-  height: 34px;
-  padding: 0 0.65rem;
+  height: 32px;
+  padding: 0 1.75rem 0 0.65rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-primary, #0f172a);
+  background-color: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border, #cbd5e1);
   border-radius: 6px;
-  background-color: var(--color-surface, #ffffff);
-  color: var(--color-text-primary, #0f172a);
-  font-size: 0.8125rem;
   cursor: pointer;
-  max-width: 220px;
+  outline: none;
+  max-width: 200px;
 }
 
 .filter-select:focus {
-  outline: none;
-  border-color: var(--color-primary, #3b82f6);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+  border-color: var(--color-accent, var(--color-primary, #2563eb));
+  box-shadow: 0 0 0 2px var(--ring-focus, rgba(37, 99, 235, 0.2));
 }
 
-/* Cores */
-.color-swatches {
+/* Pílulas de Categorias Intelectuais de Grifo */
+.category-pills {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.35rem;
 }
 
-.swatch-btn {
+.pill-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  background: none;
-  border: 1px solid var(--color-border, #e2e8f0);
-  border-radius: 4px;
+  gap: 0.35rem;
+  height: 30px;
+  padding: 0 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border, #cbd5e1);
+  background-color: var(--color-surface, #ffffff);
+  color: var(--color-text-secondary, #64748b);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
-.swatch-all {
-  height: 28px;
-  padding: 0 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--color-text-secondary, #64748b);
-  background-color: var(--color-surface-subtle, #f8fafc);
+.pill-btn:hover {
+  background-color: var(--color-surface-hover, var(--color-surface-soft, #f1f5f9));
+  color: var(--color-text-primary, #0f172a);
 }
 
-.swatch-all.is-selected {
-  background-color: var(--color-text-primary, #0f172a);
-  color: #ffffff;
-  border-color: var(--color-text-primary, #0f172a);
+.pill-btn.is-selected {
+  background-color: var(--color-surface-soft, #f1f5f9);
+  color: var(--color-text-primary, #0f172a);
+  border-color: var(--color-accent, var(--color-primary, #0f172a));
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.swatch-color {
-  width: 28px;
-  height: 28px;
-  padding: 0;
+.pill-dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
+  flex-shrink: 0;
+  background-color: currentColor;
 }
 
-.swatch-circle {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: block;
-}
-
-.swatch-color.is-selected {
-  border-color: var(--color-text-primary, #0f172a);
-  box-shadow: 0 0 0 2px var(--color-primary, #2563eb);
-}
+.pill-yellow .pill-dot { color: #eab308; }
+.pill-green .pill-dot { color: #22c55e; }
+.pill-blue .pill-dot { color: #3b82f6; }
+.pill-pink .pill-dot { color: #ec4899; }
+.pill-purple .pill-dot { color: #a855f7; }
 
 /* Botão Limpar Filtros */
 .filter-reset {
@@ -545,19 +548,19 @@ const mobileDrawerOpen = ref(false)
   background: none;
   border: 1px dashed var(--color-border, #cbd5e1);
   border-radius: 6px;
-  padding: 0.3rem 0.65rem;
+  padding: 0 0.65rem;
+  height: 30px;
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--color-text-secondary, #64748b);
   cursor: pointer;
-  height: 32px;
   transition: all 0.15s ease;
 }
 
 .btn-reset-filters:hover {
-  background-color: #fef2f2;
-  border-color: #fecaca;
-  color: #ef4444;
+  background-color: var(--color-surface-hover, var(--color-surface-soft, #f1f5f9));
+  border-color: var(--color-border-hover, #94a3b8);
+  color: var(--color-text-primary, #0f172a);
 }
 
 /* Responsividade Móvel */
@@ -607,15 +610,15 @@ const mobileDrawerOpen = ref(false)
     font-size: 0.9375rem;
   }
 
-  .color-swatches {
+  .category-pills {
     flex-wrap: wrap;
     gap: 0.5rem;
   }
 
-  .swatch-all,
-  .swatch-color {
+  .pill-all,
+  .pill-category {
     min-height: 44px;
-    min-width: 44px;
+    padding: 0 0.75rem;
   }
 
   .btn-reset-filters {

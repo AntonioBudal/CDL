@@ -47,6 +47,46 @@ export const HIGHLIGHT_COLOR_OPTIONS: readonly HighlightColorOption[] = [
   { id: 'purple', label: 'Lilás', bg: '#e9d5ff', border: '#c084fc' },
 ] as const
 
+export interface HighlightSemanticCategory {
+  key: HighlightColor
+  label: string
+  semanticName: string
+  description: string
+}
+
+export const HIGHLIGHT_SEMANTIC_CATEGORIES: Record<HighlightColor, HighlightSemanticCategory> = {
+  yellow: {
+    key: 'yellow',
+    label: 'Amarelo',
+    semanticName: 'Ideia Central',
+    description: 'Destaque fundamental da tese ou argumento principal da obra',
+  },
+  green: {
+    key: 'green',
+    label: 'Verde',
+    semanticName: 'Citação-chave',
+    description: 'Passagem memorável, aforismo ou referência direta para citação',
+  },
+  blue: {
+    key: 'blue',
+    label: 'Azul',
+    semanticName: 'Dúvida',
+    description: 'Ponto obscuro, conceito desafiador ou questão para aprofundamento',
+  },
+  pink: {
+    key: 'pink',
+    label: 'Rosa',
+    semanticName: 'Refutação',
+    description: 'Contraposição, argumento divergente ou crítica ao texto',
+  },
+  purple: {
+    key: 'purple',
+    label: 'Roxo',
+    semanticName: 'Síntese',
+    description: 'Conclusão conceitual, fechamento de raciocínio ou resumo',
+  },
+}
+
 export type ToolbarMode =
   | 'idle'
   | 'color_palette'

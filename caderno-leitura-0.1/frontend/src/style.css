@@ -603,3 +603,70 @@ button, .button, input, textarea, select { box-shadow: var(--shadow-control); }
   }
 }
 
+/* ==========================================================================
+   Feature 02 (F0.8.02): Destaques — Códice e Margens Vivas (Commonplace Cards)
+   ========================================================================== */
+
+.editorial-quote {
+  font-family: var(--font-serif, "EB Garamond", Garamond, Georgia, serif);
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--color-text-primary, #0f172a);
+  position: relative;
+  letter-spacing: -0.01em;
+}
+
+.editorial-quote-mark {
+  font-family: Georgia, serif;
+  font-size: 1.35em;
+  line-height: 0;
+  vertical-align: -0.15em;
+  opacity: 0.45;
+  color: var(--color-accent, var(--color-primary, currentColor));
+  user-select: none;
+}
+
+.reader-note-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--color-border-subtle, var(--color-border, #e2e8f0));
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-top: 0.75rem;
+}
+
+.reader-note-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-tertiary, var(--color-text-secondary, #64748b));
+}
+
+.reader-note-content {
+  font-family: var(--font-sans, "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary, #334155);
+}
+
+/* Transições Aceleradas por GPU para Fichas Literárias */
+.commonplace-expand-transition {
+  transition: max-height 180ms cubic-bezier(0.4, 0, 0.2, 1), opacity 180ms ease;
+  will-change: max-height, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .commonplace-expand-transition,
+  .btn-copy-quote,
+  .highlight-card-commonplace {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+

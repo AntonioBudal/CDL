@@ -16,10 +16,19 @@ import type {
 } from '../types'
 import HighlightCard from '../components/highlights/HighlightCard.vue'
 import HighlightFilterToolbar from '../components/highlights/HighlightFilterToolbar.vue'
+import ErrorNoticeCard from '../components/ui/ErrorNoticeCard.vue'
 import Icon from '../components/ui/Icon.vue'
+import { useFloatingToast } from '../composables/useFloatingToast'
 
 const route = useRoute()
 const router = useRouter()
+const floatingToast = useFloatingToast(1500)
+
+function handleHighlightCopied() {
+  floatingToast.showToast({
+    message: 'Copiado para a área de transferência',
+  })
+}
 
 // Estado Reativo
 const loading = ref(true)
@@ -259,14 +268,13 @@ onMounted(() => {
         @reset-filters="handleResetFilters"
       />
 
-      <!-- Feedback de Erro -->
-      <div v-if="errorMessage" class="notice-error" role="alert">
-        <Icon name="alert-triangle" :size="20" class="error-icon" />
-        <div class="error-text">
-          <p>{{ errorMessage }}</p>
-          <button type="button" class="btn-retry" @click="fetchHighlights">Tentar novamente</button>
-        </div>
-      </div>
+      <!-- Feedback de Erro Acolhedor Integrado ao Tema -->
+      <ErrorNoticeCard
+        v-if="errorMessage"
+        title="Não foi possível carregar os destaques"
+        :message="errorMessage"
+        @retry="fetchHighlights"
+      />
 
       <!-- Esqueleto de Carregamento (Loading Skeleton) -->
       <div v-else-if="loading" class="skeletons-list" aria-label="Carregando destaques...">
@@ -338,6 +346,7 @@ onMounted(() => {
           :item="item"
           @edit-note="handleEditNote"
           @delete="handleDeleteHighlight"
+          @copied="handleHighlightCopied"
         />
       </div>
 
@@ -372,6 +381,7 @@ onMounted(() => {
               :item="item"
               @edit-note="handleEditNote"
               @delete="handleDeleteHighlight"
+              @copied="handleHighlightCopied"
             />
           </div>
         </section>
@@ -427,6 +437,20 @@ onMounted(() => {
           </button>
         </div>
       </nav>
+
+      <!-- Micro-Toast Flutuante de Confirmação -->
+      <Transition name="floating-toast-fade">
+        <div
+          v-if="floatingToast.visible.value"
+          class="study-micro-toast"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <Icon name="check" :size="15" class="toast-check-icon" aria-hidden="true" />
+          <span class="micro-toast-text">{{ floatingToast.message.value }}</span>
+        </div>
+      </Transition>
     </div>
   </main>
 </template>
@@ -672,32 +696,53 @@ onMounted(() => {
   background-color: var(--color-primary-hover, #1d4ed8);
 }
 
-/* Feedback de Erro */
-.notice-error {
-  display: flex;
+/* Micro-Toast Flutuante de Confirmação */
+.study-micro-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #991b1b;
-  padding: 1rem 1.25rem;
-  border-radius: 8px;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  background-color: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #cbd5e1);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-primary, #0f172a);
+  z-index: 100;
+  pointer-events: none;
 }
 
-.error-icon {
-  color: #dc2626;
+.toast-check-icon {
+  color: var(--color-success-text, #16a34a);
   flex-shrink: 0;
 }
 
-.btn-retry {
-  background: none;
-  border: none;
-  color: #dc2626;
-  text-decoration: underline;
-  cursor: pointer;
-  padding: 0;
-  font-size: 0.875rem;
-  font-weight: 600;
+.micro-toast-text {
+  line-height: 1.25;
+}
+
+.floating-toast-fade-enter-active,
+.floating-toast-fade-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.floating-toast-fade-enter-from,
+.floating-toast-fade-leave-to {
+  opacity: 0;
+  transform: translate(-50%, 0.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-toast-fade-enter-active,
+  .floating-toast-fade-leave-active {
+    transition: opacity 0.01ms ease !important;
+    transform: translateX(-50%) !important;
+  }
 }
 
 /* Paginação */
