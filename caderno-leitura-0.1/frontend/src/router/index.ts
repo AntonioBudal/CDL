@@ -1,27 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import BooksView from '../views/BooksView.vue'
-import BookView from '../views/BookView.vue'
-import DashboardView from '../views/DashboardView.vue'
-import ImportView from '../views/ImportView.vue'
-import ConnectionView from '../views/ConnectionView.vue'
-import NotFoundView from '../views/NotFoundView.vue'
-import StudyView from '../views/StudyView.vue'
-import StudyEditView from '../views/StudyEditView.vue'
-import SettingsView from '../views/SettingsView.vue'
-import TrashView from '../views/TrashView.vue'
+import LandingView from '../views/LandingView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import SetupOwnerView from '../views/SetupOwnerView.vue'
-import UserProfileView from '../views/UserProfileView.vue'
-import FriendsView from '../views/FriendsView.vue'
-import AdminView from '../views/AdminView.vue'
-import SupportView from '../views/SupportView.vue'
-import LandingView from '../views/LandingView.vue'
 import AboutView from '../views/AboutView.vue'
-import ReviewHubView from '../views/ReviewHubView.vue'
-import HighlightsLibraryView from '../views/HighlightsLibraryView.vue'
-import InboxView from '../views/InboxView.vue'
-import StudySessionView from '../views/StudySessionView.vue'
+import SupportView from '../views/SupportView.vue'
+import NotFoundView from '../views/NotFoundView.vue'
 import DigitizeNotebookView from '../views/DigitizeNotebookView.vue'
 import { updateSeoMeta } from '../composables/useSeoMeta'
 import { useAuthStore } from '../stores/auth.ts'
@@ -53,20 +37,20 @@ export const router = createRouter({
         description: 'Conheça o Leitorum, sua metodologia de leitura em 4 partes, princípios de privacidade e arquitetura local-first.',
       },
     },
-    { path: '/dashboard', name: 'dashboard', component: DashboardView, meta: { title: 'Dashboard' } },
-    { path: '/inbox', alias: ['/caixa-de-entrada'], name: 'inbox', component: InboxView, meta: { title: 'Caixa de Entrada' } },
-    { path: '/books', alias: ['/livros'], name: 'books', component: BooksView, meta: { title: 'Livros' } },
-    { path: '/highlights', alias: ['/destaques', '/anotacoes'], name: 'highlights', component: HighlightsLibraryView, meta: { title: 'Destaques e Anotações' } },
-    { path: '/review', alias: ['/revisao'], name: 'review', component: ReviewHubView, meta: { title: 'Central de Revisão' } },
+    { path: '/dashboard', name: 'dashboard', component: () => import('../views/DashboardView.vue'), meta: { title: 'Dashboard' } },
+    { path: '/inbox', alias: ['/caixa-de-entrada'], name: 'inbox', component: () => import('../views/InboxView.vue'), meta: { title: 'Caixa de Entrada' } },
+    { path: '/books', alias: ['/livros'], name: 'books', component: () => import('../views/BooksView.vue'), meta: { title: 'Livros' } },
+    { path: '/highlights', alias: ['/destaques', '/anotacoes'], name: 'highlights', component: () => import('../views/HighlightsLibraryView.vue'), meta: { title: 'Destaques e Anotações' } },
+    { path: '/review', alias: ['/revisao'], name: 'review', component: () => import('../views/ReviewHubView.vue'), meta: { title: 'Central de Revisão' } },
     {
       path: '/estudo/sessao/:sessionId',
       alias: ['/study/session/:sessionId'],
       name: 'study-session',
-      component: StudySessionView,
+      component: () => import('../views/StudySessionView.vue'),
       meta: { title: 'Sessão de Estudo', cleanScreen: true },
     },
-    { path: '/livros/:bookId', alias: ['/books/:bookId'], name: 'book', component: BookView, meta: { title: 'Livro' } },
-    { path: '/livros/:bookId/estudos/:studyId', alias: ['/books/:bookId/estudos/:studyId'], name: 'study', component: StudyView, meta: { title: 'Ler estudo' } },
+    { path: '/livros/:bookId', alias: ['/books/:bookId'], name: 'book', component: () => import('../views/BookView.vue'), meta: { title: 'Livro' } },
+    { path: '/livros/:bookId/estudos/:studyId', alias: ['/books/:bookId/estudos/:studyId'], name: 'study', component: () => import('../views/StudyView.vue'), meta: { title: 'Ler estudo' } },
     {
       path: '/estudos/:studyId',
       name: 'study-direct',
@@ -84,10 +68,10 @@ export const router = createRouter({
         }
         next('/livros')
       },
-      component: StudyView,
+      component: () => import('../views/StudyView.vue'),
     },
-    { path: '/livros/:bookId/estudos/:studyId/editar', alias: ['/books/:bookId/estudos/:studyId/editar'], name: 'study-edit', component: StudyEditView, meta: { title: 'Editar estudo' } },
-    { path: '/importar', name: 'import', component: ImportView, meta: { title: 'Importar estudo' } },
+    { path: '/livros/:bookId/estudos/:studyId/editar', alias: ['/books/:bookId/estudos/:studyId/editar'], name: 'study-edit', component: () => import('../views/StudyEditView.vue'), meta: { title: 'Editar estudo' } },
+    { path: '/importar', name: 'import', component: () => import('../views/ImportView.vue'), meta: { title: 'Importar estudo' } },
     {
       path: '/digitalizar',
       alias: ['/scan'],
@@ -95,12 +79,12 @@ export const router = createRouter({
       component: DigitizeNotebookView,
       meta: { title: 'Digitalizar Caderno' },
     },
-    { path: '/amigos', alias: ['/friends'], name: 'friends', component: FriendsView, meta: { title: 'Amigos e Leitores' } },
-    { path: '/conexao', name: 'connection', component: ConnectionView, meta: { title: 'Conexão' } },
-    { path: '/ajustes', name: 'settings', component: SettingsView, meta: { title: 'Ajustes' } },
-    { path: '/lixeira', name: 'trash', component: TrashView, meta: { title: 'Lixeira' } },
-    { path: '/@:username', alias: ['/u/:username'], name: 'user-profile', component: UserProfileView, meta: { title: 'Perfil do Leitor' } },
-    { path: '/admin', name: 'admin', component: AdminView, meta: { title: 'Administração', requiresAdmin: true } },
+    { path: '/amigos', alias: ['/friends'], name: 'friends', component: () => import('../views/FriendsView.vue'), meta: { title: 'Amigos e Leitores' } },
+    { path: '/conexao', name: 'connection', component: () => import('../views/ConnectionView.vue'), meta: { title: 'Conexão' } },
+    { path: '/ajustes', name: 'settings', component: () => import('../views/SettingsView.vue'), meta: { title: 'Ajustes' } },
+    { path: '/lixeira', name: 'trash', component: () => import('../views/TrashView.vue'), meta: { title: 'Lixeira' } },
+    { path: '/@:username', alias: ['/u/:username'], name: 'user-profile', component: () => import('../views/UserProfileView.vue'), meta: { title: 'Perfil do Leitor' } },
+    { path: '/admin', name: 'admin', component: () => import('../views/AdminView.vue'), meta: { title: 'Administração', requiresAdmin: true } },
     {
       path: '/apoie',
       alias: ['/apoiar'],

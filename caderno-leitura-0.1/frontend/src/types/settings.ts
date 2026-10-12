@@ -149,7 +149,7 @@ export const CANONICAL_THEME_PREVIEWS: readonly ThemePreviewItem[] = Object.free
     colors: {
       page: '#FDF6E3',
       surface: '#EEE8D5',
-      text: '#3F5962',
+      text: '#2E4249',
       accent: '#00686D',
       border: '#B9B199',
     },

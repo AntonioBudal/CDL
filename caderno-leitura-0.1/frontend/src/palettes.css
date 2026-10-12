@@ -135,7 +135,7 @@
 
 :root[data-theme="solario"] {
   color-scheme: light;
-  --color-text: #3F5962; --color-muted: #465D66; --color-subtle: #465D66;
+  --color-text: #2E4249; --color-muted: #465D66; --color-subtle: #465D66;
   --color-placeholder: #465D66; --color-meta: #465D66; --color-page: #FDF6E3;
   --color-surface: #EEE8D5; --color-surface-soft: #E5DEC7; --color-surface-inset: #F5EFDA;
   --color-surface-readonly: #FDF6E3; --color-surface-disabled: #E5DEC7; --color-card-hover: #E5DEC7;

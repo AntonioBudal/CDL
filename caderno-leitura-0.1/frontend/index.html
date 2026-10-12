@@ -52,6 +52,9 @@
     }
     </script>
 
+    <!-- Preload Critical Fonts (Feature 074) -->
+    <link rel="preload" href="/fonts/eb-garamond/5.3.0/latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/source-sans-3/5.3.0/latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
     <!-- appearance-bootstrap -->
 
     <!-- Stylesheets -->
@@ -67,7 +70,42 @@
     <link rel="stylesheet" href="/src/font-picker.css" />
   </head>
   <body> 
-    <div id="app"></div>
+    <div id="app">
+      <header>
+        <p>Caderno de leitura e estudo em camadas</p>
+        <h1>Ler devagar é uma forma de pensar.</h1>
+      </header>
+      <main>
+        <p>
+          O Leitorum é um ambiente calmo para quem estuda obras fundamentais. Em vez de acumular páginas lidas às pressas, pratique o fichamento em quatro camadas cognitivas: resuma a essência, explique os mecanismos, isole conceitos e teça conexões duradouras.
+        </p>
+        <nav aria-label="Ações de início">
+          <a href="/registro">Criar Conta Gratuita</a>
+          <a href="/login">Já possuo conta (Entrar)</a>
+        </nav>
+        <section>
+          <h2>O Método de Fichamento em 4 Dimensões</h2>
+          <p>
+            1. Resumo analítico: O que a obra diz em essência?<br />
+            2. Explicação aprofundada: Como e por que o autor sustenta a tese?<br />
+            3. Conceitos-chave: Quais categorias teóricas foram formuladas?<br />
+            4. Referências e conexões: Com quais tradições este texto dialoga?
+          </p>
+        </section>
+        <section>
+          <h2>Soberania e Privacidade Absoluta</h2>
+          <p>
+            Sem anúncios nem rastreadores. Suas anotações pessoais não alimentam modelos externos de inteligência artificial. Seus dados sob seu controle exclusivo com exportação completa em formatos abertos.
+          </p>
+        </section>
+      </main>
+      <footer>
+        <nav aria-label="Navegação institucional">
+          <a href="/sobre">Sobre a metodologia</a>
+          <a href="/apoie">Apoie o projeto</a>
+        </nav>
+      </footer>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

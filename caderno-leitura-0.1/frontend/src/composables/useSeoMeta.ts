@@ -93,9 +93,14 @@ export function buildWebApplicationSchema(baseUrl = 'https://leitorum.com'): Web
     '@type': 'WebApplication',
     name: 'Leitorum',
     url: baseUrl,
-    description: 'Caderno pessoal de leitura e estudos em camadas.',
+    description: 'Caderno pessoal de leitura e estudos em camadas. Metodologia de fichamento analítico, privacidade total e soberania local-first.',
     applicationCategory: 'EducationalApplication',
     operatingSystem: 'All',
+    author: {
+      '@type': 'Organization',
+      name: 'Leitorum',
+      url: baseUrl,
+    },
     offers: {
       '@type': 'Offer',
       price: '0',
