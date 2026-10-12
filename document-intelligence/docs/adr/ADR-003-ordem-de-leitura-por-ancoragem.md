@@ -1,6 +1,6 @@
 # ADR-003: Ordem de leitura por ancoragem de regiões laterais; a detecção de blocos é o gargalo
 
-* **Status:** PROPOSED
+* **Status:** ACCEPTED (aceito pelo usuário em 2026-10-12)
 * **Data:** 2026-10-07
 * **Decisores:** Usuário (decisão); Claude Code (proposta)
 * **Experimento de Suporte:** [EXP-003](../../experiments/EXP-003/RESULTS.md)

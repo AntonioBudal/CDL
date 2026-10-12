@@ -1,9 +1,9 @@
 # EXP-003: Relatório de Resultados — Reconstrução Espacial e Ordem de Leitura
 
-* **Status:** `AWAITING USER ACCEPTANCE`
+* **Status:** `ACCEPTED` / `CONCLUÍDO` (aceito pelo usuário em 2026-10-12)
 * **Execução:** 2026-10-07
 * **Executor:** Claude Code
-* **Decisão arquitetural gerada:** [ADR-003](../../docs/adr/ADR-003-ordem-de-leitura-por-ancoragem.md) (`PROPOSED`)
+* **Decisão arquitetural gerada:** [ADR-003](../../docs/adr/ADR-003-ordem-de-leitura-por-ancoragem.md) (`ACCEPTED`)
 * **Artefatos do ciclo:** [spec.md](./spec.md) · [plan.md](./plan.md) · [tasks.md](./tasks.md)
 
 > **Licenças.** Os ordenadores são algoritmos próprios, sem pesos. O layout detectado usa os componentes do ADR-002,
@@ -113,7 +113,7 @@ Blocos verdadeiros fora de ordem ou ausentes, por família: `margin` — 74 nota
 | SC-002 — acurácia por método, família e fonte do layout, com veredito de H1–H4 | Atendido |
 | SC-003 — decomposição da perda entre ordenação e detecção | Atendido (§2.3) |
 | SC-004 — saídas válidas no LDF (`reading_order`) | Atendido: 180/180 válidas em todas as medições |
-| SC-005 — ADR | Atendido: ADR-003 `PROPOSED` |
+| SC-005 — ADR | Atendido: ADR-003 `ACCEPTED` |
 | SC-006 — escopo, testes, `ruff`, disco | Atendido (§6) |
 
 ---
@@ -186,8 +186,8 @@ detectados fora do Git; uso de disco de 8,2 GB (teto de 20 GB).
 ## 8. Homologação
 
 - [x] Entregáveis do EXP-003 concluídos e submetidos ao usuário.
-- [ ] EXP-003 **ACEITO** — decisão do usuário.
-- [ ] ADR-003 aceito, rejeitado ou ajustado — decisão do usuário.
-- [ ] Próximo passo — decisão do usuário. **EXP-004 não iniciado.**
+- [x] EXP-003 **ACEITO** pelo usuário em 2026-10-12.
+- [x] ADR-003 **aceito** pelo usuário em 2026-10-12.
+- [x] Próximo passo: fechar o contrato LDF (`specs/001-contrato-ldf/`) antes do EXP-004. **EXP-004 não iniciado.**
 
 *Assinatura do agente executor:* `Claude Code (claude-opus-5-5), 2026-10-07`
