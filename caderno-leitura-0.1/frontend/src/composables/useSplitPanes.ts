@@ -112,14 +112,6 @@ export function useSplitPanes(options: UseSplitPanesOptions = {}): UseSplitPanes
   const rightWidth = ref<number>(
     stored ? Math.max(minWidth, Math.min(maxWidth, stored.rightWidth)) : defaultRightWidth
   )
-  // Conforme decisão ratificada Q1: painel direito inicia recolhido por padrão se não houver preferência salva
-  const leftCollapsed = ref<boolean>(stored ? Boolean(stored.leftCollapsed) : false)
-  const rightCollapsed = ref<boolean>(stored ? Boolean(stored.rightCollapsed) : true)
-
-  const isDragging = ref<boolean>(false)
-  const activePane = ref<PaneId | null>(null)
-  const containerWidth = ref<number | null>(null)
-
   // Detecção de viewport e modo de layout
   const windowWidth = ref<number>(typeof window !== 'undefined' ? window.innerWidth : 1200)
 
@@ -128,6 +120,18 @@ export function useSplitPanes(options: UseSplitPanesOptions = {}): UseSplitPanes
     if (windowWidth.value < 1024) return 'drawer'
     return 'split'
   })
+
+  // Conforme decisão ratificada Q1 e FR-001 (F0.8.13):
+  // Painel direito inicia recolhido por padrão se não houver preferência salva.
+  // Painel esquerdo inicia recolhido em modo móvel (< 768px) por padrão para priorizar a leitura imediata da obra.
+  const isInitialMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  const leftCollapsed = ref<boolean>(stored ? Boolean(stored.leftCollapsed) : isInitialMobile)
+  const rightCollapsed = ref<boolean>(stored ? Boolean(stored.rightCollapsed) : true)
+
+  const isDragging = ref<boolean>(false)
+  const activePane = ref<PaneId | null>(null)
+  const containerWidth = ref<number | null>(null)
+
 
   function updateWindowWidth() {
     if (typeof window !== 'undefined') {

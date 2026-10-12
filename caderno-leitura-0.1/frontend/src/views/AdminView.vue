@@ -1267,7 +1267,7 @@ onMounted(() => {
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 1rem;
   transition: opacity 0.2s ease-in-out;
 }

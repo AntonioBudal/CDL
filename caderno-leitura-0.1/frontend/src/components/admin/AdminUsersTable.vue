@@ -73,7 +73,7 @@ function formatDate(dateStr?: string | null): string {
               </div>
             </td>
 
-            <td>
+            <td data-label="Papel">
               <span
                 class="badge"
                 :class="u.role === 'admin' ? 'badge-admin' : 'badge-user'"
@@ -82,7 +82,7 @@ function formatDate(dateStr?: string | null): string {
               </span>
             </td>
 
-            <td>
+            <td data-label="Status">
               <span
                 class="badge"
                 :class="u.status === 'ativo' ? 'badge-active' : 'badge-suspended'"
@@ -91,17 +91,17 @@ function formatDate(dateStr?: string | null): string {
               </span>
             </td>
 
-            <td>
+            <td data-label="Provedor">
               <span class="provider-label">
                 {{ u.provider === 'google' ? 'Google' : u.provider === 'ambos' ? 'Local + Google' : 'Local' }}
               </span>
             </td>
 
-            <td class="text-center">
+            <td data-label="Estudos" class="text-center">
               <span class="metric-value">{{ u.studies_count }}</span>
             </td>
 
-            <td class="text-center">
+            <td data-label="Sessões" class="text-center">
               <span
                 class="sessions-count"
                 :class="{ 'has-sessions': u.active_sessions_count > 0 }"
@@ -110,11 +110,11 @@ function formatDate(dateStr?: string | null): string {
               </span>
             </td>
 
-            <td>
+            <td data-label="Último Acesso">
               <span class="date-label text-muted">{{ formatDate(u.last_access) }}</span>
             </td>
 
-            <td class="cell-actions text-right">
+            <td data-label="Ações" class="cell-actions text-right">
               <div class="action-buttons">
                 <!-- Alterar Papel -->
                 <button
@@ -405,9 +405,103 @@ function formatDate(dateStr?: string | null): string {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 900px) and (min-width: 768px) {
   .action-label {
     display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .table-wrapper {
+    overflow-x: visible;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  .admin-table,
+  .admin-table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table thead {
+    display: none;
+  }
+
+  .admin-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: var(--radius-panel, 8px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .admin-table tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.35rem 0;
+    border-bottom: 1px dashed var(--color-border-subtle, rgba(0, 0, 0, 0.06));
+    text-align: left;
+    font-size: 0.875rem;
+  }
+
+  .admin-table tbody td:last-child {
+    border-bottom: none;
+    padding-top: 0.5rem;
+  }
+
+  .admin-table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--color-text-muted, #6b7280);
+    font-size: 0.8125rem;
+    margin-right: 0.5rem;
+  }
+
+  .admin-table tbody td.cell-user::before {
+    display: none;
+  }
+
+  .admin-table tbody td.cell-user {
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--color-border, #e5e7eb);
+  }
+
+  .admin-table tbody td.cell-actions {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .admin-table tbody td.cell-actions::before {
+    display: none;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .btn-action {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-height: 44px;
+    height: auto;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+    justify-content: center;
+  }
+
+  .action-label {
+    display: inline;
   }
 }
 </style>

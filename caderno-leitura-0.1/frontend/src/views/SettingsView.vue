@@ -1843,6 +1843,7 @@ onBeforeUnmount(() => {
     border-radius: 16px 16px 0 0;
     padding: 1.25rem;
     max-height: 80vh;
+    max-height: 80dvh;
     overflow-y: auto;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
   }

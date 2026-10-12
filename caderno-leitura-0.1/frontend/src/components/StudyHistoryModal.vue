@@ -412,6 +412,7 @@ watch(
   width: 100%;
   max-width: 1080px;
   height: 85vh;
+  height: 85dvh;
   max-height: 860px;
   background: var(--color-surface, #fff);
   border-radius: 12px;

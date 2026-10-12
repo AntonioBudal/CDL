@@ -716,35 +716,39 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
   .header-actions {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.5rem;
     width: 100%;
   }
 
   .header-actions button {
-    min-height: 40px;
+    min-height: 44px;
     font-size: 0.8125rem;
+    padding: 0.5rem 0.75rem;
   }
 }
 
 @media (max-width: 480px) {
   .header-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
     width: 100%;
   }
 
   .header-actions .icon-toggle-btn {
-    width: 100%;
-    min-height: 40px;
+    min-width: 44px;
+    min-height: 44px;
+    flex: 0 0 44px;
   }
 
   .header-actions button:not(.icon-toggle-btn) {
-    grid-column: 1 / -1;
-    width: 100%;
-    min-height: 40px;
+    flex: 1 1 calc(50% - 0.5rem);
+    min-height: 44px;
     justify-content: center;
     text-align: center;
+    padding: 0.5rem 0.5rem;
   }
 }
 

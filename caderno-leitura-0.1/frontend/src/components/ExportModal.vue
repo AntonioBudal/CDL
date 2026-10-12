@@ -378,6 +378,7 @@ async function handleDownload() {
   flex-direction: column;
   gap: 1.25rem;
   max-height: calc(85vh - 120px);
+  max-height: calc(85dvh - 120px);
   overflow-y: auto;
 }
 

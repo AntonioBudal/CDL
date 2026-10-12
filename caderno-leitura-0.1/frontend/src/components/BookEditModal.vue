@@ -371,6 +371,7 @@ async function save() {
 .modal-dialog {
   width: min(100%, 34rem);
   max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
   background: var(--color-surface);
   border-radius: var(--radius-panel);
