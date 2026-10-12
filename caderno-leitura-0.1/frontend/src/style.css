@@ -19,6 +19,13 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   line-height: var(--line-height-ui);
+  --mobile-nav-offset: 0px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --mobile-nav-offset: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
 }
 :root, body, #app, button, input, select, textarea, code, pre {
   font-family: var(--font-reading);

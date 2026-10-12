@@ -799,3 +799,51 @@ Com a conclusão da Feature 10 (F10), **todas as dez features do Roadmap 0.5 (F0
    - Proteção absoluta do acervo e zero alterações no banco de produção.
 7. **Versionamento Git:**
    - Commit atômico criado na convenção 1 Feature = 1 Commit: `feature — visualizacoes moveis e biblioteca de destaques`.
+
+---
+
+## Sessão: Implementação da Feature 081 (F0.8.15 — 12/10/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Feature Concluída:**
+   - Feature: `081-regressao-responsiva` (F0.8.15 — Bateria Completa de Regressão e Consolidação do Roadmap de Responsividade).
+   - Diretório: `specs/081-regressao-responsiva/`.
+   - Todas as 18 tarefas de `tasks.md` (T001 a T018) executadas e marcadas como concluídas (`[x]`).
+2. **Matriz Completa de Rotas × Viewports sem Transbordamento (US1):**
+   - 100% das 25 rotas mapeadas de `src/router/index.ts` validadas contra as 8 viewports normativas (320px, 375px, 390px, 430px, 767px, 768px, 1024px, 1440px) e no modo paisagem móvel (844×390px).
+   - Ausência absoluta de transbordamento horizontal (`scrollWidth === clientWidth`).
+   - Token `--mobile-nav-offset` formalizado em `:root` (0px no desktop) e `@media (max-width: 767px)` (`calc(56px + env(safe-area-inset-bottom, 0px))`), garantindo compensação canônica para elementos flutuantes e fixos.
+3. **Auditoria e Fechamento dos 19 Problemas Históricos (P-01 a P-19) (US2):**
+   - 19 de 19 problemas (P-01 a P-19) auditados e com encerramento formal ratificado:
+     - P-01 e P-02: Shell móvel com 5 colunas e testes sobre classes físicas reais.
+     - P-03: `ShareModal.vue` sem Tailwind residual e com tokens semânticos.
+     - P-04 e P-05: Mapa de Estudos com pan/pinch e lista semântica alternativa.
+     - P-06 e P-07: Canvas de Estudos com `touch-action: pan-y` e toolbar compacta.
+     - P-08: Árvore de Estudos sem drag em `pointer: coarse` e com indentação comprimida.
+     - P-09: Dropdown de notificações contido em telas ≤ 430px.
+     - P-10: Elementos fixos e rodapés respeitando `--mobile-nav-offset`.
+     - P-11: Limites canônicos de breakpoints unificados (767px mobile, 768px tablet/desktop).
+     - P-12: Palco de estudos utilizando Container Query `@container study-stage`.
+     - P-13: App.vue expurgado de regras scoped obsoletas/mortas.
+     - P-14: AdminUsersTable.vue com modo de cartões para mobile.
+     - P-15: Grids fluidos com `minmax(min(..., 100%), 1fr)` sem estouro em 320px.
+     - P-16: Modais com altura flexível via `dvh`.
+     - P-17: BookView.vue com recolhimento de gaveta no mobile.
+     - P-18: Efeitos hover protegidos com `pointer: fine`.
+     - P-19: Botões de ação globais com `white-space: nowrap` e `flex-shrink: 0`.
+4. **Suíte de Testes-Guarda Automatizados (US3):**
+   - Criada a suíte `tests/feature-081-responsive-regression.test.mjs` com 24 testes automatizados em `node --test` executando em ~20ms.
+   - Validações de alvos táteis mínimos de 44x44px (WCAG 2.1 AA) e limites de breakpoints.
+   - Ratificação da infraestrutura leve de testes nativos sem dependências pesadas de navegadores headless (Playwright/Puppeteer).
+5. **Protocolo de Homologação Física e Encerramento (US4):**
+   - `quickstart.md` detalhado com 5 cenários passo a passo para testes dinâmicos em aparelhos físicos sob rede local ou Tailscale.
+   - Marco de Responsividade Móvel (Features 076 a 081 / F0.8.11 a F0.8.15) formalmente consolidado e encerrado.
+6. **Validação Completa das Suítes:**
+   - 458 testes de backend passando (`pytest` / 458 passed, 1 skipped).
+   - 642 testes de frontend passando (`npm test` / 642 passed, 0 failed), incluindo todos os 24 testes de regressão da Feature 081.
+   - Build e checagem de tipos estritos (`npm run build` / `vue-tsc -b && vite build`) concluídos com sucesso (código 0).
+   - Conformidade estrita de ZERO emojis em todo o código e documentação.
+   - Proteção absoluta do acervo e zero alterações no banco de produção.
+7. **Próximos Passos:**
+   - Commit atômico da Feature 081: `git commit -m "feature — regressao e consolidacao responsiva"`.
+
