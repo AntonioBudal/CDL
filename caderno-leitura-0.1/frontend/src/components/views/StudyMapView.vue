@@ -6,6 +6,7 @@ import type {
   StudyRelationItem,
   StudyRelationType,
   MapConnectionEdge,
+  BookCanvasRelationItem,
 } from '../../types.ts'
 import Icon from '../ui/Icon.vue'
 import EmptyState from '../ui/EmptyState.vue'
@@ -158,6 +159,107 @@ function onMouseMove(e: MouseEvent) {
 
 function endPan() {
   isPanning.value = false
+}
+
+const initialPinchDistance = ref(0)
+const initialPinchZoom = ref(1)
+
+function onTouchStart(e: TouchEvent) {
+  if ((e.target as HTMLElement).closest('.map-node-card, button, .zoom-controls, .mobile-map-toolbar, .map-edge-badge-group')) {
+    return
+  }
+  if (e.touches.length === 1 && e.touches[0]) {
+    isPanning.value = true
+    panStart.value = { x: e.touches[0].clientX - panX.value, y: e.touches[0].clientY - panY.value }
+  } else if (e.touches.length === 2 && e.touches[0] && e.touches[1]) {
+    isPanning.value = false
+    initialPinchDistance.value = Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY
+    )
+    initialPinchZoom.value = zoomLevel.value
+  }
+}
+
+function onTouchMove(e: TouchEvent) {
+  if (e.touches.length === 1 && isPanning.value && e.touches[0]) {
+    panX.value = e.touches[0].clientX - panStart.value.x
+    panY.value = e.touches[0].clientY - panStart.value.y
+  } else if (e.touches.length === 2 && initialPinchDistance.value > 0 && e.touches[0] && e.touches[1]) {
+    const currentDist = Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY
+    )
+    const factor = currentDist / initialPinchDistance.value
+    const targetZoom = initialPinchZoom.value * factor
+    zoomLevel.value = Math.min(2.5, Math.max(0.5, Number(targetZoom.toFixed(2))))
+  }
+}
+
+function onTouchEnd(e: TouchEvent) {
+  if (e.touches.length === 0) {
+    isPanning.value = false
+    initialPinchDistance.value = 0
+  } else if (e.touches.length === 1 && e.touches[0]) {
+    panStart.value = { x: e.touches[0].clientX - panX.value, y: e.touches[0].clientY - panY.value }
+    isPanning.value = true
+    initialPinchDistance.value = 0
+  }
+}
+
+function onTouchCancel() {
+  isPanning.value = false
+  initialPinchDistance.value = 0
+}
+
+const mobileViewMode = ref<'graph' | 'relations_list'>('graph')
+
+function getStudyTitle(id: number): string {
+  const s = props.studies.find((item) => item.id === id)
+  return s ? s.title : `Estudo #${id}`
+}
+
+function getRelationTypeLabel(type: StudyRelationType | string): string {
+  switch (type) {
+    case 'relacionado_com': return 'Relacionado com'
+    case 'complementa': return 'Complementa'
+    case 'contradiz': return 'Contradiz'
+    case 'depende_de': return 'Depende de'
+    case 'mesmo_tema': return 'Mesmo tema'
+    case 'desdobramento_de': return 'Desdobramento de'
+    default: return type
+  }
+}
+
+async function handleInvertRelation(rel: BookCanvasRelationItem | StudyRelationItem) {
+  try {
+    await apiDeleteStudyRelation(rel.id)
+    await apiCreateStudyRelation(rel.target_study_id, {
+      target_study_id: rel.source_study_id,
+      relation_type: rel.relation_type,
+      description: rel.description || undefined,
+    })
+    await canvasConnections.loadBookRelations(props.bookId)
+  } catch (err) {
+    console.error('[StudyMapView] Erro ao inverter relação semântica:', err)
+  }
+}
+
+function openEditRelation(rel: BookCanvasRelationItem | StudyRelationItem) {
+  const sourceStudy = props.studies.find((s) => s.id === rel.source_study_id) || null
+  const targetStudy = props.studies.find((s) => s.id === rel.target_study_id) || null
+  if (sourceStudy && targetStudy) {
+    relationPopoverState.value = {
+      isOpen: true,
+      sourceStudy,
+      targetStudy,
+      existingRelation: rel as any,
+      position: {
+        x: typeof window !== 'undefined' ? window.innerWidth / 2 - 160 : 300,
+        y: typeof window !== 'undefined' ? window.innerHeight / 2 - 180 : 200,
+      },
+    }
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -455,13 +557,42 @@ function toggleMobileAssistedConnection() {
         </div>
       </div>
 
+      <!-- Alternador de visualização móvel: Grafo vs Lista de Relações (US2) -->
+      <div class="mobile-map-view-mode" role="tablist" aria-label="Modo de visualização móvel do mapa">
+        <button
+          type="button"
+          role="tab"
+          :aria-selected="mobileViewMode === 'graph'"
+          class="mobile-mode-tab-btn"
+          :class="{ 'is-active': mobileViewMode === 'graph' }"
+          @click="mobileViewMode = 'graph'"
+        >
+          Grafo
+        </button>
+        <button
+          type="button"
+          role="tab"
+          :aria-selected="mobileViewMode === 'relations_list'"
+          class="mobile-mode-tab-btn"
+          :class="{ 'is-active': mobileViewMode === 'relations_list' }"
+          @click="mobileViewMode = 'relations_list'"
+        >
+          Lista de Relações ({{ canvasConnections.relations.value.length }})
+        </button>
+      </div>
+
       <!-- Viewport Interativa do Mapa -->
       <div
+        v-show="mobileViewMode === 'graph'"
         ref="stageViewportRef"
         class="map-canvas-viewport"
         @mousedown="startPan"
         @mousemove="onMouseMove"
         @mouseup="endPan"
+        @touchstart="onTouchStart"
+        @touchmove="onTouchMove"
+        @touchend="onTouchEnd"
+        @touchcancel="onTouchCancel"
         @wheel.prevent="onWheel"
         @dblclick="handleCanvasDblClick"
       >
@@ -767,6 +898,66 @@ function toggleMobileAssistedConnection() {
             </RouterLink>
           </div>
         </div>
+      </div>
+
+      <!-- Lista Semântica Alternativa de Relações para Mobile (US2) -->
+      <div
+        v-if="mobileViewMode === 'relations_list'"
+        class="mobile-relations-list-view"
+      >
+        <div v-if="canvasConnections.relations.value.length === 0" class="relations-empty-state">
+          <p>Nenhuma relação cadastrada entre estudos deste livro.</p>
+        </div>
+        <ul v-else class="relations-list" role="list">
+          <li
+            v-for="rel in canvasConnections.relations.value"
+            :key="rel.id"
+            class="relation-list-item"
+          >
+            <div class="relation-item-content">
+              <div class="relation-nodes-flow">
+                <span class="relation-node-title">{{ getStudyTitle(rel.source_study_id) }}</span>
+                <span class="relation-type-tag" :class="`type-${rel.relation_type}`">
+                  {{ getRelationTypeLabel(rel.relation_type) }}
+                </span>
+                <span class="relation-node-title">{{ getStudyTitle(rel.target_study_id) }}</span>
+              </div>
+              <p v-if="rel.description" class="relation-item-desc">{{ rel.description }}</p>
+            </div>
+            <div class="relation-item-actions">
+              <button
+                type="button"
+                class="button secondary relation-action-btn action-btn touch-target"
+                title="Inverter sentido da relação"
+                aria-label="Inverter sentido da relação"
+                @click="handleInvertRelation(rel)"
+              >
+                <Icon name="refresh-cw" :size="15" />
+                <span>Inverter</span>
+              </button>
+              <button
+                type="button"
+                class="button secondary relation-action-btn action-btn touch-target"
+                title="Editar relação"
+                aria-label="Editar relação"
+                @click="openEditRelation(rel)"
+              >
+                <Icon name="pencil" :size="15" />
+                <span>Editar</span>
+              </button>
+              <button
+                type="button"
+                class="button secondary relation-action-btn btn-danger action-btn touch-target"
+                title="Desvincular relação"
+                aria-label="Desvincular relação"
+                @click="handleDeleteRelation(rel.id)"
+              >
+                <Icon name="trash" :size="15" />
+                <span>Desvincular</span>
+              </button>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -1293,12 +1484,151 @@ function toggleMobileAssistedConnection() {
   display: none;
 }
 
+.mobile-map-view-mode {
+  display: none;
+}
+
+.mobile-relations-list-view {
+  display: none;
+}
+
 /* Barra de Ações Mobile e Alvos Táteis de 44px (US3 / FR-009) */
 @media (max-width: 768px) {
   .touch-target,
   .action-btn {
     min-width: 44px;
     min-height: 44px;
+  }
+
+  .mobile-map-view-mode {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+
+  .mobile-mode-tab-btn {
+    flex: 1;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .mobile-mode-tab-btn.is-active {
+    background: var(--color-primary, #2563eb);
+    color: #ffffff;
+    border-color: var(--color-primary, #2563eb);
+  }
+
+  .mobile-relations-list-view {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0;
+  }
+
+  .relations-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .relation-list-item {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .relation-nodes-flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .relation-node-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--color-text);
+  }
+
+  .relation-type-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    background: var(--color-surface-soft, #f1f5f9);
+    color: var(--color-text-secondary, #64748b);
+    border: 1px solid var(--color-border-subtle, #e2e8f0);
+  }
+
+  .relation-type-tag.type-supports {
+    background: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+    border-color: rgba(34, 197, 94, 0.2);
+  }
+
+  .relation-type-tag.type-contradicts {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border-color: rgba(239, 68, 68, 0.2);
+  }
+
+  .relation-item-desc {
+    margin: 0.35rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+  }
+
+  .relation-item-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border-subtle, #f1f5f9);
+  }
+
+  .relation-action-btn {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    flex: 1;
+  }
+
+  .relation-action-btn.btn-danger {
+    color: var(--color-error-text, #ef4444);
+  }
+
+  .relations-empty-state {
+    padding: 2rem 1rem;
+    text-align: center;
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
   }
 
   .mobile-map-toolbar {

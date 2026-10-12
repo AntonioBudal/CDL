@@ -556,13 +556,13 @@ function handleTreeKeydown(event: KeyboardEvent) {
   gap: 0.5rem;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .tree-container {
-    padding: 0.85rem;
+    padding: 0.75rem;
   }
   .tree-branch {
-    margin-left: 0.5rem;
-    padding-left: 0.5rem;
+    margin-left: 0.35rem;
+    padding-left: 0.35rem;
   }
 }
 

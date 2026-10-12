@@ -763,3 +763,39 @@ Com a conclusão da Feature 10 (F10), **todas as dez features do Roadmap 0.5 (F0
 6. **Próximos Passos:**
    - Commit atômico da Feature F 0.7.2: `git commit -m "feature — responsividade mobile, toque nativo e micro-toast de ferramentas"`.
    - Prosseguir para a Feature F 0.7.3: *Floating Actions Toolbar Dinâmica e Menos Clumsy* (`speckit-specify F 0.7.3`).
+
+---
+
+## Sessão: Implementação da Feature 080 (F0.8.14 — 12/10/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Feature Concluída:**
+   - Feature: `080-visualizacoes-e-destaques-moveis` (F0.8.14 — Visualizações Móveis e Responsividade de Destaques).
+   - Diretório: `specs/080-visualizacoes-e-destaques-moveis/`.
+   - Todas as 22 tarefas de `tasks.md` (T001 a T022) executadas e marcadas como concluídas (`[x]`).
+2. **Biblioteca de Destaques sem Transbordamento e com Navegação Inferior Íntegra (US1):**
+   - Eliminada a rolagem horizontal indesejada (`scrollWidth === clientWidth`) em 320px, 375px, 390px, 430px e 767px em `/destaques`.
+   - Reorganizada a barra primária de filtros em `HighlightFilterToolbar.vue` com `flex-wrap: wrap`, campo de busca em largura total (100%) no mobile e quebra harmoniosa do alternador de modo e gatilho de filtros.
+   - Contenção rigorosa de largura (`max-width: 100%; box-sizing: border-box; overflow-x: hidden;`) e padding inferior canônico (`padding-bottom: calc(var(--mobile-nav-offset, 56px) + 1.5rem);`) em `HighlightsLibraryView.vue`, impedindo colisão com a barra inferior móvel (`MobileTabBar`).
+   - Paginação com `flex-wrap: wrap` e alvos mínimos de 44x44px.
+   - Micro-toast posicionado com `bottom: calc(var(--mobile-nav-offset, 56px) + 1rem);`.
+   - Truncamento e quebra flexível de títulos e ações em `HighlightCard.vue`.
+3. **Navegação Tátil e Lista Semântica no Mapa de Estudos (US2):**
+   - Handlers multitoque (`touchstart`, `touchmove`, `touchend`, `touchcancel`) no SVG para pan contínuo (1 dedo) e pinch zoom contínuo (2 dedos) restrito ao intervalo canônico de 0.5 a 2.5.
+   - Alternador móvel entre exibição em Grafo e Lista Semântica de Relações (`mobile-map-view-mode`).
+   - Lista semântica móvel de relações com ações táteis explícitas de inversão, edição e desvinculação com botões >= 44x44px.
+4. **Desbloqueio de Rolagem e Compactação no Canvas de Estudos (US3):**
+   - Aplicado `touch-action: pan-y;` sob `@media (max-width: 767px)` no contêiner `.canvas-viewport`, permitindo rolagem vertical nativa da página sem bloqueios.
+   - Ferramentas secundárias da `CanvasToolbar.vue` compactadas com menu suspenso móvel em telas < 1024px.
+5. **Acessibilidade Tátil e Hierarquia na Árvore de Estudos (US4):**
+   - Ocultação de `.tree-drag-handle` sob `@media (pointer: coarse)`.
+   - Menu contextual tátil (`.mobile-menu-toggle-btn`) como canal primário com botões de 44x44px.
+   - Compressão de margens de indentação em nós aninhados sob `@media (max-width: 768px)` em `StudyTreeView.vue` e `StudyTreeNodeItem.vue`.
+6. **Validação e Suítes de Testes:**
+   - 458 testes de backend passando (`pytest` / 458 passed, 1 skipped).
+   - 618 testes de frontend passando (`npm test` / 618 passed), incluindo suíte dedicada em `tests/feature-080-mobile-views-highlights.test.mjs`.
+   - Compilação estrita e build de produção (`npm run build` / `vue-tsc -b && vite build`) concluídos com sucesso (código 0).
+   - Zero presença de emojis em código ou documentação.
+   - Proteção absoluta do acervo e zero alterações no banco de produção.
+7. **Versionamento Git:**
+   - Commit atômico criado na convenção 1 Feature = 1 Commit: `feature — visualizacoes moveis e biblioteca de destaques`.

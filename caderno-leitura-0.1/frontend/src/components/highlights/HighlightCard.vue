@@ -406,6 +406,9 @@ function formatDate(isoDate: string): string {
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   position: relative;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .highlight-card:hover {
@@ -897,6 +900,10 @@ function formatDate(isoDate: string): string {
 }
 
 @media (max-width: 640px) {
+  .highlight-card {
+    padding: 1rem;
+  }
+
   .card-header {
     flex-direction: column;
     align-items: flex-start;
@@ -907,6 +914,18 @@ function formatDate(isoDate: string): string {
     justify-content: space-between;
   }
 
+  .card-context {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .book-title,
+  .book-author,
+  .context-chapter,
+  .study-crumb {
+    max-width: 100%;
+  }
+
   .card-footer {
     flex-direction: column;
     align-items: flex-start;
@@ -915,7 +934,9 @@ function formatDate(isoDate: string): string {
 
   .footer-actions {
     width: 100%;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.5rem;
   }
 }
 </style>

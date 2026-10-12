@@ -566,8 +566,22 @@ const mobileDrawerOpen = ref(false)
 
 /* Responsividade Móvel */
 @media (max-width: 768px) {
+  .toolbar-primary-row {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .search-input-wrapper {
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
   .btn-mobile-filter-toggle {
     display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
   }
 
   .view-mode-toggle {

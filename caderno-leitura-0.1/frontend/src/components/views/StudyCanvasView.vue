@@ -1132,5 +1132,15 @@ const isInteracting = computed(() => {
   .canvas-navigation-hint {
     display: none;
   }
+
+  .canvas-viewport {
+    touch-action: pan-y;
+  }
+
+  .canvas-viewport.is-panning,
+  .canvas-viewport.mode-frame,
+  .canvas-viewport.mode-connect {
+    touch-action: none;
+  }
 }
 </style>

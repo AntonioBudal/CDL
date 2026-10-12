@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import Icon from '../../ui/Icon.vue'
 import type { CanvasToolMode } from '../../../types.ts'
 
@@ -27,6 +28,8 @@ const emit = defineEmits<{
   (e: 'quick-create'): void
   (e: 'set-tool', tool: CanvasToolMode): void
 }>()
+
+const showMoreMenu = ref(false)
 </script>
 
 <template>
@@ -129,35 +132,50 @@ const emit = defineEmits<{
         <Icon name="minus" :size="15" />
       </button>
 
-      <button
-        type="button"
-        class="canvas-tool-btn reset-btn"
-        title="Resetar escala para 100%"
-        aria-label="Resetar zoom para 100%"
-        @click="emit('reset-zoom')"
-      >
-        <Icon name="rotate-ccw" :size="14" />
-      </button>
+      <!-- Ferramentas secundárias: visíveis em desktop ou em menu móvel compacto -->
+      <div class="secondary-tools-group" :class="{ 'is-mobile-open': showMoreMenu }">
+        <button
+          type="button"
+          class="canvas-tool-btn reset-btn"
+          title="Resetar escala para 100%"
+          aria-label="Resetar zoom para 100%"
+          @click="emit('reset-zoom'); showMoreMenu = false"
+        >
+          <Icon name="rotate-ccw" :size="14" />
+        </button>
 
-      <button
-        v-if="hasNodes"
-        type="button"
-        class="canvas-tool-btn fit-btn"
-        title="Ajustar e centralizar todos os estudos na tela"
-        aria-label="Ajustar estudos à tela"
-        @click="emit('fit-to-view')"
-      >
-        <Icon name="maximize-2" :size="15" />
-      </button>
+        <button
+          v-if="hasNodes"
+          type="button"
+          class="canvas-tool-btn fit-btn"
+          title="Ajustar e centralizar todos os estudos na tela"
+          aria-label="Ajustar estudos à tela"
+          @click="emit('fit-to-view'); showMoreMenu = false"
+        >
+          <Icon name="maximize-2" :size="15" />
+        </button>
 
+        <button
+          type="button"
+          class="canvas-tool-btn add-frame-btn"
+          title="Criar moldura delimitadora"
+          aria-label="Adicionar moldura manual"
+          @click="emit('add-frame'); showMoreMenu = false"
+        >
+          <Icon name="folder-plus" :size="15" />
+        </button>
+      </div>
+
+      <!-- Gatilho de menu para ferramentas secundárias em telas menores (< 1024px) -->
       <button
         type="button"
-        class="canvas-tool-btn add-frame-btn"
-        title="Criar moldura delimitadora"
-        aria-label="Adicionar moldura manual"
-        @click="emit('add-frame')"
+        class="canvas-tool-btn more-tools-trigger"
+        :class="{ 'is-active': showMoreMenu }"
+        title="Mais ferramentas"
+        aria-label="Mais ferramentas"
+        @click="showMoreMenu = !showMoreMenu"
       >
-        <Icon name="folder-plus" :size="15" />
+        <Icon name="more-horizontal" :size="16" />
       </button>
     </div>
 
@@ -325,6 +343,41 @@ const emit = defineEmits<{
 
 .canvas-toolbar .clear-sel-btn:hover {
   background: rgba(37, 99, 235, 0.15);
+}
+
+.secondary-tools-group {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+:root .canvas-toolbar :is(button, .button).canvas-tool-btn.more-tools-trigger,
+.canvas-toolbar .canvas-tool-btn.more-tools-trigger {
+  display: none !important;
+}
+
+@media (max-width: 1023px) {
+  :root .canvas-toolbar :is(button, .button).canvas-tool-btn.more-tools-trigger,
+  .canvas-toolbar .canvas-tool-btn.more-tools-trigger {
+    display: inline-flex !important;
+  }
+
+  .secondary-tools-group {
+    display: none !important;
+  }
+
+  .secondary-tools-group.is-mobile-open {
+    display: inline-flex !important;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 9999px;
+    padding: 0.3rem 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    z-index: 50;
+  }
 }
 
 @media (max-width: 768px) {

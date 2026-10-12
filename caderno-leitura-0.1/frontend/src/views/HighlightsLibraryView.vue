@@ -458,13 +458,18 @@ onMounted(() => {
 <style scoped>
 .highlights-library-view {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
   min-height: calc(100vh - 60px);
-  padding: 1.5rem 1rem 3rem;
+  padding: 1.5rem 1rem calc(var(--mobile-nav-offset, 56px) + 1.5rem);
   background-color: var(--color-page);
 }
 
 .library-container {
   max-width: 960px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -699,7 +704,7 @@ onMounted(() => {
 /* Micro-Toast Flutuante de Confirmação */
 .study-micro-toast {
   position: fixed;
-  bottom: calc(var(--mobile-nav-offset, 0px) + 1.5rem);
+  bottom: calc(var(--mobile-nav-offset, 56px) + 1rem);
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;
@@ -826,13 +831,24 @@ onMounted(() => {
 /* Responsividade Móvel */
 @media (max-width: 640px) {
   .highlights-library-view {
-    padding: 1rem 0.75rem 2.5rem;
+    padding: 1rem 0.75rem calc(var(--mobile-nav-offset, 56px) + 1.5rem);
   }
 
   .pagination-nav {
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .pagination-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pagination-pages {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .pagination-btn,

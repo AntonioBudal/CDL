@@ -650,6 +650,19 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
   flex-direction: column;
 }
 
+@media (pointer: coarse) {
+  .tree-drag-handle {
+    display: none;
+  }
+
+  .mobile-menu-toggle-btn,
+  .tree-chevron-btn,
+  .quick-action-item {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
 /* Ergonomia móvel: alvos mínimos de 44x44px */
 @media (max-width: 768px) {
   .touch-target,
@@ -666,6 +679,10 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
   }
   .node-open-link {
     display: none;
+  }
+  .tree-subbranch {
+    margin-left: 0.5rem;
+    padding-left: 0.5rem;
   }
 }
 
