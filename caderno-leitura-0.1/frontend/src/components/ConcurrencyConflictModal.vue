@@ -194,6 +194,7 @@ onUnmounted(() => {
   padding: 0.75rem 1rem;
   min-height: 3.5rem;
   border-radius: 6px;
+  white-space: normal;
 }
 
 .btn-subtext {

@@ -332,7 +332,7 @@ onUnmounted(() => {
             </p>
             <button
               type="button"
-              class="suggest-or-btn min-h-[38px]"
+              class="suggest-or-btn"
               @click="setMode('or')"
             >
               Buscar estudos com qualquer um dos termos (Modo OR)
@@ -713,6 +713,10 @@ onUnmounted(() => {
   font-size: 0.8125rem;
   cursor: pointer;
   transition: background-color 0.15s ease;
+  white-space: normal;
+  text-align: left;
+  line-height: 1.35;
+  min-height: 2.375rem;
 }
 
 .suggest-or-btn:hover {

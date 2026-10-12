@@ -469,7 +469,8 @@ onMounted(loadTrash)
             :aria-selected="activeFilter === 'studies'"
             @click="activeFilter = 'studies'"
           >
-            Estudos individuais ({{ trashData.studies.length }})
+            <span class="btn-text-full">Estudos individuais ({{ trashData.studies.length }})</span>
+            <span class="btn-text-short">Estudos ({{ trashData.studies.length }})</span>
           </button>
         </div>
 
@@ -546,7 +547,8 @@ onMounted(loadTrash)
                   :disabled="isRestoring('book', book.id)"
                   @click="confirmPermanentDeleteBook(book)"
                 >
-                  Excluir definitivamente
+                  <span class="btn-text-full">Excluir definitivamente</span>
+                  <span class="btn-text-short">Excluir</span>
                 </button>
               </div>
             </li>
@@ -624,7 +626,8 @@ onMounted(loadTrash)
                   :disabled="isRestoring('study', study.id)"
                   @click="confirmPermanentDeleteStudy(study)"
                 >
-                  Excluir definitivamente
+                  <span class="btn-text-full">Excluir definitivamente</span>
+                  <span class="btn-text-short">Excluir</span>
                 </button>
               </div>
             </li>
@@ -650,27 +653,36 @@ onMounted(loadTrash)
             <button
               type="button"
               class="batch-btn secondary"
+              :title="isAllSelected ? 'Desmarcar todos os itens' : 'Selecionar todos os itens da página'"
+              :aria-label="isAllSelected ? 'Desmarcar todos os itens' : 'Selecionar todos os itens da página'"
               @click="toggleSelectAll"
             >
-              {{ isAllSelected ? 'Desmarcar todos' : 'Selecionar todos' }}
+              <span class="btn-text-full">{{ isAllSelected ? 'Desmarcar todos' : 'Selecionar todos' }}</span>
+              <span class="btn-text-short">{{ isAllSelected ? 'Desmarcar' : 'Todos' }}</span>
             </button>
             <button
               type="button"
               class="batch-btn primary"
               :disabled="batchRestoring || batchDeleting"
+              title="Restaurar itens selecionados da lixeira"
+              aria-label="Restaurar itens selecionados da lixeira"
               @click="handleBatchRestore"
             >
               <Icon name="rotate-ccw" :size="14" />
-              <span>{{ batchRestoring ? 'Restaurando...' : 'Restaurar selecionados' }}</span>
+              <span class="btn-text-full">{{ batchRestoring ? 'Restaurando...' : 'Restaurar selecionados' }}</span>
+              <span class="btn-text-short">{{ batchRestoring ? 'Restaurando...' : 'Restaurar' }}</span>
             </button>
             <button
               type="button"
               class="batch-btn danger"
               :disabled="batchRestoring || batchDeleting"
+              title="Excluir permanentemente itens selecionados"
+              aria-label="Excluir permanentemente itens selecionados"
               @click="confirmBatchDeleteOpen = true"
             >
               <Icon name="trash" :size="14" />
-              <span>Excluir definitivamente</span>
+              <span class="btn-text-full">Excluir definitivamente</span>
+              <span class="btn-text-short">Excluir</span>
             </button>
             <button
               type="button"
@@ -1037,7 +1049,17 @@ onMounted(loadTrash)
   align-items: center;
   gap: 0.35rem;
   border: 1px solid var(--color-border);
-  min-height: 38px;
+  min-height: 44px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-text-short {
+  display: none;
+}
+
+.btn-text-full {
+  display: inline;
 }
 
 .batch-btn.secondary {
@@ -1079,8 +1101,8 @@ onMounted(loadTrash)
   justify-content: center;
   color: var(--color-text-muted);
   border-radius: 50%;
-  min-width: 38px;
-  min-height: 38px;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .batch-close-btn:hover {
@@ -1089,6 +1111,14 @@ onMounted(loadTrash)
 }
 
 @media (max-width: 640px) {
+  .btn-text-full {
+    display: none;
+  }
+
+  .btn-text-short {
+    display: inline;
+  }
+
   .trash-card {
     flex-direction: column;
     align-items: flex-start;
@@ -1102,7 +1132,13 @@ onMounted(loadTrash)
     width: 100%;
     justify-content: flex-end;
     margin-top: calc(var(--space-unit) * 0.5);
-    padding-left: 44px;
+    padding-left: 0;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .trash-card-actions button {
+    min-height: 44px;
   }
 
   .trash-batch-bar {
@@ -1122,6 +1158,12 @@ onMounted(loadTrash)
     width: 100%;
     flex-wrap: wrap;
     justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .batch-bar-actions .batch-btn {
+    flex: 1 1 auto;
+    justify-content: center;
   }
 }
 </style>

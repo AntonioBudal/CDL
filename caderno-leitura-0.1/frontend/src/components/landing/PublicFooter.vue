@@ -122,15 +122,16 @@ import Icon from '../ui/Icon.vue'
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 48px;
-  padding: 0 2rem;
+  min-height: 48px;
+  height: auto;
+  padding: 0.75rem 2rem;
+  white-space: nowrap;
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-on-accent, #ffffff);
   background-color: var(--color-accent);
   border-radius: var(--radius-md, 8px);
   text-decoration: none;
-  min-height: 44px;
   min-width: 44px;
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
@@ -149,8 +150,10 @@ import Icon from '../ui/Icon.vue'
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 48px;
-  padding: 0 1.5rem;
+  min-height: 48px;
+  height: auto;
+  padding: 0.75rem 1.5rem;
+  white-space: nowrap;
   font-size: 0.975rem;
   font-weight: 500;
   color: var(--color-text);
@@ -158,7 +161,6 @@ import Icon from '../ui/Icon.vue'
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md, 8px);
   text-decoration: none;
-  min-height: 44px;
   min-width: 44px;
   transition: all 0.15s ease;
 }

@@ -490,6 +490,11 @@ onMounted(() => {
 }
 
 .revoke-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
   padding: 0.4rem 0.8rem;
   border-radius: var(--radius-control, 6px);
   font-size: 0.8125rem;
@@ -517,6 +522,11 @@ onMounted(() => {
 }
 
 .danger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
   padding: 0.45rem 0.85rem;
   border-radius: var(--radius-control, 6px);
   font-size: 0.8125rem;
@@ -624,5 +634,43 @@ onMounted(() => {
 
 .google-link-slot {
   min-width: 200px;
+}
+
+@media (max-width: 640px) {
+  .session-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .session-actions {
+    width: 100%;
+  }
+
+  .revoke-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .identity-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .danger-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sessions-header .actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sessions-header .actions button {
+    width: 100%;
+  }
 }
 </style>

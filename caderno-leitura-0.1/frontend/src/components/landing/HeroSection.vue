@@ -146,15 +146,16 @@ import Icon from '../ui/Icon.vue'
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 48px;
-  padding: 0 1.75rem;
+  min-height: 48px;
+  height: auto;
+  padding: 0.75rem 1.75rem;
+  white-space: nowrap;
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-on-accent, #ffffff);
   background-color: var(--color-accent);
   border-radius: var(--radius-md, 8px);
   text-decoration: none;
-  min-height: 44px;
   min-width: 44px;
   transition: opacity 0.15s ease, transform 0.15s ease;
 }

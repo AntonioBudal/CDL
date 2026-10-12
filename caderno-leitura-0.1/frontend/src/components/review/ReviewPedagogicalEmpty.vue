@@ -152,25 +152,34 @@ function handleReviewAgain() {
         v-if="!hasEligibleItems"
         type="button"
         class="primary-action-btn"
+        title="Explorar meus Livros e Criar Estudos"
+        aria-label="Explorar meus Livros e Criar Estudos"
         @click="handleGoToBooks"
       >
-        <span>Explorar meus Livros e Criar Estudos</span>
+        <span class="btn-text-full">Explorar meus Livros e Criar Estudos</span>
+        <span class="btn-text-short">Explorar Livros</span>
       </button>
 
       <div v-else class="all-reviewed-actions">
         <button
           type="button"
           class="primary-action-btn secondary-style"
+          title="Praticar Novamente para Reforço"
+          aria-label="Praticar Novamente para Reforço"
           @click="handleReviewAgain"
         >
-          <span>Praticar Novamente para Reforço</span>
+          <span class="btn-text-full">Praticar Novamente para Reforço</span>
+          <span class="btn-text-short">Praticar Novamente</span>
         </button>
         <button
           type="button"
           class="outline-action-btn"
+          title="Retornar ao Acervo de Livros"
+          aria-label="Retornar ao Acervo de Livros"
           @click="handleGoToBooks"
         >
-          <span>Retornar ao Acervo de Livros</span>
+          <span class="btn-text-full">Retornar ao Acervo de Livros</span>
+          <span class="btn-text-short">Ir para Livros</span>
         </button>
       </div>
     </div>
@@ -403,9 +412,22 @@ function handleReviewAgain() {
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
+.btn-text-short {
+  display: none;
+}
+
+.btn-text-full {
+  display: inline;
+}
+
 .primary-action-btn:hover {
   opacity: 0.92;
-  transform: translateY(-1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .primary-action-btn:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .all-reviewed-actions {
@@ -446,6 +468,30 @@ function handleReviewAgain() {
 @media (max-width: 680px) {
   .guide-steps-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .btn-text-full {
+    display: none;
+  }
+
+  .btn-text-short {
+    display: inline;
+  }
+
+  .primary-action-btn,
+  .outline-action-btn {
+    width: 100%;
+    justify-content: center;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .all-reviewed-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
   }
 }
 </style>

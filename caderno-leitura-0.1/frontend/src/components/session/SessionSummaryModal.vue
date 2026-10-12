@@ -315,6 +315,7 @@ const formattedDuration = computed(() => {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .btn-primary {

@@ -232,6 +232,7 @@ const formattedTime = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .btn-action {
@@ -242,6 +243,9 @@ const formattedTime = computed(() => {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
+  text-align: center;
+  justify-content: center;
 }
 
 .btn-primary {
@@ -252,7 +256,12 @@ const formattedTime = computed(() => {
 
 .btn-primary:hover {
   opacity: 0.92;
-  transform: translateY(-1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .btn-secondary {

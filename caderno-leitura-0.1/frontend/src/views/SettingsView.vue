@@ -1575,7 +1575,14 @@ onBeforeUnmount(() => {
 @media (max-width: 640px) {
   .lifecycle-item {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .warning-action-btn,
+  .danger-action-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 

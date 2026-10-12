@@ -415,6 +415,7 @@ onUnmounted(() => {
   cursor: pointer;
   position: relative;
   transition: all 0.15s ease;
+  white-space: normal;
 }
 
 .btn-rating:focus-visible {

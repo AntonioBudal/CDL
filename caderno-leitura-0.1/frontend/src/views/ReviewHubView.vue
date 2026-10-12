@@ -546,6 +546,9 @@ onUnmounted(() => {
   gap: 0.5rem;
   border-bottom: 1px solid var(--color-border-subtle, #e2e8f0);
   margin-bottom: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
 }
 
 .hub-tab-item {
@@ -606,7 +609,12 @@ onUnmounted(() => {
 
 .start-structured-btn:hover {
   opacity: 0.92;
-  transform: translateY(-1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .start-structured-btn:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .start-structured-btn:disabled {
@@ -748,5 +756,21 @@ onUnmounted(() => {
 .count-hard {
   color: var(--color-error, #dc2626);
   font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .start-session-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .start-structured-btn,
+  .start-review-btn.secondary-mode {
+    width: 100%;
+    justify-content: center;
+    white-space: nowrap;
+    text-align: center;
+  }
 }
 </style>
