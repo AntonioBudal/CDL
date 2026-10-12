@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import type { ReadingStatus } from '../types.ts'
 import { READING_STATUS_LABELS } from '../composables/useStudyGrouping.ts'
 import { updateStudyStatus } from '../services/api.ts'
@@ -25,6 +25,29 @@ const emit = defineEmits<{
 
 const isOpen = ref(false)
 const isUpdating = ref(false)
+const containerRef = ref<HTMLElement | null>(null)
+
+function handleDocumentClick(e: MouseEvent) {
+  if (isOpen.value && containerRef.value && !containerRef.value.contains(e.target as Node)) {
+    isOpen.value = false
+  }
+}
+
+function handleKeydown(e: KeyboardEvent) {
+  if (isOpen.value && e.key === 'Escape') {
+    isOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleDocumentClick)
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleDocumentClick)
+  document.removeEventListener('keydown', handleKeydown)
+})
 
 const currentMeta = computed(() => {
   const norm = (props.status || 'rascunho').toLowerCase()
@@ -64,7 +87,11 @@ async function selectStatus(newStatus: ReadingStatus) {
 </script>
 
 <template>
-  <div class="study-status-badge-container" :class="{ 'is-interactive': interactive }">
+  <div
+    ref="containerRef"
+    class="study-status-badge-container"
+    :class="{ 'is-interactive': interactive, 'is-open': isOpen }"
+  >
     <button
       v-if="interactive"
       type="button"
@@ -113,6 +140,10 @@ async function selectStatus(newStatus: ReadingStatus) {
   position: relative;
   display: inline-flex;
   align-items: center;
+}
+
+.study-status-badge-container.is-open {
+  z-index: 1000;
 }
 
 .status-badge-pill {
@@ -165,49 +196,49 @@ async function selectStatus(newStatus: ReadingStatus) {
 }
 
 .badge-rascunho {
-  background-color: var(--badge-draft-bg, #f1f5f9);
-  color: var(--badge-draft-text, #475569);
-  border: 1px solid var(--badge-draft-border, #cbd5e1);
+  background-color: transparent;
+  color: var(--color-muted);
+  border: 1px solid var(--color-border);
 }
 
 .badge-em-estudo {
-  background-color: var(--badge-study-bg, #eff6ff);
-  color: var(--badge-study-text, #1d4ed8);
-  border: 1px solid var(--badge-study-border, #bfdbfe);
+  background-color: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
 }
 
 .badge-revisado {
-  background-color: var(--badge-reviewed-bg, #fef3c7);
-  color: var(--badge-reviewed-text, #b45309);
-  border: 1px solid var(--badge-reviewed-border, #fde68a);
+  background-color: transparent;
+  color: var(--color-warning-text);
+  border: 1px solid var(--color-warning-border, var(--color-warning-text));
 }
 
 .badge-concluido {
-  background-color: var(--badge-done-bg, #ecfdf5);
-  color: var(--badge-done-text, #047857);
-  border: 1px solid var(--badge-done-border, #a7f3d0);
+  background-color: transparent;
+  color: var(--color-success-text);
+  border: 1px solid var(--color-success-text);
 }
 
 :root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-rascunho {
-  background-color: rgba(148, 163, 184, 0.18);
+  background-color: transparent;
   color: #e2e8f0;
   border-color: rgba(148, 163, 184, 0.35);
 }
 
 :root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-em-estudo {
-  background-color: rgba(59, 130, 246, 0.2);
+  background-color: transparent;
   color: #93c5fd;
   border-color: rgba(59, 130, 246, 0.4);
 }
 
 :root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-revisado {
-  background-color: rgba(245, 158, 11, 0.2);
+  background-color: transparent;
   color: #fde68a;
   border-color: rgba(245, 158, 11, 0.4);
 }
 
 :root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-concluido {
-  background-color: rgba(16, 185, 129, 0.2);
+  background-color: transparent;
   color: #6ee7b7;
   border-color: rgba(16, 185, 129, 0.4);
 }
@@ -216,13 +247,13 @@ async function selectStatus(newStatus: ReadingStatus) {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
-  z-index: 50;
-  min-width: 150px;
+  z-index: 1000;
+  min-width: 155px;
   padding: 4px;
   background-color: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border, #e2e8f0);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 2px;

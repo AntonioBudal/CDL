@@ -69,7 +69,7 @@ onBeforeUnmount(() => {
       :class="{ active: isOpen }"
       aria-haspopup="menu"
       :aria-expanded="isOpen"
-      aria-label="Menu do usuário"
+      :aria-label="`Menu do usuário: ${displayName}`"
       title="Conta e opções de perfil"
       @click="toggleDropdown"
     >
@@ -87,8 +87,6 @@ onBeforeUnmount(() => {
       >
         {{ initials }}
       </span>
-      <span class="user-trigger-name">{{ displayName }}</span>
-      <Icon name="chevron-down" :size="14" :stroke-width="2" class="trigger-chevron" />
     </button>
 
     <Transition name="user-menu-fade">
@@ -173,16 +171,16 @@ onBeforeUnmount(() => {
 .user-trigger-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.65rem 0.35rem 0.35rem;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   min-height: 44px;
+  padding: 0;
   background-color: transparent;
   border: 1px solid transparent;
-  border-radius: var(--radius-button, 0.4rem);
+  border-radius: 50%;
   color: var(--color-text);
-  font-family: inherit;
-  font-size: 0.875rem;
-  font-weight: 600;
   cursor: pointer;
   transition: background-color 150ms ease, border-color 150ms ease;
 }
@@ -200,8 +198,8 @@ onBeforeUnmount(() => {
 
 .header-avatar-img,
 .header-avatar-initials {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;

@@ -248,9 +248,9 @@ function onClearClick() {
   padding: 0.5rem 2.25rem 0.5rem 2.25rem;
   font-size: 0.95rem;
   border-radius: var(--radius-sm, 6px);
-  border: 1px solid var(--border, #ccc);
-  background-color: var(--bg-surface, var(--card, #fff));
-  color: var(--text, #222);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
 }
 
 .search-input:focus {
@@ -381,10 +381,10 @@ function onClearClick() {
 
 .view-mode-toggle {
   display: inline-flex;
-  border: 1px solid var(--border, #ccc);
-  border-radius: var(--radius-sm, 6px);
-  overflow: hidden;
-  background-color: var(--bg-surface, var(--card, #fff));
+  gap: 0.35rem;
+  border: none;
+  background-color: transparent;
+  align-items: center;
 }
 
 .view-mode-btn {
@@ -392,27 +392,27 @@ function onClearClick() {
   align-items: center;
   gap: 0.35rem;
   padding: 0.45rem 0.75rem;
+  min-height: 38px;
   font-size: 0.85rem;
   background: transparent;
-  border: none;
-  color: var(--muted, #666);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  color: var(--color-muted);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
-.view-mode-btn:not(:last-child) {
-  border-right: 1px solid var(--border, #ccc);
-}
-
 .view-mode-btn.active {
-  background-color: var(--accent, #3b82f6);
-  color: var(--accent-text, #fff);
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
   font-weight: 600;
 }
 
 .view-mode-btn:hover:not(.active) {
-  background-color: var(--bg-hover, rgba(0, 0, 0, 0.05));
-  color: var(--text, #111);
+  background-color: var(--color-surface-hover);
+  color: var(--color-text);
+  border-color: var(--color-border-hover, var(--color-border));
 }
 
 @media (max-width: 640px) {

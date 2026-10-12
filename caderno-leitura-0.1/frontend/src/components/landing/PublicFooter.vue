@@ -53,7 +53,7 @@ import Icon from '../ui/Icon.vue'
           <div class="footer-nav-col">
             <span class="nav-heading">Transparência</span>
             <ul class="nav-links">
-              <li><a href="https://github.com/leitorum/caderno" target="_blank" rel="noopener noreferrer">Código Aberto</a></li>
+              <li><a href="https://github.com/AntonioBudal/CDL" target="_blank" rel="noopener noreferrer">Código Aberto</a></li>
               <li><a href="/robots.txt">robots.txt</a></li>
               <li><a href="/sitemap.xml">sitemap.xml</a></li>
             </ul>

@@ -77,7 +77,7 @@ const initials = computed(() => {
           <Icon v-if="!initials" name="book" :size="size === 'sm' ? 20 : size === 'lg' ? 36 : 28" />
           <template v-else>{{ initials }}</template>
         </span>
-        <span class="placeholder-title">{{ title }}</span>
+        <span v-if="size !== 'sm'" class="placeholder-title">{{ title }}</span>
         <span v-if="author && size !== 'sm'" class="placeholder-author">{{ author }}</span>
       </div>
     </div>

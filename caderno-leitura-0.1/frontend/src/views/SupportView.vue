@@ -102,7 +102,7 @@ onMounted(() => {
       </header>
 
       <div v-if="loading" class="support-state loading">
-        <p>Carregando canais de contribuição…</p>
+        <p>Carregando opções de apoio…</p>
       </div>
 
       <div v-else-if="error" class="support-state error">
@@ -113,19 +113,46 @@ onMounted(() => {
       <div v-else class="support-content">
         <!-- Propósito e Transparência -->
         <section class="support-card info-card" aria-labelledby="heading-purpose">
-          <h2 id="heading-purpose" class="card-title">Por que apoiar?</h2>
+          <h2 id="heading-purpose" class="card-title">Desenvolvimento Aberto e Independente</h2>
           <p class="card-description">
-            O projeto é mantido voluntariamente. As contribuições financeiras são 100% facultativas e ajudam a custear
-            a infraestrutura de servidores, custos de domínio, tráfego de rede e a continuidade do desenvolvimento aberto.
+            O Leitorum é desenvolvido de forma independente como software livre. A prioridade fundamental nesta fase é
+            consolidar uma ferramenta sólida, privativa e sem distrações para leitura reflexiva, organização de notas e estudos contínuos.
           </p>
           <p v-if="supportData.custom_message" class="custom-note">
             {{ supportData.custom_message }}
           </p>
         </section>
 
-        <!-- Seção PIX -->
+        <!-- Apoio Comunitário e Técnico (Principal) -->
+        <section class="support-card community-card" aria-labelledby="heading-community">
+          <h2 id="heading-community" class="card-title">Como apoiar o projeto</h2>
+          <p class="card-description">
+            Nesta etapa, as formas mais valiosas de apoio são o uso real, o reporte de problemas e a colaboração técnica:
+          </p>
+          <ul class="community-list">
+            <li><strong>Uso no dia a dia:</strong> Integre o Caderno às suas leituras habituais e exercícios de estudo.</li>
+            <li><strong>Relato de falhas:</strong> Reporte comportamentos inesperados, problemas visuais ou inconsistências de navegação.</li>
+            <li><strong>Sugestões de melhoria:</strong> Compartilhe ideias para aperfeiçoar a experiência de organização e revisão.</li>
+            <li><strong>Contribuições no código:</strong> Participe com revisão de código, melhorias de acessibilidade e testes no repositório aberto.</li>
+          </ul>
+
+          <div class="repo-action-box">
+            <a
+              href="https://github.com/AntonioBudal/CDL"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-github-link"
+              aria-label="Acessar o repositório de código aberto no GitHub em nova aba"
+            >
+              <span>Repositório Oficial no GitHub</span>
+              <Icon name="external-link" :size="18" />
+            </a>
+          </div>
+        </section>
+
+        <!-- Seção PIX (Exibida somente se método ativo e configurado) -->
         <section
-          v-if="supportData.pix_enabled && supportData.pix_key"
+          v-if="supportData.has_any_method_active && supportData.pix_enabled && supportData.pix_key"
           class="support-card pix-card"
           aria-labelledby="heading-pix"
         >
@@ -135,7 +162,7 @@ onMounted(() => {
           </div>
 
           <p class="card-description">
-            Você pode transferir qualquer quantia através do aplicativo do seu banco lendo o QR Code ou copiando a chave abaixo.
+            Se desejar contribuir financeiramente com os custos de infraestrutura e hospedagem, utilize a chave abaixo:
           </p>
 
           <div v-if="supportData.pix_recipient_name" class="pix-meta">
@@ -178,9 +205,9 @@ onMounted(() => {
           </div>
         </section>
 
-        <!-- Seção Meio Alternativo (Google Pay / Link Externo) -->
+        <!-- Seção Meio Alternativo (Exibida somente se método ativo e configurado) -->
         <section
-          v-if="supportData.alternative_enabled && supportData.alternative_url"
+          v-if="supportData.has_any_method_active && supportData.alternative_enabled && supportData.alternative_url"
           class="support-card alternative-card"
           aria-labelledby="heading-alt"
         >
@@ -190,7 +217,7 @@ onMounted(() => {
             </h2>
           </div>
           <p class="card-description">
-            Contribua de forma protegida utilizando carteira digital ou página externa de doação.
+            Contribuição facultativa através de página externa segura.
           </p>
           <div class="alt-action-box">
             <a
@@ -205,19 +232,6 @@ onMounted(() => {
             </a>
           </div>
         </section>
-
-        <!-- Apoio Comunitário (Sempre presente ou Fallback) -->
-        <section class="support-card community-card" aria-labelledby="heading-community">
-          <h2 id="heading-community" class="card-title">Outras formas de apoiar</h2>
-          <p class="card-description">
-            Se não puder ou não desejar contribuir financeiramente, você fortalece o projeto:
-          </p>
-          <ul class="community-list">
-            <li>Recomendando o Leitorum para colegas, grupos de estudos e leitores.</li>
-            <li>Enviando sugestões de recursos, relatos de problemas e ideias de melhoria.</li>
-            <li>Colaborando com documentação e revisão no repositório de código aberto.</li>
-          </ul>
-        </section>
       </div>
     </div>
   </div>
@@ -229,6 +243,8 @@ onMounted(() => {
   justify-content: center;
   padding: 2.5rem 1rem 4rem;
   min-height: calc(100vh - 120px);
+  background-color: var(--color-page);
+  color: var(--color-text);
 }
 
 .support-container {
@@ -247,14 +263,14 @@ onMounted(() => {
 .support-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text, #111827);
+  color: var(--color-text);
   margin: 0 0 0.5rem;
   letter-spacing: -0.02em;
 }
 
 .support-lead {
   font-size: 1.05rem;
-  color: var(--text-muted, #4b5563);
+  color: var(--color-muted);
   line-height: 1.6;
   margin: 0;
 }
@@ -262,23 +278,23 @@ onMounted(() => {
 .support-state {
   text-align: center;
   padding: 2.5rem;
-  border-radius: 8px;
-  border: 1px dashed var(--border, #d1d5db);
-  color: var(--text-muted, #6b7280);
+  border-radius: var(--radius-card, 8px);
+  border: 1px dashed var(--color-border);
+  color: var(--color-muted);
 }
 
 .support-state.error {
-  border-color: var(--danger, #dc2626);
-  color: var(--danger, #dc2626);
+  border-color: var(--color-danger, #dc2626);
+  color: var(--color-danger, #dc2626);
 }
 
 .btn-retry {
   margin-top: 1rem;
   padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  border: 1px solid var(--border, #d1d5db);
-  background: var(--card-bg, #ffffff);
-  color: var(--text, #111827);
+  border-radius: var(--radius-control, 6px);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
   min-height: 44px;
 }
@@ -290,11 +306,11 @@ onMounted(() => {
 }
 
 .support-card {
-  background: var(--card-bg, #ffffff);
-  border: 1px solid var(--border, #e5e7eb);
-  border-radius: 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card, 10px);
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.04));
 }
 
 .card-header-line {
@@ -308,7 +324,7 @@ onMounted(() => {
 .card-title {
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--text, #111827);
+  color: var(--color-text);
   margin: 0;
 }
 
@@ -319,13 +335,14 @@ onMounted(() => {
   letter-spacing: 0.05em;
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
-  background: var(--primary-light, #e0e7ff);
-  color: var(--primary, #4338ca);
+  background: var(--color-surface-soft);
+  color: var(--color-accent);
+  border: 1px solid var(--color-border);
 }
 
 .card-description {
   font-size: 0.95rem;
-  color: var(--text-muted, #4b5563);
+  color: var(--color-muted);
   line-height: 1.55;
   margin: 0 0 1rem;
 }
@@ -334,11 +351,44 @@ onMounted(() => {
   font-size: 0.9rem;
   font-style: italic;
   padding: 0.75rem 1rem;
-  border-left: 3px solid var(--primary, #4338ca);
-  background: var(--bg-muted, #f3f4f6);
-  color: var(--text, #374151);
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-surface-soft);
+  color: var(--color-text);
   border-radius: 0 6px 6px 0;
   margin: 0;
+}
+
+.repo-action-box {
+  margin-top: 1.25rem;
+  display: flex;
+}
+
+.btn-github-link {
+  min-height: 44px;
+  padding: 0 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--radius-control, 6px);
+  background-color: var(--color-surface-soft);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.btn-github-link:hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.btn-github-link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .pix-meta {
@@ -348,17 +398,18 @@ onMounted(() => {
   margin-bottom: 1rem;
   font-size: 0.9rem;
   padding: 0.5rem 0.75rem;
-  background: var(--bg-muted, #f9fafb);
+  background: var(--color-surface-soft);
   border-radius: 6px;
+  border: 1px solid var(--color-border);
 }
 
 .meta-label {
-  color: var(--text-muted, #6b7280);
+  color: var(--color-muted);
 }
 
 .meta-value {
   font-weight: 600;
-  color: var(--text, #111827);
+  color: var(--color-text);
 }
 
 .pix-qr-container {
@@ -372,7 +423,7 @@ onMounted(() => {
   width: 100%;
   height: auto;
   border-radius: 8px;
-  border: 1px solid var(--border, #e5e7eb);
+  border: 1px solid var(--color-border);
   padding: 0.5rem;
   background: #ffffff;
 }
@@ -389,14 +440,14 @@ onMounted(() => {
   padding: 0 0.85rem;
   font-family: monospace;
   font-size: 0.9rem;
-  background: var(--bg-muted, #f9fafb);
-  border: 1px solid var(--border, #d1d5db);
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  color: var(--text, #111827);
+  color: var(--color-text);
 }
 
 .pix-input:focus {
-  outline: 2px solid var(--primary, #4338ca);
+  outline: 2px solid var(--color-accent);
   outline-offset: 1px;
 }
 
@@ -409,20 +460,20 @@ onMounted(() => {
   font-size: 0.9rem;
   font-weight: 600;
   border-radius: 6px;
-  background: var(--primary, #4338ca);
-  color: #ffffff;
+  background: var(--color-accent);
+  color: var(--color-on-accent, #ffffff);
   border: none;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.15s ease;
+  transition: opacity 0.15s ease;
 }
 
 .btn-copy-pix:hover {
-  filter: brightness(0.95);
+  opacity: 0.9;
 }
 
 .btn-copy-pix.success {
-  background: #059669;
+  background: var(--color-accent);
 }
 
 .alt-action-box {
@@ -440,25 +491,25 @@ onMounted(() => {
   font-size: 0.95rem;
   font-weight: 600;
   border-radius: 6px;
-  background: var(--primary, #4338ca);
-  color: #ffffff;
+  background: var(--color-accent);
+  color: var(--color-on-accent, #ffffff);
   text-decoration: none;
-  transition: filter 0.15s ease;
+  transition: opacity 0.15s ease;
 }
 
 .btn-alt-link:hover {
-  filter: brightness(0.95);
+  opacity: 0.9;
 }
 
 .community-list {
   margin: 0;
   padding-left: 1.25rem;
-  color: var(--text-muted, #4b5563);
+  color: var(--color-text);
   line-height: 1.6;
 }
 
 .community-list li {
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.6rem;
 }
 
 .sr-only {

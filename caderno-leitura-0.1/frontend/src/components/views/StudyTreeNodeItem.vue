@@ -408,7 +408,7 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
 
 .tree-chevron-btn:hover {
   background-color: var(--color-surface-hover, #e2e8f0);
-  color: var(--color-inverse-bg, #0f172a);
+  color: var(--color-text);
 }
 
 .tree-chevron-placeholder {
@@ -474,7 +474,7 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
 }
 
 .node-title-link {
-  color: var(--color-inverse-bg, #0f172a);
+  color: var(--color-text);
   text-decoration: none;
 }
 
@@ -572,10 +572,10 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: transparent;
-  border: 1px solid transparent;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-control, 4px);
-  color: var(--color-muted);
+  color: var(--color-text);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -583,7 +583,7 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
 .tree-action-btn:hover {
   background-color: var(--color-surface-hover);
   border-color: var(--color-border);
-  color: var(--color-inverse-bg);
+  color: var(--color-text);
 }
 
 .quick-actions-dropdown {
@@ -612,7 +612,7 @@ function triggerMove(action: 'promote' | 'demote' | 'up' | 'down', e: MouseEvent
   border: none;
   font-size: 0.82rem;
   text-align: left;
-  color: var(--color-inverse-bg);
+  color: var(--color-text);
   cursor: pointer;
   transition: background-color 0.15s ease;
 }

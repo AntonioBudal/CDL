@@ -7,6 +7,7 @@ import type { SocialActiveTab, UserSearchItem } from '../types.ts'
 import BookplateCard from '../components/BookplateCard.vue'
 import FriendActionButtons from '../components/FriendActionButtons.vue'
 import Icon from '../components/ui/Icon.vue'
+import EmptyState from '../components/ui/EmptyState.vue'
 import { getInitials, useProfile } from '../composables/useProfile.ts'
 import { useAuthStore } from '../stores/auth.ts'
 
@@ -560,13 +561,13 @@ onMounted(async () => {
       aria-labelledby="tab-blocked"
       class="tab-content"
     >
-      <div v-if="blockedUsers.length === 0" class="empty-state panel">
-        <Icon name="ban" :size="48" class="empty-icon muted" />
-        <h2 class="empty-title">Nenhum usuário bloqueado</h2>
-        <p class="empty-desc muted">
-          Você não bloqueou nenhum usuário. Leitores bloqueados não podem visualizar seus estudos, perfis ou enviar solicitações de correspondência.
-        </p>
-      </div>
+      <EmptyState
+        v-if="blockedUsers.length === 0"
+        icon="ban"
+        title="Nenhum usuário bloqueado"
+        description="Você não bloqueou nenhum usuário. Leitores bloqueados não podem visualizar seus estudos, perfis ou enviar solicitações de correspondência."
+        heading-level="h2"
+      />
 
       <div v-else class="friends-grid">
         <article

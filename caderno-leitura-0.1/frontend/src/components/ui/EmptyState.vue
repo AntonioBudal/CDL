@@ -36,9 +36,9 @@ withDefaults(defineProps<EmptyStateProps>(), {
   justify-content: center;
   text-align: center;
   padding: 3rem 1.5rem;
-  border-radius: var(--radius-md, 8px);
-  background: var(--bg-surface-elevated, var(--bg-surface, #ffffff));
-  border: 1px dashed var(--border-subtle, #e0e0e0);
+  border-radius: var(--radius-card, 8px);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
   margin: 1.5rem 0;
   max-width: 540px;
   margin-inline: auto;
@@ -51,22 +51,22 @@ withDefaults(defineProps<EmptyStateProps>(), {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--accent-subtle, var(--border-subtle, #e0e0e0)) 40%, transparent);
-  color: var(--text-muted, #71717a);
+  background: var(--color-surface-soft);
+  color: var(--color-muted);
   margin-bottom: 1.25rem;
 }
 
 .empty-state-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--text-main, #18181b);
+  color: var(--color-text);
   margin: 0 0 0.5rem 0;
   line-height: 1.4;
 }
 
 .empty-state-description {
   font-size: 0.9375rem;
-  color: var(--text-muted, #71717a);
+  color: var(--color-muted);
   margin: 0 0 1.25rem 0;
   line-height: 1.5;
   max-width: 420px;

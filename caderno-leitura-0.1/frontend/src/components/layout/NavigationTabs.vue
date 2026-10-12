@@ -324,7 +324,8 @@ onBeforeUnmount(() => {
 }
 
 .more-chevron {
-  color: var(--color-muted);
+  color: currentColor;
+  opacity: 0.85;
   transition: transform 150ms ease;
 }
 

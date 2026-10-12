@@ -473,4 +473,54 @@ const isMoreMenuOpen = ref(false)
   border: 2px solid var(--color-surface, #ffffff);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
+
+/* Rodapé Global da Aplicação (Espaçoso e Proporcional) */
+.app-footer {
+  width: min(100% - var(--page-gutter, 2rem), var(--workspace-max-width, 74rem));
+  margin: calc(var(--space-unit, 1rem) * 4) auto calc(var(--space-unit, 1rem) * 3);
+  padding-top: calc(var(--space-unit, 1rem) * 1.5);
+  padding-bottom: calc(var(--space-unit, 1rem) * 1.5);
+  padding-inline: clamp(1rem, 3vw, 2rem);
+  border-top: var(--border-width, 1px) solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  box-sizing: border-box;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.footer-brand {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.footer-sep {
+  color: var(--color-border);
+  user-select: none;
+}
+
+.footer-link,
+.footer-support-link {
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-link:hover,
+.footer-support-link:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.footer-license {
+  font-size: 0.8125rem;
+  opacity: 0.8;
+}
 </style>

@@ -460,7 +460,7 @@ onMounted(() => {
   width: 100%;
   min-height: calc(100vh - 60px);
   padding: 1.5rem 1rem 3rem;
-  background-color: var(--color-bg-primary, #fafafa);
+  background-color: var(--color-page);
 }
 
 .library-container {

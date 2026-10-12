@@ -309,10 +309,10 @@ const mobileDrawerOpen = ref(false)
   flex-direction: column;
   gap: 0.85rem;
   padding: 1rem 1.25rem;
-  background-color: var(--color-surface, #ffffff);
+  background-color: transparent;
   border: 1px solid var(--color-border-subtle, var(--color-border, #e2e8f0));
   border-radius: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  box-shadow: none;
   margin-bottom: 1.5rem;
 }
 
@@ -381,7 +381,8 @@ const mobileDrawerOpen = ref(false)
 .view-mode-toggle {
   display: inline-flex;
   align-items: center;
-  background-color: var(--color-surface-soft, #f1f5f9);
+  gap: 0.35rem;
+  background-color: transparent;
   padding: 0.2rem;
   border-radius: 6px;
   border: 1px solid var(--color-border-subtle, #e2e8f0);

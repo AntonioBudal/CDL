@@ -216,9 +216,12 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
             @click="toggleSort('title')"
           >
             <span>Título</span>
-            <span v-if="sortColumn === 'title'" class="sort-indicator">
-              {{ sortDirection === 'asc' ? '↑' : '↓' }}
-            </span>
+            <Icon
+              v-if="sortColumn === 'title'"
+              :name="sortDirection === 'asc' ? 'arrow-up' : 'arrow-down'"
+              :size="14"
+              class="sort-indicator"
+            />
           </button>
 
           <button
@@ -229,9 +232,12 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
             @click="toggleSort('status')"
           >
             <span>Status</span>
-            <span v-if="sortColumn === 'status'" class="sort-indicator">
-              {{ sortDirection === 'asc' ? '↑' : '↓' }}
-            </span>
+            <Icon
+              v-if="sortColumn === 'status'"
+              :name="sortDirection === 'asc' ? 'arrow-up' : 'arrow-down'"
+              :size="14"
+              class="sort-indicator"
+            />
           </button>
 
           <span role="columnheader" class="header-cell col-location">
@@ -246,9 +252,12 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
             @click="toggleSort('date')"
           >
             <span>Data</span>
-            <span v-if="sortColumn === 'date'" class="sort-indicator">
-              {{ sortDirection === 'asc' ? '↑' : '↓' }}
-            </span>
+            <Icon
+              v-if="sortColumn === 'date'"
+              :name="sortDirection === 'asc' ? 'arrow-up' : 'arrow-down'"
+              :size="14"
+              class="sort-indicator"
+            />
           </button>
 
           <span role="columnheader" class="header-cell col-sections">
@@ -292,24 +301,23 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
             />
           </div>
 
-          <!-- Colunas 3 e 4 agrupadas: Localização e Data -->
-          <div class="col-meta-group">
-            <div class="col-location cell">
-              <span v-if="study.location" class="location-tag">
-                <Icon name="book-open" :size="12" class="mr-1 inline" />
-                {{ study.location }}
-              </span>
-              <span v-else class="text-muted">—</span>
-            </div>
+          <!-- Coluna 3: Localização -->
+          <div class="col-location cell">
+            <span v-if="study.location" class="location-tag">
+              <Icon name="book-open" :size="12" class="mr-1 inline" />
+              {{ study.location }}
+            </span>
+            <span v-else class="text-muted">—</span>
+          </div>
 
-            <div class="col-date cell">
-              <time
-                :datetime="study.updated_at || study.created_at"
-                class="row-date"
-              >
-                {{ formatDate(study.updated_at || study.created_at) }}
-              </time>
-            </div>
+          <!-- Coluna 4: Data -->
+          <div class="col-date cell">
+            <time
+              :datetime="study.updated_at || study.created_at"
+              class="row-date"
+            >
+              {{ formatDate(study.updated_at || study.created_at) }}
+            </time>
           </div>
 
           <!-- Coluna 5: Micro-Chips de Seções Analíticas -->
@@ -526,11 +534,13 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
   background: var(--color-surface, #ffffff);
   border: var(--border-width, 1px) solid var(--color-border);
   border-radius: var(--radius-card, 8px);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .list-header-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(160px, 2.2fr) minmax(115px, 1fr) minmax(110px, 1.2fr) minmax(90px, 0.9fr) 116px 44px;
+  gap: 1rem;
   align-items: center;
   padding: 0.6rem 1rem;
   background-color: var(--color-surface-soft, #f8fafc);
@@ -573,12 +583,19 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 }
 
 .study-row-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(160px, 2.2fr) minmax(115px, 1fr) minmax(110px, 1.2fr) minmax(90px, 0.9fr) 116px 44px;
+  gap: 1rem;
   align-items: center;
   padding: 0.65rem 1rem;
   border-bottom: 1px solid var(--color-border-divider);
   transition: background-color 0.15s ease;
   cursor: pointer;
+  position: relative;
+}
+
+.study-row-item:has(.is-open) {
+  z-index: 100;
 }
 
 .study-row-item:last-child {
@@ -610,37 +627,27 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 
 /* Colunas Tabulares no Desktop */
 .col-title {
-  flex: 2 1 0%;
   min-width: 0;
 }
 
 .col-status {
-  flex: 0.9 1 0%;
-  min-width: 105px;
-}
-
-.col-meta-group {
-  display: contents;
+  min-width: 0;
 }
 
 .col-location {
-  flex: 1.1 1 0%;
   min-width: 0;
 }
 
 .col-date {
-  flex: 0.8 1 0%;
-  min-width: 80px;
+  min-width: 0;
 }
 
 .col-sections {
-  flex: 0 0 116px;
   display: flex;
   align-items: center;
 }
 
 .col-actions {
-  flex: 0 0 44px;
   display: flex;
   justify-content: flex-end;
 }
@@ -789,7 +796,8 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 /* -------------------------------------------------------------------------- */
 
 .skeleton-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(160px, 2.2fr) minmax(115px, 1fr) minmax(110px, 1.2fr) minmax(90px, 0.9fr) 116px 44px;
   align-items: center;
   padding: 0.75rem 1rem;
   gap: 1rem;
@@ -882,22 +890,12 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
   }
 
   /* Nível 2: Metadados (Localização, Data) e Chips de Seções */
-  .col-meta-group {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
   .col-location {
-    flex: initial;
+    font-size: 0.8rem;
   }
 
   .col-date {
-    flex: initial;
-    min-width: auto;
+    font-size: 0.78rem;
   }
 
   .col-sections {

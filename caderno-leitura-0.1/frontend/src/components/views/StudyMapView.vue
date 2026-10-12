@@ -474,7 +474,7 @@ function toggleMobileAssistedConnection() {
             aria-label="Aproximar zoom"
             @click="zoomIn"
           >
-            <Icon name="plus" :size="13" />
+            <Icon name="plus" :size="15" />
           </button>
           <span class="zoom-level-indicator" title="Nível de zoom">
             {{ Math.round(zoomLevel * 100) }}%
@@ -486,7 +486,7 @@ function toggleMobileAssistedConnection() {
             aria-label="Afastar zoom"
             @click="zoomOut"
           >
-            <span class="zoom-symbol">−</span>
+            <Icon name="minus" :size="15" />
           </button>
           <button
             type="button"
@@ -495,7 +495,7 @@ function toggleMobileAssistedConnection() {
             aria-label="Redefinir visualização"
             @click="resetZoom"
           >
-            <Icon name="rotate-ccw" :size="12" />
+            <Icon name="rotate-ccw" :size="14" />
           </button>
         </div>
 
@@ -714,7 +714,7 @@ function toggleMobileAssistedConnection() {
                   aria-label="Mover estudo para a lixeira"
                   @click.stop="emit('trash-study', node.study)"
                 >
-                  <Icon name="trash" :size="13" />
+                  <Icon name="trash" :size="15" />
                 </button>
               </div>
             </div>
@@ -914,42 +914,44 @@ function toggleMobileAssistedConnection() {
   position: absolute;
   right: 0.85rem;
   top: 0.85rem;
-  z-index: 30;
+  z-index: 50;
   display: flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.25rem;
   background: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border, #cbd5e1);
   border-radius: 6px;
-  padding: 0.2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 0.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .zoom-btn {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: none;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  color: var(--color-muted);
+  color: var(--color-text);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .zoom-btn:hover {
   background: var(--color-surface-hover);
-  color: var(--color-inverse-bg);
+  border-color: var(--color-border);
+  color: var(--color-text);
 }
 
 .zoom-level-indicator {
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  color: var(--color-muted);
-  min-width: 36px;
+  color: var(--color-text);
+  min-width: 42px;
   text-align: center;
+  user-select: none;
 }
 
 /* Espaço do Mundo */
@@ -1125,15 +1127,15 @@ function toggleMobileAssistedConnection() {
   position: absolute;
   top: 6px;
   right: 6px;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-surface-elevated, #f8fafc);
-  border: 1px solid var(--color-border, #cbd5e1);
-  color: var(--color-muted);
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
   cursor: crosshair;
   padding: 0;
   transition: all 0.15s ease;
@@ -1227,21 +1229,23 @@ function toggleMobileAssistedConnection() {
 }
 
 .node-trash-button {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: 1px solid transparent;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  color: var(--color-muted);
+  color: var(--color-text);
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .node-trash-button:hover {
   color: var(--color-danger, #b91c1c);
   background: var(--color-surface-hover);
+  border-color: var(--color-border);
 }
 
 /* Botões Globais */
@@ -1283,6 +1287,10 @@ function toggleMobileAssistedConnection() {
   background: color-mix(in srgb, var(--color-accent) 15%, var(--color-surface));
   border-color: var(--color-accent);
   color: var(--color-accent);
+}
+
+.mobile-map-toolbar {
+  display: none;
 }
 
 /* Barra de Ações Mobile e Alvos Táteis de 44px (US3 / FR-009) */

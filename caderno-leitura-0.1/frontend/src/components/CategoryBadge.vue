@@ -59,12 +59,12 @@ function onRemove(event: MouseEvent) {
 
 <style scoped>
 .category-badge {
-  background-color: var(--color-surface-muted, #f1f5f9);
-  color: var(--color-text, #1e293b);
-  border-color: var(--color-border, #cbd5e1);
+  background-color: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
 }
 
 .category-remove-btn:hover {
-  color: var(--color-danger, #ef4444);
+  color: var(--color-danger);
 }
 </style>

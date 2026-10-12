@@ -394,7 +394,8 @@
 
 /* 9. Acervo: mesmos elementos, outra disposição. */
 :root[data-library='grid'] .book-grid {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  justify-content: start;
 }
 
 :root[data-library='list'] .book-grid {

@@ -27,7 +27,7 @@ test('US1: StudyListView.vue possui cabeçalhos interativos com aria-sort e indi
   assert.match(content, /toggleSort\('status'\)/)
   assert.match(content, /toggleSort\('date'\)/)
   assert.match(content, /:aria-sort="getAriaSort\(/)
-  assert.match(content, /sortDirection === 'asc' \? '↑' : '↓'/)
+  assert.match(content, /sortDirection === 'asc' \? 'arrow-up' : 'arrow-down'/)
 })
 
 test('US1: StudyListView.vue suporta navegação por teclado e foco nas linhas', () => {

@@ -205,11 +205,11 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
           <button
             type="button"
             class="button primary add-book-btn"
-            aria-label="Adicionar novo livro (+ Adicionar Livro)"
+            aria-label="Adicionar novo livro"
             @click="isDrawerOpen = true"
           >
             <Icon name="plus" :size="16" :stroke-width="2" />
-            <span>+ Adicionar Livro</span>
+            <span>Adicionar Livro</span>
           </button>
         </div>
 

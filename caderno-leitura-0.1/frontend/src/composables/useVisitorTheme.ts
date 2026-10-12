@@ -1,6 +1,8 @@
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted } from 'vue'
 import { CANONICAL_THEME_PREVIEWS } from '../types/settings'
 import type { CanonicalThemeId } from '../types/settings'
+
+const VISITOR_THEME_STORAGE_KEY = 'caderno_visitor_theme'
 
 export function useVisitorTheme() {
   const activeTheme = ref<CanonicalThemeId>('papel-fosco')
@@ -12,11 +14,34 @@ export function useVisitorTheme() {
     return item ? item.label : id
   }
 
+  function readStoredTheme(): CanonicalThemeId | null {
+    if (typeof window === 'undefined' || !window.sessionStorage) return null
+    try {
+      const stored = window.sessionStorage.getItem(VISITOR_THEME_STORAGE_KEY)
+      if (stored && CANONICAL_THEME_PREVIEWS.some((t) => t.id === stored)) {
+        return stored as CanonicalThemeId
+      }
+    } catch {
+      // sessionStorage indisponível ou permissão negada
+    }
+    return null
+  }
+
+  function saveStoredTheme(themeId: CanonicalThemeId) {
+    if (typeof window === 'undefined' || !window.sessionStorage) return
+    try {
+      window.sessionStorage.setItem(VISITOR_THEME_STORAGE_KEY, themeId)
+    } catch {
+      // Degradação graciosa se sessionStorage estiver indisponível
+    }
+  }
+
   function applyTheme(themeId: CanonicalThemeId) {
     activeTheme.value = themeId
     if (typeof document !== 'undefined') {
       document.documentElement.dataset.theme = themeId
     }
+    saveStoredTheme(themeId)
     const label = getThemeLabel(themeId)
     statusMessage.value = `Tema aplicado: ${label}. A página inteira foi repintada.`
   }
@@ -25,6 +50,13 @@ export function useVisitorTheme() {
     if (typeof document !== 'undefined' && originalTheme.value) {
       document.documentElement.dataset.theme = originalTheme.value
     }
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      try {
+        window.sessionStorage.removeItem(VISITOR_THEME_STORAGE_KEY)
+      } catch {
+        // Degradação graciosa
+      }
+    }
   }
 
   onMounted(() => {
@@ -32,17 +64,19 @@ export function useVisitorTheme() {
       const current = document.documentElement.dataset.theme
       if (current) {
         originalTheme.value = current
-        const exists = CANONICAL_THEME_PREVIEWS.some((t) => t.id === current)
-        if (exists) {
-          activeTheme.value = current as CanonicalThemeId
-        }
+      }
+      const stored = readStoredTheme()
+      if (stored) {
+        activeTheme.value = stored
+        document.documentElement.dataset.theme = stored
+      } else if (current && CANONICAL_THEME_PREVIEWS.some((t) => t.id === current)) {
+        activeTheme.value = current as CanonicalThemeId
       }
     }
   })
 
-  onBeforeUnmount(() => {
-    resetToOriginal()
-  })
+  // Não chamamos resetToOriginal() no onBeforeUnmount para que a preferência do visitante
+  // persista durante toda a sua navegação entre rotas públicas (/ , /sobre, /apoie).
 
   return {
     activeTheme,
