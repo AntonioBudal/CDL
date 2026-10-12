@@ -879,3 +879,35 @@ Com a conclusão da Feature 10 (F10), **todas as dez features do Roadmap 0.5 (F0
 5. **Versionamento Git:**
    - Commit atômico: `remover mapview, canvasview e treeview`.
 
+---
+
+## Sessão: Correções Visuais e Responsividade do Leitor (12/10/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Cabeçalho Compacto e Alinhado na Página de Estudos (`StudyView.vue`):**
+   - Eliminados `border-top` e `padding-top: 0.75rem` em `.header-actions`, removendo a faixa artificial que inflava a altura vertical em dispositivos móveis.
+   - Reduzido `gap` de `0.875rem` para `0.5rem` e `margin-bottom` de `1.25rem` para `0.875rem` em `.page-header.reader-heading`.
+   - Reorganizadas as ações em `.header-actions` com `justify-content: flex-start`, `flex-wrap: wrap` e alinhamento natural à esquerda logo abaixo de `.reader-meta-row`.
+   - Preservado o divisor `.header-actions-divider` (`display: block; width: 1px; height: 20px; margin: 0 0.125rem;`) separando ações comuns da ação destrutiva de exclusão.
+   - Botão de lixeira agrupado naturalmente com `margin-left: 0` junto ao divisor, eliminando o isolamento forçado na ponta direita.
+   - Preservados os alvos táteis mínimos de 44x44px e o layout desktop original em telas >= 769px.
+
+2. **Modal de Compartilhamento Descompactado no Mobile (`ShareModal.vue`):**
+   - Corrigida a compressão severa da opção de visibilidade (`.share-visibility-option`) no celular garantindo `width: 100%`, `box-sizing: border-box` e `min-width: 0`.
+   - Botão de rádio (`.share-radio-input`) protegido com `flex-shrink: 0`, dimensões estáveis de 1.125rem e alinhamento vertical harmonioso.
+   - Contêiner de texto (`.share-option-text`) com `flex: 1 1 auto; min-width: 0` e quebra natural de palavras (`overflow-wrap: break-word; word-break: normal;`), preservando títulos e descrições legíveis sem quebras desnecessárias.
+   - Linha de link (`.share-input-row`) com `.share-link-input` em `min-width: 0; width: 100%` e botão `.share-copy-btn` com `flex-shrink: 0; white-space: nowrap`.
+   - Media query `@media (max-width: 640px)` compactando o padding do backdrop para `0.5rem`, card com altura dinâmica `calc(100dvh - 1rem)` e padding interno do body ajustado para `1rem`.
+
+3. **Alinhamento do Histórico de Versões em Telas Maiores (`StudyHistoryModal.vue` e `StudyDiffViewer.vue`):**
+   - Centralização consistente e harmoniosa de `.empty-state` e `.state-loading` dentro da área modal com `flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;`, eliminando o deslocamento para o topo com vazio inferior.
+   - Botões de alternância de abas (`.tab-toggle button`) e botão de restauração (`.restore-button`) com `display: inline-flex; align-items: center; justify-content: center; text-align: center;`.
+   - Seção inalterada de diff (`.section-diff-empty` em `StudyDiffViewer.vue`) com `text-align: center; display: flex; align-items: center; justify-content: center;`, centralizando a mensagem explicativa dentro do card de diff em telas maiores.
+   - Pílula de status (`.section-status-badge`) e badges de versão (`.current-badge`, `.summary-badge`) com alinhamento centralizado explícito.
+
+4. **Validação Completa das Suítes:**
+   - 567 testes de frontend passando (`npm test` / 567 passed, 0 failed), incluindo nova suíte dedicada em `tests/study_responsive_fixes.test.mjs`.
+   - Compilação estrita e build de produção (`npm run build` / `vue-tsc -b && vite build`) concluídos com sucesso (código 0).
+   - Zero presença de emojis em código ou documentação.
+   - Proteção absoluta do acervo e zero alterações no banco de produção.
+

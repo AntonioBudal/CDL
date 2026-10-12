@@ -1028,9 +1028,9 @@ onBeforeUnmount(() => {
 
   .page-header.reader-heading {
     flex-direction: column;
-    align-items: stretch;
-    gap: 0.875rem;
-    margin-bottom: 1.25rem;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.875rem;
   }
 
   .reader-heading-main {
@@ -1045,34 +1045,41 @@ onBeforeUnmount(() => {
   }
 
   .reader-meta-row {
-    margin-top: 0.375rem;
-    gap: 0.5rem;
+    margin-top: 0.25rem;
+    gap: 0.375rem 0.5rem;
   }
 
   .header-actions {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-    gap: 0.5rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--color-border-subtle, rgba(0, 0, 0, 0.08));
-    margin-top: 0;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    padding-top: 0;
+    border-top: none;
+    margin-top: 0.25rem;
   }
 
   .header-actions-group {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.375rem;
   }
 
   .header-actions-divider {
-    display: none;
+    display: block;
+    width: 1px;
+    height: 20px;
+    background: var(--color-border, #e4e4e7);
+    margin: 0 0.125rem;
+    flex-shrink: 0;
   }
 
   .header-actions .danger-action {
-    margin-left: auto;
+    margin-left: 0;
   }
 
   .header-icon-btn {

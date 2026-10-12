@@ -521,10 +521,14 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .share-link-input {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
   padding: 0.625rem 0.75rem;
   font-size: 0.875rem;
   font-family: monospace;
@@ -533,6 +537,7 @@ onUnmounted(() => {
   border-radius: var(--radius-control, 0.5rem);
   color: var(--color-text);
   user-select: all;
+  box-sizing: border-box;
 }
 
 .share-copy-btn {
@@ -549,6 +554,8 @@ onUnmounted(() => {
   background-color: var(--color-accent);
   color: var(--color-on-accent, #fff);
   cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
   transition: background-color 0.15s ease;
 }
 
@@ -579,6 +586,9 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .share-visibility-option {
@@ -586,6 +596,9 @@ onUnmounted(() => {
   align-items: flex-start;
   gap: 0.75rem;
   padding: 0.75rem;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   border-radius: var(--radius-control, 0.5rem);
   border: var(--border-width, 1px) solid var(--color-border);
   background-color: var(--color-surface);
@@ -609,26 +622,38 @@ onUnmounted(() => {
 }
 
 .share-radio-input {
-  margin-top: 0.25rem;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  cursor: pointer;
   accent-color: var(--color-accent);
 }
 
 .share-option-text {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .share-option-label {
+  display: block;
   font-size: 0.875rem;
   font-weight: 600;
+  line-height: 1.35;
   color: var(--color-text);
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .share-option-desc {
-  margin: 0.15rem 0 0;
+  margin: 0.2rem 0 0;
   font-size: 0.75rem;
   color: var(--color-muted);
   line-height: 1.4;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .share-acl-section {
@@ -822,5 +847,29 @@ onUnmounted(() => {
 
 .share-done-btn:hover {
   background-color: var(--color-surface-hover);
+}
+
+@media (max-width: 640px) {
+  .share-modal-backdrop {
+    padding: 0.5rem;
+  }
+
+  .share-modal-card {
+    max-height: calc(100dvh - 1rem);
+    border-radius: var(--radius-card, 0.75rem);
+  }
+
+  .share-modal-header {
+    padding: 0.875rem 1rem;
+  }
+
+  .share-modal-body {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .share-modal-footer {
+    padding: 0.75rem 1rem;
+  }
 }
 </style>

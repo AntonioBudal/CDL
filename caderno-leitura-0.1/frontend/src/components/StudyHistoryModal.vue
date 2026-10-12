@@ -529,6 +529,10 @@ watch(
   color: #065f46;
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .summary-badge {
@@ -537,6 +541,10 @@ watch(
   background-color: var(--color-surface-subtle, rgba(0, 0, 0, 0.05));
   padding: 0.125rem 0.375rem;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .version-date {
@@ -614,6 +622,10 @@ watch(
   cursor: pointer;
   color: var(--color-text-muted, #555);
   transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .tab-toggle button.active {
@@ -623,8 +635,9 @@ watch(
 }
 
 .restore-button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.375rem;
   font-size: 0.8125rem;
   padding: 0.4375rem 0.875rem;
@@ -679,11 +692,34 @@ watch(
   white-space: pre-wrap;
 }
 
+.diff-container,
+.inspection-container {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .state-loading,
 .empty-state {
-  padding: 3rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
   text-align: center;
   color: var(--color-text-muted, #666);
+}
+
+.empty-state p {
+  margin: 0 0 0.5rem;
+  max-width: 480px;
+}
+
+.empty-state .muted-text {
+  margin: 0;
+  font-size: 0.875rem;
+  max-width: 480px;
 }
 
 .confirm-overlay {

@@ -156,6 +156,10 @@ function getStatusBadge(status: SectionDiff['status']) {
   font-weight: 500;
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .badge-modified {
@@ -179,10 +183,19 @@ function getStatusBadge(status: SectionDiff['status']) {
 }
 
 .section-diff-empty {
-  padding: 1rem;
+  padding: 1.25rem 1rem;
   font-size: 0.875rem;
   color: var(--color-text-muted, #666);
   font-style: italic;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-diff-empty p {
+  margin: 0;
+  text-align: center;
 }
 
 .section-diff-content {

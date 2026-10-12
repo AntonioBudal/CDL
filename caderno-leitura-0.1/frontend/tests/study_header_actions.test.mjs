@@ -76,9 +76,9 @@ test('StudyView.vue - Hierarquia Visual e Composição Mobile Dedicada', () => {
   assert.match(content, /class="header-actions-group"/)
   assert.match(content, /class="header-actions-divider"/)
 
-  // Composição mobile dedicada: coluna vertical e lixeira ancorada à direita
+  // Composição mobile dedicada: coluna vertical e ações compactas alinhadas ao início
   assert.match(content, /\.page-header\.reader-heading\s*\{[^}]*flex-direction:\s*column/s)
-  assert.match(content, /\.header-actions\s*\.danger-action\s*\{[^}]*margin-left:\s*auto/s)
+  assert.match(content, /\.header-actions\s*\{[^}]*justify-content:\s*flex-start/s)
 })
 
 test('DropdownMenu.vue - Acessibilidade WAI-ARIA e Isolamento de Teclas', () => {
