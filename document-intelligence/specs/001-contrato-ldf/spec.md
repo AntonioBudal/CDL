@@ -2,11 +2,11 @@
 
 * **Feature:** `001-contrato-ldf`
 * **Criada em:** 2026-10-12
-* **Status:** `DRAFT` — aguardando aprovação do usuário
+* **Status:** `APPROVED` (aprovada pelo usuário em 2026-10-12, com as decisões da §9)
 * **Tipo:** feature de contrato (não é experimento; não baixa modelos nem mede candidatos)
 * **Origem:** lacunas registradas no [EXP-002](../../experiments/EXP-002/RESULTS.md) (§5), no
   [EXP-003](../../experiments/EXP-003/RESULTS.md) (§5) e nos ADR-002 e ADR-003
-* **Próximo artefato:** `plan.md`, só depois da aprovação desta especificação
+* **Próximo artefato:** [`plan.md`](./plan.md)
 
 ---
 
@@ -192,18 +192,12 @@ Os EXP-002 e EXP-003 continuam reproduzíveis exatamente como foram aceitos.
 * Um documento LDF representa uma página.
 * As coordenadas continuam em pixels.
 
-## 9. Perguntas para o usuário
+## 9. Decisões do usuário (2026-10-12)
 
-1. **Número da versão.** Como o schema 1.0 fica congelado para os experimentos, o contrato fechado precisa de
-   outro número. Recomendo **2.0.0**, porque tornar o texto da linha opcional e reorganizar diagramas e ordem de
-   leitura quebra um leitor de 1.0. A alternativa é 1.1.0, se você preferir limitar a feature a acréscimos
-   opcionais — nesse caso L4 e L7 ficam só parcialmente resolvidas.
-2. **Fonte normativa.** Recomendo o JSON Schema como fonte, por ser legível de qualquer linguagem (o backend do
-   Leitorum pode validar sem depender deste pacote), com o modelo Python conferido contra ele por teste. A
-   alternativa é o modelo Python como fonte e o schema gerado a partir dele.
-3. **Coordenadas.** Recomendo gravar tudo na imagem **original** (a que o leitor fotografou e vai ver na tela) e
-   guardar a transformação da retificação como metadado. A alternativa é gravar na imagem retificada, que é onde
-   os modelos trabalham, e converter na leitura.
-4. **Documento com correções.** Recomendo guardar a saída original intacta mais a lista de correções, e obter a
-   versão corrigida por aplicação. A alternativa é guardar a versão já corrigida e o histórico.
-5. **Uma página por documento.** Confirma que cadernos de várias páginas ficam para depois?
+| # | Pergunta | Decisão |
+| :--- | :--- | :--- |
+| 1 | Número da versão do contrato fechado | **2.0.0**; o schema 1.0 fica congelado para os experimentos aceitos |
+| 2 | Fonte normativa | **JSON Schema**; o modelo Python é conferido contra ele por teste |
+| 3 | Sistema de coordenadas | **Fotografia original**; a transformação da retificação vai como metadado |
+| 4 | Documento com correções | **Saída original intacta** mais a lista de correções; a versão corrigida é obtida por aplicação |
+| 5 | Páginas por documento | **Uma**; cadernos de várias páginas ficam para depois |
