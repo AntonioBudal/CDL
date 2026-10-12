@@ -837,17 +837,64 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
 }
 
 @media (max-width: 768px) {
+  .book-split-layout {
+    min-height: 0;
+    margin-top: 0.75rem;
+  }
+
+  .chapter-sidebar {
+    height: auto;
+  }
+
+  .studies-area {
+    padding: 0.75rem;
+    height: auto;
+    min-height: 0;
+  }
+
   .studies-header-bar {
     flex-direction: column;
     align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
   }
+
+  .studies-header-bar > div:first-child {
+    flex: initial;
+    margin-bottom: 0.25rem;
+  }
+
+  .studies-header-bar h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .studies-header-bar .eyebrow {
+    margin: 0 0 0.15rem;
+    font-size: 0.75rem;
+  }
+
   .studies-header-controls {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
   }
+
   .studies-header-controls .import-btn {
     width: 100%;
     text-align: center;
+  }
+
+  .list-caption {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .studies-view-stage {
+    margin-top: 0.25rem;
   }
 }
 </style>

@@ -911,3 +911,35 @@ Com a conclusão da Feature 10 (F10), **todas as dez features do Roadmap 0.5 (F0
    - Zero presença de emojis em código ou documentação.
    - Proteção absoluta do acervo e zero alterações no banco de produção.
 
+---
+
+## Sessão: Correções de Layout, Contraste e Espaçamento Mobile (12/10/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Dropdown de Status e Contraste Adaptativo nos 10 Temas:**
+   - Adicionados tokens semânticos canônicos (`--color-status-rascunho-text`, `--color-status-estudo-text`, `--color-status-revisado-text`, `--color-status-concluido-text` e respectivas bordas) em `palettes.css` para os 10 temas oficiais do Leitorum (`papel-fosco`, `noite-suave`, `cinza-neutro`, `grafite`, `monocromatico`, `pergaminho`, `e-ink`, `solario`, `fiorde`, `voltagem`).
+   - `StudyStatusBadge.vue` atualizado para consumir esses tokens dinâmicos, garantindo conformidade WCAG AA/AAA (texto claro em fundos escuros, texto escuro em fundos claros) tanto na Grid View quanto na List View.
+   - O ícone de status ativo (`.current-check-icon`) herda a cor do status em estudo com alto contraste.
+   - Implementado cálculo dinâmico de viewport (`opensUpward`) para abrir o dropdown para cima caso o espaço inferior seja menor que 185px.
+
+2. **Prevenção de Clipping na List View (`StudyListView.vue`):**
+   - Garantido `overflow: visible` nos contêineres `.study-tabular-list`, `.col-status` e `.study-row-item`.
+   - Implementado rastreamento de dropdown aberto (`activeDropdownStudyId` via evento `@toggle-open`) e classe `.has-dropdown-open` com `z-index: 200`, elevando o stacking context da linha ativa e impedindo que linhas inferiores cortem o menu de status.
+
+3. **Alinhamento do Cabeçalho da Lista e Ícone de Ordenação (`StudyListView.vue`):**
+   - O ícone SVG de ordenação (`.sort-indicator`) agora herda dinamicamente a cor da coluna com `stroke: currentColor; color: currentColor; display: inline-flex;`, eliminando a invisibilidade do indicador em qualquer tema.
+   - Grade tabular (`grid-template-columns`) reorganizada de forma proporcional (`minmax(180px, 3fr) minmax(125px, 1.2fr) minmax(130px, 1.5fr) minmax(105px, 1fr) minmax(115px, 1fr) 52px`) para distribuição harmônica em monitores widescreen.
+   - Células e cabeçalhos de seções e ações (`.col-sections`, `.col-actions`) centralizados vertical e horizontalmente em harmonia com os dados.
+
+4. **Compactação de Espaçamentos Excessivos no Mobile (`/livros` e `/livros/.../estudos`):**
+   - Em `BookView.vue` (`@media (max-width: 768px)`): redefinidos `.studies-header-bar` com `justify-content: flex-start; gap: 0.5rem; margin-bottom: 0.5rem;`, `.studies-header-bar > div:first-child` com `flex: initial;`, `.studies-area` com `height: auto; min-height: 0; padding: 0.75rem;` e `.book-split-layout` com `min-height: 0; margin-top: 0.75rem;`, eliminando completamente o espaço em branco exagerado entre o título do capítulo e a barra de controles.
+   - Em `StudyView.vue` (`@media (max-width: 768px)`): `.page-header.reader-heading` ajustado com `justify-content: flex-start; gap: 0.5rem; margin-bottom: 0.875rem;`, `.reader-heading-main` com `flex: initial; margin-bottom: 0;` e `.header-actions` com `margin-top: 0.25rem; margin-bottom: 0;`, eliminando o vão entre a badge de status e as ações.
+
+5. **Validação Completa das Suítes:**
+   - 458 testes de backend passando (`pytest` / 458 passed, 1 skipped).
+   - 575 testes de frontend passando (`npm test` / 575 passed, 0 failed), incluindo nova suíte em `tests/study_layout_and_contrast_fixes.test.mjs`.
+   - Build de produção (`npm run build` / `vue-tsc -b && vite build`) concluído com sucesso (código 0).
+   - Zero presença de emojis em código ou documentação.
+   - Proteção estrita do banco de produção (`backend/data/caderno.db` intocado).
+
+

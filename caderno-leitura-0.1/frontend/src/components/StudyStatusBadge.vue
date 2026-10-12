@@ -21,21 +21,25 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   (e: 'change', newStatus: ReadingStatus): void
+  (e: 'toggle-open', isOpen: boolean): void
 }>()
 
 const isOpen = ref(false)
+const opensUpward = ref(false)
 const isUpdating = ref(false)
 const containerRef = ref<HTMLElement | null>(null)
 
 function handleDocumentClick(e: MouseEvent) {
   if (isOpen.value && containerRef.value && !containerRef.value.contains(e.target as Node)) {
     isOpen.value = false
+    emit('toggle-open', false)
   }
 }
 
 function handleKeydown(e: KeyboardEvent) {
   if (isOpen.value && e.key === 'Escape') {
     isOpen.value = false
+    emit('toggle-open', false)
   }
 }
 
@@ -63,12 +67,18 @@ const availableStatuses: { id: ReadingStatus; label: string; badgeClass: string 
 
 function toggleDropdown() {
   if (props.interactive && !props.disabled) {
+    if (!isOpen.value && containerRef.value) {
+      const rect = containerRef.value.getBoundingClientRect()
+      opensUpward.value = window.innerHeight - rect.bottom < 185 && rect.top > 185
+    }
     isOpen.value = !isOpen.value
+    emit('toggle-open', isOpen.value)
   }
 }
 
 async function selectStatus(newStatus: ReadingStatus) {
   isOpen.value = false
+  emit('toggle-open', false)
   if (newStatus === props.status) return
 
   emit('change', newStatus)
@@ -116,6 +126,7 @@ async function selectStatus(newStatus: ReadingStatus) {
     <div
       v-if="interactive && isOpen"
       class="status-dropdown-menu"
+      :class="{ 'opens-upward': opensUpward }"
       role="menu"
       aria-label="Selecionar status de leitura"
     >
@@ -197,66 +208,71 @@ async function selectStatus(newStatus: ReadingStatus) {
 
 .badge-rascunho {
   background-color: transparent;
-  color: var(--color-muted);
-  border: 1px solid var(--color-border);
+  color: var(--color-status-rascunho-text, var(--color-muted));
+  border: 1px solid var(--color-status-rascunho-border, var(--color-border));
 }
 
 .badge-em-estudo {
   background-color: transparent;
-  color: var(--color-accent);
-  border: 1px solid var(--color-accent);
+  color: var(--color-status-estudo-text, var(--color-accent));
+  border: 1px solid var(--color-status-estudo-border, var(--color-accent));
 }
 
 .badge-revisado {
   background-color: transparent;
-  color: var(--color-warning-text);
-  border: 1px solid var(--color-warning-border, var(--color-warning-text));
+  color: var(--color-status-revisado-text, var(--color-warning-text));
+  border: 1px solid var(--color-status-revisado-border, var(--color-warning-border, var(--color-warning-text)));
 }
 
 .badge-concluido {
   background-color: transparent;
-  color: var(--color-success-text);
-  border: 1px solid var(--color-success-text);
+  color: var(--color-status-concluido-text, var(--color-success-text));
+  border: 1px solid var(--color-status-concluido-border, var(--color-success-text));
 }
 
 :root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-rascunho {
   background-color: transparent;
-  color: #e2e8f0;
-  border-color: rgba(148, 163, 184, 0.35);
+  color: var(--color-status-rascunho-text, #e2e8f0);
+  border-color: var(--color-status-rascunho-border, rgba(148, 163, 184, 0.45));
 }
 
 :root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-em-estudo {
   background-color: transparent;
-  color: #93c5fd;
-  border-color: rgba(59, 130, 246, 0.4);
+  color: var(--color-status-estudo-text, #93c5fd);
+  border-color: var(--color-status-estudo-border, rgba(59, 130, 246, 0.5));
 }
 
 :root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-revisado {
   background-color: transparent;
-  color: #fde68a;
-  border-color: rgba(245, 158, 11, 0.4);
+  color: var(--color-status-revisado-text, #fde68a);
+  border-color: var(--color-status-revisado-border, rgba(245, 158, 11, 0.5));
 }
 
 :root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .badge-concluido {
   background-color: transparent;
-  color: #6ee7b7;
-  border-color: rgba(16, 185, 129, 0.4);
+  color: var(--color-status-concluido-text, #86efac);
+  border-color: var(--color-status-concluido-border, rgba(16, 185, 129, 0.5));
 }
 
 .status-dropdown-menu {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
-  z-index: 1000;
+  z-index: 1200;
   min-width: 155px;
   padding: 4px;
   background-color: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border, #e2e8f0);
   border-radius: 8px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+.status-dropdown-menu.opens-upward {
+  top: auto;
+  bottom: calc(100% + 4px);
 }
 
 .status-option-btn {
@@ -272,20 +288,33 @@ async function selectStatus(newStatus: ReadingStatus) {
   border-radius: 6px;
   cursor: pointer;
   text-align: left;
+  transition: background-color 0.12s ease;
 }
 
 .status-option-btn:hover {
-  background-color: var(--color-surface-soft, #f8fafc);
+  background-color: var(--color-surface-hover, var(--color-surface-soft, #f8fafc));
+}
+
+.status-option-btn.is-current {
+  background-color: var(--color-surface-soft);
 }
 
 .status-pill-small {
-  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 600;
+  line-height: 1.2;
 }
 
 .current-check-icon {
-  color: var(--color-accent, #3b82f6);
+  color: var(--color-status-estudo-text, var(--color-accent, #3b82f6));
+  flex-shrink: 0;
+}
+
+:root:is([data-theme='noite-suave'], [data-theme='grafite'], [data-theme='fiorde'], [data-theme='voltagem']) .current-check-icon {
+  color: var(--color-status-estudo-text, #93c5fd);
 }
 </style>

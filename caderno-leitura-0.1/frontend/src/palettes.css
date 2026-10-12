@@ -16,6 +16,10 @@
   --color-error-detail: #9f1239; --color-error-marker: #9f1239; --color-warning-bg: #fef3c7;
   --color-warning-text: #92400e; --color-warning-border: #92400e; --color-warning-marker: #92400e;
   --color-success-text: #166534; --color-success-marker: #166534;
+  --color-status-rascunho-text: #475569; --color-status-rascunho-border: #94a3b8;
+  --color-status-estudo-text: #1d4ed8; --color-status-estudo-border: #3b82f6;
+  --color-status-revisado-text: #b45309; --color-status-revisado-border: #f59e0b;
+  --color-status-concluido-text: #15803d; --color-status-concluido-border: #22c55e;
 }
 
 :root[data-theme="noite-suave"] {
@@ -35,6 +39,10 @@
   --color-error-detail: #f43f5e; --color-error-marker: #f43f5e; --color-warning-bg: #451a03;
   --color-warning-text: #fbbf24; --color-warning-border: #fbbf24; --color-warning-marker: #fbbf24;
   --color-success-text: #4ade80; --color-success-marker: #4ade80;
+  --color-status-rascunho-text: #e2e8f0; --color-status-rascunho-border: #64748b;
+  --color-status-estudo-text: #93c5fd; --color-status-estudo-border: #3b82f6;
+  --color-status-revisado-text: #fde68a; --color-status-revisado-border: #f59e0b;
+  --color-status-concluido-text: #86efac; --color-status-concluido-border: #22c55e;
 }
 
 :root[data-theme="cinza-neutro"] {
@@ -54,6 +62,10 @@
   --color-error-detail: #9f1239; --color-error-marker: #9f1239; --color-warning-bg: #fef3c7;
   --color-warning-text: #92400e; --color-warning-border: #92400e; --color-warning-marker: #92400e;
   --color-success-text: #166534; --color-success-marker: #166534;
+  --color-status-rascunho-text: #3f3f46; --color-status-rascunho-border: #a1a1aa;
+  --color-status-estudo-text: #1d4ed8; --color-status-estudo-border: #3b82f6;
+  --color-status-revisado-text: #b45309; --color-status-revisado-border: #f59e0b;
+  --color-status-concluido-text: #15803d; --color-status-concluido-border: #22c55e;
 }
 
 :root[data-theme="grafite"] {
@@ -73,6 +85,10 @@
   --color-error-detail: #f87171; --color-error-marker: #f87171; --color-warning-bg: #451a03;
   --color-warning-text: #fcd34d; --color-warning-border: #fcd34d; --color-warning-marker: #fcd34d;
   --color-success-text: #4ade80; --color-success-marker: #4ade80;
+  --color-status-rascunho-text: #f5f5f4; --color-status-rascunho-border: #78716c;
+  --color-status-estudo-text: #93c5fd; --color-status-estudo-border: #3b82f6;
+  --color-status-revisado-text: #fde68a; --color-status-revisado-border: #f59e0b;
+  --color-status-concluido-text: #86efac; --color-status-concluido-border: #22c55e;
 }
 
 :root[data-theme="monocromatico"] {
@@ -92,6 +108,10 @@
   --color-error-detail: #111111; --color-error-marker: #111111; --color-warning-bg: #fef3c7;
   --color-warning-text: #111111; --color-warning-border: #111111; --color-warning-marker: #111111;
   --color-success-text: #111111; --color-success-marker: #111111;
+  --color-status-rascunho-text: #111111; --color-status-rascunho-border: #71717a;
+  --color-status-estudo-text: #111111; --color-status-estudo-border: #111111;
+  --color-status-revisado-text: #111111; --color-status-revisado-border: #111111;
+  --color-status-concluido-text: #111111; --color-status-concluido-border: #111111;
 }
 
 :root[data-theme="pergaminho"] {
@@ -111,6 +131,10 @@
   --color-error-detail: #821D20; --color-error-marker: #821D20; --color-warning-bg: #EAC786;
   --color-warning-text: #543209; --color-warning-border: #543209; --color-warning-marker: #543209;
   --color-success-text: #365024; --color-success-marker: #365024;
+  --color-status-rascunho-text: #35200F; --color-status-rascunho-border: #B58D58;
+  --color-status-estudo-text: #873018; --color-status-estudo-border: #873018;
+  --color-status-revisado-text: #543209; --color-status-revisado-border: #85562F;
+  --color-status-concluido-text: #365024; --color-status-concluido-border: #365024;
 }
 
 :root[data-theme="e-ink"] {
@@ -130,6 +154,10 @@
   --color-error-detail: #000000; --color-error-marker: #000000; --color-warning-bg: #FFFFFF;
   --color-warning-text: #000000; --color-warning-border: #000000; --color-warning-marker: #000000;
   --color-success-text: #000000; --color-success-marker: #000000;
+  --color-status-rascunho-text: #000000; --color-status-rascunho-border: #000000;
+  --color-status-estudo-text: #000000; --color-status-estudo-border: #000000;
+  --color-status-revisado-text: #000000; --color-status-revisado-border: #000000;
+  --color-status-concluido-text: #000000; --color-status-concluido-border: #000000;
   --line-height-reading: 1.9;
 }
 
@@ -150,6 +178,10 @@
   --color-error-detail: #9B3428; --color-error-marker: #9B3428; --color-warning-bg: #F6E1A4;
   --color-warning-text: #795100; --color-warning-border: #795100; --color-warning-marker: #795100;
   --color-success-text: #526B00; --color-success-marker: #526B00;
+  --color-status-rascunho-text: #2E4249; --color-status-rascunho-border: #B9B199;
+  --color-status-estudo-text: #00686D; --color-status-estudo-border: #00686D;
+  --color-status-revisado-text: #795100; --color-status-revisado-border: #A84B00;
+  --color-status-concluido-text: #526B00; --color-status-concluido-border: #526B00;
 }
 
 :root[data-theme="fiorde"] {
@@ -169,6 +201,10 @@
   --color-error-detail: #FFB3C0; --color-error-marker: #FFB3C0; --color-warning-bg: #4A3D2A;
   --color-warning-text: #EBCB8B; --color-warning-border: #EBCB8B; --color-warning-marker: #EBCB8B;
   --color-success-text: #A3E5C0; --color-success-marker: #A3E5C0;
+  --color-status-rascunho-text: #ECEFF4; --color-status-rascunho-border: #5A6A82;
+  --color-status-estudo-text: #98D0E0; --color-status-estudo-border: #98D0E0;
+  --color-status-revisado-text: #EBCB8B; --color-status-revisado-border: #EBCB8B;
+  --color-status-concluido-text: #A3E5C0; --color-status-concluido-border: #A3E5C0;
 }
 
 :root[data-theme="voltagem"] {
@@ -188,4 +224,8 @@
   --color-error-detail: #FF77BD; --color-error-marker: #FF77BD; --color-warning-bg: #3D1030;
   --color-warning-text: #FFA3D6; --color-warning-border: #FFA3D6; --color-warning-marker: #FFA3D6;
   --color-success-text: #84FFD0; --color-success-marker: #84FFD0;
+  --color-status-rascunho-text: #ECEAF4; --color-status-rascunho-border: #575067;
+  --color-status-estudo-text: #F6FF00; --color-status-estudo-border: #F6FF00;
+  --color-status-revisado-text: #FFA3D6; --color-status-revisado-border: #FFA3D6;
+  --color-status-concluido-text: #84FFD0; --color-status-concluido-border: #84FFD0;
 }

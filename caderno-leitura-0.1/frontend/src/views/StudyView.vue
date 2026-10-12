@@ -1029,12 +1029,15 @@ onBeforeUnmount(() => {
   .page-header.reader-heading {
     flex-direction: column;
     align-items: flex-start;
+    justify-content: flex-start;
     gap: 0.5rem;
     margin-bottom: 0.875rem;
   }
 
   .reader-heading-main {
+    flex: initial;
     width: 100%;
+    margin-bottom: 0;
   }
 
   .reader-title {
@@ -1046,7 +1049,9 @@ onBeforeUnmount(() => {
 
   .reader-meta-row {
     margin-top: 0.25rem;
+    margin-bottom: 0;
     gap: 0.375rem 0.5rem;
+    align-items: center;
   }
 
   .header-actions {
@@ -1060,6 +1065,7 @@ onBeforeUnmount(() => {
     padding-top: 0;
     border-top: none;
     margin-top: 0.25rem;
+    margin-bottom: 0;
   }
 
   .header-actions-group {

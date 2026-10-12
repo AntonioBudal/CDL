@@ -54,6 +54,11 @@ const STATUS_OPTIONS: { value: ReadingStatus | 'all'; label: string }[] = [
 ]
 
 const isMobileFilterOpen = ref(false)
+const activeDropdownStudyId = ref<number | null>(null)
+
+function onDropdownToggle(studyId: number, isOpen: boolean) {
+  activeDropdownStudyId.value = isOpen ? studyId : null
+}
 
 function onStatusChange(study: StudySummary, newStatus: ReadingStatus) {
   study.reading_status = newStatus
@@ -275,7 +280,10 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
           :key="study.id"
           role="row"
           class="study-row-item"
-          :class="{ 'is-focused': activeStudyId === study.id }"
+          :class="{
+            'is-focused': activeStudyId === study.id,
+            'has-dropdown-open': activeDropdownStudyId === study.id
+          }"
           tabindex="0"
           @click="emit('select-study', study.id)"
           @keydown.enter="emit('select-study', study.id)"
@@ -298,6 +306,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
               :study-id="study.id"
               :interactive="true"
               @change="(newSt) => onStatusChange(study, newSt)"
+              @toggle-open="(isOpen) => onDropdownToggle(study.id, isOpen)"
             />
           </div>
 
@@ -539,8 +548,8 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 
 .list-header-row {
   display: grid;
-  grid-template-columns: minmax(160px, 2.2fr) minmax(115px, 1fr) minmax(110px, 1.2fr) minmax(90px, 0.9fr) 116px 44px;
-  gap: 1rem;
+  grid-template-columns: minmax(180px, 3fr) minmax(125px, 1.2fr) minmax(130px, 1.5fr) minmax(105px, 1fr) minmax(115px, 1fr) 52px;
+  gap: 1.25rem;
   align-items: center;
   padding: 0.6rem 1rem;
   background-color: var(--color-surface-soft, #f8fafc);
@@ -555,7 +564,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 .header-sort-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.35rem;
   background: transparent;
   border: none;
   padding: 0;
@@ -565,16 +574,30 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
   letter-spacing: inherit;
   cursor: pointer;
   text-align: left;
+  transition: color 0.15s ease;
 }
 
 .header-sort-btn:hover {
   color: var(--color-accent, #1d4ed8);
 }
 
+.header-sort-btn[aria-sort="ascending"],
+.header-sort-btn[aria-sort="descending"] {
+  color: var(--color-text, #0f172a);
+}
+
 .sort-indicator {
+  display: inline-flex;
+  align-items: center;
+  stroke: currentColor;
+  color: currentColor;
+  flex-shrink: 0;
   font-size: 0.85rem;
-  color: var(--color-accent, #1d4ed8);
   font-weight: bold;
+}
+
+:deep(.sort-indicator svg) {
+  stroke: currentColor;
 }
 
 .header-cell {
@@ -582,20 +605,33 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
   align-items: center;
 }
 
+.col-sections.header-cell {
+  justify-content: center;
+  text-align: center;
+}
+
+.col-actions.header-cell {
+  justify-content: center;
+  text-align: center;
+}
+
 .study-row-item {
   display: grid;
-  grid-template-columns: minmax(160px, 2.2fr) minmax(115px, 1fr) minmax(110px, 1.2fr) minmax(90px, 0.9fr) 116px 44px;
-  gap: 1rem;
+  grid-template-columns: minmax(180px, 3fr) minmax(125px, 1.2fr) minmax(130px, 1.5fr) minmax(105px, 1fr) minmax(115px, 1fr) 52px;
+  gap: 1.25rem;
   align-items: center;
   padding: 0.65rem 1rem;
   border-bottom: 1px solid var(--color-border-divider);
   transition: background-color 0.15s ease;
   cursor: pointer;
   position: relative;
+  overflow: visible;
 }
 
-.study-row-item:has(.is-open) {
-  z-index: 100;
+.study-row-item:has(.is-open),
+.study-row-item.has-dropdown-open {
+  z-index: 200;
+  position: relative;
 }
 
 .study-row-item:last-child {
@@ -632,6 +668,8 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 
 .col-status {
   min-width: 0;
+  position: relative;
+  overflow: visible;
 }
 
 .col-location {
@@ -645,11 +683,13 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 .col-sections {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .col-actions {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
 }
 
 .row-title-link {
@@ -797,10 +837,10 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 
 .skeleton-row {
   display: grid;
-  grid-template-columns: minmax(160px, 2.2fr) minmax(115px, 1fr) minmax(110px, 1.2fr) minmax(90px, 0.9fr) 116px 44px;
+  grid-template-columns: minmax(180px, 3fr) minmax(125px, 1.2fr) minmax(130px, 1.5fr) minmax(105px, 1fr) minmax(115px, 1fr) 52px;
   align-items: center;
   padding: 0.75rem 1rem;
-  gap: 1rem;
+  gap: 1.25rem;
   border-bottom: 1px solid var(--color-border-divider);
 }
 
