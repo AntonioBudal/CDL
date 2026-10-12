@@ -1,7 +1,7 @@
 import type { ThemeId } from '../appearance'
 
 export type SuperclassName = 'zero-g' | 'mecanica' | 'invisivel' | 'dimensional' | 'monolitica'
-export type PreferredViewMode = 'grid' | 'list' | 'tree' | 'canvas' | 'cockpit'
+export type PreferredViewMode = 'grid' | 'list'
 export type FontFamilyPreference = 'garamond' | 'sans' | 'dyslexic'
 export type ThemeModePreference = ThemeId | 'dark' | 'light'
 

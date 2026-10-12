@@ -134,38 +134,17 @@ describe('Feature 081: Bateria Completa de Regressão e Consolidação do Roadma
       assert.ok(content.includes('var(--color-border)'), 'ShareModal deve utilizar var(--color-border)')
     })
 
-    it('P-04 e P-05: StudyMapView.vue implementa handlers de touch, pinch zoom [0.5, 2.5] e lista semântica', () => {
-      const mapPath = path.join(srcDir, 'components/views/StudyMapView.vue')
-      const content = fs.readFileSync(mapPath, 'utf-8')
+    it('P-04 a P-08: Visualizações experimentais (Map, Canvas, Tree) removidas em favor da Grade e Lista estáveis', () => {
+      const bookViewPath = path.join(srcDir, 'views/BookView.vue')
+      const typesPath = path.join(srcDir, 'types.ts')
 
-      assert.match(content, /touchstart|touchmove|handleTouch/, 'StudyMapView deve conter handlers de toque')
-      assert.match(content, /Math\.min\(2\.5,\s*Math\.max\(0\.5/, 'StudyMapView deve limitar pinch zoom a [0.5, 2.5]')
-      assert.match(content, /relations_list|lista-relacoes|relacoes-list/i, 'StudyMapView deve conter lista semântica')
-    })
+      const bookViewContent = fs.readFileSync(bookViewPath, 'utf-8')
+      const typesContent = fs.readFileSync(typesPath, 'utf-8')
 
-    it('P-06: StudyCanvasView.vue utiliza touch-action: pan-y para desbloquear rolagem vertical', () => {
-      const canvasPath = path.join(srcDir, 'components/views/StudyCanvasView.vue')
-      const content = fs.readFileSync(canvasPath, 'utf-8')
-
-      assert.match(content, /touch-action:\s*pan-y/, 'StudyCanvasView deve ter touch-action: pan-y')
-    })
-
-    it('P-07: CanvasToolbar.vue compacta ferramentas secundárias em menu', () => {
-      const toolbarPath = path.join(srcDir, 'components/views/canvas/CanvasToolbar.vue')
-      const content = fs.readFileSync(toolbarPath, 'utf-8')
-
-      assert.match(content, /secondary-tools-group|more-tools-trigger/, 'CanvasToolbar deve compactar ferramentas secundárias')
-    })
-
-    it('P-08: StudyTreeNodeItem.vue suprime alça de arrasto sob pointer: coarse', () => {
-      const itemPath = path.join(srcDir, 'components/views/StudyTreeNodeItem.vue')
-      const content = fs.readFileSync(itemPath, 'utf-8')
-
-      assert.match(
-        content,
-        /@media\s*\(pointer:\s*coarse\)[\s\S]*?\.tree-drag-handle\s*\{[^}]*display:\s*none/,
-        'StudyTreeNodeItem deve ocultar alça de arrasto em telas de toque'
-      )
+      assert.ok(!bookViewContent.includes('StudyMapView'), 'StudyMapView não deve ser referenciado')
+      assert.ok(!bookViewContent.includes('StudyCanvasView'), 'StudyCanvasView não deve ser referenciado')
+      assert.ok(!bookViewContent.includes('StudyTreeView'), 'StudyTreeView não deve ser referenciado')
+      assert.match(typesContent, /export type StudyViewMode = 'grid' \| 'list'/)
     })
 
     it('P-09: NotificationsDropdown.vue previne estouro em telas estreitas <= 430px', () => {
@@ -274,16 +253,13 @@ describe('Feature 081: Bateria Completa de Regressão e Consolidação do Roadma
   describe('US3: Alvos Táteis e Suíte de Testes-Guarda', () => {
     it('Botões e alvos móveis respeitam dimensões mínimas ergonômicas de 44x44px', () => {
       const tabBarPath = path.join(srcDir, 'components/layout/MobileTabBar.vue')
-      const treeNodePath = path.join(srcDir, 'components/views/StudyTreeNodeItem.vue')
       const stylePath = path.join(srcDir, 'style.css')
 
       const tabContent = fs.readFileSync(tabBarPath, 'utf-8')
-      const treeContent = fs.readFileSync(treeNodePath, 'utf-8')
       const styleContent = fs.readFileSync(stylePath, 'utf-8')
 
       assert.match(tabContent, /min-height:\s*44px/)
       assert.match(tabContent, /min-width:\s*44px/)
-      assert.match(treeContent, /min-height:\s*44px/)
       assert.match(styleContent, /min-height:\s*2\.875rem/) // 2.875rem = 46px > 44px
     })
 

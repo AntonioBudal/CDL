@@ -16,9 +16,6 @@ import { positiveId, type Book, type Chapter, type StudySummary, type StudyViewM
 import ViewSwitcher from '../components/views/ViewSwitcher.vue'
 import StudyGridView from '../components/views/StudyGridView.vue'
 import StudyListView from '../components/views/StudyListView.vue'
-import StudyTreeView from '../components/views/StudyTreeView.vue'
-import StudyMapView from '../components/views/StudyMapView.vue'
-import StudyCanvasView from '../components/views/StudyCanvasView.vue'
 import { useViewPreference, loadStoredViewPreference } from '../composables/useViewPreference.ts'
 
 const splitLayoutRef = ref<InstanceType<typeof SplitLayout> | null>(null)
@@ -228,10 +225,7 @@ const {
 
 const viewRenderers: Record<StudyViewMode, any> = {
   grid: StudyGridView,
-  list: StudyListView,
-  tree: StudyTreeView,
-  map: StudyMapView,
-  canvas: StudyCanvasView
+  list: StudyListView
 }
 
 const activeRendererComponent = computed(() => viewRenderers[activeViewMode.value] ?? StudyGridView)

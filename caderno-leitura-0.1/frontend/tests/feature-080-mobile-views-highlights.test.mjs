@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const srcDir = path.resolve(__dirname, '../src')
 
-describe('Feature 080: Visualizações Móveis e Responsividade de Destaques', () => {
+describe('Feature 080: Responsividade de Destaques e Foco em Visualizações Estáveis', () => {
   it('US1: HighlightFilterToolbar permite flex-wrap e expande busca para largura total no mobile', () => {
     const toolbarPath = path.join(srcDir, 'components/highlights/HighlightFilterToolbar.vue')
     const content = fs.readFileSync(toolbarPath, 'utf-8')
@@ -46,33 +46,6 @@ describe('Feature 080: Visualizações Móveis e Responsividade de Destaques', (
     )
   })
 
-  it('US2: StudyMapView implementa gestos táteis de pan/pinch e alternador móvel de lista semântica', () => {
-    const mapPath = path.join(srcDir, 'components/views/StudyMapView.vue')
-    const content = fs.readFileSync(mapPath, 'utf-8')
-
-    assert.match(
-      content,
-      /touchstart|touchmove|handleTouch/,
-      'StudyMapView deve conter handlers de eventos de toque para pan e pinch zoom'
-    )
-    assert.match(
-      content,
-      /mobile-map-view-mode|relations_list|lista-relacoes|relacoes-list/s,
-      'StudyMapView deve oferecer alternador para lista semântica de relações no celular'
-    )
-  })
-
-  it('US3: StudyCanvasView desbloqueia rolagem vertical no mobile com touch-action: pan-y', () => {
-    const canvasPath = path.join(srcDir, 'components/views/StudyCanvasView.vue')
-    const content = fs.readFileSync(canvasPath, 'utf-8')
-
-    assert.match(
-      content,
-      /touch-action:\s*pan-y/,
-      'StudyCanvasView deve desbloquear a rolagem vertical no mobile através de touch-action: pan-y'
-    )
-  })
-
   it('Foundational: style.css declara container query para palco de estudos', () => {
     const stylePath = path.join(srcDir, 'style.css')
     const content = fs.readFileSync(stylePath, 'utf-8')
@@ -105,58 +78,15 @@ describe('Feature 080: Visualizações Móveis e Responsividade de Destaques', (
     )
   })
 
-  it('US2: StudyMapView restringe pinch zoom no intervalo [0.5, 2.5]', () => {
-    const mapPath = path.join(srcDir, 'components/views/StudyMapView.vue')
-    const content = fs.readFileSync(mapPath, 'utf-8')
+  it('Visualizações estáveis: BookView opera com foco exclusivo em Grade e Lista', () => {
+    const bookViewPath = path.join(srcDir, 'views/BookView.vue')
+    const content = fs.readFileSync(bookViewPath, 'utf-8')
 
-    assert.match(
-      content,
-      /Math\.min\(2\.5,\s*Math\.max\(0\.5/,
-      'StudyMapView deve limitar o pinch zoom ao intervalo canônico de 0.5 a 2.5'
-    )
-  })
-
-  it('US3: CanvasToolbar compacta ferramentas secundárias em menu em telas menores', () => {
-    const toolbarPath = path.join(srcDir, 'components/views/canvas/CanvasToolbar.vue')
-    const content = fs.readFileSync(toolbarPath, 'utf-8')
-
-    assert.match(
-      content,
-      /secondary-tools-group/,
-      'CanvasToolbar deve agrupar ferramentas secundárias em secondary-tools-group'
-    )
-    assert.match(
-      content,
-      /more-tools-trigger/,
-      'CanvasToolbar deve ter gatilho more-tools-trigger para telas menores'
-    )
-  })
-
-  it('US4: StudyTreeNodeItem oculta drag handle em pointer: coarse e garante alvos táteis de 44px', () => {
-    const treeNodePath = path.join(srcDir, 'components/views/StudyTreeNodeItem.vue')
-    const content = fs.readFileSync(treeNodePath, 'utf-8')
-
-    assert.match(
-      content,
-      /@media\s*\(pointer:\s*coarse\)[^}]*tree-drag-handle\s*\{[^}]*display:\s*none/s,
-      'StudyTreeNodeItem deve ocultar a alça de arrasto sob pointer: coarse'
-    )
-    assert.match(
-      content,
-      /min-height:\s*44px/,
-      'StudyTreeNodeItem deve garantir alvos táteis mínimos de 44px para botões de menu'
-    )
-  })
-
-  it('US4: StudyTreeView comprime indentação de ramos aninhados no mobile', () => {
-    const treePath = path.join(srcDir, 'components/views/StudyTreeView.vue')
-    const content = fs.readFileSync(treePath, 'utf-8')
-
-    assert.match(
-      content,
-      /@media\s*\(max-width:\s*768px\)[\s\S]*?\.tree-branch\s*\{[^}]*margin-left:/,
-      'StudyTreeView deve comprimir indentação no mobile em @media (max-width: 768px)'
-    )
+    assert.ok(content.includes('StudyGridView'), 'BookView deve incluir StudyGridView')
+    assert.ok(content.includes('StudyListView'), 'BookView deve incluir StudyListView')
+    assert.ok(!content.includes('StudyMapView'), 'BookView não deve incluir StudyMapView')
+    assert.ok(!content.includes('StudyCanvasView'), 'BookView não deve incluir StudyCanvasView')
+    assert.ok(!content.includes('StudyTreeView'), 'BookView não deve incluir StudyTreeView')
   })
 
   it('Conformidade de estilo: Zero presença de emojis nos arquivos modificados da Feature 080', () => {
@@ -164,11 +94,7 @@ describe('Feature 080: Visualizações Móveis e Responsividade de Destaques', (
       'components/highlights/HighlightFilterToolbar.vue',
       'components/highlights/HighlightCard.vue',
       'views/HighlightsLibraryView.vue',
-      'components/views/StudyMapView.vue',
-      'components/views/StudyCanvasView.vue',
-      'components/views/StudyTreeNodeItem.vue',
-      'components/views/StudyTreeView.vue',
-      'components/views/canvas/CanvasToolbar.vue'
+      'views/BookView.vue'
     ]
 
     const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u

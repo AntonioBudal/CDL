@@ -18,8 +18,6 @@ test('Feature 075 - Correções Visuais, de Cor e de Disposição', async (t) =>
   const libraryToolbarPath = path.resolve(srcDir, 'components/LibraryToolbar.vue')
   const studyStatusBadgePath = path.resolve(srcDir, 'components/StudyStatusBadge.vue')
   const studyListViewPath = path.resolve(srcDir, 'components/views/StudyListView.vue')
-  const studyTreeNodeItemPath = path.resolve(srcDir, 'components/views/StudyTreeNodeItem.vue')
-  const studyMapViewPath = path.resolve(srcDir, 'components/views/StudyMapView.vue')
   const appFooterPath = path.resolve(srcDir, 'components/layout/AppFooter.vue')
   const userDropdownPath = path.resolve(srcDir, 'components/layout/UserDropdown.vue')
   const emptyStatePath = path.resolve(srcDir, 'components/ui/EmptyState.vue')
@@ -127,7 +125,7 @@ test('Feature 075 - Correções Visuais, de Cor e de Disposição', async (t) =>
     )
   })
 
-  await t.test('4. [US3] Estudos em /livros/:id: Status, Lista, Árvore e Mapa', () => {
+  await t.test('4. [US3] Estudos em /livros/:id: Status e Lista', () => {
     const studyBadge = fs.readFileSync(studyStatusBadgePath, 'utf-8')
     assert.match(
       studyBadge,
@@ -140,25 +138,6 @@ test('Feature 075 - Correções Visuais, de Cor e de Disposição', async (t) =>
       studyList,
       /\{\{\s*sortDirection\s*===\s*'asc'\s*\?\s*'↑'\s*:\s*'↓'\s*\}\}/,
       'StudyListView deve utilizar componentes de ícone em vez de setas ASCII no cabeçalho'
-    )
-
-    const studyTree = fs.readFileSync(studyTreeNodeItemPath, 'utf-8')
-    assert.doesNotMatch(
-      studyTree,
-      /color:\s*var\(--color-inverse-bg/,
-      'StudyTreeNodeItem não deve usar color-inverse-bg como cor de texto em botões ou títulos'
-    )
-
-    const studyMap = fs.readFileSync(studyMapViewPath, 'utf-8')
-    assert.doesNotMatch(
-      studyMap,
-      /\.zoom-btn:hover\s*\{[^}]*color:\s*var\(--color-inverse-bg\)/,
-      'StudyMapView não deve usar color-inverse-bg no hover de zoom-btn'
-    )
-    assert.match(
-      studyMap,
-      /\.mobile-map-toolbar\s*\{[^}]*display:\s*none/i,
-      'StudyMapView deve ocultar mobile-map-toolbar por padrão em telas desktop'
     )
   })
 

@@ -847,3 +847,35 @@ Com a conclusão da Feature 10 (F10), **todas as dez features do Roadmap 0.5 (F0
 7. **Próximos Passos:**
    - Commit atômico da Feature 081: `git commit -m "feature — regressao e consolidacao responsiva"`.
 
+---
+
+## Sessão: Remoção Permanente de MapView, CanvasView e TreeView (12/10/2026)
+
+### Evidências Verificadas nesta Rodada
+1. **Decisão de Arquitetura e Simplificação do Frontend:**
+   - Remoção permanente das visualizações experimentais/complexas de estudos: **MapView** (`StudyMapView.vue`), **CanvasView** (`StudyCanvasView.vue`) e **TreeView** (`StudyTreeView.vue`).
+   - Manutenção estrita das duas visualizações canônicas e estáveis que estão plenamente funcionais: **Grade** (`StudyGridView.vue`) e **Lista** (`StudyListView.vue`).
+2. **Arquivos e Diretórios Removidos:**
+   - Componentes excluídos:
+     - `StudyMapView.vue`, `StudyCanvasView.vue`, `StudyTreeView.vue`, `StudyTreeNodeItem.vue`
+     - Subpastas completas: `src/components/views/canvas/` e `src/components/views/map/`
+   - Composables excluídos:
+     - `useStudyHierarchy.ts`, `useMapLayout.ts`, `useCanvasNodes.ts`, `useCanvasConnections.ts`, `useCanvasSelection.ts`, `useCanvasViewport.ts`, `useCanvasFrames.ts`, `useSmartSnapping.ts`
+   - Suítes de testes descontinuadas (14 arquivos):
+     - `canvas-a11y.test.mjs`, `canvas-frames.test.mjs`, `canvas-minimap.test.mjs`, `canvas-nodes.test.mjs`, `canvas-relations.test.mjs`, `canvas-snapping.test.mjs`, `canvas-viewport.test.mjs`, `study_canvas_view.test.mjs`
+     - `study-map.test.mjs`, `study_map_view.test.mjs`
+     - `study-tree-a11y.test.mjs`, `study-tree-dnd.test.mjs`, `study-tree.test.mjs`, `study_tree_view.test.mjs`
+3. **Ajustes de Tipagem e Preservação da Resiliência:**
+   - `types.ts`: `StudyViewMode` restrito a `'grid' | 'list'`; `STUDY_VIEW_OPTIONS` contém apenas Grade e Lista.
+   - `types/preferences.ts`: `PreferredViewMode` restrito a `'grid' | 'list'`.
+   - `useViewPreference.ts`: `VALID_MODES` restrito ao conjunto `{'grid', 'list'}` com sanitização e fallback automático e silencioso para `'grid'` caso valores legados persistam em `localStorage`.
+   - `BookView.vue`: Removidos imports e mapeamentos de renderizadores dinâmicos para árvore, mapa e canvas. Apenas Grade e Lista são registradas. O `ViewSwitcher.vue` renderiza apenas as 2 opções ativas.
+4. **Validação Completa das Suítes:**
+   - 458 testes de backend passando (`pytest` / 458 passed, 1 skipped).
+   - 558 testes de frontend passando (`npm test` / 558 passed, 0 failed).
+   - Compilação estrita e build de produção (`npm run build` / `vue-tsc -b && vite build`) concluídos com sucesso (código 0).
+   - Zero presença de emojis em código ou documentação.
+   - Proteção absoluta do acervo e zero alterações no banco de produção.
+5. **Versionamento Git:**
+   - Commit atômico: `remover mapview, canvasview e treeview`.
+

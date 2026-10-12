@@ -695,7 +695,7 @@ export interface SplitLayoutDimensions {
 
 // --- Sistema de Visualizações (F01) ---
 
-export type StudyViewMode = 'grid' | 'list' | 'tree' | 'map' | 'canvas'
+export type StudyViewMode = 'grid' | 'list'
 
 export interface StudyViewOption {
   id: StudyViewMode
@@ -722,24 +722,6 @@ export const STUDY_VIEW_OPTIONS: StudyViewOption[] = [
     label: 'Lista',
     icon: 'list',
     description: 'Apresentação compacta em alta densidade de leitura'
-  },
-  {
-    id: 'tree',
-    label: 'Árvore',
-    icon: 'folder',
-    description: 'Hierarquia visual com nós expansíveis e ramos de estudo'
-  },
-  {
-    id: 'map',
-    label: 'Mapa',
-    icon: 'network',
-    description: 'Rede bidimensional de conceitos e conexões'
-  },
-  {
-    id: 'canvas',
-    label: 'Canvas',
-    icon: 'canvas',
-    description: 'Espaço 2D livre com exploração espacial flexível'
   }
 ]
 

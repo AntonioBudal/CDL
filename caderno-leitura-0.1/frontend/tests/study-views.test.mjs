@@ -45,41 +45,38 @@ test('useViewPreference inicializa com "grid" como fallback padrão', () => {
 
   assert.equal(pref.currentMode.value, 'grid')
   assert.equal(pref.activeStudyId.value, null)
-  assert.equal(pref.availableModes.length, 5)
+  assert.equal(pref.availableModes.length, 2)
 })
 
-test('useViewPreference comuta entre os 5 modos canônicos e preserva activeStudyId', () => {
+test('useViewPreference comuta entre os modos canônicos e preserva activeStudyId', () => {
   globalThis.localStorage.clear()
   const pref = useViewPreference()
 
-  pref.setMode('tree')
-  assert.equal(pref.currentMode.value, 'tree')
+  pref.setMode('list')
+  assert.equal(pref.currentMode.value, 'list')
 
   pref.setActiveStudy(42)
   assert.equal(pref.activeStudyId.value, 42)
 
-  // Ao comutar para outro modo, o estudo ativo em foco permanece preservado
-  pref.setMode('canvas')
-  assert.equal(pref.currentMode.value, 'canvas')
-  assert.equal(pref.activeStudyId.value, 42)
-
-  pref.setMode('map')
-  assert.equal(pref.currentMode.value, 'map')
-  assert.equal(pref.activeStudyId.value, 42)
-
-  pref.setMode('list')
-  assert.equal(pref.currentMode.value, 'list')
+  pref.setMode('grid')
+  assert.equal(pref.currentMode.value, 'grid')
   assert.equal(pref.activeStudyId.value, 42)
 })
 
-test('useViewPreference ignora modos inválidos', () => {
+test('useViewPreference ignora modos inválidos ou descontinuados', () => {
   globalThis.localStorage.clear()
   const pref = useViewPreference()
 
   assert.equal(pref.currentMode.value, 'grid')
   // @ts-ignore
-  pref.setMode('invalid_mode')
-  assert.equal(pref.currentMode.value, 'grid', 'Modo não canônico deve ser descartado')
+  pref.setMode('tree')
+  assert.equal(pref.currentMode.value, 'grid', 'Modo tree descontinuado deve ser descartado')
+  // @ts-ignore
+  pref.setMode('map')
+  assert.equal(pref.currentMode.value, 'grid', 'Modo map descontinuado deve ser descartado')
+  // @ts-ignore
+  pref.setMode('canvas')
+  assert.equal(pref.currentMode.value, 'grid', 'Modo canvas descontinuado deve ser descartado')
 })
 
 // ==========================================
@@ -95,22 +92,22 @@ test('useViewPreference respeita o modelo híbrido de persistência (Q2)', () =>
   assert.equal(globalThis.localStorage.getItem(VIEW_GLOBAL_STORAGE_KEY), 'list')
 
   // 2. Salva preferência individual para o livro '10'
-  saveStoredViewPreference('tree', '10')
-  assert.equal(loadStoredViewPreference('10'), 'tree', 'Livro 10 tem preferência individual em Árvore')
-  assert.equal(globalThis.localStorage.getItem(`${VIEW_BOOK_STORAGE_KEY_PREFIX}10`), 'tree')
+  saveStoredViewPreference('grid', '10')
+  assert.equal(loadStoredViewPreference('10'), 'grid', 'Livro 10 tem preferência individual em Grade')
+  assert.equal(globalThis.localStorage.getItem(`${VIEW_BOOK_STORAGE_KEY_PREFIX}10`), 'grid')
 
   // 3. Outro livro novo sem preferência individual herda a global mais recente
-  assert.equal(loadStoredViewPreference('99'), 'tree', 'Novas obras herdam a última preferência global salva')
+  assert.equal(loadStoredViewPreference('99'), 'grid', 'Novas obras herdam a última preferência global salva')
 
   // 4. Instância com bookId carrega a preferência correta
   const book10Pref = useViewPreference({ bookId: '10' })
-  assert.equal(book10Pref.currentMode.value, 'tree')
+  assert.equal(book10Pref.currentMode.value, 'grid')
 })
 
 test('Navegação WAI-ARIA do ViewSwitcher calcula índices corretamente', () => {
   const options = STUDY_VIEW_OPTIONS
   const count = options.length
-  assert.equal(count, 5)
+  assert.equal(count, 2)
 
   // Função auxiliar simulando a lógica de teclado de ViewSwitcher.vue
   function getNextIndex(currentIdx, key) {
@@ -132,13 +129,13 @@ test('Navegação WAI-ARIA do ViewSwitcher calcula índices corretamente', () =>
 
   // De 0 ('grid') para a direita -> 1 ('list')
   assert.equal(getNextIndex(0, 'ArrowRight'), 1)
-  // De 4 ('canvas') para a direita -> volta ciclicamente para 0 ('grid')
-  assert.equal(getNextIndex(4, 'ArrowRight'), 0)
-  // De 0 ('grid') para a esquerda -> volta ciclicamente para 4 ('canvas')
-  assert.equal(getNextIndex(0, 'ArrowLeft'), 4)
-  // De qualquer posição, Home -> 0 ('grid') e End -> 4 ('canvas')
-  assert.equal(getNextIndex(2, 'Home'), 0)
-  assert.equal(getNextIndex(2, 'End'), 4)
+  // De 1 ('list') para a direita -> volta ciclicamente para 0 ('grid')
+  assert.equal(getNextIndex(1, 'ArrowRight'), 0)
+  // De 0 ('grid') para a esquerda -> volta ciclicamente para 1 ('list')
+  assert.equal(getNextIndex(0, 'ArrowLeft'), 1)
+  // De qualquer posição, Home -> 0 ('grid') e End -> 1 ('list')
+  assert.equal(getNextIndex(1, 'Home'), 0)
+  assert.equal(getNextIndex(0, 'End'), 1)
 })
 
 // ==========================================

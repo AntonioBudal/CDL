@@ -4,7 +4,7 @@ import { STUDY_VIEW_OPTIONS, type StudyViewMode, type StudyViewOption } from '..
 export const VIEW_GLOBAL_STORAGE_KEY = 'caderno_default_view'
 export const VIEW_BOOK_STORAGE_KEY_PREFIX = 'caderno_preferred_view_'
 
-const VALID_MODES: Set<StudyViewMode> = new Set(['grid', 'list', 'tree', 'map', 'canvas'])
+const VALID_MODES: Set<StudyViewMode> = new Set(['grid', 'list'])
 
 export interface UseViewPreferenceOptions {
   bookId?: string | number | null
@@ -89,7 +89,10 @@ export function saveStoredViewPreference(
 
 export function useViewPreference(options: UseViewPreferenceOptions = {}): UseViewPreferenceReturn {
   const stored = loadStoredViewPreference(options.bookId)
-  const currentMode = ref<StudyViewMode>(stored ?? options.initialMode ?? 'grid')
+  const initial = stored && VALID_MODES.has(stored)
+    ? stored
+    : (options.initialMode && VALID_MODES.has(options.initialMode) ? options.initialMode : 'grid')
+  const currentMode = ref<StudyViewMode>(initial)
   const activeStudyId = ref<number | null>(null)
 
   function setMode(mode: StudyViewMode): void {
