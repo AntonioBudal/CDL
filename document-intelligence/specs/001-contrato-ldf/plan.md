@@ -2,8 +2,8 @@
 
 * **Feature:** `001-contrato-ldf`
 * **Especificação:** [`spec.md`](./spec.md) (`APPROVED` em 2026-10-12)
-* **Status:** `DRAFT` — aguardando aprovação do usuário
-* **Próximo artefato:** `tasks.md`, só depois da aprovação deste plano
+* **Status:** `APPROVED` (aprovado pelo usuário em 2026-10-12, com `jsonschema` autorizado como dependência)
+* **Próximo artefato:** [`tasks.md`](./tasks.md)
 
 ---
 
@@ -20,7 +20,7 @@ experimentos aceitos não são tocados.
 | :--- | :--- |
 | Linguagem | Python ≥ 3.11 (ambiente principal em 3.14.3), `uv` |
 | Dependências atuais | `pydantic` ≥ 2.7 |
-| **Dependência nova** | `jsonschema` (MIT, Python puro mais `rpds-py`; já usado nos ambientes dos EXP-002/003). **Precisa da sua aprovação** — ver §9 |
+| **Dependência nova** | `jsonschema` (MIT, Python puro mais `rpds-py`; já usado nos ambientes dos EXP-002/003). Autorizada pelo usuário em 2026-10-12 — ver §9 |
 | Testes | `pytest`, `ruff`; só dados fictícios |
 | Rede, modelos, datasets | nenhum |
 | Disco | desprezível (texto) |
@@ -161,7 +161,7 @@ carregar os modelos, o que está fora desta feature.
 | Paridade estrutural frágil com construções avançadas do schema | O schema usa só o subconjunto necessário (`$defs`, `enum`, `required`, sem `oneOf` aninhado) |
 | Quebrar testes de estrutura existentes | `tests/test_structure.py` exige `docs/ldf.md`, os exemplos 1.0 e a pasta `contracts`; todos permanecem |
 
-## 9. Decisão que preciso de você
+## 9. Decisão do usuário: `jsonschema` autorizado (2026-10-12)
 
 **Adicionar `jsonschema` às dependências do pacote principal.** Com o JSON Schema como fonte, é a forma direta de
 validar. É uma biblioteca pequena, licença MIT, sem relação com OCR. A alternativa é deixá-la só nos testes e
