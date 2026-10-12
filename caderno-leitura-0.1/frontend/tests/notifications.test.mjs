@@ -164,26 +164,30 @@ test('validação de ações inline e feedback em NotificationItem.vue', () => {
   )
 })
 
-test('validação do botão de notificações no cabeçalho em App.vue', () => {
+test('validação do botão de notificações no cabeçalho em App.vue e GlobalHeader.vue', () => {
   const appContent = fs.readFileSync(
     path.resolve(srcDir, 'App.vue'),
     'utf-8',
   )
+  const headerContent = fs.readFileSync(
+    path.resolve(srcDir, 'components/layout/GlobalHeader.vue'),
+    'utf-8',
+  )
 
   assert.ok(
-    appContent.includes('notifications-nav-container'),
+    headerContent.includes('notifications-nav-container'),
     'Deve conter container de notificações',
   )
   assert.ok(
-    appContent.includes('btn-notifications-trigger'),
+    headerContent.includes('btn-notifications-trigger'),
     'Deve conter botão de disparo de notificações',
   )
   assert.ok(
-    appContent.includes('notifications-badge'),
+    headerContent.includes('notifications-badge'),
     'Deve conter badge dinâmico de contagem',
   )
   assert.ok(
-    appContent.includes('NotificationsDropdown'),
+    headerContent.includes('NotificationsDropdown'),
     'Deve incluir o componente NotificationsDropdown',
   )
   assert.ok(

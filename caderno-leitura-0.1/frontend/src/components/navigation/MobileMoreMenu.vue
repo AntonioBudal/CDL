@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, watch } from 'vue'
+import { computed, onMounted, onUnmounted, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import Icon from '../ui/Icon.vue'
+import { useInboxCount } from '../../composables/useInboxCount.ts'
+import { useFriends } from '../../composables/useFriends.ts'
 
 const props = withDefaults(
   defineProps<{
@@ -26,6 +28,12 @@ const emit = defineEmits<{
   (e: 'close'): void
   (e: 'logout'): void
 }>()
+
+const inboxService = useInboxCount()
+const friendsService = useFriends()
+
+const inboxCount = computed(() => inboxService.count.value)
+const pendingFriendsCount = computed(() => friendsService.pendingReceivedCount.value)
 
 function handleKeydown(event: KeyboardEvent) {
   if (props.open && event.key === 'Escape') {
@@ -115,6 +123,47 @@ onUnmounted(() => {
           >
             <Icon name="user" :size="20" class="drawer-item-icon" />
             <span class="drawer-item-label">Meu Perfil</span>
+          </RouterLink>
+
+          <RouterLink
+            to="/inbox"
+            class="drawer-item"
+            @click="emit('close')"
+          >
+            <Icon name="inbox" :size="20" class="drawer-item-icon" />
+            <span class="drawer-item-label">Caixa de Entrada</span>
+            <span
+              v-if="inboxCount > 0"
+              class="drawer-item-badge"
+              :aria-label="`Caixa de Entrada: ${inboxCount} itens pendentes`"
+            >
+              {{ inboxCount > 99 ? '99+' : inboxCount }}
+            </span>
+          </RouterLink>
+
+          <RouterLink
+            to="/amigos"
+            class="drawer-item"
+            @click="emit('close')"
+          >
+            <Icon name="users" :size="20" class="drawer-item-icon" />
+            <span class="drawer-item-label">Salão de Amigos</span>
+            <span
+              v-if="pendingFriendsCount > 0"
+              class="drawer-item-badge"
+              :aria-label="`Amigos: ${pendingFriendsCount} solicitações pendentes`"
+            >
+              {{ pendingFriendsCount > 99 ? '99+' : pendingFriendsCount }}
+            </span>
+          </RouterLink>
+
+          <RouterLink
+            to="/importar"
+            class="drawer-item"
+            @click="emit('close')"
+          >
+            <Icon name="plus" :size="20" class="drawer-item-icon" />
+            <span class="drawer-item-label">Importar Estudo</span>
           </RouterLink>
 
           <RouterLink
@@ -345,6 +394,21 @@ onUnmounted(() => {
 
 .drawer-item-label {
   flex: 1;
+}
+
+.drawer-item-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.35rem;
+  border-radius: 9999px;
+  background-color: var(--color-accent);
+  color: var(--color-on-accent, #fff);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .drawer-divider {

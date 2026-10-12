@@ -313,4 +313,15 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
 }
+
+@media (max-width: 430px) {
+  .notifications-dropdown {
+    position: fixed;
+    top: calc(3.75rem + 8px);
+    left: 0.5rem;
+    right: 0.5rem;
+    width: auto;
+    max-width: calc(100vw - 1rem);
+  }
+}
 </style>

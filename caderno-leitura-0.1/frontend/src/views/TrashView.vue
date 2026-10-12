@@ -1108,7 +1108,7 @@ onMounted(loadTrash)
   .trash-batch-bar {
     border-radius: var(--radius-small);
     width: 95vw;
-    bottom: 1rem;
+    bottom: calc(var(--mobile-nav-offset, 0px) + 0.75rem);
     padding: 0.75rem;
   }
 

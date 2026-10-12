@@ -437,7 +437,11 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+  .header-center {
+    display: none !important;
+  }
+
   .tool-label {
     display: none;
   }
@@ -451,7 +455,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
   }
 
   .mobile-more-trigger {
-    display: inline-flex;
+    display: none !important;
   }
 }
 

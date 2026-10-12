@@ -1103,7 +1103,7 @@ onBeforeUnmount(() => {
 
 .study-toast {
   position: fixed;
-  bottom: 2rem;
+  bottom: calc(var(--mobile-nav-offset, 0px) + 1.5rem);
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;

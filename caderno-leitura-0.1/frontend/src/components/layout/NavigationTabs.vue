@@ -407,6 +407,12 @@ onBeforeUnmount(() => {
   transform: translateY(-4px);
 }
 
+@media (max-width: 767px) {
+  .navigation-tabs {
+    display: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .more-fade-enter-active,
   .more-fade-leave-active,

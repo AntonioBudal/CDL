@@ -1799,7 +1799,7 @@ onBeforeUnmount(() => {
 
   .mobile-preview-fab-wrap {
     position: fixed;
-    bottom: 1.5rem;
+    bottom: calc(var(--mobile-nav-offset, 0px) + 1rem);
     right: 1.5rem;
     z-index: 40;
   }

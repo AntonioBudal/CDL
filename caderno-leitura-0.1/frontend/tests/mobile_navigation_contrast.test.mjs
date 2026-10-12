@@ -77,16 +77,23 @@ test('validação de gaveta inferior MobileMoreMenu.vue', () => {
   assert.ok(!emojiRegex.test(content), 'MobileMoreMenu não deve conter emojis')
 })
 
-test('validação de integração móvel em App.vue', () => {
+test('validação de integração móvel em App.vue e MobileTabBar.vue', () => {
   const appContent = fs.readFileSync(path.resolve(srcDir, 'App.vue'), 'utf-8')
+  const tabBarPath = path.resolve(srcDir, 'components/layout/MobileTabBar.vue')
+  assert.ok(fs.existsSync(tabBarPath), 'MobileTabBar.vue deve existir em components/layout')
+  const tabBarContent = fs.readFileSync(tabBarPath, 'utf-8')
 
-  // Incorporação do MobileMoreMenu
+  // Incorporação do MobileMoreMenu e MobileTabBar no App.vue
   assert.ok(appContent.includes('<MobileMoreMenu'), 'App.vue deve integrar MobileMoreMenu')
+  assert.ok(appContent.includes('<MobileTabBar'), 'App.vue deve integrar MobileTabBar')
 
-  // Botão Mais na barra móvel
-  assert.ok(appContent.includes('mobile-more-trigger'), 'App.vue deve ter botão disparador mobile-more-trigger')
-  assert.ok(appContent.includes('more-horizontal'), 'Botão Mais deve utilizar ícone more-horizontal')
+  // Botão Mais na barra móvel física (MobileTabBar.vue)
+  assert.ok(tabBarContent.includes('mobile-more-trigger'), 'MobileTabBar.vue deve ter botão disparador mobile-more-trigger')
+  assert.ok(tabBarContent.includes('more-horizontal'), 'Botão Mais deve utilizar ícone more-horizontal')
 
-  // Destinos desktop-only (Admin e Lixeira)
-  assert.ok(appContent.includes('desktopOnly: true'), 'Admin e Lixeira devem ser marcados como desktopOnly')
+  // Destinos essenciais na barra móvel de 5 colunas
+  assert.ok(tabBarContent.includes('/dashboard'), 'MobileTabBar.vue deve conter link para /dashboard')
+  assert.ok(tabBarContent.includes('/books'), 'MobileTabBar.vue deve conter link para /books')
+  assert.ok(tabBarContent.includes('/highlights'), 'MobileTabBar.vue deve conter link para /highlights')
+  assert.ok(tabBarContent.includes('/review'), 'MobileTabBar.vue deve conter link para /review')
 })

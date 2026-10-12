@@ -6,6 +6,7 @@ import type {
   ResourcePermissionItem,
   ResourceVisibility,
 } from '../../types.ts'
+import Icon from '../ui/Icon.vue'
 
 interface Props {
   modelValue: boolean
@@ -201,225 +202,186 @@ onUnmounted(() => {
 <template>
   <div
     v-if="modelValue"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+    class="share-modal-backdrop"
     role="dialog"
     aria-modal="true"
     aria-labelledby="share-modal-title"
     @click.self="close"
   >
-    <div
-      class="w-full max-w-lg overflow-hidden bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 transition-all flex flex-col max-h-[90vh]"
-    >
+    <div class="share-modal-card">
       <!-- Modal Header -->
-      <header class="flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-zinc-800/80">
-        <div class="flex items-center gap-2">
-          <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-          </svg>
-          <h2 id="share-modal-title" class="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+      <header class="share-modal-header">
+        <div class="share-modal-title-group">
+          <Icon name="network" :size="20" class="share-modal-icon" />
+          <h2 id="share-modal-title" class="share-modal-title">
             Compartilhar Estudo
           </h2>
         </div>
         <button
           type="button"
-          class="flex items-center justify-center w-11 h-11 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+          class="share-modal-close-btn"
           aria-label="Fechar janela de compartilhamento"
           @click="close"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <Icon name="x" :size="20" />
         </button>
       </header>
 
       <!-- Modal Body (Scrollable) -->
-      <div class="p-6 overflow-y-auto space-y-6 flex-1">
+      <div class="share-modal-body">
         <!-- Notificações de feedback -->
         <div
           v-if="error"
-          class="p-3 text-sm rounded-xl bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-900/50 flex items-center gap-2"
+          class="share-feedback-alert error"
           role="alert"
         >
-          <svg class="w-4 h-4 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
+          <Icon name="alert-triangle" :size="16" class="feedback-icon" />
           <span>{{ error }}</span>
         </div>
 
         <div
           v-if="successMsg"
-          class="p-3 text-sm rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/50 flex items-center gap-2"
+          class="share-feedback-alert success"
           role="status"
         >
-          <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
+          <Icon name="check" :size="16" class="feedback-icon" />
           <span>{{ successMsg }}</span>
         </div>
 
         <!-- Copiar Link do Estudo -->
-        <div class="space-y-2">
-          <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        <div class="share-field-group">
+          <label class="share-field-label">
             Link direto para o estudo
           </label>
-          <div class="flex items-center gap-2">
+          <div class="share-input-row">
             <input
               type="text"
               readonly
               :value="studyLink"
-              class="flex-1 px-3 py-2.5 text-sm rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 select-all font-mono focus:outline-none"
+              class="share-link-input"
               aria-label="Link do estudo"
             />
             <button
               type="button"
-              class="inline-flex items-center justify-center min-h-[44px] px-4 py-2 text-sm font-medium rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
-              :class="
-                copyFeedback
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-amber-600 hover:bg-amber-500 text-white shadow-sm hover:shadow'
-              "
+              class="share-copy-btn"
+              :class="{ copied: copyFeedback }"
               aria-label="Copiar link do estudo"
               @click="copyLink"
             >
-              <span v-if="copyFeedback" class="flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Copiado!
-              </span>
-              <span v-else class="flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                </svg>
-                Copiar
-              </span>
+              <Icon :name="copyFeedback ? 'check' : 'copy'" :size="16" />
+              <span>{{ copyFeedback ? 'Copiado!' : 'Copiar' }}</span>
             </button>
           </div>
         </div>
 
         <!-- Seção de Visibilidade -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        <div class="share-field-group">
+          <div class="share-visibility-header">
+            <label class="share-field-label">
               Nível de Visibilidade
             </label>
             <span
               v-if="effectiveVisibility"
-              class="text-xs px-2 py-0.5 rounded-full font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+              class="share-effective-tag"
             >
               Efetivo: {{ effectiveVisibility }}
             </span>
           </div>
 
-          <div class="grid grid-cols-1 gap-2" role="radiogroup" aria-label="Nível de visibilidade do estudo">
+          <div class="share-visibility-options" role="radiogroup" aria-label="Nível de visibilidade do estudo">
             <label
               v-for="opt in visibilityOptions"
               :key="opt.value"
-              class="flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer select-none"
-              :class="[
-                currentVisibility === opt.value
-                  ? 'border-amber-500 bg-amber-50/50 dark:bg-amber-950/20 ring-1 ring-amber-500/50'
-                  : 'border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/40',
-                saving ? 'opacity-60 pointer-events-none' : '',
-              ]"
+              class="share-visibility-option"
+              :class="{
+                selected: currentVisibility === opt.value,
+                disabled: saving,
+              }"
             >
               <input
                 type="radio"
                 name="study-visibility"
                 :value="opt.value"
                 :checked="currentVisibility === opt.value"
-                class="mt-1 w-4 h-4 text-amber-600 border-zinc-300 dark:border-zinc-700 focus:ring-amber-500 focus:ring-offset-0"
+                class="share-radio-input"
                 @change="onVisibilityChange(opt.value)"
               />
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-1.5 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                  <span>{{ opt.label }}</span>
-                </div>
-                <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 leading-relaxed">
-                  {{ opt.desc }}
-                </p>
+              <div class="share-option-text">
+                <span class="share-option-label">{{ opt.label }}</span>
+                <p class="share-option-desc">{{ opt.desc }}</p>
               </div>
             </label>
           </div>
         </div>
 
         <!-- Seção ACL Granular (Apenas no modo 'custom') -->
-        <div v-if="currentVisibility === 'custom'" class="pt-2 border-t border-zinc-100 dark:border-zinc-800 space-y-4">
-          <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        <div v-if="currentVisibility === 'custom'" class="share-acl-section">
+          <label class="share-field-label">
             Conceder Acesso Nominal
           </label>
 
           <!-- Input para adicionar amigo por username -->
-          <form class="flex items-center gap-2" @submit.prevent="handleGrantPermission">
-            <div class="relative flex-1">
-              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm font-mono">@</span>
+          <form class="share-input-row" @submit.prevent="handleGrantPermission">
+            <div class="share-username-wrap">
+              <span class="share-at-prefix">@</span>
               <input
                 v-model="newReaderUsername"
                 type="text"
                 placeholder="nome_do_leitor"
                 maxlength="50"
-                class="w-full pl-8 pr-3 py-2.5 text-sm rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500"
+                class="share-username-input"
                 aria-label="Handle do leitor para conceder acesso"
               />
             </div>
             <button
               type="submit"
               :disabled="!newReaderUsername.trim() || granting"
-              class="inline-flex items-center justify-center min-h-[44px] px-4 py-2 text-sm font-medium rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white shadow-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+              class="share-grant-btn"
             >
-              <span v-if="granting">Concedendo...</span>
-              <span v-else>Conceder</span>
+              <span>{{ granting ? 'Concedendo...' : 'Conceder' }}</span>
             </button>
           </form>
 
           <!-- Lista de Leitores Autorizados -->
-          <div class="space-y-2">
-            <h4 class="text-xs font-medium text-zinc-600 dark:text-zinc-400">
+          <div class="share-readers-group">
+            <h4 class="share-readers-title">
               Leitores autorizados ({{ permissions.length }})
             </h4>
 
-            <div v-if="permissions.length === 0" class="p-4 text-center text-xs text-zinc-400 dark:text-zinc-500 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl">
+            <div v-if="permissions.length === 0" class="share-empty-readers">
               Nenhum leitor convidado ainda. Digite o @username acima para autorizar.
             </div>
 
-            <ul v-else class="divide-y divide-zinc-100 dark:divide-zinc-800/80 rounded-xl border border-zinc-200 dark:border-zinc-800 max-h-48 overflow-y-auto">
+            <ul v-else class="share-readers-list">
               <li
                 v-for="user in permissions"
                 :key="user.user_id"
-                class="flex items-center justify-between p-3 gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors"
+                class="share-reader-item"
               >
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <div
-                    class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 flex items-center justify-center text-xs font-semibold overflow-hidden shrink-0"
-                  >
+                <div class="share-reader-info">
+                  <div class="share-reader-avatar">
                     <img
                       v-if="user.avatar_url"
                       :src="user.avatar_url"
                       :alt="user.display_name"
-                      class="w-full h-full object-cover"
+                      class="share-avatar-img"
                     />
-                    <span v-else>{{ user.display_name.charAt(0).toUpperCase() }}</span>
+                    <span v-else class="share-avatar-initial">{{ user.display_name.charAt(0).toUpperCase() }}</span>
                   </div>
-                  <div class="min-w-0">
-                    <p class="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
-                      {{ user.display_name }}
-                    </p>
-                    <p class="text-xs text-zinc-400 dark:text-zinc-500 font-mono truncate">
-                      @{{ user.username }}
-                    </p>
+                  <div class="share-reader-details">
+                    <p class="share-reader-name">{{ user.display_name }}</p>
+                    <p class="share-reader-handle">@{{ user.username }}</p>
                   </div>
                 </div>
 
                 <button
                   type="button"
-                  class="flex items-center justify-center min-w-[44px] min-h-[44px] text-zinc-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+                  class="share-revoke-btn"
                   :aria-label="`Revogar acesso de @${user.username}`"
                   :disabled="revokingUserId === user.user_id"
                   @click="handleRevokePermission(user.user_id, user.username)"
                 >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
+                  <Icon name="trash" :size="16" />
                 </button>
               </li>
             </ul>
@@ -428,10 +390,10 @@ onUnmounted(() => {
       </div>
 
       <!-- Modal Footer -->
-      <footer class="flex items-center justify-end px-6 py-3.5 border-t border-zinc-100 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/50">
+      <footer class="share-modal-footer">
         <button
           type="button"
-          class="min-h-[44px] px-5 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+          class="share-done-btn"
           @click="close"
         >
           Concluir
@@ -440,3 +402,425 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.share-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.share-modal-card {
+  width: 100%;
+  max-width: 32rem;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--color-surface);
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--radius-card, 1rem);
+  box-shadow: var(--shadow-modal, 0 20px 25px -5px rgba(0, 0, 0, 0.3));
+}
+
+.share-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: var(--border-width, 1px) solid var(--color-border);
+}
+
+.share-modal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.share-modal-icon {
+  color: var(--color-accent);
+}
+
+.share-modal-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 650;
+  color: var(--color-text);
+}
+
+.share-modal-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-control, 0.375rem);
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.share-modal-close-btn:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.share-modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  flex: 1;
+}
+
+.share-feedback-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  border-radius: var(--radius-control, 0.5rem);
+}
+
+.share-feedback-alert.error {
+  background-color: var(--color-error-bg, rgba(239, 68, 68, 0.1));
+  color: var(--color-error-text, #b91c1c);
+  border: 1px solid var(--color-error-border, rgba(239, 68, 68, 0.2));
+}
+
+.share-feedback-alert.success {
+  background-color: var(--color-success-bg, rgba(34, 197, 94, 0.1));
+  color: var(--color-success-text, #15803d);
+  border: 1px solid var(--color-success-border, rgba(34, 197, 94, 0.2));
+}
+
+.share-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.share-field-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+}
+
+.share-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.share-link-input {
+  flex: 1;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  font-family: monospace;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.03));
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--radius-control, 0.5rem);
+  color: var(--color-text);
+  user-select: all;
+}
+
+.share-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-control, 0.5rem);
+  border: none;
+  background-color: var(--color-accent);
+  color: var(--color-on-accent, #fff);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.share-copy-btn:hover {
+  background-color: var(--color-accent-hover, var(--color-accent));
+}
+
+.share-copy-btn.copied {
+  background-color: var(--color-success-marker, #16a34a);
+}
+
+.share-visibility-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.share-effective-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.05));
+  color: var(--color-muted);
+}
+
+.share-visibility-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.share-visibility-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-control, 0.5rem);
+  border: var(--border-width, 1px) solid var(--color-border);
+  background-color: var(--color-surface);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.share-visibility-option:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.share-visibility-option.selected {
+  border-color: var(--color-accent);
+  background-color: var(--color-surface-hover);
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+
+.share-visibility-option.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.share-radio-input {
+  margin-top: 0.25rem;
+  accent-color: var(--color-accent);
+}
+
+.share-option-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.share-option-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.share-option-desc {
+  margin: 0.15rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+.share-acl-section {
+  padding-top: 0.75rem;
+  border-top: var(--border-width, 1px) solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.share-username-wrap {
+  position: relative;
+  flex: 1;
+}
+
+.share-at-prefix {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-muted);
+  font-family: monospace;
+}
+
+.share-username-input {
+  width: 100%;
+  padding: 0.625rem 0.75rem 0.625rem 1.75rem;
+  font-size: 0.875rem;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.03));
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--radius-control, 0.5rem);
+  color: var(--color-text);
+  box-sizing: border-box;
+}
+
+.share-grant-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-control, 0.5rem);
+  border: none;
+  background-color: var(--color-accent);
+  color: var(--color-on-accent, #fff);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.share-grant-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.share-readers-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.share-readers-title {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.share-empty-readers {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-control, 0.5rem);
+}
+
+.share-readers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 12rem;
+  overflow-y: auto;
+  border: var(--border-width, 1px) solid var(--color-border);
+  border-radius: var(--radius-control, 0.5rem);
+}
+
+.share-reader-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.625rem 0.75rem;
+  gap: 0.75rem;
+  border-bottom: var(--border-width, 1px) solid var(--color-border);
+}
+
+.share-reader-item:last-child {
+  border-bottom: none;
+}
+
+.share-reader-info {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+.share-reader-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.08));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.share-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.share-reader-details {
+  min-width: 0;
+}
+
+.share-reader-name {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.share-reader-handle {
+  margin: 0;
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--color-muted);
+}
+
+.share-revoke-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  border-radius: var(--radius-control, 0.375rem);
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.share-revoke-btn:hover {
+  color: var(--color-error-text, #ef4444);
+  background-color: var(--color-error-bg, rgba(239, 68, 68, 0.1));
+}
+
+.share-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem 1.5rem;
+  border-top: var(--border-width, 1px) solid var(--color-border);
+  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.02));
+}
+
+.share-done-btn {
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-control, 0.5rem);
+  border: var(--border-width, 1px) solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.share-done-btn:hover {
+  background-color: var(--color-surface-hover);
+}
+</style>
