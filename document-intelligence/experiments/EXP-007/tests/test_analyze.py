@@ -31,3 +31,12 @@ def test_misaligned_detection():
 def test_page_without_detections():
     assert classify_unmatched([A, B], []) == {"missed": 2}
     assert classify_unmatched([], [A]) == {}
+
+
+def test_fragments_inside_the_same_line_are_merged():
+    from analyze import merge_fragments
+
+    halves = [[100, 100, 380, 150], [420, 100, 700, 150]]
+    stray = [100, 600, 300, 650]
+    assert merge_fragments([A, B], [*halves, B, stray]) == [A, B, stray]
+    assert merge_fragments([], [stray]) == [stray]

@@ -44,8 +44,8 @@ SYNTHETIC = {
     "lines_f1_strong": 0.784,
     "lines_f1_strong_rectified": 0.845,
     "blocks_map50": 0.781,
-    "order_true_layout": 0.954,
-    "order_detected_layout": 0.777,
+    "order_true_layout": 0.983,
+    "order_detected_layout": 0.773,
     "page_ms": {"rectify": 178.0, "docufcn": 2600.0, "heron": 1800.0},
 }
 H1_MARGIN = 0.10
