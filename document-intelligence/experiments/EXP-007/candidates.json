@@ -1,0 +1,129 @@
+{
+  "schema": "leitorum-di-candidates/1",
+  "experiment": "EXP-007",
+  "note": "Pipeline congelado dos ADR-002 e ADR-003. Entradas copiadas de experiments/EXP-002/candidates.json (mesmos pesos e SHA-256) e parâmetros de experiments/EXP-003/calibration.json. Nada foi recalibrado nos dados do EXP-007. Licenças conforme declaradas nas fontes oficiais; não constitui parecer jurídico.",
+  "candidates": [
+    {
+      "stage": "linhas",
+      "family": "FCN (Doc-UFCN)",
+      "environment": "envs/docufcn",
+      "code": {
+        "package": "doc-ufcn==0.1.9",
+        "license": "BSD-3-Clause",
+        "source": "https://pypi.org/project/doc-ufcn/",
+        "remarks": "Licença declarada nos metadados do PyPI; o repositório oficial (gitlab.teklia.com) bloqueia acesso automatizado. Conferir o arquivo LICENSE dentro do pacote na instalação (T020)."
+      },
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "remarks": "model.pth é pickle: carregar só após conferir o SHA-256.",
+      "id": "docufcn-norhand-line",
+      "adapter": "adapters.docufcn:DocUFCNDetector",
+      "weights": {
+        "repository": "https://huggingface.co/Teklia/doc-ufcn-norhand-v1-line",
+        "revision": "43ec736950e268798802a5499318f1183276f0ff",
+        "license": "MIT",
+        "files": {
+          "model.pth": {
+            "bytes": 49115013,
+            "sha256": "8e6e5e4f272a9b43a98de036c9164fdc522d2780e2e66dd601bde930bb14a950"
+          },
+          "parameters.yml": {
+            "bytes": 186,
+            "sha256": "c3cdabdd8503e517f9470c63ceefc788ad545574bd793248279ae1429650d5d7"
+          }
+        },
+        "local_dir": "models/exp-002/docufcn-norhand-line"
+      }
+    },
+    {
+      "id": "heron",
+      "stage": "blocos (detector de layout)",
+      "family": "RT-DETRv2 (Docling Heron)",
+      "environment": "envs/heron",
+      "code": {
+        "package": "transformers 5.18.0",
+        "license": "Apache-2.0"
+      },
+      "weights": {
+        "repository": "https://huggingface.co/docling-project/docling-layout-heron",
+        "revision": "8f39ad3c0b4c58e9c2d2c84a38465abf757272d8",
+        "license": "Apache-2.0",
+        "files": {
+          "model.safetensors": {
+            "bytes": 171658996,
+            "sha256": "00333a43451945aaf89db8ca9c0a17e75d1537c17db60fdb91aa95f4c7929e0c"
+          },
+          "config.json": {
+            "bytes": 3268,
+            "sha256": "fdea30805ce2f5666b147fca941dcdd27ad468e27d6ed21902207d3da056a97d"
+          },
+          "preprocessor_config.json": {
+            "bytes": 444,
+            "sha256": "cd38cd59999e7a95d68e487fbe5132df3d4e5c32a0836add57e6126ba0c4eaf1"
+          }
+        },
+        "training_data": "documentos impressos (ver relatório técnico do Docling; não verificado)",
+        "local_dir": "models/exp-002/heron"
+      },
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "class_mapping": {
+        "Title": "title",
+        "Section-header": "title",
+        "Text": "paragraph",
+        "Picture": "graphic_box",
+        "Footnote": "margin_note",
+        "Page-header": "margin_note",
+        "Page-footer": "margin_note"
+      },
+      "remarks": "Treinado em documentos impressos; testa se um detector de layout genérico transfere para caderno manuscrito. Pesos em safetensors (sem pickle).",
+      "adapter": "adapters.heron:HeronDetector"
+    }
+  ],
+  "rectifier": {
+    "id": "rectify-contour",
+    "kind": "reference",
+    "adapter": "adapters.rectifiers:ContourRectifier",
+    "license": "Apache-2.0 (OpenCV)",
+    "license_status": "VERIFIED"
+  },
+  "block_filter": {
+    "min_score": 0.4,
+    "nms_iou": 0.7,
+    "containment": 0.6
+  },
+  "orderers": {
+    "naive": {
+      "method": "naive",
+      "deskew": false,
+      "tie": 0.0,
+      "min_gap": 0.15,
+      "shrink": 0.1,
+      "lateral_offset": 0.08,
+      "side_overlap": 0.3
+    },
+    "anchored": {
+      "method": "anchored",
+      "deskew": false,
+      "tie": 0.5,
+      "min_gap": 0.15,
+      "shrink": 0.1,
+      "lateral_offset": 0.04,
+      "side_overlap": 0.5
+    }
+  },
+  "datasets": {
+    "gnhk": {
+      "license": "CC-BY-4.0",
+      "license_status": "VERIFIED",
+      "attribution": "Lee, Chung e Lee. GNHK: A Dataset for English Handwriting in the Wild. ICDAR 2021."
+    },
+    "bressay": {
+      "license": "conflitante (CC-BY-4.0 nos metadados; uso não comercial no README)",
+      "license_status": "NEEDS VALIDATION",
+      "user_exception": "2026-10-12, só experimento local"
+    }
+  }
+}
