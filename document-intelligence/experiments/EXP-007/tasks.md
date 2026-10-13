@@ -1,7 +1,7 @@
 # Tarefas: EXP-007 — Validação do Layout e da Ordem de Leitura em Imagens Reais
 
 * **Entradas:** [`spec.md`](./spec.md) e [`plan.md`](./plan.md), ambos `APPROVED` em 2026-10-12
-* **Status:** `APPROVED` (aprovado pelo usuário em 2026-10-12)
+* **Status:** `APPROVED` (2026-10-12) — em execução; Fase 3 aguardando RAM livre (≥ 1 GiB)
 * **Execução:** contínua, sem parar a cada fase; parada só no aceite final ou em bloqueio real (RAM livre abaixo
   de 1 GiB que não se resolve esperando, disco perto do teto, verdade de chão inutilizável, dependência nova)
 
@@ -14,38 +14,38 @@ datasets vai para o Git, para relatórios ou para o chat.
 
 ## Fase 1 — Preparação
 
-- [ ] **T001** Medir disco e RAM livre; registrar no relatório de execução.
-- [ ] **T002** Copiar do EXP-003 para `experiments/EXP-007/harness/` só o necessário: supervisor, worker,
+- [x] **T001** Medir disco e RAM livre; registrar no relatório de execução.
+- [x] **T002** Copiar do EXP-003 para `experiments/EXP-007/harness/` só o necessário: supervisor, worker,
   adaptadores (`base`, `docufcn`, `heron`, `rectifiers`, `fakes`), `evaluate`, `rectify`, `orderers`,
   `postprocess`, `order_eval`. Prefixo de protocolo `@@EXP007`. Copiar os testes correspondentes e ajustá-los.
-- [ ] **T003** `candidates.json` do EXP-007 com os mesmos pesos e SHA-256 do EXP-002 (`docufcn-norhand-line`,
+- [x] **T003** `candidates.json` do EXP-007 com os mesmos pesos e SHA-256 do EXP-002 (`docufcn-norhand-line`,
   `heron`), o retificador por contorno e os estados de licença.
-- [ ] **T004** `harness/prepare.py`: extrai de cada zip só a divisão oficial de teste para
+- [x] **T004** `harness/prepare.py`: extrai de cada zip só a divisão oficial de teste para
   `dataset/processed/exp-007/`; grava `subsets.json` (nomes e SHA-256, sem conteúdo). Confere os hashes dos zips.
-- [ ] **T005** Teste que garante EXP-001 a EXP-003 intactos continua verde; conferir `.gitignore` para
+- [x] **T005** Teste que garante EXP-001 a EXP-003 intactos continua verde; conferir `.gitignore` para
   `dataset/raw/exp-007/` e `dataset/processed/exp-007/`.
 
 ## Fase 2 — Verdade de chão (Cenários 1 a 3; SC-001)
 
-- [ ] **T006** [P] Testes de `gnhk.py` com anotações fictícias: agrupamento por `line_idx`, retângulo mínimo de
+- [x] **T006** [P] Testes de `gnhk.py` com anotações fictícias: agrupamento por `line_idx`, retângulo mínimo de
   linha inclinada, linha só impressa ou só com marca especial vira "ignorar", foto sem linha utilizável.
-- [ ] **T007** [P] `harness/gnhk.py`: linhas (caixa e polígono) e regiões a ignorar por foto. Não lê nem grava o
+- [x] **T007** [P] `harness/gnhk.py`: linhas (caixa e polígono) e regiões a ignorar por foto. Não lê nem grava o
   campo de texto além de testar as marcas especiais.
-- [ ] **T008** [P] Testes de `bressay.py` com página e recortes fictícios: localização exata, recorte ausente,
+- [x] **T008** [P] Testes de `bressay.py` com página e recortes fictícios: localização exata, recorte ausente,
   recorte repetido, parágrafo de uma linha, ordem pela numeração.
-- [ ] **T009** [P] `harness/bressay.py`: localiza cada recorte de linha e de parágrafo na página; devolve linhas,
+- [x] **T009** [P] `harness/bressay.py`: localiza cada recorte de linha e de parágrafo na página; devolve linhas,
   blocos, pertencimento e ordem. Recorte não localizado é contado; página incompleta sai da medição.
-- [ ] **T010** Gerar os manifestos com geometria em `dataset/processed/exp-007/` (fora do Git), incluindo a versão
+- [x] **T010** Gerar os manifestos com geometria em `dataset/processed/exp-007/` (fora do Git), incluindo a versão
   ampliada 3× das páginas do BRESSAY com a geometria escalada.
-- [ ] **T011** Relatório de verdade de chão: fotos e páginas utilizáveis, taxa de localização, contagem de linhas,
+- [x] **T011** Relatório de verdade de chão: fotos e páginas utilizáveis, taxa de localização, contagem de linhas,
   blocos e regiões ignoradas. **Parar e perguntar** se ficar abaixo de 100 + 100 (SC-001).
 
 ## Fase 3 — Detecção (Cenário 4)
 
-- [ ] **T012** `harness/detect.py` adaptado: linhas com Doc-UFCN e blocos com Heron; no GNHK, linhas também sobre
+- [x] **T012** `harness/detect.py` adaptado: linhas com Doc-UFCN e blocos com Heron; no GNHK, linhas também sobre
   a imagem retificada, levadas de volta à foto original; registro de tempo e memória por foto; falha por foto é
   contada, não descartada.
-- [ ] **T013** Ensaio com os adaptadores falsos (sem modelo) nas duas bases, para validar o fluxo de ponta a ponta.
+- [x] **T013** Ensaio com os adaptadores falsos (sem modelo) nas duas bases, para validar o fluxo de ponta a ponta.
 - [ ] **T014** Detecção no GNHK (172 fotos): com e sem retificação.
 - [ ] **T015** Detecção no BRESSAY (199 páginas): ampliada 3× e nativa.
 - [ ] **T016** Conferir critérios de parada e uso de disco depois das execuções.
