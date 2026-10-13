@@ -1,8 +1,8 @@
 # Plano: EXP-007 — Validação do Layout e da Ordem de Leitura em Imagens Reais
 
 * **Especificação:** [`spec.md`](./spec.md) (`APPROVED` em 2026-10-12)
-* **Status:** `DRAFT` — aguardando aprovação do usuário
-* **Próximo artefato:** `tasks.md`, só depois da aprovação deste plano
+* **Status:** `APPROVED` (aprovado pelo usuário em 2026-10-12, incluindo os três pontos da §7)
+* **Próximo artefato:** [`tasks.md`](./tasks.md)
 
 ---
 
