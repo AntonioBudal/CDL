@@ -1,158 +1,182 @@
-# Experiment Specification: EXP-007 — Validação do Layout e da Ordem de Leitura em Fotografias Reais
+# Experiment Specification: EXP-007 — Validação do Layout e da Ordem de Leitura em Imagens Reais
 
 **Diretório do experimento**: `experiments/EXP-007/`
 
-**Created**: 2026-10-12
+**Created**: 2026-10-12 · **Revisada**: 2026-10-12 (fonte dos dados trocada para datasets públicos, por decisão do
+usuário)
 
-**Status**: `DRAFT` — aguardando aprovação do usuário. Nenhum plano, tarefa, código ou coleta antes disso.
+**Status**: `DRAFT` — aguardando aprovação do usuário. Nenhum plano, tarefa, código ou download antes disso.
 
 **Input**: ADR-002, ADR-003 e ADR-004 (aceitos); limitações declaradas nos EXP-002 e EXP-003 ("só páginas
-sintéticas"); `dataset/README.md` (política de privacidade).
+sintéticas"); `dataset/README.md` (política de privacidade e de datasets públicos).
 
 **Pré-requisito**: contrato LDF 2.0 aceito (2026-10-12).
 
-**Numeração**: recebe o número 007 porque 004 a 006 já estão reservados no roteiro. A ordem de execução passa a ser
-001 → 002 → 003 → **007** → 004 → 005 → 006.
+**Numeração**: 007, porque 004 a 006 já estão reservados no roteiro. Ordem de execução: 003 → **007** → 004.
 
 ---
 
 ## 1. Pergunta e Hipóteses
 
-**Pergunta central:** o que os EXP-002 e EXP-003 mediram em fotografias **simuladas** se mantém em fotografias
-**de verdade**, tiradas com celular? Se não, onde quebra: na retificação, nas linhas, nos blocos ou na ordem?
+**Pergunta central:** o que os EXP-002 e EXP-003 mediram em páginas **sintéticas** se mantém em imagens
+**reais** — fotos de celular e caligrafia de verdade em português? Se não, onde quebra?
 
-Hoje toda a direção de trabalho (Doc-UFCN para linhas, Heron para blocos, retificação por contorno, ordem por
-ancoragem) apoia-se em páginas renderizadas e degradadas por código. Sombra, perspectiva e desfoque foram
-imitados, não fotografados. É a maior incerteza do que foi decidido até aqui.
+Toda a direção de trabalho (Doc-UFCN para linhas, Heron para blocos, retificação por contorno, ordem por
+ancoragem) apoia-se em páginas renderizadas com fonte e degradadas por código. É a maior incerteza do que foi
+decidido até aqui.
 
-- **H1 (retificação):** a retificação por contorno encontra a folha em ≥ 90 % das fotos.
-- **H2 (linhas):** o F1 de linhas do Doc-UFCN `norhand` com retificação fica a no máximo 0,05 do medido no nível
-  sintético equivalente (0,920 limpo, 0,845 com degradação forte).
-- **H3 (blocos):** o mAP de blocos do Heron fica a no máximo 0,10 do sintético (0,781).
-- **H4 (ordem de ponta a ponta):** a acurácia de ordem com layout detectado fica a no máximo 0,10 da sintética (0,77).
-- **H5 (condições):** a queda concentra-se em condições identificáveis (luz lateral, ângulo, mão segurando a
-  folha), e não é uniforme.
+Nenhum dataset público encontrado reúne foto de celular, caderno, linhas, blocos e ordem de leitura. Por isso o
+experimento usa **dois conjuntos complementares**, e cada hipótese é medida onde há verdade de chão para ela:
+
+| Conjunto | O que tem de real | Verdade de chão disponível |
+| :--- | :--- | :--- |
+| **GNHK** — 687 fotos de anotações manuscritas tiradas com celular, em inglês | câmera, luz, perspectiva, fundo, papel | palavras com polígono agrupadas em linhas (a confirmar na abertura do arquivo) |
+| **BRESSAY** — 1.000 páginas de redações manuscritas em português | caligrafia real de 1.000 pessoas, em português | recortes de linhas e de parágrafos de cada página, numerados; a posição na página precisa ser recuperada |
+
+Hipóteses, com a referência sintética ao lado:
+
+- **H1 (linhas em foto real — GNHK):** o F1 de linhas do Doc-UFCN `norhand` fica a no máximo 0,10 do sintético com
+  degradação forte (0,784 sem retificação; 0,845 com).
+- **H2 (retificação em foto real — GNHK):** a retificação por contorno encontra uma folha em ≥ 70 % das fotos e,
+  onde encontra, não piora o F1 de linhas. (Muitas fotos do GNHK não mostram a folha inteira; por isso o limiar é
+  mais baixo que no sintético.)
+- **H3 (linhas em caligrafia portuguesa — BRESSAY):** F1 de linhas a no máximo 0,05 do sintético limpo (0,928).
+- **H4 (blocos — BRESSAY):** os parágrafos são detectados pelo Heron com F1 ≥ 0,70 em IoU 0,5.
+- **H5 (ordem — BRESSAY):** acurácia de ordem de blocos ≥ 0,90 com os parágrafos verdadeiros e ≥ 0,75 com os
+  detectados.
+- **H6 (custo):** tempo e memória por página ficam na mesma faixa dos experimentos anteriores.
 
 Os limiares são critérios de avaliação. O experimento conclui com veredito explícito para cada hipótese, inclusive
-"refutada".
+"refutada" ou "não mensurável com estes dados".
 
 ---
 
-## 2. A questão central: de onde vêm as fotos
+## 2. Dados e licenças
 
-A política do projeto proíbe fotos do seu acervo pessoal no repositório, e você já decidiu não fornecer amostras
-manuscritas pessoais. Há três caminhos compatíveis com isso.
+| Item | GNHK | BRESSAY |
+| :--- | :--- | :--- |
+| Fonte | site oficial indicado em `github.com/GoodNotes/GNHK-dataset` | Zenodo, DOI 10.5281/zenodo.11637681 — **já está no disco** (`dataset/raw/exp-001/bressay.zip`, 1,4 GB) |
+| Licença declarada | CC-BY-4.0 (repositório oficial) | conflitante: CC-BY-4.0 nos metadados, uso não comercial no README do arquivo |
+| Estado | `LICENSE STATUS: VERIFIED` pelo que a fonte oficial declara (não é parecer jurídico) | `LICENSE STATUS: NEEDS VALIDATION` — exceção do usuário estendida ao EXP-007 em 2026-10-12: só experimento local, conteúdo fora do Git, não pode embasar produto |
+| Download | **feito pelo usuário**: o site pede aceite de termos, e esse aceite não é do agente | nenhum |
+| Destino | `dataset/raw/exp-007/gnhk/` (fora do Git) | reutilizado onde está, só leitura |
 
-| Opção | Como | Verdade de chão | O que mede | O que não mede |
-| :--- | :--- | :--- | :--- | :--- |
-| **A — Imprimir e fotografar (recomendada)** | Gero as páginas sintéticas já usadas, você imprime e fotografa com o celular | **Gratuita e exata**: vem do manifesto; só é preciso localizar os quatro cantos da folha em cada foto | Câmera, luz, sombra, perspectiva, desfoque, papel de verdade | Caligrafia real (a letra é de fonte), pauta e textura de caderno |
-| **B — Páginas escritas para o teste** | Você copia à mão textos fictícios que eu forneço e fotografa | Precisa ser anotada à mão (caixas de linhas e blocos) | Tudo da opção A mais caligrafia e caderno reais | — |
-| **C — Dataset público** | Fotos de páginas manuscritas com licença verificada | Depende do dataset; raramente tem blocos e ordem | Variedade de escritores | Raramente é caderno de estudo; licença costuma ser só pesquisa |
+Cuidados que valem para os dois:
 
-**Recomendação:** começar pela **A**. É a única com verdade de chão exata e sem trabalho de anotação, não envolve
-nada pessoal, e isola a variável que nunca foi medida: a fotografia. A **B** fica como segunda fase, pequena
-(10 a 15 páginas), se a A confirmar que o pipeline sobrevive à câmera. A **C** só entra se você quiser e depois de
-auditoria de licença.
+* As imagens são anotações e redações de pessoas reais. Nenhuma imagem, recorte ou **texto transcrito** vai para o
+  Git, para relatórios versionados, para o chat ou para serviços externos. Relatórios trazem só números e
+  identificadores de arquivo.
+* O experimento não usa o texto das transcrições: mede só geometria.
+* Atribuição (CC-BY) registrada em `docs/models-and-licensing.md` e no relatório.
 
-**Custo para você na opção A:** imprimir cerca de 30 páginas e tirar cerca de 90 fotos (cada página em três
-condições). Estimativa: 30 a 40 minutos.
+`school_notebooks_RU` (cadernos pautados, MIT, 3 GB, cirílico) fica **fora** deste experimento, por decisão do
+usuário; é candidato para depois, se a pauta do caderno se mostrar um problema.
 
 ---
 
 ## 3. Cenários Experimentais
 
-### Cenário 1 — Kit de impressão e protocolo de captura (P1)
+### Cenário 1 — Abertura e auditoria dos dados (P1)
 
-Gero um PDF com as páginas a imprimir e um roteiro de captura de uma página: quais condições fotografar, como
-nomear os arquivos e onde salvá-los.
+Conferir o que cada arquivo realmente contém antes de qualquer medição: formato da anotação do GNHK, tamanho,
+hashes; no BRESSAY, se os recortes podem ser localizados na página.
 
-**Critério de aceite:** você consegue imprimir e fotografar seguindo só o roteiro, sem perguntar nada.
+**Critério de aceite:** relatório curto dizendo, para cada conjunto, qual verdade de chão existe de fato. Se a do
+GNHK não permitir formar linhas, ou a do BRESSAY não puder ser localizada, a execução **para e pergunta**.
 
-### Cenário 2 — Registro das fotos com a verdade de chão (P1)
+### Cenário 2 — Verdade de chão de linhas no GNHK (P1)
 
-Cada foto é ligada à sua página de origem, e a verdade de chão (linhas, blocos, ordem) é levada para as
-coordenadas da foto.
+Formar a caixa e o contorno de cada linha a partir das palavras anotadas.
 
-**Critério de aceite:** em uma amostra conferida visualmente, as caixas projetadas caem sobre o conteúdo
-impresso com erro de poucos pixels. Fotos em que o registro falha são listadas, não descartadas em silêncio.
+**Critério de aceite:** regra de agrupamento documentada e testada com casos fictícios; fotos sem anotação
+utilizável são listadas, não descartadas em silêncio.
 
-### Cenário 3 — Medição com o pipeline dos ADR-002 e ADR-003 (P1)
+### Cenário 3 — Verdade de chão de linhas, blocos e ordem no BRESSAY (P1)
 
-Os mesmos componentes, pesos, parâmetros e métricas dos experimentos aceitos, sem recalibrar nada nas fotos.
+Recuperar a posição de cada recorte de linha e de parágrafo dentro da imagem da página; a ordem de leitura vem da
+numeração dos parágrafos.
 
-**Critério de aceite:** relatórios no formato dos anteriores, com as saídas gravadas em **LDF 2.0** e válidas.
+**Critério de aceite:** taxa de localização medida e reportada; páginas com localização incompleta ficam fora da
+medição e são contadas. Uma amostra é conferida por sobreposição numérica (o recorte reaparece na posição
+encontrada com erro abaixo de um limiar), sem inspeção de conteúdo.
 
-### Cenário 4 — Comparação sintético × real e análise de falhas (P1)
+### Cenário 4 — Medição com o pipeline dos ADR-002 e ADR-003 (P1)
 
-Tabela lado a lado por métrica e por condição de captura; análise de onde a queda acontece.
+Mesmos componentes, pesos, parâmetros e métricas dos experimentos aceitos. Nada é recalibrado nestes dados.
 
-**Critério de aceite:** veredito para H1 a H5 e recomendação de próximo passo.
+**Critério de aceite:** relatórios no formato dos anteriores; saídas em **LDF 2.0**, todas válidas.
 
-### Cenário 5 — Páginas escritas à mão (P2, opcional)
+### Cenário 5 — Comparação sintético × real e análise de falhas (P1)
 
-Só se você aprovar a opção B depois dos resultados do cenário 4.
+Tabela lado a lado por métrica; no GNHK, com e sem retificação; análise de onde a perda acontece.
+
+**Critério de aceite:** veredito para H1 a H6 e recomendação de próximo passo.
 
 ### Casos de borda
 
-- Foto em que a folha não aparece inteira, ou com dedos e objetos sobre ela.
-- Página impressa com escala diferente (margens da impressora).
-- Foto na horizontal ou de cabeça para baixo.
-- Fotos repetidas da mesma página e condição.
-- Metadados do celular (localização, modelo) nos arquivos.
+- Foto do GNHK sem folha visível inteira, com várias folhas, ou com texto impresso misturado.
+- Palavras do GNHK sem índice de linha, ou marcadas como ilegíveis.
+- Recorte do BRESSAY que aparece em mais de um lugar da página, ou em nenhum.
+- Páginas muito grandes (memória) ou em orientação inesperada.
+- Parágrafo de uma linha só; página com um único parágrafo (ordem trivial).
 
 ---
 
 ## 4. Requisitos
 
-- **FR-001:** As páginas impressas são geradas pelo gerador já existente, com conteúdo fictício e sementes
-  registradas; cada uma traz um identificador legível por máquina impresso fora da área de conteúdo.
-- **FR-002:** O conjunto de páginas cobre as famílias de layout dos EXP-002/003 (coluna única, nota de margem,
-  destaque lateral, caixa gráfica).
-- **FR-003:** O protocolo define ao menos três condições de captura por página: boa (de frente, luz uniforme),
-  inclinada, e difícil (luz lateral com sombra).
-- **FR-004:** As fotos ficam em `dataset/raw/exp-007/`, **fora do Git**. No Git entram só manifesto, hashes e
-  métricas.
-- **FR-005:** Os metadados EXIF são removidos de qualquer cópia de trabalho; nenhum dado de localização ou do
-  aparelho vai para relatórios.
-- **FR-006:** Nenhuma foto, recorte ou trecho de imagem é enviado a serviços externos nem exibido em relatório
-  versionado. Miniaturas de análise, se houver, ficam fora do Git.
-- **FR-007:** O pipeline medido é exatamente o dos ADR-002 e ADR-003. Nenhum parâmetro é ajustado nas fotos; se
-  alguma parte do conjunto for usada para ajuste, ela é separada antes e não entra na medição.
-- **FR-008:** As métricas são as dos experimentos anteriores (F1 de linhas, mAP de blocos, acurácia de ordem),
-  mais taxa de sucesso da retificação e do registro.
-- **FR-009:** Os diretórios dos EXP-001 a EXP-003 não são modificados; o que for reaproveitado é copiado, como no
-  EXP-003. Ambientes existentes são usados com `--frozen`.
-- **FR-010:** Saídas em LDF 2.0, pelo conversor de referência.
-- **FR-011:** Sem modelo, peso ou dependência nova. Se alguma se mostrar necessária, a execução para e pergunta.
-- **FR-012:** Critérios de parada dos experimentos anteriores (memória, tempo, RAM livre) continuam valendo.
+- **FR-001:** O pipeline medido é exatamente o dos ADR-002 e ADR-003: mesmos pesos (hashes conferidos), mesmos
+  parâmetros e mesmo ponto de operação dos blocos. Nenhum ajuste nestes dados.
+- **FR-002:** Subconjuntos fixos e reproduzíveis, escolhidos por sorteio com semente registrada antes de qualquer
+  medição. Tamanho-alvo: 150 fotos do GNHK e 150 páginas do BRESSAY (o plano confirma pelo tempo disponível).
+- **FR-003:** A lista de arquivos de cada subconjunto, com hash, é versionada; o conteúdo não.
+- **FR-004:** As métricas são as dos experimentos anteriores (F1 de linhas, F1 e mAP de blocos, acurácia de
+  ordem), mais a taxa de sucesso da retificação e a taxa de localização da verdade de chão.
+- **FR-005:** O tipo de bloco não é avaliado no BRESSAY: só existe "parágrafo" na verdade de chão. A medição de
+  blocos ignora a classe e diz isso no relatório.
+- **FR-006:** Nenhuma imagem, recorte ou transcrição sai de `dataset/`; nada disso aparece em relatório, log
+  versionado ou no chat. Metadados das fotos (EXIF) não são lidos nem reportados.
+- **FR-007:** O `bressay.zip` do EXP-001 é lido onde está; os diretórios dos EXP-001 a EXP-003 não são
+  modificados. O que for reaproveitado de código é copiado, como no EXP-003. Ambientes existentes são usados com
+  `--frozen`.
+- **FR-008:** Saídas em LDF 2.0, pelo conversor de referência (`leitorum_di.contracts.ldf.build_document`).
+- **FR-009:** Sem modelo ou peso novo. Dependência nova só para ler os dados, se indispensável, e com parada para
+  perguntar.
+- **FR-010:** Critérios de parada dos experimentos anteriores (memória, tempo, RAM livre ≥ 1 GiB) continuam
+  valendo; uso de disco medido antes e depois, dentro do teto de 20 GB.
+- **FR-011:** Todos os relatórios e o ADR resultante trazem `LICENSE STATUS: NEEDS VALIDATION` na parte que
+  depende do BRESSAY.
 
 ## 5. Critérios de Sucesso
 
-- **SC-001:** Ao menos 80 fotos registradas com verdade de chão, cobrindo todas as famílias e condições.
-- **SC-002:** Veredito explícito para H1 a H5, com os números sintéticos de referência ao lado.
+- **SC-001:** Verdade de chão utilizável em ao menos 100 fotos do GNHK e 100 páginas do BRESSAY.
+- **SC-002:** Veredito explícito para H1 a H6, com os números sintéticos de referência ao lado.
 - **SC-003:** Análise de falhas que diga em qual etapa cada perda acontece.
 - **SC-004:** 100 % das saídas válidas em LDF 2.0.
-- **SC-005:** Nenhuma foto no Git; nada fora de `document-intelligence/`; uso de disco dentro do teto de 20 GB.
-- **SC-006:** ADR novo ou revisão dos ADR-002/003, conforme o que os dados mostrarem.
+- **SC-005:** Nenhum conteúdo dos datasets no Git; nada fora de `document-intelligence/`; disco dentro do teto.
+- **SC-006:** ADR novo, ou revisão dos ADR-002/003, conforme o que os dados mostrarem.
 
 ## 6. Fora do escopo
 
-- Reconhecimento de texto (não há modelo para português; ADR-001).
-- Treinar, ajustar ou trocar modelos.
-- Fotos do seu acervo pessoal, em qualquer hipótese.
-- Classificação semântica e diagramas (EXP-004 e EXP-005).
-- Qualquer integração com o site.
+- Reconhecimento de texto (ADR-001) e qualquer uso das transcrições.
+- Treinar, ajustar ou trocar modelos; recalibrar parâmetros.
+- Fotos do acervo pessoal do usuário, em qualquer hipótese.
+- Imprimir e fotografar páginas sintéticas (fica como experimento posterior, se necessário).
+- Classificação semântica e diagramas (EXP-004 e EXP-005); integração com o site.
 
 ## 7. Limitações já conhecidas
 
-- A opção A não mede caligrafia real nem pauta de caderno: um resultado bom nela é necessário, não suficiente.
-- Um celular, uma impressora e um ambiente: pouca variedade de equipamento.
-- O registro foto → página introduz erro próprio, que precisa ser medido e reportado junto.
+- **Ordem de leitura com notas de margem em foto real continua sem medição.** Redações não têm margem anotada, e
+  o GNHK não tem blocos. Só páginas próprias fotografadas cobririam isso.
+- O GNHK é em inglês e não é caderno de estudo; o BRESSAY é em português, mas não é foto de celular nem caderno.
+  Nenhum dos dois, sozinho, é o caso de uso do produto.
+- A verdade de chão de linhas do GNHK é derivada (agrupamento de palavras), e a do BRESSAY é recuperada por
+  localização de recortes: as duas têm erro próprio, que será medido e reportado.
+- O BRESSAY tem licença em validação: os resultados que dependem dele não podem embasar decisão de produto.
 
-## 8. Perguntas para o usuário
+## 8. O que preciso de você
 
-1. **Origem das fotos:** opção A (imprimir e fotografar), como recomendo? Você tem impressora à mão?
-2. **Quantidade:** cerca de 30 páginas em três condições (90 fotos) está bom, ou prefere um conjunto menor para
-   começar (por exemplo, 12 páginas, 36 fotos)?
-3. **Fase B:** fica combinada como opcional, a decidir depois dos resultados, ou você prefere descartá-la desde já?
-4. **Numeração:** concorda com EXP-007, mantendo 004 a 006 como estão no roteiro?
+1. **Aprovar esta especificação.**
+2. **Baixar o GNHK**, quando for conveniente: pelo link no repositório oficial (`github.com/GoodNotes/GNHK-dataset`),
+   aceitar os termos e salvar `train_data.zip` e `test_data.zip` em
+   `document-intelligence/dataset/raw/exp-007/gnhk/`. Não precisa descompactar. Enquanto isso, plano e tarefas
+   podem avançar, e a parte do BRESSAY pode ser executada primeiro.

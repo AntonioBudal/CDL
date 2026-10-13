@@ -83,7 +83,9 @@ Revisões completas e SHA-256: `experiments/EXP-002/candidates.json`.
 
 | Recurso | Versão | Licença | Origem | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| BRESSAY (manuscrito PT-BR, 1.000 autores) | v1, DOI 10.5281/zenodo.11637681 | **Conflitante**: CC-BY-4.0 nos metadados do Zenodo; o `README.md` do arquivo restringe a "non-commercial research and teaching purposes only" | Zenodo, acesso aberto | `LICENSE STATUS: NEEDS VALIDATION` — uso experimental local autorizado pelo usuário em 2026-10-01; conteúdo fora do Git; **não pode embasar produto nem ser redistribuído** |
+| BRESSAY (manuscrito PT-BR, 1.000 autores) | v1, DOI 10.5281/zenodo.11637681 | **Conflitante**: CC-BY-4.0 nos metadados do Zenodo; o `README.md` do arquivo restringe a "non-commercial research and teaching purposes only" | Zenodo, acesso aberto | `LICENSE STATUS: NEEDS VALIDATION` — uso experimental local autorizado pelo usuário em 2026-10-01 (EXP-001) e estendido ao EXP-007 em 2026-10-12; conteúdo fora do Git; **não pode embasar produto nem ser redistribuído** |
+| GNHK — GoodNotes Handwriting Kollection (687 fotos de celular de anotações manuscritas, inglês) | ICDAR 2021 | CC-BY-4.0, declarada em `github.com/GoodNotes/GNHK-dataset` (consulta em 2026-10-12); o site de download pede aceite de termos | site oficial; **download feito pelo usuário** | `LICENSE STATUS: VERIFIED` pelo declarado — previsto para o EXP-007; conteúdo fora do Git; atribuição: Lee, Chung e Lee, "GNHK: A Dataset for English Handwriting in the Wild" |
+| `ai-forever/school_notebooks_RU` (cadernos pautados, russo) | — | MIT, declarada no card do Hugging Face (consulta em 2026-10-12) | Hugging Face, 3,06 GB | Não baixado — **fora do EXP-007** por decisão do usuário |
 | Fonte Caveat (linhas sintéticas) | `googlefonts/caveat` | OFL-1.1 | GitHub | `LICENSE STATUS: VERIFIED` |
 | Fontes Indie Flower, Kalam, Patrick Hand, Shadows Into Light (páginas sintéticas do EXP-002) | `google/fonts` @ `a0e3dbcd` | OFL-1.1 | GitHub | `LICENSE STATUS: VERIFIED`; glifos PT-BR completos |
 
