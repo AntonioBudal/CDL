@@ -1,6 +1,6 @@
 # ADR-002: Direção para segmentação de layout — Doc-UFCN para linhas, Heron para blocos, retificação por contorno
 
-* **Status:** ACCEPTED (aceito pelo usuário em 2026-10-05)
+* **Status:** ACCEPTED em 2026-10-05; **SUPERSEDED por [ADR-005](./ADR-005-layout-nao-confirmado-em-imagens-reais.md) em 2026-10-13** quanto a linhas (Doc-UFCN `norhand` usado como está) e à retificação por contorno. Quanto a blocos, o Heron permanece só como detector da região de texto; a separação de tipos de bloco em caderno real segue sem medição. O texto abaixo é o registro original, baseado apenas em páginas sintéticas.
 * **Data:** 2026-10-05
 * **Decisores:** Usuário (decisão); Claude Code (proposta)
 * **Experimento de Suporte:** [EXP-002](../../experiments/EXP-002/RESULTS.md)

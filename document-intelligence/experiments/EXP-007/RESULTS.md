@@ -1,9 +1,9 @@
 # EXP-007: Relatório de Resultados — Validação do Layout e da Ordem de Leitura em Imagens Reais
 
-* **Status:** `AWAITING USER ACCEPTANCE`
+* **Status:** `ACCEPTED` / `CONCLUÍDO` (aceito pelo usuário em 2026-10-13)
 * **Execução:** 2026-10-12 e 2026-10-13
 * **Executor:** Claude Code
-* **Decisão arquitetural gerada:** [ADR-005](../../docs/adr/ADR-005-layout-nao-confirmado-em-imagens-reais.md) (`PROPOSED`)
+* **Decisão arquitetural gerada:** [ADR-005](../../docs/adr/ADR-005-layout-nao-confirmado-em-imagens-reais.md) (`ACCEPTED`)
 * **Artefatos do ciclo:** [spec.md](./spec.md) · [plan.md](./plan.md) · [tasks.md](./tasks.md) · [failure-analysis.md](./failure-analysis.md)
 
 > **Licenças.** Pipeline: Doc-UFCN (BSD-3-Clause / MIT), Docling Heron (Apache-2.0) e OpenCV (Apache-2.0), todos
@@ -112,7 +112,7 @@ Continua acima da meta de 2 s por página do EXP-002, como já se sabia.
 | SC-003 — análise de falhas por etapa | Atendido: [failure-analysis.md](./failure-analysis.md) |
 | SC-004 — 100 % das saídas válidas em LDF 2.0 | Atendido: 542 de 542 |
 | SC-005 — nenhum conteúdo no Git; nada fora da pasta; disco no teto | Atendido (§6) |
-| SC-006 — ADR | Atendido: ADR-005 `PROPOSED` |
+| SC-006 — ADR | Atendido: ADR-005 `ACCEPTED` |
 
 ---
 
@@ -175,7 +175,7 @@ uv run --frozen --project $h python experiments/EXP-007/harness/run.py --out eva
 uv run --frozen --project $h python experiments/EXP-007/harness/analyze.py --benchmark evaluation/benchmarks/bench.json --out evaluation/benchmarks/analysis.json
 ```
 
-**Verificação final (2026-10-13):** `uv run pytest` — 239 passed; testes do harness do EXP-007 — 55 passed; `uv run ruff check .` — limpo; EXP-001 a EXP-003 intactos (teste de congelamento); nada fora de `document-intelligence/`; nenhuma imagem ou arquivo dos datasets rastreado pelo Git; `dataset/` com 5,8 GB (1,8 GB a mais que antes do experimento), total da pasta em torno de 10 GB, dentro do teto de 20 GB.
+**Verificação final (2026-10-13):** `uv run pytest` — 239 passed; testes do harness do EXP-007 — 55 passed; `uv run ruff check .` — limpo; EXP-001 a EXP-003 intactos (teste de congelamento); nada fora de `document-intelligence/`; nenhuma imagem ou arquivo dos datasets rastreado pelo Git; `dataset/` com 5,8 GB (2,8 GB a mais que antes do experimento: 1,0 GB do GNHK e 1,8 GB de imagens de trabalho), total da pasta em torno de 10 GB, dentro do teto de 20 GB.
 
 ---
 
@@ -195,8 +195,8 @@ uv run --frozen --project $h python experiments/EXP-007/harness/analyze.py --ben
 ## 8. Homologação
 
 - [x] Entregáveis do EXP-007 concluídos e submetidos ao usuário.
-- [ ] EXP-007 **ACEITO** — decisão do usuário.
-- [ ] ADR-005 aceito, rejeitado ou ajustado — decisão do usuário.
-- [ ] Próximo passo — decisão do usuário. **EXP-004 não iniciado.**
+- [x] EXP-007 **ACEITO** pelo usuário em 2026-10-13.
+- [x] ADR-005 **aceito** pelo usuário em 2026-10-13.
+- [x] Próximo passo: EXP-008 (detecção de linhas em manuscrito real), escolhido pelo usuário. **EXP-004 não iniciado.**
 
 *Assinatura do agente executor:* `Claude Code (claude-opus-5-5), 2026-10-13`

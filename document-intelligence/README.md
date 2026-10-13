@@ -114,6 +114,7 @@ document-intelligence/
 │   ├── EXP-001/               # HTR de linhas isoladas: spec, plano, harness, RESULTS.md (ACEITO em 2026-10-02)
 │   ├── EXP-002/               # Layout e segmentação: spec, plano, harness, RESULTS.md (ACEITO em 2026-10-05)
 │   ├── EXP-003/               # Ordem de leitura: spec, plano, harness, RESULTS.md (ACEITO em 2026-10-12)
+│   ├── EXP-007/               # Validação em imagens reais, GNHK e BRESSAY (ACEITO em 2026-10-13)
 │   └── EXP-001-context.md     # Contexto original do EXP-001
 │
 ├── dataset/                   # Gestão de dados sintéticos (dados reais NUNCA versionados)

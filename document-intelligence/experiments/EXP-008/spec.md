@@ -4,13 +4,13 @@
 
 **Created**: 2026-10-13
 
-**Status**: `DRAFT` — **proposta condicionada** ao aceite do EXP-007 e do ADR-005 e à escolha deste passo pelo
-usuário. Nenhum plano, tarefa, código ou download antes da aprovação.
+**Status**: `APPROVED` pelo usuário em 2026-10-13 ("pode seguir com o EXP-008"), sem ajustes: valem as propostas
+da §7 (fine-tuning fora do escopo; metas de H2 como escritas). Plano em [`plan.md`](./plan.md).
 
 **Input**: [EXP-007](../EXP-007/RESULTS.md), [failure-analysis](../EXP-007/failure-analysis.md) e ADR-005
-(`PROPOSED`); ADR-002.
+(`ACCEPTED`); ADR-002.
 
-**Pré-requisito**: EXP-007 `ACCEPTED`.
+**Pré-requisito**: EXP-007 `ACCEPTED` (2026-10-13).
 
 ---
 

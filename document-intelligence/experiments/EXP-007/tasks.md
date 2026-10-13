@@ -1,7 +1,7 @@
 # Tarefas: EXP-007 — Validação do Layout e da Ordem de Leitura em Imagens Reais
 
 * **Entradas:** [`spec.md`](./spec.md) e [`plan.md`](./plan.md), ambos `APPROVED` em 2026-10-12
-* **Status:** `EXECUTADO` em 2026-10-13 — aguardando aceite do experimento e do ADR-005
+* **Status:** `ACCEPTED` / `CONCLUÍDO` (executado e aceito pelo usuário em 2026-10-13, com o ADR-005)
 * **Execução:** contínua, sem parar a cada fase; parada só no aceite final ou em bloqueio real (RAM livre abaixo
   de 1 GiB que não se resolve esperando, disco perto do teto, verdade de chão inutilizável, dependência nova)
 

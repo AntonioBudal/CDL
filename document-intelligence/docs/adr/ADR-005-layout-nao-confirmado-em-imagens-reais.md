@@ -1,6 +1,6 @@
 # ADR-005: A direção de layout do ADR-002 não se confirma em imagens reais; benchmark real passa a ser obrigatório
 
-* **Status:** PROPOSED
+* **Status:** ACCEPTED (aceito pelo usuário em 2026-10-13)
 * **Data:** 2026-10-13
 * **Decisores:** Usuário (decisão); Claude Code (proposta)
 * **Experimento de Suporte:** [EXP-007](../../experiments/EXP-007/RESULTS.md)
@@ -66,7 +66,7 @@ Registra o que foi medido, mantém os componentes como candidatos e muda a regra
    imagens reais. As divisões de teste do GNHK e do BRESSAY usadas no EXP-007 passam a ser o benchmark de
    referência para linhas. As páginas sintéticas ficam para testes de regressão e para o que só elas permitem
    (ordem com notas de margem), nunca como única evidência.
-6. **Efeito sobre o ADR-002:** se este ADR for aceito, o ADR-002 passa a `SUPERSEDED por ADR-005` nos itens 1 e 2,
+6. **Efeito sobre o ADR-002:** com o aceite deste ADR (2026-10-13), o ADR-002 passa a `SUPERSEDED por ADR-005` nos itens 1 e 2,
    e recebe uma nota no item 3. Nada disso altera os diretórios dos experimentos aceitos.
 
 Nada é promovido a produto.
