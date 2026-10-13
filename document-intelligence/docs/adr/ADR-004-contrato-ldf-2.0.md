@@ -1,6 +1,6 @@
 # ADR-004: Contrato LDF 2.0 — JSON Schema como fonte única, coordenadas na foto original, correções por identificador
 
-* **Status:** PROPOSED
+* **Status:** ACCEPTED (aceito pelo usuário em 2026-10-12)
 * **Data:** 2026-10-12
 * **Decisores:** Usuário (decisão); Claude Code (proposta)
 * **Experimento de Suporte:** não é um experimento. Evidência: lacunas do [EXP-002](../../experiments/EXP-002/RESULTS.md) (§5) e do [EXP-003](../../experiments/EXP-003/RESULTS.md) (§5); feature [`specs/001-contrato-ldf`](../../specs/001-contrato-ldf/spec.md)
@@ -129,7 +129,8 @@ Medido em 2026-10-12, no ambiente do EXP-000 (CPU, Python 3.14.3):
   editável. Com `jsonschema` nas dependências dele, `uv run --project <ambiente>` passa a querer reescrever o
   `uv.lock` do ambiente (só o trecho que descreve o `leitorum-di`). Para reproduzir os experimentos sem tocar neles,
   use `uv run --frozen --project <ambiente> …`. Verificado: com `--frozen`, os testes dos harness passam (33 e 46) e
-  os diretórios ficam inalterados. Nenhum código de experimento importa `leitorum_di.contracts`.
+  os diretórios ficam inalterados. Nenhum código de experimento importa `leitorum_di.contracts`. Decisão do usuário
+  (2026-10-12): manter os experimentos intocados e usar `--frozen`.
 * **`semantics` e diagramas mudarão.** Quem construir sobre eles agora terá retrabalho.
 * **Sem validação em fotos reais.** O formato foi exercitado só com páginas sintéticas, como os experimentos.
 * O modelo Pydantic compara tipos em modo estrito: recusa `1.0` onde o schema pede inteiro, embora o JSON Schema

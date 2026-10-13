@@ -58,8 +58,8 @@ imagem retificada, passe `rectification=rectification_from_corners(cantos, taman
 
 ## 5. Mudar o contrato
 
-1. Edite `src/leitorum_di/contracts/ldf/schemas/ldf-2.0.schema.json` (só enquanto o ADR-004 estiver `PROPOSED`;
-   depois do aceite, mudança entra como arquivo de versão nova).
+1. Edite `src/leitorum_di/contracts/ldf/schemas/ldf-2.0.schema.json` (o ADR-004 foi aceito em 2026-10-12: toda mudança
+   entra como arquivo de versão nova, e o 2.0 não é mais editado).
 2. Ajuste `models.py` até `tests/ldf/test_models_parity.py` passar.
 3. Acrescente casos em `tests/ldf/make_conformance.py` e rode `uv run python tests/ldf/make_conformance.py`.
 4. Atualize `docs/ldf.md`.

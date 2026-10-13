@@ -2,7 +2,7 @@
 
 * **Feature:** `001-contrato-ldf`
 * **Entradas:** [`spec.md`](./spec.md) e [`plan.md`](./plan.md), ambos `APPROVED` em 2026-10-12
-* **Status:** `EXECUTADO` em 2026-10-12 — aguardando aceite da feature e do ADR-004
+* **Status:** `ACCEPTED` / `CONCLUÍDO` (executado e aceito pelo usuário em 2026-10-12, com o ADR-004)
 * **Execução:** contínua, sem parar a cada fase; parada só no aceite final ou em bloqueio real
 
 Convenções: `[P]` = pode ser feita em paralelo com as vizinhas (arquivos diferentes). Cada fase termina com
