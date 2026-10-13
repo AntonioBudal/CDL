@@ -1,4 +1,4 @@
-"""Avaliador do EXP-002: detecção de linhas (caixa e polígono), blocos (AP) e regiões "ignorar".
+"""Avaliador (cópia do EXP-002/003, com atalho em ``polygon_iou``): linhas, blocos e "ignorar".
 
 Formato de predição por página::
 
@@ -44,6 +44,9 @@ def polygon_iou(a, b) -> float:
     pa = np.asarray(a, dtype=np.float64).reshape(-1, 2)
     pb = np.asarray(b, dtype=np.float64).reshape(-1, 2)
     if len(pa) < 3 or len(pb) < 3:
+        return 0.0
+    # Atalho do EXP-007 (mesmo resultado): envelopes disjuntos têm IoU zero, sem rasterizar.
+    if (pa.max(axis=0) < pb.min(axis=0)).any() or (pb.max(axis=0) < pa.min(axis=0)).any():
         return 0.0
     both = np.vstack([pa, pb])
     x0, y0 = np.floor(both.min(axis=0)).astype(int)
