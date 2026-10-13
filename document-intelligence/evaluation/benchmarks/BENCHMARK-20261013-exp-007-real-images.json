@@ -1,0 +1,760 @@
+{
+  "schema": "leitorum-di-real-images-benchmark/1",
+  "created_utc": "2026-10-13T11:01:38+00:00",
+  "experiment": "EXP-007",
+  "git": {
+    "commit": "8bf4e5fbd69524cdb964feee42c4d154a6891cfa",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "seed": {
+    "seed": 1234,
+    "seeded": [
+      "random",
+      "numpy"
+    ],
+    "pythonhashseed_effective": false
+  },
+  "license_status": {
+    "gnhk": "VERIFIED (CC-BY-4.0, conforme declarado)",
+    "bressay": "NEEDS VALIDATION (exceção experimental do usuário; não embasa produto)"
+  },
+  "pipeline": {
+    "candidates": [
+      "docufcn-norhand-line",
+      "heron"
+    ],
+    "block_filter": {
+      "min_score": 0.4,
+      "nms_iou": 0.7,
+      "containment": 0.6
+    },
+    "orderers": {
+      "naive": {
+        "method": "naive",
+        "deskew": false,
+        "tie": 0.0,
+        "min_gap": 0.15,
+        "shrink": 0.1,
+        "lateral_offset": 0.08,
+        "side_overlap": 0.3
+      },
+      "anchored": {
+        "method": "anchored",
+        "deskew": false,
+        "tie": 0.5,
+        "min_gap": 0.15,
+        "shrink": 0.1,
+        "lateral_offset": 0.04,
+        "side_overlap": 0.5
+      }
+    }
+  },
+  "synthetic_reference": {
+    "lines_f1_clean": 0.928,
+    "lines_f1_strong": 0.784,
+    "lines_f1_strong_rectified": 0.845,
+    "blocks_map50": 0.781,
+    "order_true_layout": 0.983,
+    "order_detected_layout": 0.773,
+    "page_ms": {
+      "rectify": 178.0,
+      "docufcn": 2600.0,
+      "heron": 1800.0
+    }
+  },
+  "datasets": {
+    "gnhk": {
+      "manifest_sha256": "1e4a3f0f3cf0084e73484ab9bde1669fff397bde943e893c17055efd850c2773",
+      "pages": 172,
+      "lines_original": {
+        "bbox": {
+          "0.5": {
+            "tp": 1121,
+            "fp": 3188,
+            "fn": 1068,
+            "precision": 0.26015316778834996,
+            "recall": 0.5121059844677935,
+            "f1": 0.34502923976608185,
+            "mean_iou": 0.6569638443828594
+          },
+          "0.75": {
+            "tp": 235,
+            "fp": 4074,
+            "fn": 1954,
+            "precision": 0.05453701554885124,
+            "recall": 0.10735495660118775,
+            "f1": 0.07232994767620805,
+            "mean_iou": 0.8167885254312708
+          }
+        },
+        "polygon": {
+          "0.5": {
+            "tp": 532,
+            "fp": 3777,
+            "fn": 1657,
+            "precision": 0.12346252030633557,
+            "recall": 0.24303334856098674,
+            "f1": 0.16374269005847952,
+            "mean_iou": 0.5977990055280757
+          },
+          "0.75": {
+            "tp": 29,
+            "fp": 4280,
+            "fn": 2160,
+            "precision": 0.006730099791134834,
+            "recall": 0.013248058474189127,
+            "f1": 0.008925823330255463,
+            "mean_iou": 0.8004832864428886
+          }
+        },
+        "by_group": {
+          "AF": {
+            "tp": 170,
+            "fp": 486,
+            "fn": 151,
+            "precision": 0.25914634146341464,
+            "recall": 0.5295950155763239,
+            "f1": 0.3480040941658137,
+            "mean_iou": 0.6619840548690389
+          },
+          "AS": {
+            "tp": 305,
+            "fp": 405,
+            "fn": 211,
+            "precision": 0.4295774647887324,
+            "recall": 0.5910852713178295,
+            "f1": 0.4975530179445351,
+            "mean_iou": 0.6614456311622886
+          },
+          "EU": {
+            "tp": 358,
+            "fp": 1416,
+            "fn": 406,
+            "precision": 0.20180383314543404,
+            "recall": 0.468586387434555,
+            "f1": 0.28211189913317575,
+            "mean_iou": 0.6602256094551557
+          },
+          "NA": {
+            "tp": 288,
+            "fp": 881,
+            "fn": 300,
+            "precision": 0.24636441402908468,
+            "recall": 0.4897959183673469,
+            "f1": 0.327831531018782,
+            "mean_iou": 0.6451996338055734
+          }
+        },
+        "missing_pages": [],
+        "page_f1_median": 0.3684210526315789,
+        "pages_with_f1_below_0_5": 106,
+        "predicted_lines": 4493,
+        "truth_lines": 2189
+      },
+      "lines_rectified": {
+        "bbox": {
+          "0.5": {
+            "tp": 863,
+            "fp": 4179,
+            "fn": 1326,
+            "precision": 0.17116223720745735,
+            "recall": 0.3942439470077661,
+            "f1": 0.23869450974968884,
+            "mean_iou": 0.6560964553649513
+          },
+          "0.75": {
+            "tp": 182,
+            "fp": 4860,
+            "fn": 2007,
+            "precision": 0.03609678698928996,
+            "recall": 0.08314298766560073,
+            "f1": 0.05033881897386253,
+            "mean_iou": 0.825424409104956
+          }
+        },
+        "polygon": {
+          "0.5": {
+            "tp": 356,
+            "fp": 4686,
+            "fn": 1833,
+            "precision": 0.07060690202300675,
+            "recall": 0.1626313385107355,
+            "f1": 0.09846494260821463,
+            "mean_iou": 0.6001558457121495
+          },
+          "0.75": {
+            "tp": 27,
+            "fp": 5015,
+            "fn": 2162,
+            "precision": 0.0053550178500595,
+            "recall": 0.012334399269072635,
+            "f1": 0.00746784677084774,
+            "mean_iou": 0.8049006614043489
+          }
+        },
+        "by_group": {
+          "AF": {
+            "tp": 113,
+            "fp": 635,
+            "fn": 208,
+            "precision": 0.15106951871657753,
+            "recall": 0.35202492211838005,
+            "f1": 0.21141253507951355,
+            "mean_iou": 0.6332811162550894
+          },
+          "AS": {
+            "tp": 246,
+            "fp": 536,
+            "fn": 270,
+            "precision": 0.3145780051150895,
+            "recall": 0.47674418604651164,
+            "f1": 0.3790446841294299,
+            "mean_iou": 0.6679528654172657
+          },
+          "EU": {
+            "tp": 287,
+            "fp": 1945,
+            "fn": 477,
+            "precision": 0.128584229390681,
+            "recall": 0.3756544502617801,
+            "f1": 0.19158878504672897,
+            "mean_iou": 0.660674459572891
+          },
+          "NA": {
+            "tp": 217,
+            "fp": 1063,
+            "fn": 371,
+            "precision": 0.16953125,
+            "recall": 0.36904761904761907,
+            "f1": 0.2323340471092077,
+            "mean_iou": 0.6484815670647944
+          }
+        },
+        "missing_pages": [],
+        "page_f1_median": 0.2222222222222222,
+        "pages_with_f1_below_0_5": 129,
+        "predicted_lines": 5241,
+        "truth_lines": 2189
+      },
+      "rectification": {
+        "found": 172,
+        "found_rate": 1.0,
+        "failed": 0,
+        "found_by_group": {
+          "AF": 29,
+          "AS": 25,
+          "EU": 82,
+          "NA": 36
+        },
+        "f1_original_where_found": {
+          "tp": 1121,
+          "fp": 3188,
+          "fn": 1068,
+          "precision": 0.26015316778834996,
+          "recall": 0.5121059844677935,
+          "f1": 0.34502923976608185,
+          "mean_iou": 0.6569638443828594
+        },
+        "f1_rectified_where_found": {
+          "tp": 863,
+          "fp": 4179,
+          "fn": 1326,
+          "precision": 0.17116223720745735,
+          "recall": 0.3942439470077661,
+          "f1": 0.23869450974968884,
+          "mean_iou": 0.6560964553649513
+        }
+      },
+      "ldf2": {
+        "documents": 172,
+        "valid": 172,
+        "not_representable": 0,
+        "regions": 978,
+        "lines": 5241,
+        "reasons": {}
+      },
+      "costs": {
+        "rectify-contour": {
+          "pages": 172,
+          "failed_pages": [],
+          "median_ms": 171.07055,
+          "p95_ms": 251.965,
+          "max_ms": 285.0325,
+          "peak_rss_bytes": 65863680,
+          "load_ms": 0.9952,
+          "wall_s": 28.426626700005727
+        },
+        "docufcn-norhand-line (retificado)": {
+          "pages": 172,
+          "failed_pages": [],
+          "median_ms": 3031.254,
+          "p95_ms": 4592.0253,
+          "max_ms": 6169.126,
+          "peak_rss_bytes": 906219520,
+          "load_ms": 6983.5502,
+          "wall_s": 551.1476915999956
+        },
+        "docufcn-norhand-line (original)": {
+          "pages": 172,
+          "failed_pages": [],
+          "median_ms": 2909.8142500000004,
+          "p95_ms": 4173.6914,
+          "max_ms": 5237.2074,
+          "peak_rss_bytes": 882941952,
+          "load_ms": 4936.9507,
+          "wall_s": 525.7141921999864
+        },
+        "heron": {
+          "pages": 172,
+          "failed_pages": [],
+          "median_ms": 1821.07505,
+          "p95_ms": 1992.7849,
+          "max_ms": 2293.5636,
+          "peak_rss_bytes": 797175808,
+          "load_ms": 17460.1754,
+          "wall_s": 338.14906170000904
+        }
+      }
+    },
+    "bressay-x3": {
+      "manifest_sha256": "e68c0c8df5e719de422084d89c9709c1c9d3c970f86728a8d6328f1512a8c486",
+      "pages": 185,
+      "lines_original": {
+        "bbox": {
+          "0.5": {
+            "tp": 2683,
+            "fp": 6251,
+            "fn": 2813,
+            "precision": 0.3003134094470562,
+            "recall": 0.48817321688500726,
+            "f1": 0.3718641718641719,
+            "mean_iou": 0.6166722863050847
+          },
+          "0.75": {
+            "tp": 216,
+            "fp": 8718,
+            "fn": 5280,
+            "precision": 0.0241773002014775,
+            "recall": 0.039301310043668124,
+            "f1": 0.02993762993762994,
+            "mean_iou": 0.8063653916946886
+          }
+        },
+        "polygon": {
+          "0.5": {
+            "tp": 440,
+            "fp": 8494,
+            "fn": 5056,
+            "precision": 0.04925005596597269,
+            "recall": 0.08005822416302766,
+            "f1": 0.06098406098406097,
+            "mean_iou": 0.5545808415759582
+          },
+          "0.75": {
+            "tp": 0,
+            "fp": 8934,
+            "fn": 5496,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "mean_iou": 0.0
+          }
+        },
+        "by_group": {
+          "x3": {
+            "tp": 2683,
+            "fp": 6251,
+            "fn": 2813,
+            "precision": 0.3003134094470562,
+            "recall": 0.48817321688500726,
+            "f1": 0.3718641718641719,
+            "mean_iou": 0.6166722863050847
+          }
+        },
+        "missing_pages": [],
+        "page_f1_median": 0.4,
+        "pages_with_f1_below_0_5": 119,
+        "predicted_lines": 8934,
+        "truth_lines": 5496
+      },
+      "blocks": {
+        "class_agnostic_ap50": 0.3337545340814204,
+        "operating_point": {
+          "min_score": 0.4,
+          "nms_iou": 0.7,
+          "containment": 0.6
+        },
+        "at_operating_point": {
+          "0.5": {
+            "tp": 205,
+            "fp": 182,
+            "fn": 566,
+            "precision": 0.5297157622739018,
+            "recall": 0.26588845654993515,
+            "f1": 0.3540587219343696,
+            "mean_iou": 0.9036513483052634
+          },
+          "0.75": {
+            "tp": 170,
+            "fp": 217,
+            "fn": 601,
+            "precision": 0.4392764857881137,
+            "recall": 0.2204928664072633,
+            "f1": 0.2936096718480138,
+            "mean_iou": 0.9701756430930104
+          }
+        },
+        "predicted_blocks": 387,
+        "raw_predicted_blocks": 993,
+        "truth_blocks": 771
+      },
+      "order": {
+        "naive": {
+          "params": {
+            "method": "naive",
+            "deskew": false,
+            "tie": 0.0,
+            "min_gap": 0.15,
+            "shrink": 0.1,
+            "lateral_offset": 0.08,
+            "side_overlap": 0.3
+          },
+          "true_layout": {
+            "blocks_accuracy": 1.0,
+            "blocks_accuracy_matched": 1.0,
+            "lines_accuracy": 1.0,
+            "perfect_pages": 1.0,
+            "tau_blocks_mean": 1.0,
+            "unmatched_predicted": 0,
+            "unmatched_truth": 0,
+            "truth_blocks": 771,
+            "order_ms_median": 0.297,
+            "order_ms_max": 0.5857
+          },
+          "detected_layout": {
+            "blocks_accuracy": 0.24368686868686873,
+            "blocks_accuracy_matched": 1.0,
+            "lines_accuracy": 0.29650772330423103,
+            "perfect_pages": 0.04864864864864865,
+            "tau_blocks_mean": 1.0,
+            "unmatched_predicted": 182,
+            "unmatched_truth": 566,
+            "truth_blocks": 771,
+            "order_ms_median": 2.1478,
+            "order_ms_max": 6.9903
+          }
+        },
+        "anchored": {
+          "params": {
+            "method": "anchored",
+            "deskew": false,
+            "tie": 0.5,
+            "min_gap": 0.15,
+            "shrink": 0.1,
+            "lateral_offset": 0.04,
+            "side_overlap": 0.5
+          },
+          "true_layout": {
+            "blocks_accuracy": 1.0,
+            "blocks_accuracy_matched": 1.0,
+            "lines_accuracy": 1.0,
+            "perfect_pages": 1.0,
+            "tau_blocks_mean": 1.0,
+            "unmatched_predicted": 0,
+            "unmatched_truth": 0,
+            "truth_blocks": 771,
+            "order_ms_median": 0.4349,
+            "order_ms_max": 0.8977
+          },
+          "detected_layout": {
+            "blocks_accuracy": 0.23863636363636365,
+            "blocks_accuracy_matched": 1.0,
+            "lines_accuracy": 0.2956122677412133,
+            "perfect_pages": 0.04864864864864865,
+            "tau_blocks_mean": 1.0,
+            "unmatched_predicted": 182,
+            "unmatched_truth": 566,
+            "truth_blocks": 771,
+            "order_ms_median": 2.3356,
+            "order_ms_max": 5.8163
+          }
+        },
+        "pages_with_more_than_one_block": 185
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "regions": 387,
+        "lines": 8934,
+        "reasons": {}
+      },
+      "costs": {
+        "docufcn-norhand-line (original)": {
+          "pages": 185,
+          "failed_pages": [],
+          "median_ms": 3574.9335,
+          "p95_ms": 4358.745,
+          "max_ms": 5281.0489,
+          "peak_rss_bytes": 944918528,
+          "load_ms": 18666.5816,
+          "wall_s": 710.0525847999961
+        },
+        "heron": {
+          "pages": 185,
+          "failed_pages": [],
+          "median_ms": 1898.095,
+          "p95_ms": 2446.7268,
+          "max_ms": 3111.2043,
+          "peak_rss_bytes": 1410363392,
+          "load_ms": 39261.7145,
+          "wall_s": 408.8630049000203
+        }
+      }
+    },
+    "bressay-native": {
+      "manifest_sha256": "b72fb27714b62aac22c84851ce526421d7ead581cbdd3cfa057cb076de4cff61",
+      "pages": 185,
+      "lines_original": {
+        "bbox": {
+          "0.5": {
+            "tp": 2626,
+            "fp": 6520,
+            "fn": 2870,
+            "precision": 0.2871200524819593,
+            "recall": 0.47780203784570596,
+            "f1": 0.3586941674634613,
+            "mean_iou": 0.6184316008973685
+          },
+          "0.75": {
+            "tp": 215,
+            "fp": 8931,
+            "fn": 5281,
+            "precision": 0.02350754428165318,
+            "recall": 0.0391193595342067,
+            "f1": 0.029367572735965037,
+            "mean_iou": 0.8106845587751457
+          }
+        },
+        "polygon": {
+          "0.5": {
+            "tp": 572,
+            "fp": 8574,
+            "fn": 4924,
+            "precision": 0.06254100153072381,
+            "recall": 0.10407569141193596,
+            "f1": 0.07813140281382325,
+            "mean_iou": 0.5536894789872886
+          },
+          "0.75": {
+            "tp": 1,
+            "fp": 9145,
+            "fn": 5495,
+            "precision": 0.00010933741526350318,
+            "recall": 0.0001819505094614265,
+            "f1": 0.00013659336156262807,
+            "mean_iou": 0.7737929613026228
+          }
+        },
+        "by_group": {
+          "native": {
+            "tp": 2626,
+            "fp": 6520,
+            "fn": 2870,
+            "precision": 0.2871200524819593,
+            "recall": 0.47780203784570596,
+            "f1": 0.3586941674634613,
+            "mean_iou": 0.6184316008973685
+          }
+        },
+        "missing_pages": [],
+        "page_f1_median": 0.38095238095238093,
+        "pages_with_f1_below_0_5": 127,
+        "predicted_lines": 9146,
+        "truth_lines": 5496
+      },
+      "blocks": {
+        "class_agnostic_ap50": 0.32471839359744564,
+        "operating_point": {
+          "min_score": 0.4,
+          "nms_iou": 0.7,
+          "containment": 0.6
+        },
+        "at_operating_point": {
+          "0.5": {
+            "tp": 198,
+            "fp": 178,
+            "fn": 573,
+            "precision": 0.526595744680851,
+            "recall": 0.25680933852140075,
+            "f1": 0.3452484742807323,
+            "mean_iou": 0.8940257606053206
+          },
+          "0.75": {
+            "tp": 161,
+            "fp": 215,
+            "fn": 610,
+            "precision": 0.42819148936170215,
+            "recall": 0.20881971465629054,
+            "f1": 0.2807323452484743,
+            "mean_iou": 0.9697542364755101
+          }
+        },
+        "predicted_blocks": 376,
+        "raw_predicted_blocks": 973,
+        "truth_blocks": 771
+      },
+      "order": {
+        "naive": {
+          "params": {
+            "method": "naive",
+            "deskew": false,
+            "tie": 0.0,
+            "min_gap": 0.15,
+            "shrink": 0.1,
+            "lateral_offset": 0.08,
+            "side_overlap": 0.3
+          },
+          "true_layout": {
+            "blocks_accuracy": 1.0,
+            "blocks_accuracy_matched": 1.0,
+            "lines_accuracy": 1.0,
+            "perfect_pages": 1.0,
+            "tau_blocks_mean": 1.0,
+            "unmatched_predicted": 0,
+            "unmatched_truth": 0,
+            "truth_blocks": 771,
+            "order_ms_median": 0.2865,
+            "order_ms_max": 0.4987
+          },
+          "detected_layout": {
+            "blocks_accuracy": 0.2344740177439797,
+            "blocks_accuracy_matched": 1.0,
+            "lines_accuracy": 0.28198119396457466,
+            "perfect_pages": 0.05405405405405406,
+            "tau_blocks_mean": 1.0,
+            "unmatched_predicted": 178,
+            "unmatched_truth": 573,
+            "truth_blocks": 771,
+            "order_ms_median": 2.1646,
+            "order_ms_max": 4.7739
+          }
+        },
+        "anchored": {
+          "params": {
+            "method": "anchored",
+            "deskew": false,
+            "tie": 0.5,
+            "min_gap": 0.15,
+            "shrink": 0.1,
+            "lateral_offset": 0.04,
+            "side_overlap": 0.5
+          },
+          "true_layout": {
+            "blocks_accuracy": 1.0,
+            "blocks_accuracy_matched": 1.0,
+            "lines_accuracy": 1.0,
+            "perfect_pages": 1.0,
+            "tau_blocks_mean": 1.0,
+            "unmatched_predicted": 0,
+            "unmatched_truth": 0,
+            "truth_blocks": 771,
+            "order_ms_median": 0.3391,
+            "order_ms_max": 0.8041
+          },
+          "detected_layout": {
+            "blocks_accuracy": 0.23320659062103932,
+            "blocks_accuracy_matched": 1.0,
+            "lines_accuracy": 0.28198119396457466,
+            "perfect_pages": 0.05405405405405406,
+            "tau_blocks_mean": 1.0,
+            "unmatched_predicted": 178,
+            "unmatched_truth": 573,
+            "truth_blocks": 771,
+            "order_ms_median": 2.0375,
+            "order_ms_max": 5.8833
+          }
+        },
+        "pages_with_more_than_one_block": 185
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "regions": 376,
+        "lines": 9146,
+        "reasons": {}
+      },
+      "costs": {
+        "docufcn-norhand-line (original)": {
+          "pages": 185,
+          "failed_pages": [],
+          "median_ms": 3530.1784,
+          "p95_ms": 4849.2464,
+          "max_ms": 5993.2774,
+          "peak_rss_bytes": 934719488,
+          "load_ms": 5426.4931,
+          "wall_s": 697.5114803999895
+        },
+        "heron": {
+          "pages": 185,
+          "failed_pages": [],
+          "median_ms": 2062.6744,
+          "p95_ms": 2451.841,
+          "max_ms": 3167.9824,
+          "peak_rss_bytes": 809140224,
+          "load_ms": 25003.3099,
+          "wall_s": 422.8278939000156
+        }
+      }
+    }
+  },
+  "verdicts": {
+    "h1_lines_real_photos": {
+      "f1_without_rectification": 0.34502923976608185,
+      "target_without": 0.684,
+      "f1_with_rectification": 0.23869450974968884,
+      "target_with": 0.745,
+      "met": false,
+      "met_without_rectification": false
+    },
+    "h2_rectification": {
+      "found_rate": 1.0,
+      "target": 0.7,
+      "does_not_hurt": false,
+      "met": false
+    },
+    "h3_lines_portuguese": {
+      "f1_x3": 0.3718641718641719,
+      "f1_native": 0.3586941674634613,
+      "target": 0.878,
+      "met": false
+    },
+    "h4_blocks": {
+      "f1_x3": 0.3540587219343696,
+      "target": 0.7,
+      "met": false
+    },
+    "h5_order": {
+      "true_layout": 1.0,
+      "target_true": 0.9,
+      "detected_layout": 0.23863636363636365,
+      "target_detected": 0.75,
+      "met": false
+    },
+    "h6_cost": {
+      "synthetic_page_ms": 4578.0,
+      "gnhk_page_ms": 5023.3996,
+      "bressay_x3_page_ms": 5473.0285,
+      "max_peak_rss_bytes": 1410363392,
+      "met": true
+    }
+  }
+}

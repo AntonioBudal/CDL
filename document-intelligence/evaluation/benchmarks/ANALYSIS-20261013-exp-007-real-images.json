@@ -1,0 +1,344 @@
+{
+  "schema": "leitorum-di-real-images-analysis/1",
+  "experiment": "EXP-007",
+  "benchmark": "BENCHMARK-20261013-exp-007-real-images.json",
+  "benchmark_commit": "8bf4e5fbd69524cdb964feee42c4d154a6891cfa",
+  "comparison": [
+    {
+      "metric": "F1 de linhas, sem retificação",
+      "synthetic": 0.784,
+      "synthetic_condition": "degradação forte",
+      "gnhk": 0.34502923976608185,
+      "bressay_x3": 0.3718641718641719,
+      "bressay_native": 0.3586941674634613
+    },
+    {
+      "metric": "F1 de linhas, com retificação",
+      "synthetic": 0.845,
+      "synthetic_condition": "degradação forte",
+      "gnhk": 0.23869450974968884
+    },
+    {
+      "metric": "F1 de linhas, página limpa",
+      "synthetic": 0.928,
+      "synthetic_condition": "sem degradação",
+      "bressay_x3": 0.3718641718641719,
+      "bressay_native": 0.3586941674634613
+    },
+    {
+      "metric": "blocos (sintético: mAP50 com classe; real: AP50 sem classe)",
+      "synthetic": 0.781,
+      "bressay_x3": 0.3337545340814204,
+      "bressay_native": 0.32471839359744564
+    },
+    {
+      "metric": "F1 de blocos no ponto de operação",
+      "bressay_x3": 0.3540587219343696,
+      "bressay_native": 0.3452484742807323
+    },
+    {
+      "metric": "ordem de blocos, layout verdadeiro",
+      "synthetic": 0.983,
+      "bressay_x3": 1.0,
+      "bressay_native": 1.0
+    },
+    {
+      "metric": "ordem de blocos, layout detectado",
+      "synthetic": 0.773,
+      "bressay_x3": 0.23863636363636365,
+      "bressay_native": 0.23320659062103932
+    }
+  ],
+  "line_errors": {
+    "gnhk/original": {
+      "oracle_merge": {
+        "tp": 1359,
+        "fp": 1536,
+        "fn": 830,
+        "precision": 0.4694300518134715,
+        "recall": 0.620831429876656,
+        "f1": 0.5346184107002361,
+        "mean_iou": 0.675252441559498
+      },
+      "predictions_per_truth_line_median": 1.5294117647058822,
+      "truth_lines": 2189,
+      "unmatched_truth_lines": 1068,
+      "by_kind": {
+        "missed": 70,
+        "misaligned": 467,
+        "merged": 115,
+        "split": 416
+      },
+      "share_by_kind": {
+        "missed": 0.06554307116104868,
+        "misaligned": 0.43726591760299627,
+        "merged": 0.10767790262172285,
+        "split": 0.3895131086142322
+      },
+      "pages_with_all_lines_unmatched": 20,
+      "worst_pages": [
+        "eng_NA_111",
+        "eng_NA_092",
+        "eng_EU_319",
+        "eng_EU_315",
+        "eng_EU_313",
+        "eng_EU_308",
+        "eng_EU_293",
+        "eng_EU_292",
+        "eng_EU_284",
+        "eng_EU_268"
+      ]
+    },
+    "gnhk/rectified": {
+      "oracle_merge": {
+        "tp": 1208,
+        "fp": 1433,
+        "fn": 981,
+        "precision": 0.45740249905338887,
+        "recall": 0.5518501598903609,
+        "f1": 0.5002070393374741,
+        "mean_iou": 0.6838703586511525
+      },
+      "predictions_per_truth_line_median": 1.9166666666666667,
+      "truth_lines": 2189,
+      "unmatched_truth_lines": 1326,
+      "by_kind": {
+        "misaligned": 426,
+        "split": 591,
+        "missed": 234,
+        "merged": 75
+      },
+      "share_by_kind": {
+        "misaligned": 0.3212669683257919,
+        "split": 0.4457013574660634,
+        "missed": 0.17647058823529413,
+        "merged": 0.05656108597285068
+      },
+      "pages_with_all_lines_unmatched": 37,
+      "worst_pages": [
+        "eng_NA_111",
+        "eng_NA_094",
+        "eng_NA_092",
+        "eng_NA_052",
+        "eng_NA_050",
+        "eng_EU_319",
+        "eng_EU_315",
+        "eng_EU_313",
+        "eng_EU_308",
+        "eng_EU_298"
+      ]
+    },
+    "bressay-x3/original": {
+      "oracle_merge": {
+        "tp": 3888,
+        "fp": 1532,
+        "fn": 1608,
+        "precision": 0.7173431734317344,
+        "recall": 0.7074235807860262,
+        "f1": 0.7123488457310371,
+        "mean_iou": 0.6212259040230003
+      },
+      "predictions_per_truth_line_median": 1.5,
+      "truth_lines": 5496,
+      "unmatched_truth_lines": 2813,
+      "by_kind": {
+        "misaligned": 881,
+        "split": 1844,
+        "missed": 87,
+        "merged": 1
+      },
+      "share_by_kind": {
+        "misaligned": 0.3131887664415215,
+        "split": 0.6555279061500178,
+        "missed": 0.030927835051546393,
+        "merged": 0.00035549235691432633
+      },
+      "pages_with_all_lines_unmatched": 2,
+      "worst_pages": [
+        "4106-024",
+        "3943-018",
+        "3513-017",
+        "7595-051",
+        "4120-038",
+        "3514-018",
+        "4100-018",
+        "4509-072",
+        "8126-028",
+        "7345-047"
+      ]
+    },
+    "bressay-native/original": {
+      "oracle_merge": {
+        "tp": 3902,
+        "fp": 1518,
+        "fn": 1594,
+        "precision": 0.7199261992619926,
+        "recall": 0.7099708879184862,
+        "f1": 0.714913887871015,
+        "mean_iou": 0.622965258555981
+      },
+      "predictions_per_truth_line_median": 1.5666666666666667,
+      "truth_lines": 5496,
+      "unmatched_truth_lines": 2870,
+      "by_kind": {
+        "split": 1924,
+        "misaligned": 863,
+        "missed": 83
+      },
+      "share_by_kind": {
+        "split": 0.670383275261324,
+        "misaligned": 0.30069686411149826,
+        "missed": 0.0289198606271777
+      },
+      "pages_with_all_lines_unmatched": 2,
+      "worst_pages": [
+        "4106-024",
+        "3943-018",
+        "3513-017",
+        "8126-028",
+        "7345-047",
+        "4430-108",
+        "3514-018",
+        "0691-082",
+        "7595-051",
+        "4120-038"
+      ]
+    }
+  },
+  "rectification_effect": {
+    "quad >= 90% da foto": {
+      "photos": 60,
+      "f1_original": 0.2936928261916225,
+      "f1_rectified": 0.2802249297094658
+    },
+    "60% a 90%": {
+      "photos": 84,
+      "f1_original": 0.3654292343387471,
+      "f1_rectified": 0.2367906066536203
+    },
+    "< 60%": {
+      "photos": 28,
+      "f1_original": 0.3823227132579651,
+      "f1_rectified": 0.15857284440039643
+    },
+    "quad_share_median": 0.8059239952812192
+  },
+  "block_absorption": {
+    "bressay-x3": {
+      "truth_blocks": 771,
+      "unmatched_truth_blocks": 566,
+      "absorbed_in_larger_block": 562,
+      "pages_by_detected_blocks": {
+        "1": 109,
+        "2": 20,
+        "3": 17,
+        "4": 17,
+        "5+": 22
+      }
+    },
+    "bressay-native": {
+      "truth_blocks": 771,
+      "unmatched_truth_blocks": 573,
+      "absorbed_in_larger_block": 568,
+      "pages_by_detected_blocks": {
+        "1": 112,
+        "2": 19,
+        "3": 16,
+        "4": 17,
+        "5+": 21
+      }
+    }
+  },
+  "gnhk_by_region": {
+    "original": {
+      "AF": {
+        "tp": 170,
+        "fp": 486,
+        "fn": 151,
+        "precision": 0.25914634146341464,
+        "recall": 0.5295950155763239,
+        "f1": 0.3480040941658137,
+        "mean_iou": 0.6619840548690389
+      },
+      "AS": {
+        "tp": 305,
+        "fp": 405,
+        "fn": 211,
+        "precision": 0.4295774647887324,
+        "recall": 0.5910852713178295,
+        "f1": 0.4975530179445351,
+        "mean_iou": 0.6614456311622886
+      },
+      "EU": {
+        "tp": 358,
+        "fp": 1416,
+        "fn": 406,
+        "precision": 0.20180383314543404,
+        "recall": 0.468586387434555,
+        "f1": 0.28211189913317575,
+        "mean_iou": 0.6602256094551557
+      },
+      "NA": {
+        "tp": 288,
+        "fp": 881,
+        "fn": 300,
+        "precision": 0.24636441402908468,
+        "recall": 0.4897959183673469,
+        "f1": 0.327831531018782,
+        "mean_iou": 0.6451996338055734
+      }
+    },
+    "rectified": {
+      "AF": {
+        "tp": 113,
+        "fp": 635,
+        "fn": 208,
+        "precision": 0.15106951871657753,
+        "recall": 0.35202492211838005,
+        "f1": 0.21141253507951355,
+        "mean_iou": 0.6332811162550894
+      },
+      "AS": {
+        "tp": 246,
+        "fp": 536,
+        "fn": 270,
+        "precision": 0.3145780051150895,
+        "recall": 0.47674418604651164,
+        "f1": 0.3790446841294299,
+        "mean_iou": 0.6679528654172657
+      },
+      "EU": {
+        "tp": 287,
+        "fp": 1945,
+        "fn": 477,
+        "precision": 0.128584229390681,
+        "recall": 0.3756544502617801,
+        "f1": 0.19158878504672897,
+        "mean_iou": 0.660674459572891
+      },
+      "NA": {
+        "tp": 217,
+        "fp": 1063,
+        "fn": 371,
+        "precision": 0.16953125,
+        "recall": 0.36904761904761907,
+        "f1": 0.2323340471092077,
+        "mean_iou": 0.6484815670647944
+      }
+    },
+    "rectification_found": {
+      "AF": 29,
+      "AS": 25,
+      "EU": 82,
+      "NA": 36
+    }
+  },
+  "verdicts": {
+    "h1_lines_real_photos": false,
+    "h2_rectification": false,
+    "h3_lines_portuguese": false,
+    "h4_blocks": false,
+    "h5_order": false,
+    "h6_cost": true
+  }
+}

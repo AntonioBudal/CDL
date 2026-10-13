@@ -1,7 +1,7 @@
 # Tarefas: EXP-007 — Validação do Layout e da Ordem de Leitura em Imagens Reais
 
 * **Entradas:** [`spec.md`](./spec.md) e [`plan.md`](./plan.md), ambos `APPROVED` em 2026-10-12
-* **Status:** `APPROVED` (2026-10-12) — em execução; Fase 3 aguardando RAM livre (≥ 1 GiB)
+* **Status:** `EXECUTADO` em 2026-10-13 — aguardando aceite do experimento e do ADR-005
 * **Execução:** contínua, sem parar a cada fase; parada só no aceite final ou em bloqueio real (RAM livre abaixo
   de 1 GiB que não se resolve esperando, disco perto do teto, verdade de chão inutilizável, dependência nova)
 
@@ -46,30 +46,30 @@ datasets vai para o Git, para relatórios ou para o chat.
   a imagem retificada, levadas de volta à foto original; registro de tempo e memória por foto; falha por foto é
   contada, não descartada.
 - [x] **T013** Ensaio com os adaptadores falsos (sem modelo) nas duas bases, para validar o fluxo de ponta a ponta.
-- [ ] **T014** Detecção no GNHK (172 fotos): com e sem retificação.
-- [ ] **T015** Detecção no BRESSAY (199 páginas): ampliada 3× e nativa.
-- [ ] **T016** Conferir critérios de parada e uso de disco depois das execuções.
+- [x] **T014** Detecção no GNHK (172 fotos): com e sem retificação.
+- [x] **T015** Detecção no BRESSAY (199 páginas): ampliada 3× e nativa.
+- [x] **T016** Conferir critérios de parada e uso de disco depois das execuções.
 
 ## Fase 4 — Avaliação (Cenário 4; SC-004)
 
-- [ ] **T017** `harness/run.py`: F1 de linhas por caixa e por polígono (GNHK e BRESSAY); taxa de sucesso da
+- [x] **T017** `harness/run.py`: F1 de linhas por caixa e por polígono (GNHK e BRESSAY); taxa de sucesso da
   retificação (GNHK); F1 e mAP de blocos sem classe, com o ponto de operação do EXP-003 (BRESSAY); acurácia de
   ordem com parágrafos verdadeiros e detectados, ordenadores `naive` e `anchored` com os parâmetros do EXP-003.
-- [ ] **T018** `harness/to_ldf2.py`: todas as saídas pelo `build_document`; contar documentos válidos.
-- [ ] **T019** Gravar `BENCHMARK-*-exp-007-*.json` a partir de árvore limpa, com manifesto de reprodutibilidade.
+- [x] **T018** `harness/to_ldf2.py`: todas as saídas pelo `build_document`; contar documentos válidos.
+- [x] **T019** Gravar `BENCHMARK-*-exp-007-*.json` a partir de árvore limpa, com manifesto de reprodutibilidade.
 
 ## Fase 5 — Análise e fecho (Cenário 5; SC-002, SC-003, SC-005, SC-006)
 
-- [ ] **T020** `harness/analyze.py`: comparação sintético × real por métrica; no GNHK, por região de origem da
+- [x] **T020** `harness/analyze.py`: comparação sintético × real por métrica; no GNHK, por região de origem da
   foto (prefixo do nome do arquivo) e com/sem retificação; no BRESSAY, ampliada × nativa; decomposição das perdas.
-- [ ] **T021** `failure-analysis.md`: onde a perda acontece, só com números e nomes de arquivo.
-- [ ] **T022** `RESULTS.md`: veredito de H1 a H6, desvios do plano, limitações, manifesto de reprodutibilidade,
+- [x] **T021** `failure-analysis.md`: onde a perda acontece, só com números e nomes de arquivo.
+- [x] **T022** `RESULTS.md`: veredito de H1 a H6, desvios do plano, limitações, manifesto de reprodutibilidade,
   conformidade; `LICENSE STATUS: NEEDS VALIDATION` na parte que depende do BRESSAY; atribuição do GNHK.
-- [ ] **T023** ADR-005 (`PROPOSED`), ou proposta de revisão dos ADR-002/003, conforme os dados; índice de ADRs.
-- [ ] **T024** Atualizar `docs/roadmap-experiments.md`, `docs/models-and-licensing.md` e `CLAUDE.md`.
-- [ ] **T025** Verificação final: suíte principal, testes do harness, `ruff`, nada fora de
+- [x] **T023** ADR-005 (`PROPOSED`), ou proposta de revisão dos ADR-002/003, conforme os dados; índice de ADRs.
+- [x] **T024** Atualizar `docs/roadmap-experiments.md`, `docs/models-and-licensing.md` e `CLAUDE.md`.
+- [x] **T025** Verificação final: suíte principal, testes do harness, `ruff`, nada fora de
   `document-intelligence/`, nenhum conteúdo de dataset rastreado pelo Git, disco dentro do teto.
-- [ ] **T026** Submeter ao usuário para aceite. Não iniciar o EXP-004.
+- [x] **T026** Submeter ao usuário para aceite. Não iniciar o EXP-004.
 
 ---
 

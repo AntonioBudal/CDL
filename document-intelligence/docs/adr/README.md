@@ -67,3 +67,4 @@ Um ADR passa pelos seguintes status:
 | [`ADR-002`](./ADR-002-segmentacao-de-layout-doc-ufcn-heron.md) | Direção para segmentação de layout — Doc-UFCN para linhas, Heron para blocos, retificação por contorno | ACCEPTED | EXP-002 | 2026-10-05 |
 | [`ADR-003`](./ADR-003-ordem-de-leitura-por-ancoragem.md) | Ordem de leitura por ancoragem de regiões laterais; a detecção de blocos é o gargalo | ACCEPTED | EXP-003 | 2026-10-07 |
 | [`ADR-004`](./ADR-004-contrato-ldf-2.0.md) | Contrato LDF 2.0 — JSON Schema como fonte única, coordenadas na foto original, correções por identificador | ACCEPTED | N/A (feature `specs/001-contrato-ldf`) | 2026-10-12 |
+| [`ADR-005`](./ADR-005-layout-nao-confirmado-em-imagens-reais.md) | A direção de layout do ADR-002 não se confirma em imagens reais; benchmark real passa a ser obrigatório | PROPOSED | EXP-007 | 2026-10-13 |
