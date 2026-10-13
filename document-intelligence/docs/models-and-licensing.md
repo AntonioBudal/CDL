@@ -73,6 +73,12 @@ de uso próprios — ponto a revalidar antes de qualquer adoção em produto.
 
 Revisões completas e SHA-256: `experiments/EXP-002/candidates.json`.
 
+### Dependências do pacote principal (não são modelos)
+
+| Identificador | Versão | Licença | Uso | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| `jsonschema` | 4.26.0 | MIT (campo `License-Expression` dos metadados do pacote instalado, consultado em 2026-10-12) | validação do LDF 2.0 contra a fonte normativa; autorizada pelo usuário em 2026-10-12 | `LICENSE STATUS: VERIFIED` |
+
 ### Datasets e fontes
 
 | Recurso | Versão | Licença | Origem | Status |

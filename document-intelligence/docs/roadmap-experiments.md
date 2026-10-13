@@ -81,5 +81,5 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 - **Métricas**: Node Precision/Recall, Edge Precision/Recall e Edge-F1.
 
 ### `EXP-006` — Pipeline Integrado Ponta a Ponta
-- **Objetivo**: Unificação de todos os componentes experimentais em uma cadeia de inferência completa: receber fotografia bruta e emitir o documento serializado em **LDF 1.0**.
+- **Objetivo**: Unificação de todos os componentes experimentais em uma cadeia de inferência completa: receber fotografia bruta e emitir o documento serializado em **LDF 2.0** (contrato fechado em 2026-10-12, ADR-004).
 - **Métricas**: Tempo total de resposta por página, memória de pico e aderência estrita ao JSON Schema do LDF.

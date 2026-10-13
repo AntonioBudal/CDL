@@ -85,6 +85,10 @@ Lembretes de governança
 
 ## Notas para quem for revisar a spec do Antigravity
 
+* **Atualização de 2026-10-12:** as lacunas do formato citadas no prompt (região de diagrama, modelo Python
+  divergente do JSON Schema) foram fechadas no **LDF 2.0** — `document-intelligence/docs/ldf.md`, ADR-004
+  (`PROPOSED`). A restrição de não acoplar a tela ao formato continua valendo: ainda não há serviço para chamar.
+
 * Os quatro estados do indicador (item 3 do prompt) refletem os resultados aceitos até aqui: ADR-001 (nenhum
   reconhecedor pronto lê português manuscrito), ADR-002 (linhas e blocos funcionam em páginas sintéticas, sem
   validação em fotos reais) e EXP-003 (ordem de leitura boa com layout exato; de ponta a ponta ainda abaixo da

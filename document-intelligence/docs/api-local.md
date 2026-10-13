@@ -4,6 +4,10 @@
 > Este documento representa o contrato conceitual inicial para a interface de rede local entre o **Leitorum** e o motor de **Document Intelligence**.  
 > **Nenhum endpoint está implementado nesta fase de preparação.** A implementação será realizada pelo Claude Code e formalizada após os devidos ciclos do GitHub Spec Kit.
 
+> **Nota (2026-10-12):** o contrato de referência passou a ser o **LDF 2.0** ([`docs/ldf.md`](./ldf.md),
+> [ADR-004](./adr/ADR-004-contrato-ldf-2.0.md)). As menções a "LDF 1.0" abaixo são do rascunho original e serão
+> revistas quando esta API tiver especificação própria.
+
 ---
 
 ## 1. Visão Geral da Arquitetura de Comunicação

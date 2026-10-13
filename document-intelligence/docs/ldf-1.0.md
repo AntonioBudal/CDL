@@ -1,5 +1,9 @@
 # Leitorum Document Format (LDF) — Versão 1.0.0
 
+> **CONGELADO em 2026-10-12.** Este texto descreve o LDF 1.0, que não é mais o contrato. O formato vigente é o
+> [LDF 2.0](./ldf.md) (ver [ADR-004](./adr/ADR-004-contrato-ldf-2.0.md)). O 1.0 permanece só porque os conversores
+> dos EXP-002 e EXP-003 validam contra o seu schema. Não o use em trabalho novo.
+
 O **Leitorum Document Format (LDF)** é a especificação do contrato de dados que conecta o subsistema **Document Intelligence** ao ecossistema da aplicação **Leitorum**. Ele padroniza a representação digital de cadernos físicos e anotações manuscritas digitalizadas.
 
 ---

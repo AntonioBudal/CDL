@@ -37,7 +37,7 @@ Classificação Semântica (conceito, pergunta, citação, etc.)
       ↓
 Reconhecimento de Diagramas / Fluxogramas (nós e arestas)
       ↓
-Leitorum Document Format (LDF 1.0)
+Leitorum Document Format (LDF 2.0)
       ↓
 Consumo pelo Produto Leitorum
 ```
@@ -107,13 +107,13 @@ document-intelligence/
 │   ├── models-and-licensing.md # Matriz de modelos e auditoria de licenças de pesos
 │   ├── roadmap-experiments.md # Roteiro sequencial de experimentos (EXP-000 a EXP-006)
 │   ├── ldf-examples/          # Payloads de exemplo válidos do LDF
-│   └── schemas/               # JSON Schema oficial do LDF 1.0
+│   └── schemas/               # Schema do LDF 1.0 (congelado) e índice dos schemas
 │
 ├── experiments/               # Rastreamento de pesquisa e experimentos
 │   ├── EXP-000/               # Fundação de ambiente e reprodutibilidade (ACEITO em 2026-09-30)
 │   ├── EXP-001/               # HTR de linhas isoladas: spec, plano, harness, RESULTS.md (ACEITO em 2026-10-02)
 │   ├── EXP-002/               # Layout e segmentação: spec, plano, harness, RESULTS.md (ACEITO em 2026-10-05)
-│   ├── EXP-003/               # Ordem de leitura: spec, plano, harness, RESULTS.md (AGUARDANDO ACEITE)
+│   ├── EXP-003/               # Ordem de leitura: spec, plano, harness, RESULTS.md (ACEITO em 2026-10-12)
 │   └── EXP-001-context.md     # Contexto original do EXP-001
 │
 ├── dataset/                   # Gestão de dados sintéticos (dados reais NUNCA versionados)
@@ -124,7 +124,7 @@ document-intelligence/
 ├── tests/                     # Testes automatizados de estrutura, fronteira e métricas
 └── src/
     └── leitorum_di/           # Pacote Python principal (namespace do subsistema)
-        ├── contracts/         # Modelos Pydantic formais do LDF 1.0
+        ├── contracts/         # LDF 2.0: JSON Schema normativo, validação, correções e conversor
         └── metrics/           # Utilitários puros de CER, WER e IoU
 ```
 
