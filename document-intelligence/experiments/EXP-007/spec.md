@@ -5,7 +5,7 @@
 **Created**: 2026-10-12 · **Revisada**: 2026-10-12 (fonte dos dados trocada para datasets públicos, por decisão do
 usuário)
 
-**Status**: `DRAFT` — aguardando aprovação do usuário. Nenhum plano, tarefa, código ou download antes disso.
+**Status**: `APPROVED` pelo usuário em 2026-10-12, que também autorizou o agente a baixar o GNHK. Plano em [`plan.md`](./plan.md).
 
 **Input**: ADR-002, ADR-003 e ADR-004 (aceitos); limitações declaradas nos EXP-002 e EXP-003 ("só páginas
 sintéticas"); `dataset/README.md` (política de privacidade e de datasets públicos).
@@ -58,7 +58,7 @@ Os limiares são critérios de avaliação. O experimento conclui com veredito e
 | Fonte | site oficial indicado em `github.com/GoodNotes/GNHK-dataset` | Zenodo, DOI 10.5281/zenodo.11637681 — **já está no disco** (`dataset/raw/exp-001/bressay.zip`, 1,4 GB) |
 | Licença declarada | CC-BY-4.0 (repositório oficial) | conflitante: CC-BY-4.0 nos metadados, uso não comercial no README do arquivo |
 | Estado | `LICENSE STATUS: VERIFIED` pelo que a fonte oficial declara (não é parecer jurídico) | `LICENSE STATUS: NEEDS VALIDATION` — exceção do usuário estendida ao EXP-007 em 2026-10-12: só experimento local, conteúdo fora do Git, não pode embasar produto |
-| Download | **feito pelo usuário**: o site pede aceite de termos, e esse aceite não é do agente | nenhum |
+| Download | feito pelo agente em 2026-10-12, com autorização do usuário, pelos links do Google Drive publicados pelo autor no repositório oficial (a página de download saiu do ar; não houve tela de termos) | nenhum |
 | Destino | `dataset/raw/exp-007/gnhk/` (fora do Git) | reutilizado onde está, só leitura |
 
 Cuidados que valem para os dois:
@@ -173,7 +173,7 @@ Tabela lado a lado por métrica; no GNHK, com e sem retificação; análise de o
   localização de recortes: as duas têm erro próprio, que será medido e reportado.
 - O BRESSAY tem licença em validação: os resultados que dependem dele não podem embasar decisão de produto.
 
-## 8. O que preciso de você
+## 8. O que preciso de você (resolvido em 2026-10-12)
 
 1. **Aprovar esta especificação.**
 2. **Baixar o GNHK**, quando for conveniente: pelo link no repositório oficial (`github.com/GoodNotes/GNHK-dataset`),
