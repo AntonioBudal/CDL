@@ -1,0 +1,279 @@
+{
+  "ldf_version": "2.0.0",
+  "document_id": "00000000-0000-0000-0000-000000000002",
+  "created_at": "2026-10-12T20:00:00Z",
+  "source_image": {
+    "filename": "pagina_ficticia.jpg",
+    "width": 1200,
+    "height": 1600,
+    "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+  },
+  "coordinate_space": {
+    "frame": "source_image",
+    "unit": "pixel"
+  },
+  "pipeline": {
+    "stages": {
+      "layout": {
+        "status": "completed",
+        "component": {
+          "name": "detector-ficticio",
+          "version": "0.1.0",
+          "revision": "abc1234",
+          "license": "MIT",
+          "license_status": "VERIFIED"
+        },
+        "elapsed_ms": 12.5
+      },
+      "reading_order": {
+        "status": "completed",
+        "component": {
+          "name": "ordenador-ficticio",
+          "version": "0.1.0",
+          "license": "N/A",
+          "license_status": "N/A"
+        },
+        "elapsed_ms": 12.5
+      },
+      "recognition": {
+        "status": "completed",
+        "component": {
+          "name": "htr-ficticio",
+          "version": "0.1.0",
+          "license": "não declarada",
+          "license_status": "NEEDS VALIDATION"
+        },
+        "elapsed_ms": 12.5
+      },
+      "semantics": {
+        "status": "completed",
+        "component": {
+          "name": "classificador-ficticio",
+          "version": "0.1.0",
+          "license": "N/A",
+          "license_status": "N/A"
+        },
+        "elapsed_ms": 12.5
+      },
+      "diagrams": {
+        "status": "completed",
+        "component": {
+          "name": "grafos-ficticio",
+          "version": "0.1.0",
+          "license": "N/A",
+          "license_status": "N/A"
+        },
+        "elapsed_ms": 12.5
+      }
+    }
+  },
+  "recognition": {
+    "lines": [
+      {
+        "id": "line_001",
+        "bbox": [
+          100,
+          100,
+          700,
+          150
+        ],
+        "detection_confidence": 0.97,
+        "text": "Fichamento de teste",
+        "confidence": 0.9,
+        "is_handwritten": true
+      },
+      {
+        "id": "line_002",
+        "bbox": [
+          100,
+          220,
+          800,
+          270
+        ],
+        "detection_confidence": 0.95,
+        "text": "Primeira linha de um parágrafo fictício",
+        "confidence": 0.9,
+        "is_handwritten": true
+      },
+      {
+        "id": "line_003",
+        "bbox": [
+          100,
+          280,
+          760,
+          330
+        ],
+        "detection_confidence": 0.93,
+        "text": "segunda linha do mesmo parágrafo",
+        "confidence": 0.9,
+        "is_handwritten": true
+      },
+      {
+        "id": "line_004",
+        "bbox": [
+          880,
+          220,
+          1120,
+          262
+        ],
+        "detection_confidence": 0.81,
+        "text": "nota de margem",
+        "confidence": 0.9,
+        "is_handwritten": true
+      }
+    ]
+  },
+  "structure": {
+    "regions": [
+      {
+        "id": "region_001",
+        "type": "title",
+        "bbox": [
+          90,
+          90,
+          710,
+          160
+        ],
+        "line_ids": [
+          "line_001"
+        ]
+      },
+      {
+        "id": "region_002",
+        "type": "paragraph",
+        "bbox": [
+          90,
+          210,
+          810,
+          340
+        ],
+        "line_ids": [
+          "line_002",
+          "line_003"
+        ],
+        "confidence": 0.9
+      },
+      {
+        "id": "region_003",
+        "type": "margin_note",
+        "bbox": [
+          870,
+          210,
+          1130,
+          270
+        ],
+        "line_ids": [
+          "line_004"
+        ]
+      },
+      {
+        "id": "region_004",
+        "type": "graphic",
+        "bbox": [
+          150,
+          500,
+          900,
+          900
+        ],
+        "line_ids": []
+      }
+    ],
+    "reading_order": [
+      "region_001",
+      "region_002",
+      "region_003",
+      "region_004"
+    ],
+    "diagrams": [
+      {
+        "id": "diagram_001",
+        "region_id": "region_004",
+        "nodes": [
+          {
+            "id": "node_001",
+            "label": "Causa",
+            "bbox": [
+              180,
+              560,
+              420,
+              700
+            ]
+          },
+          {
+            "id": "node_002",
+            "label": "Efeito",
+            "bbox": [
+              620,
+              560,
+              860,
+              700
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "id": "edge_001",
+            "source": "node_001",
+            "target": "node_002",
+            "type": "arrow"
+          }
+        ]
+      }
+    ]
+  },
+  "human_corrections": [
+    {
+      "id": "correction_001",
+      "author": "leitor-ficticio",
+      "timestamp": "2026-10-12T21:00:00Z",
+      "target": {
+        "collection": "semantics.entities",
+        "id": "entity_001"
+      },
+      "ops": [
+        {
+          "op": "remove",
+          "path": ""
+        }
+      ]
+    },
+    {
+      "id": "correction_002",
+      "author": "leitor-ficticio",
+      "timestamp": "2026-10-12T21:00:00Z",
+      "target": {
+        "collection": "semantics.entities",
+        "id": "entity_001"
+      },
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/type",
+          "value": "question"
+        }
+      ]
+    }
+  ],
+  "semantics": {
+    "sections": [
+      {
+        "id": "section_001",
+        "role": "title",
+        "region_ids": [
+          "region_001"
+        ],
+        "confidence": 0.9
+      }
+    ],
+    "entities": [
+      {
+        "id": "entity_001",
+        "type": "concept",
+        "text_reference": "parágrafo fictício",
+        "region_ids": [
+          "region_002"
+        ]
+      }
+    ]
+  }
+}

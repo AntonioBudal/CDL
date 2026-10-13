@@ -1,0 +1,157 @@
+{
+  "ldf_version": "2.0.0",
+  "document_id": "00000000-0000-0000-0000-000000000002",
+  "created_at": "2026-10-12T20:00:00Z",
+  "source_image": {
+    "filename": "pagina_ficticia.jpg",
+    "width": 1200,
+    "height": 1600,
+    "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+  },
+  "coordinate_space": {
+    "frame": "source_image",
+    "unit": "pixel"
+  },
+  "pipeline": {
+    "stages": {
+      "layout": {
+        "status": "completed",
+        "component": {
+          "name": "detector-ficticio",
+          "version": "0.1.0",
+          "revision": "abc1234",
+          "license": "MIT",
+          "license_status": "VERIFIED"
+        },
+        "elapsed_ms": 12.5
+      },
+      "reading_order": {
+        "status": "completed",
+        "component": {
+          "name": "ordenador-ficticio",
+          "version": "0.1.0",
+          "license": "N/A",
+          "license_status": "N/A"
+        },
+        "elapsed_ms": 12.5
+      },
+      "recognition": {
+        "status": "not_run"
+      },
+      "semantics": {
+        "status": "not_run"
+      },
+      "diagrams": {
+        "status": "not_run"
+      }
+    }
+  },
+  "recognition": {
+    "lines": [
+      {
+        "id": "line_001",
+        "bbox": [
+          100,
+          100,
+          700,
+          150
+        ],
+        "detection_confidence": 0.97
+      },
+      {
+        "id": "line_002",
+        "bbox": [
+          100,
+          220,
+          800,
+          270
+        ],
+        "detection_confidence": 0.95
+      },
+      {
+        "id": "line_003",
+        "bbox": [
+          100,
+          280,
+          760,
+          330
+        ],
+        "detection_confidence": 0.93
+      },
+      {
+        "id": "line_004",
+        "bbox": [
+          880,
+          220,
+          1120,
+          262
+        ],
+        "detection_confidence": 0.81
+      }
+    ]
+  },
+  "structure": {
+    "regions": [
+      {
+        "id": "region_001",
+        "type": "title",
+        "bbox": [
+          90,
+          90,
+          710,
+          160
+        ],
+        "line_ids": [
+          "line_001"
+        ]
+      },
+      {
+        "id": "region_002",
+        "type": "paragraph",
+        "bbox": [
+          90,
+          210,
+          810,
+          340
+        ],
+        "line_ids": [
+          "line_002",
+          "line_003"
+        ],
+        "confidence": 0.9
+      },
+      {
+        "id": "region_003",
+        "type": "margin_note",
+        "bbox": [
+          870,
+          210,
+          1130,
+          270
+        ],
+        "line_ids": [
+          "line_004"
+        ]
+      },
+      {
+        "id": "region_004",
+        "type": "graphic",
+        "bbox": [
+          150,
+          500,
+          900,
+          900
+        ],
+        "line_ids": []
+      }
+    ],
+    "reading_order": [
+      "region_001",
+      "region_002",
+      "region_003",
+      "region_004"
+    ],
+    "diagrams": []
+  },
+  "human_corrections": []
+}

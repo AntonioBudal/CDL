@@ -28,6 +28,7 @@ classifiers = [
 # modelos de OCR/HTR) NÃO devem ser adicionadas prematuramente aqui;
 # suas inclusoes dependem dos resultados formais de cada experimento.
 dependencies = [
+    "jsonschema>=4.21",
     "pydantic>=2.7.0",
 ]
 

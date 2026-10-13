@@ -35,6 +35,8 @@ def test_mandatory_directories_exist():
         "tests",
         "src/leitorum_di",
         "src/leitorum_di/contracts",
+        "src/leitorum_di/contracts/ldf",
+        "tests/ldf/conformance",
         "src/leitorum_di/metrics",
     ]
     for rel_path in expected_dirs:
@@ -66,6 +68,11 @@ def test_essential_documentation_and_contract_files_exist():
         "docs/schemas/ldf-1.0.schema.json",
         "docs/ldf-examples/ldf-1.0-minimal.json",
         "docs/ldf-examples/ldf-1.0-annotated-page.json",
+        "docs/ldf-1.0.md",
+        "docs/schemas/README.md",
+        "docs/ldf-examples/ldf-2.0-minimal.json",
+        "src/leitorum_di/contracts/ldf/schemas/ldf-2.0.schema.json",
+        "tests/ldf/conformance/index.json",
         "experiments/EXP-000/README.md",
         "experiments/EXP-000/environment.md",
         "experiments/EXP-000/RESULTS.md",

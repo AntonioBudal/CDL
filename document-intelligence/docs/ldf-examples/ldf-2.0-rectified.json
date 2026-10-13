@@ -1,0 +1,162 @@
+{
+  "ldf_version": "2.0.0",
+  "document_id": "00000000-0000-0000-0000-000000000002",
+  "created_at": "2026-10-12T20:00:00Z",
+  "source_image": {
+    "filename": "pagina_ficticia.jpg",
+    "width": 1200,
+    "height": 1600,
+    "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+  },
+  "coordinate_space": {
+    "frame": "source_image",
+    "unit": "pixel",
+    "rectification": {
+      "method": "contorno-ficticio",
+      "source_quad": [
+        [
+          100,
+          100
+        ],
+        [
+          1100,
+          100
+        ],
+        [
+          1100,
+          1500
+        ],
+        [
+          100,
+          1500
+        ]
+      ],
+      "output_size": [
+        1000,
+        1400
+      ],
+      "homography": [
+        [
+          1,
+          0,
+          -100
+        ],
+        [
+          0,
+          1,
+          -100
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    }
+  },
+  "pipeline": {
+    "stages": {
+      "layout": {
+        "status": "completed",
+        "component": {
+          "name": "detector-ficticio",
+          "version": "0.1.0",
+          "revision": "abc1234",
+          "license": "MIT",
+          "license_status": "VERIFIED"
+        },
+        "elapsed_ms": 12.5
+      },
+      "reading_order": {
+        "status": "completed",
+        "component": {
+          "name": "ordenador-ficticio",
+          "version": "0.1.0",
+          "license": "N/A",
+          "license_status": "N/A"
+        },
+        "elapsed_ms": 12.5
+      },
+      "recognition": {
+        "status": "not_run"
+      },
+      "semantics": {
+        "status": "not_run"
+      },
+      "diagrams": {
+        "status": "not_run"
+      }
+    }
+  },
+  "recognition": {
+    "lines": [
+      {
+        "id": "line_001",
+        "bbox": [
+          200,
+          300,
+          800,
+          380
+        ],
+        "polygon": [
+          [
+            200,
+            320
+          ],
+          [
+            800,
+            300
+          ],
+          [
+            800,
+            360
+          ],
+          [
+            200,
+            380
+          ]
+        ]
+      }
+    ]
+  },
+  "structure": {
+    "regions": [
+      {
+        "id": "region_001",
+        "type": "paragraph",
+        "bbox": [
+          190,
+          290,
+          810,
+          390
+        ],
+        "polygon": [
+          [
+            190,
+            310
+          ],
+          [
+            810,
+            290
+          ],
+          [
+            810,
+            370
+          ],
+          [
+            190,
+            390
+          ]
+        ],
+        "line_ids": [
+          "line_001"
+        ]
+      }
+    ],
+    "reading_order": [
+      "region_001"
+    ],
+    "diagrams": []
+  },
+  "human_corrections": []
+}

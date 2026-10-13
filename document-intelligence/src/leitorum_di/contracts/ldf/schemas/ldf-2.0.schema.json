@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leitorum.app/schemas/ldf-2.0.schema.json",
+  "title": "LeitorumDocumentFormat",
+  "description": "Fonte normativa do Leitorum Document Format (LDF 2.0). Uma página por documento; coordenadas em pixels da fotografia original. As regras R1-R9, que este schema não expressa, estão em docs/ldf.md.",
+  "type": "object",
+  "required": [
+    "ldf_version",
+    "document_id",
+    "created_at",
+    "source_image",
+    "coordinate_space",
+    "pipeline",
+    "recognition",
+    "structure",
+    "human_corrections"
+  ],
+  "properties": {
+    "ldf_version": { "type": "string", "pattern": "^2\\.0\\.[0-9]+$" },
+    "document_id": { "$ref": "#/$defs/identifier" },
+    "created_at": { "$ref": "#/$defs/timestamp" },
+    "source_image": { "$ref": "#/$defs/source_image" },
+    "coordinate_space": { "$ref": "#/$defs/coordinate_space" },
+    "pipeline": { "$ref": "#/$defs/pipeline" },
+    "recognition": { "$ref": "#/$defs/recognition" },
+    "structure": { "$ref": "#/$defs/structure" },
+    "semantics": { "$ref": "#/$defs/semantics" },
+    "human_corrections": { "type": "array", "items": { "$ref": "#/$defs/correction" } }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$" },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "point": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+    "bbox": {
+      "$comment": "[x_min, y_min, x_max, y_max] na fotografia original.",
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "polygon": {
+      "$comment": "Vértices em sentido horário (eixo y para baixo).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/point" },
+      "minItems": 3
+    },
+    "id_list": { "type": "array", "items": { "$ref": "#/$defs/identifier" } },
+    "source_image": {
+      "type": "object",
+      "required": ["filename", "width", "height", "sha256"],
+      "properties": {
+        "filename": { "type": "string", "minLength": 1 },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "dpi": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "rectification": {
+      "$comment": "homography leva pontos da fotografia original para a imagem retificada; source_quad são os cantos da folha na fotografia (superior esquerdo, superior direito, inferior direito, inferior esquerdo).",
+      "type": "object",
+      "required": ["method", "source_quad", "output_size", "homography"],
+      "properties": {
+        "method": { "type": "string", "minLength": 1 },
+        "source_quad": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/point" },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "output_size": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1 },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "homography": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "additionalProperties": false
+    },
+    "coordinate_space": {
+      "type": "object",
+      "required": ["frame", "unit"],
+      "properties": {
+        "frame": { "const": "source_image" },
+        "unit": { "const": "pixel" },
+        "rectification": { "$ref": "#/$defs/rectification" }
+      },
+      "additionalProperties": false
+    },
+    "component": {
+      "type": "object",
+      "required": ["name", "version", "license", "license_status"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "license": { "type": "string", "minLength": 1 },
+        "license_status": { "enum": ["VERIFIED", "NEEDS VALIDATION", "N/A"] }
+      },
+      "additionalProperties": false
+    },
+    "stage": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["completed", "not_run", "failed"] },
+        "component": { "$ref": "#/$defs/component" },
+        "elapsed_ms": { "type": "number", "minimum": 0 },
+        "error": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "pipeline": {
+      "type": "object",
+      "required": ["stages"],
+      "properties": {
+        "stages": {
+          "type": "object",
+          "required": ["layout", "reading_order", "recognition", "semantics", "diagrams"],
+          "properties": {
+            "layout": { "$ref": "#/$defs/stage" },
+            "reading_order": { "$ref": "#/$defs/stage" },
+            "recognition": { "$ref": "#/$defs/stage" },
+            "semantics": { "$ref": "#/$defs/stage" },
+            "diagrams": { "$ref": "#/$defs/stage" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "line": {
+      "type": "object",
+      "required": ["id", "bbox"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "bbox": { "$ref": "#/$defs/bbox" },
+        "polygon": { "$ref": "#/$defs/polygon" },
+        "detection_confidence": { "$ref": "#/$defs/confidence" },
+        "text": { "type": "string" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "is_handwritten": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "recognition": {
+      "type": "object",
+      "required": ["lines"],
+      "properties": {
+        "lines": { "type": "array", "items": { "$ref": "#/$defs/line" } }
+      },
+      "additionalProperties": false
+    },
+    "region": {
+      "type": "object",
+      "required": ["id", "type", "bbox", "line_ids"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "type": { "enum": ["title", "paragraph", "margin_note", "graphic"] },
+        "bbox": { "$ref": "#/$defs/bbox" },
+        "polygon": { "$ref": "#/$defs/polygon" },
+        "line_ids": { "$ref": "#/$defs/id_list" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": false
+    },
+    "diagram_node": {
+      "type": "object",
+      "required": ["id", "label", "bbox"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "label": { "type": "string" },
+        "bbox": { "$ref": "#/$defs/bbox" },
+        "line_ids": { "$ref": "#/$defs/id_list" }
+      },
+      "additionalProperties": false
+    },
+    "diagram_edge": {
+      "type": "object",
+      "required": ["id", "source", "target", "type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "source": { "$ref": "#/$defs/identifier" },
+        "target": { "$ref": "#/$defs/identifier" },
+        "type": { "enum": ["arrow", "line", "bidirectional_arrow", "dashed_line"] },
+        "label": { "type": "string" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": false
+    },
+    "diagram": {
+      "$comment": "Nós e arestas mantidos como no LDF 1.0 até o EXP-005.",
+      "type": "object",
+      "required": ["id", "region_id", "nodes", "edges"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "region_id": { "$ref": "#/$defs/identifier" },
+        "nodes": { "type": "array", "items": { "$ref": "#/$defs/diagram_node" } },
+        "edges": { "type": "array", "items": { "$ref": "#/$defs/diagram_edge" } }
+      },
+      "additionalProperties": false
+    },
+    "structure": {
+      "type": "object",
+      "required": ["regions", "reading_order", "diagrams"],
+      "properties": {
+        "regions": { "type": "array", "items": { "$ref": "#/$defs/region" } },
+        "reading_order": { "$ref": "#/$defs/id_list" },
+        "diagrams": { "type": "array", "items": { "$ref": "#/$defs/diagram" } }
+      },
+      "additionalProperties": false
+    },
+    "section": {
+      "type": "object",
+      "required": ["id", "role", "region_ids"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "role": {
+          "enum": ["title", "summary", "concept", "question", "quote", "example", "margin_note", "other"]
+        },
+        "region_ids": { "$ref": "#/$defs/id_list" },
+        "label": { "type": "string" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": false
+    },
+    "entity": {
+      "type": "object",
+      "required": ["id", "type", "text_reference", "region_ids"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "type": { "type": "string", "minLength": 1 },
+        "text_reference": { "type": "string" },
+        "region_ids": { "$ref": "#/$defs/id_list" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      },
+      "additionalProperties": false
+    },
+    "semantics": {
+      "$comment": "PROVISÓRIA: o vocabulário será fechado depois do EXP-004.",
+      "type": "object",
+      "required": ["sections", "entities"],
+      "properties": {
+        "sections": { "type": "array", "items": { "$ref": "#/$defs/section" } },
+        "entities": { "type": "array", "items": { "$ref": "#/$defs/entity" } }
+      },
+      "additionalProperties": false
+    },
+    "correction_target": {
+      "$comment": "Com id: as operações são relativas ao elemento. Sem id: relativas à coleção inteira.",
+      "type": "object",
+      "required": ["collection"],
+      "properties": {
+        "collection": {
+          "enum": [
+            "recognition.lines",
+            "structure.regions",
+            "structure.reading_order",
+            "structure.diagrams",
+            "semantics.sections",
+            "semantics.entities"
+          ]
+        },
+        "id": { "$ref": "#/$defs/identifier" }
+      },
+      "additionalProperties": false
+    },
+    "operation": {
+      "$comment": "Operação RFC 6902 com caminho (RFC 6901) relativo ao alvo da correção.",
+      "type": "object",
+      "required": ["op", "path"],
+      "properties": {
+        "op": { "enum": ["add", "remove", "replace", "move", "copy", "test"] },
+        "path": { "type": "string", "pattern": "^(/[^/]*)*$" },
+        "from": { "type": "string", "pattern": "^(/[^/]*)*$" },
+        "value": {}
+      },
+      "additionalProperties": false
+    },
+    "correction": {
+      "type": "object",
+      "required": ["id", "author", "timestamp", "target", "ops"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "author": { "type": "string", "minLength": 1 },
+        "timestamp": { "$ref": "#/$defs/timestamp" },
+        "reason": { "type": "string" },
+        "target": { "$ref": "#/$defs/correction_target" },
+        "ops": { "type": "array", "items": { "$ref": "#/$defs/operation" }, "minItems": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

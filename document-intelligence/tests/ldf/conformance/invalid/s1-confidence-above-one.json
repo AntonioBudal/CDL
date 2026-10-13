@@ -1,0 +1,94 @@
+{
+  "ldf_version": "2.0.0",
+  "document_id": "00000000-0000-0000-0000-000000000002",
+  "created_at": "2026-10-12T20:00:00Z",
+  "source_image": {
+    "filename": "pagina_ficticia.jpg",
+    "width": 1200,
+    "height": 1600,
+    "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+  },
+  "coordinate_space": {
+    "frame": "source_image",
+    "unit": "pixel"
+  },
+  "pipeline": {
+    "stages": {
+      "layout": {
+        "status": "completed",
+        "component": {
+          "name": "detector-ficticio",
+          "version": "0.1.0",
+          "revision": "abc1234",
+          "license": "MIT",
+          "license_status": "VERIFIED"
+        },
+        "elapsed_ms": 12.5
+      },
+      "reading_order": {
+        "status": "completed",
+        "component": {
+          "name": "ordenador-ficticio",
+          "version": "0.1.0",
+          "license": "N/A",
+          "license_status": "N/A"
+        },
+        "elapsed_ms": 12.5
+      },
+      "recognition": {
+        "status": "completed",
+        "component": {
+          "name": "htr-ficticio",
+          "version": "0.1.0",
+          "license": "não declarada",
+          "license_status": "NEEDS VALIDATION"
+        },
+        "elapsed_ms": 12.5
+      },
+      "semantics": {
+        "status": "not_run"
+      },
+      "diagrams": {
+        "status": "not_run"
+      }
+    }
+  },
+  "recognition": {
+    "lines": [
+      {
+        "id": "line_001",
+        "bbox": [
+          100,
+          150,
+          600,
+          200
+        ],
+        "text": "Anotação de teste em linha única",
+        "confidence": 1.5,
+        "is_handwritten": true
+      }
+    ]
+  },
+  "structure": {
+    "regions": [
+      {
+        "id": "region_001",
+        "type": "paragraph",
+        "bbox": [
+          100,
+          140,
+          600,
+          210
+        ],
+        "line_ids": [
+          "line_001"
+        ]
+      }
+    ],
+    "reading_order": [
+      "region_001"
+    ],
+    "diagrams": []
+  },
+  "human_corrections": []
+}
