@@ -73,6 +73,14 @@ de uso próprios — ponto a revalidar antes de qualquer adoção em produto.
 
 Revisões completas e SHA-256: `experiments/EXP-002/candidates.json`.
 
+### EXP-008 — detecção de linhas em manuscrito real (consulta em 2026-10-13)
+
+| Identificador | Versão | Licença do código | Licença dos pesos | Local-First? | Status |
+| :--- | :--- | :--- | :--- | :---: | :--- |
+| PP-OCRv6 small det via `rapidocr` (+ ONNX Runtime) | `rapidocr` 3.10.0, `onnxruntime` 1.31.0; `PP-OCRv6_det_small.onnx` SHA-256 `090f04ab…1ff94f` (embutido no wheel) | Apache-2.0; MIT (ONNX Runtime) | Apache-2.0 (`MODEL_LICENSES.md` do wheel e card `PaddlePaddle/PP-OCRv6_small_det_onnx`) | Sim | `LICENSE STATUS: VERIFIED` — benchmark EXP-008; só a detecção é usada |
+| Surya | — | GPL | restrição de uso comercial | Sim | Excluído |
+| Florence-2 (`microsoft/Florence-2-base`) | rev. `5ca5edf5` | MIT | MIT | Sim | Não avaliado: exige executar código baixado com o modelo |
+
 ### Dependências do pacote principal (não são modelos)
 
 | Identificador | Versão | Licença | Uso | Status |

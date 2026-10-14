@@ -76,6 +76,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 - **Objetivo**: Medir o pipeline dos ADR-002 e ADR-003, sem ajustes, em fotos de celular (GNHK) e em caligrafia portuguesa (BRESSAY). Executado depois do EXP-003 e antes do EXP-004.
 - **Resultado**: o F1 de linhas cai de 0,78–0,93 (sintético) para 0,35–0,37; a retificação por contorno piora; os blocos saem como texto único. Decisão no ADR-005. Próximo: `EXP-008` (detecção de linhas em manuscrito real).
 
+### `EXP-008` — Detecção de Linhas em Manuscrito Real *(EXECUTADO em 2026-10-14 — aguardando aceite)*
+- **Resultado**: PP-OCRv6 small det + fusão de fragmentos: F1 0,812 (GNHK) e 0,982 (BRESSAY), contra 0,428 e 0,675 do Doc-UFCN. Proposta no ADR-006.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.

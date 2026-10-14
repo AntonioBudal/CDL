@@ -1,0 +1,750 @@
+{
+  "schema": "leitorum-di-line-detection-benchmark/1",
+  "created_utc": "2026-10-14T04:07:37+00:00",
+  "experiment": "EXP-008",
+  "git": {
+    "commit": "74c34eafe7b9fb14ba85d1d6fe8dd8026ab68f3b",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "seed": {
+    "seed": 1234,
+    "seeded": [
+      "random",
+      "numpy"
+    ],
+    "pythonhashseed_effective": false
+  },
+  "license_status": {
+    "gnhk": "VERIFIED (CC-BY-4.0, conforme declarado)",
+    "bressay": "NEEDS VALIDATION (exceção experimental do usuário; não embasa produto)"
+  },
+  "datasets": {
+    "test-gnhk": {
+      "manifest_sha256": "1e4a3f0f3cf0084e73484ab9bde1669fff397bde943e893c17055efd850c2773",
+      "pages": 172,
+      "truth_lines": 2189
+    },
+    "test-bressay": {
+      "manifest_sha256": "e68c0c8df5e719de422084d89c9709c1c9d3c970f86728a8d6328f1512a8c486",
+      "pages": 185,
+      "truth_lines": 5496
+    }
+  },
+  "exp007_reference": {
+    "test-gnhk": {
+      "f1": 0.345,
+      "oracle": 0.535
+    },
+    "test-bressay": {
+      "f1": 0.372,
+      "oracle": 0.712
+    }
+  },
+  "calibration_sets": {
+    "cal-gnhk": 150,
+    "cal-bressay": 136
+  },
+  "ranking_by_mean_f1_merged": [
+    "ppocr-det",
+    "docufcn-norhand",
+    "docufcn-historical",
+    "classic"
+  ],
+  "candidates": {
+    "docufcn-norhand": {
+      "license_status": "VERIFIED",
+      "merge_params": {
+        "v_overlap": 0.5,
+        "max_gap": 40.0,
+        "max_angle": 45.0
+      },
+      "sets": {
+        "test-gnhk": {
+          "raw": {
+            "precision": 0.26015316778834996,
+            "recall": 0.5121059844677935,
+            "f1": 0.34502923976608185,
+            "mean_iou": 0.6569638443828594,
+            "predicted_lines": 4309,
+            "truth_lines": 2189,
+            "oracle_merge_f1": 0.5346184107002361,
+            "unmatched_by_kind": {
+              "missed": 70,
+              "misaligned": 467,
+              "merged": 115,
+              "split": 416
+            },
+            "coverage": {
+              "covered": 0.6059405883387806,
+              "spill": 0.11471629715859735,
+              "area_f1": 0.7194482156965313
+            },
+            "f1_by_group": {
+              "AF": 0.3480040941658137,
+              "AS": 0.4975530179445351,
+              "EU": 0.28211189913317575,
+              "NA": 0.327831531018782
+            }
+          },
+          "merged": {
+            "precision": 0.3970300898788589,
+            "recall": 0.4641388761991777,
+            "f1": 0.4279696714406066,
+            "mean_iou": 0.6611126749220598,
+            "predicted_lines": 2559,
+            "truth_lines": 2189,
+            "oracle_merge_f1": 0.4861704519901057,
+            "unmatched_by_kind": {
+              "missed": 79,
+              "misaligned": 435,
+              "merged": 499,
+              "split": 160
+            },
+            "coverage": {
+              "covered": 0.6948726157317967,
+              "spill": 0.17970132804100225,
+              "area_f1": 0.7523942520507821
+            },
+            "f1_by_group": {
+              "AF": 0.4718498659517426,
+              "AS": 0.41020608439646716,
+              "EU": 0.4277588168373151,
+              "NA": 0.4163265306122449
+            }
+          },
+          "cost": {
+            "pages": 172,
+            "failed_pages": [],
+            "median_ms": 2909.8142500000004,
+            "p95_ms": 4173.6914,
+            "max_ms": 5237.2074,
+            "peak_rss_bytes": 882941952,
+            "load_ms": 4936.9507,
+            "wall_s": 525.7141921999864,
+            "reused_from": "EXP-007 (detected-gnhk.json)"
+          },
+          "ldf2": {
+            "documents": 172,
+            "valid": 172,
+            "not_representable": 0,
+            "lines": 2668,
+            "reasons": {}
+          }
+        },
+        "test-bressay": {
+          "raw": {
+            "precision": 0.3003134094470562,
+            "recall": 0.48817321688500726,
+            "f1": 0.3718641718641719,
+            "mean_iou": 0.6166722863050847,
+            "predicted_lines": 8934,
+            "truth_lines": 5496,
+            "oracle_merge_f1": 0.7123488457310371,
+            "unmatched_by_kind": {
+              "misaligned": 881,
+              "split": 1844,
+              "missed": 87,
+              "merged": 1
+            },
+            "coverage": {
+              "covered": 0.576676664580306,
+              "spill": 0.0028723920825898153,
+              "area_f1": 0.7307391816673132
+            },
+            "f1_by_group": {
+              "x3": 0.3718641718641719
+            }
+          },
+          "merged": {
+            "precision": 0.664903930900758,
+            "recall": 0.6863173216885007,
+            "f1": 0.6754409526367624,
+            "mean_iou": 0.6183276952585509,
+            "predicted_lines": 5673,
+            "truth_lines": 5496,
+            "oracle_merge_f1": 0.7118768328445749,
+            "unmatched_by_kind": {
+              "misaligned": 1456,
+              "missed": 87,
+              "merged": 4,
+              "split": 177
+            },
+            "coverage": {
+              "covered": 0.6205632470473551,
+              "spill": 0.003280806943266244,
+              "area_f1": 0.7648970686875172
+            },
+            "f1_by_group": {
+              "x3": 0.6754409526367624
+            }
+          },
+          "cost": {
+            "pages": 185,
+            "failed_pages": [],
+            "median_ms": 3574.9335,
+            "p95_ms": 4358.745,
+            "max_ms": 5281.0489,
+            "peak_rss_bytes": 944918528,
+            "load_ms": 18666.5816,
+            "wall_s": 710.0525847999961,
+            "reused_from": "EXP-007 (detected-bressay-x3.json)"
+          },
+          "ldf2": {
+            "documents": 185,
+            "valid": 185,
+            "not_representable": 0,
+            "lines": 5673,
+            "reasons": {}
+          }
+        }
+      },
+      "mean_f1_raw": 0.3584467058151269,
+      "mean_f1_merged": 0.5517053120386846
+    },
+    "docufcn-historical": {
+      "license_status": "VERIFIED",
+      "merge_params": {
+        "v_overlap": 0.3,
+        "max_gap": 40.0,
+        "max_angle": 45.0
+      },
+      "sets": {
+        "test-gnhk": {
+          "raw": {
+            "precision": 0.07232554442854872,
+            "recall": 0.20785746916400183,
+            "f1": 0.10731132075471699,
+            "mean_iou": 0.6312797105778009,
+            "predicted_lines": 6291,
+            "truth_lines": 2189,
+            "oracle_merge_f1": 0.3944172557549393,
+            "unmatched_by_kind": {
+              "split": 1110,
+              "misaligned": 538,
+              "missed": 71,
+              "merged": 15
+            },
+            "coverage": {
+              "covered": 0.3650720108759369,
+              "spill": 0.15716691048984444,
+              "area_f1": 0.5094684519866668
+            },
+            "f1_by_group": {
+              "AF": 0.04141616566466266,
+              "AS": 0.21881254169446296,
+              "EU": 0.06327206990057246,
+              "NA": 0.14318706697459582
+            }
+          },
+          "merged": {
+            "precision": 0.1717829457364341,
+            "recall": 0.25308359981726813,
+            "f1": 0.20465459918729217,
+            "mean_iou": 0.6207278657936123,
+            "predicted_lines": 3225,
+            "truth_lines": 2189,
+            "oracle_merge_f1": 0.33677120606188177,
+            "unmatched_by_kind": {
+              "split": 474,
+              "misaligned": 690,
+              "missed": 181,
+              "merged": 290
+            },
+            "coverage": {
+              "covered": 0.5125218570718413,
+              "spill": 0.18603463910211052,
+              "area_f1": 0.6289921722699289
+            },
+            "f1_by_group": {
+              "AF": 0.2357142857142857,
+              "AS": 0.22752293577981653,
+              "EU": 0.16545012165450124,
+              "NA": 0.22533240027991605
+            }
+          },
+          "cost": {
+            "pages": 172,
+            "failed_pages": [],
+            "median_ms": 2911.5689,
+            "p95_ms": 3519.9894,
+            "max_ms": 4143.145,
+            "peak_rss_bytes": 887193600,
+            "load_ms": 5116.6591,
+            "wall_s": 502.9780360000441
+          },
+          "ldf2": {
+            "documents": 172,
+            "valid": 172,
+            "not_representable": 0,
+            "lines": 3377,
+            "reasons": {}
+          }
+        },
+        "test-bressay": {
+          "raw": {
+            "precision": 0.14361183355006502,
+            "recall": 0.3215065502183406,
+            "f1": 0.19853932584269662,
+            "mean_iou": 0.646842008288193,
+            "predicted_lines": 12304,
+            "truth_lines": 5496,
+            "oracle_merge_f1": 0.6003700277520814,
+            "unmatched_by_kind": {
+              "merged": 46,
+              "split": 2905,
+              "misaligned": 599,
+              "missed": 179
+            },
+            "coverage": {
+              "covered": 0.5272288393912027,
+              "spill": 0.005811019817668095,
+              "area_f1": 0.6890481962462907
+            },
+            "f1_by_group": {
+              "x3": 0.19853932584269662
+            }
+          },
+          "merged": {
+            "precision": 0.5608120355265543,
+            "recall": 0.5629548762736536,
+            "f1": 0.5618814128756924,
+            "mean_iou": 0.6526394042760407,
+            "predicted_lines": 5517,
+            "truth_lines": 5496,
+            "oracle_merge_f1": 0.5996475934341093,
+            "unmatched_by_kind": {
+              "merged": 53,
+              "misaligned": 1964,
+              "missed": 179,
+              "split": 206
+            },
+            "coverage": {
+              "covered": 0.6106796195128972,
+              "spill": 0.006013679845839443,
+              "area_f1": 0.7565527164098862
+            },
+            "f1_by_group": {
+              "x3": 0.5618814128756924
+            }
+          },
+          "cost": {
+            "pages": 185,
+            "failed_pages": [],
+            "median_ms": 3887.8908,
+            "p95_ms": 4309.3164,
+            "max_ms": 4693.5522,
+            "peak_rss_bytes": 956170240,
+            "load_ms": 4811.5324,
+            "wall_s": 732.6339779999689
+          },
+          "ldf2": {
+            "documents": 185,
+            "valid": 185,
+            "not_representable": 0,
+            "lines": 5517,
+            "reasons": {}
+          }
+        }
+      },
+      "mean_f1_raw": 0.1529253232987068,
+      "mean_f1_merged": 0.38326800603149225
+    },
+    "classic": {
+      "license_status": "VERIFIED",
+      "merge_params": {
+        "v_overlap": 0.5,
+        "max_gap": 40.0,
+        "max_angle": 45.0
+      },
+      "sets": {
+        "test-gnhk": {
+          "raw": {
+            "precision": 0.08525681014763985,
+            "recall": 0.37460027409776153,
+            "f1": 0.138900652155501,
+            "mean_iou": 0.7520193935813224,
+            "predicted_lines": 9618,
+            "truth_lines": 2189,
+            "oracle_merge_f1": 0.3229510199096128,
+            "unmatched_by_kind": {
+              "split": 858,
+              "merged": 106,
+              "misaligned": 214,
+              "missed": 191
+            },
+            "coverage": {
+              "covered": 0.463391055651579,
+              "spill": 0.09263190533322979,
+              "area_f1": 0.6134794127101704
+            },
+            "f1_by_group": {
+              "AF": 0.17873303167420812,
+              "AS": 0.14799154334038056,
+              "EU": 0.11307872839769574,
+              "NA": 0.1486441245396719
+            }
+          },
+          "merged": {
+            "precision": 0.12292213473315836,
+            "recall": 0.3851073549566012,
+            "f1": 0.18636011937658892,
+            "mean_iou": 0.7518822983645144,
+            "predicted_lines": 6858,
+            "truth_lines": 2189,
+            "oracle_merge_f1": 0.3024526979677645,
+            "unmatched_by_kind": {
+              "split": 542,
+              "merged": 384,
+              "misaligned": 237,
+              "missed": 183
+            },
+            "coverage": {
+              "covered": 0.5811362188892708,
+              "spill": 0.1607814712082629,
+              "area_f1": 0.6867302460038349
+            },
+            "f1_by_group": {
+              "AF": 0.29747899159663865,
+              "AS": 0.14838709677419354,
+              "EU": 0.17629345743224747,
+              "NA": 0.17576791808873718
+            }
+          },
+          "cost": {
+            "pages": 172,
+            "failed_pages": [],
+            "median_ms": 1020.00185,
+            "p95_ms": 3047.2235,
+            "max_ms": 5219.6554,
+            "peak_rss_bytes": 108584960,
+            "load_ms": 0.0534,
+            "wall_s": 215.32773749995977
+          },
+          "ldf2": {
+            "documents": 172,
+            "valid": 170,
+            "not_representable": 2,
+            "lines": 6899,
+            "reasons": {
+              "ValueError": 2
+            }
+          }
+        },
+        "test-bressay": {
+          "raw": {
+            "precision": 0.03858087566991569,
+            "recall": 0.223981077147016,
+            "f1": 0.06582359703767077,
+            "mean_iou": 0.6793104883879356,
+            "predicted_lines": 31907,
+            "truth_lines": 5496,
+            "oracle_merge_f1": 0.7301940005127767,
+            "unmatched_by_kind": {
+              "split": 4034,
+              "missed": 64,
+              "misaligned": 146,
+              "merged": 21
+            },
+            "coverage": {
+              "covered": 0.40319906242178394,
+              "spill": 0.014129234571302,
+              "area_f1": 0.5723285616317976
+            },
+            "f1_by_group": {
+              "x3": 0.06582359703767077
+            }
+          },
+          "merged": {
+            "precision": 0.1517624202053844,
+            "recall": 0.49745269286754,
+            "f1": 0.23257198758028155,
+            "mean_iou": 0.7306067008499472,
+            "predicted_lines": 18015,
+            "truth_lines": 5496,
+            "oracle_merge_f1": 0.7283409330059628,
+            "unmatched_by_kind": {
+              "split": 2341,
+              "missed": 65,
+              "misaligned": 241,
+              "merged": 115
+            },
+            "coverage": {
+              "covered": 0.5236748504780012,
+              "spill": 0.02414094756606887,
+              "area_f1": 0.6815889155671271
+            },
+            "f1_by_group": {
+              "x3": 0.23257198758028155
+            }
+          },
+          "cost": {
+            "pages": 185,
+            "failed_pages": [],
+            "median_ms": 3721.0744,
+            "p95_ms": 9849.6186,
+            "max_ms": 27882.7593,
+            "peak_rss_bytes": 318758912,
+            "load_ms": 0.0508,
+            "wall_s": 856.195079200028
+          },
+          "ldf2": {
+            "documents": 185,
+            "valid": 183,
+            "not_representable": 2,
+            "lines": 17823,
+            "reasons": {
+              "ValueError": 2
+            }
+          }
+        }
+      },
+      "mean_f1_raw": 0.10236212459658588,
+      "mean_f1_merged": 0.20946605347843522
+    },
+    "ppocr-det": {
+      "license_status": "VERIFIED",
+      "merge_params": {
+        "v_overlap": 0.7,
+        "max_gap": 1.0,
+        "max_angle": 20.0
+      },
+      "sets": {
+        "test-gnhk": {
+          "raw": {
+            "precision": 0.6611331649224107,
+            "recall": 0.8369118318867063,
+            "f1": 0.7387096774193549,
+            "mean_iou": 0.7390102226345984,
+            "predicted_lines": 2771,
+            "truth_lines": 2189,
+            "oracle_merge_f1": 0.9066849190052475,
+            "unmatched_by_kind": {
+              "misaligned": 65,
+              "split": 220,
+              "merged": 46,
+              "missed": 26
+            },
+            "coverage": {
+              "covered": 0.9341608177499576,
+              "spill": 0.13156796002843718,
+              "area_f1": 0.9000980794360037
+            },
+            "f1_by_group": {
+              "AF": 0.6851119894598156,
+              "AS": 0.8225806451612905,
+              "EU": 0.6877113866967305,
+              "NA": 0.767353165522502
+            }
+          },
+          "merged": {
+            "precision": 0.7928633594429939,
+            "recall": 0.8323435358611238,
+            "f1": 0.8121239135279696,
+            "mean_iou": 0.7458309712814835,
+            "predicted_lines": 2298,
+            "truth_lines": 2189,
+            "oracle_merge_f1": 0.8738000468274408,
+            "unmatched_by_kind": {
+              "merged": 190,
+              "misaligned": 59,
+              "split": 91,
+              "missed": 27
+            },
+            "coverage": {
+              "covered": 0.94776468261273,
+              "spill": 0.1385834158070339,
+              "area_f1": 0.9025300344353733
+            },
+            "f1_by_group": {
+              "AF": 0.7930535455861072,
+              "AS": 0.8148148148148148,
+              "EU": 0.8177777777777777,
+              "NA": 0.8133891213389121
+            }
+          },
+          "cost": {
+            "pages": 172,
+            "failed_pages": [],
+            "median_ms": 2375.8836,
+            "p95_ms": 2758.5269,
+            "max_ms": 3191.5858,
+            "peak_rss_bytes": 797401088,
+            "load_ms": 1350.633,
+            "wall_s": 372.7641136000166
+          },
+          "ldf2": {
+            "documents": 172,
+            "valid": 172,
+            "not_representable": 0,
+            "lines": 2461,
+            "reasons": {}
+          }
+        },
+        "test-bressay": {
+          "raw": {
+            "precision": 0.9485306903147279,
+            "recall": 0.9925400291120815,
+            "f1": 0.9700364541655553,
+            "mean_iou": 0.854759709696621,
+            "predicted_lines": 5751,
+            "truth_lines": 5496,
+            "oracle_merge_f1": 0.9956284153005464,
+            "unmatched_by_kind": {
+              "misaligned": 6,
+              "split": 13,
+              "missed": 22
+            },
+            "coverage": {
+              "covered": 0.9850487164411722,
+              "spill": 0.030221682058723654,
+              "area_f1": 0.9773538737889579
+            },
+            "f1_by_group": {
+              "x3": 0.9700364541655553
+            }
+          },
+          "merged": {
+            "precision": 0.9710222222222222,
+            "recall": 0.9938136826783115,
+            "f1": 0.982285765668555,
+            "mean_iou": 0.8553908188540376,
+            "predicted_lines": 5625,
+            "truth_lines": 5496,
+            "oracle_merge_f1": 0.9957175398633257,
+            "unmatched_by_kind": {
+              "misaligned": 4,
+              "split": 4,
+              "missed": 24,
+              "merged": 2
+            },
+            "coverage": {
+              "covered": 0.9854793742711002,
+              "spill": 0.030266090812943004,
+              "area_f1": 0.9775432420803523
+            },
+            "f1_by_group": {
+              "x3": 0.982285765668555
+            }
+          },
+          "cost": {
+            "pages": 185,
+            "failed_pages": [],
+            "median_ms": 2834.2044,
+            "p95_ms": 3871.7804,
+            "max_ms": 4346.3004,
+            "peak_rss_bytes": 899198976,
+            "load_ms": 1345.8441,
+            "wall_s": 534.1309764999896
+          },
+          "ldf2": {
+            "documents": 185,
+            "valid": 185,
+            "not_representable": 0,
+            "lines": 5625,
+            "reasons": {}
+          }
+        }
+      },
+      "mean_f1_raw": 0.8543730657924551,
+      "mean_f1_merged": 0.8972048395982624
+    }
+  },
+  "verdicts": {
+    "h1_merge_recovers_the_ceiling": {
+      "f1_merged": {
+        "test-gnhk": 0.4279696714406066,
+        "test-bressay": 0.6754409526367624
+      },
+      "target": {
+        "test-gnhk": 0.43,
+        "test-bressay": 0.57
+      },
+      "met": false
+    },
+    "h2_some_candidate_is_good_enough": {
+      "best_f1": {
+        "test-gnhk": {
+          "docufcn-norhand": 0.4279696714406066,
+          "docufcn-historical": 0.20465459918729217,
+          "classic": 0.18636011937658892,
+          "ppocr-det": 0.8121239135279696
+        },
+        "test-bressay": {
+          "docufcn-norhand": 0.6754409526367624,
+          "docufcn-historical": 0.5618814128756924,
+          "classic": 0.23257198758028155,
+          "ppocr-det": 0.982285765668555
+        }
+      },
+      "target": {
+        "test-gnhk": 0.6,
+        "test-bressay": 0.7
+      },
+      "met_by": [
+        "ppocr-det"
+      ],
+      "met": true
+    },
+    "h3_classic_below_models": {
+      "classic": {
+        "test-gnhk": 0.18636011937658892,
+        "test-bressay": 0.23257198758028155
+      },
+      "best_model": {
+        "test-gnhk": 0.8121239135279696,
+        "test-bressay": 0.982285765668555
+      },
+      "met": true
+    },
+    "h4_cost_of_best": {
+      "candidate": "ppocr-det",
+      "median_ms": {
+        "test-gnhk": 2375.8836,
+        "test-bressay": 2834.2044
+      },
+      "peak_rss_bytes": {
+        "test-gnhk": 797401088,
+        "test-bressay": 899198976
+      },
+      "met": true
+    },
+    "h5_same_verdict_by_coverage": {
+      "ranking_by_f1": {
+        "test-gnhk": [
+          "ppocr-det",
+          "docufcn-norhand",
+          "docufcn-historical",
+          "classic"
+        ],
+        "test-bressay": [
+          "ppocr-det",
+          "docufcn-norhand",
+          "docufcn-historical",
+          "classic"
+        ]
+      },
+      "ranking_by_area_f1": {
+        "test-gnhk": [
+          "ppocr-det",
+          "docufcn-norhand",
+          "classic",
+          "docufcn-historical"
+        ],
+        "test-bressay": [
+          "ppocr-det",
+          "docufcn-norhand",
+          "docufcn-historical",
+          "classic"
+        ]
+      },
+      "met": true
+    }
+  }
+}
