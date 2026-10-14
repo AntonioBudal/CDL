@@ -1,10 +1,8 @@
 """Leitor de linha com um reconhecedor PP-OCR escolhido, opcionalmente ampliando o recorte.
 
-Roda em ``EXP-008/envs/ppocr``. Opções: ``model`` (``small`` embutido no wheel, ou caminho de um
-``.onnx``
-baixado, com SHA-256 conferido), ``ocr_version``, ``model_type``, ``lang_type`` e ``scale`` (fator
-de
-ampliação bicúbica do recorte antes da leitura). Sem rede.
+Roda em ``EXP-008/envs/ppocr``. Opções: ``model_path`` (vazio para o ``small`` embutido no wheel),
+``model_sha256`` (conferido antes da carga), ``ocr_version``, ``model_type``, ``lang_type`` e
+``scale`` (ampliação bicúbica do recorte antes da leitura). Sem rede.
 """
 
 from __future__ import annotations
