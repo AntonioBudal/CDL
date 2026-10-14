@@ -94,7 +94,7 @@ def main(argv: list[str] | None = None) -> int:
         },
         "h4_cost": {
             "median_ms": {k: v["cost"]["median_ms"] for k, v in exp001.items()},
-            "met_by_best": best["cost"]["median_ms"] <= 150
+            "met": best["cost"]["median_ms"] <= 150
             and (best["cost"]["peak_rss_bytes"] or 0) <= 2 * 1024**3,
         },
     }

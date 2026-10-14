@@ -1,0 +1,590 @@
+{
+  "schema": "leitorum-di-reading-benchmark/1",
+  "created_utc": "2026-10-14T11:17:25+00:00",
+  "experiment": "EXP-010",
+  "git": {
+    "commit": "2dec8916b94490faa111937d3122bf83e1660bed",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "license_status": {
+    "ppocr": "VERIFIED (Apache-2.0, conforme declarado)",
+    "gnhk": "VERIFIED (CC-BY-4.0)",
+    "bressay": "NEEDS VALIDATION (exceção experimental; não embasa produto)"
+  },
+  "results": {
+    "latin-x1-lines-exp001": {
+      "model": "latin",
+      "scale": 1,
+      "set": "lines-exp001",
+      "lines": 398,
+      "missing": 0,
+      "cer_micro": 0.42813053666342804,
+      "wer_micro": 0.8004021202705173,
+      "cer_macro": 0.4097134542563568,
+      "ref_chars": 34994,
+      "ref_words": 5471,
+      "lines_with_cer_below_10pct": 19,
+      "cer_by_class": {
+        "letra": {
+          "chars": 27791,
+          "cer": 0.44852650138534056
+        },
+        "letra acentuada": {
+          "chars": 1106,
+          "cer": 0.6980108499095841
+        },
+        "dígito": {
+          "chars": 39,
+          "cer": 0.5641025641025641
+        },
+        "pontuação": {
+          "chars": 970,
+          "cer": 0.5402061855670103
+        },
+        "espaço": {
+          "chars": 5088,
+          "cer": 0.21187106918238993
+        }
+      },
+      "insertions": 121,
+      "cost": {
+        "items": 398,
+        "failed": [],
+        "median_ms": 107.4863,
+        "p95_ms": 182.33326999999997,
+        "peak_rss_bytes": 148267008,
+        "load_ms": 1244.8057
+      }
+    },
+    "latin-x1-lines-gnhk": {
+      "model": "latin",
+      "scale": 1,
+      "set": "lines-gnhk",
+      "lines": 1918,
+      "missing": 0,
+      "cer_micro": 0.23274104980457042,
+      "wer_micro": 0.6212794612794613,
+      "cer_macro": 0.24667030298598214,
+      "ref_chars": 41703,
+      "ref_words": 7425,
+      "lines_with_cer_below_10pct": 496,
+      "cer_by_class": {
+        "letra": {
+          "chars": 32868,
+          "cer": 0.21893635146647195
+        },
+        "dígito": {
+          "chars": 1354,
+          "cer": 0.35081240768094535
+        },
+        "pontuação": {
+          "chars": 1553,
+          "cer": 0.3264649066323245
+        },
+        "espaço": {
+          "chars": 5802,
+          "cer": 0.16425370561875216
+        },
+        "outro": {
+          "chars": 126,
+          "cer": 0.46825396825396826
+        }
+      },
+      "insertions": 516,
+      "cost": {
+        "items": 1918,
+        "failed": [],
+        "median_ms": 27.74615,
+        "p95_ms": 79.91465999999994,
+        "peak_rss_bytes": 129515520,
+        "load_ms": 1229.9755
+      }
+    },
+    "latin-x2-lines-exp001": {
+      "model": "latin",
+      "scale": 2,
+      "set": "lines-exp001",
+      "lines": 398,
+      "missing": 0,
+      "cer_micro": 0.39049551351660283,
+      "wer_micro": 0.7870590385669896,
+      "cer_macro": 0.37312296078916646,
+      "ref_chars": 34994,
+      "ref_words": 5471,
+      "lines_with_cer_below_10pct": 25,
+      "cer_by_class": {
+        "letra": {
+          "chars": 27791,
+          "cer": 0.4096649994602569
+        },
+        "letra acentuada": {
+          "chars": 1106,
+          "cer": 0.6573236889692586
+        },
+        "dígito": {
+          "chars": 39,
+          "cer": 0.5641025641025641
+        },
+        "pontuação": {
+          "chars": 970,
+          "cer": 0.5072164948453608
+        },
+        "espaço": {
+          "chars": 5088,
+          "cer": 0.1761006289308176
+        }
+      },
+      "insertions": 143,
+      "cost": {
+        "items": 398,
+        "failed": [],
+        "median_ms": 133.2158,
+        "p95_ms": 185.11990999999998,
+        "peak_rss_bytes": 151146496,
+        "load_ms": 1216.2282
+      }
+    },
+    "latin-x3-lines-exp001": {
+      "model": "latin",
+      "scale": 3,
+      "set": "lines-exp001",
+      "lines": 398,
+      "missing": 0,
+      "cer_micro": 0.3934674515631251,
+      "wer_micro": 0.7850484372144032,
+      "cer_macro": 0.3778757251308786,
+      "ref_chars": 34994,
+      "ref_words": 5471,
+      "lines_with_cer_below_10pct": 21,
+      "cer_by_class": {
+        "letra": {
+          "chars": 27791,
+          "cer": 0.41286747508186106
+        },
+        "letra acentuada": {
+          "chars": 1106,
+          "cer": 0.6636528028933092
+        },
+        "dígito": {
+          "chars": 39,
+          "cer": 0.5384615384615384
+        },
+        "pontuação": {
+          "chars": 970,
+          "cer": 0.49381443298969074
+        },
+        "espaço": {
+          "chars": 5088,
+          "cer": 0.17944182389937108
+        }
+      },
+      "insertions": 148,
+      "cost": {
+        "items": 398,
+        "failed": [],
+        "median_ms": 133.14685,
+        "p95_ms": 182.13712,
+        "peak_rss_bytes": 155213824,
+        "load_ms": 1223.1301
+      }
+    },
+    "medium-x1-lines-exp001": {
+      "model": "medium",
+      "scale": 1,
+      "set": "lines-exp001",
+      "lines": 398,
+      "missing": 0,
+      "cer_micro": 0.587129222152369,
+      "wer_micro": 0.8201425699140925,
+      "cer_macro": 0.5490820094769108,
+      "ref_chars": 34994,
+      "ref_words": 5471,
+      "lines_with_cer_below_10pct": 25,
+      "cer_by_class": {
+        "letra": {
+          "chars": 27791,
+          "cer": 0.5998344787880968
+        },
+        "letra acentuada": {
+          "chars": 1106,
+          "cer": 0.8987341772151899
+        },
+        "dígito": {
+          "chars": 39,
+          "cer": 0.3333333333333333
+        },
+        "pontuação": {
+          "chars": 970,
+          "cer": 0.5082474226804123
+        },
+        "espaço": {
+          "chars": 5088,
+          "cer": 0.4502751572327044
+        }
+      },
+      "insertions": 85,
+      "cost": {
+        "items": 398,
+        "failed": [],
+        "median_ms": 2149.74165,
+        "p95_ms": 2865.7884299999996,
+        "peak_rss_bytes": 243953664,
+        "load_ms": 1508.636
+      }
+    },
+    "medium-x1-lines-gnhk": {
+      "model": "medium",
+      "scale": 1,
+      "set": "lines-gnhk",
+      "lines": 1918,
+      "missing": 0,
+      "cer_micro": 0.1651919526173177,
+      "wer_micro": 0.4146801346801347,
+      "cer_macro": 0.14618460999122454,
+      "ref_chars": 41703,
+      "ref_words": 7425,
+      "lines_with_cer_below_10pct": 1099,
+      "cer_by_class": {
+        "letra": {
+          "chars": 32868,
+          "cer": 0.14457831325301204
+        },
+        "dígito": {
+          "chars": 1354,
+          "cer": 0.16469719350073855
+        },
+        "pontuação": {
+          "chars": 1553,
+          "cer": 0.2169993560849968
+        },
+        "espaço": {
+          "chars": 5802,
+          "cer": 0.19355394691485694
+        },
+        "outro": {
+          "chars": 126,
+          "cer": 0.30952380952380953
+        }
+      },
+      "insertions": 415,
+      "cost": {
+        "items": 1918,
+        "failed": [],
+        "median_ms": 663.9624,
+        "p95_ms": 1439.893105,
+        "peak_rss_bytes": 244604928,
+        "load_ms": 1496.1718
+      }
+    },
+    "medium-x2-lines-exp001": {
+      "model": "medium",
+      "scale": 2,
+      "set": "lines-exp001",
+      "lines": 398,
+      "missing": 0,
+      "cer_micro": 0.5188889523918386,
+      "wer_micro": 0.787424602449278,
+      "cer_macro": 0.48281928838314164,
+      "ref_chars": 34994,
+      "ref_words": 5471,
+      "lines_with_cer_below_10pct": 35,
+      "cer_by_class": {
+        "letra": {
+          "chars": 27791,
+          "cer": 0.5332301824331618
+        },
+        "letra acentuada": {
+          "chars": 1106,
+          "cer": 0.8860759493670886
+        },
+        "dígito": {
+          "chars": 39,
+          "cer": 0.3333333333333333
+        },
+        "pontuação": {
+          "chars": 970,
+          "cer": 0.44742268041237115
+        },
+        "espaço": {
+          "chars": 5088,
+          "cer": 0.3529874213836478
+        }
+      },
+      "insertions": 116,
+      "cost": {
+        "items": 398,
+        "failed": [],
+        "median_ms": 2270.08785,
+        "p95_ms": 2837.1400599999997,
+        "peak_rss_bytes": 257785856,
+        "load_ms": 1502.5385
+      }
+    },
+    "medium-x3-lines-exp001": {
+      "model": "medium",
+      "scale": 3,
+      "set": "lines-exp001",
+      "lines": 398,
+      "missing": 0,
+      "cer_micro": 0.500771560839001,
+      "wer_micro": 0.7770060318040578,
+      "cer_macro": 0.46971209711351697,
+      "ref_chars": 34994,
+      "ref_words": 5471,
+      "lines_with_cer_below_10pct": 37,
+      "cer_by_class": {
+        "letra": {
+          "chars": 27791,
+          "cer": 0.51430319168076
+        },
+        "letra acentuada": {
+          "chars": 1106,
+          "cer": 0.8725135623869801
+        },
+        "dígito": {
+          "chars": 39,
+          "cer": 0.3333333333333333
+        },
+        "pontuação": {
+          "chars": 970,
+          "cer": 0.4381443298969072
+        },
+        "espaço": {
+          "chars": 5088,
+          "cer": 0.33431603773584906
+        }
+      },
+      "insertions": 127,
+      "cost": {
+        "items": 398,
+        "failed": [],
+        "median_ms": 2310.5305500000004,
+        "p95_ms": 2845.74741,
+        "peak_rss_bytes": 259547136,
+        "load_ms": 1438.3888
+      }
+    },
+    "small-x1-lines-exp001": {
+      "model": "small",
+      "scale": 1,
+      "set": "lines-exp001",
+      "lines": 398,
+      "missing": 0,
+      "cer_micro": 0.38506601131622564,
+      "wer_micro": 0.7609212209833669,
+      "cer_macro": 0.3626149491182186,
+      "ref_chars": 34994,
+      "ref_words": 5471,
+      "lines_with_cer_below_10pct": 32,
+      "cer_by_class": {
+        "letra": {
+          "chars": 27791,
+          "cer": 0.39811449749919037
+        },
+        "letra acentuada": {
+          "chars": 1106,
+          "cer": 0.8155515370705244
+        },
+        "dígito": {
+          "chars": 39,
+          "cer": 0.41025641025641024
+        },
+        "pontuação": {
+          "chars": 970,
+          "cer": 0.4484536082474227
+        },
+        "espaço": {
+          "chars": 5088,
+          "cer": 0.18081761006289307
+        }
+      },
+      "insertions": 138,
+      "cost": {
+        "items": 398,
+        "failed": [],
+        "median_ms": 88.0504,
+        "p95_ms": 167.81201999999996,
+        "peak_rss_bytes": 184512512,
+        "load_ms": 1372.3199
+      }
+    },
+    "small-x1-lines-gnhk": {
+      "model": "small",
+      "scale": 1,
+      "set": "lines-gnhk",
+      "lines": 1918,
+      "missing": 0,
+      "cer_micro": 0.14775915401769657,
+      "wer_micro": 0.45481481481481484,
+      "cer_macro": 0.15434654553586954,
+      "ref_chars": 41703,
+      "ref_words": 7425,
+      "lines_with_cer_below_10pct": 926,
+      "cer_by_class": {
+        "letra": {
+          "chars": 32868,
+          "cer": 0.12708409395156384
+        },
+        "dígito": {
+          "chars": 1354,
+          "cer": 0.1809453471196455
+        },
+        "pontuação": {
+          "chars": 1553,
+          "cer": 0.2343850611719253
+        },
+        "espaço": {
+          "chars": 5802,
+          "cer": 0.14184763874526027
+        },
+        "outro": {
+          "chars": 126,
+          "cer": 0.3492063492063492
+        }
+      },
+      "insertions": 509,
+      "cost": {
+        "items": 1918,
+        "failed": [],
+        "median_ms": 31.047649999999997,
+        "p95_ms": 74.04770499999997,
+        "peak_rss_bytes": 159285248,
+        "load_ms": 1306.478
+      }
+    },
+    "small-x2-lines-exp001": {
+      "model": "small",
+      "scale": 2,
+      "set": "lines-exp001",
+      "lines": 398,
+      "missing": 0,
+      "cer_micro": 0.3437160656112476,
+      "wer_micro": 0.7409979893986474,
+      "cer_macro": 0.32464848036688665,
+      "ref_chars": 34994,
+      "ref_words": 5471,
+      "lines_with_cer_below_10pct": 34,
+      "cer_by_class": {
+        "letra": {
+          "chars": 27791,
+          "cer": 0.35497103378791695
+        },
+        "letra acentuada": {
+          "chars": 1106,
+          "cer": 0.7974683544303798
+        },
+        "dígito": {
+          "chars": 39,
+          "cer": 0.46153846153846156
+        },
+        "pontuação": {
+          "chars": 970,
+          "cer": 0.4144329896907217
+        },
+        "espaço": {
+          "chars": 5088,
+          "cer": 0.13463050314465408
+        }
+      },
+      "insertions": 176,
+      "cost": {
+        "items": 398,
+        "failed": [],
+        "median_ms": 104.67885000000001,
+        "p95_ms": 159.92576499999998,
+        "peak_rss_bytes": 186105856,
+        "load_ms": 1575.9988
+      }
+    },
+    "small-x3-lines-exp001": {
+      "model": "small",
+      "scale": 3,
+      "set": "lines-exp001",
+      "lines": 398,
+      "missing": 0,
+      "cer_micro": 0.34728810653254844,
+      "wer_micro": 0.7369767866934747,
+      "cer_macro": 0.32965740339148125,
+      "ref_chars": 34994,
+      "ref_words": 5471,
+      "lines_with_cer_below_10pct": 37,
+      "cer_by_class": {
+        "letra": {
+          "chars": 27791,
+          "cer": 0.3588212011082725
+        },
+        "letra acentuada": {
+          "chars": 1106,
+          "cer": 0.7920433996383364
+        },
+        "dígito": {
+          "chars": 39,
+          "cer": 0.46153846153846156
+        },
+        "pontuação": {
+          "chars": 970,
+          "cer": 0.40824742268041236
+        },
+        "espaço": {
+          "chars": 5088,
+          "cer": 0.13757861635220126
+        }
+      },
+      "insertions": 191,
+      "cost": {
+        "items": 398,
+        "failed": [],
+        "median_ms": 99.6683,
+        "p95_ms": 142.61656499999992,
+        "peak_rss_bytes": 186949632,
+        "load_ms": 1323.8101
+      }
+    }
+  },
+  "verdicts": {
+    "h1_alternative_model_5_points_better": {
+      "cer_at_1x": {
+        "small": 0.38506601131622564,
+        "medium": 0.587129222152369,
+        "latin": 0.42813053666342804
+      },
+      "baseline_small_1x": 0.385,
+      "met": false
+    },
+    "h2_upscaling_2_points_better": {
+      "gain_by_model": {
+        "small": 0.04134994570497802,
+        "medium": 0.08635766131336797,
+        "latin": 0.03763502314682521
+      },
+      "met": true
+    },
+    "h3_adoption_criterion": {
+      "best": "small-x2-lines-exp001",
+      "cer": 0.3437160656112476,
+      "wer": 0.7409979893986474,
+      "met": false
+    },
+    "h4_cost": {
+      "median_ms": {
+        "latin-x1-lines-exp001": 107.4863,
+        "latin-x2-lines-exp001": 133.2158,
+        "latin-x3-lines-exp001": 133.14685,
+        "medium-x1-lines-exp001": 2149.74165,
+        "medium-x2-lines-exp001": 2270.08785,
+        "medium-x3-lines-exp001": 2310.5305500000004,
+        "small-x1-lines-exp001": 88.0504,
+        "small-x2-lines-exp001": 104.67885000000001,
+        "small-x3-lines-exp001": 99.6683
+      },
+      "met_by_best": true
+    }
+  }
+}
