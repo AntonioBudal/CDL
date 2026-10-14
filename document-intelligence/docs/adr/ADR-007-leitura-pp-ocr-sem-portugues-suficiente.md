@@ -3,7 +3,7 @@
 * **Status:** PROPOSED
 * **Data:** 2026-10-14
 * **Decisores:** Usuário (decisão); Claude Code (proposta)
-* **Experimento de Suporte:** [EXP-009](../../experiments/EXP-009/RESULTS.md)
+* **Experimentos de Suporte:** [EXP-009](../../experiments/EXP-009/RESULTS.md) e [EXP-010](../../experiments/EXP-010/RESULTS.md)
 * **Status de Licença:** PP-OCRv6 small rec e det via `rapidocr` (Apache-2.0) — `LICENSE STATUS: VERIFIED`, conforme declarado. A medida em português depende do BRESSAY (`NEEDS VALIDATION`): serve para orientar experimentos, não para decisão de produto.
 
 ## 1. Contexto
@@ -40,7 +40,18 @@ mesmo pacote tem um reconhecedor multilíngue que declara português. O EXP-009 
 * Fica registrado que o texto de ponta a ponta melhorou com a página ampliada (36,7 % contra 41,4 %): a escala da
   linha é uma variável a medir, não um detalhe.
 
-## 5. Conformidade
+## 5. Evidência acrescentada pelo EXP-010 (2026-10-14)
+
+* **Outros reconhecedores do ecossistema não superam o small:** PP-OCRv5 latino 42,8 % e PP-OCRv6 medium 58,7 %
+  nas mesmas 398 linhas (small: 38,5 %).
+* **Ampliar o recorte 2× ajuda:** o small cai para **34,4 %** (WER 74,1 %), 105 ms por linha. Esta passa a ser a
+  referência a ser batida.
+* O latino erra menos os acentos (66 % contra 80 %), mas mais as demais letras.
+* Nenhum chega ao critério de adoção. O próximo passo deixa de ser "testar outro modelo pronto" e passa a ser
+  **adaptar um reconhecedor ao português**, o que depende de dados com licença adequada (o BRESSAY não tem) ou de
+  dados próprios.
+
+## 6. Conformidade
 
 * [x] Local-first; [x] evidência antes de decisão; [x] licenças declaradas; [x] nenhum texto de terceiros em
   relatório.

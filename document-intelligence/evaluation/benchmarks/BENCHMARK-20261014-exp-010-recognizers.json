@@ -1,9 +1,9 @@
 {
   "schema": "leitorum-di-reading-benchmark/1",
-  "created_utc": "2026-10-14T11:17:25+00:00",
+  "created_utc": "2026-10-14T11:17:44+00:00",
   "experiment": "EXP-010",
   "git": {
-    "commit": "2dec8916b94490faa111937d3122bf83e1660bed",
+    "commit": "e62c005a894a4fc7b56fb48c4a89895db304091e",
     "dirty": false
   },
   "environment": {
@@ -551,18 +551,18 @@
   "verdicts": {
     "h1_alternative_model_5_points_better": {
       "cer_at_1x": {
-        "small": 0.38506601131622564,
+        "latin": 0.42813053666342804,
         "medium": 0.587129222152369,
-        "latin": 0.42813053666342804
+        "small": 0.38506601131622564
       },
       "baseline_small_1x": 0.385,
       "met": false
     },
     "h2_upscaling_2_points_better": {
       "gain_by_model": {
-        "small": 0.04134994570497802,
+        "latin": 0.03763502314682521,
         "medium": 0.08635766131336797,
-        "latin": 0.03763502314682521
+        "small": 0.04134994570497802
       },
       "met": true
     },
@@ -584,7 +584,7 @@
         "small-x2-lines-exp001": 104.67885000000001,
         "small-x3-lines-exp001": 99.6683
       },
-      "met_by_best": true
+      "met": true
     }
   }
 }

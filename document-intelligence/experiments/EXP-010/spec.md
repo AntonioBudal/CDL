@@ -34,7 +34,7 @@ quanto a escala do recorte da linha muda a leitura?
 
 ## Tarefas
 
-- [ ] **T001** Baixar e conferir os dois modelos; registrar licenças.
-- [ ] **T002** Generalizar o leitor de linha do EXP-009 (modelo e escala como opções), com teste da escala.
-- [ ] **T003** Rodar 3 modelos × 3 escalas nas linhas do EXP-001 e 3 modelos × 1× no GNHK.
-- [ ] **T004** Relatório, ADR (ou atualização do ADR-007), registros, verificação.
+- [x] **T001** Baixar e conferir os dois modelos; registrar licenças.
+- [x] **T002** Generalizar o leitor de linha do EXP-009 (modelo e escala como opções), com teste da escala.
+- [x] **T003** Rodar 3 modelos × 3 escalas nas linhas do EXP-001 e 3 modelos × 1× no GNHK.
+- [x] **T004** Relatório, ADR (ou atualização do ADR-007), registros, verificação.

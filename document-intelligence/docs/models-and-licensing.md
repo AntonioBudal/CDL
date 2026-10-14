@@ -79,6 +79,8 @@ Revisões completas e SHA-256: `experiments/EXP-002/candidates.json`.
 | :--- | :--- | :--- | :--- | :---: | :--- |
 | PP-OCRv6 small det via `rapidocr` (+ ONNX Runtime) | `rapidocr` 3.10.0, `onnxruntime` 1.31.0; `PP-OCRv6_det_small.onnx` SHA-256 `090f04ab…1ff94f` (embutido no wheel) | Apache-2.0; MIT (ONNX Runtime) | Apache-2.0 (`MODEL_LICENSES.md` do wheel e card `PaddlePaddle/PP-OCRv6_small_det_onnx`) | Sim | `LICENSE STATUS: VERIFIED` — benchmark EXP-008; só a detecção é usada |
 | PP-OCRv6 small rec via `rapidocr` | `PP-OCRv6_rec_small.onnx` SHA-256 `6f327246…14884` (embutido no wheel) | Apache-2.0 | Apache-2.0 (`MODEL_LICENSES.md` e card `PaddlePaddle/PP-OCRv6_small_rec_onnx`) | Sim | `LICENSE STATUS: VERIFIED` — benchmark EXP-009 |
+| PP-OCRv6 medium rec | `PP-OCRv6_rec_medium.onnx` SHA-256 `eef44482…4894b`, em `models/exp-010/` | Apache-2.0 | Apache-2.0 (card `PaddlePaddle/PP-OCRv6_medium_rec_onnx`) | Sim | `LICENSE STATUS: VERIFIED` — benchmark EXP-010 |
+| PP-OCRv5 latino mobile rec | `latin_PP-OCRv5_rec_mobile.onnx` SHA-256 `b20bd37c…b5f5a`, em `models/exp-010/` | Apache-2.0 | Apache-2.0 (card `PaddlePaddle/latin_PP-OCRv5_mobile_rec_onnx`) | Sim | `LICENSE STATUS: VERIFIED` — benchmark EXP-010 |
 | Surya | — | GPL | restrição de uso comercial | Sim | Excluído |
 | Florence-2 (`microsoft/Florence-2-base`) | rev. `5ca5edf5` | MIT | MIT | Sim | Não avaliado: exige executar código baixado com o modelo |
 
