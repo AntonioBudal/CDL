@@ -50,7 +50,7 @@ def load_candidate(candidate_id: str) -> tuple[dict[str, Any], str, Path | None]
     candidate = next(c for c in registry["candidates"] if c["id"] == candidate_id)
     options = {"id": candidate_id, "seed": 1234, **candidate.get("options", {})}
     weights_dir = None
-    if candidate.get("weights", {}).get("local_dir"):
+    if (candidate.get("weights") or {}).get("local_dir"):
         weights_dir = ROOT / candidate["weights"]["local_dir"]
         options["weights_dir"] = str(weights_dir)
     candidate["options"] = options

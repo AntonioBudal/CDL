@@ -1,16 +1,15 @@
 """Adaptador do detector de linhas de texto PP-OCR (via ``rapidocr`` + ONNX Runtime).
 
-Roda em ``envs/ppocr``. Usa só a etapa de detecção: o classificador de orientação e o reconhecedor
-de
-texto do pacote não são chamados. O modelo é o que vem dentro do wheel
-(``PP-OCRv6_det_small.onnx``);
-o SHA-256 é conferido antes da carga, e nenhuma rede é usada.
+Roda em ``envs/ppocr``. Usa só a etapa de detecção: o classificador de orientação e o
+reconhecedor de texto do pacote não são chamados. O modelo é o que vem dentro do wheel
+(``PP-OCRv6_det_small.onnx``); o SHA-256 é conferido antes da carga, e nenhuma rede é usada.
 """
 
 from __future__ import annotations
 
 import hashlib
 import logging
+from importlib import metadata
 from pathlib import Path
 from typing import Any
 
@@ -31,7 +30,7 @@ class PPOCRDetector:
             raise ValueError(f"SHA-256 do modelo não confere: {model.name}")
         self._id = options.get("id")
         self._model = model.name
-        self._version = rapidocr.__version__
+        self._version = metadata.version("rapidocr")
         self._engine = RapidOCR()
 
     def predict(self, image_path: str) -> dict[str, Any]:
