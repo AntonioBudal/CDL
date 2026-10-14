@@ -1,0 +1,15 @@
+# Ambiente isolado do EXP-008 para o candidato ``ppocr-det`` (detector de linhas de texto PP-OCR via
+# rapidocr + ONNX Runtime). NÃO faz parte do pacote leitorum-di e não depende dele: o worker usa só a
+# biblioteca padrão e o adaptador.
+[project]
+name = "exp-008-ppocr"
+version = "0.0.0"
+description = "EXP-008: detector de linhas PP-OCR (rapidocr + onnxruntime)"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "rapidocr==3.10.0",
+    "onnxruntime",
+]
+
+[tool.uv]
+package = false

@@ -1,0 +1,166 @@
+{
+  "schema": "leitorum-di-candidates/1",
+  "experiment": "EXP-008",
+  "note": "Licenças conforme declaradas nas fontes oficiais; não constitui parecer jurídico. Nada aqui é autorizado para produto.",
+  "candidates": [
+    {
+      "stage": "linhas",
+      "family": "FCN (Doc-UFCN)",
+      "environment": "envs/docufcn",
+      "code": {
+        "package": "doc-ufcn==0.1.9",
+        "license": "BSD-3-Clause",
+        "source": "https://pypi.org/project/doc-ufcn/",
+        "remarks": "Licença declarada nos metadados do PyPI; o repositório oficial (gitlab.teklia.com) bloqueia acesso automatizado. Conferir o arquivo LICENSE dentro do pacote na instalação (T020)."
+      },
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "remarks": "model.pth é pickle: carregar só após conferir o SHA-256.",
+      "id": "docufcn-norhand",
+      "adapter": "adapters.docufcn:DocUFCNDetector",
+      "weights": {
+        "repository": "https://huggingface.co/Teklia/doc-ufcn-norhand-v1-line",
+        "revision": "43ec736950e268798802a5499318f1183276f0ff",
+        "license": "MIT",
+        "files": {
+          "model.pth": {
+            "bytes": 49115013,
+            "sha256": "8e6e5e4f272a9b43a98de036c9164fdc522d2780e2e66dd601bde930bb14a950"
+          },
+          "parameters.yml": {
+            "bytes": 186,
+            "sha256": "c3cdabdd8503e517f9470c63ceefc788ad545574bd793248279ae1429650d5d7"
+          }
+        },
+        "local_dir": "models/exp-002/docufcn-norhand-line"
+      },
+      "source_entry": "experiments/EXP-002/candidates.json#docufcn-norhand-line",
+      "environment_path": "experiments/EXP-002/envs/docufcn"
+    },
+    {
+      "stage": "linhas",
+      "family": "FCN (Doc-UFCN)",
+      "environment": "envs/docufcn",
+      "code": {
+        "package": "doc-ufcn==0.1.9",
+        "license": "BSD-3-Clause",
+        "source": "https://pypi.org/project/doc-ufcn/",
+        "remarks": "Licença declarada nos metadados do PyPI; o repositório oficial (gitlab.teklia.com) bloqueia acesso automatizado. Conferir o arquivo LICENSE dentro do pacote na instalação (T020)."
+      },
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "remarks": "model.pth é pickle: carregar só após conferir o SHA-256.",
+      "id": "docufcn-historical",
+      "adapter": "adapters.docufcn:DocUFCNDetector",
+      "weights": {
+        "repository": "https://huggingface.co/Teklia/doc-ufcn-generic-historical-line",
+        "revision": "3338539ef366fa0d963e87de675bc431183a7c80",
+        "license": "MIT",
+        "files": {
+          "model.pth": {
+            "bytes": 49198561,
+            "sha256": "b5d0659a29638446f573bec8928f3380f8643f4bee5c9ea7b8e64ae813dcc6f5"
+          },
+          "parameters.yml": {
+            "bytes": 151,
+            "sha256": "10d02400932639334ab11bb41325b6a43ac176d18d15e61501b64916cb9d9641"
+          }
+        },
+        "local_dir": "models/exp-002/docufcn-historical-line"
+      },
+      "source_entry": "experiments/EXP-002/candidates.json#docufcn-historical-line",
+      "environment_path": "experiments/EXP-002/envs/docufcn"
+    },
+    {
+      "id": "classic",
+      "stage": "linhas e blocos",
+      "family": "sem aprendizado (OpenCV + NumPy)",
+      "environment": "envs/harness",
+      "code": {
+        "package": "opencv-python-headless 5.0.0.93",
+        "license": "Apache-2.0",
+        "source": "https://github.com/opencv/opencv"
+      },
+      "weights": null,
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "adapter": "adapters.classic:ClassicDetector",
+      "environment_path": null,
+      "options": {
+        "classic_params": {
+          "block_size": 41,
+          "offset": 30,
+          "rule_kernel": 90,
+          "dilate_width": 15,
+          "dilate_height": 3,
+          "min_area": 120,
+          "max_height_factor": 3.0,
+          "merge_gap_factor": 4.0,
+          "max_side": 2500
+        }
+      },
+      "source_entry": "experiments/EXP-002/candidates.json#classic; parâmetros de experiments/EXP-002/calibration.json"
+    },
+    {
+      "id": "ppocr-det",
+      "stage": "linhas",
+      "family": "DBNet (PP-OCRv6 small det)",
+      "adapter": "adapters.ppocr:PPOCRDetector",
+      "environment_path": "experiments/EXP-008/envs/ppocr",
+      "code": {
+        "package": "rapidocr==3.10.0 + onnxruntime==1.31.0",
+        "license": "Apache-2.0 (rapidocr); MIT (ONNX Runtime)",
+        "source": "https://pypi.org/project/rapidocr/"
+      },
+      "weights": {
+        "repository": "https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx",
+        "license": "Apache-2.0",
+        "evidence": "MODEL_LICENSES.md dentro do wheel do rapidocr 3.10.0 e card oficial do modelo (consulta em 2026-10-13)",
+        "bundled_in_wheel": true
+      },
+      "options": {
+        "model_file": "PP-OCRv6_det_small.onnx",
+        "model_sha256": "090f04abcd9d9a7498bc4ebf677e4cb9bdce1fe4197ddb7e529f1ef44e1ff94f"
+      },
+      "license_status": "VERIFIED",
+      "benchmark_allowed": true,
+      "product_allowed": false,
+      "remarks": "O plano previa o PP-OCRv5 mobile; o wheel traz o PP-OCRv6 small, usado sem download adicional. Só a etapa de detecção é chamada."
+    }
+  ],
+  "excluded": [
+    {
+      "id": "kraken",
+      "reason": "sem wheels para Windows (EXP-002)"
+    },
+    {
+      "id": "doctr",
+      "reason": "pesos sem licença declarada (EXP-002)"
+    },
+    {
+      "id": "ultralytics/yolo",
+      "reason": "AGPL-3.0, excluído por decisão do usuário"
+    },
+    {
+      "id": "surya",
+      "reason": "código GPL e pesos com restrição de uso comercial"
+    },
+    {
+      "id": "florence-2",
+      "reason": "exige executar código baixado junto com o modelo e é pesado para CPU"
+    }
+  ],
+  "datasets": {
+    "gnhk": {
+      "license": "CC-BY-4.0",
+      "license_status": "VERIFIED"
+    },
+    "bressay": {
+      "license_status": "NEEDS VALIDATION",
+      "user_exception": "2026-10-13, só experimento local"
+    }
+  }
+}

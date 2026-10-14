@@ -1,0 +1,1387 @@
+{
+ "schema": "leitorum-di-subsets/1",
+ "note": "Conjuntos de CALIBRAÇÃO. Só nomes de arquivo; o conteúdo não é versionado. O teste é o do EXP-007 (experiments/EXP-007/subsets.json).",
+ "gnhk": {
+  "archive": "train_data.zip",
+  "archive_sha256": "a8a841f504761a7df91c5104cff1d85d534dd5834af99c2d68baecb7c6cddda2",
+  "split": "treino oficial, amostra de 150 com semente 1234",
+  "files": [
+   {
+    "id": "eng_AF_003",
+    "member": "train/eng_AF_003.jpg"
+   },
+   {
+    "id": "eng_AF_012",
+    "member": "train/eng_AF_012.jpg"
+   },
+   {
+    "id": "eng_AF_013",
+    "member": "train/eng_AF_013.jpg"
+   },
+   {
+    "id": "eng_AF_014",
+    "member": "train/eng_AF_014.jpg"
+   },
+   {
+    "id": "eng_AF_019",
+    "member": "train/eng_AF_019.jpg"
+   },
+   {
+    "id": "eng_AF_023",
+    "member": "train/eng_AF_023.jpg"
+   },
+   {
+    "id": "eng_AF_025",
+    "member": "train/eng_AF_025.jpg"
+   },
+   {
+    "id": "eng_AF_029",
+    "member": "train/eng_AF_029.jpg"
+   },
+   {
+    "id": "eng_AF_030",
+    "member": "train/eng_AF_030.jpg"
+   },
+   {
+    "id": "eng_AF_033",
+    "member": "train/eng_AF_033.jpg"
+   },
+   {
+    "id": "eng_AF_042",
+    "member": "train/eng_AF_042.jpg"
+   },
+   {
+    "id": "eng_AF_050",
+    "member": "train/eng_AF_050.jpg"
+   },
+   {
+    "id": "eng_AF_051",
+    "member": "train/eng_AF_051.jpg"
+   },
+   {
+    "id": "eng_AF_053",
+    "member": "train/eng_AF_053.jpg"
+   },
+   {
+    "id": "eng_AF_054",
+    "member": "train/eng_AF_054.jpg"
+   },
+   {
+    "id": "eng_AF_056",
+    "member": "train/eng_AF_056.jpg"
+   },
+   {
+    "id": "eng_AF_057",
+    "member": "train/eng_AF_057.jpg"
+   },
+   {
+    "id": "eng_AF_060",
+    "member": "train/eng_AF_060.jpg"
+   },
+   {
+    "id": "eng_AF_068",
+    "member": "train/eng_AF_068.jpg"
+   },
+   {
+    "id": "eng_AF_070",
+    "member": "train/eng_AF_070.jpg"
+   },
+   {
+    "id": "eng_AF_079",
+    "member": "train/eng_AF_079.jpg"
+   },
+   {
+    "id": "eng_AF_081",
+    "member": "train/eng_AF_081.jpg"
+   },
+   {
+    "id": "eng_AF_086",
+    "member": "train/eng_AF_086.jpg"
+   },
+   {
+    "id": "eng_AF_087",
+    "member": "train/eng_AF_087.jpg"
+   },
+   {
+    "id": "eng_AF_089",
+    "member": "train/eng_AF_089.jpg"
+   },
+   {
+    "id": "eng_AF_092",
+    "member": "train/eng_AF_092.jpg"
+   },
+   {
+    "id": "eng_AF_094",
+    "member": "train/eng_AF_094.jpg"
+   },
+   {
+    "id": "eng_AF_106",
+    "member": "train/eng_AF_106.jpg"
+   },
+   {
+    "id": "eng_AF_107",
+    "member": "train/eng_AF_107.jpg"
+   },
+   {
+    "id": "eng_AF_110",
+    "member": "train/eng_AF_110.jpg"
+   },
+   {
+    "id": "eng_AF_116",
+    "member": "train/eng_AF_116.jpg"
+   },
+   {
+    "id": "eng_AF_117",
+    "member": "train/eng_AF_117.jpg"
+   },
+   {
+    "id": "eng_AF_121",
+    "member": "train/eng_AF_121.jpg"
+   },
+   {
+    "id": "eng_AF_123",
+    "member": "train/eng_AF_123.jpg"
+   },
+   {
+    "id": "eng_AF_125",
+    "member": "train/eng_AF_125.jpg"
+   },
+   {
+    "id": "eng_AS_003",
+    "member": "train/eng_AS_003.jpg"
+   },
+   {
+    "id": "eng_AS_008",
+    "member": "train/eng_AS_008.jpg"
+   },
+   {
+    "id": "eng_AS_009",
+    "member": "train/eng_AS_009.jpg"
+   },
+   {
+    "id": "eng_AS_011",
+    "member": "train/eng_AS_011.jpg"
+   },
+   {
+    "id": "eng_AS_017",
+    "member": "train/eng_AS_017.jpg"
+   },
+   {
+    "id": "eng_AS_024",
+    "member": "train/eng_AS_024.jpg"
+   },
+   {
+    "id": "eng_AS_035",
+    "member": "train/eng_AS_035.jpg"
+   },
+   {
+    "id": "eng_AS_050",
+    "member": "train/eng_AS_050.jpg"
+   },
+   {
+    "id": "eng_AS_053",
+    "member": "train/eng_AS_053.jpg"
+   },
+   {
+    "id": "eng_AS_062",
+    "member": "train/eng_AS_062.jpg"
+   },
+   {
+    "id": "eng_AS_066",
+    "member": "train/eng_AS_066.jpg"
+   },
+   {
+    "id": "eng_AS_074",
+    "member": "train/eng_AS_074.jpg"
+   },
+   {
+    "id": "eng_AS_076",
+    "member": "train/eng_AS_076.jpg"
+   },
+   {
+    "id": "eng_AS_079",
+    "member": "train/eng_AS_079.jpg"
+   },
+   {
+    "id": "eng_AS_080",
+    "member": "train/eng_AS_080.jpg"
+   },
+   {
+    "id": "eng_AS_082",
+    "member": "train/eng_AS_082.jpg"
+   },
+   {
+    "id": "eng_AS_085",
+    "member": "train/eng_AS_085.jpg"
+   },
+   {
+    "id": "eng_AS_095",
+    "member": "train/eng_AS_095.jpg"
+   },
+   {
+    "id": "eng_AS_097",
+    "member": "train/eng_AS_097.jpg"
+   },
+   {
+    "id": "eng_AS_098",
+    "member": "train/eng_AS_098.jpg"
+   },
+   {
+    "id": "eng_AS_100",
+    "member": "train/eng_AS_100.jpg"
+   },
+   {
+    "id": "eng_EU_018",
+    "member": "train/eng_EU_018.jpg"
+   },
+   {
+    "id": "eng_EU_022",
+    "member": "train/eng_EU_022.jpg"
+   },
+   {
+    "id": "eng_EU_024",
+    "member": "train/eng_EU_024.jpg"
+   },
+   {
+    "id": "eng_EU_028",
+    "member": "train/eng_EU_028.jpg"
+   },
+   {
+    "id": "eng_EU_029",
+    "member": "train/eng_EU_029.jpg"
+   },
+   {
+    "id": "eng_EU_032",
+    "member": "train/eng_EU_032.jpg"
+   },
+   {
+    "id": "eng_EU_049",
+    "member": "train/eng_EU_049.jpg"
+   },
+   {
+    "id": "eng_EU_050",
+    "member": "train/eng_EU_050.jpg"
+   },
+   {
+    "id": "eng_EU_055",
+    "member": "train/eng_EU_055.jpg"
+   },
+   {
+    "id": "eng_EU_077",
+    "member": "train/eng_EU_077.jpg"
+   },
+   {
+    "id": "eng_EU_087",
+    "member": "train/eng_EU_087.jpg"
+   },
+   {
+    "id": "eng_EU_088",
+    "member": "train/eng_EU_088.jpg"
+   },
+   {
+    "id": "eng_EU_089",
+    "member": "train/eng_EU_089.jpg"
+   },
+   {
+    "id": "eng_EU_097",
+    "member": "train/eng_EU_097.jpg"
+   },
+   {
+    "id": "eng_EU_104",
+    "member": "train/eng_EU_104.jpg"
+   },
+   {
+    "id": "eng_EU_105",
+    "member": "train/eng_EU_105.jpg"
+   },
+   {
+    "id": "eng_EU_106",
+    "member": "train/eng_EU_106.jpg"
+   },
+   {
+    "id": "eng_EU_108",
+    "member": "train/eng_EU_108.jpg"
+   },
+   {
+    "id": "eng_EU_110",
+    "member": "train/eng_EU_110.jpg"
+   },
+   {
+    "id": "eng_EU_111",
+    "member": "train/eng_EU_111.jpg"
+   },
+   {
+    "id": "eng_EU_116",
+    "member": "train/eng_EU_116.jpg"
+   },
+   {
+    "id": "eng_EU_120",
+    "member": "train/eng_EU_120.jpg"
+   },
+   {
+    "id": "eng_EU_121",
+    "member": "train/eng_EU_121.jpg"
+   },
+   {
+    "id": "eng_EU_122",
+    "member": "train/eng_EU_122.jpg"
+   },
+   {
+    "id": "eng_EU_127",
+    "member": "train/eng_EU_127.jpg"
+   },
+   {
+    "id": "eng_EU_130",
+    "member": "train/eng_EU_130.jpg"
+   },
+   {
+    "id": "eng_EU_134",
+    "member": "train/eng_EU_134.jpg"
+   },
+   {
+    "id": "eng_EU_141",
+    "member": "train/eng_EU_141.jpg"
+   },
+   {
+    "id": "eng_EU_145",
+    "member": "train/eng_EU_145.jpg"
+   },
+   {
+    "id": "eng_EU_147",
+    "member": "train/eng_EU_147.jpg"
+   },
+   {
+    "id": "eng_EU_154",
+    "member": "train/eng_EU_154.jpg"
+   },
+   {
+    "id": "eng_EU_161",
+    "member": "train/eng_EU_161.jpg"
+   },
+   {
+    "id": "eng_EU_171",
+    "member": "train/eng_EU_171.jpg"
+   },
+   {
+    "id": "eng_EU_172",
+    "member": "train/eng_EU_172.jpg"
+   },
+   {
+    "id": "eng_EU_176",
+    "member": "train/eng_EU_176.jpg"
+   },
+   {
+    "id": "eng_EU_187",
+    "member": "train/eng_EU_187.jpg"
+   },
+   {
+    "id": "eng_EU_188",
+    "member": "train/eng_EU_188.jpg"
+   },
+   {
+    "id": "eng_EU_189",
+    "member": "train/eng_EU_189.jpg"
+   },
+   {
+    "id": "eng_EU_191",
+    "member": "train/eng_EU_191.jpg"
+   },
+   {
+    "id": "eng_EU_201",
+    "member": "train/eng_EU_201.jpg"
+   },
+   {
+    "id": "eng_EU_204",
+    "member": "train/eng_EU_204.jpg"
+   },
+   {
+    "id": "eng_EU_213",
+    "member": "train/eng_EU_213.jpg"
+   },
+   {
+    "id": "eng_EU_218",
+    "member": "train/eng_EU_218.jpg"
+   },
+   {
+    "id": "eng_EU_228",
+    "member": "train/eng_EU_228.jpg"
+   },
+   {
+    "id": "eng_EU_231",
+    "member": "train/eng_EU_231.jpg"
+   },
+   {
+    "id": "eng_EU_232",
+    "member": "train/eng_EU_232.jpg"
+   },
+   {
+    "id": "eng_EU_236",
+    "member": "train/eng_EU_236.jpg"
+   },
+   {
+    "id": "eng_EU_237",
+    "member": "train/eng_EU_237.jpg"
+   },
+   {
+    "id": "eng_EU_242",
+    "member": "train/eng_EU_242.jpg"
+   },
+   {
+    "id": "eng_EU_244",
+    "member": "train/eng_EU_244.jpg"
+   },
+   {
+    "id": "eng_EU_245",
+    "member": "train/eng_EU_245.jpg"
+   },
+   {
+    "id": "eng_EU_247",
+    "member": "train/eng_EU_247.jpg"
+   },
+   {
+    "id": "eng_EU_249",
+    "member": "train/eng_EU_249.jpg"
+   },
+   {
+    "id": "eng_EU_258",
+    "member": "train/eng_EU_258.jpg"
+   },
+   {
+    "id": "eng_EU_263",
+    "member": "train/eng_EU_263.jpg"
+   },
+   {
+    "id": "eng_EU_264",
+    "member": "train/eng_EU_264.jpg"
+   },
+   {
+    "id": "eng_EU_270",
+    "member": "train/eng_EU_270.jpg"
+   },
+   {
+    "id": "eng_EU_273",
+    "member": "train/eng_EU_273.jpg"
+   },
+   {
+    "id": "eng_EU_288",
+    "member": "train/eng_EU_288.jpg"
+   },
+   {
+    "id": "eng_EU_311",
+    "member": "train/eng_EU_311.jpg"
+   },
+   {
+    "id": "eng_EU_312",
+    "member": "train/eng_EU_312.jpg"
+   },
+   {
+    "id": "eng_EU_317",
+    "member": "train/eng_EU_317.jpg"
+   },
+   {
+    "id": "eng_EU_323",
+    "member": "train/eng_EU_323.jpg"
+   },
+   {
+    "id": "eng_EU_329",
+    "member": "train/eng_EU_329.jpg"
+   },
+   {
+    "id": "eng_NA_004",
+    "member": "train/eng_NA_004.jpg"
+   },
+   {
+    "id": "eng_NA_006",
+    "member": "train/eng_NA_006.jpg"
+   },
+   {
+    "id": "eng_NA_008",
+    "member": "train/eng_NA_008.jpg"
+   },
+   {
+    "id": "eng_NA_009",
+    "member": "train/eng_NA_009.jpg"
+   },
+   {
+    "id": "eng_NA_016",
+    "member": "train/eng_NA_016.jpg"
+   },
+   {
+    "id": "eng_NA_017",
+    "member": "train/eng_NA_017.jpg"
+   },
+   {
+    "id": "eng_NA_022",
+    "member": "train/eng_NA_022.jpg"
+   },
+   {
+    "id": "eng_NA_024",
+    "member": "train/eng_NA_024.jpg"
+   },
+   {
+    "id": "eng_NA_037",
+    "member": "train/eng_NA_037.jpg"
+   },
+   {
+    "id": "eng_NA_042",
+    "member": "train/eng_NA_042.jpg"
+   },
+   {
+    "id": "eng_NA_046",
+    "member": "train/eng_NA_046.jpg"
+   },
+   {
+    "id": "eng_NA_051",
+    "member": "train/eng_NA_051.jpg"
+   },
+   {
+    "id": "eng_NA_059",
+    "member": "train/eng_NA_059.jpg"
+   },
+   {
+    "id": "eng_NA_060",
+    "member": "train/eng_NA_060.jpg"
+   },
+   {
+    "id": "eng_NA_061",
+    "member": "train/eng_NA_061.jpg"
+   },
+   {
+    "id": "eng_NA_062",
+    "member": "train/eng_NA_062.jpg"
+   },
+   {
+    "id": "eng_NA_079",
+    "member": "train/eng_NA_079.jpg"
+   },
+   {
+    "id": "eng_NA_080",
+    "member": "train/eng_NA_080.jpg"
+   },
+   {
+    "id": "eng_NA_082",
+    "member": "train/eng_NA_082.jpg"
+   },
+   {
+    "id": "eng_NA_097",
+    "member": "train/eng_NA_097.jpg"
+   },
+   {
+    "id": "eng_NA_100",
+    "member": "train/eng_NA_100.jpg"
+   },
+   {
+    "id": "eng_NA_103",
+    "member": "train/eng_NA_103.jpg"
+   },
+   {
+    "id": "eng_NA_110",
+    "member": "train/eng_NA_110.jpg"
+   },
+   {
+    "id": "eng_NA_118",
+    "member": "train/eng_NA_118.jpg"
+   },
+   {
+    "id": "eng_NA_123",
+    "member": "train/eng_NA_123.jpg"
+   },
+   {
+    "id": "eng_NA_126",
+    "member": "train/eng_NA_126.jpg"
+   },
+   {
+    "id": "eng_NA_133",
+    "member": "train/eng_NA_133.jpg"
+   },
+   {
+    "id": "eng_NA_135",
+    "member": "train/eng_NA_135.jpg"
+   },
+   {
+    "id": "eng_NA_144",
+    "member": "train/eng_NA_144.jpg"
+   },
+   {
+    "id": "eng_NA_146",
+    "member": "train/eng_NA_146.jpg"
+   }
+  ]
+ },
+ "bressay": {
+  "archive": "bressay.zip (DOI 10.5281/zenodo.11637681)",
+  "split": "bressay/sets/validation.txt",
+  "files": [
+   {
+    "id": "0212-004",
+    "member": "bressay/data/pages/0212-004/0212-004.png",
+    "usable": true
+   },
+   {
+    "id": "0222-014",
+    "member": "bressay/data/pages/0222-014/0222-014.png",
+    "usable": true
+   },
+   {
+    "id": "0242-034",
+    "member": "bressay/data/pages/0242-034/0242-034.png",
+    "usable": true
+   },
+   {
+    "id": "0246-038",
+    "member": "bressay/data/pages/0246-038/0246-038.png",
+    "usable": true
+   },
+   {
+    "id": "0416-014",
+    "member": "bressay/data/pages/0416-014/0416-014.png",
+    "usable": true
+   },
+   {
+    "id": "0559-006",
+    "member": "bressay/data/pages/0559-006/0559-006.png",
+    "usable": true
+   },
+   {
+    "id": "0577-024",
+    "member": "bressay/data/pages/0577-024/0577-024.png",
+    "usable": true
+   },
+   {
+    "id": "0591-038",
+    "member": "bressay/data/pages/0591-038/0591-038.png",
+    "usable": true
+   },
+   {
+    "id": "0653-044",
+    "member": "bressay/data/pages/0653-044/0653-044.png",
+    "usable": true
+   },
+   {
+    "id": "0655-046",
+    "member": "bressay/data/pages/0655-046/0655-046.png",
+    "usable": true
+   },
+   {
+    "id": "0663-054",
+    "member": "bressay/data/pages/0663-054/0663-054.png",
+    "usable": true
+   },
+   {
+    "id": "0679-070",
+    "member": "bressay/data/pages/0679-070/0679-070.png",
+    "usable": true
+   },
+   {
+    "id": "0769-030",
+    "member": "bressay/data/pages/0769-030/0769-030.png",
+    "usable": true
+   },
+   {
+    "id": "0950-035",
+    "member": "bressay/data/pages/0950-035/0950-035.png",
+    "usable": true
+   },
+   {
+    "id": "0952-037",
+    "member": "bressay/data/pages/0952-037/0952-037.png",
+    "usable": true
+   },
+   {
+    "id": "0958-043",
+    "member": "bressay/data/pages/0958-043/0958-043.png",
+    "usable": true
+   },
+   {
+    "id": "0989-015",
+    "member": "bressay/data/pages/0989-015/0989-015.png",
+    "usable": true
+   },
+   {
+    "id": "0994-020",
+    "member": "bressay/data/pages/0994-020/0994-020.png",
+    "usable": true
+   },
+   {
+    "id": "1430-034",
+    "member": "bressay/data/pages/1430-034/1430-034.png",
+    "usable": true
+   },
+   {
+    "id": "1433-037",
+    "member": "bressay/data/pages/1433-037/1433-037.png",
+    "usable": true
+   },
+   {
+    "id": "1434-038",
+    "member": "bressay/data/pages/1434-038/1434-038.png",
+    "usable": true
+   },
+   {
+    "id": "1445-049",
+    "member": "bressay/data/pages/1445-049/1445-049.png",
+    "usable": true
+   },
+   {
+    "id": "1479-024",
+    "member": "bressay/data/pages/1479-024/1479-024.png",
+    "usable": true
+   },
+   {
+    "id": "1480-025",
+    "member": "bressay/data/pages/1480-025/1480-025.png",
+    "usable": true
+   },
+   {
+    "id": "1497-042",
+    "member": "bressay/data/pages/1497-042/1497-042.png",
+    "usable": true
+   },
+   {
+    "id": "1634-023",
+    "member": "bressay/data/pages/1634-023/1634-023.png",
+    "usable": true
+   },
+   {
+    "id": "1636-025",
+    "member": "bressay/data/pages/1636-025/1636-025.png",
+    "usable": false
+   },
+   {
+    "id": "1640-029",
+    "member": "bressay/data/pages/1640-029/1640-029.png",
+    "usable": true
+   },
+   {
+    "id": "1645-034",
+    "member": "bressay/data/pages/1645-034/1645-034.png",
+    "usable": true
+   },
+   {
+    "id": "1653-042",
+    "member": "bressay/data/pages/1653-042/1653-042.png",
+    "usable": true
+   },
+   {
+    "id": "1658-047",
+    "member": "bressay/data/pages/1658-047/1658-047.png",
+    "usable": true
+   },
+   {
+    "id": "1665-054",
+    "member": "bressay/data/pages/1665-054/1665-054.png",
+    "usable": true
+   },
+   {
+    "id": "1668-057",
+    "member": "bressay/data/pages/1668-057/1668-057.png",
+    "usable": true
+   },
+   {
+    "id": "1670-059",
+    "member": "bressay/data/pages/1670-059/1670-059.png",
+    "usable": true
+   },
+   {
+    "id": "1671-060",
+    "member": "bressay/data/pages/1671-060/1671-060.png",
+    "usable": false
+   },
+   {
+    "id": "1676-065",
+    "member": "bressay/data/pages/1676-065/1676-065.png",
+    "usable": true
+   },
+   {
+    "id": "1681-070",
+    "member": "bressay/data/pages/1681-070/1681-070.png",
+    "usable": true
+   },
+   {
+    "id": "1760-024",
+    "member": "bressay/data/pages/1760-024/1760-024.png",
+    "usable": false
+   },
+   {
+    "id": "2185-042",
+    "member": "bressay/data/pages/2185-042/2185-042.png",
+    "usable": true
+   },
+   {
+    "id": "2190-047",
+    "member": "bressay/data/pages/2190-047/2190-047.png",
+    "usable": true
+   },
+   {
+    "id": "2242-042",
+    "member": "bressay/data/pages/2242-042/2242-042.png",
+    "usable": true
+   },
+   {
+    "id": "2243-043",
+    "member": "bressay/data/pages/2243-043/2243-043.png",
+    "usable": true
+   },
+   {
+    "id": "2250-050",
+    "member": "bressay/data/pages/2250-050/2250-050.png",
+    "usable": true
+   },
+   {
+    "id": "2319-026",
+    "member": "bressay/data/pages/2319-026/2319-026.png",
+    "usable": true
+   },
+   {
+    "id": "2330-037",
+    "member": "bressay/data/pages/2330-037/2330-037.png",
+    "usable": true
+   },
+   {
+    "id": "2347-054",
+    "member": "bressay/data/pages/2347-054/2347-054.png",
+    "usable": false
+   },
+   {
+    "id": "2509-052",
+    "member": "bressay/data/pages/2509-052/2509-052.png",
+    "usable": true
+   },
+   {
+    "id": "2604-021",
+    "member": "bressay/data/pages/2604-021/2604-021.png",
+    "usable": true
+   },
+   {
+    "id": "2611-028",
+    "member": "bressay/data/pages/2611-028/2611-028.png",
+    "usable": true
+   },
+   {
+    "id": "2612-029",
+    "member": "bressay/data/pages/2612-029/2612-029.png",
+    "usable": true
+   },
+   {
+    "id": "2635-021",
+    "member": "bressay/data/pages/2635-021/2635-021.png",
+    "usable": true
+   },
+   {
+    "id": "2640-026",
+    "member": "bressay/data/pages/2640-026/2640-026.png",
+    "usable": true
+   },
+   {
+    "id": "2641-027",
+    "member": "bressay/data/pages/2641-027/2641-027.png",
+    "usable": true
+   },
+   {
+    "id": "2969-012",
+    "member": "bressay/data/pages/2969-012/2969-012.png",
+    "usable": true
+   },
+   {
+    "id": "3196-006",
+    "member": "bressay/data/pages/3196-006/3196-006.png",
+    "usable": true
+   },
+   {
+    "id": "3667-037",
+    "member": "bressay/data/pages/3667-037/3667-037.png",
+    "usable": true
+   },
+   {
+    "id": "3675-045",
+    "member": "bressay/data/pages/3675-045/3675-045.png",
+    "usable": true
+   },
+   {
+    "id": "3677-047",
+    "member": "bressay/data/pages/3677-047/3677-047.png",
+    "usable": true
+   },
+   {
+    "id": "3678-048",
+    "member": "bressay/data/pages/3678-048/3678-048.png",
+    "usable": false
+   },
+   {
+    "id": "3680-050",
+    "member": "bressay/data/pages/3680-050/3680-050.png",
+    "usable": true
+   },
+   {
+    "id": "3681-051",
+    "member": "bressay/data/pages/3681-051/3681-051.png",
+    "usable": true
+   },
+   {
+    "id": "4102-020",
+    "member": "bressay/data/pages/4102-020/4102-020.png",
+    "usable": true
+   },
+   {
+    "id": "4104-022",
+    "member": "bressay/data/pages/4104-022/4104-022.png",
+    "usable": true
+   },
+   {
+    "id": "4105-023",
+    "member": "bressay/data/pages/4105-023/4105-023.png",
+    "usable": true
+   },
+   {
+    "id": "4107-025",
+    "member": "bressay/data/pages/4107-025/4107-025.png",
+    "usable": true
+   },
+   {
+    "id": "4112-030",
+    "member": "bressay/data/pages/4112-030/4112-030.png",
+    "usable": true
+   },
+   {
+    "id": "4113-031",
+    "member": "bressay/data/pages/4113-031/4113-031.png",
+    "usable": true
+   },
+   {
+    "id": "4115-033",
+    "member": "bressay/data/pages/4115-033/4115-033.png",
+    "usable": true
+   },
+   {
+    "id": "4118-036",
+    "member": "bressay/data/pages/4118-036/4118-036.png",
+    "usable": true
+   },
+   {
+    "id": "4119-037",
+    "member": "bressay/data/pages/4119-037/4119-037.png",
+    "usable": true
+   },
+   {
+    "id": "4123-041",
+    "member": "bressay/data/pages/4123-041/4123-041.png",
+    "usable": true
+   },
+   {
+    "id": "4260-029",
+    "member": "bressay/data/pages/4260-029/4260-029.png",
+    "usable": true
+   },
+   {
+    "id": "4297-010",
+    "member": "bressay/data/pages/4297-010/4297-010.png",
+    "usable": false
+   },
+   {
+    "id": "4338-016",
+    "member": "bressay/data/pages/4338-016/4338-016.png",
+    "usable": false
+   },
+   {
+    "id": "4383-061",
+    "member": "bressay/data/pages/4383-061/4383-061.png",
+    "usable": true
+   },
+   {
+    "id": "4416-094",
+    "member": "bressay/data/pages/4416-094/4416-094.png",
+    "usable": true
+   },
+   {
+    "id": "4454-017",
+    "member": "bressay/data/pages/4454-017/4454-017.png",
+    "usable": false
+   },
+   {
+    "id": "4595-158",
+    "member": "bressay/data/pages/4595-158/4595-158.png",
+    "usable": false
+   },
+   {
+    "id": "4604-167",
+    "member": "bressay/data/pages/4604-167/4604-167.png",
+    "usable": true
+   },
+   {
+    "id": "4685-248",
+    "member": "bressay/data/pages/4685-248/4685-248.png",
+    "usable": true
+   },
+   {
+    "id": "4688-251",
+    "member": "bressay/data/pages/4688-251/4688-251.png",
+    "usable": true
+   },
+   {
+    "id": "4696-259",
+    "member": "bressay/data/pages/4696-259/4696-259.png",
+    "usable": true
+   },
+   {
+    "id": "4728-291",
+    "member": "bressay/data/pages/4728-291/4728-291.png",
+    "usable": true
+   },
+   {
+    "id": "4761-006",
+    "member": "bressay/data/pages/4761-006/4761-006.png",
+    "usable": true
+   },
+   {
+    "id": "4861-026",
+    "member": "bressay/data/pages/4861-026/4861-026.png",
+    "usable": false
+   },
+   {
+    "id": "4865-030",
+    "member": "bressay/data/pages/4865-030/4865-030.png",
+    "usable": true
+   },
+   {
+    "id": "4879-044",
+    "member": "bressay/data/pages/4879-044/4879-044.png",
+    "usable": true
+   },
+   {
+    "id": "4915-080",
+    "member": "bressay/data/pages/4915-080/4915-080.png",
+    "usable": true
+   },
+   {
+    "id": "4919-084",
+    "member": "bressay/data/pages/4919-084/4919-084.png",
+    "usable": false
+   },
+   {
+    "id": "4938-012",
+    "member": "bressay/data/pages/4938-012/4938-012.png",
+    "usable": false
+   },
+   {
+    "id": "4992-048",
+    "member": "bressay/data/pages/4992-048/4992-048.png",
+    "usable": true
+   },
+   {
+    "id": "4993-049",
+    "member": "bressay/data/pages/4993-049/4993-049.png",
+    "usable": true
+   },
+   {
+    "id": "4999-055",
+    "member": "bressay/data/pages/4999-055/4999-055.png",
+    "usable": true
+   },
+   {
+    "id": "5650-033",
+    "member": "bressay/data/pages/5650-033/5650-033.png",
+    "usable": true
+   },
+   {
+    "id": "6146-017",
+    "member": "bressay/data/pages/6146-017/6146-017.png",
+    "usable": true
+   },
+   {
+    "id": "6396-021",
+    "member": "bressay/data/pages/6396-021/6396-021.png",
+    "usable": true
+   },
+   {
+    "id": "6398-023",
+    "member": "bressay/data/pages/6398-023/6398-023.png",
+    "usable": true
+   },
+   {
+    "id": "6480-010",
+    "member": "bressay/data/pages/6480-010/6480-010.png",
+    "usable": true
+   },
+   {
+    "id": "6686-036",
+    "member": "bressay/data/pages/6686-036/6686-036.png",
+    "usable": true
+   },
+   {
+    "id": "6688-038",
+    "member": "bressay/data/pages/6688-038/6688-038.png",
+    "usable": true
+   },
+   {
+    "id": "6782-067",
+    "member": "bressay/data/pages/6782-067/6782-067.png",
+    "usable": true
+   },
+   {
+    "id": "7051-014",
+    "member": "bressay/data/pages/7051-014/7051-014.png",
+    "usable": true
+   },
+   {
+    "id": "7054-017",
+    "member": "bressay/data/pages/7054-017/7054-017.png",
+    "usable": true
+   },
+   {
+    "id": "7055-018",
+    "member": "bressay/data/pages/7055-018/7055-018.png",
+    "usable": false
+   },
+   {
+    "id": "7133-074",
+    "member": "bressay/data/pages/7133-074/7133-074.png",
+    "usable": true
+   },
+   {
+    "id": "7137-078",
+    "member": "bressay/data/pages/7137-078/7137-078.png",
+    "usable": true
+   },
+   {
+    "id": "7139-080",
+    "member": "bressay/data/pages/7139-080/7139-080.png",
+    "usable": false
+   },
+   {
+    "id": "7142-083",
+    "member": "bressay/data/pages/7142-083/7142-083.png",
+    "usable": true
+   },
+   {
+    "id": "7143-084",
+    "member": "bressay/data/pages/7143-084/7143-084.png",
+    "usable": false
+   },
+   {
+    "id": "7161-102",
+    "member": "bressay/data/pages/7161-102/7161-102.png",
+    "usable": false
+   },
+   {
+    "id": "7169-110",
+    "member": "bressay/data/pages/7169-110/7169-110.png",
+    "usable": true
+   },
+   {
+    "id": "7172-113",
+    "member": "bressay/data/pages/7172-113/7172-113.png",
+    "usable": true
+   },
+   {
+    "id": "7259-061",
+    "member": "bressay/data/pages/7259-061/7259-061.png",
+    "usable": true
+   },
+   {
+    "id": "7273-075",
+    "member": "bressay/data/pages/7273-075/7273-075.png",
+    "usable": true
+   },
+   {
+    "id": "7285-087",
+    "member": "bressay/data/pages/7285-087/7285-087.png",
+    "usable": true
+   },
+   {
+    "id": "7339-041",
+    "member": "bressay/data/pages/7339-041/7339-041.png",
+    "usable": true
+   },
+   {
+    "id": "7342-044",
+    "member": "bressay/data/pages/7342-044/7342-044.png",
+    "usable": true
+   },
+   {
+    "id": "7349-051",
+    "member": "bressay/data/pages/7349-051/7349-051.png",
+    "usable": true
+   },
+   {
+    "id": "7568-024",
+    "member": "bressay/data/pages/7568-024/7568-024.png",
+    "usable": true
+   },
+   {
+    "id": "7570-026",
+    "member": "bressay/data/pages/7570-026/7570-026.png",
+    "usable": true
+   },
+   {
+    "id": "7580-036",
+    "member": "bressay/data/pages/7580-036/7580-036.png",
+    "usable": true
+   },
+   {
+    "id": "7582-038",
+    "member": "bressay/data/pages/7582-038/7582-038.png",
+    "usable": true
+   },
+   {
+    "id": "7597-053",
+    "member": "bressay/data/pages/7597-053/7597-053.png",
+    "usable": true
+   },
+   {
+    "id": "7599-055",
+    "member": "bressay/data/pages/7599-055/7599-055.png",
+    "usable": true
+   },
+   {
+    "id": "7611-067",
+    "member": "bressay/data/pages/7611-067/7611-067.png",
+    "usable": true
+   },
+   {
+    "id": "7617-073",
+    "member": "bressay/data/pages/7617-073/7617-073.png",
+    "usable": true
+   },
+   {
+    "id": "7623-079",
+    "member": "bressay/data/pages/7623-079/7623-079.png",
+    "usable": true
+   },
+   {
+    "id": "7625-081",
+    "member": "bressay/data/pages/7625-081/7625-081.png",
+    "usable": true
+   },
+   {
+    "id": "7708-074",
+    "member": "bressay/data/pages/7708-074/7708-074.png",
+    "usable": true
+   },
+   {
+    "id": "7710-076",
+    "member": "bressay/data/pages/7710-076/7710-076.png",
+    "usable": true
+   },
+   {
+    "id": "7788-020",
+    "member": "bressay/data/pages/7788-020/7788-020.png",
+    "usable": false
+   },
+   {
+    "id": "7806-038",
+    "member": "bressay/data/pages/7806-038/7806-038.png",
+    "usable": true
+   },
+   {
+    "id": "7857-033",
+    "member": "bressay/data/pages/7857-033/7857-033.png",
+    "usable": true
+   },
+   {
+    "id": "7860-036",
+    "member": "bressay/data/pages/7860-036/7860-036.png",
+    "usable": true
+   },
+   {
+    "id": "7874-050",
+    "member": "bressay/data/pages/7874-050/7874-050.png",
+    "usable": true
+   },
+   {
+    "id": "8117-019",
+    "member": "bressay/data/pages/8117-019/8117-019.png",
+    "usable": true
+   },
+   {
+    "id": "8122-024",
+    "member": "bressay/data/pages/8122-024/8122-024.png",
+    "usable": true
+   },
+   {
+    "id": "8124-026",
+    "member": "bressay/data/pages/8124-026/8124-026.png",
+    "usable": true
+   },
+   {
+    "id": "8127-029",
+    "member": "bressay/data/pages/8127-029/8127-029.png",
+    "usable": true
+   },
+   {
+    "id": "8128-030",
+    "member": "bressay/data/pages/8128-030/8128-030.png",
+    "usable": true
+   },
+   {
+    "id": "8131-033",
+    "member": "bressay/data/pages/8131-033/8131-033.png",
+    "usable": true
+   },
+   {
+    "id": "8134-036",
+    "member": "bressay/data/pages/8134-036/8134-036.png",
+    "usable": true
+   },
+   {
+    "id": "8189-039",
+    "member": "bressay/data/pages/8189-039/8189-039.png",
+    "usable": true
+   },
+   {
+    "id": "8244-013",
+    "member": "bressay/data/pages/8244-013/8244-013.png",
+    "usable": true
+   },
+   {
+    "id": "8614-062",
+    "member": "bressay/data/pages/8614-062/8614-062.png",
+    "usable": true
+   },
+   {
+    "id": "8617-065",
+    "member": "bressay/data/pages/8617-065/8617-065.png",
+    "usable": true
+   },
+   {
+    "id": "8620-068",
+    "member": "bressay/data/pages/8620-068/8620-068.png",
+    "usable": true
+   },
+   {
+    "id": "8745-033",
+    "member": "bressay/data/pages/8745-033/8745-033.png",
+    "usable": true
+   },
+   {
+    "id": "8753-041",
+    "member": "bressay/data/pages/8753-041/8753-041.png",
+    "usable": true
+   },
+   {
+    "id": "9002-016",
+    "member": "bressay/data/pages/9002-016/9002-016.png",
+    "usable": false
+   },
+   {
+    "id": "9211-044",
+    "member": "bressay/data/pages/9211-044/9211-044.png",
+    "usable": true
+   },
+   {
+    "id": "9283-028",
+    "member": "bressay/data/pages/9283-028/9283-028.png",
+    "usable": true
+   },
+   {
+    "id": "9289-034",
+    "member": "bressay/data/pages/9289-034/9289-034.png",
+    "usable": true
+   },
+   {
+    "id": "9290-035",
+    "member": "bressay/data/pages/9290-035/9290-035.png",
+    "usable": true
+   }
+  ]
+ }
+}
