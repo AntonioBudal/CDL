@@ -78,6 +78,7 @@ Revisões completas e SHA-256: `experiments/EXP-002/candidates.json`.
 | Identificador | Versão | Licença do código | Licença dos pesos | Local-First? | Status |
 | :--- | :--- | :--- | :--- | :---: | :--- |
 | PP-OCRv6 small det via `rapidocr` (+ ONNX Runtime) | `rapidocr` 3.10.0, `onnxruntime` 1.31.0; `PP-OCRv6_det_small.onnx` SHA-256 `090f04ab…1ff94f` (embutido no wheel) | Apache-2.0; MIT (ONNX Runtime) | Apache-2.0 (`MODEL_LICENSES.md` do wheel e card `PaddlePaddle/PP-OCRv6_small_det_onnx`) | Sim | `LICENSE STATUS: VERIFIED` — benchmark EXP-008; só a detecção é usada |
+| PP-OCRv6 small rec via `rapidocr` | `PP-OCRv6_rec_small.onnx` SHA-256 `6f327246…14884` (embutido no wheel) | Apache-2.0 | Apache-2.0 (`MODEL_LICENSES.md` e card `PaddlePaddle/PP-OCRv6_small_rec_onnx`) | Sim | `LICENSE STATUS: VERIFIED` — benchmark EXP-009 |
 | Surya | — | GPL | restrição de uso comercial | Sim | Excluído |
 | Florence-2 (`microsoft/Florence-2-base`) | rev. `5ca5edf5` | MIT | MIT | Sim | Não avaliado: exige executar código baixado com o modelo |
 

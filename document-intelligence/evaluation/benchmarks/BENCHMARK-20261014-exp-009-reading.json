@@ -1,0 +1,229 @@
+{
+  "schema": "leitorum-di-reading-benchmark/1",
+  "created_utc": "2026-10-14T09:55:01+00:00",
+  "experiment": "EXP-009",
+  "git": {
+    "commit": "e6794898336c236bd8c3790503d8751271c7cd7d",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "seed": {
+    "seed": 1234,
+    "seeded": [
+      "random",
+      "numpy"
+    ],
+    "pythonhashseed_effective": false
+  },
+  "license_status": {
+    "ppocr": "VERIFIED (Apache-2.0, conforme declarado)",
+    "gnhk": "VERIFIED (CC-BY-4.0, conforme declarado)",
+    "bressay": "NEEDS VALIDATION (exceção experimental do usuário; não embasa produto)"
+  },
+  "results": {
+    "lines-exp001": {
+      "lines": 398,
+      "missing": 0,
+      "cer_micro": 0.38506601131622564,
+      "wer_micro": 0.7609212209833669,
+      "cer_macro": 0.3626149491182186,
+      "ref_chars": 34994,
+      "ref_words": 5471,
+      "lines_with_cer_below_10pct": 32,
+      "cer_by_class": {
+        "letra": {
+          "chars": 27791,
+          "cer": 0.39811449749919037
+        },
+        "letra acentuada": {
+          "chars": 1106,
+          "cer": 0.8155515370705244
+        },
+        "dígito": {
+          "chars": 39,
+          "cer": 0.41025641025641024
+        },
+        "pontuação": {
+          "chars": 970,
+          "cer": 0.4484536082474227
+        },
+        "espaço": {
+          "chars": 5088,
+          "cer": 0.18081761006289307
+        }
+      },
+      "insertions": 138,
+      "cost": {
+        "items": 398,
+        "failed": [],
+        "median_ms": 84.95240000000001,
+        "p95_ms": 150.740075,
+        "peak_rss_bytes": 185036800,
+        "load_ms": 1287.2725,
+        "wall_s": 40.25426860002335
+      }
+    },
+    "lines-gnhk": {
+      "lines": 1918,
+      "missing": 0,
+      "cer_micro": 0.14775915401769657,
+      "wer_micro": 0.45481481481481484,
+      "cer_macro": 0.15434654553586954,
+      "ref_chars": 41703,
+      "ref_words": 7425,
+      "lines_with_cer_below_10pct": 926,
+      "cer_by_class": {
+        "letra": {
+          "chars": 32868,
+          "cer": 0.12708409395156384
+        },
+        "dígito": {
+          "chars": 1354,
+          "cer": 0.1809453471196455
+        },
+        "pontuação": {
+          "chars": 1553,
+          "cer": 0.2343850611719253
+        },
+        "espaço": {
+          "chars": 5802,
+          "cer": 0.14184763874526027
+        },
+        "outro": {
+          "chars": 126,
+          "cer": 0.3492063492063492
+        }
+      },
+      "insertions": 509,
+      "cost": {
+        "items": 1918,
+        "failed": [],
+        "median_ms": 32.4821,
+        "p95_ms": 81.96788999999991,
+        "peak_rss_bytes": 160894976,
+        "load_ms": 1767.7169,
+        "wall_s": 82.50582230003783
+      },
+      "skipped_lines": 521
+    },
+    "lines-bressay": {
+      "lines": 5496,
+      "missing": 0,
+      "cer_micro": 0.41881916938638636,
+      "wer_micro": 0.7753094172750347,
+      "cer_macro": 0.38805654016580177,
+      "ref_chars": 490553,
+      "ref_words": 76434,
+      "lines_with_cer_below_10pct": 428,
+      "cer_by_class": {
+        "letra": {
+          "chars": 384863,
+          "cer": 0.42460563888968283
+        },
+        "letra acentuada": {
+          "chars": 15676,
+          "cer": 0.8053712681806583
+        },
+        "dígito": {
+          "chars": 449,
+          "cer": 0.47884187082405344
+        },
+        "pontuação": {
+          "chars": 18311,
+          "cer": 0.6160777674621812
+        },
+        "espaço": {
+          "chars": 71239,
+          "cer": 0.22004800741167058
+        },
+        "outro": {
+          "chars": 15,
+          "cer": 1.0
+        }
+      },
+      "insertions": 2226,
+      "cost": {
+        "items": 5496,
+        "failed": [],
+        "median_ms": 83.10079999999999,
+        "p95_ms": 132.73084999999998,
+        "peak_rss_bytes": 218595328,
+        "load_ms": 1398.5302,
+        "wall_s": 475.9445157000446
+      }
+    },
+    "pages-oracle-lines": {
+      "pages": 185,
+      "cer_micro": 0.41390424416414706,
+      "wer_micro": 0.7720856608364621,
+      "page_cer_median": 0.3324396782841823,
+      "ref_chars": 491145
+    },
+    "pages-end-to-end": {
+      "pages": 185,
+      "cer_micro": 0.36700770648179254,
+      "wer_micro": 0.7464449706309442,
+      "page_cer_median": 0.28952772073921973,
+      "ref_chars": 491145,
+      "cost": {
+        "items": 185,
+        "failed": [],
+        "median_ms": 5079.7031,
+        "p95_ms": 6418.3703399999995,
+        "peak_rss_bytes": 889286656,
+        "load_ms": 5693.2047,
+        "wall_s": 978.3089103999991
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 5625
+      }
+    }
+  },
+  "verdicts": {
+    "h1_better_than_exp001": {
+      "cer": 0.38506601131622564,
+      "target": 0.3,
+      "exp001_best": {
+        "candidate": "trocr-small-handwritten",
+        "cer": 0.694,
+        "wer": 1.029
+      },
+      "met": false
+    },
+    "h2_adoption_criterion": {
+      "cer": 0.38506601131622564,
+      "wer": 0.7609212209833669,
+      "target": {
+        "cer": 0.12,
+        "wer": 0.25
+      },
+      "met": false
+    },
+    "h3_detection_costs_little": {
+      "page_cer_oracle": 0.41390424416414706,
+      "page_cer_end_to_end": 0.36700770648179254,
+      "gap": -0.04689653768235452,
+      "target_gap": 0.05,
+      "met": true
+    },
+    "h4_cost": {
+      "median_ms_per_line": 84.95240000000001,
+      "peak_rss_bytes": 889286656,
+      "met": true
+    },
+    "h5_phone_photos_english": {
+      "cer": 0.14775915401769657,
+      "target": 0.2,
+      "met": true
+    }
+  }
+}

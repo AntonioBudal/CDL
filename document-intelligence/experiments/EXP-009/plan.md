@@ -29,14 +29,14 @@ Imagens de trabalho e manifestos com texto ficam fora do Git, em `dataset/proces
 
 ## Tarefas
 
-- [ ] **T001** Copiar do EXP-008 o supervisor, o worker e a fusão; prefixo `@@EXP009`.
-- [ ] **T002** `prepare.py`: manifestos dos quatro conjuntos; recortes das linhas do GNHK; texto das páginas.
-- [ ] **T003** Adaptadores `ppocr_rec` (lê um recorte de linha) e `ppocr_page` (detecção + fusão + leitura) com
+- [x] **T001** Copiar do EXP-008 o supervisor, o worker e a fusão; prefixo `@@EXP009`.
+- [x] **T002** `prepare.py`: manifestos dos quatro conjuntos; recortes das linhas do GNHK; texto das páginas.
+- [x] **T003** Adaptadores `ppocr_rec` (lê um recorte de linha) e `ppocr_page` (detecção + fusão + leitura) com
   testes de recorte e de ordenação em dados fictícios.
-- [ ] **T004** `evaluate.py`: CER/WER de linha e de página, normalização de página, CER por classe de caractere,
+- [x] **T004** `evaluate.py`: CER/WER de linha e de página, normalização de página, CER por classe de caractere,
   com testes.
-- [ ] **T005** Rodar os quatro conjuntos (RAM livre ≥ 1 GiB).
-- [ ] **T006** `run.py`: relatório, vereditos, LDF 2.0 das páginas; árvore limpa.
-- [ ] **T007** `RESULTS.md`, ADR-007, registros, verificação final.
+- [x] **T005** Rodar os quatro conjuntos (RAM livre ≥ 1 GiB).
+- [x] **T006** `run.py`: relatório, vereditos, LDF 2.0 das páginas; árvore limpa.
+- [x] **T007** `RESULTS.md`, ADR-007, registros, verificação final.
 
 Estimativa: cerca de 8 mil leituras de linha e 185 detecções de página; algo entre 20 e 40 minutos de máquina.

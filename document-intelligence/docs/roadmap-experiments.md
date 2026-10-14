@@ -79,6 +79,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-008` — Detecção de Linhas em Manuscrito Real *(EXECUTADO em 2026-10-14 — aguardando aceite)*
 - **Resultado**: PP-OCRv6 small det + fusão de fragmentos: F1 0,812 (GNHK) e 0,982 (BRESSAY), contra 0,428 e 0,675 do Doc-UFCN. Proposta no ADR-006.
 
+### `EXP-009` — Leitura de Manuscrito com o PP-OCR *(EXECUTADO em 2026-10-14 por delegação — aguardando aceite)*
+- **Resultado**: CER 38,5 % nas linhas do EXP-001 (antes: 69,4 %); 14,8 % em inglês fotografado; letras acentuadas com 80 % de erro. ADR-001 mantido (ADR-007).
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.
