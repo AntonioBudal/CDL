@@ -28,8 +28,8 @@ from merge import MergeParams, merge_lines
 
 GRID = {
     "v_overlap": (0.3, 0.5, 0.7),
-    "max_gap": (0.5, 1.0, 2.0, 3.0, 5.0, 8.0, 12.0),
-    "max_angle": (5.0, 10.0, 20.0),
+    "max_gap": (0.5, 1.0, 2.0, 3.0, 5.0, 8.0, 12.0, 20.0, 40.0),
+    "max_angle": (5.0, 10.0, 20.0, 45.0),
 }
 
 

@@ -1,0 +1,4432 @@
+{
+ "schema": "leitorum-di-merge-calibration/1",
+ "note": "Calibração só nos conjuntos cal-gnhk e cal-bressay; o teste não é lido.",
+ "criterion": "média do F1 de linhas (IoU >= 0,5) nos dois conjuntos de calibração",
+ "grid": {
+  "v_overlap": [
+   0.3,
+   0.5,
+   0.7
+  ],
+  "max_gap": [
+   0.5,
+   1.0,
+   2.0,
+   3.0,
+   5.0,
+   8.0,
+   12.0,
+   20.0,
+   40.0
+  ],
+  "max_angle": [
+   5.0,
+   10.0,
+   20.0,
+   45.0
+  ]
+ },
+ "sets": {
+  "cal-gnhk": 150,
+  "cal-bressay": 136
+ },
+ "candidates": {
+  "docufcn-norhand": {
+   "raw": {
+    "cal-gnhk": 0.2990438509726343,
+    "cal-bressay": 0.33510054844606946,
+    "mean": 0.31707219970935185
+   },
+   "best": {
+    "params": {
+     "v_overlap": 0.5,
+     "max_gap": 40.0,
+     "max_angle": 45.0
+    },
+    "cal-gnhk": 0.42243604787608535,
+    "cal-bressay": 0.6575309240844045,
+    "mean": 0.5399834859802449
+   },
+   "grid_results": [
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3251195292386907,
+     "cal-bressay": 0.3849086110839605,
+     "mean": 0.3550140701613256
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.33434190620272314,
+     "cal-bressay": 0.38723613156602843,
+     "mean": 0.36078901888437576
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3423144020158946,
+     "cal-bressay": 0.3879598662207358,
+     "mean": 0.36513713411831517
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.3506339144215531,
+     "cal-bressay": 0.3883801083210241,
+     "mean": 0.3695070113712886
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.33565380997177796,
+     "cal-bressay": 0.4342281188933457,
+     "mean": 0.38494096443256187
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.3489278752436647,
+     "cal-bressay": 0.43864554209381795,
+     "mean": 0.3937867086687413
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3582448407132839,
+     "cal-bressay": 0.44008307372793354,
+     "mean": 0.3991639572206087
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.36849681266707796,
+     "cal-bressay": 0.44086133361073543,
+     "mean": 0.4046790731389067
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3518231186966641,
+     "cal-bressay": 0.48344583735133395,
+     "mean": 0.417634478023999
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.36794171220400734,
+     "cal-bressay": 0.49188487340402504,
+     "mean": 0.4299132928040162
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3823467893746078,
+     "cal-bressay": 0.4944064298903009,
+     "mean": 0.4383766096324544
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.3939720129171152,
+     "cal-bressay": 0.49608013937282236,
+     "mean": 0.4450260761449688
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3591061894403797,
+     "cal-bressay": 0.5178178618565772,
+     "mean": 0.43846202564847847
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.37536171971889215,
+     "cal-bressay": 0.5256495669553631,
+     "mean": 0.4505056433371276
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3899102180418983,
+     "cal-bressay": 0.5281925562736796,
+     "mean": 0.4590513871577889
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.4018506278916061,
+     "cal-bressay": 0.529891608000894,
+     "mean": 0.46587111794625
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.36330498177399756,
+     "cal-bressay": 0.5616221114635251,
+     "mean": 0.4624635466187613
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.38105352591333896,
+     "cal-bressay": 0.5704475220327343,
+     "mean": 0.47575052397303663
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3977072310405644,
+     "cal-bressay": 0.5730040206777715,
+     "mean": 0.4853556258591679
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.4112021857923498,
+     "cal-bressay": 0.5748847926267281,
+     "mean": 0.49304348920953894
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3666873834679925,
+     "cal-bressay": 0.6027429102742909,
+     "mean": 0.4847151468711417
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.3856677524429967,
+     "cal-bressay": 0.6143176207828847,
+     "mean": 0.4999926866129407
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.40153222172149616,
+     "cal-bressay": 0.6177825008855827,
+     "mean": 0.5096573613035394
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.4135198135198135,
+     "cal-bressay": 0.6201752308785223,
+     "mean": 0.516847522199168
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3700273626604925,
+     "cal-bressay": 0.6245432040551692,
+     "mean": 0.49728528335783084
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.386896857016379,
+     "cal-bressay": 0.6381963497554574,
+     "mean": 0.5125466033859182
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.4033149171270718,
+     "cal-bressay": 0.6416586768935763,
+     "mean": 0.522486797010324
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.4142209496540205,
+     "cal-bressay": 0.6439903846153846,
+     "mean": 0.5291056671347025
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3736404350607806,
+     "cal-bressay": 0.6363420427553443,
+     "mean": 0.5049912389080624
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.38983812949640284,
+     "cal-bressay": 0.6491291291291291,
+     "mean": 0.519483629312766
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.40439971916686174,
+     "cal-bressay": 0.6524257784214337,
+     "mean": 0.5284127487941477
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.4163424124513619,
+     "cal-bressay": 0.6552058111380145,
+     "mean": 0.5357741117946881
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.37424892703862667,
+     "cal-bressay": 0.6393618287891416,
+     "mean": 0.5068053779138841
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.3915703602991162,
+     "cal-bressay": 0.6527710843373495,
+     "mean": 0.5221707223182328
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.40566706021251475,
+     "cal-bressay": 0.6561743341404358,
+     "mean": 0.5309206971764753
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.41785188818048064,
+     "cal-bressay": 0.6595382746051033,
+     "mean": 0.538695081392792
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.32497745716862037,
+     "cal-bressay": 0.38460787186248657,
+     "mean": 0.35479266451555347
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.3342577186171196,
+     "cal-bressay": 0.3869322083782988,
+     "mean": 0.3605949634977092
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3409477062488201,
+     "cal-bressay": 0.38761670761670763,
+     "mean": 0.36428220693276386
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.3481438738218888,
+     "cal-bressay": 0.38803620621802437,
+     "mean": 0.3680900400199566
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.335852534562212,
+     "cal-bressay": 0.4333264844873638,
+     "mean": 0.3845895095247879
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.3488681757656458,
+     "cal-bressay": 0.43773272652047995,
+     "mean": 0.3933004511430629
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.35782498538296625,
+     "cal-bressay": 0.43912051441609623,
+     "mean": 0.39847274989953124
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.36650049850448657,
+     "cal-bressay": 0.43989610389610384,
+     "mean": 0.4031983012002952
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3522490036059973,
+     "cal-bressay": 0.48170340252514443,
+     "mean": 0.41697620306557087
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.3684106614017769,
+     "cal-bressay": 0.4901134521880065,
+     "mean": 0.4292620567948917
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3799268590004063,
+     "cal-bressay": 0.49257130463073423,
+     "mean": 0.43624908181557026
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.39265595660337993,
+     "cal-bressay": 0.49418415045113595,
+     "mean": 0.44342005352725794
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3586180274078364,
+     "cal-bressay": 0.5153145240970468,
+     "mean": 0.4369662757524416
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.3748994368463395,
+     "cal-bressay": 0.5231076138756512,
+     "mean": 0.4490035253609953
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3869898487673503,
+     "cal-bressay": 0.5255782918149466,
+     "mean": 0.4562840702911485
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.3994889267461669,
+     "cal-bressay": 0.5273720593154198,
+     "mean": 0.4634304930307933
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.36331360946745556,
+     "cal-bressay": 0.5587337478801583,
+     "mean": 0.4610236786738069
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.38152196329140026,
+     "cal-bressay": 0.5675119945167924,
+     "mean": 0.4745169789040963
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3965039437220209,
+     "cal-bressay": 0.5699873896595208,
+     "mean": 0.48324566669077085
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.40870138431114045,
+     "cal-bressay": 0.5719540229885057,
+     "mean": 0.4903277036498231
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.367913148371532,
+     "cal-bressay": 0.5997679814385152,
+     "mean": 0.4838405649050236
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.38730025231286797,
+     "cal-bressay": 0.6112871054792913,
+     "mean": 0.4992936788960797
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.4017391304347826,
+     "cal-bressay": 0.6146594390761253,
+     "mean": 0.508199284755454
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.41408703454463885,
+     "cal-bressay": 0.6171293561724749,
+     "mean": 0.5156081953585568
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3725010199918401,
+     "cal-bressay": 0.6211764705882353,
+     "mean": 0.4968387452900377
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.3908488347231131,
+     "cal-bressay": 0.6347619047619047,
+     "mean": 0.5128053697425089
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.40673460345591494,
+     "cal-bressay": 0.6386795837818443,
+     "mean": 0.5227070936188796
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.4184981684981685,
+     "cal-bressay": 0.6414008155432958,
+     "mean": 0.5299494920207322
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3748194014447884,
+     "cal-bressay": 0.6333886649276737,
+     "mean": 0.504104033186231
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.393755420641804,
+     "cal-bressay": 0.6464379947229552,
+     "mean": 0.5200967076823796
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.40917266187050355,
+     "cal-bressay": 0.6501204819277109,
+     "mean": 0.5296465718991072
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.4210526315789473,
+     "cal-bressay": 0.6532141130981151,
+     "mean": 0.5371333723385312
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3756745537567456,
+     "cal-bressay": 0.6367851622874807,
+     "mean": 0.5062298580221132
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.39528281284123173,
+     "cal-bressay": 0.6500661614338987,
+     "mean": 0.5226744871375653
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.41060503059143433,
+     "cal-bressay": 0.6538554508097655,
+     "mean": 0.5322302407005999
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.42243604787608535,
+     "cal-bressay": 0.6575309240844045,
+     "mean": 0.5399834859802449
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3255648461127913,
+     "cal-bressay": 0.3840155945419103,
+     "mean": 0.3547902203273508
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.33309090909090905,
+     "cal-bressay": 0.3860988742046011,
+     "mean": 0.35959489164775504
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3384501572036249,
+     "cal-bressay": 0.3867045788802823,
+     "mean": 0.3625773680419536
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.34385569334836524,
+     "cal-bressay": 0.38704612365063784,
+     "mean": 0.36545090849950157
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.33387710712343666,
+     "cal-bressay": 0.432172131147541,
+     "mean": 0.3830246191354888
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.34495618124184224,
+     "cal-bressay": 0.43630737493553384,
+     "mean": 0.39063177808868804
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3525604416523891,
+     "cal-bressay": 0.43759693930307103,
+     "mean": 0.39507869047773003
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.35876528829353527,
+     "cal-bressay": 0.438231334783059,
+     "mean": 0.3984983115382971
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.34571110285926476,
+     "cal-bressay": 0.4792066538707613,
+     "mean": 0.41245887836501305
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.35933897002305915,
+     "cal-bressay": 0.48675995694294943,
+     "mean": 0.4230494634830043
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3698009067612852,
+     "cal-bressay": 0.48914335097763845,
+     "mean": 0.42947212886946184
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.37954729183508484,
+     "cal-bressay": 0.4906354877124608,
+     "mean": 0.4350913897737728
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.352497643732328,
+     "cal-bressay": 0.5118058592041977,
+     "mean": 0.4321517514682629
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.36630179827990617,
+     "cal-bressay": 0.5189761694616064,
+     "mean": 0.4426389838707563
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.3777599357687676,
+     "cal-bressay": 0.5211423511179986,
+     "mean": 0.4494511434433831
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.3873892437667422,
+     "cal-bressay": 0.5228003994230556,
+     "mean": 0.4550948215948989
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.35553849107314267,
+     "cal-bressay": 0.554005400540054,
+     "mean": 0.4547719458065983
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.3709032773780975,
+     "cal-bressay": 0.5620454545454545,
+     "mean": 0.466474365961776
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.38469450730302407,
+     "cal-bressay": 0.5645529197080292,
+     "mean": 0.4746237135055267
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.395004233700254,
+     "cal-bressay": 0.5663656110666514,
+     "mean": 0.48068492238345273
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.36104605776736926,
+     "cal-bressay": 0.5936094128503864,
+     "mean": 0.47732773530887784
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.37685279187817255,
+     "cal-bressay": 0.603544776119403,
+     "mean": 0.4901987839987878
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.39154103852596317,
+     "cal-bressay": 0.6070257611241218,
+     "mean": 0.49928339982504244
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.40198404140608146,
+     "cal-bressay": 0.6097675510683258,
+     "mean": 0.5058757962372036
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.36496638987742186,
+     "cal-bressay": 0.6152405478169262,
+     "mean": 0.49010346884717404
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.380638516992791,
+     "cal-bressay": 0.6266571969696969,
+     "mean": 0.5036478569812439
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.395997445177773,
+     "cal-bressay": 0.6304399524375742,
+     "mean": 0.5132186988076737
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.4066681289756525,
+     "cal-bressay": 0.6333611541671635,
+     "mean": 0.520014641571408
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3684,
+     "cal-bressay": 0.6271966033730393,
+     "mean": 0.4977983016865196
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.3859502404348735,
+     "cal-bressay": 0.6387596899224807,
+     "mean": 0.5123549651786771
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.4010371650821089,
+     "cal-bressay": 0.6423864861626932,
+     "mean": 0.521711825622401
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.41231593038821956,
+     "cal-bressay": 0.6456806439985582,
+     "mean": 0.5289982871933889
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.3695958174140358,
+     "cal-bressay": 0.6305581835383159,
+     "mean": 0.5000770004761759
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.38871341335017895,
+     "cal-bressay": 0.6423444976076557,
+     "mean": 0.5155289554789173
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.40357376334713446,
+     "cal-bressay": 0.6460761927652926,
+     "mean": 0.5248249780562135
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.41494149414941495,
+     "cal-bressay": 0.6499457373688653,
+     "mean": 0.5324436157591401
+    }
+   ]
+  },
+  "docufcn-historical": {
+   "raw": {
+    "cal-gnhk": 0.11271197245951806,
+    "cal-bressay": 0.19756303164993486,
+    "mean": 0.15513750205472646
+   },
+   "best": {
+    "params": {
+     "v_overlap": 0.3,
+     "max_gap": 40.0,
+     "max_angle": 45.0
+    },
+    "cal-gnhk": 0.20008116883116883,
+    "cal-bressay": 0.5514587212911235,
+    "mean": 0.37576994506114614
+   },
+   "grid_results": [
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.117772165359564,
+     "cal-bressay": 0.22046863676624529,
+     "mean": 0.16912040106290466
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.11825947677522691,
+     "cal-bressay": 0.22084307245909568,
+     "mean": 0.1695512746171613
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.11851257356875333,
+     "cal-bressay": 0.22094992339327474,
+     "mean": 0.16973124848101404
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.11856014987287569,
+     "cal-bressay": 0.22116470398451366,
+     "mean": 0.1698624269286947
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.13283312491315827,
+     "cal-bressay": 0.2575062732543047,
+     "mean": 0.1951696990837315
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.13407977606717986,
+     "cal-bressay": 0.2590727556867512,
+     "mean": 0.19657626587696553
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.13485040033712598,
+     "cal-bressay": 0.2594556995043909,
+     "mean": 0.19715304992075844
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1350021094079595,
+     "cal-bressay": 0.26024893376272956,
+     "mean": 0.19762552158534452
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.15015641293013557,
+     "cal-bressay": 0.3246690501497729,
+     "mean": 0.23741273153995424
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1559383499546691,
+     "cal-bressay": 0.32866588875923763,
+     "mean": 0.24230211935695337
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.15751862551315188,
+     "cal-bressay": 0.3303092381231099,
+     "mean": 0.2439139318181309
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1581834806461445,
+     "cal-bressay": 0.33147659532883805,
+     "mean": 0.24483003798749126
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.1616915422885572,
+     "cal-bressay": 0.36633561994471175,
+     "mean": 0.2640135811166345
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.16708860759493668,
+     "cal-bressay": 0.3721602643535729,
+     "mean": 0.2696244359742548
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1690051020408163,
+     "cal-bressay": 0.3746110765401368,
+     "mean": 0.27180808929047656
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.16972990250918973,
+     "cal-bressay": 0.3763776252859222,
+     "mean": 0.273053763897556
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.17431495543083525,
+     "cal-bressay": 0.42502744237102086,
+     "mean": 0.2996711989009281
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1793918918918919,
+     "cal-bressay": 0.4337108594270486,
+     "mean": 0.30655137565947027
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1814776983316309,
+     "cal-bressay": 0.43841429369067564,
+     "mean": 0.30994599601115325
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1822836661546339,
+     "cal-bressay": 0.44078431372549015,
+     "mean": 0.31153398994006204
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.17852834740651388,
+     "cal-bressay": 0.4795091456355638,
+     "mean": 0.32901874652103885
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.18381441473348684,
+     "cal-bressay": 0.49090268810893295,
+     "mean": 0.3373585514212099
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.18646186819074834,
+     "cal-bressay": 0.4988168480832939,
+     "mean": 0.3426393581370211
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1873209169054441,
+     "cal-bressay": 0.5020194820622476,
+     "mean": 0.3446701994838458
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.1774683092304946,
+     "cal-bressay": 0.5007698685301434,
+     "mean": 0.339119088880319
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.18348961206104064,
+     "cal-bressay": 0.5129067114899749,
+     "mean": 0.3481981617755078
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.18627087198515768,
+     "cal-bressay": 0.5220338983050848,
+     "mean": 0.35415238514512126
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1873021783652951,
+     "cal-bressay": 0.5259700766330131,
+     "mean": 0.3566361274991541
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.18158139534883722,
+     "cal-bressay": 0.5188214070956103,
+     "mean": 0.35020140122222376
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.18780065422359052,
+     "cal-bressay": 0.5311243756852235,
+     "mean": 0.359462514954407
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1912908242612753,
+     "cal-bressay": 0.5402948402948404,
+     "mean": 0.36579283227805787
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1924653523326176,
+     "cal-bressay": 0.5443772373781015,
+     "mean": 0.36842129485535957
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.1892622634221707,
+     "cal-bressay": 0.525399129172714,
+     "mean": 0.35733069629744235
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.19508295022986208,
+     "cal-bressay": 0.5377924782555434,
+     "mean": 0.3664377142427028
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1987878787878788,
+     "cal-bressay": 0.5473190017296764,
+     "mean": 0.3730534402587776
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.20008116883116883,
+     "cal-bressay": 0.5514587212911235,
+     "mean": 0.37576994506114614
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.11862615587846762,
+     "cal-bressay": 0.2203799098518995,
+     "mean": 0.16950303286518356
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.11903499469777305,
+     "cal-bressay": 0.22075410892684497,
+     "mean": 0.169894551812309
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.11927214769557709,
+     "cal-bressay": 0.2208608737707561,
+     "mean": 0.1700665107331666
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1193038395110934,
+     "cal-bressay": 0.22107554623881318,
+     "mean": 0.17018969287495328
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.13215859030837004,
+     "cal-bressay": 0.257372654155496,
+     "mean": 0.194765622231933
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.13327791632031033,
+     "cal-bressay": 0.2589378687955571,
+     "mean": 0.1961078925579337
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.13400055601890462,
+     "cal-bressay": 0.25932041366124964,
+     "mean": 0.19666048484007714
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.13411240957150808,
+     "cal-bressay": 0.2601130926489778,
+     "mean": 0.19711275111024296
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14752896319108375,
+     "cal-bressay": 0.32416256395404963,
+     "mean": 0.2358457635725667
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.15242905957510028,
+     "cal-bressay": 0.3281523217408199,
+     "mean": 0.24029069065796008
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1538921261018975,
+     "cal-bressay": 0.3297924178929929,
+     "mean": 0.2418422719974452
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1544447770128704,
+     "cal-bressay": 0.33095772722835104,
+     "mean": 0.24270125212061072
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.1574299634591961,
+     "cal-bressay": 0.36564417177914116,
+     "mean": 0.2615370676191686
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.16174423998762952,
+     "cal-bressay": 0.37145508920284626,
+     "mean": 0.2665996645952379
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.163786392651409,
+     "cal-bressay": 0.3738995339202486,
+     "mean": 0.2688429632858288
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.16437928883343728,
+     "cal-bressay": 0.37566192503374524,
+     "mean": 0.27002060693359126
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.16792665272639534,
+     "cal-bressay": 0.42393686979395,
+     "mean": 0.2959317612601727
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1726004922067268,
+     "cal-bressay": 0.43259423503325944,
+     "mean": 0.3025973636199931
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.17478936064761275,
+     "cal-bressay": 0.4372839781469506,
+     "mean": 0.3060366693972817
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.17546763780830987,
+     "cal-bressay": 0.43964649289629715,
+     "mean": 0.30755706535230354
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.17050383717050385,
+     "cal-bressay": 0.47838150289017345,
+     "mean": 0.32444267003033866
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1760082023239918,
+     "cal-bressay": 0.4896858884200657,
+     "mean": 0.33284704537202875
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1787190082644628,
+     "cal-bressay": 0.4975782634376846,
+     "mean": 0.3381486358510737
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.17943409247757072,
+     "cal-bressay": 0.5007709642984225,
+     "mean": 0.3401025283879966
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.1724197149235789,
+     "cal-bressay": 0.499763481551561,
+     "mean": 0.33609159823756996
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.17768376520359597,
+     "cal-bressay": 0.5118676576360587,
+     "mean": 0.3447757114198273
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.18020259463301938,
+     "cal-bressay": 0.5209718360933155,
+     "mean": 0.35058721536316745
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1810728925325254,
+     "cal-bressay": 0.5248967694923489,
+     "mean": 0.35298483101243716
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.17502668089647813,
+     "cal-bressay": 0.5181359596444872,
+     "mean": 0.34658132027048266
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.17895122845617895,
+     "cal-bressay": 0.5304136253041363,
+     "mean": 0.3546824268801576
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1816164231551692,
+     "cal-bressay": 0.5395656974604344,
+     "mean": 0.3605910603078018
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.18266196398737702,
+     "cal-bressay": 0.5436390532544378,
+     "mean": 0.3631505086209074
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.18138248847926264,
+     "cal-bressay": 0.5238497765970294,
+     "mean": 0.352616132538146
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.18541785646297354,
+     "cal-bressay": 0.5362035225048923,
+     "mean": 0.3608106894839329
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.18873726696136847,
+     "cal-bressay": 0.545701245836931,
+     "mean": 0.36721925639914976
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.18992472495657212,
+     "cal-bressay": 0.549826474962816,
+     "mean": 0.36987559995969405
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.11678257446529329,
+     "cal-bressay": 0.2200595190219577,
+     "mean": 0.16842104674362549
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.11716692996313849,
+     "cal-bressay": 0.2204331374285484,
+     "mean": 0.16880003369584345
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.11738327618042732,
+     "cal-bressay": 0.22053966975432943,
+     "mean": 0.16896147296737837
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.11741424802110817,
+     "cal-bressay": 0.22075410892684497,
+     "mean": 0.16908417847397655
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.12698844323589395,
+     "cal-bressay": 0.2561933534743202,
+     "mean": 0.19159089835510706
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.12740943267259058,
+     "cal-bressay": 0.25770696224454454,
+     "mean": 0.19255819745856756
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1278113000548546,
+     "cal-bressay": 0.2580868961928714,
+     "mean": 0.19294909812386302
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.12791655229206697,
+     "cal-bressay": 0.2588766385971005,
+     "mean": 0.1933965954445837
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.13660345073435048,
+     "cal-bressay": 0.32131525814825496,
+     "mean": 0.22895935444130272
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.14071510957324107,
+     "cal-bressay": 0.32517651610407194,
+     "mean": 0.2329458128386565
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14142877843790755,
+     "cal-bressay": 0.3267682157756865,
+     "mean": 0.23409849710679703
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14190365641323274,
+     "cal-bressay": 0.32792302458936723,
+     "mean": 0.23491334050129997
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.1429200293470286,
+     "cal-bressay": 0.3615462868769074,
+     "mean": 0.252233158111968
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.14682716599791945,
+     "cal-bressay": 0.3671794871794871,
+     "mean": 0.2570033265887033
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14800418597697712,
+     "cal-bressay": 0.36955402204140486,
+     "mean": 0.258779104009191
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14848076635234247,
+     "cal-bressay": 0.37129581827568403,
+     "mean": 0.2598882923140132
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.15035982238554585,
+     "cal-bressay": 0.41723800195886385,
+     "mean": 0.2837989121722049
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.15487482506608616,
+     "cal-bressay": 0.4256630351050951,
+     "mean": 0.2902689300855906
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1561815336463224,
+     "cal-bressay": 0.43027888446215135,
+     "mean": 0.29323020905423686
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.15671524839366868,
+     "cal-bressay": 0.43255245919840124,
+     "mean": 0.29463385379603496
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.152876280535855,
+     "cal-bressay": 0.46935965113610284,
+     "mean": 0.31111796583597895
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.15700754535238404,
+     "cal-bressay": 0.48000000000000004,
+     "mean": 0.318503772676192
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.15847347994825356,
+     "cal-bressay": 0.48751904371264504,
+     "mean": 0.32299626183044927
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.15902834008097166,
+     "cal-bressay": 0.4905882352941177,
+     "mean": 0.32480828768754466
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.15392061955469508,
+     "cal-bressay": 0.49218474556352104,
+     "mean": 0.3230526825591081
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.15876152832674573,
+     "cal-bressay": 0.503691355084544,
+     "mean": 0.33122644170564486
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1607172505395982,
+     "cal-bressay": 0.5124264617601152,
+     "mean": 0.3365718561498567
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.16137082016303445,
+     "cal-bressay": 0.5161601543656537,
+     "mean": 0.3387654872643441
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.15635395874916835,
+     "cal-bressay": 0.5121338912133891,
+     "mean": 0.33424392498127875
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1601090103900528,
+     "cal-bressay": 0.524518706865238,
+     "mean": 0.3423138586276454
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.16177228232869656,
+     "cal-bressay": 0.5333333333333333,
+     "mean": 0.34755280783101494
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.16250645550008608,
+     "cal-bressay": 0.5372255611431375,
+     "mean": 0.34986600832161174
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.16146726088447036,
+     "cal-bressay": 0.5191243685350012,
+     "mean": 0.3402958147097358
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.16584507042253524,
+     "cal-bressay": 0.5311243756852235,
+     "mean": 0.3484847230538794
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.16770296677917926,
+     "cal-bressay": 0.5403612237375599,
+     "mean": 0.3540320952583696
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.16862745098039217,
+     "cal-bressay": 0.5443100469019994,
+     "mean": 0.35646874894119573
+    }
+   ]
+  },
+  "classic": {
+   "raw": {
+    "cal-gnhk": 0.12899669239250275,
+    "cal-bressay": 0.062181720718306084,
+    "mean": 0.09558920655540441
+   },
+   "best": {
+    "params": {
+     "v_overlap": 0.5,
+     "max_gap": 40.0,
+     "max_angle": 45.0
+    },
+    "cal-gnhk": 0.1769714920399852,
+    "cal-bressay": 0.20682226211849192,
+    "mean": 0.19189687707923855
+   },
+   "grid_results": [
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.12813852813852813,
+     "cal-bressay": 0.08266985685409017,
+     "mean": 0.10540419249630915
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1294978059483179,
+     "cal-bressay": 0.08406377827865431,
+     "mean": 0.1067807921134861
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1310732236128905,
+     "cal-bressay": 0.08505611340815121,
+     "mean": 0.10806466851052085
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1334932054356515,
+     "cal-bressay": 0.086248492159228,
+     "mean": 0.10987084879743975
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.12986010612638688,
+     "cal-bressay": 0.09070787220714137,
+     "mean": 0.11028398916676413
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.13219741480611047,
+     "cal-bressay": 0.09212418577108537,
+     "mean": 0.11216080028859793
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.13368983957219252,
+     "cal-bressay": 0.09344514804039021,
+     "mean": 0.11356749380629136
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.13621295831240585,
+     "cal-bressay": 0.09505487298325391,
+     "mean": 0.11563391564782988
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.13187239406574228,
+     "cal-bressay": 0.11171124828532235,
+     "mean": 0.1217918211755323
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.13491124260355028,
+     "cal-bressay": 0.11350787161868314,
+     "mean": 0.12420955711111671
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.13652694610778443,
+     "cal-bressay": 0.1150154117129018,
+     "mean": 0.12577117891034312
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.13935091277890466,
+     "cal-bressay": 0.11687316963280019,
+     "mean": 0.12811204120585243
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.1341641514944991,
+     "cal-bressay": 0.1167939919720316,
+     "mean": 0.12547907173326533
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.137274350327316,
+     "cal-bressay": 0.11892555102756233,
+     "mean": 0.12809995067743918
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.13865166281523159,
+     "cal-bressay": 0.12053967690395881,
+     "mean": 0.1295956698595952
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14145543744889613,
+     "cal-bressay": 0.12256393949030119,
+     "mean": 0.13200968846959865
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.13499460414009612,
+     "cal-bressay": 0.11987847222222221,
+     "mean": 0.12743653818115916
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1376891472091392,
+     "cal-bressay": 0.12194154212405765,
+     "mean": 0.12981534466659841
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1381625801200529,
+     "cal-bressay": 0.12377122430741733,
+     "mean": 0.1309669022137351
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14152313758041088,
+     "cal-bressay": 0.12597920197901874,
+     "mean": 0.1337511697797148
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.13956748097717261,
+     "cal-bressay": 0.1238586740770147,
+     "mean": 0.13171307752709366
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1414578822559027,
+     "cal-bressay": 0.12702265372168287,
+     "mean": 0.1342402679887928
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14293243385685675,
+     "cal-bressay": 0.12947204684783603,
+     "mean": 0.1362022403523464
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14623562594922979,
+     "cal-bressay": 0.1328357503897208,
+     "mean": 0.1395356881694753
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14120536171083597,
+     "cal-bressay": 0.13104975371684216,
+     "mean": 0.13612755771383905
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.14522292993630573,
+     "cal-bressay": 0.1352415358251123,
+     "mean": 0.14023223288070902
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14788117081695062,
+     "cal-bressay": 0.1389943074003795,
+     "mean": 0.14343773910866506
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.15353214650187094,
+     "cal-bressay": 0.14513327046210353,
+     "mean": 0.14933270848198724
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14359515023721667,
+     "cal-bressay": 0.14221430580294364,
+     "mean": 0.14290472802008014
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.14798502532481833,
+     "cal-bressay": 0.14764580507653555,
+     "mean": 0.14781541520067693
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.15333562192470535,
+     "cal-bressay": 0.15369171309541735,
+     "mean": 0.15351366751006135
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1601726411701235,
+     "cal-bressay": 0.1646364368124497,
+     "mean": 0.1624045389912866
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.1505329084715965,
+     "cal-bressay": 0.16336288474947702,
+     "mean": 0.15694789661053676
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.155799192152337,
+     "cal-bressay": 0.17292057535959976,
+     "mean": 0.16435988375596838
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.16315662067296055,
+     "cal-bressay": 0.18451726413019576,
+     "mean": 0.17383694240157815
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.17173661917597227,
+     "cal-bressay": 0.2079548244537196,
+     "mean": 0.18984572181484594
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.13385526064540768,
+     "cal-bressay": 0.08227614238206675,
+     "mean": 0.1080657015137372
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.13563573220142774,
+     "cal-bressay": 0.08382786238950905,
+     "mean": 0.10973179729546839
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.13689027358582417,
+     "cal-bressay": 0.08482105439611097,
+     "mean": 0.11085566399096758
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.13911330049261084,
+     "cal-bressay": 0.08623265741728922,
+     "mean": 0.11267297895495003
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.13499281953087602,
+     "cal-bressay": 0.09036119539465481,
+     "mean": 0.11267700746276542
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.13712957582800697,
+     "cal-bressay": 0.09209032420840166,
+     "mean": 0.11460995001820432
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.13844348846304266,
+     "cal-bressay": 0.09348971613122557,
+     "mean": 0.11596660229713412
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14092033646709548,
+     "cal-bressay": 0.09530823549798552,
+     "mean": 0.1181142859825405
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.13696258536116188,
+     "cal-bressay": 0.11158981359041077,
+     "mean": 0.12427619947578633
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.13993373611381796,
+     "cal-bressay": 0.11359903172819226,
+     "mean": 0.12676638392100512
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14136641071076983,
+     "cal-bressay": 0.11524001049226196,
+     "mean": 0.1283032106015159
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14409739546951403,
+     "cal-bressay": 0.1171641458082363,
+     "mean": 0.13063077063887515
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.1393553368075661,
+     "cal-bressay": 0.11664161477345932,
+     "mean": 0.1279984757905127
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1427732079905993,
+     "cal-bressay": 0.11897400165483603,
+     "mean": 0.13087360482271768
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14412987527222332,
+     "cal-bressay": 0.12070484581497798,
+     "mean": 0.13241736054360065
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14684612294094013,
+     "cal-bressay": 0.12277388019427957,
+     "mean": 0.13481000156760986
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14027588886730136,
+     "cal-bressay": 0.11985148087384509,
+     "mean": 0.13006368487057324
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.14364750049397354,
+     "cal-bressay": 0.1223774692304323,
+     "mean": 0.1330124848622029
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14462892578515704,
+     "cal-bressay": 0.12414649286157665,
+     "mean": 0.13438770932336686
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14762098413989425,
+     "cal-bressay": 0.12628048227721875,
+     "mean": 0.1369507332085565
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14394463667820068,
+     "cal-bressay": 0.12364624895865305,
+     "mean": 0.13379544281842687
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.14781816340994228,
+     "cal-bressay": 0.12734817723439384,
+     "mean": 0.13758317032216805
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14995874587458746,
+     "cal-bressay": 0.12980180507052475,
+     "mean": 0.1398802754725561
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.15391120507399578,
+     "cal-bressay": 0.13299734005319894,
+     "mean": 0.14345427256359736
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14621357265302007,
+     "cal-bressay": 0.13050893097567545,
+     "mean": 0.13836125181434777
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.15133561999792122,
+     "cal-bressay": 0.13512148073301797,
+     "mean": 0.1432285503654696
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.15435384287843304,
+     "cal-bressay": 0.13887975961312737,
+     "mean": 0.1466168012457802
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1593932065516104,
+     "cal-bressay": 0.14496723075418175,
+     "mean": 0.15218021865289608
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14754947673816185,
+     "cal-bressay": 0.1414094458906657,
+     "mean": 0.14447946131441378
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.15306890250456842,
+     "cal-bressay": 0.14751582582006523,
+     "mean": 0.15029236416231684
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.15864903899566715,
+     "cal-bressay": 0.15317503593912654,
+     "mean": 0.15591203746739685
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.16529690936450978,
+     "cal-bressay": 0.16457696765356655,
+     "mean": 0.16493693850903818
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.1551538627071229,
+     "cal-bressay": 0.16364353312302837,
+     "mean": 0.15939869791507563
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1615911900213507,
+     "cal-bressay": 0.17312541814626115,
+     "mean": 0.16735830408380592
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.16848271821909783,
+     "cal-bressay": 0.18406964797490943,
+     "mean": 0.17627618309700363
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1769714920399852,
+     "cal-bressay": 0.20682226211849192,
+     "mean": 0.19189687707923855
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.13452234133383928,
+     "cal-bressay": 0.08149419650155304,
+     "mean": 0.10800826891769616
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1362549038369534,
+     "cal-bressay": 0.08299645243791766,
+     "mean": 0.10962567813743554
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.13723978411719354,
+     "cal-bressay": 0.08386023294509151,
+     "mean": 0.11055000853114252
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.13866978284156198,
+     "cal-bressay": 0.08550908322771439,
+     "mean": 0.11208943303463818
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.136009130682899,
+     "cal-bressay": 0.08976957762793199,
+     "mean": 0.11288935415541548
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.13809661000672235,
+     "cal-bressay": 0.09151692436272461,
+     "mean": 0.11480676718472349
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.13891844829254135,
+     "cal-bressay": 0.09276829011174362,
+     "mean": 0.11584336920214248
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14039890496675791,
+     "cal-bressay": 0.09470346246143298,
+     "mean": 0.11755118371409545
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.13787835386231262,
+     "cal-bressay": 0.11060181648416942,
+     "mean": 0.12424008517324102
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.14055410753933775,
+     "cal-bressay": 0.11275709562454377,
+     "mean": 0.12665560158194075
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14166180190698582,
+     "cal-bressay": 0.11419405185120958,
+     "mean": 0.1279279268790977
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14336352894840487,
+     "cal-bressay": 0.11606473519424969,
+     "mean": 0.1297141320713273
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14001149205133115,
+     "cal-bressay": 0.11553086947233496,
+     "mean": 0.12777118076183305
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.14289869122636936,
+     "cal-bressay": 0.11799818331242702,
+     "mean": 0.1304484372693982
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14389051808406647,
+     "cal-bressay": 0.11942515179312452,
+     "mean": 0.1316578349385955
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.14574257425742576,
+     "cal-bressay": 0.12142222222222221,
+     "mean": 0.13358239823982399
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14112437427801308,
+     "cal-bressay": 0.11822786983772646,
+     "mean": 0.12967612205786977
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.14395937103232737,
+     "cal-bressay": 0.12095652173913045,
+     "mean": 0.13245794638572891
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14435022677972786,
+     "cal-bressay": 0.12249022450683186,
+     "mean": 0.13342022564327988
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.145985401459854,
+     "cal-bressay": 0.12472020771779031,
+     "mean": 0.13535280458882215
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14383294301327088,
+     "cal-bressay": 0.12197988768447172,
+     "mean": 0.1329064153488713
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1474250423348939,
+     "cal-bressay": 0.1257516802263884,
+     "mean": 0.13658836128064117
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.14879207520469018,
+     "cal-bressay": 0.12790384787873352,
+     "mean": 0.13834796154171186
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.15122756344130392,
+     "cal-bressay": 0.131243968567621,
+     "mean": 0.14123576600446247
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14499356244429037,
+     "cal-bressay": 0.12788679749032172,
+     "mean": 0.13644017996730606
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.14982720065053873,
+     "cal-bressay": 0.13250987693565233,
+     "mean": 0.14116853879309554
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.15191709844559587,
+     "cal-bressay": 0.136123715158811,
+     "mean": 0.14402040680220343
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.15569499096033182,
+     "cal-bressay": 0.14230197188504534,
+     "mean": 0.14899848142268857
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.14665185334814665,
+     "cal-bressay": 0.1386821064240419,
+     "mean": 0.14266697988609428
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.1524504692387904,
+     "cal-bressay": 0.14429387600925445,
+     "mean": 0.1483721726240224
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.1563203602444516,
+     "cal-bressay": 0.14957451981522002,
+     "mean": 0.1529474400298358
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.1617125110913931,
+     "cal-bressay": 0.1597542242703533,
+     "mean": 0.1607333676808732
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.15228004570478862,
+     "cal-bressay": 0.15964716715940486,
+     "mean": 0.15596360643209672
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.15899040017258118,
+     "cal-bressay": 0.16874874068103968,
+     "mean": 0.16386957042681044
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.16389044158747904,
+     "cal-bressay": 0.1788592194659504,
+     "mean": 0.1713748305267147
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.17084015913877837,
+     "cal-bressay": 0.19903525898702193,
+     "mean": 0.18493770906290014
+    }
+   ]
+  },
+  "ppocr-det": {
+   "raw": {
+    "cal-gnhk": 0.7353141301882513,
+    "cal-bressay": 0.9854824935952178,
+    "mean": 0.8603983118917345
+   },
+   "best": {
+    "params": {
+     "v_overlap": 0.7,
+     "max_gap": 1.0,
+     "max_angle": 20.0
+    },
+    "cal-gnhk": 0.8039563783920871,
+    "cal-bressay": 0.9904341427520235,
+    "mean": 0.8971952605720552
+   },
+   "grid_results": [
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.5089521573231582,
+     "cal-bressay": 0.97965297715641,
+     "mean": 0.744302567239784
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.5066666666666667,
+     "cal-bressay": 0.9797702297702299,
+     "mean": 0.7432184482184483
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.5060885060885061,
+     "cal-bressay": 0.9797702297702299,
+     "mean": 0.742929367929368
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.5049063336306869,
+     "cal-bressay": 0.9797702297702299,
+     "mean": 0.7423382817004585
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.5155875299760192,
+     "cal-bressay": 0.9795255930087391,
+     "mean": 0.7475565614923791
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.513022410660206,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7463326115996172
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.5124468731026107,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7460448428208195
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.5115571776155717,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7455999950773
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.5022999080036799,
+     "cal-bressay": 0.9795255930087391,
+     "mean": 0.7409127505062094
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.49705608924697864,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7383494508930035
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.49611439229095433,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7378786024149913
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.49517284335098105,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7374078279450047
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.4817927170868347,
+     "cal-bressay": 0.9795255930087391,
+     "mean": 0.7306591550477869
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.47436300723497954,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7270029098870039
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.47348484848484845,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7265638305119384
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.4724857685009488,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7260642905199886
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.46261089987325726,
+     "cal-bressay": 0.9795255930087391,
+     "mean": 0.7210682464409982
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.4550128534704371,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7173278330047327
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.45404708158658497,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7168449470628067
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.4528423772609819,
+     "cal-bressay": 0.9796428125390283,
+     "mean": 0.7162425949000051
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.45291479820627806,
+     "cal-bressay": 0.9793981770508178,
+     "mean": 0.7161564876285479
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.4443000974342319,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.711907730455812
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.443430061949788,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.71147271271359
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.4423391048676903,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.7109272341725412
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.4534621578099839,
+     "cal-bressay": 0.9793981770508178,
+     "mean": 0.7164301674304008
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.4431372549019608,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.7113263091896764
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.4429133858267717,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.7112143746520819
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.44181459566074954,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.7106649795690708
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.4526112185686654,
+     "cal-bressay": 0.9793981770508178,
+     "mean": 0.7160046978097416
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.44277305428384567,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.7111442088806189
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.44254760341431393,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.711031483445853
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.44144736842105264,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.7104813659492224
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.4526112185686654,
+     "cal-bressay": 0.9793981770508178,
+     "mean": 0.7160046978097416
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.44277305428384567,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.7111442088806189
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.44254760341431393,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.711031483445853
+    },
+    {
+     "params": {
+      "v_overlap": 0.3,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.44144736842105264,
+     "cal-bressay": 0.9795153634773921,
+     "mean": 0.7104813659492224
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.7019832985386221,
+     "cal-bressay": 0.9923626508992363,
+     "mean": 0.8471729747189292
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.7007107133456172,
+     "cal-bressay": 0.992360768851651,
+     "mean": 0.846535741098634
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.7014767932489452,
+     "cal-bressay": 0.992360768851651,
+     "mean": 0.846918781050298
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.7004486671945105,
+     "cal-bressay": 0.992360768851651,
+     "mean": 0.8464047180230807
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.7105193075898801,
+     "cal-bressay": 0.9922385117654307,
+     "mean": 0.8513789096776554
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.7100591715976331,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.851147885244288
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.7108596065750471,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.851548102732995
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.7101996762007555,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8512181375458492
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.6997005172883201,
+     "cal-bressay": 0.9922385117654307,
+     "mean": 0.8459695145268753
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.6976616231086658,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8449491109998042
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.6988416988416989,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8455391488663209
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.6985091109884043,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8453728549396735
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.6843559977888337,
+     "cal-bressay": 0.9922385117654307,
+     "mean": 0.8382972547771321
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.6791399050544541,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8356882519726985
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.6804816577989359,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8363591283449393
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.6803140773976444,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8362753381442936
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.6602924634420697,
+     "cal-bressay": 0.9922385117654307,
+     "mean": 0.8262654876037502
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.6545143833665622,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8233754911287525
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.6561874821377537,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8242120405143483
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.655793991416309,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8240152951536259
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.6490480250071043,
+     "cal-bressay": 0.9921143420404139,
+     "mean": 0.8205811835237591
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.641313742437338,
+     "cal-bressay": 0.9922346850733391,
+     "mean": 0.8167742137553385
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.6423821913847934,
+     "cal-bressay": 0.9922346850733391,
+     "mean": 0.8173084382290663
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.6421540243196294,
+     "cal-bressay": 0.9922346850733391,
+     "mean": 0.8171943546964843
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.64818519577022,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8202108973305814
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.6382608695652173,
+     "cal-bressay": 0.9923570019723866,
+     "mean": 0.8153089357688019
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.6399069226294357,
+     "cal-bressay": 0.9923570019723866,
+     "mean": 0.8161319623009111
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.6396737547334693,
+     "cal-bressay": 0.9923570019723866,
+     "mean": 0.816015378352928
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.647983986273949,
+     "cal-bressay": 0.9922365988909427,
+     "mean": 0.8201102925824459
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.638631090487239,
+     "cal-bressay": 0.9923570019723866,
+     "mean": 0.8154940462298128
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.6402793946449359,
+     "cal-bressay": 0.9923570019723866,
+     "mean": 0.8163181983086613
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.6400466336345089,
+     "cal-bressay": 0.9923570019723866,
+     "mean": 0.8162018178034478
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.6481693363844392,
+     "cal-bressay": 0.9923588858762632,
+     "mean": 0.8202641111303512
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.63881636205396,
+     "cal-bressay": 0.9924793490321785,
+     "mean": 0.8156478555430693
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.6404657933042212,
+     "cal-bressay": 0.9924793490321785,
+     "mean": 0.8164725711681998
+    },
+    {
+     "params": {
+      "v_overlap": 0.5,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.6402332361516035,
+     "cal-bressay": 0.9924793490321785,
+     "mean": 0.816356292591891
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.7853610286844708,
+     "cal-bressay": 0.9901912702305052,
+     "mean": 0.8877761494574881
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.7897486937049017,
+     "cal-bressay": 0.9903126916002452,
+     "mean": 0.8900306926525734
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.7905354919053549,
+     "cal-bressay": 0.9903126916002452,
+     "mean": 0.8904240917528
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 0.5,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.7891326021934197,
+     "cal-bressay": 0.9903126916002452,
+     "mean": 0.8897226468968324
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.7970832285642444,
+     "cal-bressay": 0.9903126916002452,
+     "mean": 0.8936979600822448
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.8029381965552177,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8966861696536206
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.8039563783920871,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8971952605720552
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 1.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.8021336042672085,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8962838735096159
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.7875064004096262,
+     "cal-bressay": 0.9903126916002452,
+     "mean": 0.8889095460049357
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.7914300464636036,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8909320946078135
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.7916235780765254,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8910288604142744
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 2.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.7902641118591404,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8903491273055819
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.7750453015790836,
+     "cal-bressay": 0.9903126916002452,
+     "mean": 0.8826789965896644
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.7753717714583875,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8829029571052055
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.7754248366013072,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8829294896766653
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 3.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.7737035096909376,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8820688262214805
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.7541327735502494,
+     "cal-bressay": 0.9903126916002452,
+     "mean": 0.8722227325752473
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.7554261514028586,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8729301470774411
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.75570897503983,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8730715588959268
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 5.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.7539239159350891,
+     "cal-bressay": 0.9904341427520235,
+     "mean": 0.8721790293435563
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.746292372881356,
+     "cal-bressay": 0.9903126916002452,
+     "mean": 0.8683025322408006
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.7445841133993047,
+     "cal-bressay": 0.9905556236967988,
+     "mean": 0.8675698685480517
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.7442983632948753,
+     "cal-bressay": 0.9905556236967988,
+     "mean": 0.8674269934958371
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 8.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.7426727614950255,
+     "cal-bressay": 0.9905556236967988,
+     "mean": 0.8666141925959121
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.74481658692185,
+     "cal-bressay": 0.9905556236967988,
+     "mean": 0.8676861053093244
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.739924771628157,
+     "cal-bressay": 0.9907986750092014,
+     "mean": 0.8653617233186792
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.739622641509434,
+     "cal-bressay": 0.9907986750092014,
+     "mean": 0.8652106582593178
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 12.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.7381788705755201,
+     "cal-bressay": 0.9907986750092014,
+     "mean": 0.8644887727923607
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.7441489361702128,
+     "cal-bressay": 0.9905556236967988,
+     "mean": 0.8673522799335058
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.7399838666308146,
+     "cal-bressay": 0.9907986750092014,
+     "mean": 0.865391270820008
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.7396816833018612,
+     "cal-bressay": 0.9907986750092014,
+     "mean": 0.8652401791555313
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 20.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.7382368848025961,
+     "cal-bressay": 0.9907986750092014,
+     "mean": 0.8645177799058987
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 5.0
+     },
+     "cal-gnhk": 0.7439510768412656,
+     "cal-bressay": 0.9906771344455348,
+     "mean": 0.8673141056434002
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 10.0
+     },
+     "cal-gnhk": 0.739784946236559,
+     "cal-bressay": 0.990920245398773,
+     "mean": 0.865352595817666
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 20.0
+     },
+     "cal-gnhk": 0.7394822006472491,
+     "cal-bressay": 0.990920245398773,
+     "mean": 0.8652012230230111
+    },
+    {
+     "params": {
+      "v_overlap": 0.7,
+      "max_gap": 40.0,
+      "max_angle": 45.0
+     },
+     "cal-gnhk": 0.7380373073803731,
+     "cal-bressay": 0.990920245398773,
+     "mean": 0.864478776389573
+    }
+   ]
+  }
+ },
+ "elapsed_s": 553.7
+}
