@@ -88,6 +88,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-011` — Correção Lexical *(CONCLUÍDO — aceito por delegação em 2026-10-18)*
 - **Resultado**: WER −7,1 e CER −0,6 pontos com dicionário do português; ajuda pouco. Evidência no ADR-007.
 
+### `EXP-012` — Pipeline Integrado Foto → LDF 2.0 *(CONCLUÍDO — aceito por delegação em 2026-10-18; cumpre o objetivo do EXP-006 com os componentes validados)*
+- **Resultado**: CER de página 27,5 % (fotos, inglês), 36,2 % (português, página 3×), 45,8 % (português, nativa); 2,7–5,2 s por página; 100 % LDF 2.0 válido. Decisão no ADR-008.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.

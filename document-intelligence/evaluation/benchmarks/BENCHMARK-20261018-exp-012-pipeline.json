@@ -1,0 +1,159 @@
+{
+  "schema": "leitorum-di-pipeline-benchmark/1",
+  "created_utc": "2026-10-18T04:50:59+00:00",
+  "experiment": "EXP-012",
+  "git": {
+    "commit": "7a852cf202a0ea81ed2a9ad41b544fe3c212fb6c",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "license_status": {
+    "pipeline": "VERIFIED (Apache-2.0; léxico CC-BY-SA 4.0), conforme declarado",
+    "gnhk": "VERIFIED (CC-BY-4.0)",
+    "bressay": "NEEDS VALIDATION (exceção experimental; não embasa produto)"
+  },
+  "lexicon_params": {
+    "size": 100000,
+    "max_distance": 1,
+    "min_length": 3,
+    "accent_ratio": 20.0
+  },
+  "results": {
+    "bressay-native": {
+      "language": "pt",
+      "pages": 185,
+      "lines": 5532,
+      "lines_upscaled": 3162,
+      "before_lexicon": {
+        "pages": 185,
+        "cer_micro": 0.46095348624133403,
+        "wer_micro": 0.7900603079499222,
+        "page_cer_median": 0.3483899821109123,
+        "ref_chars": 491145
+      },
+      "final": {
+        "pages": 185,
+        "cer_micro": 0.4583330788260086,
+        "wer_micro": 0.7375361389830065,
+        "page_cer_median": 0.3488372093023256,
+        "ref_chars": 491145
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 2799.2783,
+        "p95_ms": 5321.338019999998,
+        "peak_rss_bytes": 675512320,
+        "load_ms": 1404.1148
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 5532
+      }
+    },
+    "bressay-x3": {
+      "language": "pt",
+      "pages": 185,
+      "lines": 5625,
+      "lines_upscaled": 6,
+      "before_lexicon": {
+        "pages": 185,
+        "cer_micro": 0.36700159830599927,
+        "wer_micro": 0.7464449706309442,
+        "page_cer_median": 0.28952772073921973,
+        "ref_chars": 491145
+      },
+      "final": {
+        "pages": 185,
+        "cer_micro": 0.36189719940139875,
+        "wer_micro": 0.6789811750238747,
+        "page_cer_median": 0.2867898699520876,
+        "ref_chars": 491145
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 5174.3241,
+        "p95_ms": 6540.6874,
+        "peak_rss_bytes": 924020736,
+        "load_ms": 1346.3179
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 5625
+      }
+    },
+    "gnhk": {
+      "language": "en",
+      "pages": 172,
+      "lines": 2461,
+      "lines_upscaled": 55,
+      "before_lexicon": {
+        "pages": 172,
+        "cer_micro": 0.27470628252036255,
+        "wer_micro": 0.5401459854014599,
+        "page_cer_median": 0.17553191489361702,
+        "ref_chars": 54389
+      },
+      "final": {
+        "pages": 172,
+        "cer_micro": 0.27470628252036255,
+        "wer_micro": 0.5401459854014599,
+        "page_cer_median": 0.17553191489361702,
+        "ref_chars": 54389
+      },
+      "cost": {
+        "pages": 172,
+        "failed": [],
+        "median_ms": 2655.27845,
+        "p95_ms": 3560.3380949999996,
+        "peak_rss_bytes": 821452800,
+        "load_ms": 1448.9403
+      },
+      "ldf2": {
+        "documents": 172,
+        "valid": 172,
+        "not_representable": 0,
+        "lines": 2461
+      }
+    }
+  },
+  "verdicts": {
+    "h1_x3_with_lexicon": {
+      "cer": 0.36189719940139875,
+      "target": 0.357,
+      "met": false
+    },
+    "h2_native_close_to_x3": {
+      "native": 0.4583330788260086,
+      "x3": 0.36189719940139875,
+      "met": false
+    },
+    "h3_gnhk_photos": {
+      "cer": 0.27470628252036255,
+      "target": 0.25,
+      "met": false
+    },
+    "h4_cost": {
+      "median_ms": {
+        "bressay-native": 2799.2783,
+        "bressay-x3": 5174.3241,
+        "gnhk": 2655.27845
+      },
+      "met": true
+    },
+    "h5_ldf": {
+      "met": true
+    }
+  }
+}

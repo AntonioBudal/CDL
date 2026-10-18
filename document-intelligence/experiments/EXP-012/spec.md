@@ -34,8 +34,8 @@ saída é sempre um LDF 2.0 válido?
 
 ## Tarefas
 
-- [ ] **T001** Harness (cópia do EXP-009) e `pipeline.py` com testes da regra de ampliação.
-- [ ] **T002** `prepare.py`: manifestos das três variantes e referências de página do GNHK.
-- [ ] **T003** Rodar o pipeline nas três variantes.
-- [ ] **T004** `run.py`: CER/WER de página antes e depois da correção, custo, LDF 2.0; vereditos.
-- [ ] **T005** `RESULTS.md`, ADR-008, registros.
+- [x] **T001** Harness (cópia do EXP-009) e `pipeline.py` com testes da regra de ampliação.
+- [x] **T002** `prepare.py`: manifestos das três variantes e referências de página do GNHK.
+- [x] **T003** Rodar o pipeline nas três variantes.
+- [x] **T004** `run.py`: CER/WER de página antes e depois da correção, custo, LDF 2.0; vereditos.
+- [x] **T005** `RESULTS.md`, ADR-008, registros.
