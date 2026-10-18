@@ -32,9 +32,12 @@ correção lexical (EXP-011) e o conversor LDF 2.0 (ADR-004) e mediu a cadeia de
 | GNHK, fotos de celular (inglês) | 27,5 % (mediana 17,6 %) | 54,0 % | 2,7 | 172 / 172 |
 | BRESSAY 3× (português) | 36,2 % (mediana 28,7 %) | 67,9 % | 5,2 | 185 / 185 |
 | BRESSAY nativo (português) | 45,8 % (mediana 34,9 %) | 73,8 % | 2,8 | 185 / 185 |
+| **BRESSAY nativo + escala automática (EXP-013)** | **35,9 %** (mediana 28,1 %) | 67,7 % | 5,6 | 185 / 185 |
+| **GNHK + escala automática (EXP-013)** | **27,3 %** (mediana 17,6 %) | 53,5 % | 2,8 | 172 / 172 |
 
 ## 4. Consequências
 
 * Existe um caminho local completo foto → LDF 2.0 em menos de 6 s por página, em CPU.
-* **Próximos passos com mais retorno:** (a) ~~regra de escala automática~~ — feita no EXP-013; (b) adaptar o reconhecedor à caligrafia brasileira, que é o
-  limite real e depende de dados com licença para produto; (c) validar com fotos de caderno de verdade.
+* **Próximos passos com mais retorno:** (a) regra de escala automática — feita no EXP-013; (b) adaptar o
+  reconhecedor à caligrafia brasileira, que é o limite real e depende de dados com licença para produto;
+  (c) validar com fotos de caderno de verdade.
