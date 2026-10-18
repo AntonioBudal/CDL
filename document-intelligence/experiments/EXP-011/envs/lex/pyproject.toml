@@ -1,0 +1,11 @@
+# Ambiente isolado do EXP-011: só para exportar o léxico do português (frequências de palavras).
+# NÃO faz parte do pacote leitorum-di.
+[project]
+name = "exp-011-lex"
+version = "0.0.0"
+description = "EXP-011: exportação do léxico português (wordfreq)"
+requires-python = ">=3.12,<3.13"
+dependencies = ["wordfreq"]
+
+[tool.uv]
+package = false
