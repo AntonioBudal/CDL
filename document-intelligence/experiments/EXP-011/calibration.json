@@ -1,0 +1,584 @@
+{
+ "schema": "leitorum-di-lexicon-calibration/1",
+ "note": "Calibração só nas linhas de validação do BRESSAY; o teste não é lido.",
+ "criterion": "CER micro (NFC) da validação",
+ "lines": 4609,
+ "baseline": {
+  "cer": 0.4152430283683672,
+  "wer": 0.772187140324136
+ },
+ "best": {
+  "params": {
+   "size": 100000,
+   "max_distance": 1,
+   "min_length": 3,
+   "accent_ratio": 20.0
+  },
+  "cer": 0.41223875203276517,
+  "wer": 0.7148100911438081
+ },
+ "grid": {
+  "size": [
+   20000,
+   50000,
+   100000
+  ],
+  "max_distance": [
+   0,
+   1,
+   2
+  ],
+  "min_length": [
+   1,
+   3
+  ],
+  "accent_ratio": [
+   null,
+   5.0,
+   20.0
+  ]
+ },
+ "results": [
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 0,
+    "min_length": 1,
+    "accent_ratio": null
+   },
+   "cer": 0.4149057399265193,
+   "wer": 0.7685631629701061
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 0,
+    "min_length": 1,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.41503101849063423,
+   "wer": 0.7679254673842039
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 0,
+    "min_length": 1,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.41474914172137567,
+   "wer": 0.7667122904159019
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 0,
+    "min_length": 3,
+    "accent_ratio": null
+   },
+   "cer": 0.41482141781605736,
+   "wer": 0.7685631629701061
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 0,
+    "min_length": 3,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.4145660422815154,
+   "wer": 0.7666811833141506
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 0,
+    "min_length": 3,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.4145684514846714,
+   "wer": 0.7668211652720316
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 1,
+    "min_length": 1,
+    "accent_ratio": null
+   },
+   "cer": 0.41369391073902306,
+   "wer": 0.7134258251158739
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 1,
+    "min_length": 1,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.413819189303138,
+   "wer": 0.7127881295299717
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 1,
+    "min_length": 1,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.41353731253387943,
+   "wer": 0.7115749525616698
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 1,
+    "min_length": 3,
+    "accent_ratio": null
+   },
+   "cer": 0.41328916460880566,
+   "wer": 0.7141257349052789
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 1,
+    "min_length": 3,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.4130337890742637,
+   "wer": 0.7122437552493234
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 1,
+    "min_length": 3,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.4130361982774197,
+   "wer": 0.7123837372072044
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 2,
+    "min_length": 1,
+    "accent_ratio": null
+   },
+   "cer": 0.42397638980907065,
+   "wer": 0.7114971848072915
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 2,
+    "min_length": 1,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.4240992591700295,
+   "wer": 0.7108594892213892
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 2,
+    "min_length": 1,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.42381738240077094,
+   "wer": 0.7096463122530874
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 2,
+    "min_length": 3,
+    "accent_ratio": null
+   },
+   "cer": 0.4235740528820093,
+   "wer": 0.7121970945966964
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 2,
+    "min_length": 3,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.4233186773474673,
+   "wer": 0.710315114940741
+  },
+  {
+   "params": {
+    "size": 20000,
+    "max_distance": 2,
+    "min_length": 3,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.4233210865506234,
+   "wer": 0.710455096898622
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 0,
+    "min_length": 1,
+    "accent_ratio": null
+   },
+   "cer": 0.4150888393663796,
+   "wer": 0.7692319656577596
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 0,
+    "min_length": 1,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.41511293139794014,
+   "wer": 0.7674122002053069
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 0,
+    "min_length": 1,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.41481419020658916,
+   "wer": 0.7663078980931347
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 0,
+    "min_length": 3,
+    "accent_ratio": null
+   },
+   "cer": 0.41503583689694634,
+   "wer": 0.7692319656577596
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 0,
+    "min_length": 3,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.41465759200144553,
+   "wer": 0.7661679161352537
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 0,
+    "min_length": 3,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.41465036439197733,
+   "wer": 0.7664167729492644
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 1,
+    "min_length": 1,
+    "accent_ratio": null
+   },
+   "cer": 0.4128169607902186,
+   "wer": 0.7129436650387283
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 1,
+    "min_length": 1,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.41283864361862316,
+   "wer": 0.7111238995862755
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 1,
+    "min_length": 1,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.4125399024272722,
+   "wer": 0.7100195974741034
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 1,
+    "min_length": 3,
+    "accent_ratio": null
+   },
+   "cer": 0.41274468469553693,
+   "wer": 0.7130214327931067
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 1,
+    "min_length": 3,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.4123664398000361,
+   "wer": 0.7099573832706007
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 1,
+    "min_length": 3,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.412359212190568,
+   "wer": 0.7102062400846113
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 2,
+    "min_length": 1,
+    "accent_ratio": null
+   },
+   "cer": 0.42150695657411313,
+   "wer": 0.7100507045758546
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 2,
+    "min_length": 1,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.4215286394025176,
+   "wer": 0.7082309391234018
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 2,
+    "min_length": 1,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.42122989821116663,
+   "wer": 0.7071266370112297
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 2,
+    "min_length": 3,
+    "accent_ratio": null
+   },
+   "cer": 0.42143468047943144,
+   "wer": 0.710128472330233
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 2,
+    "min_length": 3,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.42105643558393063,
+   "wer": 0.707064422807727
+  },
+  {
+   "params": {
+    "size": 50000,
+    "max_distance": 2,
+    "min_length": 3,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.42104920797446244,
+   "wer": 0.7073132796217376
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 0,
+    "min_length": 1,
+    "accent_ratio": null
+   },
+   "cer": 0.41519243510209,
+   "wer": 0.7701807322611752
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 0,
+    "min_length": 1,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.41517797988315364,
+   "wer": 0.7672722182474259
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 0,
+    "min_length": 1,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.41474914172137567,
+   "wer": 0.7661834696861294
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 0,
+    "min_length": 3,
+    "accent_ratio": null
+   },
+   "cer": 0.41514906944528096,
+   "wer": 0.7701807322611752
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 0,
+    "min_length": 3,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.41472745889297113,
+   "wer": 0.7660279341773727
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 0,
+    "min_length": 3,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.41459013431307595,
+   "wer": 0.766292344542259
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 1,
+    "min_length": 1,
+    "accent_ratio": null
+   },
+   "cer": 0.41284346202493527,
+   "wer": 0.7186518182100974
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 1,
+    "min_length": 1,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.4128241883996868,
+   "wer": 0.715743304196348
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 1,
+    "min_length": 1,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.4123953502379088,
+   "wer": 0.7146545556350515
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 1,
+    "min_length": 3,
+    "accent_ratio": null
+   },
+   "cer": 0.4127976871649702,
+   "wer": 0.7186984788627243
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 1,
+    "min_length": 3,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.41237607661266035,
+   "wer": 0.7145456807789218
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 1,
+    "min_length": 3,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.41223875203276517,
+   "wer": 0.7148100911438081
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 2,
+    "min_length": 1,
+    "accent_ratio": null
+   },
+   "cer": 0.42056977654640726,
+   "wer": 0.715603322238467
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 2,
+    "min_length": 1,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.4205505029211588,
+   "wer": 0.7126948082247178
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 2,
+    "min_length": 1,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.42012166475938084,
+   "wer": 0.7116060596634212
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 2,
+    "min_length": 3,
+    "accent_ratio": null
+   },
+   "cer": 0.4205240016864422,
+   "wer": 0.715649982891094
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 2,
+    "min_length": 3,
+    "accent_ratio": 5.0
+   },
+   "cer": 0.4201023911341324,
+   "wer": 0.7114971848072915
+  },
+  {
+   "params": {
+    "size": 100000,
+    "max_distance": 2,
+    "min_length": 3,
+    "accent_ratio": 20.0
+   },
+   "cer": 0.4199650665542372,
+   "wer": 0.7117615951721779
+  }
+ ],
+ "elapsed_s": 574.3
+}
