@@ -3,16 +3,16 @@
 Para cada palavra (pontuação de borda e caixa preservadas):
 
 1. palavra no léxico → mantém, salvo se ``accent_ratio`` estiver ligado e a forma acentuada da
-   mesma palavra for pelo menos ``accent_ratio`` vezes mais frequente (o léxico, vindo de texto da internet,
-   tem formas sem acento como "nao");
+   mesma palavra for pelo menos ``accent_ratio`` vezes mais frequente (o léxico, vindo de texto da
+   internet, tem formas sem acento como "nao");
 2. a mesma palavra sem acentos coincide com uma palavra do léxico → forma acentuada mais frequente;
 3. senão, candidatos a distância de edição ≤ ``max_distance`` → o mais frequente de menor distância;
    sem candidato, mantém.
 
 Candidatos vêm de um índice de deleções (estilo SymSpell): até 1 deleção no léxico e até
 ``max_distance`` na palavra lida; a distância verdadeira é conferida depois. Com
-``max_distance = 2`` o índice não acha os pares que exigem duas deleções do lado do léxico (aproximação declarada, para
-caber em memória).
+``max_distance = 2`` o índice não acha os pares que exigem duas deleções do lado do léxico
+(aproximação declarada, para caber em memória).
 """
 
 from __future__ import annotations

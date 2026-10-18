@@ -1,7 +1,8 @@
 """Lê um conjunto de linhas com o PP-OCRv6 small e recorte ampliado 2× (melhor leitor do EXP-010).
 
 Conjuntos: ``val-lines`` (validação do BRESSAY, preparada aqui) e ``lines-bressay`` (todas as
-linhas de teste, preparadas no EXP-009). Saída fora do Git: ``dataset/processed/exp-011/read-<conjunto>.json``.
+linhas de teste, preparadas no EXP-009). Saída fora do Git:
+``dataset/processed/exp-011/read-<conjunto>.json``.
 """
 
 from __future__ import annotations
