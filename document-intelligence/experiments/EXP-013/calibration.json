@@ -1,0 +1,133 @@
+{
+ "note": "Só conjuntos de calibração.",
+ "best_target": 80,
+ "results": {
+  "48": {
+   "mean_cer": 0.3527801146079841,
+   "cal-bressay": {
+    "pages": 154,
+    "cer_micro": 0.42271093406712146,
+    "wer_micro": 0.7184491687532075,
+    "page_cer_median": 0.3498168498168498,
+    "ref_chars": 416469,
+    "scales": {
+     "2": 75,
+     "1": 47,
+     "3": 32
+    },
+    "cost": {
+     "pages": 154,
+     "failed": [],
+     "median_ms": 3947.09035,
+     "p95_ms": 6946.411649999998,
+     "peak_rss_bytes": 685207552,
+     "load_ms": 1403.2069
+    }
+   },
+   "cal-gnhk": {
+    "pages": 150,
+    "cer_micro": 0.28284929514884677,
+    "wer_micro": 0.5282281926855249,
+    "page_cer_median": 0.20531400966183574,
+    "ref_chars": 49514,
+    "scales": {
+     "1": 150
+    },
+    "cost": {
+     "pages": 150,
+     "failed": [],
+     "median_ms": 2661.61495,
+     "p95_ms": 3634.8452899999975,
+     "peak_rss_bytes": 779464704,
+     "load_ms": 1359.1895
+    }
+   }
+  },
+  "64": {
+   "mean_cer": 0.3424649547310701,
+   "cal-bressay": {
+    "pages": 154,
+    "cer_micro": 0.40187865123214456,
+    "wer_micro": 0.7063031679134073,
+    "page_cer_median": 0.33252032520325203,
+    "ref_chars": 416469,
+    "scales": {
+     "2": 37,
+     "3": 89,
+     "4": 10,
+     "1": 18
+    },
+    "cost": {
+     "pages": 154,
+     "failed": [],
+     "median_ms": 5293.96645,
+     "p95_ms": 7427.661565,
+     "peak_rss_bytes": 857997312,
+     "load_ms": 1392.038
+    }
+   },
+   "cal-gnhk": {
+    "pages": 150,
+    "cer_micro": 0.28305125822999555,
+    "wer_micro": 0.5288199786957036,
+    "page_cer_median": 0.20531400966183574,
+    "ref_chars": 49514,
+    "scales": {
+     "1": 146,
+     "2": 4
+    },
+    "cost": {
+     "pages": 150,
+     "failed": [],
+     "median_ms": 2672.36245,
+     "p95_ms": 3681.3612499999995,
+     "peak_rss_bytes": 780734464,
+     "load_ms": 1328.0664
+    }
+   }
+  },
+  "80": {
+   "mean_cer": 0.3414056027015909,
+   "cal-bressay": {
+    "pages": 154,
+    "cer_micro": 0.39717481973448204,
+    "wer_micro": 0.7036282483942707,
+    "page_cer_median": 0.31910569105691056,
+    "ref_chars": 416469,
+    "scales": {
+     "3": 26,
+     "4": 81,
+     "2": 39,
+     "1": 8
+    },
+    "cost": {
+     "pages": 154,
+     "failed": [],
+     "median_ms": 6173.275900000001,
+     "p95_ms": 7325.19599,
+     "peak_rss_bytes": 885604352,
+     "load_ms": 1353.6478
+    }
+   },
+   "cal-gnhk": {
+    "pages": 150,
+    "cer_micro": 0.28563638566869975,
+    "wer_micro": 0.53142383714049,
+    "page_cer_median": 0.20531400966183574,
+    "ref_chars": 49514,
+    "scales": {
+     "1": 140,
+     "2": 10
+    },
+    "cost": {
+     "pages": 150,
+     "failed": [],
+     "median_ms": 2654.00355,
+     "p95_ms": 3850.275329999996,
+     "peak_rss_bytes": 780378112,
+     "load_ms": 1448.5646
+    }
+   }
+  }
+ }
+}
