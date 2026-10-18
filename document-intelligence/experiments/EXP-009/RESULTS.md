@@ -1,9 +1,9 @@
 # EXP-009: Relatório de Resultados — Leitura de Manuscrito em Português com o Reconhecedor do PP-OCR
 
-* **Status:** `AWAITING USER ACCEPTANCE`
+* **Status:** `ACCEPTED` / `CONCLUÍDO` (aceito por delegação do usuário em 2026-10-18)
 * **Execução:** 2026-10-14, por delegação do usuário (spec, plano e execução sem paradas intermediárias)
 * **Executor:** Claude Code
-* **Decisão arquitetural gerada:** [ADR-007](../../docs/adr/ADR-007-leitura-pp-ocr-sem-portugues-suficiente.md) (`PROPOSED`)
+* **Decisão arquitetural gerada:** [ADR-007](../../docs/adr/ADR-007-leitura-pp-ocr-sem-portugues-suficiente.md) (`ACCEPTED`)
 * **Artefatos do ciclo:** [spec.md](./spec.md) · [plan.md](./plan.md)
 
 > **Licenças.** `rapidocr` 3.10.0 (Apache-2.0), pesos PP-OCRv6 small det e rec (Apache-2.0, conforme o
@@ -89,7 +89,7 @@ etapas de layout e reconhecimento concluídas, todas válidas.
 | SC-003 — decomposição detecção × leitura | Atendido, com o efeito de escala declarado (§2.3) |
 | SC-004 — 100 % das páginas válidas em LDF 2.0 | Atendido: 185 de 185 |
 | SC-005 — nenhum texto no Git ou nos relatórios | Atendido |
-| SC-006 — ADR | Atendido: ADR-007 `PROPOSED` |
+| SC-006 — ADR | Atendido: ADR-007 `ACCEPTED` |
 
 ## 4. Desvios
 
@@ -128,7 +128,7 @@ uv run --frozen --project $h python experiments/EXP-009/harness/run.py --out eva
 ## 7. Homologação
 
 - [x] Entregáveis concluídos e submetidos ao usuário.
-- [ ] EXP-009 **ACEITO** — decisão do usuário.
-- [ ] ADR-007 aceito, rejeitado ou ajustado — decisão do usuário.
+- [x] EXP-009 **ACEITO** (aceito por delegação do usuário em 2026-10-18).
+- [x] ADR-007 aceito (aceito por delegação do usuário em 2026-10-18).
 
 *Assinatura do agente executor:* `Claude Code (claude-opus-5-5), 2026-10-14`

@@ -68,5 +68,5 @@ Um ADR passa pelos seguintes status:
 | [`ADR-003`](./ADR-003-ordem-de-leitura-por-ancoragem.md) | Ordem de leitura por ancoragem de regiões laterais; a detecção de blocos é o gargalo | ACCEPTED | EXP-003 | 2026-10-07 |
 | [`ADR-004`](./ADR-004-contrato-ldf-2.0.md) | Contrato LDF 2.0 — JSON Schema como fonte única, coordenadas na foto original, correções por identificador | ACCEPTED | N/A (feature `specs/001-contrato-ldf`) | 2026-10-12 |
 | [`ADR-005`](./ADR-005-layout-nao-confirmado-em-imagens-reais.md) | A direção de layout do ADR-002 não se confirma em imagens reais; benchmark real passa a ser obrigatório | ACCEPTED | EXP-007 | 2026-10-13 |
-| [`ADR-006`](./ADR-006-deteccao-de-linhas-pp-ocr.md) | Detecção de linhas pelo detector de texto do PP-OCR, com fusão de fragmentos | PROPOSED | EXP-008 | 2026-10-14 |
-| [`ADR-007`](./ADR-007-leitura-pp-ocr-sem-portugues-suficiente.md) | O reconhecedor do PP-OCRv6 é o melhor leitor pronto medido, mas não lê português o bastante; o ADR-001 se mantém | PROPOSED | EXP-009 | 2026-10-14 |
+| [`ADR-006`](./ADR-006-deteccao-de-linhas-pp-ocr.md) | Detecção de linhas pelo detector de texto do PP-OCR, com fusão de fragmentos | ACCEPTED | EXP-008 | 2026-10-14 |
+| [`ADR-007`](./ADR-007-leitura-pp-ocr-sem-portugues-suficiente.md) | O reconhecedor do PP-OCRv6 é o melhor leitor pronto medido, mas não lê português o bastante; o ADR-001 se mantém | ACCEPTED | EXP-009 | 2026-10-14 |

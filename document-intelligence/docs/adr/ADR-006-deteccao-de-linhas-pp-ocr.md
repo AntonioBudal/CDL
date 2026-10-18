@@ -1,6 +1,6 @@
 # ADR-006: Detecção de linhas pelo detector de texto do PP-OCR, com fusão de fragmentos
 
-* **Status:** PROPOSED
+* **Status:** ACCEPTED (aceito por delegação do usuário em 2026-10-18)
 * **Data:** 2026-10-14
 * **Decisores:** Usuário (decisão); Claude Code (proposta)
 * **Experimento de Suporte:** [EXP-008](../../experiments/EXP-008/RESULTS.md)

@@ -1,9 +1,9 @@
 # EXP-010: Relatório de Resultados — Outros Reconhecedores do PP-OCR e Escala da Linha
 
-* **Status:** `AWAITING USER ACCEPTANCE`
+* **Status:** `ACCEPTED` / `CONCLUÍDO` (aceito por delegação do usuário em 2026-10-18)
 * **Execução:** 2026-10-14, por delegação do usuário
 * **Executor:** Claude Code
-* **Decisão:** evidência acrescentada ao [ADR-007](../../docs/adr/ADR-007-leitura-pp-ocr-sem-portugues-suficiente.md) (`PROPOSED`); nenhum ADR novo
+* **Decisão:** evidência acrescentada ao [ADR-007](../../docs/adr/ADR-007-leitura-pp-ocr-sem-portugues-suficiente.md) (`ACCEPTED`); nenhum ADR novo
 * **Artefato do ciclo:** [spec.md](./spec.md) (especificação, plano e tarefas)
 
 > **Licenças.** PP-OCRv6 small, PP-OCRv6 medium e PP-OCRv5 latino mobile: Apache-2.0 nos cards oficiais da
@@ -97,6 +97,6 @@ uv run --frozen --project $h python experiments/EXP-010/harness/run.py --out eva
 ## 7. Homologação
 
 - [x] Entregáveis concluídos e submetidos ao usuário.
-- [ ] EXP-010 **ACEITO** — decisão do usuário.
+- [x] EXP-010 **ACEITO** (aceito por delegação do usuário em 2026-10-18).
 
 *Assinatura do agente executor:* `Claude Code (claude-opus-5-5), 2026-10-14`

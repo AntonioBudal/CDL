@@ -1,9 +1,9 @@
 # EXP-008: Relatório de Resultados — Detecção de Linhas em Manuscrito Real
 
-* **Status:** `AWAITING USER ACCEPTANCE`
+* **Status:** `ACCEPTED` / `CONCLUÍDO` (aceito por delegação do usuário em 2026-10-18)
 * **Execução:** 2026-10-13 e 2026-10-14, com as decisões delegadas pelo usuário ao aprovar o plano
 * **Executor:** Claude Code
-* **Decisão arquitetural gerada:** [ADR-006](../../docs/adr/ADR-006-deteccao-de-linhas-pp-ocr.md) (`PROPOSED`)
+* **Decisão arquitetural gerada:** [ADR-006](../../docs/adr/ADR-006-deteccao-de-linhas-pp-ocr.md) (`ACCEPTED`)
 * **Artefatos do ciclo:** [spec.md](./spec.md) · [plan.md](./plan.md) · [tasks.md](./tasks.md)
 
 > **Licenças.** Candidatos: Doc-UFCN (BSD-3-Clause / MIT), clássico (OpenCV, Apache-2.0) e **PP-OCRv6 small det**
@@ -111,7 +111,7 @@ são contadas, não escondidas. Os outros três candidatos: 100 % válidos.
 | SC-003 — veredito de H1 a H5 | Atendido (§1) |
 | SC-004 — 100 % das saídas válidas em LDF 2.0 | Atendido para os três modelos; o `classic` tem 4 de 357 documentos não representáveis por caixa degenerada, contados |
 | SC-005 — nada de conteúdo no Git; nada fora da pasta; disco no teto | Atendido (§6) |
-| SC-006 — ADR | Atendido: ADR-006 `PROPOSED` |
+| SC-006 — ADR | Atendido: ADR-006 `ACCEPTED` |
 
 ---
 
@@ -183,7 +183,7 @@ uv run --frozen --project $h python experiments/EXP-008/harness/run.py --out eva
 ## 8. Homologação
 
 - [x] Entregáveis do EXP-008 concluídos e submetidos ao usuário.
-- [ ] EXP-008 **ACEITO** — decisão do usuário.
-- [ ] ADR-006 aceito, rejeitado ou ajustado — decisão do usuário.
+- [x] EXP-008 **ACEITO** (aceito por delegação do usuário em 2026-10-18).
+- [x] ADR-006 aceito (aceito por delegação do usuário em 2026-10-18).
 
 *Assinatura do agente executor:* `Claude Code (claude-opus-5-5), 2026-10-14`

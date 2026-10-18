@@ -1,6 +1,6 @@
 # ADR-007: O reconhecedor do PP-OCRv6 é o melhor leitor pronto medido, mas não lê português o bastante; o ADR-001 se mantém
 
-* **Status:** PROPOSED
+* **Status:** ACCEPTED (aceito por delegação do usuário em 2026-10-18)
 * **Data:** 2026-10-14
 * **Decisores:** Usuário (decisão); Claude Code (proposta)
 * **Experimentos de Suporte:** [EXP-009](../../experiments/EXP-009/RESULTS.md) e [EXP-010](../../experiments/EXP-010/RESULTS.md)

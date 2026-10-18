@@ -76,13 +76,13 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 - **Objetivo**: Medir o pipeline dos ADR-002 e ADR-003, sem ajustes, em fotos de celular (GNHK) e em caligrafia portuguesa (BRESSAY). Executado depois do EXP-003 e antes do EXP-004.
 - **Resultado**: o F1 de linhas cai de 0,78–0,93 (sintético) para 0,35–0,37; a retificação por contorno piora; os blocos saem como texto único. Decisão no ADR-005. Próximo: `EXP-008` (detecção de linhas em manuscrito real).
 
-### `EXP-008` — Detecção de Linhas em Manuscrito Real *(EXECUTADO em 2026-10-14 — aguardando aceite)*
+### `EXP-008` — Detecção de Linhas em Manuscrito Real *(CONCLUÍDO — aceito por delegação em 2026-10-18)*
 - **Resultado**: PP-OCRv6 small det + fusão de fragmentos: F1 0,812 (GNHK) e 0,982 (BRESSAY), contra 0,428 e 0,675 do Doc-UFCN. Proposta no ADR-006.
 
-### `EXP-009` — Leitura de Manuscrito com o PP-OCR *(EXECUTADO em 2026-10-14 por delegação — aguardando aceite)*
+### `EXP-009` — Leitura de Manuscrito com o PP-OCR *(CONCLUÍDO — aceito por delegação em 2026-10-18)*
 - **Resultado**: CER 38,5 % nas linhas do EXP-001 (antes: 69,4 %); 14,8 % em inglês fotografado; letras acentuadas com 80 % de erro. ADR-001 mantido (ADR-007).
 
-### `EXP-010` — Outros Reconhecedores e Escala da Linha *(EXECUTADO em 2026-10-14 por delegação — aguardando aceite)*
+### `EXP-010` — Outros Reconhecedores e Escala da Linha *(CONCLUÍDO — aceito por delegação em 2026-10-18)*
 - **Resultado**: melhor leitura em português: PP-OCRv6 small com recorte ampliado 2×, CER 34,4 %; medium e latino não superam. Evidência no ADR-007.
 
 ### `EXP-004` — Classificação Semântica
