@@ -27,7 +27,7 @@ ampliação fixa sem saber de antemão de onde veio a imagem?
 
 ## Tarefas
 
-- [ ] **T001** Harness (cópia do EXP-012) com a regra de escala e testes.
-- [ ] **T002** Conjuntos de calibração com referência de página (BRESSAY validação; GNHK treino).
-- [ ] **T003** Calibrar o alvo; testar uma vez.
-- [ ] **T004** Relatório, evidência no ADR-008, registros.
+- [x] **T001** Harness (cópia do EXP-012) com a regra de escala e testes.
+- [x] **T002** Conjuntos de calibração com referência de página (BRESSAY validação; GNHK treino).
+- [x] **T003** Calibrar o alvo; testar uma vez.
+- [x] **T004** Relatório, evidência no ADR-008, registros.

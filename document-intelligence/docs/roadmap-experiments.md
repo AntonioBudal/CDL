@@ -91,6 +91,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-012` — Pipeline Integrado Foto → LDF 2.0 *(CONCLUÍDO — aceito por delegação em 2026-10-18; cumpre o objetivo do EXP-006 com os componentes validados)*
 - **Resultado**: CER de página 27,5 % (fotos, inglês), 36,2 % (português, página 3×), 45,8 % (português, nativa); 2,7–5,2 s por página; 100 % LDF 2.0 válido. Decisão no ADR-008.
 
+### `EXP-013` — Escala Automática da Página *(CONCLUÍDO — aceito por delegação em 2026-10-18)*
+- **Resultado**: ampliar a página até linhas de ~80 px: redação original 45,8 % → 35,9 % de CER; fotos sem mudança (27,3 %). Incorporado ao ADR-008.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.
