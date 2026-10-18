@@ -1,0 +1,228 @@
+{
+  "schema": "leitorum-di-reading-benchmark/1",
+  "created_utc": "2026-10-18T03:52:59+00:00",
+  "experiment": "EXP-011",
+  "git": {
+    "commit": "b48cecd9da8d00658f839bb7bc685b3e98d6b771",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "license_status": {
+    "lexicon": "wordfreq: código Apache-2.0, dados CC-BY-SA 4.0 (conforme declarado)",
+    "bressay": "NEEDS VALIDATION (exceção experimental; não embasa produto)"
+  },
+  "params": {
+    "size": 100000,
+    "max_distance": 1,
+    "min_length": 3,
+    "accent_ratio": 20.0
+  },
+  "validation": {
+    "baseline": {
+      "cer": 0.4152430283683672,
+      "wer": 0.772187140324136
+    },
+    "best": {
+      "params": {
+        "size": 100000,
+        "max_distance": 1,
+        "min_length": 3,
+        "accent_ratio": 20.0
+      },
+      "cer": 0.41223875203276517,
+      "wer": 0.7148100911438081
+    },
+    "lines": 4609
+  },
+  "results": {
+    "lines-exp001": {
+      "before": {
+        "lines": 398,
+        "missing": 0,
+        "cer_micro": 0.3437160656112476,
+        "wer_micro": 0.7409979893986474,
+        "cer_macro": 0.32464848036688665,
+        "ref_chars": 34994,
+        "ref_words": 5471,
+        "lines_with_cer_below_10pct": 34,
+        "cer_by_class": {
+          "letra": {
+            "chars": 27791,
+            "cer": 0.35497103378791695
+          },
+          "letra acentuada": {
+            "chars": 1106,
+            "cer": 0.7974683544303798
+          },
+          "dígito": {
+            "chars": 39,
+            "cer": 0.46153846153846156
+          },
+          "pontuação": {
+            "chars": 970,
+            "cer": 0.4144329896907217
+          },
+          "espaço": {
+            "chars": 5088,
+            "cer": 0.13463050314465408
+          }
+        },
+        "insertions": 176
+      },
+      "after": {
+        "lines": 398,
+        "missing": 0,
+        "cer_micro": 0.3382008344287592,
+        "wer_micro": 0.6702613781758362,
+        "cer_macro": 0.31893265936056736,
+        "ref_chars": 34994,
+        "ref_words": 5471,
+        "lines_with_cer_below_10pct": 52,
+        "cer_by_class": {
+          "letra": {
+            "chars": 27791,
+            "cer": 0.35068907200172716
+          },
+          "letra acentuada": {
+            "chars": 1106,
+            "cer": 0.7486437613019892
+          },
+          "dígito": {
+            "chars": 39,
+            "cer": 0.46153846153846156
+          },
+          "pontuação": {
+            "chars": 970,
+            "cer": 0.4134020618556701
+          },
+          "espaço": {
+            "chars": 5088,
+            "cer": 0.13502358490566038
+          }
+        },
+        "insertions": 155
+      },
+      "harm": {
+        "correct_before": 1438,
+        "harmed": 15,
+        "harmed_share": 0.01043115438108484,
+        "substitutions_fixed": 336
+      },
+      "correction_ms_per_line": 0.3887989949752999
+    },
+    "lines-bressay": {
+      "before": {
+        "lines": 5496,
+        "missing": 0,
+        "cer_micro": 0.3776533830187564,
+        "wer_micro": 0.7511971112332209,
+        "cer_macro": 0.35097262832122555,
+        "ref_chars": 490553,
+        "ref_words": 76434,
+        "lines_with_cer_below_10pct": 469,
+        "cer_by_class": {
+          "letra": {
+            "chars": 384863,
+            "cer": 0.38382229520634614
+          },
+          "letra acentuada": {
+            "chars": 15676,
+            "cer": 0.785213064557285
+          },
+          "dígito": {
+            "chars": 449,
+            "cer": 0.4610244988864143
+          },
+          "pontuação": {
+            "chars": 18311,
+            "cer": 0.582382174649118
+          },
+          "espaço": {
+            "chars": 71239,
+            "cer": 0.16629935849745223
+          },
+          "outro": {
+            "chars": 15,
+            "cer": 1.0
+          }
+        },
+        "insertions": 2498
+      },
+      "after": {
+        "lines": 5496,
+        "missing": 0,
+        "cer_micro": 0.3733561918895614,
+        "wer_micro": 0.6857811968495696,
+        "cer_macro": 0.3460274080497672,
+        "ref_chars": 490553,
+        "ref_words": 76434,
+        "lines_with_cer_below_10pct": 639,
+        "cer_by_class": {
+          "letra": {
+            "chars": 384863,
+            "cer": 0.38091736540015536
+          },
+          "letra acentuada": {
+            "chars": 15676,
+            "cer": 0.7363485583056902
+          },
+          "dígito": {
+            "chars": 449,
+            "cer": 0.4610244988864143
+          },
+          "pontuação": {
+            "chars": 18311,
+            "cer": 0.5821091147397739
+          },
+          "espaço": {
+            "chars": 71239,
+            "cer": 0.1666362526144387
+          },
+          "outro": {
+            "chars": 15,
+            "cer": 1.0
+          }
+        },
+        "insertions": 2255
+      },
+      "harm": {
+        "correct_before": 19389,
+        "harmed": 235,
+        "harmed_share": 0.012120274382381762,
+        "substitutions_fixed": 4481
+      },
+      "correction_ms_per_line": 0.37358635371179155
+    }
+  },
+  "verdicts": {
+    "h1_wer_10_points": {
+      "before": 0.7409979893986474,
+      "after": 0.6702613781758362,
+      "met": false
+    },
+    "h2_cer_3_points": {
+      "before": 0.3437160656112476,
+      "after": 0.3382008344287592,
+      "met": false
+    },
+    "h3_accents_15_points": {
+      "before": 0.7974683544303798,
+      "after": 0.7486437613019892,
+      "met": false
+    },
+    "h4_cost": {
+      "ms_per_line": 0.3887989949752999,
+      "met": true
+    },
+    "h5_harm": {
+      "harmed_share": 0.01043115438108484,
+      "met": true
+    }
+  }
+}

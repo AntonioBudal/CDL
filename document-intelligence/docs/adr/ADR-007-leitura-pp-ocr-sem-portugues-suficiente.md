@@ -3,7 +3,7 @@
 * **Status:** ACCEPTED (aceito por delegação do usuário em 2026-10-18)
 * **Data:** 2026-10-14
 * **Decisores:** Usuário (decisão); Claude Code (proposta)
-* **Experimentos de Suporte:** [EXP-009](../../experiments/EXP-009/RESULTS.md) e [EXP-010](../../experiments/EXP-010/RESULTS.md)
+* **Experimentos de Suporte:** [EXP-009](../../experiments/EXP-009/RESULTS.md) , [EXP-010](../../experiments/EXP-010/RESULTS.md) e [EXP-011](../../experiments/EXP-011/RESULTS.md)
 * **Status de Licença:** PP-OCRv6 small rec e det via `rapidocr` (Apache-2.0) — `LICENSE STATUS: VERIFIED`, conforme declarado. A medida em português depende do BRESSAY (`NEEDS VALIDATION`): serve para orientar experimentos, não para decisão de produto.
 
 ## 1. Contexto
@@ -51,7 +51,15 @@ mesmo pacote tem um reconhecedor multilíngue que declara português. O EXP-009 
   **adaptar um reconhecedor ao português**, o que depende de dados com licença adequada (o BRESSAY não tem) ou de
   dados próprios.
 
-## 6. Conformidade
+## 6. Evidência acrescentada pelo EXP-011 (2026-10-18)
+
+* Correção lexical (dicionário de 100 mil palavras do português, distância 1, restauração de acentos) depois do
+  small 2×: WER 74,1 % → 67,0 %, CER 34,4 % → 33,8 %, acentos 79,7 % → 74,9 %; estraga 1 % das palavras certas;
+  0,4 ms por linha.
+* Vale como última etapa do pipeline, mas não muda o diagnóstico: o reconhecedor precisa ser adaptado à
+  caligrafia brasileira.
+
+## 7. Conformidade
 
 * [x] Local-first; [x] evidência antes de decisão; [x] licenças declaradas; [x] nenhum texto de terceiros em
   relatório.

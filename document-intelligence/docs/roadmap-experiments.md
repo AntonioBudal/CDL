@@ -85,6 +85,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-010` — Outros Reconhecedores e Escala da Linha *(CONCLUÍDO — aceito por delegação em 2026-10-18)*
 - **Resultado**: melhor leitura em português: PP-OCRv6 small com recorte ampliado 2×, CER 34,4 %; medium e latino não superam. Evidência no ADR-007.
 
+### `EXP-011` — Correção Lexical *(CONCLUÍDO — aceito por delegação em 2026-10-18)*
+- **Resultado**: WER −7,1 e CER −0,6 pontos com dicionário do português; ajuda pouco. Evidência no ADR-007.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.

@@ -39,8 +39,8 @@ provável e próxima, reduz o erro de leitura?
 
 ## Tarefas
 
-- [ ] **T001** Ambiente `envs/lex` com `wordfreq`; exportar o léxico português com frequências.
-- [ ] **T002** `lexicon.py` (correção) com testes em palavras fictícias.
-- [ ] **T003** Recortes e leitura (small 2×) das linhas de validação do BRESSAY e de todas as linhas de teste.
-- [ ] **T004** `calibrate.py` na validação; `run.py` no teste; relatório.
-- [ ] **T005** `RESULTS.md`, ADR (ou evidência no ADR-007), registros, verificação.
+- [x] **T001** Ambiente `envs/lex` com `wordfreq`; exportar o léxico português com frequências.
+- [x] **T002** `lexicon.py` (correção) com testes em palavras fictícias.
+- [x] **T003** Recortes e leitura (small 2×) das linhas de validação do BRESSAY e de todas as linhas de teste.
+- [x] **T004** `calibrate.py` na validação; `run.py` no teste; relatório.
+- [x] **T005** `RESULTS.md`, ADR (ou evidência no ADR-007), registros, verificação.
