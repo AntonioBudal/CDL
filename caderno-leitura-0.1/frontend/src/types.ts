@@ -1575,5 +1575,8 @@ export * from './types/settings.ts'
 // --- Lixeira: Arquivo de Salvaguarda e Segurança (Feature 073) ---
 export * from './types/trash.ts'
 
+// --- Navegação e Casca Responsiva (Feature 082) ---
+export * from './types/navigation.ts'
+
 
 

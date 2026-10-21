@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import BookCover from '../components/BookCover.vue'
 import BookEditModal from '../components/BookEditModal.vue'
 import CategoryBadge from '../components/CategoryBadge.vue'
 import ExportModal from '../components/ExportModal.vue'
 import TrashConfirmModal from '../components/TrashConfirmModal.vue'
-import SplitLayout from '../components/layout/SplitLayout.vue'
 import Icon from '../components/ui/Icon.vue'
 import EmptyState from '../components/ui/EmptyState.vue'
 import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
+import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
 import { api, errorMessage } from '../services/api'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
-import { positiveId, type Book, type Chapter, type StudySummary, type StudyViewMode } from '../types'
+import { positiveId, type Book, type Chapter, type StudySummary, type StudyViewMode, type BreadcrumbItem } from '../types'
 import ViewSwitcher from '../components/views/ViewSwitcher.vue'
 import StudyGridView from '../components/views/StudyGridView.vue'
 import StudyListView from '../components/views/StudyListView.vue'
 import { useViewPreference, loadStoredViewPreference } from '../composables/useViewPreference.ts'
-
-const splitLayoutRef = ref<InstanceType<typeof SplitLayout> | null>(null)
 
 const route = useRoute()
 const router = useRouter()
@@ -41,6 +39,24 @@ const savingChapterName = ref(false)
 const movingChapter = ref(false)
 const bookId = computed(() => positiveId(route.params.bookId))
 
+// Criação inline e edição de capítulos
+const isCreatingChapterInline = ref(false)
+const newChapterInputRef = ref<HTMLInputElement | null>(null)
+const editChapterInputRef = ref<HTMLInputElement | null>(null)
+const chaptersScrollRef = ref<HTMLElement | null>(null)
+
+// Modo Foco (recolhe faixas superior e inferior para máxima imersão)
+const isFocusMode = ref(false)
+const splitLayoutRef = computed(() => ({
+  leftCollapsed: isFocusMode.value,
+  rightCollapsed: isFocusMode.value,
+  toggleCollapse: (_pane?: string) => { isFocusMode.value = !isFocusMode.value },
+}))
+
+function toggleFocusMode() {
+  isFocusMode.value = !isFocusMode.value
+}
+
 const confirmTrashBookOpen = ref(false)
 const trashingBook = ref(false)
 const trashBookError = ref('')
@@ -53,6 +69,12 @@ const trashStudyError = ref('')
 const selectedChapter = computed(() => route.query.chapter == null
   ? chapters.value[0] ?? null
   : chapters.value.find(chapter => chapter.id === positiveId(route.query.chapter)) ?? null)
+
+const breadcrumbItems = computed<BreadcrumbItem[]>(() => [
+  { label: 'Livros', to: '/livros' },
+  { label: book.value?.title || 'Livro', current: true },
+])
+
 let bookRequest: AbortController | null = null
 let studyRequest: AbortController | null = null
 let disposed = false
@@ -122,10 +144,43 @@ async function createChapter() {
   } finally { creatingChapter.value = false }
 }
 
+function startCreateChapterInline() {
+  chapterName.value = ''
+  chapterError.value = ''
+  isCreatingChapterInline.value = true
+  nextTick(() => {
+    newChapterInputRef.value?.focus()
+  })
+}
+
+function cancelCreateChapterInline() {
+  isCreatingChapterInline.value = false
+  chapterName.value = ''
+  chapterError.value = ''
+}
+
+async function createChapterInline() {
+  await createChapter()
+  if (!chapterError.value) {
+    isCreatingChapterInline.value = false
+  }
+}
+
+function onMobileSelectChapter(event: Event) {
+  const target = event.target as HTMLSelectElement
+  const id = Number(target.value)
+  if (id && book.value) {
+    router.push({ name: 'book', params: { bookId: book.value.id }, query: { chapter: id } })
+  }
+}
+
 function startEditChapter(ch: Chapter) {
   editingChapterId.value = ch.id
   editChapterName.value = ch.name
   editChapterError.value = ''
+  nextTick(() => {
+    editChapterInputRef.value?.focus()
+  })
 }
 
 function cancelEditChapter() {
@@ -218,14 +273,14 @@ const {
   activeStudyId,
   availableModes: viewOptions,
   setMode: setViewMode,
-  setActiveStudy
+  setActiveStudy,
 } = useViewPreference({
-  bookId: bookId.value
+  bookId: bookId.value,
 })
 
 const viewRenderers: Record<StudyViewMode, any> = {
   grid: StudyGridView,
-  list: StudyListView
+  list: StudyListView,
 }
 
 const activeRendererComponent = computed(() => viewRenderers[activeViewMode.value] ?? StudyGridView)
@@ -244,320 +299,474 @@ watch(bookId, (newId) => {
   }
   loadBook()
 }, { immediate: true })
-watch(() => selectedChapter.value?.id, loadStudies, { immediate: true })
+
+watch(() => selectedChapter.value?.id, () => {
+  loadStudies()
+  nextTick(() => {
+    const activeEl = chaptersScrollRef.value?.querySelector('.chapter-pill.selected') as HTMLElement | null
+    if (activeEl) {
+      activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+    }
+  })
+}, { immediate: true })
+
 onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abort() })
 </script>
 
 <template>
   <div class="book-view">
-    <nav class="breadcrumb" aria-label="Caminho"><RouterLink to="/">Meus livros</RouterLink><span aria-hidden="true">/</span><span>Livro</span></nav>
-  <div v-if="loading" class="book-loading-skeleton" role="status" aria-label="Carregando livro">
-    <div style="display: flex; gap: 24px; margin-bottom: 32px; align-items: flex-start;">
-      <LoadingSkeleton shape="rect" width="160px" height="240px" />
-      <div style="flex: 1; display: flex; flex-direction: column; gap: 12px;">
-        <LoadingSkeleton shape="text" width="25%" height="16px" />
-        <LoadingSkeleton shape="text" width="60%" height="36px" />
-        <LoadingSkeleton shape="text" width="40%" height="20px" />
+    <AppBreadcrumb :items="breadcrumbItems" />
+
+    <div v-if="loading" class="book-loading-skeleton" role="status" aria-label="Carregando livro">
+      <div style="display: flex; gap: 24px; margin-bottom: 32px; align-items: flex-start;">
+        <LoadingSkeleton shape="rect" width="160px" height="240px" />
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 12px;">
+          <LoadingSkeleton shape="text" width="25%" height="16px" />
+          <LoadingSkeleton shape="text" width="60%" height="36px" />
+          <LoadingSkeleton shape="text" width="40%" height="20px" />
+        </div>
       </div>
     </div>
-  </div>
-  <div v-else-if="loadError" class="notice error" role="alert">
-    <h1>Não foi possível abrir o livro.</h1>
-    <p>{{ loadError }}</p>
-    <button class="secondary" type="button" @click="loadBook">Tentar novamente</button>
-  </div>
-  <template v-else-if="book">
-    <header class="page-header wrap book-header">
-      <div class="book-header-main">
-        <div class="book-header-cover">
-          <BookCover :cover-image="book.cover_image" :title="book.title" :author="book.author" size="md" />
-        </div>
-        <div class="book-info">
-          <p class="eyebrow">Livro</p>
-          <h1>{{ book.title }}</h1>
-          <p v-if="book.subtitle" class="book-subtitle">{{ book.subtitle }}</p>
-          <p class="intro">
-            {{ book.author || 'Autor não informado' }}
-            <span v-if="book.year"> · {{ book.year }}</span>
-          </p>
-          <div v-if="book.categories && book.categories.length > 0" class="flex flex-wrap gap-1.5 mt-2.5">
-            <CategoryBadge
-              v-for="cat in book.categories"
-              :key="cat.id"
-              :category="cat"
-              clickable
-              size="sm"
-              title="Filtrar por esta categoria na biblioteca"
-              @click="router.push({ path: '/books', query: { categoria: cat.id } })"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="header-actions">
-        <button
-          class="secondary icon-toggle-btn"
-          type="button"
-          :title="splitLayoutRef?.leftCollapsed ? 'Expandir capítulos' : 'Recolher capítulos'"
-          :aria-label="splitLayoutRef?.leftCollapsed ? 'Expandir capítulos' : 'Recolher capítulos'"
-          @click="splitLayoutRef?.toggleCollapse('left')"
-        >
-          <Icon name="list" :size="16" />
-        </button>
-        <button
-          class="secondary icon-toggle-btn"
-          type="button"
-          :title="splitLayoutRef?.rightCollapsed ? 'Exibir contexto' : 'Recolher contexto'"
-          :aria-label="splitLayoutRef?.rightCollapsed ? 'Exibir contexto' : 'Recolher contexto'"
-          @click="splitLayoutRef?.toggleCollapse('right')"
-        >
-          <Icon name="sliders" :size="16" />
-        </button>
-        <button class="secondary" type="button" @click="exportModalOpen = true">
-          <span class="btn-text-full">Exportar anotações</span>
-          <span class="btn-text-short">Exportar</span>
-        </button>
-        <button class="secondary" type="button" @click="isEditingBook = true">
-          <span class="btn-text-full">Editar livro</span>
-          <span class="btn-text-short">Editar</span>
-        </button>
-        <button class="secondary danger-action" type="button" @click="confirmTrashBookOpen = true">
-          <span class="btn-text-full">Mover para a lixeira</span>
-          <span class="btn-text-short">Lixeira</span>
-        </button>
-      </div>
-    </header>
 
-    <SplitLayout
-      ref="splitLayoutRef"
-      :book-id="book.id"
-      :has-right-pane="true"
-      class="book-split-layout wrap"
-    >
-      <!-- Painel Esquerdo: Navegador de Capítulos -->
-      <template #left>
-        <aside class="panel chapter-sidebar h-full" aria-labelledby="chapters-heading">
-          <div class="section-heading">
-            <h2 id="chapters-heading">Capítulos</h2>
-            <span class="count">{{ chapters.length }}</span>
+    <div v-else-if="loadError" class="notice error" role="alert">
+      <h1>Não foi possível abrir o livro.</h1>
+      <p>{{ loadError }}</p>
+      <button class="secondary" type="button" @click="loadBook">Tentar novamente</button>
+    </div>
+
+    <template v-else-if="book">
+      <!-- Cabeçalho Principal do Livro -->
+      <header class="page-header wrap book-header">
+        <div class="book-header-main">
+          <div class="book-header-cover">
+            <BookCover :cover-image="book.cover_image" :title="book.title" :author="book.author" size="md" />
           </div>
-          <nav v-if="chapters.length" aria-label="Capítulos do livro">
-            <ul class="chapter-list">
-              <li v-for="(chapter, idx) in chapters" :key="chapter.id" class="chapter-item">
-                <div v-if="editingChapterId === chapter.id" class="chapter-edit-box">
+          <div class="book-info">
+            <p class="eyebrow">Livro</p>
+            <h1>{{ book.title }}</h1>
+            <p v-if="book.subtitle" class="book-subtitle">{{ book.subtitle }}</p>
+            <p class="intro">
+              {{ book.author || 'Autor não informado' }}
+              <span v-if="book.year"> · {{ book.year }}</span>
+            </p>
+            <div v-if="book.categories && book.categories.length > 0" class="flex flex-wrap gap-1.5 mt-2.5">
+              <CategoryBadge
+                v-for="cat in book.categories"
+                :key="cat.id"
+                :category="cat"
+                clickable
+                size="sm"
+                title="Filtrar por esta categoria na biblioteca"
+                @click="router.push({ path: '/books', query: { categoria: cat.id } })"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Ações do Cabeçalho: Botões compactos de ícone com expansão suave no hover/foco -->
+        <div class="header-actions">
+          <!-- Botão Modo Foco -->
+          <button
+            class="secondary icon-action-btn focus-toggle-btn"
+            :class="{ active: isFocusMode }"
+            type="button"
+            :title="splitLayoutRef?.leftCollapsed ? 'Desativar modo foco' : 'Modo foco (ocultar faixas)'"
+            :aria-label="splitLayoutRef?.leftCollapsed ? 'Desativar modo foco' : 'Modo foco'"
+            @click="toggleFocusMode"
+          >
+            <Icon :name="isFocusMode ? 'minimize-2' : 'maximize-2'" :size="16" />
+            <span class="btn-pill-label">{{ isFocusMode ? 'Sair do foco' : 'Modo foco' }}</span>
+          </button>
+
+          <!-- Exportar Anotações -->
+          <button
+            class="secondary icon-action-btn"
+            type="button"
+            title="Exportar anotações"
+            aria-label="Exportar anotações"
+            @click="exportModalOpen = true"
+          >
+            <Icon name="download" :size="16" />
+            <span class="btn-pill-label">Exportar anotações</span>
+          </button>
+
+          <!-- Editar Livro -->
+          <button
+            class="secondary icon-action-btn"
+            type="button"
+            title="Editar livro"
+            aria-label="Editar livro"
+            @click="isEditingBook = true"
+          >
+            <Icon name="pencil" :size="16" />
+            <span class="btn-pill-label">Editar livro</span>
+          </button>
+
+          <!-- Mover para a Lixeira -->
+          <button
+            class="secondary icon-action-btn danger-action"
+            type="button"
+            title="Mover para a lixeira"
+            aria-label="Mover para a lixeira"
+            @click="confirmTrashBookOpen = true"
+          >
+            <Icon name="trash" :size="16" />
+            <span class="btn-pill-label">Mover para a lixeira</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Arquitetura em 3 Faixas Horizontais Empilhadas -->
+      <div class="book-layout book-split-layout wrap" :class="{ 'is-focus-mode': isFocusMode }">
+        <!-- 1. FAIXA SUPERIOR: Barra Horizontal de Capítulos -->
+        <section
+          v-if="!isFocusMode"
+          class="chapters-horizontal-bar panel"
+          aria-labelledby="chapters-bar-heading"
+        >
+          <div class="chapters-bar-header">
+            <div class="chapters-title-wrap">
+              <Icon name="folder" :size="16" class="chapters-icon" />
+              <h2 id="chapters-bar-heading" class="chapters-bar-title">Capítulos</h2>
+              <span class="chapters-count-badge" aria-label="Total de capítulos">{{ chapters.length }}</span>
+            </div>
+
+            <!-- Seletor Dropdown para Telas Estreitas / Mobile -->
+            <div v-if="chapters.length" class="chapters-mobile-select-wrap">
+              <label for="mobile-chapter-select" class="sr-only">Selecione o capítulo</label>
+              <select
+                id="mobile-chapter-select"
+                class="chapters-mobile-select"
+                :value="selectedChapter?.id"
+                @change="onMobileSelectChapter"
+              >
+                <option v-for="(ch, idx) in chapters" :key="ch.id" :value="ch.id">
+                  {{ idx + 1 }}. {{ ch.name }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Criação de Novo Capítulo (Inline e Compacta) -->
+            <div class="chapters-create-wrap">
+              <div v-if="isCreatingChapterInline" class="new-chapter-inline-box">
+                <form @submit.prevent="createChapterInline">
+                  <input
+                    ref="newChapterInputRef"
+                    v-model="chapterName"
+                    required
+                    placeholder="Nome do novo capítulo"
+                    class="new-chapter-input"
+                    :disabled="creatingChapter"
+                    @keydown.esc="cancelCreateChapterInline"
+                  />
+                  <div class="inline-box-actions">
+                    <button
+                      type="submit"
+                      class="primary button-sm inline-btn"
+                      :disabled="creatingChapter || !chapterName.trim()"
+                      title="Salvar capítulo"
+                      aria-label="Confirmar novo capítulo"
+                    >
+                      <Icon name="check" :size="14" />
+                      <span>Salvar</span>
+                    </button>
+                    <button
+                      type="button"
+                      class="secondary button-sm inline-btn"
+                      :disabled="creatingChapter"
+                      title="Cancelar"
+                      aria-label="Cancelar novo capítulo"
+                      @click="cancelCreateChapterInline"
+                    >
+                      <Icon name="x" :size="14" />
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <button
+                v-else
+                type="button"
+                class="secondary button-sm add-chapter-pill-btn"
+                title="Adicionar novo capítulo"
+                aria-label="Novo capítulo"
+                @click="startCreateChapterInline"
+              >
+                <Icon name="plus" :size="14" />
+                <span>Novo capítulo</span>
+              </button>
+            </div>
+          </div>
+
+          <p v-if="chapterError" class="notice error chapter-bar-notice" role="alert">{{ chapterError }}</p>
+
+          <!-- Faixa Rolável de Abas / Pílulas de Capítulos -->
+          <nav
+            v-if="chapters.length"
+            ref="chaptersScrollRef"
+            class="chapters-nav-strip"
+            aria-label="Lista de capítulos do livro"
+          >
+            <ul class="chapters-pills-track">
+              <li v-for="(chapter, idx) in chapters" :key="chapter.id" class="chapter-pill-item">
+                <!-- Modo Edição de Nome do Capítulo -->
+                <div v-if="editingChapterId === chapter.id" class="chapter-pill-edit-box">
                   <form @submit.prevent="saveChapter(chapter)">
-                    <div class="field">
-                      <input
-                        v-model="editChapterName"
-                        required
-                        placeholder="Nome do capítulo"
-                        :disabled="savingChapterName"
-                        @keydown.esc="cancelEditChapter"
-                      />
-                    </div>
-                    <p v-if="editChapterError" class="notice error" role="alert">{{ editChapterError }}</p>
-                    <div class="actions">
-                      <button type="submit" class="primary button-sm" :disabled="savingChapterName || !editChapterName.trim()">
-                        {{ savingChapterName ? 'Salvando…' : 'Salvar' }}
-                      </button>
-                      <button type="button" class="secondary button-sm" :disabled="savingChapterName" @click="cancelEditChapter">
-                        Cancelar
-                      </button>
-                    </div>
+                    <input
+                      ref="editChapterInputRef"
+                      v-model="editChapterName"
+                      required
+                      placeholder="Nome do capítulo"
+                      class="chapter-edit-input"
+                      :disabled="savingChapterName"
+                      @keydown.esc="cancelEditChapter"
+                    />
+                    <button
+                      type="submit"
+                      class="primary button-xs pill-control-btn"
+                      :disabled="savingChapterName || !editChapterName.trim()"
+                      title="Salvar alterações"
+                      aria-label="Salvar"
+                    >
+                      <Icon name="check" :size="13" />
+                    </button>
+                    <button
+                      type="button"
+                      class="secondary button-xs pill-control-btn"
+                      :disabled="savingChapterName"
+                      title="Cancelar"
+                      aria-label="Cancelar"
+                      @click="cancelEditChapter"
+                    >
+                      <Icon name="x" :size="13" />
+                    </button>
                   </form>
+                  <p v-if="editChapterError" class="notice error edit-chapter-error" role="alert">{{ editChapterError }}</p>
                 </div>
-                <div v-else class="chapter-row">
-                  <RouterLink :to="{ name: 'book', params: { bookId: book.id }, query: { chapter: chapter.id } }"
-                    :class="{ selected: selectedChapter?.id === chapter.id }" :aria-current="selectedChapter?.id === chapter.id ? 'page' : undefined">
-                    {{ chapter.name }}
+
+                <!-- Pílula de Capítulo Normal -->
+                <div
+                  v-else
+                  class="chapter-pill"
+                  :class="{ selected: selectedChapter?.id === chapter.id }"
+                >
+                  <RouterLink
+                    :to="{ name: 'book', params: { bookId: book.id }, query: { chapter: chapter.id } }"
+                    class="chapter-pill-link"
+                    :aria-current="selectedChapter?.id === chapter.id ? 'page' : undefined"
+                  >
+                    <span class="chapter-pill-num">{{ idx + 1 }}.</span>
+                    <span class="chapter-pill-text" :title="chapter.name">{{ chapter.name }}</span>
                   </RouterLink>
-                  <div class="chapter-actions">
+
+                  <!-- Controles Contextuais Exclusivos do Capítulo Ativo -->
+                  <div v-if="selectedChapter?.id === chapter.id" class="chapter-pill-active-tools">
                     <button
                       type="button"
-                      class="action-btn"
+                      class="pill-tool-btn"
                       :disabled="idx === 0 || movingChapter"
-                      title="Mover para cima"
-                      aria-label="Mover para cima"
+                      title="Mover capítulo para trás"
+                      aria-label="Mover capítulo para trás"
                       @click.prevent="moveChapter(chapter.id, 'up')"
-                    >▲</button>
+                    >
+                      <Icon name="chevron-left" :size="13" />
+                    </button>
                     <button
                       type="button"
-                      class="action-btn"
+                      class="pill-tool-btn"
                       :disabled="idx === chapters.length - 1 || movingChapter"
-                      title="Mover para baixo"
-                      aria-label="Mover para baixo"
+                      title="Mover capítulo para frente"
+                      aria-label="Mover capítulo para frente"
                       @click.prevent="moveChapter(chapter.id, 'down')"
-                    >▼</button>
+                    >
+                      <Icon name="chevron-right" :size="13" />
+                    </button>
                     <button
                       type="button"
-                      class="action-btn"
+                      class="pill-tool-btn"
                       title="Renomear capítulo"
                       aria-label="Renomear capítulo"
                       @click.prevent="startEditChapter(chapter)"
-                    ><Icon name="pencil" :size="13" /></button>
+                    >
+                      <Icon name="pencil" :size="12" />
+                    </button>
                   </div>
                 </div>
               </li>
             </ul>
           </nav>
-          <p v-else class="muted">Adicione o primeiro capítulo deste livro.</p>
-          <form class="chapter-form" @submit.prevent="createChapter">
-            <fieldset :disabled="creatingChapter">
-              <div class="field">
-                <label for="chapter-name">Novo capítulo</label>
-                <input id="chapter-name" v-model="chapterName" required placeholder="Nome ou número do capítulo" />
-              </div>
-              <p v-if="chapterError" class="notice error" role="alert">{{ chapterError }}</p>
-              <button class="secondary full-width" :disabled="creatingChapter || !chapterName.trim()">{{ creatingChapter ? 'Cadastrando…' : 'Adicionar capítulo' }}</button>
-            </fieldset>
-          </form>
-        </aside>
-      </template>
 
-      <!-- Palco Central: Estudos do Capítulo Selecionado -->
-      <template #default>
-        <section v-if="selectedChapter" class="studies-area panel-subtle" aria-labelledby="studies-heading" :aria-busy="studiesLoading">
-          <header class="section-heading wrap studies-header-bar">
-            <div>
-              <p class="eyebrow">Estudos do capítulo</p>
-              <h2 id="studies-heading">{{ selectedChapter.name }}</h2>
-            </div>
-            <div class="studies-header-controls">
-              <ViewSwitcher
-                v-model="activeViewMode"
-                :options="viewOptions"
-                :compact="true"
-                @update:model-value="setViewMode"
-              />
-              <RouterLink class="button primary import-btn" :to="{ name: 'import', query: { book: book.id, chapter: selectedChapter.id } }">
-                Importar estudo
-              </RouterLink>
-            </div>
-          </header>
-          <div v-if="studiesLoading" class="studies-loading-skeleton" role="status" aria-label="Carregando estudos">
-            <LoadingSkeleton shape="rect" height="64px" style="margin-bottom: 12px;" />
-            <LoadingSkeleton shape="rect" height="64px" style="margin-bottom: 12px;" />
-          </div>
-          <div v-else-if="studiesError" class="notice error" role="alert">
-            <p>{{ studiesError }}</p>
-            <button class="secondary" @click="loadStudies">Tentar novamente</button>
-          </div>
-          <template v-else>
-            <p class="list-caption">{{ studies.length }} {{ studies.length === 1 ? 'estudo salvo' : 'estudos salvos' }}</p>
-            <div class="studies-view-stage">
-              <Transition name="view-fade" mode="out-in">
-                <component
-                  :is="activeRendererComponent"
-                  :studies="studies"
-                  :book-id="book.id"
-                  :chapter-id="selectedChapter.id"
-                  :chapters="chapters"
-                  :active-study-id="activeStudyId"
-                  :loading="studiesLoading"
-                  @select-study="setActiveStudy"
-                  @trash-study="confirmTrashStudy"
-                />
-              </Transition>
-            </div>
-          </template>
+          <p v-else class="muted chapters-empty-msg">Adicione o primeiro capítulo deste livro para organizar seus estudos.</p>
         </section>
-        <EmptyState
-          v-else
-          :icon="chapters.length ? 'folder' : 'book-open'"
-          :title="chapters.length ? 'Selecione um capítulo' : 'Organize seu primeiro estudo'"
-          :description="chapters.length ? 'Escolha um capítulo na lista lateral para consultar os estudos cadastrados.' : 'Cadastre um capítulo e depois importe o texto-base do fichamento que deseja estudar.'"
-          heading-level="h2"
-        />
-      </template>
 
-      <!-- Painel Direito: Inspetor de Contexto -->
-      <template #right>
-        <aside class="panel context-sidebar h-full" aria-labelledby="context-heading">
-          <div class="section-heading">
-            <h2 id="context-heading">Inspetor</h2>
-          </div>
-          <div class="context-details">
-            <div class="context-group">
-              <span class="context-label">Livro</span>
-              <p class="context-value">{{ book.title }}</p>
-            </div>
-            <div class="context-group" v-if="book.author">
-              <span class="context-label">Autor</span>
-              <p class="context-value">{{ book.author }}</p>
-            </div>
-            <div class="context-group" v-if="book.year">
-              <span class="context-label">Ano</span>
-              <p class="context-value">{{ book.year }}</p>
-            </div>
-            <div class="context-group" v-if="selectedChapter">
-              <span class="context-label">Capítulo Selecionado</span>
-              <p class="context-value font-medium">{{ selectedChapter.name }}</p>
-            </div>
-            <div class="context-divider" />
-            <div class="context-group">
-              <span class="context-label">Total de Capítulos</span>
-              <p class="context-value">{{ chapters.length }}</p>
-            </div>
-            <div class="context-group" v-if="selectedChapter">
-              <span class="context-label">Estudos no Capítulo</span>
-              <p class="context-value">{{ studies.length }}</p>
-            </div>
-            <template v-if="activeStudy">
-              <div class="context-divider" />
-              <div class="context-group">
-                <span class="context-label">Estudo em Foco</span>
-                <p class="context-value font-medium">{{ activeStudy.title }}</p>
-                <p class="text-xs text-muted mt-1" v-if="activeStudy.location">{{ activeStudy.location }}</p>
-                <RouterLink
-                  :to="{ name: 'study', params: { bookId: book.id, studyId: activeStudy.id } }"
-                  class="button secondary button-sm mt-2 full-width"
-                >
-                  Abrir leitura
+        <!-- 2. BLOCO CENTRAL: Container Principal (Estudos do Capítulo) com 100% da Largura Útil -->
+        <main class="studies-main-stage">
+          <section
+            v-if="selectedChapter"
+            class="studies-area panel"
+            aria-labelledby="studies-heading"
+            :aria-busy="studiesLoading"
+          >
+            <header class="section-heading wrap studies-header-bar">
+              <div>
+                <p class="eyebrow">Estudos do capítulo</p>
+                <h2 id="studies-heading">{{ selectedChapter.name }}</h2>
+              </div>
+              <div class="studies-header-controls">
+                <ViewSwitcher
+                  v-model="activeViewMode"
+                  :options="viewOptions"
+                  :compact="true"
+                  @update:model-value="setViewMode"
+                />
+                <RouterLink class="button primary import-btn" :to="{ name: 'import', query: { book: book.id, chapter: selectedChapter.id } }">
+                  Importar estudo
                 </RouterLink>
               </div>
+            </header>
+
+            <div v-if="studiesLoading" class="studies-loading-skeleton" role="status" aria-label="Carregando estudos">
+              <LoadingSkeleton shape="rect" height="64px" style="margin-bottom: 12px;" />
+              <LoadingSkeleton shape="rect" height="64px" style="margin-bottom: 12px;" />
+            </div>
+
+            <div v-else-if="studiesError" class="notice error" role="alert">
+              <p>{{ studiesError }}</p>
+              <button class="secondary" @click="loadStudies">Tentar novamente</button>
+            </div>
+
+            <template v-else>
+              <p class="list-caption">{{ studies.length }} {{ studies.length === 1 ? 'estudo salvo' : 'estudos salvos' }}</p>
+              <div class="studies-view-stage">
+                <Transition name="view-fade" mode="out-in">
+                  <component
+                    :is="activeRendererComponent"
+                    :studies="studies"
+                    :book-id="book.id"
+                    :chapter-id="selectedChapter.id"
+                    :chapters="chapters"
+                    :active-study-id="activeStudyId"
+                    :loading="studiesLoading"
+                    @select-study="setActiveStudy"
+                    @trash-study="confirmTrashStudy"
+                  />
+                </Transition>
+              </div>
             </template>
+          </section>
+
+          <EmptyState
+            v-else
+            :icon="chapters.length ? 'folder' : 'book-open'"
+            :title="chapters.length ? 'Selecione um capítulo' : 'Organize seu primeiro estudo'"
+            :description="chapters.length ? 'Escolha um capítulo na lista superior para consultar os estudos cadastrados.' : 'Cadastre um capítulo e depois importe o texto-base do fichamento que deseja estudar.'"
+            heading-level="h2"
+          />
+        </main>
+
+        <!-- 3. FAIXA INFERIOR: Barra Horizontal do Inspetor (Status Bar / Rodapé Analítico) -->
+        <footer
+          v-if="!isFocusMode"
+          class="inspector-horizontal-bar panel"
+          aria-label="Metadados e contexto do livro"
+        >
+          <div class="inspector-bar-content">
+            <div class="inspector-metrics-grid">
+              <div class="inspector-item">
+                <span class="inspector-label">Livro</span>
+                <span class="inspector-value font-medium" :title="book.title">{{ book.title }}</span>
+              </div>
+
+              <div v-if="book.author" class="inspector-divider" aria-hidden="true" />
+              <div v-if="book.author" class="inspector-item">
+                <span class="inspector-label">Autor</span>
+                <span class="inspector-value" :title="book.author">{{ book.author }}</span>
+              </div>
+
+              <div v-if="book.year" class="inspector-divider" aria-hidden="true" />
+              <div v-if="book.year" class="inspector-item">
+                <span class="inspector-label">Ano</span>
+                <span class="inspector-value">{{ book.year }}</span>
+              </div>
+
+              <div v-if="selectedChapter" class="inspector-divider" aria-hidden="true" />
+              <div v-if="selectedChapter" class="inspector-item">
+                <span class="inspector-label">Capítulo Selecionado</span>
+                <span class="inspector-value font-medium" :title="selectedChapter.name">{{ selectedChapter.name }}</span>
+              </div>
+
+              <div class="inspector-divider" aria-hidden="true" />
+              <div class="inspector-item">
+                <span class="inspector-label">Total de Capítulos</span>
+                <span class="inspector-value">{{ chapters.length }}</span>
+              </div>
+
+              <div v-if="selectedChapter" class="inspector-divider" aria-hidden="true" />
+              <div v-if="selectedChapter" class="inspector-item">
+                <span class="inspector-label">Estudos no Capítulo</span>
+                <span class="inspector-value">{{ studies.length }}</span>
+              </div>
+            </div>
+
+            <!-- Estudo em foco selecionado -->
+            <div v-if="activeStudy" class="inspector-study-focus-card">
+              <div class="inspector-divider" aria-hidden="true" />
+              <div class="inspector-study-focus-info">
+                <span class="inspector-label">Estudo em Foco</span>
+                <span class="inspector-value font-medium" :title="activeStudy.title">{{ activeStudy.title }}</span>
+                <span v-if="activeStudy.location" class="inspector-study-location">{{ activeStudy.location }}</span>
+              </div>
+              <RouterLink
+                :to="{ name: 'study', params: { bookId: book.id, studyId: activeStudy.id } }"
+                class="button secondary button-xs inspector-open-btn"
+                title="Abrir leitura deste estudo"
+              >
+                Abrir leitura
+              </RouterLink>
+            </div>
           </div>
-        </aside>
-      </template>
-    </SplitLayout>
+        </footer>
+      </div>
 
-    <BookEditModal
-      v-if="book"
-      :book="book"
-      :open="isEditingBook"
-      @close="isEditingBook = false"
-      @saved="onBookSaved"
-    />
+      <!-- Modais Auxiliares -->
+      <BookEditModal
+        v-if="book"
+        :book="book"
+        :open="isEditingBook"
+        @close="isEditingBook = false"
+        @saved="onBookSaved"
+      />
 
-    <TrashConfirmModal
-      v-if="book"
-      :open="confirmTrashBookOpen"
-      title="Mover livro para a lixeira?"
-      :message="`Deseja enviar o livro “${book.title}” para a lixeira? Todos os seus capítulos e estudos associados também serão movidos.`"
-      confirm-label="Mover para a lixeira"
-      :loading="trashingBook"
-      @close="confirmTrashBookOpen = false"
-      @confirm="handleTrashBook"
-    />
+      <TrashConfirmModal
+        v-if="book"
+        :open="confirmTrashBookOpen"
+        title="Mover livro para a lixeira?"
+        :message="`Deseja enviar o livro “${book.title}” para a lixeira? Todos os seus capítulos e estudos associados também serão movidos.`"
+        confirm-label="Mover para a lixeira"
+        :loading="trashingBook"
+        @close="confirmTrashBookOpen = false"
+        @confirm="handleTrashBook"
+      />
 
-    <TrashConfirmModal
-      v-if="studyToTrash"
-      :open="confirmTrashStudyOpen"
-      title="Mover estudo para a lixeira?"
-      :message="`Deseja enviar o estudo “${studyToTrash.title}” para a lixeira? Ele poderá ser restaurado nos próximos 30 dias.`"
-      confirm-label="Mover para a lixeira"
-      :loading="trashingStudy"
-      @close="confirmTrashStudyOpen = false"
-      @confirm="handleTrashStudy"
-    />
-    <ExportModal
-      v-if="book"
-      :open="exportModalOpen"
-      :title="book.title"
-      scope="book"
-      :book-id="book.id"
-      @close="exportModalOpen = false"
-    />
-  </template>
+      <TrashConfirmModal
+        v-if="studyToTrash"
+        :open="confirmTrashStudyOpen"
+        title="Mover estudo para a lixeira?"
+        :message="`Deseja enviar o estudo “${studyToTrash.title}” para a lixeira? Ele poderá ser restaurado nos próximos 30 dias.`"
+        confirm-label="Mover para a lixeira"
+        :loading="trashingStudy"
+        @close="confirmTrashStudyOpen = false"
+        @confirm="handleTrashStudy"
+      />
+
+      <ExportModal
+        v-if="book"
+        :open="exportModalOpen"
+        :title="book.title"
+        scope="book"
+        :book-id="book.id"
+        @close="exportModalOpen = false"
+      />
+    </template>
   </div>
 </template>
 
@@ -576,245 +785,353 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
   margin: calc(var(--space-unit) * 0.25) 0 0;
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: calc(var(--space-unit) * 0.75);
-}
-
-.btn-text-short {
-  display: none;
-}
-
-.btn-text-full {
-  display: inline;
-}
-
-.chapter-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: calc(var(--space-unit) * 0.5);
-  border-radius: var(--radius-small);
-}
-
-.chapter-row > a {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.chapter-actions {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  flex-shrink: 0;
-}
-
-.action-btn {
-  min-height: 1.875rem;
-  min-width: 1.875rem;
-  padding: 0;
-  font-size: 0.75rem;
-  background: var(--color-surface);
-  color: var(--color-muted);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-control);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.action-btn:hover:not(:disabled) {
-  color: var(--color-text);
-  background: var(--color-surface-hover);
-  border-color: var(--color-border-strong);
-}
-
-.chapter-edit-box {
-  padding: calc(var(--space-unit) * 0.75);
-  background: var(--color-surface-soft);
-  border-radius: var(--radius-small);
-  border: var(--border-width) solid var(--color-border);
-}
-
-.chapter-edit-box .field {
-  margin-bottom: calc(var(--space-unit) * 0.5);
-}
-
-.button-sm {
-  min-height: 2.25rem;
-  padding: calc(var(--space-unit) * 0.35) calc(var(--space-unit) * 0.75);
-  font-size: 0.875rem;
-}
-
-.danger-action {
-  color: var(--color-danger, #b91c1c);
-}
-
-.danger-action:hover {
-  background: var(--color-surface-hover);
-  border-color: var(--color-danger, #b91c1c);
-}
-
-.study-item-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: calc(var(--space-unit) * 1);
-}
-
-.study-info {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.study-actions {
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
 .book-header-main {
   display: flex;
   align-items: center;
   gap: 1.5rem;
   flex: 1 1 auto;
+  min-width: 0;
 }
 
 .book-header-cover {
   flex-shrink: 0;
 }
 
-@media (max-width: 640px) {
-  .book-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
-
-  .book-header-main {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .btn-text-full {
-    display: none;
-  }
-
-  .btn-text-short {
-    display: inline;
-  }
-
-  .header-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-  }
-
-  .header-actions button {
-    min-height: 44px;
-    font-size: 0.8125rem;
-    padding: 0.5rem 0.75rem;
-  }
+.book-info {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
-@media (max-width: 480px) {
-  .header-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-  }
-
-  .header-actions .icon-toggle-btn {
-    min-width: 44px;
-    min-height: 44px;
-    flex: 0 0 44px;
-  }
-
-  .header-actions button:not(.icon-toggle-btn) {
-    flex: 1 1 calc(50% - 0.5rem);
-    min-height: 44px;
-    justify-content: center;
-    text-align: center;
-    padding: 0.5rem 0.5rem;
-  }
+/* ============================================================================
+   Barra de Ações do Cabeçalho: Botões Compactos com Expansão no Hover/Foco
+   ============================================================================ */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
-/* Painéis Redimensionáveis e Inspetor de Contexto (F06) */
-.icon-toggle-btn {
-  min-width: 44px;
-  min-height: 44px;
+.icon-action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 12px;
   border-radius: var(--radius-control);
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
 }
 
+.icon-action-btn .btn-pill-label {
+  display: inline-block;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-left: 0;
+  transition: max-width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.2s ease,
+              margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.focus-toggle-btn.active {
+  background-color: var(--color-selected-bg, var(--color-surface-soft));
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .icon-action-btn:hover:not(:disabled),
+  .icon-action-btn:focus-visible:not(:disabled) {
+    background-color: var(--color-surface-hover);
+    border-color: var(--color-border-strong);
+    color: var(--color-hover-text, var(--color-text));
+    padding: 0 14px;
+  }
+
+  .icon-action-btn:hover:not(:disabled) .btn-pill-label,
+  .icon-action-btn:focus-visible:not(:disabled) .btn-pill-label {
+    max-width: 180px;
+    opacity: 1;
+    margin-left: 8px;
+  }
+
+  .icon-action-btn.danger-action:hover:not(:disabled),
+  .icon-action-btn.danger-action:focus-visible:not(:disabled) {
+    color: var(--color-danger, #b91c1c);
+    border-color: var(--color-danger, #b91c1c);
+    background-color: color-mix(in srgb, var(--color-danger, #b91c1c) 10%, var(--color-surface));
+  }
+}
+
+/* ============================================================================
+   Layout Horizontal em 3 Faixas Empilhadas
+   ============================================================================ */
+.book-layout,
 .book-split-layout {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-unit) * 1);
   margin-top: calc(var(--space-unit) * 1.5);
   min-height: 60vh;
 }
 
-.chapter-sidebar {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+.studies-main-stage {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
 }
 
 .studies-area {
   padding: calc(var(--space-unit) * 1.5);
+  width: 100%;
   height: 100%;
   box-sizing: border-box;
 }
 
-.context-sidebar {
-  height: 100%;
-  padding: calc(var(--space-unit) * 1.25);
+/* ============================================================================
+   1. Faixa Superior: Barra Horizontal de Capítulos
+   ============================================================================ */
+.chapters-horizontal-bar {
+  padding: calc(var(--space-unit) * 0.85) calc(var(--space-unit) * 1.25);
   box-sizing: border-box;
   background: var(--color-surface);
 }
 
-.context-details {
+.chapters-bar-header {
   display: flex;
-  flex-direction: column;
-  gap: calc(var(--space-unit) * 0.85);
-  margin-top: calc(var(--space-unit) * 1);
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: calc(var(--space-unit) * 0.75);
 }
 
-.context-group {
+.chapters-title-wrap {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.context-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-meta, #556984);
+.chapters-icon {
+  color: var(--color-muted);
 }
 
-.context-value {
-  font-size: 0.925rem;
-  color: var(--color-inverse-bg, #0f172a);
+.chapters-bar-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
   margin: 0;
+  color: var(--color-text);
 }
 
-.context-divider {
-  height: 1px;
-  background-color: var(--color-border-divider);
-  margin: calc(var(--space-unit) * 0.5) 0;
+.chapters-count-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--color-surface-soft);
+  color: var(--color-muted);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 9999px;
+  padding: 1px 8px;
 }
 
-/* Sistema de Visualizações (F01) */
+.chapters-mobile-select-wrap {
+  display: none;
+}
+
+.chapters-create-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.add-chapter-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  padding: 0.35rem 0.75rem;
+  min-height: 34px;
+}
+
+.new-chapter-inline-box form {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.new-chapter-input {
+  min-width: 180px;
+  max-width: 260px;
+  height: 34px;
+  padding: 0 0.65rem;
+  font-size: 0.875rem;
+  background: var(--color-surface-soft);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-control);
+}
+
+.inline-box-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.inline-btn {
+  height: 34px;
+  padding: 0 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+}
+
+.chapter-bar-notice {
+  margin: 0.25rem 0 0.5rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* Faixa de navegação rolável por pílulas */
+.chapters-nav-strip {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+}
+
+.chapters-pills-track {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: min-content;
+}
+
+.chapter-pill-item {
+  flex-shrink: 0;
+}
+
+.chapter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  background: var(--color-surface-soft);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-control);
+  white-space: nowrap;
+  font-size: 0.875rem;
+  transition: all 0.15s ease;
+}
+
+.chapter-pill:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-hover);
+}
+
+.chapter-pill.selected {
+  background: var(--color-selected-bg, var(--color-surface));
+  color: var(--color-selected-text, var(--color-accent));
+  border-color: var(--color-accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.chapter-pill-link {
+  text-decoration: none;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.chapter-pill-num {
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.chapter-pill.selected .chapter-pill-num {
+  color: var(--color-accent);
+}
+
+.chapter-pill-active-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 0.35rem;
+  padding-left: 0.35rem;
+  border-left: var(--border-width) solid var(--color-border-divider);
+}
+
+.pill-tool-btn {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  border: var(--border-width) solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-muted);
+  border-radius: var(--radius-small);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.1s ease;
+}
+
+.pill-tool-btn:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+}
+
+.chapter-pill-edit-box form {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--color-surface-soft);
+  padding: 0.25rem;
+  border-radius: var(--radius-control);
+  border: var(--border-width) solid var(--color-border);
+}
+
+.chapter-edit-input {
+  height: 28px;
+  padding: 0 0.5rem;
+  font-size: 0.8125rem;
+  min-width: 140px;
+}
+
+.pill-control-btn {
+  min-height: 28px;
+  padding: 0 0.4rem;
+}
+
+.edit-chapter-error {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+}
+
+.chapters-empty-msg {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+}
+
+/* ============================================================================
+   2. Bloco Central: Estudos do Capítulo (Header & Palco)
+   ============================================================================ */
 .studies-header-bar {
   display: flex;
   justify-content: space-between;
@@ -836,14 +1153,107 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
   margin-top: 0.5rem;
 }
 
+.button-sm {
+  min-height: 2.25rem;
+  padding: calc(var(--space-unit) * 0.35) calc(var(--space-unit) * 0.75);
+  font-size: 0.875rem;
+}
+
+.button-xs {
+  min-height: 26px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  border-radius: var(--radius-small);
+}
+
+/* ============================================================================
+   3. Faixa Inferior: Barra Horizontal do Inspetor (Status Bar / Rodapé)
+   ============================================================================ */
+.inspector-horizontal-bar {
+  padding: calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 1.25);
+  box-sizing: border-box;
+  background: var(--color-surface);
+}
+
+.inspector-bar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.inspector-metrics-grid {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.25rem;
+}
+
+.inspector-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.inspector-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-meta, #556984);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.inspector-value {
+  font-size: 0.875rem;
+  color: var(--color-inverse-bg, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+}
+
+.inspector-divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--color-border-divider);
+  flex-shrink: 0;
+}
+
+.inspector-study-focus-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+.inspector-study-focus-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.inspector-study-location {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.inspector-open-btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ============================================================================
+   Responsividade: Tablet e Mobile
+   ============================================================================ */
 @media (max-width: 768px) {
+  .book-layout,
   .book-split-layout {
     min-height: 0;
     margin-top: 0.75rem;
-  }
-
-  .chapter-sidebar {
-    height: auto;
+    gap: 0.75rem;
   }
 
   .studies-area {
@@ -853,10 +1263,10 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
   }
 
   .studies-header-bar {
-    flex-direction: column;
-    align-items: stretch;
     justify-content: flex-start;
     gap: 0.5rem;
+    flex-direction: column;
+    align-items: stretch;
     margin-bottom: 0.5rem;
   }
 
@@ -895,6 +1305,120 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
 
   .studies-view-stage {
     margin-top: 0.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .book-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .book-header-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .header-actions .icon-action-btn {
+    min-height: 44px;
+    min-width: 44px;
+    flex: 1 1 calc(25% - 0.5rem);
+    justify-content: center;
+  }
+
+  .chapters-horizontal-bar {
+    padding: 0.75rem;
+  }
+
+  .chapters-bar-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .chapters-mobile-select-wrap {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  .chapters-mobile-select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    background: var(--color-surface-soft);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-control);
+    color: var(--color-text);
+  }
+
+  .new-chapter-inline-box form {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .new-chapter-input {
+    max-width: 100%;
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .inline-box-actions {
+    justify-content: flex-end;
+  }
+
+  .inline-box-actions button {
+    min-height: 44px;
+  }
+
+  .inspector-bar-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inspector-metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .inspector-divider {
+    display: none;
+  }
+
+  .inspector-study-focus-card {
+    margin-left: 0;
+    width: 100%;
+    padding-top: 0.5rem;
+    border-top: var(--border-width) solid var(--color-border-divider);
+    justify-content: space-between;
+  }
+
+  .inspector-open-btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-action-btn,
+  .icon-action-btn .btn-pill-label,
+  .chapter-pill,
+  .pill-tool-btn {
+    transition: none !important;
   }
 }
 </style>

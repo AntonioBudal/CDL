@@ -17,6 +17,7 @@ import StudyHistoryModal from '../components/StudyHistoryModal.vue'
 import FloatingActionsToolbar from '../components/FloatingActionsToolbar.vue'
 import NoteQuestionPopover from '../components/NoteQuestionPopover.vue'
 import HighlightActionPopover from '../components/HighlightActionPopover.vue'
+import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
 import { useStudyHighlights } from '../composables/useStudyHighlights'
 import { useActiveReadingSession } from '../composables/useActiveReadingSession'
 import { formatQuoteText, useTextSelection } from '../composables/useTextSelection'
@@ -24,7 +25,7 @@ import { useFloatingToast } from '../composables/useFloatingToast'
 import { useHighlightColorPreference } from '../composables/useHighlightColorPreference'
 import { getStudyTemplate } from '../constants/studyTemplates'
 import type { HighlightClickEvent } from '../utils/highlightRenderer'
-import type { HighlightColor, ResourceVisibility, Study, StudySectionKey, TextSelectionContext } from '../types.ts'
+import type { BreadcrumbItem, HighlightColor, ResourceVisibility, Study, StudySectionKey, TextSelectionContext } from '../types.ts'
 
 
 const route = useRoute()
@@ -36,6 +37,26 @@ const templateBadgeInfo = computed(() => {
   const tid = state.context?.study.template_id
   if (!tid || tid === 'classico') return null
   return getStudyTemplate(tid)
+})
+
+const breadcrumbItems = computed<BreadcrumbItem[]>(() => {
+  if (!state.context) return []
+  return [
+    { label: 'Livros', to: '/livros' },
+    {
+      label: state.context.book.title,
+      to: { name: 'book', params: { bookId: state.context.book.id } },
+    },
+    {
+      label: state.context.chapter.name,
+      to: {
+        name: 'book',
+        params: { bookId: state.context.book.id },
+        query: { chapter: state.context.chapter.id },
+      },
+    },
+    { label: state.context.study.title || 'Estudo', current: true },
+  ]
 })
 
 const exportModalOpen = ref(false)
@@ -472,28 +493,24 @@ onBeforeUnmount(() => {
     <p v-if="state.loading" class="state-panel" role="status">Carregando estudo…</p>
   <div v-else-if="state.error" class="notice error" role="alert">
     <h1>Não foi possível abrir o estudo.</h1><p>{{ state.error }}</p>
-    <div class="actions wrap"><button type="button" class="secondary" @click="load">Tentar novamente</button><RouterLink to="/" class="text-link">Voltar aos livros</RouterLink></div>
+    <div class="actions wrap"><button type="button" class="secondary" @click="load">Tentar novamente</button><RouterLink to="/livros" class="text-link">Voltar aos livros</RouterLink></div>
   </div>
   <template v-else-if="state.context">
-    <nav class="breadcrumb" aria-label="Caminho">
-      <div class="breadcrumb-desktop">
-        <RouterLink to="/">Meus livros</RouterLink><span aria-hidden="true">/</span>
-        <RouterLink :to="{ name: 'book', params: { bookId: state.context.book.id } }">{{ state.context.book.title }}</RouterLink><span aria-hidden="true">/</span>
-        <RouterLink :to="{ name: 'book', params: { bookId: state.context.book.id }, query: { chapter: state.context.chapter.id } }">{{ state.context.chapter.name }}</RouterLink>
-      </div>
-      <div class="breadcrumb-mobile">
-        <RouterLink
-          class="back-chapter-btn"
-          :to="{ name: 'book', params: { bookId: state.context.book.id }, query: { chapter: state.context.chapter.id } }"
-          :title="`Voltar a ${state.context.chapter.name}`"
-        >
-          <svg class="w-4 h-4 back-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          <span class="back-chapter-text">Voltar a {{ state.context.chapter.name }}</span>
-        </RouterLink>
-      </div>
-    </nav>
+    <div class="breadcrumb-desktop">
+      <AppBreadcrumb :items="breadcrumbItems" />
+    </div>
+    <div class="breadcrumb-mobile">
+      <RouterLink
+        class="back-chapter-btn"
+        :to="{ name: 'book', params: { bookId: state.context.book.id }, query: { chapter: state.context.chapter.id } }"
+        :title="`Voltar a ${state.context.chapter.name}`"
+      >
+        <svg class="w-4 h-4 back-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <span class="back-chapter-text">Voltar a {{ state.context.chapter.name }}</span>
+      </RouterLink>
+    </div>
     <!-- Banner de Somente Leitura (Convidado) -->
     <div v-if="!canEdit" class="read-only-banner" role="status" aria-live="polite">
       <div class="read-only-icon" aria-hidden="true">

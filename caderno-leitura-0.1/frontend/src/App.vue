@@ -208,4 +208,10 @@ const isMoreMenuOpen = ref(false)
   font-size: 0.8125rem;
   opacity: 0.8;
 }
+
+@media (max-width: 767px) {
+  .app-footer {
+    margin-bottom: calc(var(--mobile-nav-offset, 56px) + env(safe-area-inset-bottom, 0px) + 1.5rem);
+  }
+}
 </style>

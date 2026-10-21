@@ -41,13 +41,18 @@ interface SecondaryNavItem {
 }
 
 const primaryNavItems = computed<PrimaryNavItem[]>(() => {
-  const isDashboardHome = props.homeViewPreference === 'dashboard'
   return [
     {
-      to: isDashboardHome ? '/dashboard' : '/livros',
-      label: isDashboardHome ? 'Dashboard' : 'Livros',
-      routes: ['books', 'book', 'study', 'study-edit', 'dashboard'],
-      icon: isDashboardHome ? 'layout-dashboard' : 'book-open',
+      to: '/dashboard',
+      label: 'Dashboard',
+      routes: ['dashboard'],
+      icon: 'layout-dashboard',
+    },
+    {
+      to: '/livros',
+      label: 'Livros',
+      routes: ['books', 'book', 'study', 'study-edit'],
+      icon: 'book-open',
     },
     {
       to: '/highlights',
@@ -158,7 +163,7 @@ onBeforeUnmount(() => {
 
 <template>
   <nav class="navigation-tabs" aria-label="Navegação principal">
-    <!-- 4 Abas Primárias do Ciclo Ativo de Leitura -->
+    <!-- 5 Abas Primárias do Ciclo Ativo de Leitura -->
     <RouterLink
       v-for="item in primaryNavItems"
       :key="item.to"

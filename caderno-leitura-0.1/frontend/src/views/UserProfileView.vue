@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import type { UserProfilePublic } from '../types.ts'
+import type { BreadcrumbItem, UserProfilePublic } from '../types.ts'
 import { useProfile } from '../composables/useProfile.ts'
 import { useAuthStore } from '../stores/auth.ts'
 import UserProfileCard from '../components/profile/UserProfileCard.vue'
+import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
 import Icon from '../components/ui/Icon.vue'
 
 const route = useRoute()
@@ -25,6 +26,11 @@ const isOwner = computed(() => {
   if (!auth.user.value || !publicProfile.value) return false
   return auth.user.value.username.toLowerCase() === publicProfile.value.username.toLowerCase()
 })
+
+const breadcrumbItems = computed<BreadcrumbItem[]>(() => [
+  { label: 'Livros', to: '/livros' },
+  { label: `@${username.value}`, current: true },
+])
 
 async function loadProfile() {
   if (!username.value) {
@@ -78,7 +84,7 @@ onMounted(() => {
         <h2>Perfil indisponível</h2>
         <p class="muted">{{ errorMessage || 'Não foi possível encontrar as informações deste usuário.' }}</p>
         <div class="actions">
-          <RouterLink to="/" class="button primary">
+          <RouterLink to="/livros" class="button primary">
             Voltar ao Início
           </RouterLink>
         </div>
@@ -86,12 +92,7 @@ onMounted(() => {
 
       <!-- Perfil Carregado com Sucesso -->
       <div v-else class="loaded-profile">
-        <nav class="breadcrumb-nav" aria-label="Navegação de retorno">
-          <RouterLink to="/" class="back-link">
-            <Icon name="arrow-right" :size="14" class="back-icon" />
-            <span>Voltar ao acervo</span>
-          </RouterLink>
-        </nav>
+        <AppBreadcrumb :items="breadcrumbItems" />
 
         <UserProfileCard
           :profile="publicProfile"

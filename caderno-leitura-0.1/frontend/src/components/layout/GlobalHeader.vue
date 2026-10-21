@@ -141,17 +141,6 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
 
           <!-- Menu do Usuário com Logout Encapsulado -->
           <UserDropdown />
-
-          <!-- Botão Mais para Telas Móveis (< 768px) -->
-          <button
-            type="button"
-            class="mobile-more-trigger mobile-only"
-            aria-label="Mais opções de navegação móvel"
-            aria-haspopup="dialog"
-            @click="emit('open-mobile-more')"
-          >
-            <Icon name="more-horizontal" :size="20" :stroke-width="1.8" />
-          </button>
         </template>
 
         <!-- Ações para Visitantes (Público) -->
@@ -453,17 +442,12 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
     padding: 0;
     justify-content: center;
   }
-
-  .mobile-more-trigger {
-    display: none !important;
-  }
 }
 
 @media (pointer: coarse) {
   .quick-capture-trigger-btn,
   .search-trigger-btn,
-  .btn-notifications-trigger,
-  .mobile-more-trigger {
+  .btn-notifications-trigger {
     min-width: 44px;
     min-height: 44px;
   }

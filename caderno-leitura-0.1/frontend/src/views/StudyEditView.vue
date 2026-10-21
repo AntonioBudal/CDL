@@ -9,7 +9,8 @@ import { useStudyDraft } from '../composables/useStudyDraft'
 import StudyEditorFields from '../components/StudyEditorFields.vue'
 import ConflictResolutionModal from '../components/sync/ConflictResolutionModal.vue'
 import StudyHistoryModal from '../components/StudyHistoryModal.vue'
-import type { Study, StudyEditorDraftPayload } from '../types.ts'
+import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
+import type { BreadcrumbItem, Study, StudyEditorDraftPayload } from '../types.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -20,6 +21,22 @@ const { state, dirty, hasAnalysis, canSave } = editor
 const historyModalOpen = ref(false)
 let disposed = false
 useUnsavedChanges(() => dirty.value, () => state.saving)
+
+const breadcrumbItems = computed<BreadcrumbItem[]>(() => {
+  if (!resourceState.context) return []
+  return [
+    { label: 'Livros', to: '/livros' },
+    {
+      label: `${resourceState.context.book.title} · ${resourceState.context.chapter.name}`,
+      to: {
+        name: 'book',
+        params: { bookId: resourceState.context.book.id },
+        query: { chapter: resourceState.context.chapter.id },
+      },
+    },
+    { label: 'Editar estudo', current: true },
+  ]
+})
 
 const draft = useStudyDraft({
   studyId: () => resourceState.context?.study?.id,
@@ -126,16 +143,11 @@ onBeforeUnmount(() => { disposed = true; resource.cancel() })
       <p>{{ resourceState.error }}</p>
       <div class="actions wrap">
         <button type="button" class="secondary" @click="load">Tentar novamente</button>
-        <RouterLink to="/" class="text-link">Voltar aos livros</RouterLink>
+        <RouterLink to="/livros" class="text-link">Voltar aos livros</RouterLink>
       </div>
     </div>
     <template v-else-if="resourceState.context">
-      <nav class="breadcrumb" aria-label="Caminho">
-        <RouterLink to="/">Meus livros</RouterLink><span aria-hidden="true">/</span>
-        <RouterLink :to="{ name: 'book', params: { bookId: resourceState.context.book.id }, query: { chapter: resourceState.context.chapter.id } }">
-          {{ resourceState.context.book.title }} · {{ resourceState.context.chapter.name }}
-        </RouterLink>
-      </nav>
+      <AppBreadcrumb :items="breadcrumbItems" />
       <header class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
         <div>
           <p class="eyebrow">{{ resourceState.context.study.title }}</p>
