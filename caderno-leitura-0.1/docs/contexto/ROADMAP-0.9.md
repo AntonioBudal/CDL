@@ -53,7 +53,7 @@ Para assegurar a entrega pontual e a estabilidade arquitetural, os seguintes pon
 
 | ID | Feature | Frente de Aperfeiçoamento | Escopo e Impacto | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **F01** | **Arquitetura de Navegação Global e Shell Responsivo** | Navegação Desktop e Mobile | Desacoplar "Dashboard" e "Livros" na barra superior; coordenar `--mobile-nav-offset` contra cortes no rodapé; criar componente universal `AppBreadcrumb.vue`. | **NÃO INICIADA** |
+| **F01** | **Arquitetura de Navegação Global e Shell Responsivo** | Navegação Desktop e Mobile | Desacoplar "Dashboard" e "Livros" na barra superior; coordenar `--mobile-nav-offset` contra cortes no rodapé; criar componente universal `AppBreadcrumb.vue`. | **CONCLUÍDA** |
 | **F02** | **Ergonomia Mobile e Descongestionamento da Página do Livro** | Página do Livro (`/livros/:bookId`) | Redesenhar cabeçalho compacto no mobile; unificar seletor de capítulos sem duplicidade; tornar o inspetor analítico recolhível. | **NÃO INICIADA** |
 | **F03** | **Segurança Operacional e Refinamento do Leitor de Estudos** | Leitor de Estudo (`/livros/:bookId/estudos/:studyId`) | Isolar ação de lixeira em menu contextual suspenso; assegurar alvos de toque >= 44x44px; indicador persistente de rascunho salvo no editor. | **NÃO INICIADA** |
 | **F04** | **Correções Estruturais nas Visualizações do Acervo** | Visualizações em Lista e Grade | Eliminar corte (*clipping*) do dropdown de status na tabela; corrigir visibilidade do ícone de ordenação com `stroke: currentColor`; alinhar colunas da lista. | **NÃO INICIADA** |
