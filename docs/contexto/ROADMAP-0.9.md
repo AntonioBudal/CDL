@@ -55,7 +55,7 @@ Para assegurar a entrega pontual e a estabilidade arquitetural, os seguintes pon
 | :--- | :--- | :--- | :--- | :--- |
 | **F01** | **Arquitetura de Navegação Global e Shell Responsivo** | Navegação Desktop e Mobile | Desacoplar "Dashboard" e "Livros" na barra superior; coordenar `--mobile-nav-offset` contra cortes no rodapé; criar componente universal `AppBreadcrumb.vue`. | **CONCLUÍDA** |
 | **F02** | **Ergonomia Mobile e Descongestionamento da Página do Livro** | Página do Livro (`/livros/:bookId`) | Redesenhar cabeçalho compacto no mobile; unificar seletor de capítulos sem duplicidade; tornar o inspetor analítico recolhível. | **CONCLUÍDA** |
-| **F03** | **Segurança Operacional e Refinamento do Leitor de Estudos** | Leitor de Estudo (`/livros/:bookId/estudos/:studyId`) | Isolar ação de lixeira em menu contextual suspenso; assegurar alvos de toque >= 44x44px; indicador persistente de rascunho salvo no editor. | **NÃO INICIADA** |
+| **F03** | **Segurança Operacional e Refinamento do Leitor de Estudos** | Leitor de Estudo (`/livros/:bookId/estudos/:studyId`) | Isolar ação de lixeira em menu contextual suspenso; assegurar alvos de toque >= 44x44px; indicador persistente de rascunho salvo no editor. | **CONCLUÍDA** |
 | **F04** | **Correções Estruturais nas Visualizações do Acervo** | Visualizações em Lista e Grade | Eliminar corte (*clipping*) do dropdown de status na tabela; corrigir visibilidade do ícone de ordenação com `stroke: currentColor`; alinhar colunas da lista. | **NÃO INICIADA** |
 | **F05** | **Acessibilidade, Imunidade Cromática e Padronização de Estados** | Sistema Visual, Estados e WCAG | Erradicar cores hexadecimais em badges e avisos; converter mensagens de carregamento em skeletons fiéis; enriquecer estados vazios e página 404 com CTAs. | **NÃO INICIADA** |
 
@@ -126,7 +126,7 @@ Redesenhar a composição espacial da página do livro ([`BookView.vue`](file://
 
 ### F03 — Segurança Operacional e Refinamento do Leitor de Estudos
 
-**Status: NÃO INICIADA.**
+**Status: CONCLUÍDA.**
 
 Proteger o fluxo de estudo ativo contra descartes acidentais no leitor ([`StudyView.vue`](file:///c:/Users/User/caderno/caderno-leitura-0.1/frontend/src/views/StudyView.vue)), calibrar alvos de toque ergonômicos e aprimorar o feedback de persistência no editor ([`StudyEditView.vue`](file:///c:/Users/User/caderno/caderno-leitura-0.1/frontend/src/views/StudyEditView.vue)).
 
@@ -148,9 +148,9 @@ Proteger o fluxo de estudo ativo contra descartes acidentais no leitor ([`StudyV
      - "Salvando…" (durante a requisição assíncrona).
 
 #### Critérios de Aceitação
-- [ ] Ação de lixeira não é acionável por clique simples inadvertido no cabeçalho de leitura, residindo protegida dentro do menu contextual com confirmação por modal.
-- [ ] Todos os botões clicáveis da tela de leitura atendem ao critério de tamanho mínimo de 44x44px sob `@media (pointer: coarse)`.
-- [ ] O leitor visualiza feedback claro e em tempo real sobre a preservação de seu rascunho durante a edição de textos longos.
+- [x] Ação de lixeira não é acionável por clique simples inadvertido no cabeçalho de leitura, residindo protegida dentro do menu contextual com confirmação por modal.
+- [x] Todos os botões clicáveis da tela de leitura atendem ao critério de tamanho mínimo de 44x44px sob `@media (pointer: coarse)`.
+- [x] O leitor visualiza feedback claro e em tempo real sobre a preservação de seu rascunho durante a edição de textos longos.
 
 ---
 
