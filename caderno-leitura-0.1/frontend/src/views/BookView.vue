@@ -10,6 +10,7 @@ import Icon from '../components/ui/Icon.vue'
 import EmptyState from '../components/ui/EmptyState.vue'
 import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
 import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
+import DropdownMenu from '../components/ui/DropdownMenu.vue'
 import { api, errorMessage } from '../services/api'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import { positiveId, type Book, type Chapter, type StudySummary, type StudyViewMode, type BreadcrumbItem } from '../types'
@@ -56,6 +57,8 @@ const splitLayoutRef = computed(() => ({
 function toggleFocusMode() {
   isFocusMode.value = !isFocusMode.value
 }
+
+const isInspectorExpandedMobile = ref(false)
 
 const confirmTrashBookOpen = ref(false)
 const trashingBook = ref(false)
@@ -343,28 +346,90 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
           </div>
           <div class="book-info">
             <p class="eyebrow">Livro</p>
-            <h1>{{ book.title }}</h1>
+            <h1 class="book-title">{{ book.title }}</h1>
             <p v-if="book.subtitle" class="book-subtitle">{{ book.subtitle }}</p>
             <p class="intro">
               {{ book.author || 'Autor não informado' }}
               <span v-if="book.year"> · {{ book.year }}</span>
             </p>
-            <div v-if="book.categories && book.categories.length > 0" class="flex flex-wrap gap-1.5 mt-2.5">
-              <CategoryBadge
-                v-for="cat in book.categories"
-                :key="cat.id"
-                :category="cat"
-                clickable
-                size="sm"
-                title="Filtrar por esta categoria na biblioteca"
-                @click="router.push({ path: '/books', query: { categoria: cat.id } })"
-              />
+
+            <div class="book-meta-actions-row">
+              <div v-if="book.categories && book.categories.length > 0" class="book-categories-strip">
+                <CategoryBadge
+                  v-for="cat in book.categories"
+                  :key="cat.id"
+                  :category="cat"
+                  clickable
+                  size="sm"
+                  title="Filtrar por esta categoria na biblioteca"
+                  @click="router.push({ path: '/books', query: { categoria: cat.id } })"
+                />
+              </div>
+
+              <!-- Menu Agrupado de Ações no Mobile (<= 767px) -->
+              <div class="book-mobile-actions-wrapper">
+                <DropdownMenu align="right" aria-label="Ações do livro">
+                  <template #trigger="{ isOpen, toggle, onKeydown }">
+                    <button
+                      type="button"
+                      class="secondary button-sm book-mobile-actions-trigger"
+                      :aria-expanded="isOpen"
+                      aria-label="Ações do livro"
+                      @click="toggle"
+                      @keydown="onKeydown"
+                    >
+                      <Icon name="more-horizontal" :size="16" />
+                      <span>Ações do livro</span>
+                    </button>
+                  </template>
+                  <template #default="{ close }">
+                    <div class="book-mobile-actions-menu" role="menu">
+                      <button
+                        type="button"
+                        class="dropdown-item"
+                        role="menuitem"
+                        @click="toggleFocusMode(); close()"
+                      >
+                        <Icon :name="isFocusMode ? 'minimize-2' : 'maximize-2'" :size="16" />
+                        <span>{{ isFocusMode ? 'Sair do foco' : 'Modo foco' }}</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="dropdown-item"
+                        role="menuitem"
+                        @click="exportModalOpen = true; close()"
+                      >
+                        <Icon name="download" :size="16" />
+                        <span>Exportar anotações</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="dropdown-item"
+                        role="menuitem"
+                        @click="isEditingBook = true; close()"
+                      >
+                        <Icon name="pencil" :size="16" />
+                        <span>Editar livro</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="dropdown-item danger-item"
+                        role="menuitem"
+                        @click="confirmTrashBookOpen = true; close()"
+                      >
+                        <Icon name="trash" :size="16" />
+                        <span>Mover para a lixeira</span>
+                      </button>
+                    </div>
+                  </template>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Barra de Ações do Cabeçalho: Botões compactos de ícone com expansão suave no hover/foco -->
-        <div class="header-actions">
+        <div class="header-actions desktop-actions">
           <!-- Botão Modo Foco -->
           <button
             class="secondary icon-action-btn focus-toggle-btn"
@@ -669,7 +734,26 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
           class="inspector-horizontal-bar panel"
           aria-label="Metadados e contexto do livro"
         >
-          <div class="inspector-bar-content">
+          <!-- Gatilho Móvel do Inspetor -->
+          <button
+            type="button"
+            class="inspector-mobile-toggle mobile-only"
+            :aria-expanded="isInspectorExpandedMobile"
+            aria-controls="inspector-content-panel"
+            @click="isInspectorExpandedMobile = !isInspectorExpandedMobile"
+          >
+            <span class="toggle-text-wrap">
+              <Icon name="sliders" :size="15" />
+              <span>{{ isInspectorExpandedMobile ? 'Ocultar detalhes do livro' : 'Ver detalhes do livro' }}</span>
+            </span>
+            <Icon :name="isInspectorExpandedMobile ? 'chevron-up' : 'chevron-down'" :size="16" class="toggle-icon" />
+          </button>
+
+          <div
+            id="inspector-content-panel"
+            class="inspector-bar-content"
+            :class="{ 'is-collapsed-mobile': !isInspectorExpandedMobile }"
+          >
             <div class="inspector-metrics-grid">
               <div class="inspector-item">
                 <span class="inspector-label">Livro</span>
@@ -1245,6 +1329,14 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
   flex-shrink: 0;
 }
 
+.book-mobile-actions-wrapper {
+  display: none !important;
+}
+
+.inspector-mobile-toggle {
+  display: none !important;
+}
+
 /* ============================================================================
    Responsividade: Tablet e Mobile
    ============================================================================ */
@@ -1308,32 +1400,144 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   .book-header {
     flex-direction: column;
     align-items: stretch;
-    gap: 1rem;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
   }
 
   .book-header-main {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .header-actions {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.875rem;
     width: 100%;
   }
 
-  .header-actions .icon-action-btn {
+  .book-header-cover {
+    width: 48px;
+    height: 72px;
+    flex-shrink: 0;
+  }
+
+  .book-header-cover :deep(.book-cover),
+  .book-header-cover :deep(img) {
+    width: 48px !important;
+    height: 72px !important;
+    min-width: 48px !important;
+    max-width: 48px !important;
+    border-radius: var(--radius-sm, 4px);
+    object-fit: cover;
+  }
+
+  .book-title {
+    font-size: 1.15rem;
+    line-height: 1.3;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .book-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .book-info .eyebrow {
+    font-size: 0.7rem;
+    margin: 0;
+  }
+
+  .book-info .intro {
+    font-size: 0.8rem;
+    margin: 0;
+    color: var(--color-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .book-meta-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+  }
+
+  .book-categories-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+  }
+
+  .desktop-actions {
+    display: none !important;
+  }
+
+  .book-mobile-actions-wrapper {
+    display: inline-flex !important;
+    margin-left: auto;
+  }
+
+  .book-mobile-actions-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     min-height: 44px;
-    min-width: 44px;
-    flex: 1 1 calc(25% - 0.5rem);
-    justify-content: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-control);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .book-mobile-actions-menu {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+    padding: 0.35rem;
+    gap: 0.25rem;
+  }
+
+  .book-mobile-actions-menu .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm, 4px);
+    cursor: pointer;
+  }
+
+  .book-mobile-actions-menu .dropdown-item:hover,
+  .book-mobile-actions-menu .dropdown-item:focus {
+    background: var(--color-surface-hover);
+    color: var(--color-hover-text);
+  }
+
+  .book-mobile-actions-menu .dropdown-item.danger-item {
+    color: var(--color-danger, #b91c1c);
+  }
+
+  .book-mobile-actions-menu .dropdown-item.danger-item:hover,
+  .book-mobile-actions-menu .dropdown-item.danger-item:focus {
+    background: var(--color-danger-subtle, rgba(239, 68, 68, 0.1));
   }
 
   .chapters-horizontal-bar {
@@ -1345,13 +1549,20 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
     gap: 0.5rem;
   }
 
+  .chapters-nav-strip {
+    display: none !important;
+  }
+
   .chapters-mobile-select-wrap {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     width: 100%;
     margin-bottom: 0.25rem;
   }
 
   .chapters-mobile-select {
+    flex: 1;
     width: 100%;
     min-height: 44px;
     padding: 0.5rem 0.75rem;
@@ -1382,9 +1593,38 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
     min-height: 44px;
   }
 
-  .inspector-bar-content {
+  .inspector-mobile-toggle {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .toggle-text-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .inspector-bar-content.is-collapsed-mobile {
+    display: none !important;
+  }
+
+  .inspector-bar-content:not(.is-collapsed-mobile) {
+    display: flex;
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: var(--border-width) solid var(--color-border-divider);
   }
 
   .inspector-metrics-grid {
@@ -1410,6 +1650,12 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .inspector-metrics-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
