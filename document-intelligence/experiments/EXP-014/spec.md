@@ -40,7 +40,14 @@ Quanto um ajuste fino do reconhecedor com manuscrito em português reduz o erro 
 
 ## Plano resumido
 
-1. Ambiente isolado com PaddleOCR (CPU) e verificação de licenças (Apache-2.0).
+**Revisão de 2026-10-22 (delegação):** em vez do PaddlePaddle, a primeira tentativa usa o próprio modelo ONNX
+convertido para PyTorch (`onnx2torch`, MIT; PyTorch CPU, BSD-3-Clause), num ambiente isolado. Evita instalar o
+PaddlePaddle e o repositório de treino; se a conversão não preservar a saída do modelo, volta-se ao PaddleOCR.
+
+0. **Viabilidade (Fase 1):** converter o PP-OCRv6 small rec; conferir que a saída do PyTorch coincide com a do
+   ONNX Runtime em recortes fictícios; cronometrar ida e volta (forward + backward com perda CTC) num lote de 16
+   linhas; estimar o tempo por época nas ~19 mil linhas de treino. Decisão registrada no relatório.
+1. Ambiente isolado e verificação de licenças.
 2. Exportar linhas de treino e validação do BRESSAY (recortes exatos, como no EXP-011), ampliadas 2×.
 3. Medir o custo de uma época em 1.000 linhas; decidir o orçamento de treino.
 4. Ajustar, escolher a época pela validação, medir uma vez no teste (398 linhas do EXP-001 e todas as linhas de

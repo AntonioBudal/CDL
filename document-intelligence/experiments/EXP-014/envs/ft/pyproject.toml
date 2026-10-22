@@ -1,0 +1,26 @@
+# Ambiente isolado do EXP-014: ajuste fino experimental do reconhecedor PP-OCRv6 small (ONNX → PyTorch).
+# NÃO faz parte do pacote leitorum-di.
+[project]
+name = "exp-014-ft"
+version = "0.0.0"
+description = "EXP-014: ajuste fino experimental do reconhecedor (CPU)"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "torch",
+    "onnx",
+    "onnx2torch",
+    "onnxruntime",
+    "numpy",
+    "opencv-python-headless",
+]
+
+[tool.uv]
+package = false
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
