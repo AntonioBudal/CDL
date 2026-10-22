@@ -1,6 +1,6 @@
 # EXP-014 — Adaptação do Reconhecedor à Caligrafia Brasileira (proposta)
 
-**Created**: 2026-10-18 · **Status**: `PLANNED` — proposta registrada por delegação; **não executada**. A execução
+**Created**: 2026-10-18 · **Status**: `ACCEPTED` / `CONCLUÍDO` (executado por delegação em 2026-10-22; resultados em [RESULTS.md](./RESULTS.md)). Texto original da proposta abaixo. A execução
 exige treino de modelo, que é de outra ordem de custo que os experimentos anteriores (ver §Viabilidade).
 
 **Input**: ADR-007 e ADR-008: o pipeline completo funciona, mas o reconhecedor PP-OCRv6 small erra ~34 % dos

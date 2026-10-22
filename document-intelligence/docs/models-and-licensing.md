@@ -82,6 +82,7 @@ Revisões completas e SHA-256: `experiments/EXP-002/candidates.json`.
 | PP-OCRv6 medium rec | `PP-OCRv6_rec_medium.onnx` SHA-256 `eef44482…4894b`, em `models/exp-010/` | Apache-2.0 | Apache-2.0 (card `PaddlePaddle/PP-OCRv6_medium_rec_onnx`) | Sim | `LICENSE STATUS: VERIFIED` — benchmark EXP-010 |
 | PP-OCRv5 latino mobile rec | `latin_PP-OCRv5_rec_mobile.onnx` SHA-256 `b20bd37c…b5f5a`, em `models/exp-010/` | Apache-2.0 | Apache-2.0 (card `PaddlePaddle/latin_PP-OCRv5_mobile_rec_onnx`) | Sim | `LICENSE STATUS: VERIFIED` — benchmark EXP-010 |
 | Léxico `wordfreq` (português, 100 mil palavras) | 3.1.1 | Apache-2.0 | dados CC-BY-SA 4.0 | Sim | `LICENSE STATUS: VERIFIED` conforme declarado — dado de experimento do EXP-011, fora do Git |
+| Ajuste fino experimental (PyTorch, `onnx2torch`) do PP-OCRv6 small rec | `models/exp-014/best.pt` (fora do Git) | PyTorch BSD-3-Clause; `onnx2torch` Apache-2.0 | derivado do Apache-2.0 + **dados BRESSAY** | Sim | `LICENSE STATUS: NEEDS VALIDATION` — só experimento, **proibido no produto** |
 | Surya | — | GPL | restrição de uso comercial | Sim | Excluído |
 | Florence-2 (`microsoft/Florence-2-base`) | rev. `5ca5edf5` | MIT | MIT | Sim | Não avaliado: exige executar código baixado com o modelo |
 

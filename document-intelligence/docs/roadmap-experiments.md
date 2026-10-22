@@ -94,6 +94,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-013` — Escala Automática da Página *(CONCLUÍDO — aceito por delegação em 2026-10-18)*
 - **Resultado**: ampliar a página até linhas de ~80 px: redação original 45,8 % → 35,9 % de CER; fotos sem mudança (27,3 %). Incorporado ao ADR-008.
 
+### `EXP-014` — Ajuste Fino do Reconhecedor *(CONCLUÍDO — aceito por delegação em 2026-10-22)*
+- **Resultado**: leitura direta com margem de 640 px: CER 41,9 % → 29,7 % sem treino; ajuste fino experimental (BRESSAY, < 1 época): 13,6 % (12,4 % com correção lexical). Decisão no ADR-009.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.

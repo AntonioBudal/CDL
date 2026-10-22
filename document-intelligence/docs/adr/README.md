@@ -71,3 +71,4 @@ Um ADR passa pelos seguintes status:
 | [`ADR-006`](./ADR-006-deteccao-de-linhas-pp-ocr.md) | Detecção de linhas pelo detector de texto do PP-OCR, com fusão de fragmentos | ACCEPTED | EXP-008 | 2026-10-14 |
 | [`ADR-007`](./ADR-007-leitura-pp-ocr-sem-portugues-suficiente.md) | O reconhecedor do PP-OCRv6 é o melhor leitor pronto medido, mas não lê português o bastante; o ADR-001 se mantém | ACCEPTED | EXP-009 | 2026-10-14 |
 | [`ADR-008`](./ADR-008-pipeline-de-referencia.md) | Pipeline de referência foto → LDF 2.0, com o texto em português tratado como rascunho | ACCEPTED (delegação) | EXP-012 | 2026-10-18 |
+| [`ADR-009`](./ADR-009-margem-de-leitura-e-ajuste-fino.md) | Leitura direta com margem à direita; ajuste fino com dados licenciados como caminho para o português | ACCEPTED (delegação) | EXP-014 | 2026-10-22 |

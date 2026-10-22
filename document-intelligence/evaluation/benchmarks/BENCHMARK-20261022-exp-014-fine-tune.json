@@ -1,0 +1,140 @@
+{
+  "schema": "leitorum-di-reading-benchmark/1",
+  "created_utc": "2026-10-22T14:36:15+00:00",
+  "experiment": "EXP-014",
+  "git": {
+    "commit": "76f47a15d0ffcbca2156d6d8a3bfab2694711b78",
+    "dirty": false
+  },
+  "license_status": {
+    "base_model": "PP-OCRv6 small rec, Apache-2.0 (VERIFIED, conforme declarado)",
+    "fine_tuned_model": "ajustado com BRESSAY (NEEDS VALIDATION): só experimento"
+  },
+  "training": {
+    "best_val_cer": 0.13544376987568663,
+    "steps": 392,
+    "train_lines": 19565,
+    "args": {
+      "minutes": 150.0,
+      "lr": 5e-05,
+      "batch": 16,
+      "extra": 640,
+      "eval_every": 400,
+      "seed": 1234
+    }
+  },
+  "validation_padding_choice": {
+    "e0": 0.4149,
+    "e160": 0.3481,
+    "e320": 0.3287,
+    "e640": 0.3205
+  },
+  "results": {
+    "test-exp001": {
+      "pacote (EXP-009/010)": {
+        "raw": {
+          "lines": 398,
+          "cer": 0.38506601131622564,
+          "wer": 0.7609212209833669,
+          "accents": 0.8155515370705244,
+          "lines_with_cer_below_10pct": 32
+        },
+        "lexicon": {
+          "lines": 398,
+          "cer": 0.38157969937703606,
+          "wer": 0.7002376165234875,
+          "accents": 0.7775768535262206,
+          "lines_with_cer_below_10pct": 50
+        },
+        "ms_per_line": 97.07690201010602
+      },
+      "margem 640 px, sem ajuste": {
+        "raw": {
+          "lines": 398,
+          "cer": 0.27990512659313027,
+          "wer": 0.7176019009321879,
+          "accents": 0.783001808318264,
+          "lines_with_cer_below_10pct": 38
+        },
+        "lexicon": {
+          "lines": 398,
+          "cer": 0.2729610790421215,
+          "wer": 0.6353500274172912,
+          "accents": 0.7197106690777577,
+          "lines_with_cer_below_10pct": 57
+        },
+        "ms_per_line": null
+      },
+      "ajustado no BRESSAY + margem 640 px": {
+        "raw": {
+          "lines": 398,
+          "cer": 0.10721838029376464,
+          "wer": 0.4125388411624931,
+          "accents": 0.17992766726943943,
+          "lines_with_cer_below_10pct": 217
+        },
+        "lexicon": {
+          "lines": 398,
+          "cer": 0.09475910156026747,
+          "wer": 0.30743922500456955,
+          "accents": 0.16184448462929477,
+          "lines_with_cer_below_10pct": 248
+        },
+        "ms_per_line": 287.0798814069508
+      }
+    },
+    "test-all": {
+      "pacote (EXP-009/010)": {
+        "raw": {
+          "lines": 5496,
+          "cer": 0.41881916938638636,
+          "wer": 0.7753094172750347,
+          "accents": 0.8053712681806583,
+          "lines_with_cer_below_10pct": 428
+        },
+        "lexicon": {
+          "lines": 5496,
+          "cer": 0.4153781548578849,
+          "wer": 0.7160425988434467,
+          "accents": 0.763715233477928,
+          "lines_with_cer_below_10pct": 609
+        },
+        "ms_per_line": null
+      },
+      "margem 640 px, sem ajuste": {
+        "raw": {
+          "lines": 5496,
+          "cer": 0.29676304089466377,
+          "wer": 0.7200329696208494,
+          "accents": 0.7695202857871906,
+          "lines_with_cer_below_10pct": 453
+        },
+        "lexicon": {
+          "lines": 5496,
+          "cer": 0.28856209216944956,
+          "wer": 0.640552633644713,
+          "accents": 0.7101301352385813,
+          "lines_with_cer_below_10pct": 664
+        },
+        "ms_per_line": null
+      },
+      "ajustado no BRESSAY + margem 640 px": {
+        "raw": {
+          "lines": 5496,
+          "cer": 0.13552664034263373,
+          "wer": 0.44051076745950757,
+          "accents": 0.2145317683082419,
+          "lines_with_cer_below_10pct": 2651
+        },
+        "lexicon": {
+          "lines": 5496,
+          "cer": 0.12407018201906828,
+          "wer": 0.34090849621896013,
+          "accents": 0.19373564684868588,
+          "lines_with_cer_below_10pct": 3033
+        },
+        "ms_per_line": 278.74617696507113
+      }
+    }
+  }
+}
