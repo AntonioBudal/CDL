@@ -10,7 +10,8 @@ import StudyEditorFields from '../components/StudyEditorFields.vue'
 import ConflictResolutionModal from '../components/sync/ConflictResolutionModal.vue'
 import StudyHistoryModal from '../components/StudyHistoryModal.vue'
 import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
-import type { BreadcrumbItem, Study, StudyEditorDraftPayload } from '../types.ts'
+import Icon from '../components/ui/Icon.vue'
+import type { BreadcrumbItem, IconName, Study, StudyEditorDraftPayload } from '../types.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -58,6 +59,36 @@ const draft = useStudyDraft({
   },
 })
 const { isDraftRestored, saveDraft, restoreDraft, discardDraft, clearDraft } = draft
+
+const draftStatusLabel = computed(() => {
+  if (state.saving) {
+    return 'Salvando…'
+  }
+  if (dirty.value || isDraftRestored.value) {
+    return 'Rascunho salvo neste navegador'
+  }
+  return 'Alterações salvas'
+})
+
+const draftStatusClass = computed(() => {
+  if (state.saving) {
+    return 'saving'
+  }
+  if (dirty.value || isDraftRestored.value) {
+    return 'draft-local'
+  }
+  return 'saved'
+})
+
+const draftStatusIcon = computed<IconName>(() => {
+  if (state.saving) {
+    return 'refresh-cw'
+  }
+  if (dirty.value || isDraftRestored.value) {
+    return 'clock'
+  }
+  return 'check'
+})
 
 function handleStudyRestored(updatedStudy: Study) {
   editor.load(updatedStudy)
@@ -151,7 +182,18 @@ onBeforeUnmount(() => { disposed = true; resource.cancel() })
       <header class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
         <div>
           <p class="eyebrow">{{ resourceState.context.study.title }}</p>
-          <h1>Editar estudo</h1>
+          <div class="edit-title-row">
+            <h1>Editar estudo</h1>
+            <span
+              class="draft-status-pill"
+              :class="draftStatusClass"
+              role="status"
+              aria-live="polite"
+            >
+              <Icon :name="draftStatusIcon" :size="13" class="status-pill-icon" />
+              <span>{{ draftStatusLabel }}</span>
+            </span>
+          </div>
           <p class="intro">Revise as seções e registre suas próprias interpretações.</p>
         </div>
         <button
@@ -251,5 +293,57 @@ onBeforeUnmount(() => { disposed = true; resource.cancel() })
   padding: 0;
   text-decoration: underline;
   font-size: 0.875rem;
+}
+
+.edit-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.draft-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-full, 9999px);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.draft-status-pill.saved {
+  background-color: var(--color-surface-hover, rgba(0, 0, 0, 0.04));
+  color: var(--color-muted);
+  border: var(--border-width) solid var(--color-border);
+}
+
+.draft-status-pill.draft-local {
+  background-color: var(--color-surface-hover, rgba(0, 0, 0, 0.05));
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border);
+}
+
+.draft-status-pill.saving {
+  background-color: var(--color-surface-hover, rgba(0, 0, 0, 0.05));
+  color: var(--color-accent);
+  border: var(--border-width) solid var(--color-accent);
+}
+
+.draft-status-pill.saving .status-pill-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .draft-status-pill.saving .status-pill-icon {
+    animation: none;
+  }
 }
 </style>

@@ -282,7 +282,7 @@ const currentPositionText = computed(() => {
   border-color: var(--color-danger, #dc2626);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px), (pointer: coarse) {
   .reading-bar-content {
     padding: 0.5rem;
     gap: 0.5rem;
@@ -292,6 +292,11 @@ const currentPositionText = computed(() => {
     min-height: 44px;
     min-width: 44px;
     padding: 0.375rem 0.5rem;
+  }
+
+  .close-btn {
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .reading-bar-btn .btn-text {

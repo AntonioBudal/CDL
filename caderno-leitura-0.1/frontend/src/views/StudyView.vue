@@ -18,6 +18,8 @@ import FloatingActionsToolbar from '../components/FloatingActionsToolbar.vue'
 import NoteQuestionPopover from '../components/NoteQuestionPopover.vue'
 import HighlightActionPopover from '../components/HighlightActionPopover.vue'
 import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
+import DropdownMenu from '../components/ui/DropdownMenu.vue'
+import Icon from '../components/ui/Icon.vue'
 import { useStudyHighlights } from '../composables/useStudyHighlights'
 import { useActiveReadingSession } from '../composables/useActiveReadingSession'
 import { formatQuoteText, useTextSelection } from '../composables/useTextSelection'
@@ -555,77 +557,102 @@ onBeforeUnmount(() => {
         </div>
       </div>
       <div class="header-actions">
-        <div class="header-actions-group">
-          <!-- Compartilhar (se canEdit) -->
-          <button
-            v-if="canEdit"
-            type="button"
-            class="secondary share-action header-icon-btn"
-            aria-label="Compartilhar estudo e gerenciar permissões"
-            title="Compartilhar estudo"
-            @click="shareModalOpen = true"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-            </svg>
-          </button>
-
-          <!-- Exportar estudo -->
-          <button
-            type="button"
-            class="secondary export-action header-icon-btn"
-            aria-label="Exportar estudo"
-            title="Exportar estudo"
-            @click="exportModalOpen = true"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-          </button>
-
-          <!-- Histórico de versões -->
-          <button
-            type="button"
-            class="secondary history-action header-icon-btn"
-            aria-label="Abrir histórico de versões do estudo"
-            title="Histórico de versões"
-            @click="historyModalOpen = true"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </button>
-
-          <!-- Editar estudo (se canEdit) -->
-          <RouterLink
-            v-if="canEdit"
-            class="button primary edit-action header-icon-btn"
-            :to="{ name: 'study-edit', params: { bookId: state.context.book.id, studyId: state.context.study.id } }"
-            aria-label="Editar estudo"
-            title="Editar estudo"
-          >
-            <svg class="w-4 h-4 edit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-          </RouterLink>
-        </div>
-
-        <!-- Separação espacial entre ações comuns e a ação destrutiva de exclusão -->
-        <div v-if="canEdit" class="header-actions-divider" aria-hidden="true"></div>
-
-        <!-- Mover para a lixeira (se canEdit) -->
-        <button
+        <!-- Ação Primária: Editar estudo (se canEdit) -->
+        <RouterLink
           v-if="canEdit"
-          type="button"
-          class="secondary danger-action header-icon-btn"
-          aria-label="Mover para a lixeira"
-          title="Mover para a lixeira"
-          @click="confirmTrashOpen = true"
+          class="button primary edit-action header-icon-btn"
+          :to="{ name: 'study-edit', params: { bookId: state.context.book.id, studyId: state.context.study.id } }"
+          aria-label="Editar estudo"
+          title="Editar estudo"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          <svg class="w-4 h-4 edit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
-        </button>
+        </RouterLink>
+
+        <!-- Menu Contextual de Ações Secundárias -->
+        <DropdownMenu align="right" aria-label="Mais opções do estudo">
+          <template #trigger="{ isOpen, toggle, onKeydown }">
+            <button
+              type="button"
+              class="secondary header-icon-btn study-more-trigger"
+              :aria-expanded="isOpen"
+              aria-label="Mais opções do estudo"
+              title="Mais opções do estudo"
+              @click="toggle"
+              @keydown="onKeydown"
+            >
+              <Icon name="more-horizontal" :size="18" />
+            </button>
+          </template>
+
+          <template #default>
+            <div class="study-actions-menu" role="menu">
+              <div class="header-actions-group">
+                <!-- Compartilhar (se canEdit) -->
+                <button
+                  v-if="canEdit"
+                  type="button"
+                  class="secondary share-action header-icon-btn"
+                  aria-label="Compartilhar estudo e gerenciar permissões"
+                  title="Compartilhar estudo"
+                  @click="shareModalOpen = true"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                  </svg>
+                  <span>Compartilhar</span>
+                </button>
+
+                <!-- Exportar estudo -->
+                <button
+                  type="button"
+                  class="secondary export-action header-icon-btn"
+                  aria-label="Exportar estudo"
+                  title="Exportar estudo"
+                  @click="exportModalOpen = true"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span>Exportar</span>
+                </button>
+
+                <!-- Histórico de versões -->
+                <button
+                  type="button"
+                  class="secondary history-action header-icon-btn"
+                  aria-label="Abrir histórico de versões do estudo"
+                  title="Histórico de versões"
+                  @click="historyModalOpen = true"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Histórico de versões</span>
+                </button>
+              </div>
+
+              <!-- Separação espacial entre ações comuns e a ação destrutiva de exclusão -->
+              <div v-if="canEdit" class="header-actions-divider" aria-hidden="true"></div>
+
+              <!-- Mover para a lixeira (se canEdit) -->
+              <button
+                v-if="canEdit"
+                type="button"
+                class="secondary danger-action header-icon-btn"
+                aria-label="Mover para a lixeira"
+                title="Mover para a lixeira"
+                @click="confirmTrashOpen = true"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <span>Mover para a lixeira</span>
+              </button>
+            </div>
+          </template>
+        </DropdownMenu>
       </div>
     </header>
 
@@ -859,6 +886,68 @@ onBeforeUnmount(() => {
   background: var(--color-border, #e4e4e7);
   margin: 0 0.25rem;
   flex-shrink: 0;
+}
+
+.study-actions-menu {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  padding: 0.35rem;
+  gap: 0.25rem;
+}
+
+.study-actions-menu .header-actions-group {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.study-actions-menu .header-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.625rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm, 4px);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.study-actions-menu .header-icon-btn svg {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.study-actions-menu .header-icon-btn:hover,
+.study-actions-menu .header-icon-btn:focus {
+  background: var(--color-surface-hover);
+  color: var(--color-hover-text);
+}
+
+.study-actions-menu .danger-action {
+  color: var(--color-danger, #b91c1c);
+}
+
+.study-actions-menu .danger-action:hover,
+.study-actions-menu .danger-action:focus {
+  background: var(--color-danger-subtle, rgba(239, 68, 68, 0.1));
+}
+
+.study-actions-menu .dropdown-divider {
+  height: 1px;
+  background: var(--color-border-divider, var(--color-border, #e4e4e7));
+  margin: 0.25rem 0;
+  width: 100%;
 }
 
 .header-icon-btn {
