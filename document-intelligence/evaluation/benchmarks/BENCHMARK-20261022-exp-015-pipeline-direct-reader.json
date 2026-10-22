@@ -1,0 +1,92 @@
+{
+  "schema": "leitorum-di-pipeline-benchmark/1",
+  "created_utc": "2026-10-22T15:18:58+00:00",
+  "experiment": "EXP-015",
+  "git": {
+    "commit": "239b711fbed5b5f88016ee5a94851592118581a7",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "target": 80,
+  "results": {
+    "test-bressay": {
+      "pages": 185,
+      "cer_micro": 0.2752567978906433,
+      "wer_micro": 0.6295836004238563,
+      "page_cer_median": 0.2564234326824255,
+      "ref_chars": 491145,
+      "scales": {
+        "4": 83,
+        "3": 33,
+        "2": 50,
+        "1": 19
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 7413.5618,
+        "p95_ms": 8662.890119999998,
+        "peak_rss_bytes": 978210816,
+        "load_ms": 2206.9736
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 5623
+      }
+    },
+    "test-gnhk": {
+      "pages": 172,
+      "cer_micro": 0.27378697898472115,
+      "wer_micro": 0.5553885787891799,
+      "page_cer_median": 0.17777777777777778,
+      "ref_chars": 54389,
+      "scales": {
+        "1": 165,
+        "2": 5,
+        "3": 2
+      },
+      "cost": {
+        "pages": 172,
+        "failed": [],
+        "median_ms": 3143.94315,
+        "p95_ms": 5179.801964999998,
+        "peak_rss_bytes": 890777600,
+        "load_ms": 1791.2591
+      },
+      "ldf2": {
+        "documents": 172,
+        "valid": 172,
+        "not_representable": 0,
+        "lines": 2486
+      }
+    }
+  },
+  "verdicts": {
+    "h1_bressay_close_to_fixed_x3": {
+      "auto": 0.2752567978906433,
+      "fixed_x3": 0.359,
+      "native": 0.458,
+      "met": true
+    },
+    "h2_gnhk_not_worse": {
+      "auto": 0.27378697898472115,
+      "fixed": 0.2725,
+      "met": true
+    },
+    "h3_cost": {
+      "median_ms": {
+        "test-bressay": 7413.5618,
+        "test-gnhk": 3143.94315
+      },
+      "met": false
+    }
+  }
+}

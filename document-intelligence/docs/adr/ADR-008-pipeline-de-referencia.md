@@ -3,7 +3,7 @@
 * **Status:** ACCEPTED (aceito por delegação permanente do usuário em 2026-10-18)
 * **Data:** 2026-10-18
 * **Decisores:** Usuário (delegação); Claude Code (proposta e execução)
-* **Experimentos de Suporte:** [EXP-012](../../experiments/EXP-012/RESULTS.md) e [EXP-013](../../experiments/EXP-013/RESULTS.md)
+* **Experimentos de Suporte:** [EXP-012](../../experiments/EXP-012/RESULTS.md) , [EXP-013](../../experiments/EXP-013/RESULTS.md) e [EXP-015](../../experiments/EXP-015/RESULTS.md)
 * **Status de Licença:** `rapidocr` e PP-OCRv6 (Apache-2.0), léxico `wordfreq` (dados CC-BY-SA 4.0) — `LICENSE STATUS: VERIFIED`, conforme declarado. Evidência em português depende do BRESSAY (`NEEDS VALIDATION`).
 
 ## 1. Contexto
@@ -20,6 +20,9 @@ correção lexical (EXP-011) e o conversor LDF 2.0 (ADR-004) e mediu a cadeia de
    página é ampliada pelo fator inteiro mais próximo de 80 px / altura (1 a 4) antes da detecção definitiva.
    Na redação em escala original o CER cai de 45,8 % para 35,9 % (melhor que a ampliação fixa 3×, 36,2 %); nas
    fotos de celular não muda (27,3 %).
+2b. **Leitura direta (EXP-015, ADR-009):** o reconhecedor é chamado pelo ONNX Runtime, com a linha a 48 px de
+   altura e 640 px de margem vazia à direita, no lugar do reconhecedor do `rapidocr`. Redações: CER de página
+   35,9 % → 27,5 %; fotos: 27,4 %. Custo: 7,4 s por página nas redações.
 3. **Texto em português é rascunho:** qualquer uso no produto mostra o texto lido para revisão do leitor, com as
    correções gravadas como `human_corrections` no LDF. Nada sobre leitura em português é apresentado como texto
    final enquanto o CER não chegar perto do critério de adoção (12 %).
@@ -34,6 +37,8 @@ correção lexical (EXP-011) e o conversor LDF 2.0 (ADR-004) e mediu a cadeia de
 | BRESSAY nativo (português) | 45,8 % (mediana 34,9 %) | 73,8 % | 2,8 | 185 / 185 |
 | **BRESSAY nativo + escala automática (EXP-013)** | **35,9 %** (mediana 28,1 %) | 67,7 % | 5,6 | 185 / 185 |
 | **GNHK + escala automática (EXP-013)** | **27,3 %** (mediana 17,6 %) | 53,5 % | 2,8 | 172 / 172 |
+| **BRESSAY nativo + escala + leitura direta (EXP-015)** | **27,5 %** (mediana 25,6 %) | 63,0 % | 7,4 | 185 / 185 |
+| **GNHK + escala + leitura direta (EXP-015)** | **27,4 %** (mediana 17,8 %) | 55,5 % | 3,1 | 172 / 172 |
 
 ## 4. Consequências
 

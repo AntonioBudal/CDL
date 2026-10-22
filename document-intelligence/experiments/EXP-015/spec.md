@@ -1,6 +1,6 @@
 # EXP-015 — Pipeline com Leitura Direta e Margem (especificação, plano e tarefas)
 
-**Created**: 2026-10-22 · **Status**: `DELEGATED` (autonomia permanente do usuário, 2026-10-18)
+**Created**: 2026-10-22 · **Status**: `ACCEPTED` / `CONCLUÍDO` (por delegação, 2026-10-22; resultados em [RESULTS.md](./RESULTS.md))
 
 **Input**: ADR-008 (pipeline de referência com escala automática, EXP-013) e ADR-009 (leitura direta pelo ONNX
 Runtime com 640 px de margem: CER de linha 41,9 % → 29,7 %).
@@ -25,4 +25,4 @@ vez.
 ## Tarefas
 
 - [x] **T001** Harness (cópia do EXP-013) com o leitor direto e testes.
-- [ ] **T002** Rodar os dois conjuntos de teste; pontuar; relatório; atualizar o ADR-008.
+- [x] **T002** Rodar os dois conjuntos de teste; pontuar; relatório; atualizar o ADR-008.

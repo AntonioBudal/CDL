@@ -97,6 +97,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-014` — Ajuste Fino do Reconhecedor *(CONCLUÍDO — aceito por delegação em 2026-10-22)*
 - **Resultado**: leitura direta com margem de 640 px: CER 41,9 % → 29,7 % sem treino; ajuste fino experimental (BRESSAY, < 1 época): 13,6 % (12,4 % com correção lexical). Decisão no ADR-009.
 
+### `EXP-015` — Pipeline com Leitura Direta *(CONCLUÍDO — aceito por delegação em 2026-10-22)*
+- **Resultado**: redações 35,9 % → 27,5 % de CER de página de ponta a ponta, sem treino; fotos iguais (27,4 %); 7,4 s por página. Incorporado ao ADR-008.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.
