@@ -54,7 +54,7 @@ Para assegurar a entrega pontual e a estabilidade arquitetural, os seguintes pon
 | ID | Feature | Frente de Aperfeiçoamento | Escopo e Impacto | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **F01** | **Arquitetura de Navegação Global e Shell Responsivo** | Navegação Desktop e Mobile | Desacoplar "Dashboard" e "Livros" na barra superior; coordenar `--mobile-nav-offset` contra cortes no rodapé; criar componente universal `AppBreadcrumb.vue`. | **CONCLUÍDA** |
-| **F02** | **Ergonomia Mobile e Descongestionamento da Página do Livro** | Página do Livro (`/livros/:bookId`) | Redesenhar cabeçalho compacto no mobile; unificar seletor de capítulos sem duplicidade; tornar o inspetor analítico recolhível. | **NÃO INICIADA** |
+| **F02** | **Ergonomia Mobile e Descongestionamento da Página do Livro** | Página do Livro (`/livros/:bookId`) | Redesenhar cabeçalho compacto no mobile; unificar seletor de capítulos sem duplicidade; tornar o inspetor analítico recolhível. | **CONCLUÍDA** |
 | **F03** | **Segurança Operacional e Refinamento do Leitor de Estudos** | Leitor de Estudo (`/livros/:bookId/estudos/:studyId`) | Isolar ação de lixeira em menu contextual suspenso; assegurar alvos de toque >= 44x44px; indicador persistente de rascunho salvo no editor. | **NÃO INICIADA** |
 | **F04** | **Correções Estruturais nas Visualizações do Acervo** | Visualizações em Lista e Grade | Eliminar corte (*clipping*) do dropdown de status na tabela; corrigir visibilidade do ícone de ordenação com `stroke: currentColor`; alinhar colunas da lista. | **NÃO INICIADA** |
 | **F05** | **Acessibilidade, Imunidade Cromática e Padronização de Estados** | Sistema Visual, Estados e WCAG | Erradicar cores hexadecimais em badges e avisos; converter mensagens de carregamento em skeletons fiéis; enriquecer estados vazios e página 404 com CTAs. | **NÃO INICIADA** |
@@ -67,7 +67,7 @@ Para assegurar a entrega pontual e a estabilidade arquitetural, os seguintes pon
 
 ### F01 — Arquitetura de Navegação Global e Shell Responsivo
 
-**Status: NÃO INICIADA.**
+**Status: CONCLUÍDA.**
 
 Unificar e estabilizar a navegação principal da aplicação tanto no computador quanto em dispositivos móveis, eliminando restrições que escondem o acervo e corrigindo a sobreposição de elementos na casca do sistema.
 
@@ -89,15 +89,15 @@ Unificar e estabilizar a navegação principal da aplicação tanto no computado
    - Substituir os breadcrumbs dispersos em `BookView.vue`, `StudyView.vue`, `StudyEditView.vue` e `UserProfileView.vue`.
 
 #### Critérios de Aceitação
-- [ ] Usuário consegue navegar diretamente entre "Dashboard" e "Livros" na barra desktop com 1 clique a partir de qualquer página interna.
-- [ ] Em dispositivos móveis (360px a 767px de largura), todo o conteúdo final de qualquer página e o rodapé global terminam acima da barra inferior fixa, sem sobreposição nem corte visual.
-- [ ] O componente `AppBreadcrumb.vue` é utilizado de forma homogênea nas páginas de Livro, Estudo e Edição, exibindo hierarquia visual clara sem desvios incorretos para a raiz `/`.
+- [x] Usuário consegue navegar diretamente entre "Dashboard" e "Livros" na barra desktop com 1 clique a partir de qualquer página interna.
+- [x] Em dispositivos móveis (360px a 767px de largura), todo o conteúdo final de qualquer página e o rodapé global terminam acima da barra inferior fixa, sem sobreposição nem corte visual.
+- [x] O componente `AppBreadcrumb.vue` é utilizado de forma homogênea nas páginas de Livro, Estudo e Edição, exibindo hierarquia visual clara sem desvios incorretos para a raiz `/`.
 
 ---
 
 ### F02 — Ergonomia Mobile e Descongestionamento da Página do Livro
 
-**Status: NÃO INICIADA.**
+**Status: CONCLUÍDA.**
 
 Redesenhar a composição espacial da página do livro ([`BookView.vue`](file:///c:/Users/User/caderno/caderno-leitura-0.1/frontend/src/views/BookView.vue)), reduzindo drasticamente o consumo vertical do cabeçalho em telas pequenas e otimizando a transição entre capítulos e estudos.
 
@@ -118,9 +118,9 @@ Redesenhar a composição espacial da página do livro ([`BookView.vue`](file://
    - Converter a faixa inferior ([`inspector-horizontal-bar`](file:///c:/Users/User/caderno/caderno-leitura-0.1/frontend/src/views/BookView.vue#L664-L720)) em uma barra de contexto colapsável por padrão no celular, com botão discreto "Ver detalhes do livro ▾", liberando 100% do foco para a grade ou lista de estudos.
 
 #### Critérios de Aceitação
-- [ ] Em viewport de 390x844px (padrão móvel), o primeiro card de estudo cadastrado ou a mensagem orientadora é visível imediatamente na primeira dobra da tela (sem necessidade de rolagem vertical prévia).
-- [ ] O seletor de capítulos móvel permite alternar entre capítulos com no máximo 2 toques e sem quebras visuais.
-- [ ] Os botões de ação do livro (Editar, Exportar, Lixeira) permanecem acessíveis via menu contextual sem poluir a área superior.
+- [x] Em viewport de 390x844px (padrão móvel), o primeiro card de estudo cadastrado ou a mensagem orientadora é visível imediatamente na primeira dobra da tela (sem necessidade de rolagem vertical prévia).
+- [x] O seletor de capítulos móvel permite alternar entre capítulos com no máximo 2 toques e sem quebras visuais.
+- [x] Os botões de ação do livro (Editar, Exportar, Lixeira) permanecem acessíveis via menu contextual sem poluir a área superior.
 
 ---
 
