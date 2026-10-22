@@ -1,0 +1,26 @@
+{
+ "best_val_cer": 0.13544376987568663,
+ "steps": 392,
+ "epochs_started": 1,
+ "args": {
+  "minutes": 150.0,
+  "lr": 5e-05,
+  "batch": 16,
+  "extra": 640,
+  "eval_every": 400,
+  "seed": 1234
+ },
+ "history": [
+  {
+   "step": 0,
+   "val_cer": 0.32018647007805723
+  },
+  {
+   "step": 392,
+   "epoch": 1,
+   "val_cer": 0.13544376987568663
+  }
+ ],
+ "train_lines": 19565,
+ "dropped_chars": 0
+}
