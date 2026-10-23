@@ -103,6 +103,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-016` — Leitura em Lote *(CONCLUÍDO — aceito por delegação em 2026-10-22)*
 - **Resultado**: lote de 8 dá o mesmo texto e não acelera (leitura 4,6 → 5,0 s por página na calibração); o custo é meio detecção ampliada, meio margem. Pipeline mantido; testes não usados.
 
+### `EXP-017` — Teto de Ponta a Ponta com o Leitor Ajustado *(CONCLUÍDO — aceito por delegação em 2026-10-22)*
+- **Resultado**: leitor do EXP-014 exportado para ONNX no pipeline do ADR-008: redações 27,5 % → 11,8 % de CER de página; inglês 27,4 % → 33,4 %. Modelo só experimental (BRESSAY). Registrado no ADR-009.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.

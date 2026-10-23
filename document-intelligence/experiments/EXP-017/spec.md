@@ -1,6 +1,6 @@
 # EXP-017 — Teto de Ponta a Ponta com o Leitor Ajustado (especificação, plano e tarefas)
 
-**Created**: 2026-10-22 · **Status**: `DELEGATED` (autonomia permanente do usuário, 2026-10-18)
+**Created**: 2026-10-22 · **Status**: `ACCEPTED` / `CONCLUÍDO` (por delegação, 2026-10-22; resultados em [RESULTS.md](./RESULTS.md))
 
 **Input**: EXP-014 (ajuste fino experimental com as linhas de treino do BRESSAY: CER de linha 29,7 % → 13,6 %) e
 EXP-015 (pipeline do ADR-008 com leitura direta: redações 27,5 % de CER de página, fotos 27,4 %).
@@ -32,4 +32,4 @@ pedido de dados ao usuário. O modelo ajustado no BRESSAY continua **só experim
 
 - [x] **T001** Exportar e conferir a paridade (sonda com linhas fictícias).
 - [x] **T002** Harness (cópia do EXP-015) com o modelo configurável e testes.
-- [ ] **T003** Rodar os dois conjuntos de teste; pontuar; relatório; registrar no ADR-009.
+- [x] **T003** Rodar os dois conjuntos de teste; pontuar; relatório; registrar no ADR-009.

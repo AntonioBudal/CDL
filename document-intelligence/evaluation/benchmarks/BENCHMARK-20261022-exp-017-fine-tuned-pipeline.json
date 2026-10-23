@@ -1,0 +1,104 @@
+{
+  "schema": "leitorum-di-pipeline-benchmark/1",
+  "created_utc": "2026-10-23T02:30:01+00:00",
+  "experiment": "EXP-017",
+  "git": {
+    "commit": "d3d522439d0603e686a0376a936c86dc1b5d2b53",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "target": 80,
+  "reader_model": {
+    "file": "models/exp-017/rec-ft-bressay.onnx",
+    "sha256": "d15ff16e74341bfceca507308ada731b68c4b7dd1237c9f8f0d8f0fc9ae0d372"
+  },
+  "license_status": {
+    "reader": "NEEDS VALIDATION — ajustado no BRESSAY (EXP-014); nunca produto",
+    "gnhk": "VERIFIED (CC-BY-4.0)",
+    "bressay": "NEEDS VALIDATION (exceção experimental; não embasa produto)"
+  },
+  "results": {
+    "test-bressay": {
+      "pages": 185,
+      "cer_micro": 0.11816469677997332,
+      "wer_micro": 0.33639015711463743,
+      "page_cer_median": 0.10004486316733961,
+      "ref_chars": 491145,
+      "scales": {
+        "4": 83,
+        "3": 33,
+        "2": 50,
+        "1": 19
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 7242.6612,
+        "p95_ms": 8439.319319999999,
+        "peak_rss_bytes": 996683776,
+        "load_ms": 2281.8853
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 5623
+      },
+      "exp015": {
+        "cer": 0.2752567978906433,
+        "wer": 0.6295836004238563,
+        "median_ms": 7413.5618
+      }
+    },
+    "test-gnhk": {
+      "pages": 172,
+      "cer_micro": 0.33392781628638146,
+      "wer_micro": 0.6688492915414341,
+      "page_cer_median": 0.25149700598802394,
+      "ref_chars": 54389,
+      "scales": {
+        "1": 165,
+        "2": 5,
+        "3": 2
+      },
+      "cost": {
+        "pages": 172,
+        "failed": [],
+        "median_ms": 3035.31635,
+        "p95_ms": 4920.141494999998,
+        "peak_rss_bytes": 907218944,
+        "load_ms": 1531.1659
+      },
+      "ldf2": {
+        "documents": 172,
+        "valid": 172,
+        "not_representable": 0,
+        "lines": 2486
+      },
+      "exp015": {
+        "cer": 0.27378697898472115,
+        "wer": 0.5553885787891799,
+        "median_ms": 3143.94315
+      }
+    }
+  },
+  "verdicts": {
+    "h1_bressay_page_cer": {
+      "cer": 0.11816469677997332,
+      "met": true
+    },
+    "h2_gnhk_not_much_worse": {
+      "delta": 0.06014083730166031,
+      "met": false
+    },
+    "h3_ldf_valid": {
+      "met": true
+    }
+  }
+}

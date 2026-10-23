@@ -3,7 +3,7 @@
 * **Status:** ACCEPTED (aceito por delegação permanente do usuário em 2026-10-22)
 * **Data:** 2026-10-22
 * **Decisores:** Usuário (delegação); Claude Code (proposta e execução)
-* **Experimento de Suporte:** [EXP-014](../../experiments/EXP-014/RESULTS.md)
+* **Experimentos de Suporte:** [EXP-014](../../experiments/EXP-014/RESULTS.md) e [EXP-017](../../experiments/EXP-017/RESULTS.md)
 * **Status de Licença:** modelo de partida PP-OCRv6 small rec (Apache-2.0) e ferramentas (`VERIFIED`, conforme declarado). O modelo ajustado no EXP-014 usou o BRESSAY (`NEEDS VALIDATION`): **experimental, proibido no produto**.
 
 ## 1. Contexto
@@ -34,9 +34,21 @@ investigou o ajuste fino e, no caminho, descobriu que o pacote `rapidocr` piorav
 | ONNX Runtime + margem 640 px | 29,7 % / 72,0 % | 28,9 % / 64,1 % |
 | Ajustado (BRESSAY) + margem | 13,6 % / 44,1 % | 12,4 % / 34,1 % |
 
+**De ponta a ponta (EXP-017)**, pipeline do ADR-008 trocando só o modelo de leitura (exportado para ONNX):
+
+| Conjunto de teste | Leitor original (EXP-015) | Leitor ajustado (BRESSAY) |
+| :--- | ---: | ---: |
+| Redações BRESSAY (português), CER / WER de página | 27,5 % / 63,0 % | **11,8 % / 33,6 %** |
+| Fotos GNHK (inglês), CER / WER de página | 27,4 % / 55,5 % | 33,4 % / 66,9 % |
+
+O teto é medido dentro do mesmo acervo (autores diferentes, mesmo tipo de texto e digitalização); em fotos de
+caderno deve ser pior. O ajuste só em português piora o inglês.
+
 ## 4. Consequências
 
-* Próximo passo técnico sem dependência externa: aplicar a leitura direta com margem ao pipeline do ADR-008 e medir
-  de ponta a ponta.
+* Leitura direta com margem aplicada ao pipeline do ADR-008 (EXP-015). Teto do ajuste de ponta a ponta medido
+  (EXP-017): 11,8 % de CER de página nas redações.
 * Próximo passo com dependência externa: obter manuscrito em português com licença para produto e repetir o ajuste.
-* A inferência do modelo ajustado precisa voltar para ONNX (hoje 280 ms por linha no PyTorch).
+* A inferência do modelo ajustado voltou para ONNX (EXP-017), com o mesmo custo do original.
+* Um ajuste para o produto deve misturar dados das línguas que o leitor vai ler, ou manter o modelo original
+  para texto que não seja português.
