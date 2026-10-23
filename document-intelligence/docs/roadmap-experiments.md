@@ -100,6 +100,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-015` — Pipeline com Leitura Direta *(CONCLUÍDO — aceito por delegação em 2026-10-22)*
 - **Resultado**: redações 35,9 % → 27,5 % de CER de página de ponta a ponta, sem treino; fotos iguais (27,4 %); 7,4 s por página. Incorporado ao ADR-008.
 
+### `EXP-016` — Leitura em Lote *(CONCLUÍDO — aceito por delegação em 2026-10-22)*
+- **Resultado**: lote de 8 dá o mesmo texto e não acelera (leitura 4,6 → 5,0 s por página na calibração); o custo é meio detecção ampliada, meio margem. Pipeline mantido; testes não usados.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.

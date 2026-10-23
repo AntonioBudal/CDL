@@ -42,7 +42,10 @@ correção lexical (EXP-011) e o conversor LDF 2.0 (ADR-004) e mediu a cadeia de
 
 ## 4. Consequências
 
-* Existe um caminho local completo foto → LDF 2.0 em menos de 6 s por página, em CPU.
+* Existe um caminho local completo foto → LDF 2.0, em CPU: 3,1 s por página nas fotos e 7,4 s nas redações
+  (EXP-015). O [EXP-016](../../experiments/EXP-016/RESULTS.md) mostrou que ler em lote não reduz o custo; ele se
+  divide quase meio a meio entre a detecção na página ampliada e a margem de leitura, e baixar qualquer um dos
+  dois custa qualidade.
 * **Próximos passos com mais retorno:** (a) regra de escala automática — feita no EXP-013; (b) adaptar o
   reconhecedor à caligrafia brasileira, que é o limite real e depende de dados com licença para produto;
   (c) validar com fotos de caderno de verdade.
