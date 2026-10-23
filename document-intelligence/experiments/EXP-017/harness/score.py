@@ -21,7 +21,7 @@ from read import FT_SHA256
 from leitorum_di.reproducibility import environment_snapshot
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "dataset" / "processed" / "exp-015"
+DATA = ROOT / "dataset" / "processed" / "exp-017"
 LEXICON = ROOT / "dataset" / "processed" / "exp-011" / "lexicon-pt.json"
 LANGUAGE = {"test-bressay": "pt", "test-gnhk": "en"}
 # Referência: EXP-015 (leitor original), BENCHMARK-20261022-exp-015-pipeline-direct-reader.json.
