@@ -156,7 +156,7 @@ Proteger o fluxo de estudo ativo contra descartes acidentais no leitor ([`StudyV
 
 ### F04 — Correções Estruturais nas Visualizações do Acervo
 
-**Status: NÃO INICIADA.**
+**Status: CONCLUÍDA.**
 
 Corrigir problemas de layout, corte de menus e alinhamento responsivo nas duas visualizações ativas do acervo: [`StudyListView.vue`](file:///c:/Users/User/caderno/caderno-leitura-0.1/frontend/src/components/views/StudyListView.vue) e [`StudyGridView.vue`](file:///c:/Users/User/caderno/caderno-leitura-0.1/frontend/src/components/views/StudyGridView.vue).
 
@@ -176,9 +176,9 @@ Corrigir problemas de layout, corte de menus e alinhamento responsivo nas duas v
    - Centralizar verticalmente os conteúdos de cabeçalho (`display: flex; align-items: center;`).
 
 #### Critérios de Aceitação
-- [ ] O menu suspenso de status na visualização em lista abre livremente em qualquer linha (incluindo primeira e última linha) sem cortes na borda superior ou inferior.
-- [ ] O ícone de ordenação da coluna ativa é nitidamente legível e consistente com o texto do cabeçalho em todos os 10 temas do sistema.
-- [ ] As colunas do cabeçalho e do corpo da tabela mantêm alinhamento estrito e harmonioso em resoluções de 1024px até 2560px.
+- [x] O menu suspenso de status na visualização em lista abre livremente em qualquer linha (incluindo primeira e última linha) sem cortes na borda superior ou inferior.
+- [x] O ícone de ordenação da coluna ativa é nitidamente legível e consistente com o texto do cabeçalho em todos os 10 temas do sistema.
+- [x] As colunas do cabeçalho e do corpo da tabela mantêm alinhamento estrito e harmonioso em resoluções de 1024px até 2560px.
 
 ---
 
