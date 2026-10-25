@@ -69,7 +69,9 @@ function toggleDropdown() {
   if (props.interactive && !props.disabled) {
     if (!isOpen.value && containerRef.value) {
       const rect = containerRef.value.getBoundingClientRect()
-      opensUpward.value = window.innerHeight - rect.bottom < 185 && rect.top > 185
+      const spaceBelow = window.innerHeight - rect.bottom
+      const spaceAbove = rect.top
+      opensUpward.value = (window.innerHeight - rect.bottom < 210) && (rect.top > 210 || spaceAbove > spaceBelow)
     }
     isOpen.value = !isOpen.value
     emit('toggle-open', isOpen.value)

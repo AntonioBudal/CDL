@@ -548,7 +548,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 
 .list-header-row {
   display: grid;
-  grid-template-columns: minmax(180px, 3fr) minmax(125px, 1.2fr) minmax(130px, 1.5fr) minmax(105px, 1fr) minmax(115px, 1fr) 52px;
+  grid-template-columns: minmax(200px, 4fr) minmax(130px, 2fr) minmax(140px, 2fr) minmax(110px, 1.5fr) minmax(115px, 1fr) 52px;
   gap: 1.25rem;
   align-items: center;
   padding: 0.6rem 1rem;
@@ -590,6 +590,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
   display: inline-flex;
   align-items: center;
   stroke: currentColor;
+  fill: none;
   color: currentColor;
   flex-shrink: 0;
   font-size: 0.85rem;
@@ -598,6 +599,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 
 :deep(.sort-indicator svg) {
   stroke: currentColor;
+  fill: none;
 }
 
 .header-cell {
@@ -617,7 +619,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 
 .study-row-item {
   display: grid;
-  grid-template-columns: minmax(180px, 3fr) minmax(125px, 1.2fr) minmax(130px, 1.5fr) minmax(105px, 1fr) minmax(115px, 1fr) 52px;
+  grid-template-columns: minmax(200px, 4fr) minmax(130px, 2fr) minmax(140px, 2fr) minmax(110px, 1.5fr) minmax(115px, 1fr) 52px;
   gap: 1.25rem;
   align-items: center;
   padding: 0.65rem 1rem;
@@ -631,6 +633,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 .study-row-item:has(.is-open),
 .study-row-item.has-dropdown-open {
   z-index: 200;
+  z-index: 1000;
   position: relative;
 }
 
@@ -664,20 +667,28 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 /* Colunas Tabulares no Desktop */
 .col-title {
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 .col-status {
   min-width: 0;
   position: relative;
   overflow: visible;
+  display: flex;
+  align-items: center;
 }
 
 .col-location {
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 .col-date {
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 .col-sections {
@@ -837,7 +848,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 
 .skeleton-row {
   display: grid;
-  grid-template-columns: minmax(180px, 3fr) minmax(125px, 1.2fr) minmax(130px, 1.5fr) minmax(105px, 1fr) minmax(115px, 1fr) 52px;
+  grid-template-columns: minmax(200px, 4fr) minmax(130px, 2fr) minmax(140px, 2fr) minmax(110px, 1.5fr) minmax(115px, 1fr) 52px;
   align-items: center;
   padding: 0.75rem 1rem;
   gap: 1.25rem;

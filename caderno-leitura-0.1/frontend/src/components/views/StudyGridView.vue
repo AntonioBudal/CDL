@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { StudySummary, ReadingStatus } from '../../types'
 import Icon from '../ui/Icon.vue'
@@ -35,6 +35,12 @@ const { currentCriteria, groups, toggleGroup } = useStudyGrouping({
   storageKey: `caderno_group_by_grid_${props.bookId}`,
   chapters: computed(() => props.chapters),
 })
+
+const activeDropdownStudyId = ref<number | null>(null)
+
+function onDropdownToggle(studyId: number, isOpen: boolean) {
+  activeDropdownStudyId.value = isOpen ? studyId : null
+}
 
 function onStatusChange(study: StudySummary, newStatus: ReadingStatus) {
   study.reading_status = newStatus
@@ -116,7 +122,10 @@ function formatDate(isoStr: string): string {
               class="study-card"
               :class="[
                 'status-' + (study.reading_status || 'rascunho'),
-                { 'is-focused': activeStudyId === study.id }
+                {
+                  'is-focused': activeStudyId === study.id,
+                  'has-dropdown-open': activeDropdownStudyId === study.id
+                }
               ]"
               tabindex="0"
               role="article"
@@ -131,6 +140,7 @@ function formatDate(isoStr: string): string {
                   :interactive="true"
                   @click.stop
                   @change="(newSt) => onStatusChange(study, newSt)"
+                  @toggle-open="(isOpen) => onDropdownToggle(study.id, isOpen)"
                 />
                 <time :datetime="study.created_at" class="card-date">{{ formatDate(study.created_at) }}</time>
               </div>
@@ -288,6 +298,12 @@ function formatDate(isoStr: string): string {
 .study-card.is-focused {
   border-color: var(--color-accent, #1d4ed8);
   box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+.study-card:has(.is-open),
+.study-card.has-dropdown-open {
+  z-index: 50;
+  position: relative;
 }
 
 .study-card:hover .card-title-link {
