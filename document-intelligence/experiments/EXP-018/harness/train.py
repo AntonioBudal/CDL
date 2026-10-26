@@ -40,6 +40,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--eval-every", type=int, default=98)
     parser.add_argument("--seed", type=int, default=1234)
     parser.add_argument("--val-limit", type=int, default=None, help="só para teste rápido")
+    parser.add_argument("--stop-after", type=int, default=None, help="só para testar a retomada")
     args = parser.parse_args(argv)
     sys.stdout.reconfigure(encoding="utf-8")
     torch.set_num_threads(4)
@@ -61,13 +62,24 @@ def main(argv: list[str] | None = None) -> int:
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=1e-4)
     ctc = torch.nn.CTCLoss(blank=0, zero_infinity=True)
     started = time.monotonic()
-    history, step, epoch = [], 0, 0
+    history, step, epoch, epoch_start, skip, previous_minutes = [], 0, 0, 0, 0, 0.0
+    checkpoint = OUT / f"p{args.pages}-retomada.pt"
+    if checkpoint.exists():
+        saved = torch.load(checkpoint, map_location="cpu", weights_only=False)
+        model.load_state_dict(saved["model"])
+        optimizer.load_state_dict(saved["optimizer"])
+        torch.set_rng_state(saved["torch_rng"])
+        random.setstate(saved["epoch_random"])
+        history, step, epoch = saved["history"], saved["step"], saved["epoch"] - 1
+        skip, previous_minutes = step - saved["epoch_start"], saved["minutes"]
+        print(f"retomando no passo {step} (época {saved['epoch']})", flush=True)
     while step < args.steps:
         epoch += 1
+        epoch_random, epoch_start = random.getstate(), step - skip
         order = sorted(range(len(train)), key=lambda i: train[i]["width"])
         batches = [order[i : i + args.batch] for i in range(0, len(order), args.batch)]
         random.shuffle(batches)
-        for chunk_ids in batches:
+        for chunk_ids in batches[skip:]:
             if step >= args.steps:
                 break
             chunk = [train[i] for i in chunk_ids]
@@ -90,8 +102,27 @@ def main(argv: list[str] | None = None) -> int:
                 cer = evaluate(model, characters, val, args.extra)
                 history.append({"step": step, "epoch": epoch, "val_cer": cer})
                 print(f"passo {step}: CER de validação {cer:.4f}", flush=True)
+                OUT.mkdir(parents=True, exist_ok=True)
+                state = {
+                    "model": model.state_dict(),
+                    "optimizer": optimizer.state_dict(),
+                    "torch_rng": torch.get_rng_state(),
+                    "epoch_random": epoch_random,
+                    "epoch_start": epoch_start,
+                    "epoch": epoch,
+                    "step": step,
+                    "history": history,
+                    "minutes": previous_minutes + (time.monotonic() - started) / 60,
+                }
+                torch.save(state, checkpoint.with_suffix(".tmp"))
+                checkpoint.with_suffix(".tmp").replace(checkpoint)
+                if step == args.stop_after:
+                    print(f"interrompido no passo {step} (teste de retomada)", flush=True)
+                    return 3
+        skip = 0
     OUT.mkdir(parents=True, exist_ok=True)
     torch.save(model.state_dict(), OUT / f"p{args.pages}.pt")
+    checkpoint.unlink(missing_ok=True)
     RUNS.mkdir(exist_ok=True)
     summary = {
         "pages": pages,
@@ -100,7 +131,8 @@ def main(argv: list[str] | None = None) -> int:
         "epochs_started": epoch,
         "lines_seen": step * args.batch,
         "final_val_cer": history[-1]["val_cer"],
-        "minutes": round((time.monotonic() - started) / 60, 1),
+        "minutes": round(previous_minutes + (time.monotonic() - started) / 60, 1),
+        "resumed": previous_minutes > 0,
         "args": vars(args),
         "history": history,
     }
