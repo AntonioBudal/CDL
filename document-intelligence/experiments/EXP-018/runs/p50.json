@@ -1,0 +1,41 @@
+{
+ "pages": 50,
+ "train_lines": 1496,
+ "steps": 392,
+ "epochs_started": 5,
+ "lines_seen": 6272,
+ "final_val_cer": 0.15819601040763226,
+ "minutes": 172.7,
+ "args": {
+  "pages": 50,
+  "steps": 392,
+  "lr": 5e-05,
+  "batch": 16,
+  "extra": 640,
+  "eval_every": 98,
+  "seed": 1234,
+  "val_limit": null
+ },
+ "history": [
+  {
+   "step": 98,
+   "epoch": 2,
+   "val_cer": 0.17506504770164788
+  },
+  {
+   "step": 196,
+   "epoch": 3,
+   "val_cer": 0.16782307025151777
+  },
+  {
+   "step": 294,
+   "epoch": 4,
+   "val_cer": 0.15502312807169702
+  },
+  {
+   "step": 392,
+   "epoch": 5,
+   "val_cer": 0.15819601040763226
+  }
+ ]
+}
