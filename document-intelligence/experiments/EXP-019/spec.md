@@ -1,6 +1,6 @@
 # EXP-019 — Leitura em Condições de Foto (especificação, plano e tarefas)
 
-**Created**: 2026-10-26 · **Status**: `DELEGATED` (autonomia permanente do usuário, 2026-10-18)
+**Created**: 2026-10-26 · **Status**: `ACCEPTED` / `CONCLUÍDO` (por delegação, 2026-10-26; resultados em [RESULTS.md](./RESULTS.md))
 
 **Input**: EXP-017 (redações BRESSAY digitalizadas: CER de página 27,5 % com o leitor original, 11,8 % com o
 ajustado). A principal limitação registrada é que o número vem de **digitalizações**; o produto vai receber
@@ -29,4 +29,4 @@ lombada, luz irregular, sombra, desfoque, ruído, JPEG), e o ganho do ajuste fin
 
 - [x] **T001** Gerar as páginas degradadas e os manifestos; harness (cópia do EXP-017) com a escolha do leitor;
   testes.
-- [ ] **T002** Rodar as quatro combinações; pontuar; relatório; registrar no ADR-009.
+- [x] **T002** Rodar as quatro combinações; pontuar; relatório; registrar no ADR-009.

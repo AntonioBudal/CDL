@@ -106,6 +106,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-017` — Teto de Ponta a Ponta com o Leitor Ajustado *(CONCLUÍDO — aceito por delegação em 2026-10-22)*
 - **Resultado**: leitor do EXP-014 exportado para ONNX no pipeline do ADR-008: redações 27,5 % → 11,8 % de CER de página; inglês 27,4 % → 33,4 %. Modelo só experimental (BRESSAY). Registrado no ADR-009.
 
+### `EXP-019` — Leitura em Condições de Foto *(CONCLUÍDO — aceito por delegação em 2026-10-26)*
+- **Resultado**: leitor ajustado 11,8 % (digitalizada) → 21,6 % (foto leve) → 70,6 % (foto forte). A escala automática erra em linhas inclinadas (129 de 185 páginas com escala menor). Abre o EXP-020.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.

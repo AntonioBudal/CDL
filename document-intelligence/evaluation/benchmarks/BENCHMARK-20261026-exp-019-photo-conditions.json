@@ -1,0 +1,158 @@
+{
+  "schema": "leitorum-di-pipeline-benchmark/1",
+  "created_utc": "2026-10-26T17:55:10+00:00",
+  "experiment": "EXP-019",
+  "git": {
+    "commit": "60f5df6029ea54408f65fb3197f8123635a986e3",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "target": 80,
+  "clean_reference": {
+    "original": {
+      "cer": 0.2752567978906433,
+      "wer": 0.6295836004238563
+    },
+    "ft": {
+      "cer": 0.11816469677997332,
+      "wer": 0.33639015711463743
+    }
+  },
+  "degradation": "experiments/EXP-002/harness/pages/degrade.py (níveis light e strong)",
+  "reader_model": {
+    "file": "models/exp-017/rec-ft-bressay.onnx",
+    "sha256": "d15ff16e74341bfceca507308ada731b68c4b7dd1237c9f8f0d8f0fc9ae0d372"
+  },
+  "license_status": {
+    "reader": "NEEDS VALIDATION — ajustado no BRESSAY (EXP-014); nunca produto",
+    "gnhk": "VERIFIED (CC-BY-4.0)",
+    "bressay": "NEEDS VALIDATION (exceção experimental; não embasa produto)"
+  },
+  "results": {
+    "test-bressay-light/original": {
+      "pages": 185,
+      "cer_micro": 0.392938948782946,
+      "wer_micro": 0.7356000052327939,
+      "page_cer_median": 0.3615010799136069,
+      "ref_chars": 491145,
+      "scales": {
+        "3": 67,
+        "2": 73,
+        "1": 43,
+        "4": 2
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 6411.2057,
+        "p95_ms": 8547.777339999999,
+        "peak_rss_bytes": 955478016,
+        "load_ms": 1374.1344
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 5406
+      }
+    },
+    "test-bressay-light/ft": {
+      "pages": 185,
+      "cer_micro": 0.21602581722301967,
+      "wer_micro": 0.476053426825918,
+      "page_cer_median": 0.16934619506966775,
+      "ref_chars": 491145,
+      "scales": {
+        "3": 67,
+        "2": 73,
+        "1": 43,
+        "4": 2
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 6272.1677,
+        "p95_ms": 8177.2019,
+        "peak_rss_bytes": 948469760,
+        "load_ms": 2801.7529
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 5406
+      }
+    },
+    "test-bressay-strong/original": {
+      "pages": 185,
+      "cer_micro": 0.7788351708762178,
+      "wer_micro": 0.9202914666213158,
+      "page_cer_median": 0.8412132024977699,
+      "ref_chars": 491145,
+      "scales": {
+        "2": 68,
+        "3": 9,
+        "1": 108
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 3291.188,
+        "p95_ms": 6516.086999999999,
+        "peak_rss_bytes": 793157632,
+        "load_ms": 1792.8343
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 2848
+      }
+    },
+    "test-bressay-strong/ft": {
+      "pages": 185,
+      "cer_micro": 0.706145842877358,
+      "wer_micro": 0.8484713700762679,
+      "page_cer_median": 0.7636039250669046,
+      "ref_chars": 491145,
+      "scales": {
+        "2": 68,
+        "3": 9,
+        "1": 108
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 3356.3612,
+        "p95_ms": 7221.462779999999,
+        "peak_rss_bytes": 794324992,
+        "load_ms": 2146.477
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 2848
+      }
+    }
+  },
+  "verdicts": {
+    "h1_light_ft": {
+      "cer": 0.21602581722301967,
+      "met": false
+    },
+    "h2_strong_gap": {
+      "gap": 0.07268932799885974,
+      "met": false
+    },
+    "h3_ldf_valid": {
+      "met": true
+    }
+  }
+}

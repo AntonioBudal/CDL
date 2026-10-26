@@ -3,7 +3,7 @@
 * **Status:** ACCEPTED (aceito por delegação permanente do usuário em 2026-10-22)
 * **Data:** 2026-10-22
 * **Decisores:** Usuário (delegação); Claude Code (proposta e execução)
-* **Experimentos de Suporte:** [EXP-014](../../experiments/EXP-014/RESULTS.md) e [EXP-017](../../experiments/EXP-017/RESULTS.md)
+* **Experimentos de Suporte:** [EXP-014](../../experiments/EXP-014/RESULTS.md) , [EXP-017](../../experiments/EXP-017/RESULTS.md) e [EXP-019](../../experiments/EXP-019/RESULTS.md)
 * **Status de Licença:** modelo de partida PP-OCRv6 small rec (Apache-2.0) e ferramentas (`VERIFIED`, conforme declarado). O modelo ajustado no EXP-014 usou o BRESSAY (`NEEDS VALIDATION`): **experimental, proibido no produto**.
 
 ## 1. Contexto
@@ -43,6 +43,16 @@ investigou o ajuste fino e, no caminho, descobriu que o pacote `rapidocr` piorav
 
 O teto é medido dentro do mesmo acervo (autores diferentes, mesmo tipo de texto e digitalização); em fotos de
 caderno deve ser pior. O ajuste só em português piora o inglês.
+
+**Em condições de foto (EXP-019)**, mesmas páginas degradadas com o módulo do EXP-002:
+
+| Condição | Leitor original | Leitor ajustado |
+| :--- | ---: | ---: |
+| Foto leve, CER de página | 39,3 % | 21,6 % |
+| Foto forte, CER de página | 77,9 % | 70,6 % |
+
+O ganho do ajuste se mantém na foto leve; a maior parte da perda vem da escala automática, que mede linhas
+inclinadas pela caixa alinhada aos eixos (ver EXP-020), e, na foto forte, da detecção (metade das linhas).
 
 ## 4. Consequências
 
