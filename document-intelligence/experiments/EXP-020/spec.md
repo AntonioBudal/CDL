@@ -1,6 +1,6 @@
 # EXP-020 — Escala Automática Medida na Linha Inclinada (especificação, plano e tarefas)
 
-**Created**: 2026-10-26 · **Status**: `DELEGATED` (autonomia permanente do usuário, 2026-10-18)
+**Created**: 2026-10-26 · **Status**: `ACCEPTED` / `CONCLUÍDO` — não adotado (por delegação, 2026-10-26; resultados em [RESULTS.md](./RESULTS.md))
 
 **Input**: EXP-019 (páginas do BRESSAY degradadas como fotos). Na degradação leve, o leitor ajustado foi de 11,8 %
 para 21,6 % de CER de página. Diagnóstico com as leituras já feitas (só alturas, nenhum texto): a altura da
@@ -29,4 +29,4 @@ recupera parte da perda em condições de foto sem mudar o resultado nas digital
 ## Tarefas
 
 - [x] **T001** Harness (cópia do EXP-019) com a altura no quadrilátero; testes com linhas fictícias inclinadas.
-- [ ] **T002** Rodar os três conjuntos; pontuar; relatório; registrar no ADR-008.
+- [x] **T002** Rodar os três conjuntos; pontuar; relatório; registrar no ADR-008.

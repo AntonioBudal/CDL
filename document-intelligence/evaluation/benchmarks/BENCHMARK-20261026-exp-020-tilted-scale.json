@@ -1,0 +1,135 @@
+{
+  "schema": "leitorum-di-pipeline-benchmark/1",
+  "created_utc": "2026-10-26T21:31:34+00:00",
+  "experiment": "EXP-020",
+  "git": {
+    "commit": "b22510b47dbde1167b5a40ae60c0b3ba7f4da610",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "target": 80,
+  "before": {
+    "test-bressay-clean": 0.11816469677997332,
+    "test-bressay-light": 0.21602581722301967,
+    "test-bressay-strong": 0.706145842877358
+  },
+  "change": "altura da linha no quadrilátero detectado (média dos lados curtos)",
+  "reader_model": {
+    "file": "models/exp-017/rec-ft-bressay.onnx",
+    "sha256": "d15ff16e74341bfceca507308ada731b68c4b7dd1237c9f8f0d8f0fc9ae0d372"
+  },
+  "license_status": {
+    "reader": "NEEDS VALIDATION — ajustado no BRESSAY (EXP-014); nunca produto",
+    "gnhk": "VERIFIED (CC-BY-4.0)",
+    "bressay": "NEEDS VALIDATION (exceção experimental; não embasa produto)"
+  },
+  "results": {
+    "test-bressay-clean": {
+      "pages": 185,
+      "cer_micro": 0.11798959574056542,
+      "wer_micro": 0.3359061236770843,
+      "page_cer_median": 0.10004486316733961,
+      "ref_chars": 491145,
+      "scales": {
+        "4": 94,
+        "3": 30,
+        "2": 42,
+        "1": 19
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 7204.665,
+        "p95_ms": 8945.52628,
+        "peak_rss_bytes": 994451456,
+        "load_ms": 4133.517
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 5622
+      },
+      "before": 0.11816469677997332
+    },
+    "test-bressay-light": {
+      "pages": 185,
+      "cer_micro": 0.21574076901933237,
+      "wer_micro": 0.4715008961159587,
+      "page_cer_median": 0.16534296028880865,
+      "ref_chars": 491145,
+      "scales": {
+        "3": 54,
+        "4": 58,
+        "2": 54,
+        "1": 19
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 6638.5318,
+        "p95_ms": 7973.592,
+        "peak_rss_bytes": 986722304,
+        "load_ms": 1447.9706
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 5389
+      },
+      "before": 0.21602581722301967
+    },
+    "test-bressay-strong": {
+      "pages": 185,
+      "cer_micro": 0.7407018293986501,
+      "wer_micro": 0.8571447259978284,
+      "page_cer_median": 0.8340535868625756,
+      "ref_chars": 491145,
+      "scales": {
+        "3": 62,
+        "4": 4,
+        "2": 90,
+        "1": 29
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 4106.3594,
+        "p95_ms": 7427.51776,
+        "peak_rss_bytes": 984989696,
+        "load_ms": 1314.2024
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 2303
+      },
+      "before": 0.706145842877358
+    }
+  },
+  "verdicts": {
+    "h1_light_gain": {
+      "delta": -0.0002850482036872992,
+      "met": false
+    },
+    "h2_strong_not_worse": {
+      "delta": 0.034555986521292104,
+      "met": false
+    },
+    "h3_clean_unchanged": {
+      "delta": -0.00017510103940790445,
+      "met": true
+    },
+    "h4_ldf_valid": {
+      "met": true
+    }
+  }
+}

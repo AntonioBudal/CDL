@@ -51,8 +51,10 @@ caderno deve ser pior. O ajuste só em português piora o inglês.
 | Foto leve, CER de página | 39,3 % | 21,6 % |
 | Foto forte, CER de página | 77,9 % | 70,6 % |
 
-O ganho do ajuste se mantém na foto leve; a maior parte da perda vem da escala automática, que mede linhas
-inclinadas pela caixa alinhada aos eixos (ver EXP-020), e, na foto forte, da detecção (metade das linhas).
+O ganho do ajuste se mantém na foto leve. A perda não vem da escala automática (corrigir a medida em linhas
+inclinadas não mudou o erro, [EXP-020](../../experiments/EXP-020/RESULTS.md)); vem principalmente do leitor diante
+de letras borradas e com ruído e, na foto forte, também da detecção (metade das linhas). Próximo passo: treinar o
+leitor com degradações de foto.
 
 **Quantidade de dados (EXP-018)**, mesmo orçamento de treino, CER de linha na validação:
 

@@ -43,6 +43,8 @@ commit `60f5df6`, árvore limpa. Pipeline do EXP-017 sem mudança; degradação 
 
 ## 3. Diagnóstico: a escala automática erra em linhas inclinadas
 
+> **Correção (EXP-020, 2026-10-26):** a medida da altura de fato erra em linhas inclinadas, mas corrigi-la **não** reduz o erro (foto leve 21,6 % → 21,6 %; forte 70,6 % → 74,1 %). A perda vem da degradação sobre o leitor e o detector, não da escala. O texto abaixo é mantido como registro do diagnóstico original.
+
 Comparando, página a página, as linhas da foto leve com as da digitalização (só alturas, nenhum texto):
 
 * a altura da **caixa alinhada aos eixos** sobe 40 % (mediana da razão);

@@ -112,6 +112,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-019` — Leitura em Condições de Foto *(CONCLUÍDO — aceito por delegação em 2026-10-26)*
 - **Resultado**: leitor ajustado 11,8 % (digitalizada) → 21,6 % (foto leve) → 70,6 % (foto forte). A escala automática erra em linhas inclinadas (129 de 185 páginas com escala menor). Abre o EXP-020.
 
+### `EXP-020` — Escala Medida na Linha Inclinada *(CONCLUÍDO — não adotado, por delegação em 2026-10-26)*
+- **Resultado**: a escala sobe, mas o erro não muda na foto leve (21,6 %) e piora na forte (70,6 % → 74,1 %). A perda em foto vem do leitor e do detector, não da escala; regra do ADR-008 mantida.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.
