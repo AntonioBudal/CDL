@@ -1,6 +1,6 @@
 # EXP-018 — Curva de Aprendizado do Ajuste Fino (especificação, plano e tarefas)
 
-**Created**: 2026-10-22 · **Status**: `DELEGATED` (autonomia permanente do usuário, 2026-10-18)
+**Created**: 2026-10-22 · **Status**: `ACCEPTED` / `CONCLUÍDO` (por delegação, 2026-10-26; resultados em [RESULTS.md](./RESULTS.md))
 
 **Input**: EXP-014 (ajuste fino: CER de validação 32,0 % → 13,5 % em 392 passos de 16 linhas, ou seja, ~6,3 mil
 linhas vistas uma vez, sorteadas das 647 páginas de treino do BRESSAY) e EXP-017 (de ponta a ponta: redações
@@ -33,5 +33,5 @@ pedir.
 ## Tarefas
 
 - [x] **T001** Treino com `--pages` e `--steps`; testes do sorteio por página.
-- [ ] **T002** Três treinos (16, 50, 150 páginas).
-- [ ] **T003** Curva, relatório e recomendação de quantidade de dados; registrar no ADR-009.
+- [x] **T002** Três treinos (16, 50, 150 páginas).
+- [x] **T003** Curva, relatório e recomendação de quantidade de dados; registrar no ADR-009.
