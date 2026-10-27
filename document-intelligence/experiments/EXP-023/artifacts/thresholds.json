@@ -1,0 +1,12 @@
+{
+  "registered": "2026-10-27, depois das linhas de base na validação e antes de abrir o teste",
+  "source": "valores da spec §1, mantidos sem ajuste",
+  "h1_min_gain": 0.05,
+  "h2_min_wd_reduction": 0.20,
+  "h2_max_f1_drop": 0.01,
+  "h3_max_p95_ms": 200,
+  "gate_clean": 0.70,
+  "gate_noisy": 0.60,
+  "gate_conditions": "clean = texto digitado sem geometria (importação); noisy = CER 25 % com geometria (digitalização)",
+  "validation_preview": "na validação, H1 e H2 já ficam abaixo dos limiares (ganho do híbrido de -0,3 a +3 pontos; redução de WindowDiff de 5 a 18 %); os limiares não foram mudados por isso"
+}
