@@ -21,6 +21,8 @@ def rbac_client(tmp_path, monkeypatch) -> Generator[tuple[TestClient, sessionmak
     monkeypatch.setenv("REQUIRE_AUTH", "true")
 
     db_file = tmp_path / "test_rbac.db"
+    # As rotas de backup copiam get_database_path(), fora de dependency_overrides.
+    monkeypatch.setenv("CADERNO_DATABASE_PATH", str(db_file))
     engine = create_sqlite_engine(db_file)
     Base.metadata.create_all(bind=engine)
     session_factory = sessionmaker(autocommit=False, autoflush=False, expire_on_commit=False, bind=engine)
@@ -126,3 +128,67 @@ def test_admin_user_has_authorized_access_to_backups(rbac_client):
     res_bundle = client.get("/api/backup/bundle", headers=auth_headers)
     assert res_bundle.status_code == 200
     assert ".zip" in res_bundle.headers.get("content-disposition", "")
+
+
+BACKUP_ROUTES = [("/api/backup", "db"), ("/api/backup/bundle", "bundle")]
+
+
+@pytest.fixture
+def backup_calls(monkeypatch) -> list[tuple[str, object]]:
+    """Substitui a geração de backup por registradores de chamada."""
+    import app.routers.backups as backups_router
+
+    calls: list[tuple[str, object]] = []
+
+    def fake_database_backup(path, *args, **kwargs):
+        calls.append(("db", path))
+        path.write_bytes(b"backup ficticio")
+        return path
+
+    def fake_backup_bundle(path, *args, **kwargs):
+        calls.append(("bundle", path))
+        path.write_bytes(b"pacote ficticio")
+        return path
+
+    monkeypatch.setattr(backups_router, "create_database_backup", fake_database_backup)
+    monkeypatch.setattr(backups_router, "create_backup_bundle", fake_backup_bundle)
+    return calls
+
+
+@pytest.mark.parametrize("route, _kind", BACKUP_ROUTES)
+@pytest.mark.parametrize("as_regular_user, expected_status", [(False, 401), (True, 403)])
+def test_unauthorized_backup_requests_never_generate_backup(
+    rbac_client, backup_calls, route, _kind, as_regular_user, expected_status
+):
+    """Anônimo e usuário comum são recusados antes de qualquer cópia do banco."""
+    client, _, _, user_token = rbac_client
+    headers = {"Cookie": f"{SESSION_COOKIE_NAME}={user_token}"} if as_regular_user else {}
+
+    response = client.get(route, headers=headers)
+
+    assert response.status_code == expected_status
+    assert backup_calls == []
+
+
+@pytest.mark.parametrize("route, _kind", BACKUP_ROUTES)
+def test_regular_user_with_range_header_gets_403_without_backup(rbac_client, backup_calls, route, _kind):
+    """O cabeçalho Range não antecipa resposta nem geração para quem não é administrador."""
+    client, _, _, user_token = rbac_client
+    headers = {"Cookie": f"{SESSION_COOKIE_NAME}={user_token}", "Range": "bytes=0-"}
+
+    response = client.get(route, headers=headers)
+
+    assert response.status_code == 403
+    assert backup_calls == []
+
+
+@pytest.mark.parametrize("route, kind", BACKUP_ROUTES)
+def test_admin_backup_request_reaches_generation(rbac_client, backup_calls, route, kind):
+    """Controle positivo: para o administrador a geração interceptada é chamada uma vez."""
+    client, _, admin_token, _ = rbac_client
+    headers = {"Cookie": f"{SESSION_COOKIE_NAME}={admin_token}"}
+
+    response = client.get(route, headers=headers)
+
+    assert response.status_code == 200
+    assert [call_kind for call_kind, _ in backup_calls] == [kind]

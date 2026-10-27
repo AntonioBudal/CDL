@@ -23,7 +23,9 @@ DOWNLOAD_HEADERS = {
 }
 
 
-def temporary_backup(request: Request) -> Iterator[Path]:
+# As geradoras dependem de AdminUser para que a autorização seja resolvida
+# antes de qualquer cópia do banco.
+def temporary_backup(_admin: AdminUser, request: Request) -> Iterator[Path]:
     if "range" in request.headers:
         raise HTTPException(
             status_code=416,
@@ -71,7 +73,7 @@ def temporary_backup(request: Request) -> Iterator[Path]:
             directory.cleanup()
 
 
-def temporary_backup_bundle(request: Request) -> Iterator[Path]:
+def temporary_backup_bundle(_admin: AdminUser, request: Request) -> Iterator[Path]:
     if "range" in request.headers:
         raise HTTPException(
             status_code=416,
@@ -123,8 +125,8 @@ def temporary_backup_bundle(request: Request) -> Iterator[Path]:
     summary="Baixar backup do banco (.db)",
 )
 def download_backup(
-    path: Annotated[Path, Depends(temporary_backup, scope="request")],
     _admin: AdminUser,
+    path: Annotated[Path, Depends(temporary_backup, scope="request")],
 ) -> FileResponse:
     timestamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S-%fZ")
     return FileResponse(
@@ -144,8 +146,8 @@ def download_backup(
     summary="Baixar pacote completo de backup (.zip com banco, capas e manifesto)",
 )
 def download_backup_bundle_endpoint(
-    path: Annotated[Path, Depends(temporary_backup_bundle, scope="request")],
     _admin: AdminUser,
+    path: Annotated[Path, Depends(temporary_backup_bundle, scope="request")],
 ) -> FileResponse:
     return FileResponse(
         path=path,
