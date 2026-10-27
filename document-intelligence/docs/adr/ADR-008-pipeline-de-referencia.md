@@ -49,3 +49,24 @@ correção lexical (EXP-011) e o conversor LDF 2.0 (ADR-004) e mediu a cadeia de
 * **Próximos passos com mais retorno:** (a) regra de escala automática — feita no EXP-013; (b) adaptar o
   reconhecedor à caligrafia brasileira, que é o limite real e depende de dados com licença para produto;
   (c) validar com fotos de caderno de verdade.
+
+## 5. Promoção ao Leitorum (2026-10-27)
+
+O usuário decidiu levar o pipeline ao produto com o **leitor original** (PP-OCRv6 small, Apache-2.0), com o
+texto apresentado sempre como rascunho a revisar. A validação com foto crua de celular (pergunta aberta do
+EXP-022) foi **dispensada pelo usuário** ("vamos pular esse passo da camera ja testamos", 2026-10-27).
+
+* **Onde está:** feature 086 do Leitorum
+  ([`specs/086-digitalizar-caderno-estudo/`](../../../specs/086-digitalizar-caderno-estudo/spec.md)), pacote
+  `caderno-leitura-0.1/motor/leitorum_motor`. O código foi promovido do EXP-019 sem mudança de lógica de leitura
+  e roda num ambiente próprio, num processo por página.
+* **O que ficou de fora do produto:**
+  * a correção lexical, porque o ganho em CER é pequeno e o léxico está sob CC-BY-SA;
+  * a montagem do LDF 2.0, porque a primeira fatia não persiste o documento;
+  * qualquer peso treinado com o BRESSAY. O motor recusa leitor sem `license_status: VERIFIED`.
+* **Paridade:** nas 15 páginas do EXP-022, o motor do produto deu o mesmo texto que o pipeline do EXP-019 em
+  **458 de 458 linhas**, com a imagem direta e com a normalização do backend. Levou ~7 s por página com os
+  modelos carregados e ~12 s com o carregamento.
+* O item 4 da decisão ("nada entra em `src/` sem validação em foto de caderno") continua valendo para
+  `document-intelligence/src/`. A promoção foi feita por spec de produto do Leitorum e com dispensa explícita do
+  usuário.

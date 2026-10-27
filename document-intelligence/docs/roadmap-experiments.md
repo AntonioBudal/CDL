@@ -121,6 +121,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-022` — Páginas do BRESSAY Impressas e Fotografadas *(CONCLUÍDO com ressalva — por delegação em 2026-10-27)*
 - **Resultado**: 15 páginas impressas e fotografadas pelo usuário, entregues depois de conversor e recorte: leitor ajustado 11,0 % (as mesmas digitalizadas: 10,7 %), original 24,3 % (24,1 %). As imagens não têm inclinação de câmera (0,12° contra 0,11° na digitalização); medem página limpa por software, não a foto crua. O custo da câmera crua segue sem medida.
 
+### Promoção ao Leitorum — feature 086 *(2026-10-27, decisão do usuário)*
+- **Resultado**: pipeline do ADR-008 com o leitor original levado ao Leitorum (`caderno-leitura-0.1/motor/`, tela `/digitalizar`), texto como rascunho a revisar e salvo como Estudo. Validação com foto crua de celular dispensada pelo usuário. Paridade com o EXP-019: 458/458 linhas idênticas nas páginas do EXP-022. Ver ADR-008 §5.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.
