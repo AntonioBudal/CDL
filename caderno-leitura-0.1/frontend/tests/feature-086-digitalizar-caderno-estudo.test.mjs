@@ -69,6 +69,20 @@ test('tela oferece câmera e arquivo com formatos restritos, sem getUserMedia', 
   assert.ok(!view.includes('getUserMedia') && !view.includes('mediaDevices'))
 })
 
+test('seletores de arquivo ficam escondidos apesar da regra global input { display: block }', () => {
+  const view = read('views/DigitizeNotebookView.vue')
+  const globalStyle = read('style.css')
+  assert.match(globalStyle, /input, textarea, select \{ display: block;/, 'premissa: a regra global existe')
+  const inputs = view.match(/<input[^>]*type="file"[^>]*>/g) || []
+  assert.equal(inputs.length, 2)
+  for (const input of inputs) {
+    assert.ok(input.includes('class="file-picker"'), 'cada seletor usa a classe que o esconde')
+    assert.ok(input.includes('hidden') && input.includes('tabindex="-1"'))
+  }
+  const style = view.slice(view.indexOf('<style'))
+  assert.match(style, /\.file-picker,\s*\.file-picker\[hidden\]\s*\{\s*display: none;\s*\}/)
+})
+
 test('tela traz aviso de rascunho, processamento local, atalhos e proteção de alterações', () => {
   const view = read('views/DigitizeNotebookView.vue')
   assert.ok(view.includes('Rascunho lido automaticamente.'))

@@ -184,8 +184,8 @@ onBeforeUnmount(() => {
           <Icon name="image" :size="18" aria-hidden="true" /> Escolher imagem
         </button>
       </div>
-      <input ref="cameraInput" type="file" :accept="DIGITIZE_ACCEPT" capture="environment" hidden tabindex="-1" @change="onFileChosen" />
-      <input ref="fileInput" type="file" :accept="DIGITIZE_ACCEPT" hidden tabindex="-1" @change="onFileChosen" />
+      <input ref="cameraInput" class="file-picker" type="file" :accept="DIGITIZE_ACCEPT" capture="environment" hidden tabindex="-1" @change="onFileChosen" />
+      <input ref="fileInput" class="file-picker" type="file" :accept="DIGITIZE_ACCEPT" hidden tabindex="-1" @change="onFileChosen" />
     </section>
 
     <!-- Lendo -->
@@ -452,6 +452,13 @@ h2[tabindex='-1']:focus:not(:focus-visible) {
 
 .capture-panel .actions {
   justify-content: center;
+}
+
+/* A regra global `input { display: block }` do style.css vence o `[hidden]` do navegador:
+   sem isto, os dois seletores nativos aparecem abaixo dos botões. Abertos só por openPicker(). */
+.file-picker,
+.file-picker[hidden] {
+  display: none;
 }
 
 .capture-icon,
