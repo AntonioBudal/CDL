@@ -1,7 +1,6 @@
 # EXP-022 — Páginas do BRESSAY Impressas e Fotografadas com Celular (especificação, plano e tarefas)
 
-**Created**: 2026-10-27 · **Status**: `DELEGATED` (autonomia permanente do usuário, 2026-10-18; teste pedido pelo
-usuário em 2026-10-27)
+**Created**: 2026-10-27 · **Status**: `ACCEPTED` — concluído com ressalva por delegação em 2026-10-27 ([RESULTS](./RESULTS.md))
 
 **Input**: EXP-019 a EXP-021. Toda a medida em condições de foto até aqui é **sintética** (degradação do EXP-002
 sobre a digitalização). Não há banco público de fotos de manuscrito em português com transcrição (busca de
@@ -44,5 +43,5 @@ conhecida, e a degradação sintética do EXP-019 representa bem essa condição
   branco uniforme e sem metadados da câmera. O usuário confirma que são fotos e pediu para usá-las; o resultado
   mede **foto recortada e limpa por software**, não a foto crua da câmera. A inclinação das linhas detectadas é
   registrada como checagem objetiva da geometria de foto.
-- [ ] **T003** Harness de leitura das fotos com associação por menor CER; rodar os dois leitores; pontuar;
+- [x] **T003** Harness de leitura das fotos com associação por menor CER; rodar os dois leitores; pontuar;
   relatório.

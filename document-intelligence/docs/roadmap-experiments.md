@@ -118,6 +118,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-021` — Ajuste Fino com Degradações de Foto *(CONCLUÍDO — não adotado, por delegação em 2026-10-26)*
 - **Resultado**: metade das linhas de treino degradadas como foto: digitalizada 11,8 % → 12,1 %, foto leve 21,6 % → 21,4 %, forte 70,6 % → 69,9 %. O aumento não fecha a perda em foto; as páginas pedidas para o produto devem ser fotos.
 
+### `EXP-022` — Páginas do BRESSAY Impressas e Fotografadas *(CONCLUÍDO com ressalva — por delegação em 2026-10-27)*
+- **Resultado**: 15 páginas impressas e fotografadas pelo usuário, entregues depois de conversor e recorte: leitor ajustado 11,0 % (as mesmas digitalizadas: 10,7 %), original 24,3 % (24,1 %). As imagens não têm inclinação de câmera (0,12° contra 0,11° na digitalização); medem página limpa por software, não a foto crua. O custo da câmera crua segue sem medida.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.

@@ -1,0 +1,203 @@
+{
+  "schema": "leitorum-di-pipeline-benchmark/1",
+  "created_utc": "2026-10-27T15:40:30+00:00",
+  "experiment": "EXP-022",
+  "git": {
+    "commit": "1cb8ad43aecc7e284ea38a87114420bcce18198d",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "target": 80,
+  "photos": {
+    "files": 15,
+    "sizes": [
+      "1653x2339"
+    ],
+    "assignment_margin_min": 0.4978257785469344,
+    "assignment_margin_median": 0.6285330965747365
+  },
+  "pages": [
+    "2122-072",
+    "0689-080",
+    "7560-016",
+    "2107-057",
+    "7147-088",
+    "7294-096",
+    "7146-087",
+    "7605-061",
+    "1648-037",
+    "8475-069",
+    "7280-082",
+    "1664-053",
+    "6944-026",
+    "9428-009",
+    "2975-018"
+  ],
+  "reader_model": {
+    "file": "models/exp-017/rec-ft-bressay.onnx",
+    "sha256": "d15ff16e74341bfceca507308ada731b68c4b7dd1237c9f8f0d8f0fc9ae0d372"
+  },
+  "license_status": {
+    "reader": "NEEDS VALIDATION — ajustado no BRESSAY (EXP-014); nunca produto",
+    "bressay": "NEEDS VALIDATION (exceção experimental; não embasa produto)"
+  },
+  "results": {
+    "original": {
+      "pages": 15,
+      "cer_micro": 0.24339780901303917,
+      "wer_micro": 0.6063340991138825,
+      "page_cer_median": 0.22768383798662997,
+      "ref_chars": 39343,
+      "cost": {
+        "pages": 15,
+        "failed": [],
+        "median_ms": 6261.5281,
+        "p95_ms": 8953.62975,
+        "peak_rss_bytes": 834949120,
+        "load_ms": 1458.0836
+      },
+      "scales": {
+        "1": 8,
+        "2": 7
+      },
+      "lines": 458,
+      "tilt": {
+        "median_abs_deg": 0.11735326669277521,
+        "p90_abs_deg": 0.28775301119481994
+      },
+      "ldf2": {
+        "documents": 15,
+        "valid": 15,
+        "not_representable": 0,
+        "lines": 458
+      }
+    },
+    "ft": {
+      "pages": 15,
+      "cer_micro": 0.11015936761304425,
+      "wer_micro": 0.3273711847719068,
+      "page_cer_median": 0.06998011928429423,
+      "ref_chars": 39343,
+      "cost": {
+        "pages": 15,
+        "failed": [],
+        "median_ms": 7614.5706,
+        "p95_ms": 11899.373529999999,
+        "peak_rss_bytes": 834949120,
+        "load_ms": 4799.2299
+      },
+      "scales": {
+        "1": 8,
+        "2": 7
+      },
+      "lines": 458,
+      "tilt": {
+        "median_abs_deg": 0.11735326669277521,
+        "p90_abs_deg": 0.28775301119481994
+      },
+      "ldf2": {
+        "documents": 15,
+        "valid": 15,
+        "not_representable": 0,
+        "lines": 458
+      }
+    }
+  },
+  "baselines_same_pages": {
+    "digitalizada": {
+      "original": {
+        "pages": 15,
+        "cer_micro": 0.2407543908700404,
+        "wer_micro": 0.6014112241549064,
+        "page_cer_median": 0.22162162162162163,
+        "ref_chars": 39343,
+        "lines": 454,
+        "tilt": {
+          "median_abs_deg": 0.11486708650937737,
+          "p90_abs_deg": 0.2990809391801832
+        }
+      },
+      "ft": {
+        "pages": 15,
+        "cer_micro": 0.10660092011285362,
+        "wer_micro": 0.3263866097801116,
+        "page_cer_median": 0.07713717693836979,
+        "ref_chars": 39343,
+        "lines": 454,
+        "tilt": {
+          "median_abs_deg": 0.11486708650937737,
+          "p90_abs_deg": 0.2990809391801832
+        }
+      }
+    },
+    "foto leve sintética": {
+      "original": {
+        "pages": 15,
+        "cer_micro": 0.3815164069847241,
+        "wer_micro": 0.7208729898260584,
+        "page_cer_median": 0.33384912959381047,
+        "ref_chars": 39343,
+        "lines": 436,
+        "tilt": {
+          "median_abs_deg": 0.949147435338886,
+          "p90_abs_deg": 2.8216694448419783
+        }
+      },
+      "ft": {
+        "pages": 15,
+        "cer_micro": 0.22868108685153649,
+        "wer_micro": 0.48162126681982276,
+        "page_cer_median": 0.14000712504453153,
+        "ref_chars": 39343,
+        "lines": 436,
+        "tilt": {
+          "median_abs_deg": 0.949147435338886,
+          "p90_abs_deg": 2.8216694448419783
+        }
+      }
+    },
+    "foto forte sintética": {
+      "original": {
+        "pages": 15,
+        "cer_micro": 0.7357598556287014,
+        "wer_micro": 0.906629471611421,
+        "page_cer_median": 0.8278569351555685,
+        "ref_chars": 39343,
+        "lines": 281,
+        "tilt": {
+          "median_abs_deg": 1.90518622924298,
+          "p90_abs_deg": 90.18602460450754
+        }
+      },
+      "ft": {
+        "pages": 15,
+        "cer_micro": 0.636606257784104,
+        "wer_micro": 0.7991467016737774,
+        "page_cer_median": 0.6975865077057284,
+        "ref_chars": 39343,
+        "lines": 281,
+        "tilt": {
+          "median_abs_deg": 1.90518622924298,
+          "p90_abs_deg": 90.18602460450754
+        }
+      }
+    }
+  },
+  "verdicts": {
+    "h1_between_scan_and_light": {
+      "scan": 0.10660092011285362,
+      "photo": 0.11015936761304425,
+      "light": 0.22868108685153649,
+      "met": true
+    },
+    "h2_runs_within_budget": {
+      "met": true
+    }
+  }
+}
