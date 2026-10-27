@@ -1,0 +1,17 @@
+# Ambiente isolado do EXP-023: treino offline e medição da organização nas 4 seções.
+# NÃO faz parte do pacote leitorum-di. A pipeline em si roda em Python puro (harness/organizer.py);
+# NumPy e scikit-learn servem só para ajustar e exportar os pesos; RapidFuzz só para o modelo de ruído.
+[project]
+name = "exp-023-organizer"
+version = "0.0.0"
+description = "EXP-023: organização automática do texto nas 4 seções do estudo"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy",
+    "scikit-learn",
+    "rapidfuzz",
+    "pytest",
+]
+
+[tool.uv]
+package = false
