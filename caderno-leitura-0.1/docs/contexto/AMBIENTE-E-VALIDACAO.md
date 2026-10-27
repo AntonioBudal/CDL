@@ -61,7 +61,7 @@ npm run build   # Executa vue-tsc -b && vite build
 ## 4. Governança e Execução de Testes
 
 ### Princípios de Segurança de Dados
-1. **Isolamento Comprovado:** Todas as suítes de teste existentes (`backend/tests/`) utilizam a fixture `tmp_path` do pytest, criando bancos de dados temporários com caminhos isolados (inclusive testando caracteres especiais, espaços e acentos).
+1. **Isolamento Comprovado:** Ao carregar, `backend/tests/conftest.py` aponta `CADERNO_DATABASE_PATH` para um banco num diretório temporário da execução, antes de importar `app.main`. Assim, código que resolve o banco fora de `dependency_overrides` (como o `lifespan` e as rotas de backup) nunca cai em `backend/data/caderno.db`. O mesmo arquivo instala uma guarda em `sqlite3.connect`/`sqlite3.dbapi2.connect` que recusa conexões ao banco ativo e faz falhar o teste responsável; `tests/test_active_database_isolation.py` verifica essa proteção. Os testes de banco e de API criam ainda seus próprios bancos em `tmp_path` (inclusive com caracteres especiais, espaços e acentos).
 2. **Servidor Efêmero:** O teste `test_local_server.py` inicia um processo do Uvicorn com porta aleatória efêmera (`socket.bind(('127.0.0.1', 0))`) e direciona explicitamente `CADERNO_DATABASE_PATH` para o banco temporário daquele teste.
 3. **Frontend Mockado:** Os testes do frontend (`frontend/tests/*.test.mjs`) usam o runner nativo do Node.js (`node --test`) com mocks das funções de gateway da API, sem disparar chamadas de rede reais.
 

@@ -1,13 +1,102 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
+import shutil
+import sqlite3
+import tempfile
 from typing import Any
 from unittest.mock import MagicMock, patch
+from urllib.parse import unquote, urlsplit
 
 from fastapi.testclient import TestClient
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from app.core.config import BACKEND_DIR
+
+
+# Isolamento do banco ativo (Constituição II.1). Precisa rodar antes de importar
+# app.main, que cria a aplicação no import e já resolve o caminho do banco.
+# O lifespan abre sessão direto por get_session(), fora de dependency_overrides;
+# sem isto, a manutenção dele rodaria sobre backend/data/caderno.db.
+_PROTECTED_DB_PATH = BACKEND_DIR / "data" / "caderno.db"
+_SESSION_DB_DIR = Path(tempfile.mkdtemp(prefix="leitorum-pytest-"))
+_ORIGINAL_DATABASE_PATH = os.environ.get("CADERNO_DATABASE_PATH")
+os.environ["CADERNO_DATABASE_PATH"] = str(_SESSION_DB_DIR / "caderno.db")
+
+_ORIGINAL_SQLITE_CONNECT = sqlite3.connect
+_ACTIVE_DB_ATTEMPTS: list[str] = []
+
+
+def _connect_target_path(database: Any) -> str | None:
+    """Extrai o caminho de arquivo de um alvo de sqlite3.connect (None para memória)."""
+    if isinstance(database, bytes):
+        target = database.decode()
+    else:
+        target = os.fspath(database)
+    if target.startswith("file:"):
+        target = unquote(urlsplit(target).path)
+        # file:///C:/... vira /C:/... no Windows.
+        if len(target) > 2 and target[0] == "/" and target[2] == ":":
+            target = target[1:]
+    if not target or target == ":memory:":
+        return None
+    return target
+
+
+def _normalized(path: str | os.PathLike[str]) -> str:
+    return os.path.normcase(os.path.realpath(path))
+
+
+def _is_protected_target(target: str) -> bool:
+    protected = _normalized(_PROTECTED_DB_PATH)
+    candidate = _normalized(target)
+    return candidate in {protected, protected + "-wal", protected + "-shm", protected + "-journal"}
+
+
+def _guarded_sqlite_connect(database: Any, *args: Any, **kwargs: Any) -> sqlite3.Connection:
+    target = _connect_target_path(database)
+    if target is not None and _is_protected_target(target):
+        _ACTIVE_DB_ATTEMPTS.append(target)
+        raise RuntimeError(f"Teste tentou abrir o banco ativo: {target}")
+    return _ORIGINAL_SQLITE_CONNECT(database, *args, **kwargs)
+
+
+# O dialeto pysqlite do SQLAlchemy usa sqlite3.dbapi2.connect, não sqlite3.connect.
+sqlite3.connect = sqlite3.dbapi2.connect = _guarded_sqlite_connect
+
+
+def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
+    if _ACTIVE_DB_ATTEMPTS:
+        session.exitstatus = 1
+
+
+def pytest_unconfigure(config: pytest.Config) -> None:
+    sqlite3.connect = sqlite3.dbapi2.connect = _ORIGINAL_SQLITE_CONNECT
+    if _ORIGINAL_DATABASE_PATH is None:
+        os.environ.pop("CADERNO_DATABASE_PATH", None)
+    else:
+        os.environ["CADERNO_DATABASE_PATH"] = _ORIGINAL_DATABASE_PATH
+    shutil.rmtree(_SESSION_DB_DIR, ignore_errors=True)
+
+
+@pytest.fixture(autouse=True)
+def _fail_on_active_database_attempt():
+    """Falha o teste que tentou abrir o banco ativo, mesmo se a aplicação engoliu o erro."""
+    yield
+    if _ACTIVE_DB_ATTEMPTS:
+        attempts = list(_ACTIVE_DB_ATTEMPTS)
+        _ACTIVE_DB_ATTEMPTS.clear()
+        pytest.fail(f"Tentativa de abrir o banco ativo durante o teste: {attempts}")
+
+
+@pytest.fixture(scope="session")
+def session_database_dir() -> Path:
+    """Diretório temporário que abriga o banco padrão da suíte."""
+    return _SESSION_DB_DIR
+
 
 from app.core.config import DEFAULT_OWNER_ID, DEFAULT_OWNER_USERNAME
 from app.core.security import hash_password
