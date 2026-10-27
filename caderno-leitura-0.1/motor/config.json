@@ -1,0 +1,17 @@
+{
+  "reader": {
+    "file": null,
+    "sha256": "6f327246b50388f3c176ae304bd95767ea6dc0c9ae92153ef8cbe210b3c14884",
+    "name": "PP-OCRv6 small",
+    "license": "Apache-2.0",
+    "license_status": "VERIFIED"
+  },
+  "detector": {
+    "file": "PP-OCRv6_det_small.onnx",
+    "sha256": "090f04abcd9d9a7498bc4ebf677e4cb9bdce1fe4197ddb7e529f1ef44e1ff94f"
+  },
+  "target": 80,
+  "merge": { "v_overlap": 0.7, "max_gap": 1.0, "max_angle": 20.0 },
+  "right_margin": 640,
+  "low_confidence": 0.75
+}

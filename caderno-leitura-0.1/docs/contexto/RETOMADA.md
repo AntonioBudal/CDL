@@ -638,3 +638,45 @@ Com a conclusão da Feature 10 (F10), **todas as dez features do Roadmap 0.5 (F0
 - F08: Árvore Hierárquica e Navegação de Estudos
 - F09 / F09.5: Notificações, Atividade Social, Refatoração de Temas e Correções Visuais
 - F10: Segurança, Auditoria, Ciclo de Vida da Conta e Google OAuth
+
+---
+
+## Sessão: Feature 086 — Digitalizar Caderno como Estudo (27/10/2026)
+
+Feature avulsa, pedida pelo usuário, fora do Roadmap 0.9. O estado das features da 0.9 não muda. Ciclo Spec Kit
+completo, com aprovação a cada artefato: [`specs/086-digitalizar-caderno-estudo/`](../../../specs/086-digitalizar-caderno-estudo/spec.md).
+
+### O que foi entregue
+1. **Motor de leitura** (`motor/`):
+   - pipeline do ADR-008 do `document-intelligence/` com o leitor PP-OCRv6 (Apache-2.0);
+   - ambiente próprio `motor/.venv`, instalação opcional por `instalar.py --motor`;
+   - um processo por página;
+   - modelos conferidos por SHA-256 e leitor só com licença `VERIFIED`;
+   - limiar de linha incerta em 0,75.
+2. **Backend:**
+   - `GET /api/digitize/status` e `POST /api/digitize/preview`, sem migração e sem acesso ao banco;
+   - um pedido por vez, recusa com menos de 2 GB livres, tempo limite de 120 s;
+   - cancelamento quando o cliente desiste;
+   - temporários sempre apagados.
+3. **Frontend:**
+   - `/digitalizar` reescrita: tirar foto ou escolher imagem, revisão com a foto ao lado, aviso de rascunho e lista
+     "Linhas para conferir";
+   - salvamento como Estudo "rascunho" pelo `POST /api/studies`, com a leitura bruta em `source_response`;
+   - card do Ateliê de Importação: "Rascunho a revisar".
+
+### Evidências
+- `pytest`: 487 aprovados e 1 pulado (com `CADERNO_DATABASE_PATH` num banco descartável).
+- `npm test`: 615 aprovados. `npm run build`: ok.
+- Paridade com o EXP-019: 458/458 linhas idênticas.
+- Fluxo pela API num servidor com banco descartável: 6,8 s por página, estudo salvo como rascunho, nenhum
+  temporário restante.
+- O banco ativo não foi aberto pelo agente.
+
+### Ponto de continuação
+- **Validação manual pendente com o usuário** (quickstart §3 e §6):
+  - temas (claro, escuro e E-Ink);
+  - 320 px e teclado;
+  - celular na rede local;
+  - leitura com a rede desligada.
+- **Tarefa sugerida à parte:** isolar a manutenção de inicialização (`lifespan`) nos testes. Hoje ela abre o banco
+  ativo quando `CADERNO_DATABASE_PATH` não está definido.

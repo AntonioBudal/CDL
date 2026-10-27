@@ -1,13 +1,66 @@
-export type StageStatus = 'validating' | 'researching' | 'not_started'
+// Digitalizar Caderno (feature 086): contrato de /api/digitize e constantes da tela.
 
-export interface MaturityStage {
-  id: string
-  title: string
-  status: StageStatus
-  statusLabel: string
-  description: string
-  technicalNote?: string
+export type DigitizeUnavailableReason = 'not_installed' | 'integrity_failed'
+
+export interface DigitizeStatus {
+  available: boolean
+  reason: DigitizeUnavailableReason | null
 }
+
+export interface DigitizeLine {
+  index: number
+  text: string
+  confidence: number
+  low_confidence: boolean
+}
+
+export interface DigitizeWarning {
+  code: 'draft' | 'no_text' | 'many_uncertain'
+  message: string
+}
+
+export interface DigitizeEngine {
+  name: string
+  version: string
+  reader: string
+  license_status: string
+}
+
+export interface DigitizePreview {
+  text: string
+  lines: DigitizeLine[]
+  low_confidence_count: number
+  warnings: DigitizeWarning[]
+  engine: DigitizeEngine
+  elapsed_ms: number
+}
+
+export type DigitizeErrorCode =
+  | 'too_large'
+  | 'unsupported_format'
+  | 'invalid_image'
+  | 'unavailable'
+  | 'busy'
+  | 'low_memory'
+  | 'timeout'
+  | 'engine_failed'
+  | 'save_failed'
+  | 'error'
+
+export type DigitizeSection = 'summary' | 'explanation' | 'concepts' | 'references'
+
+export const DIGITIZE_SECTIONS: readonly { key: DigitizeSection; label: string }[] = [
+  { key: 'summary', label: 'Resumo' },
+  { key: 'explanation', label: 'Explicação' },
+  { key: 'concepts', label: 'Conceitos' },
+  { key: 'references', label: 'Referências' },
+] as const
+
+export const DIGITIZE_DEFAULT_SECTION: DigitizeSection = 'summary'
+
+export const DIGITIZE_ACCEPT = 'image/jpeg,image/png,image/webp'
+export const DIGITIZE_ACCEPTED_TYPES: readonly string[] = ['image/jpeg', 'image/png', 'image/webp']
+export const DIGITIZE_MAX_BYTES = 20 * 1024 * 1024
 
 export interface ExitShortcut {
   title: string
@@ -15,41 +68,6 @@ export interface ExitShortcut {
   routePath: string
   actionLabel: string
 }
-
-export const DOCUMENT_INTELLIGENCE_STAGES: readonly MaturityStage[] = [
-  {
-    id: 'locate-lines-blocks',
-    title: 'Localizar linhas e blocos na página',
-    status: 'validating',
-    statusLabel: 'Em validação',
-    description: 'Segmentação visual para detecção de caixas de texto, títulos e notas laterais.',
-    technicalNote: 'Funciona em páginas sintéticas; falta testar em fotos reais.',
-  },
-  {
-    id: 'reading-order',
-    title: 'Ordem de leitura',
-    status: 'validating',
-    statusLabel: 'Em validação',
-    description: 'Algoritmo de ordenação topológica para fluxo contínuo entre colunas e margens.',
-    technicalNote: 'Validação preliminar de grafo de leitura em colunas duplas e notas soltas.',
-  },
-  {
-    id: 'portuguese-htr',
-    title: 'Transcrição do texto manuscrito em português',
-    status: 'researching',
-    statusLabel: 'Em pesquisa',
-    description: 'Reconhecimento de texto caligráfico manuscrito (Handwritten Text Recognition).',
-    technicalNote: 'Ainda não há modelo que leia caligrafia em português.',
-  },
-  {
-    id: 'content-classification',
-    title: 'Classificação do conteúdo e diagramas',
-    status: 'not_started',
-    statusLabel: 'Não iniciado',
-    description: 'Distinção automática entre parágrafos conceituais, citações e croquis visuais.',
-    technicalNote: 'Etapa futura dependente da estabilização da segmentação geométrica.',
-  },
-] as const
 
 export const DIGITIZE_EXIT_SHORTCUTS: readonly ExitShortcut[] = [
   {

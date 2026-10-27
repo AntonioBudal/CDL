@@ -21,6 +21,7 @@ from app.routers import (
     chapters,
     covers,
     dashboard,
+    digitize,
     friends,
     health,
     imports,
@@ -111,6 +112,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(study_versions.router, prefix="/api")
     application.include_router(canvas.router, prefix="/api")
     application.include_router(imports.router, prefix="/api")
+    application.include_router(digitize.router, prefix="/api")
     application.include_router(trash.router, prefix="/api")
     application.include_router(covers.router, prefix="/api")
     application.include_router(dashboard.router, prefix="/api")

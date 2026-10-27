@@ -1,728 +1,699 @@
 <script setup lang="ts">
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import { DOCUMENT_INTELLIGENCE_STAGES, DIGITIZE_EXIT_SHORTCUTS } from '../types/digitize'
+import { api, errorMessage } from '../services/api'
+import { useDigitizeDraft, type UncertainLine } from '../composables/useDigitizeDraft'
+import { useUnsavedChanges } from '../composables/useUnsavedChanges'
+import EmptyState from '../components/ui/EmptyState.vue'
+import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
+import Icon from '../components/ui/Icon.vue'
+import { positiveId, type Book, type Chapter } from '../types'
+import { DIGITIZE_ACCEPT, DIGITIZE_EXIT_SHORTCUTS, DIGITIZE_SECTIONS } from '../types/digitize'
+
+const draft = useDigitizeDraft({
+  status: api.getDigitizeStatus,
+  preview: api.previewDigitize,
+  createStudy: api.createStudy,
+})
+const { state, canSave, uncertainLines } = draft
+// A leitura em andamento pode ser abandonada (é cancelada ao sair); só o salvamento segura a navegação.
+useUnsavedChanges(() => draft.dirty.value, () => state.phase === 'saving')
+
+const cameraInput = ref<HTMLInputElement | null>(null)
+const fileInput = ref<HTMLInputElement | null>(null)
+const editor = ref<HTMLTextAreaElement | null>(null)
+const reviewHeading = ref<HTMLElement | null>(null)
+const resultHeading = ref<HTMLElement | null>(null)
+
+const books = ref<Book[]>([])
+const chapters = ref<Chapter[]>([])
+const booksLoading = ref(true)
+const chaptersLoading = ref(false)
+const booksError = ref('')
+const chaptersError = ref('')
+let bookRequest: AbortController | null = null
+let chapterRequest: AbortController | null = null
+const statusRequest = new AbortController()
+
+const selectedBook = computed(() => books.value.find(item => item.id === positiveId(state.bookId)))
+const unavailableDescription = computed(() => state.unavailableReason === 'integrity_failed'
+  ? 'Os arquivos do motor de leitura não passaram na verificação de integridade. Reinstale o motor com instalar.py --motor.'
+  : 'O motor de leitura não está instalado neste computador. Para ativá-lo, rode instalar.py --motor. Enquanto isso, os outros caminhos continuam disponíveis.')
+const noText = computed(() => state.preview?.warnings.some(warning => warning.code === 'no_text') ?? false)
+const manyUncertain = computed(() => state.preview?.warnings.find(warning => warning.code === 'many_uncertain'))
+
+async function loadBooks() {
+  bookRequest?.abort()
+  const controller = new AbortController()
+  bookRequest = controller
+  booksLoading.value = true
+  booksError.value = ''
+  try {
+    const result = await api.listBooks(controller.signal)
+    if (controller.signal.aborted) return
+    books.value = result
+    if (state.bookId && !selectedBook.value) state.bookId = ''
+  } catch (error) {
+    if (!controller.signal.aborted) booksError.value = errorMessage(error)
+  } finally {
+    if (!controller.signal.aborted) booksLoading.value = false
+  }
+}
+
+async function loadChapters() {
+  chapterRequest?.abort()
+  const controller = new AbortController()
+  chapterRequest = controller
+  const preferred = positiveId(state.chapterId)
+  state.chapterId = ''
+  chapters.value = []
+  chaptersError.value = ''
+  const id = positiveId(state.bookId)
+  chaptersLoading.value = id !== null
+  if (id === null) return
+  try {
+    const result = await api.listChapters(id, controller.signal)
+    if (controller.signal.aborted) return
+    chapters.value = result
+    const kept = result.find(item => item.id === preferred)
+    state.chapterId = kept?.id.toString() ?? (result.length === 1 ? String(result[0]!.id) : '')
+  } catch (error) {
+    if (!controller.signal.aborted) chaptersError.value = errorMessage(error)
+  } finally {
+    if (!controller.signal.aborted) chaptersLoading.value = false
+  }
+}
+
+function openPicker(input: HTMLInputElement | null) {
+  if (!input) return
+  input.value = ''
+  input.click()
+}
+
+async function onFileChosen(event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  const ok = await draft.choose(file)
+  await nextTick()
+  if (ok) reviewHeading.value?.focus()
+  else if (state.phase === 'error') resultHeading.value?.focus()
+}
+
+function selectLine(line: UncertainLine) {
+  const textarea = editor.value
+  if (!textarea || line.revised) return
+  const start = state.text.indexOf(line.text)
+  if (start < 0) return
+  textarea.focus()
+  textarea.setSelectionRange(start, start + line.text.length)
+  const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight) || 24
+  const before = state.text.slice(0, start).split('\n').length - 1
+  textarea.scrollTop = Math.max(0, (before - 2) * lineHeight)
+}
+
+async function save() {
+  if (await draft.save()) {
+    await nextTick()
+    resultHeading.value?.focus()
+  }
+}
+
+async function startAnother() {
+  if (draft.dirty.value && !window.confirm('Descartar o texto desta página e enviar outra foto?')) return
+  draft.reset()
+  await nextTick()
+  resultHeading.value?.focus()
+}
+
+watch(() => state.bookId, loadChapters)
+onMounted(() => {
+  void draft.checkStatus(statusRequest.signal)
+  void loadBooks()
+})
+onBeforeUnmount(() => {
+  statusRequest.abort()
+  bookRequest?.abort()
+  chapterRequest?.abort()
+  draft.dispose()
+})
 </script>
 
 <template>
-  <main
-    class="digitize-notebook-view"
-    role="main"
-    aria-labelledby="digitize-main-title"
-  >
-    <div class="digitize-container">
-      <!-- 1. Cabeçalho Editorial & Manifesto de Privacidade Soberana -->
-      <header class="digitize-header">
-        <div class="status-pill" role="status">
-          <svg class="status-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-          </svg>
-          <span>Pesquisa Experimental — Subprojeto Document Intelligence</span>
+  <main class="digitize-view" role="main" aria-labelledby="digitize-main-title">
+    <header class="page-header digitize-header">
+      <p class="eyebrow">Ateliê de Fichamento</p>
+      <h1 id="digitize-main-title">Digitalizar Caderno</h1>
+      <p class="digitize-lead">
+        Fotografe uma página do seu caderno. O Leitorum lê o texto manuscrito, você revisa e salva como estudo.
+      </p>
+    </header>
+
+    <!-- Verificando o motor -->
+    <section v-if="state.phase === 'checking'" class="panel" aria-label="Verificando a digitalização">
+      <LoadingSkeleton shape="text" :lines="3" height="1.1rem" />
+    </section>
+
+    <!-- Motor indisponível: o resto do Leitorum segue funcionando -->
+    <section v-else-if="state.phase === 'unavailable'" aria-labelledby="unavailable-heading">
+      <EmptyState icon="camera" title="Digitalização indisponível nesta instalação" :description="unavailableDescription">
+        <RouterLink class="button primary" to="/importar">Importar texto</RouterLink>
+        <RouterLink class="button secondary" to="/inbox">Anotar na Caixa de Entrada</RouterLink>
+      </EmptyState>
+      <h2 id="unavailable-heading" class="sr-only">Caminhos disponíveis</h2>
+      <div class="exit-grid">
+        <article v-for="shortcut in DIGITIZE_EXIT_SHORTCUTS" :key="shortcut.routePath" class="panel exit-card">
+          <h3>{{ shortcut.title }}</h3>
+          <p class="muted-text">{{ shortcut.description }}</p>
+          <RouterLink class="text-link" :to="shortcut.routePath">{{ shortcut.actionLabel }}</RouterLink>
+        </article>
+      </div>
+    </section>
+
+    <!-- Escolher a foto -->
+    <section v-else-if="state.phase === 'idle'" class="panel capture-panel" aria-labelledby="capture-heading">
+      <div class="capture-icon" aria-hidden="true"><Icon name="camera" :size="28" /></div>
+      <h2 id="capture-heading" ref="resultHeading" tabindex="-1">Enviar uma página</h2>
+      <p class="muted-text">
+        Uma foto por estudo. Fotografe a folha inteira, de frente, com boa luz e sem sombra. JPEG, PNG ou WebP, até 20 MB.
+      </p>
+      <div class="actions">
+        <button type="button" class="primary" @click="openPicker(cameraInput)">
+          <Icon name="camera" :size="18" aria-hidden="true" /> Tirar foto
+        </button>
+        <button type="button" class="secondary" @click="openPicker(fileInput)">
+          <Icon name="image" :size="18" aria-hidden="true" /> Escolher imagem
+        </button>
+      </div>
+      <input ref="cameraInput" type="file" :accept="DIGITIZE_ACCEPT" capture="environment" hidden tabindex="-1" @change="onFileChosen" />
+      <input ref="fileInput" type="file" :accept="DIGITIZE_ACCEPT" hidden tabindex="-1" @change="onFileChosen" />
+    </section>
+
+    <!-- Lendo -->
+    <section v-else-if="state.phase === 'reading'" class="panel reading-panel" aria-labelledby="reading-heading" aria-busy="true">
+      <h2 id="reading-heading">Lendo a página</h2>
+      <p class="muted-text" role="status">A leitura acontece neste computador e costuma levar de 10 a 20 segundos.</p>
+      <div class="review-grid">
+        <div class="photo-frame">
+          <img v-if="state.previewUrl" :src="state.previewUrl" alt="Foto enviada" class="photo" />
+        </div>
+        <LoadingSkeleton shape="text" :lines="8" height="1rem" gap="0.75rem" />
+      </div>
+      <div class="actions">
+        <button type="button" class="secondary" @click="draft.cancel()">
+          <Icon name="x" :size="18" aria-hidden="true" /> Cancelar
+        </button>
+      </div>
+    </section>
+
+    <!-- Erro -->
+    <section v-else-if="state.phase === 'error'" class="panel" aria-labelledby="error-heading">
+      <h2 id="error-heading" ref="resultHeading" tabindex="-1">Não foi possível ler esta foto</h2>
+      <p class="notice error" role="alert">{{ state.error?.message }}</p>
+      <div class="actions">
+        <button type="button" class="primary" @click="startAnother">Tentar outra foto</button>
+        <RouterLink class="text-link" to="/importar">Importar texto digitado</RouterLink>
+      </div>
+    </section>
+
+    <!-- Salvo -->
+    <section v-else-if="state.phase === 'saved' && state.saved" class="panel" aria-labelledby="saved-heading">
+      <p class="success-label" role="status">
+        <Icon name="check-circle" :size="18" aria-hidden="true" /> Estudo salvo como rascunho
+      </p>
+      <h2 id="saved-heading" ref="resultHeading" tabindex="-1">{{ state.saved.title }}</h2>
+      <div class="actions">
+        <RouterLink class="button primary" :to="{ name: 'study', params: { bookId: state.bookId, studyId: state.saved.id } }">Abrir estudo</RouterLink>
+        <button type="button" class="secondary" @click="startAnother">Digitalizar outra página</button>
+      </div>
+    </section>
+
+    <!-- Revisão -->
+    <form v-else class="review-form" @submit.prevent="save">
+      <fieldset :disabled="state.phase === 'saving'">
+        <h2 id="review-heading" ref="reviewHeading" tabindex="-1">Revisar o texto</h2>
+        <div class="notice warning draft-notice" role="note">
+          <Icon name="alert-triangle" :size="18" aria-hidden="true" />
+          <p>
+            <strong>Rascunho lido automaticamente.</strong> O texto pode ter erros de leitura: confira com a foto e corrija
+            antes de salvar.
+          </p>
+        </div>
+        <p v-if="manyUncertain" class="notice warning" role="status">{{ manyUncertain.message }}</p>
+        <div v-if="noText" class="notice" role="status">
+          <p>Nenhuma linha de texto foi encontrada nesta foto. Fotografe a folha inteira, com boa luz e sem sombra.</p>
+          <button type="button" class="secondary" @click="startAnother">Tentar outra foto</button>
         </div>
 
-        <h1 id="digitize-main-title" class="page-title">
-          Digitalizar Caderno
-        </h1>
+        <div class="review-grid">
+          <figure class="photo-frame">
+            <img v-if="state.previewUrl" :src="state.previewUrl" alt="Foto da página enviada" class="photo" />
+            <figcaption class="muted-text">{{ state.fileName }}</figcaption>
+          </figure>
 
-        <p class="page-lead">
-          Um espaço dedicado a transformar fotografias de páginas de cadernos físicos manuscritos em
-          <strong>estudos estruturados</strong>, preservando a hierarquia de parágrafos, anotações de margem, diagramas e o ritmo autêntico da sua leitura.
+          <div class="editor-column">
+            <section v-if="uncertainLines.length" class="uncertain" aria-labelledby="uncertain-heading">
+              <h3 id="uncertain-heading">Linhas para conferir ({{ uncertainLines.length }})</h3>
+              <p class="muted-text">Leitura incerta. Toque numa linha para selecioná-la no texto.</p>
+              <ul class="uncertain-list">
+                <li v-for="line in uncertainLines" :key="line.index">
+                  <button
+                    type="button"
+                    class="uncertain-item"
+                    :disabled="line.revised"
+                    :aria-label="line.revised ? `Linha ${line.number}, já revisada` : `Selecionar a linha ${line.number} no texto`"
+                    @click="selectLine(line)"
+                  >
+                    <Icon :name="line.revised ? 'check' : 'eye'" :size="16" aria-hidden="true" />
+                    <span class="uncertain-number">Linha {{ line.number }}</span>
+                    <span class="uncertain-text">{{ line.revised ? 'já revisada' : line.text }}</span>
+                  </button>
+                </li>
+              </ul>
+            </section>
+
+            <div class="field">
+              <label for="digitize-text">Texto da página</label>
+              <textarea id="digitize-text" ref="editor" v-model="state.text" rows="16" spellcheck="true" />
+            </div>
+          </div>
+        </div>
+
+        <section class="destination" aria-labelledby="destination-heading">
+          <h3 id="destination-heading">Salvar como estudo</h3>
+          <div v-if="booksError" class="notice error" role="alert">
+            <p>{{ booksError }}</p>
+            <button type="button" class="secondary" @click="loadBooks">Tentar novamente</button>
+          </div>
+          <div v-else-if="!booksLoading && books.length === 0" class="notice">
+            <p>Cadastre um livro e um capítulo para escolher onde salvar.</p>
+            <RouterLink class="text-link" to="/livros">Cadastrar livro</RouterLink>
+          </div>
+          <div v-if="chaptersError" class="notice error" role="alert">
+            <p>{{ chaptersError }}</p>
+            <button type="button" class="secondary" @click="loadChapters">Tentar novamente</button>
+          </div>
+          <p v-else-if="selectedBook && !chaptersLoading && chapters.length === 0" class="notice">
+            Este livro ainda não tem capítulos.
+            <RouterLink class="text-link" :to="{ name: 'book', params: { bookId: selectedBook.id } }">Adicionar capítulo</RouterLink>
+          </p>
+
+          <div class="destination-grid">
+            <div class="field">
+              <label for="digitize-book">Livro</label>
+              <select id="digitize-book" v-model="state.bookId" required :disabled="booksLoading || books.length === 0">
+                <option value="">{{ booksLoading ? 'Carregando livros…' : 'Selecione um livro' }}</option>
+                <option v-for="book in books" :key="book.id" :value="String(book.id)">{{ book.title }}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="digitize-chapter">Capítulo</label>
+              <select id="digitize-chapter" v-model="state.chapterId" required :disabled="chaptersLoading || !state.bookId || chapters.length === 0">
+                <option value="">{{ chaptersLoading ? 'Carregando capítulos…' : 'Selecione um capítulo' }}</option>
+                <option v-for="chapter in chapters" :key="chapter.id" :value="String(chapter.id)">{{ chapter.name }}</option>
+              </select>
+            </div>
+            <div class="field title-field">
+              <label for="digitize-title">Título</label>
+              <input id="digitize-title" v-model="state.title" required maxlength="200" />
+            </div>
+          </div>
+
+          <fieldset class="section-choice">
+            <legend>Seção do estudo que recebe o texto</legend>
+            <div class="section-options">
+              <label v-for="option in DIGITIZE_SECTIONS" :key="option.key" class="section-option">
+                <input v-model="state.section" type="radio" name="digitize-section" :value="option.key" />
+                <span>{{ option.label }}</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <p v-if="state.error" class="notice error" role="alert">{{ state.error.message }}</p>
+          <div class="actions">
+            <button type="submit" class="primary" :disabled="!canSave">
+              {{ state.phase === 'saving' ? 'Salvando…' : 'Salvar como estudo' }}
+            </button>
+            <button type="button" class="secondary" @click="startAnother">Descartar e enviar outra</button>
+          </div>
+          <p class="muted-text small">O texto lido automaticamente, sem as suas correções, fica guardado no estudo como registro de origem.</p>
+        </section>
+      </fieldset>
+    </form>
+
+    <!-- Transparência (US3) -->
+    <section class="panel transparency" aria-labelledby="transparency-heading">
+      <div class="transparency-icon" aria-hidden="true"><Icon name="lock" :size="22" /></div>
+      <div>
+        <h2 id="transparency-heading">Onde a leitura acontece</h2>
+        <p class="muted-text">
+          A foto é processada no computador onde o Leitorum está instalado, inclusive quando você a envia pelo celular na
+          rede local. Nada é enviado para a internet, e a foto é apagada assim que a leitura termina; só o texto que você
+          salvar fica no acervo.
         </p>
-
-        <!-- Manifesto de Soberania de Dados e Processamento Local -->
-        <div class="privacy-card" role="region" aria-label="Compromisso de Soberania e Privacidade">
-          <div class="privacy-badge-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-          </div>
-          <div class="privacy-content">
-            <h2 class="privacy-title">Processamento Estritamente Local no seu Computador</h2>
-            <p class="privacy-text">
-              No Leitorum, seus cadernos pertencem somente a você. Quando a funcionalidade estiver operacional,
-              toda a análise de imagem e o reconhecimento manuscrito serão executados <strong>localmente, na sua própria máquina</strong>.
-              Nenhuma foto, rascunho ou texto será transmitido a servidores em nuvem ou modelos externos de inteligência artificial.
-            </p>
-            <p class="privacy-status-note">
-              <strong>Estágio Atual:</strong> Esta funcionalidade está em fase de pesquisa laboratorial. Não existe serviço ou modelo ativo em produção no momento, e não há promessa de data de lançamento.
-            </p>
-          </div>
-        </div>
-      </header>
-
-      <!-- 2. Como a Estruturação Funcionará (Do Papel ao Fichamento) -->
-      <section class="concept-section" aria-labelledby="concept-heading">
-        <div class="section-header">
-          <h2 id="concept-heading" class="section-title">Do Papel ao Estudo Estruturado</h2>
-          <p class="section-subtitle">
-            Diferente de um scanner tradicional que apenas extrai um bloco desordenado de texto corrido, a tecnologia busca reconstituir a lógica espacial da página:
-          </p>
-        </div>
-
-        <div class="concept-grid">
-          <div class="concept-card">
-            <div class="concept-icon-wrap" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
-              </svg>
-            </div>
-            <h3 class="concept-card-title">Linhas e Parágrafos</h3>
-            <p class="concept-card-desc">
-              Identificação exata do corpo de texto principal, separando títulos, subtítulos e blocos de parágrafos conforme a diagramação manuscrita.
-            </p>
-          </div>
-
-          <div class="concept-card">
-            <div class="concept-icon-wrap" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-              </svg>
-            </div>
-            <h3 class="concept-card-title">Notas de Margem</h3>
-            <p class="concept-card-desc">
-              Preservação de anotações laterais, interpolações e observações de rodapé como reflexões subordinadas associadas ao trecho principal.
-            </p>
-          </div>
-
-          <div class="concept-card">
-            <div class="concept-icon-wrap" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-            <h3 class="concept-card-title">Diagramas e Esquemas</h3>
-            <p class="concept-card-desc">
-              Detecção de caixas delimitadoras e regiões gráficas, permitindo manter desenhos e esquemas conceituais integrados ao estudo.
-            </p>
-          </div>
-
-          <div class="concept-card">
-            <div class="concept-icon-wrap" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </div>
-            <h3 class="concept-card-title">Ordem Natural de Leitura</h3>
-            <p class="concept-card-desc">
-              Ordenação topológica inteligente que reconstrói a sequência coerente do pensamento entre múltiplas colunas e notas soltas.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- 3. Ilustração Conceitual Rotulada (Texto Fictício) -->
-      <section class="mockup-section" aria-labelledby="mockup-heading">
-        <div class="mockup-header">
-          <span class="mockup-tag">Ilustração Conceitual</span>
-          <h2 id="mockup-heading" class="mockup-title">Visualização da Segmentação Geométrica</h2>
-          <p class="mockup-subtitle">
-            Demonstração gráfica de como as caixas delimitadoras mapeiam os blocos na folha sem confundir corpo e margens:
-          </p>
-        </div>
-
-        <div class="mockup-page-canvas" aria-hidden="true">
-          <div class="mockup-box box-title">
-            <span class="box-badge">1 · Título</span>
-            <p class="box-content-mock">Capítulo I — Do Hábito da Leitura Ativa</p>
-          </div>
-
-          <div class="mockup-body-row">
-            <div class="mockup-box box-paragraph">
-              <span class="box-badge">2 · Parágrafo Principal</span>
-              <p class="box-content-mock">
-                A disciplina de anotar à mão em um caderno físico desacelera o ritmo da leitura,
-                permitindo que as ideias fundamentais amadureçam antes de se transformarem em síntese...
-              </p>
-            </div>
-
-            <div class="mockup-box box-margin-note">
-              <span class="box-badge">3 · Nota Marginal</span>
-              <p class="box-content-mock">
-                Confrontar com a tese de Schopenhauer sobre pensar por conta própria.
-              </p>
-            </div>
-          </div>
-
-          <div class="mockup-reading-flow-indicator">
-            <span class="flow-step">1</span>
-            <span class="flow-arrow">→</span>
-            <span class="flow-step">2</span>
-            <span class="flow-arrow">→</span>
-            <span class="flow-step">3</span>
-            <span class="flow-label">Ordem topológica de reconstituição</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- 4. Matriz de Maturidade da Pesquisa (4 Etapas Fixas) -->
-      <section class="maturity-section" aria-labelledby="maturity-heading">
-        <div class="section-header">
-          <h2 id="maturity-heading" class="section-title">Estágio Real da Pesquisa</h2>
-          <p class="section-subtitle">
-            Transparência técnica absoluta sobre o que já foi validado em laboratório e os desafios em investigação:
-          </p>
-        </div>
-
-        <div class="stages-table-container">
-          <div
-            v-for="stage in DOCUMENT_INTELLIGENCE_STAGES"
-            :key="stage.id"
-            class="stage-row-card"
-          >
-            <div class="stage-status-col">
-              <span
-                class="stage-badge"
-                :class="{
-                  'badge-validating': stage.status === 'validating',
-                  'badge-researching': stage.status === 'researching',
-                  'badge-not-started': stage.status === 'not_started',
-                }"
-              >
-                {{ stage.statusLabel }}
-              </span>
-            </div>
-
-            <div class="stage-info-col">
-              <h3 class="stage-title">{{ stage.title }}</h3>
-              <p class="stage-desc">{{ stage.description }}</p>
-              <p v-if="stage.technicalNote" class="stage-technical-note">
-                <span class="note-prefix">Diagnóstico:</span> {{ stage.technicalNote }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 5. Caminhos Disponíveis Hoje (Saídas Úteis) -->
-      <section class="exit-actions-section" aria-labelledby="exit-heading">
-        <div class="section-header">
-          <h2 id="exit-heading" class="section-title">Enquanto a pesquisa avança, estude com o Leitorum</h2>
-          <p class="section-subtitle">
-            Utilize os fluxos já operacionais para registrar seus fichamentos e reflexões imediatas:
-          </p>
-        </div>
-
-        <div class="exit-cards-grid">
-          <div
-            v-for="shortcut in DIGITIZE_EXIT_SHORTCUTS"
-            :key="shortcut.routePath"
-            class="exit-card"
-          >
-            <div class="exit-card-body">
-              <h3 class="exit-card-title">{{ shortcut.title }}</h3>
-              <p class="exit-card-desc">{{ shortcut.description }}</p>
-            </div>
-            <div class="exit-card-footer">
-              <RouterLink :to="shortcut.routePath" class="btn-exit-action">
-                <span>{{ shortcut.actionLabel }}</span>
-                <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </RouterLink>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+        <p class="muted-text">
+          O texto é um rascunho do leitor de licença livre (PP-OCRv6) e erra com frequência em letra cursiva. Revise sempre.
+        </p>
+      </div>
+    </section>
   </main>
 </template>
 
 <style scoped>
-.digitize-notebook-view {
-  min-height: 100vh;
-  padding: 2.5rem 1.5rem 5rem;
-  background-color: var(--color-background, #f8fafc);
-  color: var(--color-text, #0f172a);
-}
-
-.digitize-container {
-  max-width: 880px;
+.digitize-view {
+  max-width: 1120px;
   margin: 0 auto;
+  padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 1.25) calc(var(--space-unit) * 4);
   display: flex;
   flex-direction: column;
-  gap: 3.5rem;
+  gap: calc(var(--space-unit) * 1.5);
+  color: var(--color-text);
 }
 
-/* 1. Cabeçalho */
-.digitize-header {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.status-pill {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 9999px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
-  color: var(--color-text-secondary, #64748b);
-  border: 1px solid var(--color-border-subtle, #e2e8f0);
-}
-
-.status-icon {
-  flex-shrink: 0;
-  color: var(--color-accent, #3b82f6);
-}
-
-.page-title {
-  font-family: var(--font-serif, "EB Garamond", Garamond, Georgia, serif);
-  font-size: 2.5rem;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: var(--color-text, #0f172a);
+.digitize-header h1 {
   margin: 0;
 }
 
-.page-lead {
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: var(--color-text-secondary, #475569);
-  margin: 0;
+.digitize-lead {
+  margin: calc(var(--space-unit) * 0.5) 0 0;
+  color: var(--color-muted);
+  max-width: 62ch;
 }
 
-/* Card de Privacidade Soberana */
-.privacy-card {
-  display: flex;
-  gap: 1.25rem;
-  padding: 1.5rem;
-  border-radius: var(--radius-card, 1rem);
-  background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border-subtle, #e2e8f0);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+.panel {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: calc(var(--space-unit) * 1.5);
 }
 
-.privacy-badge-icon {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.03));
-  color: var(--color-accent, #3b82f6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+h2,
+h3 {
+  margin: 0 0 calc(var(--space-unit) * 0.5);
 }
 
-.privacy-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
+h2:focus-visible,
+h3:focus-visible {
+  outline: var(--focus-width, 2px) solid var(--color-accent);
+  outline-offset: var(--focus-offset, 2px);
 }
 
-.privacy-title {
-  font-size: 1.0625rem;
-  font-weight: 600;
-  color: var(--color-text, #0f172a);
-  margin: 0;
+h2[tabindex='-1']:focus:not(:focus-visible) {
+  outline: none;
 }
 
-.privacy-text {
-  font-size: 0.9375rem;
-  line-height: 1.55;
-  color: var(--color-text-secondary, #475569);
-  margin: 0;
+.muted-text {
+  color: var(--color-muted);
+  margin: 0 0 calc(var(--space-unit) * 0.75);
 }
 
-.privacy-status-note {
+.small {
   font-size: 0.875rem;
-  line-height: 1.5;
-  padding: 0.65rem 0.85rem;
-  border-radius: 8px;
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.02));
-  border-left: 3px solid var(--color-accent, #3b82f6);
-  color: var(--color-text-secondary, #64748b);
-  margin: 0.25rem 0 0;
 }
 
-/* Seções Comuns */
-.section-header {
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.actions {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.section-title {
-  font-family: var(--font-serif, "EB Garamond", Garamond, Georgia, serif);
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--color-text, #0f172a);
-  margin: 0;
-  letter-spacing: -0.015em;
-}
-
-.section-subtitle {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--color-text-secondary, #64748b);
-  margin: 0;
-}
-
-/* 2. Grid de Conceitos */
-.concept-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-}
-
-.concept-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1.25rem;
-  border-radius: var(--radius-card, 0.75rem);
-  background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border-subtle, #e2e8f0);
-}
-
-.concept-icon-wrap {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.03));
-  color: var(--color-accent, #3b82f6);
-  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  gap: calc(var(--space-unit) * 0.75);
+  margin-top: calc(var(--space-unit) * 0.75);
 }
 
-.concept-card-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text, #0f172a);
-  margin: 0;
-}
-
-.concept-card-desc {
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: var(--color-text-secondary, #64748b);
-  margin: 0;
-}
-
-/* 3. Ilustração Conceitual Rotulada */
-.mockup-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1.5rem;
-  border-radius: var(--radius-card, 1rem);
-  background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border-subtle, #e2e8f0);
-}
-
-.mockup-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.mockup-tag {
-  align-self: flex-start;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.06));
-  color: var(--color-text-secondary, #64748b);
-}
-
-.mockup-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--color-text, #0f172a);
-  margin: 0;
-}
-
-.mockup-subtitle {
-  font-size: 0.875rem;
-  color: var(--color-text-secondary, #64748b);
-  margin: 0;
-}
-
-.mockup-page-canvas {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1.5rem;
-  border-radius: 8px;
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.02));
-  border: 1px dashed var(--color-border-subtle, #cbd5e1);
-}
-
-.mockup-box {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  padding: 0.85rem 1rem;
-  border-radius: 6px;
-  background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-accent, #3b82f6);
-}
-
-.box-title {
-  border-left-width: 4px;
-}
-
-.mockup-body-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 1rem;
-}
-
-.box-paragraph {
-  border-left-width: 4px;
-  border-color: var(--color-border-subtle, #94a3b8);
-}
-
-.box-margin-note {
-  border-left-width: 4px;
-  border-color: var(--color-accent, #3b82f6);
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.01));
-}
-
-.box-badge {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-text-secondary, #64748b);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.box-content-mock {
-  font-family: var(--font-serif, "EB Garamond", Garamond, Georgia, serif);
-  font-size: 0.95rem;
-  font-style: italic;
-  line-height: 1.4;
-  color: var(--color-text, #334155);
-  margin: 0;
-}
-
-.mockup-reading-flow-indicator {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--color-border-subtle, #e2e8f0);
-  font-size: 0.8125rem;
-  color: var(--color-text-secondary, #64748b);
-}
-
-.flow-step {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: var(--color-accent, #3b82f6);
-  color: var(--color-on-accent, #ffffff);
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.flow-arrow {
-  color: var(--color-text-secondary, #94a3b8);
-}
-
-.flow-label {
-  margin-left: 0.5rem;
-}
-
-/* 4. Matriz de Maturidade (4 Etapas) */
-.stages-table-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.stage-row-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.25rem;
-  padding: 1.15rem 1.25rem;
-  border-radius: var(--radius-card, 0.75rem);
-  background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border-subtle, #e2e8f0);
-}
-
-.stage-status-col {
-  flex-shrink: 0;
-  width: 140px;
-}
-
-.stage-badge {
-  display: inline-block;
-  padding: 0.25rem 0.65rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-align: center;
-  letter-spacing: 0.02em;
-}
-
-.badge-validating {
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.05));
-  color: var(--color-accent, #2563eb);
-  border: 1px solid var(--color-accent, #93c5fd);
-}
-
-.badge-researching {
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.05));
-  color: var(--color-warning, #d97706);
-  border: 1px solid var(--color-warning, #fcd34d);
-}
-
-.badge-not-started {
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.03));
-  color: var(--color-text-secondary, #64748b);
-  border: 1px solid var(--color-border-subtle, #cbd5e1);
-}
-
-.stage-info-col {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  flex: 1;
-}
-
-.stage-title {
-  font-size: 0.975rem;
-  font-weight: 600;
-  color: var(--color-text, #0f172a);
-  margin: 0;
-}
-
-.stage-desc {
-  font-size: 0.875rem;
-  line-height: 1.45;
-  color: var(--color-text-secondary, #475569);
-  margin: 0;
-}
-
-.stage-technical-note {
-  font-size: 0.8125rem;
-  line-height: 1.4;
-  color: var(--color-text-secondary, #64748b);
-  margin: 0.25rem 0 0;
-}
-
-.note-prefix {
-  font-weight: 600;
-}
-
-/* 5. Ações de Saída */
-.exit-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-}
-
-.exit-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 1.25rem;
-  border-radius: var(--radius-card, 0.75rem);
-  background-color: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border-subtle, #e2e8f0);
-  gap: 1.25rem;
-}
-
-.exit-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.exit-card-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text, #0f172a);
-  margin: 0;
-}
-
-.exit-card-desc {
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: var(--color-text-secondary, #64748b);
-  margin: 0;
-}
-
-.btn-exit-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+.actions .button,
+.actions button {
   min-height: 44px;
-  padding: 0.65rem 1.25rem;
-  border-radius: var(--radius-button, 8px);
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
-  color: var(--color-text, #0f172a);
-  border: 1px solid var(--color-border-subtle, #e2e8f0);
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+  min-width: 44px;
+}
+
+.actions :is(a, button):focus-visible,
+.uncertain-item:focus-visible,
+.section-option input:focus-visible {
+  outline: var(--focus-width, 2px) solid var(--color-accent);
+  outline-offset: var(--focus-offset, 2px);
+}
+
+.capture-panel {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.capture-panel .actions {
+  justify-content: center;
+}
+
+.capture-icon,
+.transparency-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-button);
+  display: grid;
+  place-items: center;
+  background: var(--color-surface-soft);
+  color: var(--color-accent);
+  margin-bottom: calc(var(--space-unit) * 0.75);
+  flex-shrink: 0;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: calc(var(--space-unit) * 1.25);
+  align-items: start;
+  margin-top: calc(var(--space-unit) * 1);
+}
+
+.photo-frame {
+  margin: 0;
+  position: sticky;
+  top: calc(var(--space-unit) * 1);
+}
+
+.photo {
+  display: block;
   width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-soft);
 }
 
-.btn-exit-action:hover {
-  background-color: var(--color-accent, #3b82f6);
-  color: var(--color-on-accent, #ffffff);
-  border-color: transparent;
-  transform: translateY(-1px);
+.review-form fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
 }
 
-.btn-exit-action:focus-visible {
-  outline: 2px solid var(--color-accent, #3b82f6);
-  outline-offset: 2px;
+.review-form > fieldset {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: calc(var(--space-unit) * 1.5);
 }
 
-/* Responsividade Mobile (< 768px) */
+.draft-notice {
+  display: flex;
+  gap: calc(var(--space-unit) * 0.6);
+  align-items: flex-start;
+}
+
+.draft-notice p {
+  margin: 0;
+}
+
+.editor-column {
+  min-width: 0;
+}
+
+.editor-column textarea {
+  min-height: 22rem;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.uncertain {
+  border: var(--border-width) solid var(--color-warning-border);
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+  border-radius: var(--radius-control);
+  padding: calc(var(--space-unit) * 0.9);
+  margin-bottom: calc(var(--space-unit) * 1);
+}
+
+.uncertain .muted-text {
+  color: inherit;
+}
+
+.uncertain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-unit) * 0.4);
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.uncertain-item {
+  width: 100%;
+  min-height: 44px;
+  justify-content: flex-start;
+  text-align: left;
+  white-space: normal;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border);
+}
+
+.uncertain-item:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.uncertain-number {
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.uncertain-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  font-weight: 400;
+}
+
+.destination {
+  margin-top: calc(var(--space-unit) * 1.5);
+  padding-top: calc(var(--space-unit) * 1.25);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.destination-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(var(--space-unit) * 1);
+}
+
+.section-choice legend {
+  font-weight: 650;
+  margin-bottom: calc(var(--space-unit) * 0.5);
+}
+
+.section-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--space-unit) * 0.5);
+}
+
+.section-option {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--space-unit) * 0.5);
+  min-height: 44px;
+  padding: 0 calc(var(--space-unit) * 0.9);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-button);
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.section-option:has(input:checked) {
+  border-color: var(--color-accent);
+  background: var(--color-selected-bg);
+  color: var(--color-selected-text);
+  font-weight: 650;
+}
+
+.section-option input {
+  width: auto;
+  min-height: 0;
+  margin: 0;
+  accent-color: var(--color-accent);
+}
+
+.exit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(var(--space-unit) * 1);
+  margin-top: calc(var(--space-unit) * 1);
+}
+
+.exit-card .text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.success-label {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--space-unit) * 0.4);
+}
+
+.transparency {
+  display: flex;
+  gap: calc(var(--space-unit) * 1);
+  align-items: flex-start;
+}
+
+.transparency .muted-text:last-child {
+  margin-bottom: 0;
+}
+
 @media (max-width: 768px) {
-  .digitize-notebook-view {
-    padding: 1.5rem 1rem 4rem;
+  .digitize-view {
+    padding: calc(var(--space-unit) * 1.25) calc(var(--space-unit) * 0.75) calc(var(--space-unit) * 3);
   }
 
-  .digitize-container {
-    gap: 2.5rem;
+  .review-grid,
+  .destination-grid,
+  .exit-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .page-title {
-    font-size: 2rem;
+  .photo-frame {
+    position: static;
   }
 
-  .privacy-card {
+  .photo {
+    max-height: 40vh;
+  }
+
+  .panel,
+  .review-form > fieldset {
+    padding: calc(var(--space-unit) * 1);
+  }
+
+  .transparency {
     flex-direction: column;
   }
 
-  .concept-grid {
-    grid-template-columns: 1fr;
+  .actions .button,
+  .actions button {
+    flex: 1 1 100%;
   }
+}
 
-  .mockup-body-row {
-    grid-template-columns: 1fr;
-  }
-
-  .stage-row-card {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .stage-status-col {
-    width: auto;
-  }
-
-  .exit-cards-grid {
-    grid-template-columns: 1fr;
+@media (prefers-reduced-motion: reduce) {
+  .digitize-view * {
+    transition: none !important;
+    animation: none !important;
   }
 }
 </style>

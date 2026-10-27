@@ -61,6 +61,8 @@ import type {
   NotificationPurgeResponse,
 } from '../types/notifications.ts'
 
+import type { DigitizePreview, DigitizeStatus } from '../types/digitize.ts'
+
 export interface NotificationReadAllResponse {
   marked_count: number
   message: string
@@ -313,6 +315,12 @@ export const api = {
   createStudy: (payload: StudyCreate) => request<Study>('/studies', {
     method: 'POST', body: JSON.stringify(payload),
   }),
+  getDigitizeStatus: (signal?: AbortSignal) => request<DigitizeStatus>('/digitize/status', { signal }),
+  previewDigitize: (file: File, signal?: AbortSignal) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return request<DigitizePreview>('/digitize/preview', { method: 'POST', body: formData, signal })
+  },
 
   // Métodos de Destaques e Ações Contextuais
   listStudyHighlights: (studyId: number, section?: string, signal?: AbortSignal) => {

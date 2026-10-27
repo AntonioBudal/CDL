@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "leitorum-motor"
+version = "0.1.0"
+description = "Motor de leitura de páginas manuscritas do Leitorum (processo separado, sem rede)"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+# Versões fixadas em requirements.txt; aqui só os nomes, para não puxar versões diferentes.
+dependencies = ["rapidocr", "onnxruntime", "opencv-python-headless", "numpy"]
+
+[tool.setuptools]
+packages = ["leitorum_motor"]

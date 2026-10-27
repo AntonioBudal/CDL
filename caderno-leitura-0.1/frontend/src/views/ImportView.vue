@@ -241,7 +241,7 @@ onBeforeUnmount(() => {
         <h1>Importar Fichamento</h1>
       </header>
 
-      <!-- Card Editorial de Convite: Digitalizar Caderno Manuscrito (Em Pesquisa) -->
+      <!-- Card Editorial de Convite: Digitalizar Caderno Manuscrito (feature 086) -->
       <div class="digitize-invitation-card" role="region" aria-label="Digitalizar Caderno Manuscrito">
         <div class="invitation-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
@@ -251,15 +251,16 @@ onBeforeUnmount(() => {
         <div class="invitation-content">
           <div class="invitation-headline">
             <h2 class="invitation-title">Caderno Manuscrito</h2>
-            <span class="invitation-badge">Em Pesquisa</span>
+            <span class="invitation-badge">Rascunho a revisar</span>
           </div>
           <p class="invitation-desc">
-            Transforme páginas físicas de cadernos em estudos estruturados com processamento 100% local no seu computador.
+            Fotografe uma página do caderno e receba o texto para revisar e salvar como estudo. A leitura acontece no seu
+            computador e é um rascunho: confira antes de salvar.
           </p>
         </div>
         <div class="invitation-action">
           <RouterLink to="/digitalizar" class="btn-invitation-link">
-            <span>Conhecer a proposta</span>
+            <span>Digitalizar uma página</span>
             <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
             </svg>

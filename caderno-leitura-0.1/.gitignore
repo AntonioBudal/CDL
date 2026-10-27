@@ -8,6 +8,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .venv/
+*.egg-info/
 venv/
 
 # SQLite e Dados Locais Privados

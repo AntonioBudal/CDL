@@ -284,3 +284,35 @@ def audit_session_secret() -> tuple[bool, str | None]:
     return True, None
 
 
+
+
+# Digitalização de caderno (feature 086): motor de leitura em processo e ambiente próprios.
+DIGITIZE_MAX_UPLOAD_BYTES: int = 20 * 1024 * 1024
+DIGITIZE_MAX_PIXELS: int = 40_000_000
+DIGITIZE_TIMEOUT_SECONDS: float = 120.0
+DEFAULT_DIGITIZE_MIN_FREE_MB: int = 2048
+MOTOR_DIR: Path = BACKEND_DIR.parent / "motor"
+
+
+def get_motor_python() -> Path:
+    """Interpretador do motor: ``LEITORUM_MOTOR_PYTHON`` ou ``motor/.venv`` do projeto."""
+    configured = os.environ.get("LEITORUM_MOTOR_PYTHON", "").strip()
+    if configured:
+        return Path(configured).expanduser()
+    if os.name == "nt":
+        return MOTOR_DIR / ".venv" / "Scripts" / "python.exe"
+    return MOTOR_DIR / ".venv" / "bin" / "python"
+
+
+def get_motor_config() -> Path:
+    """Configuração do motor (leitor, SHA-256, licença, limiar): ``motor/config.json``."""
+    return MOTOR_DIR / "config.json"
+
+
+def get_digitize_min_free_bytes() -> int:
+    """Memória livre mínima para iniciar uma leitura (``LEITORUM_DIGITIZE_MIN_FREE_MB``)."""
+    try:
+        megabytes = int(os.environ.get("LEITORUM_DIGITIZE_MIN_FREE_MB", str(DEFAULT_DIGITIZE_MIN_FREE_MB)))
+    except ValueError:
+        megabytes = DEFAULT_DIGITIZE_MIN_FREE_MB
+    return max(0, megabytes) * 1024 * 1024

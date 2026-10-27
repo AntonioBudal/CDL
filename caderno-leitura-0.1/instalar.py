@@ -7,15 +7,41 @@ import sys
 ROOT = Path(__file__).resolve().parent
 BACKEND = ROOT / "backend"
 ENVIRONMENT = BACKEND / ".venv"
+MOTOR = ROOT / "motor"
+MOTOR_ENVIRONMENT = MOTOR / ".venv"
 
 
 def run(*arguments: str | Path, cwd: Path = ROOT) -> None:
     subprocess.run([str(argument) for argument in arguments], cwd=cwd, check=True)
 
 
+def venv_python(environment: Path) -> Path:
+    return environment / ("Scripts/python.exe" if sys.platform == "win32" else "bin/python")
+
+
+def install_motor() -> bool:
+    """Motor de leitura da digitalização (opcional): ambiente próprio, sem tocar no backend nem no banco."""
+    python = venv_python(MOTOR_ENVIRONMENT)
+    try:
+        if not python.is_file():
+            print("Criando o ambiente do motor de leitura…", flush=True)
+            run(sys.executable, "-m", "venv", MOTOR_ENVIRONMENT)
+        print("Instalando o motor de leitura (pode levar alguns minutos)…", flush=True)
+        run(python, "-m", "pip", "install", "--disable-pip-version-check", "-r", MOTOR / "requirements.txt")
+        run(python, "-m", "pip", "install", "--disable-pip-version-check", "--no-deps", "-e", MOTOR)
+        run(python, "-I", "-m", "leitorum_motor", "check", "--config", MOTOR / "config.json")
+    except (OSError, subprocess.CalledProcessError) as error:
+        print(f"Aviso: o motor de leitura não foi instalado ({error}).", file=sys.stderr)
+        print("O Leitorum funciona normalmente; só a digitalização de caderno fica indisponível.", file=sys.stderr)
+        return False
+    print("Motor de leitura instalado: a digitalização de caderno está disponível.")
+    return True
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Instalar o Caderno de Leitura Alpha 0.1.")
     parser.add_argument("--dev", action="store_true", help="Instalar também as dependências dos testes Python.")
+    parser.add_argument("--motor", action="store_true", help="Instalar também o motor de leitura da digitalização de caderno (opcional).")
     args = parser.parse_args()
     if sys.version_info[:2] != (3, 13):
         print("Use Python 3.13: no Windows, execute py -3.13 instalar.py.", file=sys.stderr)
@@ -27,7 +53,7 @@ def main() -> int:
             print(f"Arquivo necessário ausente: {required.relative_to(ROOT)}. Extraia o ZIP completo.", file=sys.stderr)
             return 1
 
-    python = ENVIRONMENT / ("Scripts/python.exe" if sys.platform == "win32" else "bin/python")
+    python = venv_python(ENVIRONMENT)
     try:
         if not python.is_file():
             print("Criando o ambiente Python deste projeto…", flush=True)
@@ -43,6 +69,8 @@ def main() -> int:
         print(f"Instalação interrompida: {error}", file=sys.stderr)
         print("Corrija o erro indicado e execute novamente. Não apague o arquivo do banco.", file=sys.stderr)
         return 1
+    if args.motor:
+        install_motor()
     print("Instalação concluída. No Windows, abra INICIAR.cmd.")
     print("Endereço do caderno: http://127.0.0.1:8000")
     return 0
