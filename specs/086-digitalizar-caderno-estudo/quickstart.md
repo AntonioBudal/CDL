@@ -84,7 +84,7 @@ só números.
 | Tempo (SC-001) | ~7 s por página com os modelos carregados; **12,1 s** a frio pela linha de comando; **6,8 s** pela API num servidor de validação |
 | Limiar de baixa confiança (§5) | **0,75**: 1 500 linhas de teste, 20,7 % marcadas, CER 43,5 % nas marcadas contra 23,7 % nas demais, 32,5 % dos erros dentro das marcadas. Com 0,80 seriam 34,9 % marcadas, acima da meta de 1 em 4 |
 | Fluxo pela API (§3) | status disponível → preview 200 com aviso `draft` → estudo salvo com `reading_status = rascunho` e `source_response` igual à leitura; texto renomeado → 415; JPEG truncado → 422 |
-| Memória (FR-011) | com 1,17 GB livres o servidor respondeu `503 low_memory` sem iniciar o motor |
+| Memória (FR-011) | com 1,17 GB livres o servidor respondeu `503 low_memory` sem iniciar o motor. *Alterado pela 088*: esse era o uso normal da máquina, então toda leitura era recusada |
 | Limpeza (SC-002) | zero pastas `leitorum-digitize-*` restantes após sucesso, erros e cancelamento no meio da leitura |
 
 **Pendente de execução manual pelo usuário** (não marcado como feito):

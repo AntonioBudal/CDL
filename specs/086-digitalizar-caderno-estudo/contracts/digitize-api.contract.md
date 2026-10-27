@@ -55,7 +55,7 @@ Lê uma foto de página e devolve o texto para revisão. **Não grava nada no ba
 | 422 | `invalid_image` | arquivo corrompido, truncado ou ausente |
 | 503 | `unavailable` | motor não instalado ou com integridade falha |
 | 503 | `busy` | outro pedido em andamento; inclui `Retry-After: 15` |
-| 503 | `low_memory` | memória livre abaixo do mínimo (padrão 2 GiB) |
+| 503 | `low_memory` | memória livre abaixo do mínimo (padrão 2 GiB; *alterado pela 088*: no Windows, memória comprometível abaixo de 2304 MB) |
 | 504 | `timeout` | o motor passou de 120 s e foi encerrado |
 | 500 | `engine_failed` | o motor terminou com erro ou com saída inválida (detalhe só no log local, sem texto) |
 

@@ -169,6 +169,11 @@ motor, sem mudar o contrato.
 
   Abaixo de **2 GiB** livres (pico de ~800 MiB mais 1 GiB de reserva, a regra da máquina), a resposta é **`503` com
   código `low_memory`**. O limite pode ser mudado por `LEITORUM_DIGITIZE_MIN_FREE_MB`.
+
+  *Alterado pela 088*: com ~1,2 GB de RAM física disponível no computador de referência, essa regra recusava
+  toda leitura. No Windows, a medida passou a ser a memória comprometível (`ullAvailPageFile`), e o mínimo
+  padrão passou a **2304 MB** (pico comprometido medido de 1 205 MB mais 1 GiB). Ver
+  `specs/088-memoria-digitalizacao/`.
 - **Tempo**: o processo do motor é morto após **120 s** e a resposta é `504` com código `timeout`.
 - **Cancelamento**: enquanto o motor roda, o endpoint assíncrono verifica a cada 250 ms se o processo terminou e
   se o cliente desconectou (`request.is_disconnected()`). Em caso de desconexão, mata o processo.

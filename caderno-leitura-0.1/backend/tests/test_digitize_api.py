@@ -7,6 +7,7 @@ a sessão substituída dos testes.
 import asyncio
 import io
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -19,7 +20,7 @@ from PIL import Image
 import pytest
 from sqlalchemy.orm import Session
 
-from app.core.config import BACKEND_DIR
+from app.core.config import BACKEND_DIR, get_digitize_min_free_bytes
 from app.db.session import create_sqlite_engine, get_session
 from app.main import create_app
 from app.services import digitize_service
@@ -271,7 +272,7 @@ def test_second_request_while_busy_is_refused(client, motor):
 def test_low_memory_is_refused_before_engine(client, motor, monkeypatch):
     trace = motor("ok")
     monkeypatch.setenv("LEITORUM_DIGITIZE_MIN_FREE_MB", "2048")
-    monkeypatch.setattr(digitize_service, "free_memory_bytes", lambda: 1024)
+    monkeypatch.setattr(digitize_service, "available_memory", lambda: digitize_service.MemoryReading("commit", 1024))
     before = leftover_dirs()
     response = post_image(client, image_bytes())
     assert response.status_code == 503
@@ -282,13 +283,104 @@ def test_low_memory_is_refused_before_engine(client, motor, monkeypatch):
 
 def test_unmeasurable_memory_does_not_block(client, motor, monkeypatch):
     monkeypatch.setenv("LEITORUM_DIGITIZE_MIN_FREE_MB", "2048")
-    monkeypatch.setattr(digitize_service, "free_memory_bytes", lambda: None)
+    monkeypatch.setattr(digitize_service, "available_memory", lambda: None)
     assert post_image(client, image_bytes()).status_code == 200
 
 
 def test_free_memory_is_measured_on_this_machine():
-    free = digitize_service.free_memory_bytes()
-    assert free is None or free > 0
+    reading = digitize_service.available_memory()
+    assert reading is None or reading.available > 0
+    if reading is not None and os.name == "nt":
+        assert reading.measure == "commit"
+
+
+# --- Feature 088: memória comprometível no Windows e motivo no log ----------------------------
+
+MB = 2**20
+
+
+@pytest.fixture
+def windows_memory(monkeypatch):
+    """Simula o Windows com RAM física e memória comprometível disponíveis em MB."""
+
+    def use(physical_mb: int, commit_mb: int) -> None:
+        status = digitize_service._MemoryStatus()
+        status.ullAvailPhys = physical_mb * MB
+        status.ullAvailPageFile = commit_mb * MB
+        monkeypatch.setattr(digitize_service, "IS_WINDOWS", True)
+        monkeypatch.setattr(digitize_service, "_windows_memory_status", lambda: status)
+
+    return use
+
+
+def test_windows_low_physical_but_ample_commit_reads(client, motor, monkeypatch, windows_memory):
+    """A causa do relato: ~1,2 GB de RAM física livre recusava toda leitura com o mínimo de 2 GiB."""
+    trace = motor("ok")
+    monkeypatch.delenv("LEITORUM_DIGITIZE_MIN_FREE_MB")
+    windows_memory(physical_mb=1200, commit_mb=18000)
+    response = post_image(client, image_bytes())
+    assert response.status_code == 200, response.text
+    assert trace.is_file(), "o motor deveria ter sido chamado"
+
+
+def test_windows_low_commit_is_refused_and_logged(client, motor, monkeypatch, windows_memory, caplog):
+    trace = motor("ok")
+    monkeypatch.delenv("LEITORUM_DIGITIZE_MIN_FREE_MB")
+    windows_memory(physical_mb=6000, commit_mb=1024)
+    with caplog.at_level("INFO", logger="leitorum.digitize"):
+        response = post_image(client, image_bytes())
+    assert response.status_code == 503
+    assert response.json()["code"] == "low_memory"
+    assert not trace.exists()
+    assert "low_memory" in caplog.text
+    assert "commit" in caplog.text
+    assert "1024 MB" in caplog.text
+    assert "2304 MB" in caplog.text
+
+
+def test_min_free_env_applies_to_commit(client, motor, monkeypatch, windows_memory):
+    monkeypatch.setenv("LEITORUM_DIGITIZE_MIN_FREE_MB", "20000")
+    windows_memory(physical_mb=6000, commit_mb=18000)
+    assert post_image(client, image_bytes()).json()["code"] == "low_memory"
+
+
+def test_default_min_free_is_peak_plus_reserve(monkeypatch):
+    monkeypatch.delenv("LEITORUM_DIGITIZE_MIN_FREE_MB", raising=False)
+    assert get_digitize_min_free_bytes() == 2304 * MB
+
+
+def test_engine_failure_logs_exit_code_and_type(client, motor, caplog):
+    motor("crash")
+    with caplog.at_level("INFO", logger="leitorum.digitize"):
+        assert post_image(client, image_bytes()).status_code == 500
+    assert "código 1" in caplog.text
+    assert "RuntimeError" in caplog.text
+
+
+def test_engine_failure_log_ignores_noisy_stderr(client, motor, caplog):
+    motor("noisy_crash")
+    with caplog.at_level("INFO", logger="leitorum.digitize"):
+        assert post_image(client, image_bytes()).status_code == 500
+    assert "ValueError" in caplog.text
+    assert "Livro de Teste" not in caplog.text
+    assert "modelos-ficticios" not in caplog.text
+
+
+@pytest.mark.parametrize(
+    ("content", "expected"),
+    [
+        (None, "desconhecido"),
+        (b"", "desconhecido"),
+        (b"[INFO] Using C:\\modelos-ficticios\\detector.onnx\nLivro de Teste\n", "desconhecido"),
+        (b"\x1b[32m[INFO] aviso\x1b[0m\nIntegrityError\n\n", "IntegrityError"),
+        (b"aviso qualquer\nnumpy.core._exceptions._ArrayMemoryError\n", "numpy.core._exceptions._ArrayMemoryError"),
+    ],
+)
+def test_motor_error_type(tmp_path, content, expected):
+    log = tmp_path / "motor.log"
+    if content is not None:
+        log.write_bytes(content)
+    assert digitize_service.motor_error_type(log) == expected
 
 
 @pytest.fixture

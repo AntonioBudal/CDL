@@ -1,7 +1,7 @@
 """Feature 086: o motor real lê uma página sintética fictícia pela linha de comando.
 
-Pulado quando o motor não está instalado (``instalar.py --motor``) ou quando há pouca memória livre
-(a máquina é compartilhada; o motor chega a ~800 MiB).
+Pulado quando o motor não está instalado (``instalar.py --motor``) ou quando o serviço também recusaria
+a leitura por memória (feature 088: no Windows, memória comprometível abaixo do mínimo).
 """
 
 import json
@@ -10,12 +10,14 @@ import subprocess
 from PIL import Image, ImageDraw, ImageFont
 import pytest
 
-from app.core.config import get_motor_config, get_motor_python
-from app.services.digitize_service import _creation_flags, free_memory_bytes
+from app.core.config import get_digitize_min_free_bytes, get_motor_config, get_motor_python
+from app.services.digitize_service import _creation_flags, available_memory
 
 pytestmark = pytest.mark.skipif(not get_motor_python().is_file(), reason="motor de leitura não instalado")
+_memory = available_memory()
 needs_memory = pytest.mark.skipif(
-    (free_memory_bytes() or 2**40) < 1536 * 2**20, reason="pouca memória livre para o motor"
+    _memory is not None and _memory.available < get_digitize_min_free_bytes(),
+    reason="pouca memória livre para o motor (mesma regra do serviço)",
 )
 
 

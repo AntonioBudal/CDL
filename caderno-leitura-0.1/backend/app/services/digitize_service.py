@@ -2,9 +2,10 @@
 
 O motor de leitura roda em outro ambiente Python (``motor/.venv``), num processo por pedido, chamado
 pela linha de comando ``leitorum_motor`` (contrato ``motor-cli``). Este módulo valida e normaliza a
-imagem, garante um pedido por vez e memória livre, encerra o motor por tempo limite ou desconexão do
-cliente, apaga os arquivos temporários em qualquer desfecho e traduz a saída para a pré-visualização.
-Nunca registra em log o texto lido nem caminhos temporários.
+imagem, garante um pedido por vez e memória disponível (no Windows, a comprometível), encerra o motor
+por tempo limite ou desconexão do cliente, apaga os arquivos temporários em qualquer desfecho e traduz a
+saída para a pré-visualização. Registra em log o motivo das recusas e falhas (memória medida, código de
+saída e tipo da exceção do motor), nunca o texto lido nem caminhos temporários.
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ import io
 import json
 import logging
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -22,7 +24,7 @@ import threading
 import time
 from collections.abc import Awaitable, Callable
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 from fastapi import UploadFile
 from PIL import Image, ImageOps, UnidentifiedImageError
@@ -52,7 +54,12 @@ CHECK_TIMEOUT_SECONDS = 60.0
 POLL_SECONDS = 0.25
 CLEANUP_SECONDS = 2.0
 TEMP_PREFIX = "leitorum-digitize-"
+MOTOR_LOG = "motor.log"
+MOTOR_LOG_TAIL_BYTES = 4096
 EXIT_IMAGE, EXIT_INTEGRITY = 2, 3
+IS_WINDOWS = os.name == "nt"
+# O motor escreve no stderr só o nome do tipo da exceção; avisos de bibliotecas (com caminhos) não casam.
+_EXCEPTION_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_.]{0,79}")
 
 WARNING_MESSAGES = {
     "draft": "Texto lido automaticamente. Pode conter erros: revise antes de salvar.",
@@ -124,19 +131,34 @@ class _MemoryStatus(ctypes.Structure):
     ]
 
 
-def free_memory_bytes() -> int | None:
-    """Memória física livre do sistema, ou ``None`` quando não há como medir."""
+class MemoryReading(NamedTuple):
+    measure: str
+    available: int
+
+
+def _windows_memory_status() -> _MemoryStatus | None:
+    status = _MemoryStatus()
+    status.dwLength = ctypes.sizeof(_MemoryStatus)
+    if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status)):
+        return status
+    return None
+
+
+def available_memory() -> MemoryReading | None:
+    """Memória que o motor ainda pode usar, ou ``None`` quando não há como medir.
+
+    No Windows é a memória comprometível disponível (RAM mais arquivo de paginação): é quando ela
+    acaba que as alocações falham; com a RAM física cheia, o sistema só pagina (feature 088). No
+    Linux é ``MemAvailable``.
+    """
     try:
-        if os.name == "nt":
-            status = _MemoryStatus()
-            status.dwLength = ctypes.sizeof(_MemoryStatus)
-            if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status)):
-                return int(status.ullAvailPhys)
-            return None
+        if IS_WINDOWS:
+            status = _windows_memory_status()
+            return MemoryReading("commit", int(status.ullAvailPageFile)) if status else None
         with open("/proc/meminfo", encoding="ascii") as meminfo:
             for line in meminfo:
                 if line.startswith("MemAvailable:"):
-                    return int(line.split()[1]) * 1024
+                    return MemoryReading("physical", int(line.split()[1]) * 1024)
     except (OSError, ValueError, AttributeError):
         return None
     return None
@@ -208,7 +230,7 @@ async def run_engine(
     timeout = timeout or DIGITIZE_TIMEOUT_SECONDS
     workdir = image.parent
     try:
-        with open(workdir / "motor.log", "wb") as log:
+        with open(workdir / MOTOR_LOG, "wb") as log:
             process = subprocess.Popen(
                 _motor_command("read", "--image", str(image), "--out", str(output)),
                 stdin=subprocess.DEVNULL,
@@ -230,6 +252,22 @@ async def run_engine(
             raise DigitizeError(499, "cancelled", "Leitura cancelada.")
         await asyncio.sleep(POLL_SECONDS)
     return code
+
+
+def motor_error_type(log_path: Path) -> str:
+    """Nome do tipo da exceção que o motor informou no stderr, ou ``"desconhecido"``."""
+    try:
+        with open(log_path, "rb") as log:
+            log.seek(0, os.SEEK_END)
+            log.seek(max(0, log.tell() - MOTOR_LOG_TAIL_BYTES))
+            tail = log.read().decode("utf-8", errors="replace")
+    except OSError:
+        return "desconhecido"
+    for line in reversed(tail.splitlines()):
+        line = line.strip()
+        if line:
+            return line if _EXCEPTION_NAME.fullmatch(line) else "desconhecido"
+    return "desconhecido"
 
 
 def _engine_failed() -> DigitizeError:
@@ -295,10 +333,18 @@ async def preview(upload: UploadFile, is_disconnected: Callable[[], Awaitable[bo
         image, output = workdir / "pagina.png", workdir / "leitura.json"
         await asyncio.to_thread(normalize_image, data, image)
         del data
-        free = free_memory_bytes()
-        if free is not None and free < get_digitize_min_free_bytes():
+        memory, minimum = available_memory(), get_digitize_min_free_bytes()
+        if memory is not None and memory.available < minimum:
+            logger.warning(
+                "digitize: low_memory, memória %s disponível %d MB, mínimo %d MB",
+                memory.measure,
+                memory.available // 2**20,
+                minimum // 2**20,
+            )
             raise DigitizeError(503, "low_memory", "Pouca memória livre no computador agora. Feche outros programas e tente de novo.")
         exit_code = await run_engine(image, output, is_disconnected)
+        if exit_code != 0:
+            logger.warning("digitize: motor saiu com código %d (%s)", exit_code, motor_error_type(workdir / MOTOR_LOG))
         if exit_code == EXIT_IMAGE:
             raise DigitizeError(422, "invalid_image", "A imagem não pôde ser lida. Tente outra foto.")
         if exit_code == EXIT_INTEGRITY:

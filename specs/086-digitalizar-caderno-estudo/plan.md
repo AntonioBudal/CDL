@@ -63,7 +63,7 @@ carregamento dos modelos.
 
 **Constraints**:
 - pico do motor ~800 MiB;
-- recusa abaixo de 2 GiB livres;
+- recusa abaixo de 2 GiB livres (*alterado pela 088*: no Windows, memória comprometível abaixo de 2304 MB);
 - um pedido por vez;
 - tempo limite de 120 s;
 - upload até 20 MB / 40 MP;

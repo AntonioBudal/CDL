@@ -1,6 +1,7 @@
 """Motor falso para os testes da feature 086: segue o contrato ``motor-cli`` sem bibliotecas pesadas.
 
-Modo em ``FAKE_MOTOR_MODE``: ok, empty, uncertain, slow, crash, bad_schema, integrity, unreadable.
+Modo em ``FAKE_MOTOR_MODE``: ok, empty, uncertain, slow, crash, noisy_crash, bad_schema, integrity,
+unreadable. ``noisy_crash`` imita uma saída de erro com aviso de biblioteca e texto antes do tipo (feature 088).
 Se ``FAKE_MOTOR_TRACE`` estiver definido, grava ali a pasta e o tamanho da imagem recebida, para os
 testes conferirem orientação e limpeza. Textos sempre fictícios.
 """
@@ -20,6 +21,7 @@ ENGINE = {
     "reader_sha256": "0" * 64,
     "license_status": "VERIFIED",
 }
+NOISY_MODEL_PATH = r"C:\modelos-ficticios\detector_teste.onnx"
 LINES = {
     "ok": [("Capítulo 1 do Livro de Teste", 0.95), ("linha fictícia incerta", 0.42)],
     "empty": [],
@@ -54,6 +56,11 @@ def main() -> int:
         time.sleep(60)
     if mode == "crash":
         print("RuntimeError", file=sys.stderr)
+        return 1
+    if mode == "noisy_crash":
+        print(f"[INFO] Using {NOISY_MODEL_PATH}", file=sys.stderr)
+        print("Livro de Teste", file=sys.stderr)
+        print("ValueError", file=sys.stderr)
         return 1
     if mode == "integrity":
         return 3

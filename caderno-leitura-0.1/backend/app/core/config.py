@@ -290,7 +290,9 @@ def audit_session_secret() -> tuple[bool, str | None]:
 DIGITIZE_MAX_UPLOAD_BYTES: int = 20 * 1024 * 1024
 DIGITIZE_MAX_PIXELS: int = 40_000_000
 DIGITIZE_TIMEOUT_SECONDS: float = 120.0
-DEFAULT_DIGITIZE_MIN_FREE_MB: int = 2048
+# Pico de memória comprometida do motor (1 205 MB, página sintética de 12 MP ampliada 3×) mais 1 GiB de
+# reserva, arredondado para múltiplo de 256 MB (feature 088).
+DEFAULT_DIGITIZE_MIN_FREE_MB: int = 2304
 MOTOR_DIR: Path = BACKEND_DIR.parent / "motor"
 
 
@@ -310,7 +312,10 @@ def get_motor_config() -> Path:
 
 
 def get_digitize_min_free_bytes() -> int:
-    """Memória livre mínima para iniciar uma leitura (``LEITORUM_DIGITIZE_MIN_FREE_MB``)."""
+    """Memória mínima para iniciar uma leitura (``LEITORUM_DIGITIZE_MIN_FREE_MB``).
+
+    Comparada com a memória comprometível disponível no Windows e com ``MemAvailable`` no Linux.
+    """
     try:
         megabytes = int(os.environ.get("LEITORUM_DIGITIZE_MIN_FREE_MB", str(DEFAULT_DIGITIZE_MIN_FREE_MB)))
     except ValueError:
