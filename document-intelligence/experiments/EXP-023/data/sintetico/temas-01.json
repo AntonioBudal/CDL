@@ -1,0 +1,133 @@
+{
+  "license": "MIT — texto fictício escrito para o EXP-023; autores, obras e citações são inventados",
+  "topics": [
+    {
+      "id": "t01-leitura-ativa",
+      "units": [
+        ["s", "O capítulo trata de como a leitura ativa muda a forma de reter o que se lê."],
+        ["s", "Ideia central: ler bem é conversar com o texto, não só passar os olhos."],
+        ["s", "A autora defende que perguntas feitas antes da leitura orientam a atenção."],
+        ["s", "Em resumo, o hábito de anotar transforma o leitor em participante."],
+        ["e", "Quando escrevo a pergunta antes de ler, percebo que paro nos trechos que respondem a ela."],
+        ["e", "Isso acontece porque a atenção fica com um alvo, e o resto do texto vira contexto."],
+        ["e", "Sem a pergunta eu leio mais rápido mas lembro menos no dia seguinte"],
+        ["e", "p. 23 — achei confuso o exemplo do estudante que relê três vezes, não entendi se ela é contra reler"],
+        ["e", "Acho que a parte sobre margens funciona melhor em livro próprio, em livro emprestado não dá."],
+        ["e", "Por exemplo, sublinhar sem escrever nada ao lado não ajuda muito (MOURA, 2019), porque não obriga a pensar."],
+        ["e", "→ ler com lápis na mão deixa a leitura mais lenta, só que mais funda"],
+        ["e", "Será que isso vale para romance ou só para texto técnico?"],
+        ["c", "Leitura ativa: leitura em que o leitor faz perguntas, anota e resume enquanto lê."],
+        ["c", "Marginália — anotações feitas na margem do próprio livro."],
+        ["c", "Leitura inspecional é a leitura rápida para decidir se o livro merece leitura atenta."],
+        ["c", "Pergunta-guia: questão escrita antes de começar, que dirige a atenção."],
+        ["c", "- fichamento: registro organizado das ideias de uma obra"],
+        ["r", "MOURA, Helena. A leitura que fica. São Paulo: Editora Página Aberta, 2019."],
+        ["r", "“Quem lê com uma pergunta encontra o que procura e também o que não esperava.”"],
+        ["r", "cf. cap. 4, sobre releitura"],
+        ["r", "ver também TAVARES, Rui. Ler devagar. 2. ed. Recife: Casa do Leitor, 2014."]
+      ]
+    },
+    {
+      "id": "t02-revolucao-industrial",
+      "units": [
+        ["s", "O texto apresenta a Revolução Industrial como uma mudança no modo de trabalhar, mais do que nas máquinas."],
+        ["s", "Tese do autor: a fábrica reorganizou o tempo das pessoas antes de mudar a técnica."],
+        ["s", "cap 2 resume a passagem da oficina doméstica para a fábrica"],
+        ["s", "De modo geral, o livro mostra que o relógio virou instrumento de disciplina."],
+        ["e", "A oficina doméstica deixava a família controlar o ritmo, por isso a fábrica pareceu uma perda de liberdade."],
+        ["e", "Os donos pagavam por hora e não por peça, então o tempo virou mercadoria."],
+        ["e", "Isso explica as multas por atraso que aparecem nos regulamentos citados"],
+        ["e", "Não concordo totalmente: em algumas cidades o trabalho em casa também era muito controlado."],
+        ["e", "p. 58 — o exemplo das tecelãs ajuda a ver que mulheres e crianças entraram primeiro nas fábricas"],
+        ["e", "Ou seja, a máquina chegou depois da disciplina e não o contrário."],
+        ["e", "O carvão barato tornou as máquinas a vapor viáveis, e isso puxou a mineração e as ferrovias juntas."],
+        ["e", "fica a dúvida sobre quanto disso vale para o Brasil do século XIX"],
+        ["c", "Sistema doméstico: produção feita em casa, com matéria-prima entregue por um comerciante."],
+        ["c", "Proletariado — trabalhadores que vivem apenas da venda da própria força de trabalho."],
+        ["c", "Cercamentos foram o fechamento de terras comuns, que expulsou camponeses para as cidades."],
+        ["c", "Disciplina fabril: conjunto de regras de horário, silêncio e produtividade dentro da fábrica."],
+        ["c", "máquina a vapor = motor que transforma calor em movimento"],
+        ["r", "ALMEIDA, Joaquim. O relógio e a fábrica. Porto Alegre: Editora Meridiano, 2008."],
+        ["r", "“O apito da fábrica valia mais que o sino da igreja.” (ALMEIDA, 2008, p. 61)"],
+        ["r", "apud ALMEIDA, 2008, p. 77: regulamento de uma fiação de 1820"],
+        ["r", "Fonte complementar: NUNES, Clara. Cidades de fumaça. Lisboa: Atlântico, 2016."]
+      ]
+    },
+    {
+      "id": "t03-fotossintese",
+      "units": [
+        ["s", "Capítulo sobre fotossíntese: como as plantas transformam luz em energia química."],
+        ["s", "O livro explica as duas etapas, a dependente de luz e o ciclo de Calvin."],
+        ["s", "Em síntese a planta usa luz, água e gás carbônico para fazer açúcar e liberar oxigênio."],
+        ["e", "A primeira etapa acontece nos tilacoides porque é ali que fica a clorofila."],
+        ["e", "A água é quebrada nessa fase, e é dela que vem o oxigênio liberado, não do gás carbônico."],
+        ["e", "Eu sempre achei que o oxigênio vinha do CO2, então essa parte foi uma surpresa"],
+        ["e", "O ciclo de Calvin não precisa de luz diretamente, mas depende do ATP produzido antes."],
+        ["e", "Por isso chamar de fase escura confunde, ela acontece de dia também."],
+        ["e", "p. 112 — o gráfico de taxa por intensidade de luz mostra um platô, a enzima vira o limite"],
+        ["e", "Logo, aumentar a luz não aumenta a produção para sempre."],
+        ["e", "→ comparar com plantas C4 na próxima aula"],
+        ["c", "Clorofila: pigmento verde que absorve luz vermelha e azul."],
+        ["c", "Estômatos — pequenas aberturas nas folhas por onde entra o gás carbônico."],
+        ["c", "ATP é a molécula que armazena energia para as reações da célula."],
+        ["c", "Ciclo de Calvin: sequência de reações que fixa o carbono e forma açúcar."],
+        ["c", "Rubisco = enzima que captura o CO2 no ciclo de Calvin"],
+        ["c", "Ponto de compensação luminoso, quando a fotossíntese iguala a respiração."],
+        ["r", "PEREIRA, Lúcia; DIAS, Marcos. Biologia das plantas. 3. ed. Curitiba: Folha Verde, 2017."],
+        ["r", "cf. figura 7.3 e tabela 7.1"],
+        ["r", "“A folha é uma fábrica movida a luz.” (PEREIRA; DIAS, 2017, p. 109)"]
+      ]
+    },
+    {
+      "id": "t04-inflacao",
+      "units": [
+        ["s", "O autor discute o que causa a inflação e por que ela pesa mais para quem ganha pouco."],
+        ["s", "Ideia principal: inflação é aumento generalizado de preços, não de um produto só."],
+        ["s", "o cap. fecha defendendo metas de inflação com banco central independente"],
+        ["s", "Resumindo, há inflação de demanda, de custos e a inercial, e cada uma pede remédio diferente."],
+        ["e", "Quem tem salário fixo perde poder de compra mês a mês, já que o preço sobe antes do reajuste."],
+        ["e", "A inflação inercial é difícil porque todo mundo reajusta olhando a inflação passada."],
+        ["e", "Isso cria uma espiral, os preços sobem porque subiram antes"],
+        ["e", "p. 89 — o caso dos anos 80 no livro é bem resumido, faltou explicar a indexação dos aluguéis"],
+        ["e", "Subir juros esfria o consumo, mas também encarece o crédito das empresas, então o desemprego pode subir."],
+        ["e", "Não sei se a independência do banco central resolve, depende de quem indica a diretoria."],
+        ["e", "Por exemplo, em choque de petróleo o custo sobe mesmo sem demanda forte (RIBEIRO, 2012)."],
+        ["c", "Inflação: aumento contínuo e generalizado do nível de preços."],
+        ["c", "Deflação — queda generalizada dos preços, que também pode ser ruim para a economia."],
+        ["c", "Índice de preços é uma média ponderada dos preços de uma cesta de produtos."],
+        ["c", "Indexação: correção automática de valores pela inflação passada."],
+        ["c", "Meta de inflação: valor anunciado que o banco central se compromete a perseguir."],
+        ["c", "taxa básica de juros = juro que o banco central usa para guiar os demais"],
+        ["r", "RIBEIRO, Fernando. Preços em movimento. Rio de Janeiro: Editora Cais, 2012."],
+        ["r", "ver também cap. 6 sobre juros"],
+        ["r", "“Inflação é um imposto que ninguém votou.”"],
+        ["r", "SANTOS, Paula. Moeda e confiança. Belo Horizonte: Pampulha, 2020. p. 33-41."]
+      ]
+    },
+    {
+      "id": "t05-romantismo",
+      "units": [
+        ["s", "O capítulo apresenta o Romantismo brasileiro e a busca de uma identidade nacional."],
+        ["s", "A autora sustenta que o índio idealizado servia para criar um passado heroico para o país."],
+        ["s", "Três gerações: nacionalista, ultrarromântica e condoreira."],
+        ["e", "O índio dos romances não é o índio real, é um cavaleiro medieval com cocar"],
+        ["e", "Isso fazia sentido porque o país recém-independente queria um herói que não fosse português."],
+        ["e", "A segunda geração muda o foco para a morte, o tédio e o amor impossível."],
+        ["e", "p. 140 — gostei da comparação entre o mal do século e a melancolia dos estudantes da época"],
+        ["e", "Os condoreiros olham para fora, para a escravidão, e a poesia vira discurso político."],
+        ["e", "Penso que a crítica dela à idealização é justa, mas às vezes parece cobrar do século XIX ideias de hoje."],
+        ["e", "Por exemplo, o poema do navio é romântico na forma e abolicionista no tema (LIMA, 2011)."],
+        ["e", "dúvida: onde entra o romance urbano nessa divisão?"],
+        ["c", "Indianismo: corrente que toma o indígena idealizado como símbolo nacional."],
+        ["c", "Mal do século — sentimento de tédio, pessimismo e atração pela morte da segunda geração."],
+        ["c", "Condoreirismo é a poesia social e grandiloquente da terceira geração."],
+        ["c", "Ultrarromantismo: exagero sentimental e subjetivo."],
+        ["c", "- byronismo: influência do poeta inglês, com vida boêmia e melancolia"],
+        ["r", "LIMA, Beatriz. A invenção do herói. Salvador: Editora Baía, 2011."],
+        ["r", "“O país precisava de um passado, e a literatura o escreveu.”"],
+        ["r", "cf. antologia, poemas 12 a 18"],
+        ["r", "ver também CARVALHO, Otávio. Poesia e nação. São Paulo: Ateliê do Verso, 2005."]
+      ]
+    }
+  ]
+}

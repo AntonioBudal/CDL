@@ -1,0 +1,120 @@
+{
+  "license": "MIT — texto fictício escrito para o EXP-023; autores, obras e citações são inventados",
+  "topics": [
+    {
+      "id": "t16-algoritmos",
+      "units": [
+        ["s", "O capítulo apresenta o que é um algoritmo e como medir se ele é eficiente."],
+        ["s", "A ideia principal é que o tempo de execução cresce de formas diferentes conforme o tamanho da entrada."],
+        ["s", "cap. 1 = algoritmos de busca e ordenação com exemplos simples"],
+        ["e", "A busca binária é rápida porque descarta metade da lista a cada passo."],
+        ["e", "Mas ela só funciona se a lista já estiver ordenada, e ordenar também custa tempo"],
+        ["e", "p. 18 — o exemplo da lista telefônica deixou a busca binária bem intuitiva"],
+        ["e", "Um algoritmo quadrático parece bom com dez itens e trava com um milhão, por isso a análise importa."],
+        ["e", "Acho que a notação assintótica assusta mais do que precisa, a ideia é só comparar crescimento."],
+        ["e", "→ implementar as duas buscas e cronometrar"],
+        ["c", "Algoritmo: sequência finita de passos bem definidos que resolve um problema."],
+        ["c", "Complexidade de tempo — medida de como o tempo cresce com o tamanho da entrada."],
+        ["c", "Busca binária é a busca que divide a lista ordenada ao meio a cada comparação."],
+        ["c", "Notação O grande: descrição do limite superior de crescimento de uma função."],
+        ["c", "recursão = função que chama a si mesma"],
+        ["r", "LOPES, Rafael. Pensar em passos. São Carlos: Editora Código, 2020."],
+        ["r", "cf. pseudocódigo da figura 1.4"],
+        ["r", "ver também a lista de exercícios no ambiente virtual"],
+        ["r", "“Um bom algoritmo é aquele que você consegue explicar em voz alta.” (LOPES, 2020, p. 9)"]
+      ]
+    },
+    {
+      "id": "t17-vacinas",
+      "units": [
+        ["s", "O texto explica como as vacinas treinam o sistema imunológico."],
+        ["s", "A autora defende que a vacinação é um ato coletivo, não apenas individual."],
+        ["s", "Em resumo: a vacina apresenta o antígeno sem a doença, e o corpo guarda memória."],
+        ["e", "Quando o corpo encontra o vírus de verdade, as células de memória respondem mais rápido."],
+        ["e", "Por isso a doença não aparece ou aparece mais fraca"],
+        ["e", "A imunidade de rebanho protege quem não pode ser vacinado, já que o vírus circula menos."],
+        ["e", "p. 77 — o gráfico da queda de casos depois da campanha é impressionante"],
+        ["e", "Me pergunto por que a confiança nas vacinas caiu justo quando as doenças sumiram."],
+        ["e", "Algumas vacinas precisam de reforço porque a memória imunológica diminui com o tempo (NERY, 2018)."],
+        ["c", "Antígeno: substância que o sistema imunológico reconhece como estranha."],
+        ["c", "Anticorpo — proteína produzida para se ligar a um antígeno específico."],
+        ["c", "Imunidade de rebanho é a proteção indireta que surge quando grande parte da população está imune."],
+        ["c", "Células de memória: linfócitos que guardam o registro de um antígeno já encontrado."],
+        ["c", "dose de reforço = nova aplicação para manter a proteção"],
+        ["r", "NERY, Carla. O corpo que se defende. Belo Horizonte: Editora Serra, 2018."],
+        ["r", "“A vacina protege quem a toma e quem está ao lado.”"],
+        ["r", "cf. calendário vacinal no anexo"],
+        ["r", "ver também boletins da secretaria de saúde citados na aula"]
+      ]
+    },
+    {
+      "id": "t18-estatistica",
+      "units": [
+        ["s", "O capítulo mostra a diferença entre média, mediana e moda e quando usar cada uma."],
+        ["s", "Tese do autor: a média sozinha engana quando os dados têm valores extremos."],
+        ["s", "resumo do cap: medidas de centro e de dispersão andam juntas"],
+        ["e", "Se um bilionário entra na sala, a média salarial sobe muito, mas a mediana quase não muda."],
+        ["e", "Por isso a mediana é melhor para renda e preço de imóvel"],
+        ["e", "O desvio-padrão mostra o quanto os dados se espalham, então duas turmas com a mesma média podem ser muito diferentes."],
+        ["e", "p. 41 — exercício 3 resolvido com a fórmula errada? conferir na monitoria"],
+        ["e", "Eu sempre olhei só a média das notas, nunca pensei na dispersão."],
+        ["e", "Amostras pequenas variam muito, ou seja, conclusões com poucos dados são frágeis."],
+        ["c", "Média: soma dos valores dividida pela quantidade de valores."],
+        ["c", "Mediana — valor central quando os dados estão em ordem."],
+        ["c", "Moda é o valor que aparece com mais frequência."],
+        ["c", "Desvio-padrão: medida de quanto os valores se afastam da média."],
+        ["c", "outlier = valor muito distante dos demais"],
+        ["c", "Amostra, parte da população observada para tirar conclusões sobre o todo."],
+        ["r", "TEIXEIRA, Bruno. Números que contam. Juiz de Fora: Editora Mantiqueira, 2015."],
+        ["r", "cf. planilha de exemplos da aula 3"],
+        ["r", "“A média é a medida mais usada e a mais mal usada.” (TEIXEIRA, 2015, p. 38)"]
+      ]
+    },
+    {
+      "id": "t19-cultura",
+      "units": [
+        ["s", "O texto discute o conceito de cultura na antropologia e a crítica ao etnocentrismo."],
+        ["s", "O autor sustenta que cada cultura deve ser entendida nos próprios termos."],
+        ["s", "Em suma, o estranho para nós é normal para quem vive dentro daquela cultura, e vice-versa."],
+        ["e", "Quando julgamos um costume alheio pelo nosso, deixamos de entender a lógica dele."],
+        ["e", "O trabalho de campo existe porque só convivendo dá para ver o sentido das práticas"],
+        ["e", "p. 63 — o relato do ritual de passagem lembrou a formatura, que também é um ritual"],
+        ["e", "Penso que o relativismo tem limite quando há violação de direitos, o livro não resolve isso bem."],
+        ["e", "Dessa forma, estranhar o familiar é tão importante quanto familiarizar o estranho."],
+        ["e", "A cultura muda com o contato entre grupos (FREITAS, 2013), não é algo fixo."],
+        ["c", "Cultura: conjunto de significados, práticas e valores compartilhados por um grupo."],
+        ["c", "Etnocentrismo — julgamento de outras culturas a partir dos valores da própria."],
+        ["c", "Relativismo cultural é a postura de entender cada cultura em seu próprio contexto."],
+        ["c", "Etnografia: descrição detalhada de um grupo feita a partir do convívio."],
+        ["c", "- ritual de passagem: cerimônia que marca a mudança de fase da vida"],
+        ["r", "FREITAS, Márcio. O outro e nós. Cuiabá: Editora Chapada, 2013."],
+        ["r", "“Ninguém enxerga a própria cultura até conhecer outra.”"],
+        ["r", "ver também o documentário indicado na aula 4"],
+        ["r", "cf. FREITAS, 2013, p. 70-72"]
+      ]
+    },
+    {
+      "id": "t20-renascimento",
+      "units": [
+        ["s", "O capítulo apresenta a pintura do Renascimento e a invenção da perspectiva."],
+        ["s", "A autora mostra que a perspectiva mudou a relação entre o espectador e a imagem."],
+        ["s", "ideia central: o quadro vira uma janela aberta para um mundo organizado pela razão"],
+        ["e", "Com o ponto de fuga, todas as linhas levam o olhar para um centro, por isso a cena parece profunda."],
+        ["e", "Antes as figuras importantes eram maiores, agora o tamanho depende da distância"],
+        ["e", "p. 120 — a análise do afresco com a mesa comprida é ótima, ver a imagem em boa resolução"],
+        ["e", "Acho curioso que a técnica matemática tenha deixado a pintura mais emotiva e não mais fria."],
+        ["e", "O mecenato explica muita coisa, já que quem pagava escolhia o tema e às vezes aparecia no quadro."],
+        ["e", "Não entendi a diferença entre sfumato e claro-escuro, rever"],
+        ["c", "Perspectiva linear: técnica que cria ilusão de profundidade com linhas que convergem."],
+        ["c", "Ponto de fuga — ponto onde as linhas paralelas parecem se encontrar."],
+        ["c", "Mecenato é o patrocínio de artistas por famílias ricas, nobres ou pela Igreja."],
+        ["c", "Sfumato: transição suave entre luz e sombra, sem contornos marcados."],
+        ["c", "afresco = pintura feita sobre reboco ainda úmido"],
+        ["r", "VALENTE, Júlia. A janela e o olhar. Ouro Preto: Editora Barroco, 2014."],
+        ["r", "“A pintura é uma janela pela qual olhamos o mundo.”"],
+        ["r", "cf. caderno de imagens, pranchas 5 a 9"],
+        ["r", "ver também GUERRA, Paulo. Luz e sombra na arte. Natal: Editora Potiguar, 2010."]
+      ]
+    }
+  ]
+}

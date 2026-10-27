@@ -1,0 +1,122 @@
+{
+  "license": "MIT — texto fictício escrito para o EXP-023; autores, obras e citações são inventados",
+  "topics": [
+    {
+      "id": "t11-direito-consumidor",
+      "units": [
+        ["s", "O capítulo trata dos direitos básicos do consumidor e da responsabilidade do fornecedor."],
+        ["s", "A ideia principal é que o consumidor é a parte mais fraca da relação e a lei compensa isso."],
+        ["s", "o texto termina com o direito de arrependimento nas compras fora da loja"],
+        ["e", "Como o consumidor não conhece o produto por dentro, a lei inverte o ônus da prova em vários casos."],
+        ["e", "Isso significa que o fornecedor precisa provar que o defeito não existe"],
+        ["e", "p. 55 — o prazo de sete dias vale para compra pela internet, perguntar se vale para aplicativo de comida"],
+        ["e", "A responsabilidade é objetiva, ou seja, não importa se houve culpa do fabricante."],
+        ["e", "Acho que muita gente não usa esses direitos porque o processo parece demorado."],
+        ["e", "Publicidade enganosa também gera dever de indenizar (GOMES, 2014), mesmo sem intenção de enganar."],
+        ["c", "Consumidor: pessoa que adquire ou usa produto ou serviço como destinatário final."],
+        ["c", "Fornecedor — quem produz, monta, importa, distribui ou vende produtos ou serviços."],
+        ["c", "Vício do produto é o defeito que torna o produto impróprio ou diminui seu valor."],
+        ["c", "Responsabilidade objetiva: dever de reparar o dano independentemente de culpa."],
+        ["c", "Direito de arrependimento — desistência em sete dias nas compras fora do estabelecimento."],
+        ["c", "inversão do ônus da prova = o juiz transfere ao fornecedor o dever de provar"],
+        ["r", "GOMES, Patrícia. Manual do consumidor. São Paulo: Editora Balcão, 2014."],
+        ["r", "cf. art. 49 do código"],
+        ["r", "“A boa-fé é a regra, e a esperteza, a exceção punida.”"],
+        ["r", "ver também jurisprudência indicada no material da aula 7"]
+      ]
+    },
+    {
+      "id": "t12-escola-nova",
+      "units": [
+        ["s", "O livro apresenta a Escola Nova e a crítica ao ensino baseado na memorização."],
+        ["s", "Tese do autor: o aluno aprende fazendo, e a escola deve partir dos interesses da criança."],
+        ["s", "Em resumo o professor deixa de ser só transmissor e vira organizador de experiências."],
+        ["s", "o cap. 5 compara a proposta com a escola tradicional ponto a ponto"],
+        ["e", "Se a criança só decora, ela não sabe usar o conteúdo quando a situação muda."],
+        ["e", "Por isso o projeto, a experiência e o trabalho em grupo ganham espaço."],
+        ["e", "p. 98 — achei romantizado, numa turma de quarenta alunos isso fica difícil"],
+        ["e", "Ainda assim, mesmo pequenas experiências mudam o envolvimento da turma, vi isso no estágio"],
+        ["e", "A crítica posterior diz que a Escola Nova esvaziou o conteúdo (PRADO, 2012), mas não sei se concordo."],
+        ["e", "→ relacionar com metodologias ativas de hoje"],
+        ["c", "Escola Nova: movimento de renovação pedagógica centrado na atividade do aluno."],
+        ["c", "Aprender fazendo — princípio de que a experiência prática gera conhecimento."],
+        ["c", "Pedagogia tradicional é o ensino centrado no professor e na transmissão de conteúdo."],
+        ["c", "Método de projetos: organização do ensino em torno de problemas que os alunos investigam."],
+        ["c", "- interesse: motivação que nasce da própria criança, ponto de partida do ensino"],
+        ["r", "PRADO, Álvaro. A escola em movimento. Florianópolis: Editora Ilha, 2012."],
+        ["r", "“A educação não é preparação para a vida; é a própria vida.”"],
+        ["r", "apud PRADO, 2012, p. 44"],
+        ["r", "ROCHA, Elisa. Pedagogias do século XX. Maceió: Lagoa, 2018."]
+      ]
+    },
+    {
+      "id": "t13-tabela-periodica",
+      "units": [
+        ["s", "O capítulo conta como a tabela periódica foi organizada e o que as colunas significam."],
+        ["s", "O autor mostra que a posição de um elemento já diz muito sobre seu comportamento químico."],
+        ["s", "resumindo: períodos são as linhas, grupos são as colunas, e o número atômico manda na ordem"],
+        ["e", "Elementos do mesmo grupo têm a mesma quantidade de elétrons na última camada, por isso reagem parecido."],
+        ["e", "Os metais alcalinos reagem com água de forma violenta porque perdem um elétron com facilidade."],
+        ["e", "Os gases nobres quase não reagem, já que a última camada está completa"],
+        ["e", "p. 30 — a previsão de elementos ainda não descobertos é a parte mais bonita do capítulo"],
+        ["e", "Penso que decorar a tabela inteira não faz sentido, entender a lógica das colunas resolve quase tudo."],
+        ["e", "O raio atômico diminui ao longo do período, pois a carga do núcleo aumenta e puxa os elétrons."],
+        ["c", "Número atômico: quantidade de prótons no núcleo de um átomo."],
+        ["c", "Período — cada linha horizontal da tabela periódica."],
+        ["c", "Grupo ou família é cada coluna vertical da tabela."],
+        ["c", "Eletronegatividade: tendência de um átomo atrair elétrons numa ligação."],
+        ["c", "Camada de valência — última camada eletrônica, que define as ligações."],
+        ["c", "isótopos = átomos do mesmo elemento com número de nêutrons diferente"],
+        ["r", "SOARES, Marina. Química para entender. Teresina: Editora Parnaíba, 2016."],
+        ["r", "cf. tabela no apêndice A"],
+        ["r", "“A tabela não foi descoberta de uma vez; foi montada como um quebra-cabeça.” (SOARES, 2016, p. 27)"]
+      ]
+    },
+    {
+      "id": "t14-cidades",
+      "units": [
+        ["s", "O texto discute o crescimento das cidades brasileiras e a formação das periferias."],
+        ["s", "A tese é que a urbanização foi rápida e desigual, e o planejamento chegou atrasado."],
+        ["s", "Em síntese, a cidade formal e a informal cresceram juntas, uma dependendo da outra."],
+        ["e", "Como o emprego ficava no centro e a moradia barata longe, o trajeto diário ficou enorme."],
+        ["e", "Isso explica por que o transporte público virou o centro das disputas urbanas"],
+        ["e", "Na minha cidade isso é bem visível, o bairro onde moro surgiu de loteamento irregular."],
+        ["e", "p. 150 — o mapa dos anos 70 ajuda a ver o espraiamento, vale tirar foto"],
+        ["e", "A valorização do centro empurra quem tem menos renda para longe, então a desigualdade vira geografia."],
+        ["e", "Será que a regularização fundiária resolve ou só valoriza a área e expulsa de novo?"],
+        ["c", "Urbanização: aumento da população urbana em relação à rural."],
+        ["c", "Periferização — deslocamento da população de baixa renda para as bordas da cidade."],
+        ["c", "Especulação imobiliária é a retenção de terrenos à espera de valorização."],
+        ["c", "Movimento pendular: deslocamento diário entre casa e trabalho em cidades diferentes."],
+        ["c", "gentrificação = substituição de moradores antigos por grupos de renda maior"],
+        ["r", "ARAÚJO, Denise. A cidade partida. Recife: Editora Capibaribe, 2017."],
+        ["r", "ver também dados do censo no material complementar"],
+        ["r", "“A cidade é desenhada por quem tem poder de escolher onde morar.”"],
+        ["r", "cf. ARAÚJO, 2017, cap. 3"]
+      ]
+    },
+    {
+      "id": "t15-harmonia",
+      "units": [
+        ["s", "O capítulo apresenta a formação dos acordes e o campo harmônico maior."],
+        ["s", "O autor afirma que entender os graus do campo harmônico facilita tocar de ouvido."],
+        ["s", "ideia central: cada nota da escala gera um acorde, e eles têm funções diferentes"],
+        ["e", "O acorde de dominante cria tensão porque tem uma nota que quer resolver na tônica."],
+        ["e", "Por isso a sequência dominante → tônica soa como final de música"],
+        ["e", "p. 22 — o exercício de cifrar a música conhecida ajudou bastante, fazer de novo com outra"],
+        ["e", "Eu tocava os acordes decorados sem saber por que funcionavam juntos."],
+        ["e", "Trocar um acorde por outro da mesma função mantém o sentido da música, ou seja, dá para rearmonizar."],
+        ["e", "Ainda não entendi bem o acorde diminuto, o livro passa rápido por ele"],
+        ["c", "Tríade: acorde formado por três notas sobrepostas em terças."],
+        ["c", "Campo harmônico — conjunto de acordes formados a partir das notas de uma escala."],
+        ["c", "Tônica é o acorde de repouso, o centro da tonalidade."],
+        ["c", "Dominante: acorde de tensão que pede resolução na tônica."],
+        ["c", "Cifra — notação dos acordes por letras e números."],
+        ["c", "intervalo = distância entre duas notas"],
+        ["r", "QUEIROZ, Daniel. Harmonia sem mistério. Campo Grande: Editora Pantanal, 2019."],
+        ["r", "cf. exemplos sonoros 3 a 7"],
+        ["r", "“A harmonia é a arte de criar expectativa e resolvê-la.”"]
+      ]
+    }
+  ]
+}

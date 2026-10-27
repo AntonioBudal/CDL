@@ -1,0 +1,129 @@
+{
+  "license": "MIT — texto fictício escrito para o EXP-023; autores, obras e citações são inventados",
+  "topics": [
+    {
+      "id": "t06-memoria",
+      "units": [
+        ["s", "O texto trata dos tipos de memória e de como esquecemos."],
+        ["s", "O autor afirma que esquecer é parte do funcionamento normal, não uma falha."],
+        ["s", "cap 3 = memória de curto prazo, de longo prazo e de trabalho"],
+        ["s", "No geral, revisar em intervalos crescentes é a estratégia que o livro mais recomenda."],
+        ["e", "A memória de trabalho segura poucas coisas ao mesmo tempo, por isso decorar listas grandes de uma vez falha."],
+        ["e", "Quando revejo no dia seguinte lembro muito mais do que revendo três vezes no mesmo dia"],
+        ["e", "A curva do esquecimento cai rápido no começo e depois estabiliza."],
+        ["e", "Isso sugere que a primeira revisão precisa vir cedo."],
+        ["e", "p. 47 — o experimento com sílabas sem sentido parece artificial, será que vale para conteúdo com significado?"],
+        ["e", "Dormir ajuda a consolidar, então estudar de madrugada antes da prova pode atrapalhar."],
+        ["e", "Associar a informação nova a algo que já sei facilita, pois cria mais caminhos para lembrar."],
+        ["c", "Memória de trabalho: sistema que mantém e manipula informação por poucos segundos."],
+        ["c", "Consolidação — processo que torna a memória estável depois da aprendizagem."],
+        ["c", "Repetição espaçada é a revisão em intervalos cada vez maiores."],
+        ["c", "Curva do esquecimento: gráfico da perda de lembrança ao longo do tempo."],
+        ["c", "Efeito de testagem, quando tentar lembrar fortalece mais que reler."],
+        ["c", "memória episódica = lembrança de eventos vividos"],
+        ["r", "FARIAS, Gustavo. Como lembramos. Campinas: Editora Sinapse, 2018."],
+        ["r", "“Lembrar é reconstruir, não reproduzir.” (FARIAS, 2018, p. 15)"],
+        ["r", "cf. quadro 3.2"],
+        ["r", "MOTA, Inês. O cérebro que aprende. Fortaleza: Litoral, 2021."]
+      ]
+    },
+    {
+      "id": "t07-contrato-social",
+      "units": [
+        ["s", "O capítulo compara três autores do contrato social e o que cada um entende por estado de natureza."],
+        ["s", "A tese do livro é que o contrato é uma ficção útil para justificar a autoridade."],
+        ["s", "Resumo: para um, o estado de natureza é guerra; para outro, liberdade com riscos; para o terceiro, bondade corrompida."],
+        ["e", "Se o estado de natureza é guerra de todos contra todos, então qualquer governo forte parece melhor que nenhum."],
+        ["e", "Já para quem vê o estado de natureza como pacífico, o governo existe para proteger a propriedade."],
+        ["e", "A diferença muda tudo: quanto pior a natureza humana, mais poder se aceita entregar"],
+        ["e", "p. 72 — a crítica à vontade geral me pareceu exagerada, o autor do livro lê como se fosse autoritarismo"],
+        ["e", "Eu acho que a ideia de vontade geral pode ser lida como bem comum e não como ditadura."],
+        ["e", "O direito de resistência aparece quando o governo quebra o contrato (VIEIRA, 2010)."],
+        ["e", "Contudo, ninguém assinou contrato nenhum, e essa é a objeção mais forte."],
+        ["c", "Estado de natureza: situação hipotética dos seres humanos antes de qualquer governo."],
+        ["c", "Contrato social — acordo, real ou hipotético, que funda a sociedade política."],
+        ["c", "Vontade geral é a vontade do corpo político voltada ao interesse comum."],
+        ["c", "Soberania: poder supremo de mandar dentro de um território."],
+        ["c", "Direito natural — direito que existiria independentemente das leis escritas."],
+        ["r", "VIEIRA, Augusto. A ficção do contrato. Brasília: Editora Planalto, 2010."],
+        ["r", "“O homem nasce livre, e por toda parte encontra amarras.”"],
+        ["r", "ver também cap. 5 sobre representação"],
+        ["r", "apud VIEIRA, 2010, p. 80"]
+      ]
+    },
+    {
+      "id": "t08-ecossistemas",
+      "units": [
+        ["s", "O texto explica como a energia passa pelos níveis de uma cadeia alimentar."],
+        ["s", "Ideia central: só uma pequena parte da energia passa de um nível para o seguinte."],
+        ["s", "o capítulo termina com o efeito de remover um predador de topo"],
+        ["e", "Como cada nível gasta energia vivendo, sobra pouco para o nível acima."],
+        ["e", "Por isso existem poucos predadores grandes e muitas plantas."],
+        ["e", "Quando o lobo saiu do parque, os cervos aumentaram e comeram a vegetação da margem dos rios"],
+        ["e", "Ou seja, o predador controlava a paisagem indiretamente."],
+        ["e", "p. 201 — não ficou claro se o exemplo dos lobos é consenso ou se ainda há debate"],
+        ["e", "Lembrei do manguezal da aula de campo, os caranguejos também mudam o solo."],
+        ["e", "Decompositores fecham o ciclo, devolvendo nutrientes ao solo, mas não devolvem energia."],
+        ["c", "Cadeia alimentar: sequência de organismos em que cada um serve de alimento ao seguinte."],
+        ["c", "Teia alimentar — conjunto de cadeias interligadas num ecossistema."],
+        ["c", "Produtores são os organismos que fazem o próprio alimento, como as plantas."],
+        ["c", "Nível trófico: posição de um organismo na cadeia alimentar."],
+        ["c", "Cascata trófica — efeito em sequência causado pela mudança num nível da cadeia."],
+        ["c", "espécie-chave = espécie cuja ausência muda muito o ecossistema"],
+        ["r", "COSTA, Renata. Fluxos da vida. Manaus: Editora Igarapé, 2015."],
+        ["r", "cf. figura 9.1"],
+        ["r", "“Nenhuma energia volta; toda a matéria volta.” (COSTA, 2015, p. 198)"],
+        ["r", "BARROS, Hélio. Ecologia de campo. Natal: Dunas, 2019."]
+      ]
+    },
+    {
+      "id": "t09-variacao-linguistica",
+      "units": [
+        ["s", "A autora discute a variação linguística e o preconceito contra falares regionais."],
+        ["s", "Tese: não existe língua errada, existem variedades com prestígio social diferente."],
+        ["s", "Em suma, a norma-padrão é uma variedade entre outras, escolhida por razões históricas."],
+        ["e", "Quando alguém corrige o sotaque do outro, está julgando a origem social, não a gramática."],
+        ["e", "A escola precisa ensinar a norma-padrão sem desprezar a fala que o aluno traz de casa"],
+        ["e", "Isso porque a criança que se sente ridicularizada para de falar em sala."],
+        ["e", "p. 34 — o exemplo do 'nós vai' mostra que a concordância segue outra regra, não é ausência de regra"],
+        ["e", "Discordo um pouco quando ela diz que toda correção é preconceito, às vezes é só adequação ao contexto."],
+        ["e", "As variações acontecem por região, idade, classe e situação de fala (BRAGA, 2016)."],
+        ["e", "→ usar isso no trabalho de estágio"],
+        ["c", "Variação linguística: diferenças no uso da língua entre grupos e situações."],
+        ["c", "Norma-padrão — modelo idealizado de língua usado como referência na escola e na escrita formal."],
+        ["c", "Variante é cada uma das formas possíveis de dizer a mesma coisa."],
+        ["c", "Preconceito linguístico: discriminação de pessoas pela forma como falam."],
+        ["c", "Registro — grau de formalidade escolhido conforme a situação."],
+        ["r", "BRAGA, Sílvia. Falar diferente. Belém: Editora Marajó, 2016."],
+        ["r", "“A língua não é um museu, é uma praça.”"],
+        ["r", "cf. cap. 2 do livro de sociolinguística da disciplina"],
+        ["r", "ver também MENDES, Caio. Gramática e poder. Vitória: Capixaba, 2009."]
+      ]
+    },
+    {
+      "id": "t10-newton",
+      "units": [
+        ["s", "O capítulo apresenta as três leis de Newton e exemplos do dia a dia."],
+        ["s", "O livro mostra que as três leis explicam desde um carro freando até a órbita da Lua."],
+        ["s", "resumo: inércia, força igual a massa vezes aceleração, ação e reação"],
+        ["e", "No ônibus que freia o corpo continua indo para frente, isso é a inércia"],
+        ["e", "A segunda lei explica por que um caminhão vazio acelera mais rápido que cheio, já que a massa é menor."],
+        ["e", "Ação e reação agem em corpos diferentes, por isso não se anulam."],
+        ["e", "Eu confundia isso antes, achava que as forças se cancelavam e nada se movia."],
+        ["e", "p. 66 — exercício 4 errado no gabarito? o sinal da aceleração está trocado"],
+        ["e", "Logo, para mudar o movimento é preciso uma força resultante diferente de zero."],
+        ["e", "O atrito parece contrariar a primeira lei, mas ele é só mais uma força agindo."],
+        ["c", "Inércia: tendência de um corpo manter seu estado de repouso ou movimento."],
+        ["c", "Força resultante — soma vetorial de todas as forças sobre um corpo."],
+        ["c", "Massa é a medida da inércia de um corpo."],
+        ["c", "Newton (N): unidade de força no Sistema Internacional."],
+        ["c", "aceleração = variação da velocidade por unidade de tempo"],
+        ["c", "Referencial inercial, aquele em que vale a primeira lei."],
+        ["r", "MACHADO, Tiago. Física em movimento. Goiânia: Editora Cerrado, 2013. v. 1."],
+        ["r", "cf. lista de exercícios 2"],
+        ["r", "“Todo corpo persevera em seu estado de repouso ou de movimento.”"],
+        ["r", "ver também simulação da aula 5"]
+      ]
+    }
+  ]
+}
