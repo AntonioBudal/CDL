@@ -1,0 +1,181 @@
+{
+ "schema": "leitorum-di-organizer-dusuario/1",
+ "created_utc": "2026-10-27T23:57:55+00:00",
+ "experiment": "EXP-023",
+ "git": {
+  "commit": "58dac1ec719cca090da47e64e4743216b5e1d4d0",
+  "dirty": false
+ },
+ "privacy": "só números agregados; cópia temporária via API de backup, origem e cópia em mode=ro, apagada no fim",
+ "studies_total": 3,
+ "studies_eligible": 3,
+ "studies_evaluated": 3,
+ "users_with_eligible": 2,
+ "centroid_build_s_all_studies": 0.04,
+ "centroid_build_s_per_100_studies": 1.193,
+ "section_char_share": {
+  "summary": 0.2876,
+  "explanation": 0.3599,
+  "concepts": 0.1404,
+  "references": 0.2121
+ },
+ "V4_seed": {
+  "macro_f1_chars": 0.4965,
+  "macro_f1_units": 0.4606,
+  "per_section_chars": {
+   "summary": {
+    "precision": 0.6761,
+    "recall": 0.8304,
+    "f1": 0.7454
+   },
+   "explanation": {
+    "precision": 0.6458,
+    "recall": 0.3442,
+    "f1": 0.4491
+   },
+   "concepts": {
+    "precision": 0.3413,
+    "recall": 0.9585,
+    "f1": 0.5034
+   },
+   "references": {
+    "precision": 0.6478,
+    "recall": 0.1852,
+    "f1": 0.288
+   }
+  },
+  "char_error_effort": 0.4634,
+  "pk": 0.5507,
+  "windowdiff": 0.8002,
+  "fragmentation": 4.429,
+  "ece": 0.3235,
+  "unit_boundary_f1": 0.1308,
+  "uncovered_chars": 0,
+  "latency_ms_p50": 17.96,
+  "latency_ms_p95": 42.35,
+  "pages": 3
+ },
+ "V6_user": {
+  "kappa_25": {
+   "macro_f1_chars": 0.6441,
+   "macro_f1_units": 0.5833,
+   "per_section_chars": {
+    "summary": {
+     "precision": 0.6715,
+     "recall": 1.0,
+     "f1": 0.8035
+    },
+    "explanation": {
+     "precision": 0.6923,
+     "recall": 0.6306,
+     "f1": 0.66
+    },
+    "concepts": {
+     "precision": 0.7166,
+     "recall": 0.9585,
+     "f1": 0.8201
+    },
+    "references": {
+     "precision": 0.6994,
+     "recall": 0.1852,
+     "f1": 0.2928
+    }
+   },
+   "char_error_effort": 0.3116,
+   "pk": 0.4222,
+   "windowdiff": 0.6654,
+   "fragmentation": 4.0,
+   "ece": 0.2322,
+   "unit_boundary_f1": 0.1308,
+   "uncovered_chars": 0,
+   "latency_ms_p50": null,
+   "latency_ms_p95": null,
+   "pages": 3
+  },
+  "kappa_50": {
+   "macro_f1_chars": 0.6193,
+   "macro_f1_units": 0.5623,
+   "per_section_chars": {
+    "summary": {
+     "precision": 0.7075,
+     "recall": 1.0,
+     "f1": 0.8287
+    },
+    "explanation": {
+     "precision": 0.6895,
+     "recall": 0.5851,
+     "f1": 0.633
+    },
+    "concepts": {
+     "precision": 0.5802,
+     "recall": 0.9585,
+     "f1": 0.7228
+    },
+    "references": {
+     "precision": 0.6994,
+     "recall": 0.1852,
+     "f1": 0.2928
+    }
+   },
+   "char_error_effort": 0.328,
+   "pk": 0.4601,
+   "windowdiff": 0.6692,
+   "fragmentation": 3.571,
+   "ece": 0.233,
+   "unit_boundary_f1": 0.1308,
+   "uncovered_chars": 0,
+   "latency_ms_p50": null,
+   "latency_ms_p95": null,
+   "pages": 3
+  },
+  "kappa_100": {
+   "macro_f1_chars": 0.5852,
+   "macro_f1_units": 0.528,
+   "per_section_chars": {
+    "summary": {
+     "precision": 0.6923,
+     "recall": 0.9301,
+     "f1": 0.7938
+    },
+    "explanation": {
+     "precision": 0.6711,
+     "recall": 0.5376,
+     "f1": 0.597
+    },
+    "concepts": {
+     "precision": 0.5,
+     "recall": 0.9585,
+     "f1": 0.6572
+    },
+    "references": {
+     "precision": 0.6994,
+     "recall": 0.1852,
+     "f1": 0.2928
+    }
+   },
+   "char_error_effort": 0.3652,
+   "pk": 0.4919,
+   "windowdiff": 0.7413,
+   "fragmentation": 3.571,
+   "ece": 0.2675,
+   "unit_boundary_f1": 0.1308,
+   "uncovered_chars": 0,
+   "latency_ms_p50": null,
+   "latency_ms_p95": null,
+   "pages": 3
+  }
+ },
+ "h4": {
+  "gain_macro_f1": 0.1228,
+  "minority_sections": [
+   "concepts",
+   "references"
+  ],
+  "minority_f1_drop": {
+   "concepts": -0.2194,
+   "references": -0.0048
+  },
+  "met": true
+ },
+ "note": "Coluna de cada estudo como gabarito; pseudo-página na ordem canônica e sem cabeçalhos. unit_boundary_f1 aqui mede só as fronteiras entre colunas."
+}

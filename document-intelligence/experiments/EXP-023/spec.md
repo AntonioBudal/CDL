@@ -1,6 +1,6 @@
 # EXP-023 — Organização Automática do Texto nas 4 Seções do Estudo (pesquisa, especificação e plano)
 
-**Created**: 2026-10-27 · **Status**: `APPROVED` — aprovado pelo usuário em 2026-10-27, com as decisões da §11; execução das fases F01 a F05 só dentro de `document-intelligence/`
+**Created**: 2026-10-27 · **Status**: `CONCLUÍDO` em 2026-10-27 ([RESULTS](./RESULTS.md)); adoção proposta no ADR-010, à espera do usuário
 
 **Input**: pedido do usuário (2026-10-27, Parte 2). Leitores escrevem no caderno de forma corrida, sem os cabeçalhos
 `Resumo / Explicação / Conceitos / Referências` que o parser determinístico do Leitorum
