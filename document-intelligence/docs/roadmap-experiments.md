@@ -115,6 +115,9 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### `EXP-020` — Escala Medida na Linha Inclinada *(CONCLUÍDO — não adotado, por delegação em 2026-10-26)*
 - **Resultado**: a escala sobe, mas o erro não muda na foto leve (21,6 %) e piora na forte (70,6 % → 74,1 %). A perda em foto vem do leitor e do detector, não da escala; regra do ADR-008 mantida.
 
+### `EXP-021` — Ajuste Fino com Degradações de Foto *(CONCLUÍDO — não adotado, por delegação em 2026-10-26)*
+- **Resultado**: metade das linhas de treino degradadas como foto: digitalizada 11,8 % → 12,1 %, foto leve 21,6 % → 21,4 %, forte 70,6 % → 69,9 %. O aumento não fecha a perda em foto; as páginas pedidas para o produto devem ser fotos.
+
 ### `EXP-004` — Classificação Semântica
 - **Objetivo**: Rotular trechos do caderno em categorias didáticas (`title`, `concept`, `summary`, `question`, `quote`, `example`) usando pistas visuais e textuais.
 - **Métricas**: Macro-F1 e Matriz de Confusão.

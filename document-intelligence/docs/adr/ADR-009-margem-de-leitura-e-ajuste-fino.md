@@ -3,7 +3,7 @@
 * **Status:** ACCEPTED (aceito por delegação permanente do usuário em 2026-10-22)
 * **Data:** 2026-10-22
 * **Decisores:** Usuário (delegação); Claude Code (proposta e execução)
-* **Experimentos de Suporte:** [EXP-014](../../experiments/EXP-014/RESULTS.md) , [EXP-017](../../experiments/EXP-017/RESULTS.md), [EXP-018](../../experiments/EXP-018/RESULTS.md) e [EXP-019](../../experiments/EXP-019/RESULTS.md)
+* **Experimentos de Suporte:** [EXP-014](../../experiments/EXP-014/RESULTS.md) , [EXP-017](../../experiments/EXP-017/RESULTS.md), [EXP-018](../../experiments/EXP-018/RESULTS.md), [EXP-019](../../experiments/EXP-019/RESULTS.md) e [EXP-021](../../experiments/EXP-021/RESULTS.md)
 * **Status de Licença:** modelo de partida PP-OCRv6 small rec (Apache-2.0) e ferramentas (`VERIFIED`, conforme declarado). O modelo ajustado no EXP-014 usou o BRESSAY (`NEEDS VALIDATION`): **experimental, proibido no produto**.
 
 ## 1. Contexto
@@ -53,8 +53,11 @@ caderno deve ser pior. O ajuste só em português piora o inglês.
 
 O ganho do ajuste se mantém na foto leve. A perda não vem da escala automática (corrigir a medida em linhas
 inclinadas não mudou o erro, [EXP-020](../../experiments/EXP-020/RESULTS.md)); vem principalmente do leitor diante
-de letras borradas e com ruído e, na foto forte, também da detecção (metade das linhas). Próximo passo: treinar o
-leitor com degradações de foto.
+de letras borradas e com ruído e, na foto forte, também da detecção (metade das linhas).
+
+**Treino com degradações de foto (EXP-021)**, mesmo orçamento, metade das linhas degradadas: digitalizada 11,8 % →
+12,1 %, foto leve 21,6 % → 21,4 %, foto forte 70,6 % → 69,9 %. Não adotado: digitalizações degradadas
+artificialmente não ensinam o leitor a ler fotos; os dados para o produto precisam ser fotos.
 
 **Quantidade de dados (EXP-018)**, mesmo orçamento de treino, CER de linha na validação:
 
@@ -69,7 +72,8 @@ leitor com degradações de foto.
   (EXP-017): 11,8 % de CER de página nas redações.
 * Próximo passo com dependência externa: obter manuscrito em português com licença para produto e repetir o ajuste.
   Pedido recomendado (EXP-018): **mínimo de ~50 páginas, alvo de ~150**, fotografadas com celular e transcritas
-  linha a linha.
+  linha a linha. Fotos, não digitalizações: o aumento de dados com degradações sintéticas não fecha a perda em
+  foto (EXP-021).
 * A inferência do modelo ajustado voltou para ONNX (EXP-017), com o mesmo custo do original.
 * Um ajuste para o produto deve misturar dados das línguas que o leitor vai ler, ou manter o modelo original
   para texto que não seja português.

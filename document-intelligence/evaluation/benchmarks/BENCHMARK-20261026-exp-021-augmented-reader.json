@@ -1,0 +1,133 @@
+{
+  "schema": "leitorum-di-pipeline-benchmark/1",
+  "created_utc": "2026-10-27T01:57:33+00:00",
+  "experiment": "EXP-021",
+  "git": {
+    "commit": "b2df6b97fc09f4a6ee39b8894c576bf0181550e3",
+    "dirty": false
+  },
+  "environment": {
+    "python": "3.14.3",
+    "implementation": "CPython",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "cpu_count": 8
+  },
+  "target": 80,
+  "before": {
+    "test-bressay-clean": 0.11816469677997332,
+    "test-bressay-light": 0.21602581722301967,
+    "test-bressay-strong": 0.706145842877358
+  },
+  "reader_model": {
+    "file": "models/exp-021/rec-aug-bressay.onnx",
+    "sha256": "ded45aaef892c02d6e191b2882eae2bacdd14ba61456486bbe40db7a9985dbf0"
+  },
+  "license_status": {
+    "reader": "NEEDS VALIDATION — ajustado no BRESSAY (EXP-021); nunca produto",
+    "gnhk": "VERIFIED (CC-BY-4.0)",
+    "bressay": "NEEDS VALIDATION (exceção experimental; não embasa produto)"
+  },
+  "results": {
+    "test-bressay-clean": {
+      "pages": 185,
+      "cer_micro": 0.1211332702155168,
+      "wer_micro": 0.3443047579178713,
+      "page_cer_median": 0.10492227979274611,
+      "ref_chars": 491145,
+      "scales": {
+        "4": 83,
+        "3": 33,
+        "2": 50,
+        "1": 19
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 7135.7301,
+        "p95_ms": 8541.30144,
+        "peak_rss_bytes": 991944704,
+        "load_ms": 2045.649
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 5623
+      },
+      "before": 0.11816469677997332
+    },
+    "test-bressay-light": {
+      "pages": 185,
+      "cer_micro": 0.21377800853108553,
+      "wer_micro": 0.47859133187687236,
+      "page_cer_median": 0.1758519141775347,
+      "ref_chars": 491145,
+      "scales": {
+        "3": 67,
+        "2": 73,
+        "1": 43,
+        "4": 2
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 6177.4959,
+        "p95_ms": 7891.991799999999,
+        "peak_rss_bytes": 953106432,
+        "load_ms": 2189.3439
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 5406
+      },
+      "before": 0.21602581722301967
+    },
+    "test-bressay-strong": {
+      "pages": 185,
+      "cer_micro": 0.6987875271050301,
+      "wer_micro": 0.8485760259546579,
+      "page_cer_median": 0.7399418322830829,
+      "ref_chars": 491145,
+      "scales": {
+        "2": 68,
+        "3": 9,
+        "1": 108
+      },
+      "cost": {
+        "pages": 185,
+        "failed": [],
+        "median_ms": 3199.6841,
+        "p95_ms": 6390.118859999998,
+        "peak_rss_bytes": 796844032,
+        "load_ms": 1368.9255
+      },
+      "ldf2": {
+        "documents": 185,
+        "valid": 185,
+        "not_representable": 0,
+        "lines": 2848
+      },
+      "before": 0.706145842877358
+    }
+  },
+  "verdicts": {
+    "h1_light_gain": {
+      "delta": -0.002247808691934139,
+      "met": false
+    },
+    "h2_clean_not_worse": {
+      "delta": 0.0029685734355434784,
+      "met": true
+    },
+    "h3_strong_gain": {
+      "delta": -0.007358315772327928,
+      "met": true
+    },
+    "h4_ldf_valid": {
+      "met": true
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # EXP-021 — Ajuste Fino com Degradações de Foto (especificação, plano e tarefas)
 
-**Created**: 2026-10-26 · **Status**: `DELEGATED` (autonomia permanente do usuário, 2026-10-18)
+**Created**: 2026-10-26 · **Status**: `ACCEPTED` — concluído por delegação em 2026-10-26 ([RESULTS](./RESULTS.md)) (autonomia permanente do usuário, 2026-10-18)
 
 **Input**: EXP-019 e EXP-020. O leitor ajustado (EXP-014/017) vai de 11,8 % de CER de página na digitalização
 para 21,6 % na foto leve e 70,6 % na forte; a escala não é a causa (EXP-020). Na foto leve só 4 % das linhas
@@ -35,5 +35,5 @@ servem; se não, as páginas pedidas precisam ser fotos.
 ## Tarefas
 
 - [x] **T001** Degradação de linha com testes; treino com `--augment`; exportação; harness de leitura.
-- [ ] **T002** Treino, exportação e paridade.
-- [ ] **T003** Três leituras; pontuação; relatório; registrar no ADR-009.
+- [x] **T002** Treino, exportação e paridade.
+- [x] **T003** Três leituras; pontuação; relatório; registrar no ADR-009.
