@@ -39,6 +39,10 @@ conhecida, e a degradação sintética do EXP-019 representa bem essa condição
 ## Tarefas
 
 - [x] **T001** Sorteio das páginas e PDF para impressão.
-- [ ] **T002** (usuário) Imprimir e fotografar.
+- [x] **T002** (usuário) Imprimir e fotografar. **Desvio registrado:** as 15 fotos chegaram depois de passar
+  por um conversor (PDF → PPTX) e de recorte pelo usuário: PNG em tons de cinza, todas com 1653 × 2339 px, fundo
+  branco uniforme e sem metadados da câmera. O usuário confirma que são fotos e pediu para usá-las; o resultado
+  mede **foto recortada e limpa por software**, não a foto crua da câmera. A inclinação das linhas detectadas é
+  registrada como checagem objetiva da geometria de foto.
 - [ ] **T003** Harness de leitura das fotos com associação por menor CER; rodar os dois leitores; pontuar;
   relatório.
