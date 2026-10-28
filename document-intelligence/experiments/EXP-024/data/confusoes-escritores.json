@@ -1,0 +1,30 @@
+{
+  "license": "MIT; dados sintéticos do projeto Leitorum (EXP-024).",
+  "notes": "SINTÉTICO, declarado: o modelo de ruído do EXP-015 é global, sem identidade de escritor. Estes confundidores recorrentes por escritor são inventados para testar se o motor aprende erros pessoais estáveis. src/dst são trechos de 1 a 2 caracteres; where = any (qualquer posição) ou end (fim de palavra); p = probabilidade por ocorrência, aplicada antes do ruído global.",
+  "writers": {
+    "W1": [
+      {"src": "ç", "dst": "c", "p": 0.85, "where": "any"},
+      {"src": "ã", "dst": "a", "p": 0.8, "where": "any"},
+      {"src": "m", "dst": "rn", "p": 0.2, "where": "any"},
+      {"src": "é", "dst": "e", "p": 0.7, "where": "any"}
+    ],
+    "W2": [
+      {"src": "é", "dst": "e", "p": 0.9, "where": "any"},
+      {"src": "u", "dst": "v", "p": 0.15, "where": "any"},
+      {"src": "ó", "dst": "o", "p": 0.85, "where": "any"},
+      {"src": "s", "dst": "r", "p": 0.25, "where": "end"}
+    ],
+    "W3": [
+      {"src": "a", "dst": "o", "p": 0.25, "where": "end"},
+      {"src": "ê", "dst": "e", "p": 0.9, "where": "any"},
+      {"src": "ç", "dst": "c", "p": 0.6, "where": "any"},
+      {"src": "nh", "dst": "rh", "p": 0.3, "where": "any"}
+    ],
+    "W4": [
+      {"src": "rn", "dst": "m", "p": 0.4, "where": "any"},
+      {"src": "í", "dst": "i", "p": 0.9, "where": "any"},
+      {"src": "ã", "dst": "õ", "p": 0.3, "where": "any"},
+      {"src": "t", "dst": "l", "p": 0.12, "where": "any"}
+    ]
+  }
+}

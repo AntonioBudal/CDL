@@ -1,0 +1,358 @@
+{
+  "license": "MIT; textos fictícios escritos para o projeto Leitorum (EXP-024). Nenhum livro, autor ou obra citada existe.",
+  "notes": "Cada livro tem 8 termos com glosa e 5 obras relacionadas. A divisão entre adaptação e holdout é feita por streams.py (termos e obras relacionadas), nunca aqui.",
+  "books": [
+    {
+      "id": "b01", "profile": "P1", "split": "val",
+      "title": "A leitura como conversa", "author": "Helena Mourão", "year": 2011, "city": "Vila Serena", "publisher": "Editora Vereda",
+      "chapters": ["A pergunta antes do texto", "Notas à margem", "O leitor que responde", "Releituras"],
+      "terms": [
+        ["hermenêutica", "arte de interpretar o sentido de um texto"],
+        ["leitura ativa", "ler fazendo perguntas e respondendo ao texto"],
+        ["marginália", "anotações feitas nas margens da página"],
+        ["inferência", "conclusão tirada do que o texto sugere sem dizer"],
+        ["diálogo interior", "conversa silenciosa do leitor com o autor"],
+        ["releitura", "voltar ao texto com uma pergunta nova"],
+        ["horizonte de expectativa", "aquilo que o leitor espera encontrar antes de ler"],
+        ["síntese", "redução das ideias principais a poucas linhas"]
+      ],
+      "related": [
+        ["Cadernos de um leitor lento", "Otávio Brandão", 1998],
+        ["A margem e o centro", "Lúcia Pereira Dantas", 2004],
+        ["Perguntar ao livro", "Rui Cavalcante", 2015],
+        ["O hábito de anotar", "Marta Quintela", 2009],
+        ["Leitores e ouvintes", "Sebastião Ribas", 1987]
+      ]
+    },
+    {
+      "id": "b02", "profile": "P1", "split": "val",
+      "title": "Cidades que respiram", "author": "Joaquim Telles", "year": 2016, "city": "Porto Brando", "publisher": "Casa do Lume",
+      "chapters": ["O verde invisível", "Água de chuva", "Quintais e calçadas", "A praça como abrigo"],
+      "terms": [
+        ["ilha de calor", "área urbana mais quente que o entorno por falta de sombra"],
+        ["permeabilidade", "capacidade do solo de absorver a água da chuva"],
+        ["corredor ecológico", "faixa verde que liga áreas de mata"],
+        ["arborização", "plantio planejado de árvores nas ruas"],
+        ["microclima", "clima próprio de um lugar pequeno"],
+        ["drenagem", "caminho que a água percorre até sair da cidade"],
+        ["biodiversidade", "variedade de espécies num mesmo lugar"],
+        ["resiliência", "capacidade de voltar ao equilíbrio depois de um choque"]
+      ],
+      "related": [
+        ["O rio sob o asfalto", "Cecília Arantes", 2012],
+        ["Árvores de calçada", "Henrique Lobato", 2007],
+        ["Chuva e cidade", "Paula Sobreira", 2019],
+        ["Jardins de vizinhança", "Elias Franco", 2001],
+        ["A sombra pública", "Ivone Carvalhal", 2014]
+      ]
+    },
+    {
+      "id": "b03", "profile": "P1", "split": "test",
+      "title": "A imprensa das pequenas cidades", "author": "Augusto Ferraz", "year": 2008, "city": "Rio Claro do Norte", "publisher": "Tipografia Avante",
+      "chapters": ["O jornal de uma folha só", "Tipógrafos e leitores", "A notícia que chegava de trem", "O fim das gráficas"],
+      "terms": [
+        ["tipografia", "impressão com tipos móveis de metal"],
+        ["folhetim", "narrativa publicada em partes no jornal"],
+        ["tiragem", "número de exemplares impressos de uma edição"],
+        ["linotipo", "máquina que fundia linhas inteiras de texto"],
+        ["opinião pública", "conjunto de ideias que circulam entre os leitores"],
+        ["censura prévia", "controle do texto antes da publicação"],
+        ["periodicidade", "intervalo regular entre as edições"],
+        ["circulação", "alcance de um jornal entre os leitores"]
+      ],
+      "related": [
+        ["Papel e chumbo", "Lauro Medeiros", 1995],
+        ["Notícias do interior", "Gilda Fontoura", 2003],
+        ["O tipógrafo e a cidade", "Nestor Avelar", 1982],
+        ["Folhas que voavam", "Raquel Sampaio", 2017],
+        ["Jornais de uma tarde", "Caio Mendonça", 2010]
+      ]
+    },
+    {
+      "id": "b04", "profile": "P1", "split": "test",
+      "title": "Ouvir a música de casa", "author": "Beatriz Lacerda", "year": 2013, "city": "São Brás do Campo", "publisher": "Editora Ciranda",
+      "chapters": ["Cantigas de cozinha", "O rádio na sala", "Memória e melodia", "Instrumentos esquecidos"],
+      "terms": [
+        ["memória afetiva", "lembrança ligada a uma emoção vivida"],
+        ["cantiga", "canção simples transmitida de boca em boca"],
+        ["timbre", "qualidade que distingue um som de outro"],
+        ["repertório", "conjunto de músicas que um grupo conhece"],
+        ["improvisação", "criação musical feita no momento"],
+        ["oralidade", "transmissão de saberes pela fala"],
+        ["harmonia", "combinação de sons tocados ao mesmo tempo"],
+        ["ritmo", "organização dos sons no tempo"]
+      ],
+      "related": [
+        ["Rádios de domingo", "Fábio Gusmão", 1999],
+        ["A voz da avó", "Clarice Tavares", 2006],
+        ["Canções de trabalho", "Manuel Esteves", 1991],
+        ["O violão na varanda", "Sônia Prates", 2018],
+        ["Ouvido e lembrança", "Daniel Arruda", 2011]
+      ]
+    },
+    {
+      "id": "b05", "profile": "P2", "split": "val",
+      "title": "Mapas sem fronteiras", "author": "Renato Galvão", "year": 2005, "city": "Altamira do Sul", "publisher": "Editora Rumo",
+      "chapters": ["A escala do mundo", "Linhas imaginárias", "Mapas de quem caminha", "O território vivido"],
+      "terms": [
+        ["escala", "relação entre a medida no mapa e a medida real"],
+        ["projeção cartográfica", "modo de representar a esfera num plano"],
+        ["território", "espaço marcado por relações de poder"],
+        ["legenda", "chave que explica os símbolos do mapa"],
+        ["orientação", "posição em relação aos pontos cardeais"],
+        ["cartografia social", "mapa feito pelos próprios moradores"],
+        ["topografia", "descrição do relevo de um lugar"],
+        ["fronteira", "limite que separa dois territórios"]
+      ],
+      "related": [
+        ["Atlas das coisas pequenas", "Vera Lucena", 2010],
+        ["O mapa e a trilha", "Gustavo Pimentel", 1996],
+        ["Linhas no papel", "Aurora Siqueira", 2008],
+        ["Andar e medir", "Tomás Rezende", 2016],
+        ["A terra desenhada", "Íris Monteiro", 1989]
+      ]
+    },
+    {
+      "id": "b06", "profile": "P2", "split": "val",
+      "title": "Economia da cozinha", "author": "Marlene Queiroz", "year": 2019, "city": "Campo Alegre", "publisher": "Editora Fogão",
+      "chapters": ["A despensa como orçamento", "Comprar na feira", "Sobras que viram prato", "A mesa partilhada"],
+      "terms": [
+        ["orçamento doméstico", "planejamento dos gastos de uma casa"],
+        ["sazonalidade", "variação de oferta conforme a estação"],
+        ["desperdício", "perda de alimento que poderia ser consumido"],
+        ["conservação", "técnicas para o alimento durar mais"],
+        ["economia solidária", "trocas baseadas na cooperação"],
+        ["segurança alimentar", "acesso regular a comida suficiente"],
+        ["aproveitamento integral", "uso de cascas, talos e sementes"],
+        ["custo de oportunidade", "o que se deixa de ganhar ao fazer uma escolha"]
+      ],
+      "related": [
+        ["Feiras do bairro", "Rosana Dutra", 2013],
+        ["A arte de sobrar", "Leonardo Bastos", 2002],
+        ["Despensas antigas", "Celina Ramalho", 1994],
+        ["Comer junto", "Paulo Vasconcelos", 2017],
+        ["Contas da casa", "Teresa Albuquerque", 2008]
+      ]
+    },
+    {
+      "id": "b07", "profile": "P2", "split": "test",
+      "title": "O céu de quem observa", "author": "Wagner Sales", "year": 2014, "city": "Serra Azul", "publisher": "Editora Órbita",
+      "chapters": ["Olhar sem telescópio", "As fases da Lua", "Constelações de cada povo", "A noite que some"],
+      "terms": [
+        ["constelação", "agrupamento de estrelas com um nome"],
+        ["órbita", "caminho que um astro faz em volta de outro"],
+        ["eclipse", "ocultação de um astro por outro"],
+        ["poluição luminosa", "excesso de luz artificial que apaga o céu"],
+        ["magnitude", "medida do brilho aparente de uma estrela"],
+        ["solstício", "dia em que o Sol atinge o ponto mais alto ou mais baixo"],
+        ["equinócio", "dia em que o dia e a noite têm a mesma duração"],
+        ["meridiano", "linha imaginária que passa pelos polos"]
+      ],
+      "related": [
+        ["Estrelas do quintal", "Amélia Rocha", 2009],
+        ["A Lua e as marés", "Jorge Valadares", 1997],
+        ["Céus de outros povos", "Patrícia Moura", 2012],
+        ["Noites claras", "Hugo Barreto", 2005],
+        ["O relógio do céu", "Silvana Prado", 2018]
+      ]
+    },
+    {
+      "id": "b08", "profile": "P2", "split": "test",
+      "title": "Saúde no território", "author": "Lívia Correia", "year": 2017, "city": "Nova Esperança", "publisher": "Editora Comum",
+      "chapters": ["O posto de saúde", "Agentes comunitários", "Prevenção e cuidado", "Dados que salvam"],
+      "terms": [
+        ["atenção básica", "primeiro nível de cuidado na rede de saúde"],
+        ["vigilância epidemiológica", "acompanhamento contínuo das doenças"],
+        ["promoção da saúde", "ações que melhoram as condições de vida"],
+        ["território adscrito", "área pela qual uma equipe é responsável"],
+        ["prevalência", "proporção de pessoas com uma condição"],
+        ["integralidade", "cuidado que considera a pessoa inteira"],
+        ["equidade", "tratar de modo diferente quem tem necessidades diferentes"],
+        ["notificação", "registro obrigatório de um caso de doença"]
+      ],
+      "related": [
+        ["Visitas de casa em casa", "Mário Teixeira", 2004],
+        ["O cuidado e o bairro", "Joana Belmonte", 2011],
+        ["Números da saúde", "Ricardo Neves", 2016],
+        ["Prevenir é conversar", "Alice Coutinho", 1999],
+        ["A ficha da família", "Edson Furtado", 2008]
+      ]
+    },
+    {
+      "id": "b09", "profile": "P3", "split": "val",
+      "title": "A técnica e o gesto", "author": "Rodrigo Amaral", "year": 2002, "city": "Monte Verde", "publisher": "Editora Prisma",
+      "chapters": ["A ferramenta como extensão", "O artesão e a máquina", "Técnica e tempo", "O gesto perdido"],
+      "terms": [
+        ["técnica", "conjunto de procedimentos para produzir algo"],
+        ["alienação", "perda do sentido do próprio trabalho"],
+        ["artesania", "trabalho feito à mão com saber acumulado"],
+        ["automação", "substituição do gesto humano pela máquina"],
+        ["mediação", "aquilo que se põe entre a pessoa e o mundo"],
+        ["obsolescência", "envelhecimento planejado de um objeto"],
+        ["saber prático", "conhecimento que se aprende fazendo"],
+        ["instrumentalidade", "valor de algo apenas como meio"]
+      ],
+      "related": [
+        ["Mãos e engrenagens", "Adriana Lemos", 1993],
+        ["O tempo das máquinas", "Fernando Cardoso", 2006],
+        ["Ofícios em extinção", "Lúcio Andrade", 2011],
+        ["A oficina e o mundo", "Mirela Soares", 1999],
+        ["Técnica e cultura", "Valter Peixoto", 2015]
+      ]
+    },
+    {
+      "id": "b10", "profile": "P3", "split": "val",
+      "title": "Educar com a comunidade", "author": "Dalva Ribeiro", "year": 1999, "city": "Boa Vista do Rio", "publisher": "Editora Roda",
+      "chapters": ["A sala de aula aberta", "Saberes da vizinhança", "O professor que escuta", "Avaliar sem punir"],
+      "terms": [
+        ["educação popular", "educação feita a partir da vida dos educandos"],
+        ["diálogo", "troca em que os dois lados aprendem"],
+        ["conscientização", "processo de compreender a própria realidade"],
+        ["tema gerador", "assunto do cotidiano que organiza o estudo"],
+        ["avaliação formativa", "avaliação feita para orientar o aprendizado"],
+        ["autonomia", "capacidade de decidir por si"],
+        ["mediação pedagógica", "papel do professor entre o aluno e o saber"],
+        ["currículo", "conjunto organizado do que se ensina"]
+      ],
+      "related": [
+        ["A escola da rua", "Eduardo Marinho", 1988],
+        ["Escutar para ensinar", "Lígia Bezerra", 2004],
+        ["Saber de experiência", "Antônio Paixão", 1996],
+        ["A roda e o quadro", "Cristina Leal", 2010],
+        ["Avaliar é cuidar", "Murilo Campos", 2013]
+      ]
+    },
+    {
+      "id": "b11", "profile": "P3", "split": "test",
+      "title": "Casas feitas de terra", "author": "Severino Lima", "year": 2010, "city": "Pedra Branca", "publisher": "Editora Taipa",
+      "chapters": ["O barro e a palha", "Paredes que respiram", "A casa do avô", "Construir junto"],
+      "terms": [
+        ["arquitetura vernácula", "construção feita com saberes e materiais locais"],
+        ["taipa de pilão", "parede de terra socada em formas de madeira"],
+        ["adobe", "tijolo de barro seco ao sol"],
+        ["inércia térmica", "capacidade de guardar e liberar calor devagar"],
+        ["mutirão", "trabalho coletivo e voluntário"],
+        ["bioconstrução", "construção com baixo impacto ambiental"],
+        ["ventilação cruzada", "circulação de ar entre aberturas opostas"],
+        ["patrimônio", "bem que uma comunidade quer preservar"]
+      ],
+      "related": [
+        ["Barro, pau e mão", "Conceição Tavora", 2003],
+        ["Casas do sertão", "Ulisses Brito", 1992],
+        ["A parede viva", "Natália Ferreira", 2014],
+        ["Construir com o lugar", "Otávio Rangel", 2008],
+        ["Telhados antigos", "Margarida Assis", 1997]
+      ]
+    },
+    {
+      "id": "b12", "profile": "P3", "split": "test",
+      "title": "O palco da praça", "author": "Gabriel Moreira", "year": 2007, "city": "Lagoa Funda", "publisher": "Editora Cena",
+      "chapters": ["Teatro sem paredes", "O público que interrompe", "Máscaras e bonecos", "A cena política"],
+      "terms": [
+        ["teatro de rua", "encenação feita em espaço público aberto"],
+        ["dramaturgia", "arte de compor a ação teatral"],
+        ["quarta parede", "divisão imaginária entre palco e plateia"],
+        ["catarse", "alívio emocional provocado pela cena"],
+        ["improviso", "cena criada sem texto prévio"],
+        ["teatro de bonecos", "encenação com figuras manipuladas"],
+        ["encenação", "modo de pôr um texto em cena"],
+        ["espectador", "quem assiste e reage à cena"]
+      ],
+      "related": [
+        ["A praça e o palco", "Luíza Maranhão", 2001],
+        ["Bonecos que falam", "Jaime Rosário", 1994],
+        ["O riso do público", "Cláudia Frota", 2012],
+        ["Teatro e cidade", "Mauro Diniz", 2005],
+        ["Máscaras do povo", "Rita Godoy", 2016]
+      ]
+    },
+    {
+      "id": "b13", "profile": "P4", "split": "val",
+      "title": "Plantas que curam e enganam", "author": "Norma Batista", "year": 2012, "city": "Vale do Sossego", "publisher": "Editora Raiz",
+      "chapters": ["O quintal medicinal", "Saber popular e ciência", "Doses e riscos", "A horta da escola"],
+      "terms": [
+        ["fitoterapia", "uso de plantas no tratamento de doenças"],
+        ["princípio ativo", "substância responsável pelo efeito da planta"],
+        ["etnobotânica", "estudo da relação entre povos e plantas"],
+        ["toxicidade", "capacidade de uma substância causar dano"],
+        ["infusão", "preparo em que a água quente extrai a substância"],
+        ["dosagem", "quantidade adequada de um remédio"],
+        ["horta comunitária", "plantação cuidada por um grupo de vizinhos"],
+        ["automedicação", "uso de remédio sem orientação"]
+      ],
+      "related": [
+        ["Chás da avó", "Beatriz Peçanha", 2005],
+        ["Ervas e enganos", "Rogério Mattos", 1998],
+        ["A farmácia do mato", "Helena Soares Brito", 2011],
+        ["Plantar para cuidar", "Vicente Aragão", 2016],
+        ["Folhas que curam", "Isabel Navarro", 1990]
+      ]
+    },
+    {
+      "id": "b14", "profile": "P4", "split": "val",
+      "title": "As palavras viajantes", "author": "Ernesto Pinheiro", "year": 2004, "city": "Porto das Letras", "publisher": "Editora Sílaba",
+      "chapters": ["De onde vêm as palavras", "Empréstimos e mudanças", "Sotaques do país", "A língua da internet"],
+      "terms": [
+        ["etimologia", "estudo da origem das palavras"],
+        ["empréstimo linguístico", "palavra tomada de outra língua"],
+        ["variação linguística", "diferenças no uso da língua entre grupos"],
+        ["neologismo", "palavra nova criada na língua"],
+        ["norma-padrão", "variedade da língua tomada como referência"],
+        ["sotaque", "jeito característico de pronunciar"],
+        ["morfema", "menor parte da palavra que tem sentido"],
+        ["preconceito linguístico", "julgamento de pessoas pelo modo de falar"]
+      ],
+      "related": [
+        ["Viagem das palavras", "Lourdes Batalha", 1997],
+        ["O sotaque e a escola", "Fábio Correia Lins", 2009],
+        ["Palavras emprestadas", "Mônica Viana", 2003],
+        ["A língua em movimento", "Davi Moreno", 2015],
+        ["Dicionário do cotidiano", "Neusa Barcelos", 2011]
+      ]
+    },
+    {
+      "id": "b15", "profile": "P4", "split": "test",
+      "title": "Direitos de quem compra", "author": "Paulo Henrique Matias", "year": 2015, "city": "São Jorge da Mata", "publisher": "Editora Balança",
+      "chapters": ["O contrato invisível", "Garantia e troca", "Publicidade enganosa", "O consumidor organizado"],
+      "terms": [
+        ["vulnerabilidade", "posição mais fraca do consumidor na relação"],
+        ["vício do produto", "defeito que impede o uso adequado"],
+        ["direito de arrependimento", "prazo para desistir de compra fora da loja"],
+        ["publicidade enganosa", "anúncio que induz o consumidor ao erro"],
+        ["cláusula abusiva", "regra do contrato que prejudica o consumidor"],
+        ["garantia legal", "proteção que vale mesmo sem estar escrita"],
+        ["inversão do ônus da prova", "o fornecedor precisa provar que não errou"],
+        ["recall", "chamado do fabricante para corrigir um defeito"]
+      ],
+      "related": [
+        ["A nota fiscal e o cidadão", "Glória Fontes", 2010],
+        ["Comprar com cuidado", "Artur Lessa", 2003],
+        ["Contratos do dia a dia", "Simone Mafra", 2017],
+        ["O balcão de reclamações", "Heitor Gouveia", 1998],
+        ["Anúncios e promessas", "Eliane Rebouças", 2012]
+      ]
+    },
+    {
+      "id": "b16", "profile": "P4", "split": "test",
+      "title": "Cozinhas do litoral", "author": "Iracema Duarte", "year": 2009, "city": "Ponta da Areia", "publisher": "Editora Maré",
+      "chapters": ["O peixe do dia", "Farinha e mandioca", "Temperos de viagem", "A mesa da festa"],
+      "terms": [
+        ["moqueca", "cozido de peixe com leite de coco e azeite"],
+        ["mandioca", "raiz base de farinhas e beijus"],
+        ["defumação", "conservação do alimento pela fumaça"],
+        ["culinária regional", "modo de cozinhar próprio de um lugar"],
+        ["especiaria", "tempero vindo de plantas aromáticas"],
+        ["pirão", "papa feita com caldo e farinha"],
+        ["patrimônio imaterial", "saber reconhecido como herança de um povo"],
+        ["sustentabilidade", "uso dos recursos sem esgotá-los"]
+      ],
+      "related": [
+        ["Sabores da maré", "Cláudio Seixas", 2006],
+        ["A farinha e o mar", "Teresa Quaresma", 1995],
+        ["Panelas de barro", "Josias Feitosa", 2013],
+        ["Temperos de porto", "Lia Sarmento", 2001],
+        ["A festa e o peixe", "Benedito Furtado", 2018]
+      ]
+    }
+  ]
+}

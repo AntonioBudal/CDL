@@ -1,0 +1,16 @@
+{
+  "license": "MIT; formatos e dados fictícios escritos para o projeto Leitorum (EXP-024).",
+  "notes": "Formatos de linha de referência. md_* e url_line imitam o estilo inferido do D-usuário no EXP-023 (listas Markdown, 'Título — Autor', links); abnt e author_year_page são o estilo acadêmico que o organizer-v1 já conhece. URLs usam o domínio reservado exemplo.org.",
+  "formats": {
+    "md_title_author": "- {titulo} — {autor}",
+    "md_author_title": "- {autor} — {titulo}",
+    "md_link": "- [{titulo}]({url})",
+    "url_line": "{url}",
+    "title_author_year": "{titulo} ({autor}, {ano})",
+    "abnt": "{SOBRENOME}, {prenome}. {titulo}. {cidade}: {editora}, {ano}.",
+    "author_year_page": "cf. {SOBRENOME}, {ano}, p. {pag}.",
+    "quote": "{citacao}"
+  },
+  "cities": ["Vila Serena", "Porto Brando", "Campo Alegre", "Serra Azul", "Monte Verde", "Lagoa Funda", "Pedra Branca", "Ponta da Areia"],
+  "publishers": ["Editora Vereda", "Casa do Lume", "Editora Rumo", "Editora Prisma", "Editora Roda", "Editora Raiz", "Editora Sílaba", "Editora Maré"]
+}

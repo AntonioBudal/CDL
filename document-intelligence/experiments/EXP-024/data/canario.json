@@ -1,0 +1,39 @@
+{
+ "license": "MIT; páginas fictícias do D-sintético do EXP-023 (dados congelados no commit 3716816).",
+ "notes": "Canário do portão-sombra: 8 páginas do split de TESTE do EXP-023, montadas por experiments/EXP-023/harness/pages.py. Nunca entram em adaptação, calibração ou avaliação do EXP-024; servem só para detectar atualização destrutiva. O SHA-256 é do texto da página (linhas unidas por quebra de linha).",
+ "source": "experiments/EXP-023/harness/pages.py: build_pages()['test']",
+ "pages": [
+  {
+   "page_id": "t20-renascimento-p5",
+   "sha256": "d1bcbf8d6ffd4f623ffbb99f3c9677552f274b0501e00057a5dc889677eb367c"
+  },
+  {
+   "page_id": "t01-leitura-ativa-p0",
+   "sha256": "40d4f31a204f4d309a4aa3f8d42253528f8e71c653245841f81db74684198a43"
+  },
+  {
+   "page_id": "t03-fotossintese-p0",
+   "sha256": "42ecdeb3b5eefbfb8a2f101f82d78a637f7baf69cf7a7c903a8b852c00cd11e1"
+  },
+  {
+   "page_id": "t10-newton-p0",
+   "sha256": "14ac37236e777e3a919e5c01a62a2fb79488998d5c42a0773028768c8d3aa329"
+  },
+  {
+   "page_id": "t10-newton-p1",
+   "sha256": "8906ef040884585b2c9be29730e877999399e56ba68107abfa2c3d73311909d9"
+  },
+  {
+   "page_id": "t10-newton-p2",
+   "sha256": "b88d33b6b87396f6080112f29641aeb3bb44ab97669b95ba7866a9ec82eb27a5"
+  },
+  {
+   "page_id": "t10-newton-p3",
+   "sha256": "69347324cf64a72f08ee6cc1149bf217f321511dbcd299c414763a61561c42a7"
+  },
+  {
+   "page_id": "t10-newton-p4",
+   "sha256": "8769d211a5fa7bd4d77e24e4e950c912783083ea3afa943297967bb1900cb2ee"
+  }
+ ]
+}

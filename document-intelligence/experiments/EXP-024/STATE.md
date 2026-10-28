@@ -9,8 +9,8 @@ Este arquivo é o diário de bordo: é atualizado ao fim de cada fase, antes do 
 | Fase | Conteúdo | Estado | Commit |
 | :--- | :--- | :--- | :--- |
 | F00 | Diagnóstico e linha de base (só leitura) | **concluída em 2026-10-28** | `F00` (este) |
-| F01 | Pesquisa e especificação: `spec.md`, `plan.md`, `tasks.md` | **concluída em 2026-10-28; aguardando revisão do usuário** | `F01` |
-| F02 | Fluxos longitudinais sintéticos e simulador de feedback | pendente | — |
+| F01 | Pesquisa e especificação: `spec.md`, `plan.md`, `tasks.md` | **concluída e aprovada em 2026-10-28** | `F01` |
+| F02 | Fluxos longitudinais sintéticos e simulador de feedback | **concluída em 2026-10-28** | `F02` |
 | F03 | Motor adaptativo em Python puro e travas anti-regressão | pendente | — |
 | F04 | Calibração, curvas de aprendizado, ablações, estresse e D-usuário | pendente | — |
 | F05 | `RESULTS.md`, ADR-011 (se houver adoção) e fechamento; **para para revisão do usuário** | pendente | — |
@@ -80,9 +80,69 @@ Este arquivo é o diário de bordo: é atualizado ao fim de cada fase, antes do 
   - estudos importados não alimentam $T_{\text{user}}$, porque as colunas não guardam a ordem das unidades;
   - no D-usuário, $T_{\text{user}}$ fica desligado, porque as pseudo-páginas estão na ordem canônica e isso daria
     ganho falso.
-- **Pendente com o usuário (revisão da F01):** qual banco o D-usuário da F04 lê — a origem congelada em
-  `caderno-leitura-0.1/backend/data/` ou o banco ativo em `D:\Leitorum\db\`.
+- **Revisão do usuário (2026-10-28):** F01 aprovada. O D-usuário da F04 lê o **banco ativo do D:**
+  (`D:\Leitorum\db\caderno.db`), sempre por cópia temporária via API de backup, em modo só leitura.
+
+## F02 — Fluxos longitudinais e simulador (2026-10-28)
+
+### Dados congelados (2026-10-28, antes de qualquer código de fluxo, simulador ou motor)
+
+Conteúdo normalizado para LF; conferido por `streams.verify_frozen()`.
+
+| Arquivo | SHA-256 |
+| :--- | :--- |
+| `data/canario.json` | `773edf9dcfb7d6ac20df2f40d0465d854752b57665c25a2eb280f636f3157f8b` |
+| `data/confusoes-escritores.json` | `4c5852b1882d69e94ff3f3341e0c00d5dceda187c25f6a6755dc193e2b29a567` |
+| `data/frases/reescritas.json` | `30dc2acfb8d4b6e540cd74728e1344a09df768bc4b8fe34ffa17174fe44ccf3c` |
+| `data/frases/referencias.json` | `01e4dd8a4db25ef00a02594827da4c18cd9dfec34fa5b779bab266bbaad4a094` |
+| `data/frases/secoes.json` | `5d7f167d7a0dec8ecc4bde1b23e61086789f33601606d2f8660f3fa77337a41c` |
+| `data/livros.json` | `397664e61b52e5a6389f027c85bccc177c531de0e11e7b530d37dec9dfd6ed00` |
+| `data/perfis.json` | `73878fdfa2006c79b1162311e78af3b5aec93690f32970e1c52cc072104b387f` |
+
+- **16 livros fictícios:** 4 perfis × 2 livros de validação + 2 de teste. Cada livro tem 8 termos com glosa e 5
+  obras relacionadas.
+- **Bancos de frases:** 32 de resumo, 36 de explicação (8 em primeira pessoa), 20 de conceito, 8 citações, 8
+  formatos de referência e 20 reescritas autorais (R3).
+- **Confundidores de leitura por escritor:** **sintéticos e declarados** (W1–W4, 4 regras cada).
+- **Canário:** 8 páginas do split de **teste** do EXP-023, referenciadas pelo SHA-256 do texto.
+
+### Fluxos (`harness/streams.py`)
+
+- **Tamanho:** 4 perfis × 2 splits (validação e teste, com livros disjuntos) × (40 páginas de adaptação + 2 × 12
+  *holdout*) = **512 páginas**.
+- **Vazamento zero** entre adaptação e *holdout*, por teste: nenhum trecho repetido e Jaccard de 4-gramas de
+  palavras < 0,5 em todos os pares. A divisão é por *hash*: modelos de frase (70/30), 3 de 8 termos e 2 de 5 obras
+  por livro reservados ao *holdout*. O livro principal só é citado na adaptação.
+
+### Simulador (`harness/simulator.py`)
+
+- **Leitura:** confundidores do escritor, depois o modelo global do EXP-015 com **dificuldade por linha**
+  log-normal (σ = 0,6). Sem ela, a confiança não separava as linhas ruins (29,6 % contra 25,2 % de CER).
+- **CER medido** nos fluxos de validação: alvo 10 % → 9,4 %; alvo 25 % → 23,3 %. Dentro de ±2 pontos.
+- **Confiança por linha:** Beta com média 1,0 − 0,6 × erro da linha, concentração 16, calibrada só na validação
+  contra a 086. A 27 % de CER: 20,0 % das linhas marcadas (086: 20,7 %), CER 40,5 % nelas contra 21,8 % nas demais
+  (086: 43,5 % e 23,7 %).
+- **Leitor simulado:**
+  - move 85 % dos trechos errados marcados "conferir" e 45 % dos não marcados;
+  - corrige 90 % das palavras erradas em linhas de baixa confiança e 55 % nas demais;
+  - reverte em 3 % das páginas, ou em 30 % quando a sugestão acerta menos da metade.
+- **Regimes:**
+  - **R1:** sem nota.
+  - **R2:** nota coerente com a qualidade da sugestão.
+  - **R3:** exatamente 20 % de páginas ruidosas, em rodízio: nota contraditória, salva sem revisar e reescrita
+    autoral.
+- **Primeiro sinal:** com o organizador estático (V4), a qualidade média da sugestão no perfil P1 (referências em
+  lista e links) ficou em **0,51**. É perto do 0,497 do D-usuário no EXP-023: o perfil reproduz a lacuna real.
+
+### Verificações
+
+| Comando | Resultado |
+| :--- | :--- |
+| `uv run --frozen --project experiments/EXP-023/envs/organizer python -m pytest experiments/EXP-024/tests` | 18 aprovados |
+| `uv run ruff check .` e `uv run ruff format --check experiments/EXP-024` | sem avisos |
+| `uv run pytest` | 239 aprovados |
 
 ## Próximo passo
 
-Revisão do usuário. Depois, F02 (dados congelados antes de qualquer código do motor).
+F03: motor adaptativo (`state.py`, `diff_signal.py`, `adaptive_organizer.py`, `adaptive_ocr_corrector.py`,
+`safety_gate.py`) e testes.

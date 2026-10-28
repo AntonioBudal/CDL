@@ -1,0 +1,42 @@
+{
+  "license": "MIT; perfis fictícios de anotação escritos para o projeto Leitorum (EXP-024).",
+  "notes": "Cada perfil é um leitor simulado. style: pesos dos registros; order: pesos dos padrões de ordem das seções (mesmos nomes do EXP-023); references: pesos dos formatos de referencias.json; counts: [mínimo, máximo] de trechos por seção numa página; reflexao: chance de uma explicação ser em primeira pessoa; writer: confundidores de leitura do escritor (confusoes-escritores.json).",
+  "profiles": [
+    {
+      "id": "P1", "name": "fichamento em lista",
+      "description": "Estilo inferido do D-usuário no EXP-023: listas, referências em Markdown, 'Título — Autor' e links.",
+      "style": {"lista": 0.55, "telegrafico": 0.35, "corrido": 0.10},
+      "order": {"canonical": 0.8, "summary_concepts_first": 0.2},
+      "references": {"md_title_author": 0.45, "md_link": 0.3, "md_author_title": 0.15, "url_line": 0.1},
+      "counts": {"summary": [1, 2], "explanation": [1, 4], "concepts": [2, 4], "references": [1, 3]},
+      "reflexao": 0.1, "writer": "W1"
+    },
+    {
+      "id": "P2", "name": "conceitos primeiro",
+      "description": "Telegráfico, abre a página pelos conceitos; referências curtas com autor e ano.",
+      "style": {"telegrafico": 0.6, "lista": 0.3, "corrido": 0.1},
+      "order": {"concepts_first": 0.7, "canonical": 0.3},
+      "references": {"title_author_year": 0.6, "md_title_author": 0.4},
+      "counts": {"summary": [1, 2], "explanation": [1, 3], "concepts": [3, 5], "references": [1, 2]},
+      "reflexao": 0.15, "writer": "W2"
+    },
+    {
+      "id": "P3", "name": "reflexivo acadêmico",
+      "description": "Corrido, com muita explicação em primeira pessoa; referências ABNT, citações com página e remissões.",
+      "style": {"corrido": 0.8, "telegrafico": 0.2},
+      "order": {"canonical": 0.5, "refs_inline": 0.5},
+      "references": {"abnt": 0.6, "quote": 0.25, "author_year_page": 0.15},
+      "counts": {"summary": [1, 3], "explanation": [3, 6], "concepts": [1, 3], "references": [1, 3]},
+      "reflexao": 0.45, "writer": "W3"
+    },
+    {
+      "id": "P4", "name": "misto",
+      "description": "Mistura registros, ordens e formatos de referência.",
+      "style": {"corrido": 0.35, "telegrafico": 0.35, "lista": 0.3},
+      "order": {"canonical": 0.4, "interleaved": 0.3, "concepts_first": 0.3},
+      "references": {"abnt": 0.2, "md_title_author": 0.2, "title_author_year": 0.2, "md_link": 0.15, "quote": 0.15, "url_line": 0.1},
+      "counts": {"summary": [1, 2], "explanation": [2, 4], "concepts": [1, 4], "references": [1, 3]},
+      "reflexao": 0.25, "writer": "W4"
+    }
+  ]
+}

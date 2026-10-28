@@ -33,26 +33,26 @@ Caminhos relativos a `document-intelligence/`; `E` = `experiments/EXP-024`; `O` 
 
 ## F02 — Fluxos longitudinais e simulador
 
-- [ ] T010 `E/data/perfis.json`: pelo menos 4 perfis.
+- [x] T010 `E/data/perfis.json`: pelo menos 4 perfis.
   - P1: referências em lista Markdown com "Título — Autor" e links;
   - P2: ordem própria, conceitos primeiro;
   - P3: ABNT e corrido reflexivo;
   - P4: misto e telegráfico.
-- [ ] T011 `E/data/livros.json`: 2 a 3 livros fictícios por perfil, com termos acentuados de propósito.
-- [ ] T012 `E/data/frases/`: bancos de frases fictícias por seção e estilo, com lacunas de vocabulário do livro.
-- [ ] T013 `E/data/confusoes-escritores.json`: confundidores recorrentes sintéticos por escritor, declarados como
+- [x] T011 `E/data/livros.json`: 2 a 3 livros fictícios por perfil, com termos acentuados de propósito.
+- [x] T012 `E/data/frases/`: bancos de frases fictícias por seção e estilo, com lacunas de vocabulário do livro.
+- [x] T013 `E/data/confusoes-escritores.json`: confundidores recorrentes sintéticos por escritor, declarados como
   sintéticos.
-- [ ] T014 `E/data/canario.json`: 8 páginas fictícias do portão-sombra.
-- [ ] T015 Congelar: `E/data/SHA256SUMS`, gravado no `STATE.md` **antes** de qualquer código do motor.
-- [ ] T016 `E/harness/streams.py`: fluxos de validação e de teste por perfil (40 de adaptação e 12 *holdout* por
+- [x] T014 `E/data/canario.json`: 8 páginas fictícias do portão-sombra.
+- [x] T015 Congelar: `E/data/SHA256SUMS`, gravado no `STATE.md` **antes** de qualquer código do motor.
+- [x] T016 `E/harness/streams.py`: fluxos de validação e de teste por perfil (40 de adaptação e 12 *holdout* por
   livro), determinísticos.
-- [ ] T017 `E/harness/simulator.py`:
+- [x] T017 `E/harness/simulator.py`:
   - leitura ruidosa (EXP-023 `noise.corrupt` mais confundidores);
   - confiança calibrada na 086;
   - leitor simulado R1, R2 e R3;
   - pacote `leitorum-feedback/1`.
-- [ ] T018 `E/tests/test_simulator.py` (plan §6). Verificar com `O python -m pytest E/tests` e `uv run ruff check .`.
-- [ ] T019 `STATE.md` (hashes, contagens, vazamento zero). Commit `F02 … fluxos longitudinais sinteticos e
+- [x] T018 `E/tests/test_simulator.py` (plan §6). Verificar com `O python -m pytest E/tests` e `uv run ruff check .`.
+- [x] T019 `STATE.md` (hashes, contagens, vazamento zero). Commit `F02 … fluxos longitudinais sinteticos e
   simulador de feedback`.
 
 ## F03 — Motor adaptativo e travas
@@ -93,7 +93,7 @@ Caminhos relativos a `document-intelligence/`; `E` = `experiments/EXP-024`; `O` 
   - E4 com $k = 0..3$ cliques e três ordens;
   - custo (latência e KB do estado);
   - replay de 500 estudos.
-- [ ] T032 `E/harness/dusuario_continual.py`, **com o banco escolhido pelo usuário** na revisão da F01:
+- [ ] T032 `E/harness/dusuario_continual.py`, **com o banco ativo do D:**, escolhido pelo usuário na revisão da F01:
   - cópia pela API de backup em pasta temporária, origem e cópia em `mode=ro`, apagada no `finally`;
   - avaliação prequencial com $T_{\text{user}}$ desligado;
   - só números.
