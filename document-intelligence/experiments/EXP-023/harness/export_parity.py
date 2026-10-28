@@ -2,7 +2,7 @@
 
 Para as 24 páginas de teste em 6 condições (CER 0, 10 e 25 %, com e sem geometria), roda a
 implementação de referência com ``organizer-v1.json`` e grava texto, linhas e resultado esperado em
-``artifacts/parity-v1.json``. O Leitorum copia o arquivo e exige o mesmo resultado em todos os casos.
+``artifacts/parity-v1.json``. O Leitorum copia o arquivo e exige o mesmo resultado em cada caso.
 """
 
 from __future__ import annotations
