@@ -207,6 +207,7 @@ async def upload_book_cover(
         book_id=updated_book.id,
         cover_image=updated_book.cover_image,
         cover_url=f"/api/covers/{updated_book.cover_image}",
+        updated_at=updated_book.updated_at,
         message="Capa atualizada com sucesso.",
     )
 
@@ -228,6 +229,7 @@ def import_book_cover_url(
         book_id=updated_book.id,
         cover_image=updated_book.cover_image,
         cover_url=f"/api/covers/{updated_book.cover_image}",
+        updated_at=updated_book.updated_at,
         message="Capa importada com sucesso.",
     )
 
@@ -242,6 +244,7 @@ def delete_book_cover(book_id: Identifier, session: DatabaseSession, current_use
         book_id=updated_book.id,
         cover_image=None,
         cover_url=None,
+        updated_at=updated_book.updated_at,
         message="Capa removida com sucesso.",
     )
 

@@ -1,6 +1,8 @@
 """Testes automatizados isolados para capas de livros (upload, URL, SSRF, ciclo de vida e lixeira)."""
 import io
+import sqlite3
 import uuid
+from contextlib import closing
 from pathlib import Path
 from unittest.mock import patch
 
@@ -294,6 +296,37 @@ def test_remove_cover_cleans_file(client_and_covers):
 
     # 4. Arquivo físico foi removido do disco
     assert not file_path.exists()
+
+
+def age_book(db_path: Path, book_id: int) -> None:
+    """Simula o formulário aberto há um tempo: o livro foi salvo pela última vez há uma hora."""
+    with closing(sqlite3.connect(db_path)) as conn:
+        conn.execute("UPDATE books SET updated_at = datetime('now', '-1 hour') WHERE id = ?", (book_id,))
+        conn.commit()
+
+
+def test_cover_change_returns_new_updated_at_so_next_save_does_not_conflict(client_and_covers):
+    """Trocar ou remover a capa devolve a data nova do livro; salvar o formulário com ela não acusa conflito."""
+    client, _, db_path = client_and_covers
+    book_id = client.post("/api/books", json={"title": "Livro de Teste"}).json()["id"]
+
+    for change in ("upload", "remove"):
+        age_book(db_path, book_id)
+        stale = client.get(f"/api/books/{book_id}").json()["updated_at"]
+        if change == "upload":
+            res = client.post(f"/api/books/{book_id}/cover", files={"file": ("c.jpg", generate_synthetic_image(), "image/jpeg")})
+        else:
+            res = client.delete(f"/api/books/{book_id}/cover")
+        assert res.status_code == 200
+        fresh = res.json()["updated_at"]
+        assert fresh and fresh != stale
+        assert fresh == client.get(f"/api/books/{book_id}").json()["updated_at"]
+
+        # A data antiga é a que o formulário mandava antes da correção: conflito.
+        conflict = client.patch(f"/api/books/{book_id}", json={"title": "Capítulo 1", "expected_updated_at": stale})
+        assert conflict.status_code == 409
+        saved = client.patch(f"/api/books/{book_id}", json={"title": f"Livro de Teste ({change})", "expected_updated_at": fresh})
+        assert saved.status_code == 200
 
 
 def test_replace_cover_deletes_old_file(client_and_covers):

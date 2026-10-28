@@ -171,6 +171,7 @@ export interface CoverResponse {
   book_id: number
   cover_image: string | null
   cover_url: string | null
+  updated_at?: string | null
   message: string
 }
 

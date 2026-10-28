@@ -4,6 +4,7 @@ import BookCover from './BookCover.vue'
 import CategoryInput from './CategoryInput.vue'
 import Icon from './ui/Icon.vue'
 import { api, errorMessage } from '../services/api'
+import { bookAfterCoverChange } from '../utils/bookCover'
 import type { Book } from '../types'
 
 const props = defineProps<{
@@ -73,7 +74,7 @@ async function onFileSelected(event: Event) {
     const res = await api.uploadBookCover(props.book.id, file)
     currentCover.value = res.cover_image
     coverSuccess.value = 'Capa atualizada com sucesso.'
-    emit('saved', { ...props.book, cover_image: res.cover_image })
+    emit('saved', bookAfterCoverChange(props.book, res))
   } catch (err) {
     coverError.value = errorMessage(err)
   } finally {
@@ -98,7 +99,7 @@ async function importFromUrl() {
     currentCover.value = res.cover_image
     coverSuccess.value = 'Capa importada com sucesso.'
     urlInput.value = ''
-    emit('saved', { ...props.book, cover_image: res.cover_image })
+    emit('saved', bookAfterCoverChange(props.book, res))
   } catch (err) {
     coverError.value = errorMessage(err)
   } finally {
@@ -112,10 +113,10 @@ async function removeCover() {
   coverSuccess.value = ''
 
   try {
-    await api.removeBookCover(props.book.id)
+    const res = await api.removeBookCover(props.book.id)
     currentCover.value = null
     coverSuccess.value = 'Capa removida.'
-    emit('saved', { ...props.book, cover_image: null })
+    emit('saved', bookAfterCoverChange(props.book, res))
   } catch (err) {
     coverError.value = errorMessage(err)
   } finally {
