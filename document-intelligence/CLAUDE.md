@@ -76,7 +76,7 @@ uv run python -m leitorum_di
   Recomendação: um `organizer-v2` estático com as pistas novas, e o produto passar a registrar o pacote de
   feedback antes de qualquer aprendizado online.
 - **EXP-025 concluído em 2026-10-28 por delegação** ([RESULTS](./experiments/EXP-025/RESULTS.md),
-  [ADR-011](./docs/adr/ADR-011-organizer-v2-estatico.md) `PROPOSED`): `organizer-v2` estático, o v1 congelado
+  [ADR-011](./docs/adr/ADR-011-organizer-v2-estatico.md) `ACCEPTED` pelo usuário): `organizer-v2` estático, o v1 congelado
   mais as 4 pistas de referência do EXP-024 aprendidas em lote. Fichamentos fictícios 0,704 → 0,751 (Referências
   do P1 0,00 → 0,55; P4 −1,5 ponto); EXP-023 idêntico ao v1; estudos reais (N = 4) 0,535 = 0,535, as pistas não
   disparam; custo 0,017 ms por página, mas a latência pré-registrada reprova por ruído (até +2,18 ms). Integração no

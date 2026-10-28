@@ -1,6 +1,7 @@
 # ADR-011: `organizer-v2` estático — o v1 congelado mais 4 pistas fixas de referência
 
-* **Status:** PROPOSED (2026-10-28; aguarda o aceite do usuário. A H4 reprova na medida pré-registrada, ver §3)
+* **Status:** ACCEPTED (aprovado pelo usuário em 2026-10-28, com a ressalva da H4, §3; implementação no Leitorum pela
+  feature 091, fatia A)
 * **Data:** 2026-10-28
 * **Decisores:** Usuário; Claude Code (proposta e execução do EXP-025, por delegação)
 * **Experimento de suporte:** [EXP-025](../../experiments/EXP-025/RESULTS.md); origem das pistas no
@@ -16,7 +17,7 @@ No EXP-024, 4 regras fixas de formato de referência levaram o F1 de Referência
 0,78, mas dentro de um motor online que não passou no portão de adoção. O EXP-025 testou as mesmas regras
 aprendidas **em lote**, sem estado por usuário, para ir ao produto sem aprendizado online.
 
-## 2. Decisão proposta
+## 2. Decisão
 
 1. **Trocar `organizer-v1.json` por `organizer-v2.json`** (SHA-256 `9f6530a3…8aee`) no Organizador do Leitorum:
    - os pesos, o viés, a temperatura (β = 1,25) e a margem de "conferir" (0,20) do v1 ficam **congelados**;
@@ -40,7 +41,7 @@ aprendidas **em lote**, sem estado por usuário, para ir ao produto sem aprendiz
 | H4 — latência p95 | passagem única: até **+2,18 ms** (reprova em 3 de 10); intercalada: −0,73 a +0,18 ms; custo direto **0,017 ms por página** | ≤ 1 ms: **reprova no pré-registro** |
 
 A H4 reprovada é ruído de medida: as diferenças trocam de sinal, e o que o v2 executa a mais custa 17 µs. Aceitar
-isso é trocar o critério depois de ver o resultado, e por isso a decisão fica com o usuário.
+isso é trocar o critério depois de ver o resultado. O usuário aceitou o ADR com essa ressalva em 2026-10-28.
 
 ## 4. Consequências
 

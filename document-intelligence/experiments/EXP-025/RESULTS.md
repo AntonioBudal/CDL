@@ -2,7 +2,7 @@
 
 * **Status:** `CONCLUÍDO` (2026-10-28, por delegação). H1, H2 e H3 dentro do pré-registro; a H4 reprova na medida
   pré-registrada e passa nas complementares (§2.4). [ADR-011](../../docs/adr/ADR-011-organizer-v2-estatico.md)
-  `PROPOSED`: a adoção no Leitorum depende do aceite do usuário e de uma feature de produto própria.
+  `ACCEPTED` pelo usuário em 2026-10-28, com a ressalva da H4; integração no Leitorum pela feature 091.
 * **Executor:** Claude Code
 * **Artefatos:**
   - [spec.md](./spec.md) (hipóteses, dados e a decisão tomada na validação, §5);
@@ -80,8 +80,8 @@ O Macro-F1 é **idêntico** ao do v1 nas 6 condições: 0,934 / 0,908 / 0,891 / 
   perfis, condições e rodadas, e o P2 sai 1,45 ms **mais rápido** no v2. O v2 executa o v1 inteiro mais as 4
   expressões; o que ele faz a mais custa 17 µs por página.
 - **Desvio declarado:** o portão da spec (§1) é a medida de passagem única. Aprovar a H4 pelas medidas
-  complementares é uma troca de critério depois de ver o resultado. Por isso o ADR-011 fica `PROPOSED` e a
-  decisão é do usuário.
+  complementares é uma troca de critério depois de ver o resultado. Por isso o ADR-011 ficou `PROPOSED` e a
+  decisão foi do usuário, que o aceitou com essa ressalva em 2026-10-28.
 
 ## 3. Limites
 

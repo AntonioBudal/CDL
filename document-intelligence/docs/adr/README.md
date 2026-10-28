@@ -73,4 +73,4 @@ Um ADR passa pelos seguintes status:
 | [`ADR-008`](./ADR-008-pipeline-de-referencia.md) | Pipeline de referência foto → LDF 2.0, com o texto em português tratado como rascunho | ACCEPTED (delegação) | EXP-012 | 2026-10-18 |
 | [`ADR-009`](./ADR-009-margem-de-leitura-e-ajuste-fino.md) | Leitura direta com margem à direita; ajuste fino com dados licenciados como caminho para o português | ACCEPTED (delegação) | EXP-014 | 2026-10-22 |
 | [`ADR-010`](./ADR-010-organizacao-nas-4-secoes.md) | Organização do texto nas 4 seções do Estudo como sugestão revisável, em Python puro | ACCEPTED | EXP-023 | 2026-10-27 |
-| [`ADR-011`](./ADR-011-organizer-v2-estatico.md) | `organizer-v2` estático: o v1 congelado mais 4 pistas fixas de referência | PROPOSED | EXP-025 | 2026-10-28 |
+| [`ADR-011`](./ADR-011-organizer-v2-estatico.md) | `organizer-v2` estático: o v1 congelado mais 4 pistas fixas de referência | ACCEPTED | EXP-025 | 2026-10-28 |
