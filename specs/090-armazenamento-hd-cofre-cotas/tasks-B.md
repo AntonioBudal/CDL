@@ -198,11 +198,21 @@ Caminhos relativos a `C:\Users\User\caderno`; `L/` = `caderno-leitura-0.1/`.
 
 ## Phase 8: Ambiente real (PORTÃO; cada passo só com a sua aprovação)
 
-- [ ] B023 **Você** roda `py -3.13 instalar.py --media-key` no seu terminal e guarda o código de recuperação fora do
+- [x] B023 **Você** roda `py -3.13 instalar.py --media-key` no seu terminal e guarda o código de recuperação fora do
   computador. Eu **não** rodo esse passo, para que o código não apareça no histórico desta conversa.
-- [ ] B024 Com o servidor parado, atualizo o banco no HD para a `0031` (snapshot automático verificado e segunda
+- [x] B024 Com o servidor parado, atualizo o banco no HD para a `0031` (snapshot automático verificado e segunda
   cópia).
-- [ ] B025 `--vault-import --plan` (só leitura) e o relatório. Com a sua aprovação, `--vault-import` e a conferência.
+
+  **Resultado (28/10/2026):** antes, `quick_check` ok e chave aberta pelo Windows. Snapshot
+  `caderno-pre-migracao-20261028-145912.db` (versão `0030`) íntegro, segunda cópia com o mesmo SHA-256. Depois,
+  banco em `0031_encrypted_media`, `quick_check` e `foreign_key_check` ok, `encrypted_media` vazia com os 4 índices.
+  A retenção de 5 snapshots retirou do HD o `caderno-pre-migracao-20261010-154610.db`, que continua em
+  `backend\data\backups`.
+- [x] B025 `--vault-import --plan` (só leitura) e o relatório. Com a sua aprovação, `--vault-import` e a conferência.
+
+  **Resultado:** plano com 0 referências antigas, 0 arquivos e 0 bytes; cofre `ready`; banco com o mesmo hash
+  antes e depois. Nenhum livro tem capa e nenhum perfil tem avatar. Por decisão do usuário, o `--vault-import`
+  **não** foi rodado: não havia nada a importar.
 
 ---
 

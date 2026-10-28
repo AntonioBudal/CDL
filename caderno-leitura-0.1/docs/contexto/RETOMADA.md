@@ -791,9 +791,17 @@ em `backend\data\caderno.db`; manter por pelo menos 30 dias.
 - Latência (SC-007), página de ruído 2000 × 1500: página p95 16,3 ms (meta 150); miniatura p95 13,6 ms (meta 80).
 - Banco no HD continua em `0030`; nenhuma chave instalada; `D:\Leitorum\vault` não existe ainda.
 
-### Ponto de continuação (portão; cada passo com aprovação)
-1. **B023 — você:** `py -3.13 instalar.py --media-key` no seu terminal; guardar o código de recuperação fora do
-   computador. Eu não rodo esse passo.
-2. **B024:** com o servidor parado, atualizar o banco do HD para `0031` (snapshot automático e segunda cópia).
-3. **B025:** `--vault-import-plan`, relatório e, com aprovação, `--vault-import` e conferência.
+### Ambiente real (B023–B025, concluído em 28/10/2026)
+- **Ajuste antes da B023** (commit `50db4fe`): a chave passou a ser protegida pelo DPAPI no escopo da máquina,
+  porque o serviço `Leitorum` (NSSM) roda como `LocalSystem`. O `.env` fixa
+  `LEITORUM_MEDIA_KEY_FILE=C:\Users\User\AppData\Local\Leitorum\media-master.key`.
+- **B023:** o usuário criou a chave; o código de recuperação ficou só com ele.
+- **B024:** banco do HD em `0031_encrypted_media`. Snapshot `caderno-pre-migracao-20261028-145912.db` íntegro,
+  com segunda cópia conferida por SHA-256.
+- **B025:** plano sem nada a importar (nenhuma capa, nenhum avatar); `--vault-import` não foi rodado.
+
+### Ponto de continuação
+- Religar o serviço (`Start-Service Leitorum`) e enviar uma capa ou um avatar: é a primeira vez que a conta
+  `LocalSystem` abre a chave. Imagem aparecendo = chave lida e impressão digital registrada no acervo. Erro `503`
+  = o serviço não abriu a chave.
 - Depois: fatia C (fotos de conferência, retenção, "Minhas Imagens e Espaço", cotas).
