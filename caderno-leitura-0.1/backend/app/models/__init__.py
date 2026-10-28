@@ -18,6 +18,7 @@ from app.models.study_highlight import StudyHighlight
 from app.models.study_mention import StudyMention
 from app.models.study_relation import StudyRelation
 from app.models.study_session import StudySession, StudySessionItem
+from app.models.storage_settings import StorageSettings
 from app.models.study_version import StudyVersion
 from app.models.support_setting import SupportSetting
 from app.models.user import User
@@ -45,6 +46,7 @@ __all__ = [
     "StudyRelation",
     "StudySession",
     "StudySessionItem",
+    "StorageSettings",
     "StudyVersion",
     "SupportSetting",
     "User",

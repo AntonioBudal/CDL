@@ -162,12 +162,55 @@ def get_frontend_dist_path() -> Path:
     return BACKEND_DIR.parent / "frontend" / "dist"
 
 
+def get_storage_root() -> Path | None:
+    """Raiz única de armazenamento (``LEITORUM_STORAGE_ROOT``, feature 090-A), sem criar nada.
+
+    Contém ``db/caderno.db``, ``backups/`` e, legados, ``covers/`` e ``avatars/``. As variáveis
+    ``CADERNO_*`` explícitas continuam valendo e vencem a raiz.
+    """
+    configured = os.environ.get("LEITORUM_STORAGE_ROOT", "").strip()
+    if not configured:
+        return None
+    path = Path(configured).expanduser()
+    if not path.is_absolute():
+        raise ValueError("LEITORUM_STORAGE_ROOT deve ser um caminho absoluto.")
+    return path
+
+
+def get_root_database_path() -> Path | None:
+    """Banco dentro da raiz, quando a raiz está ativa e CADERNO_DATABASE_PATH não a substitui."""
+    root = get_storage_root()
+    if root is None or os.environ.get("CADERNO_DATABASE_PATH"):
+        return None
+    return root / "db" / "caderno.db"
+
+
+def _root_subdir(name: str) -> Path:
+    """Subpasta da raiz; só é criada se a raiz existir e tiver o marcador do Leitorum."""
+    from app.core.storage import verify_root
+
+    root = get_storage_root()
+    assert root is not None
+    verify_root(root)
+    path = root / name
+    path.mkdir(exist_ok=True)
+    return path.resolve()
+
+
+def _uses_root(database_path: Path | None) -> bool:
+    root_db = get_root_database_path()
+    if root_db is None:
+        return False
+    if database_path is None:
+        return True
+    return os.path.normcase(Path(database_path).resolve()) == os.path.normcase(root_db.resolve())
+
+
 def get_database_path() -> Path:
     """Retorna o caminho absoluto canônico do banco de dados ativo.
 
-    Se CADERNO_DATABASE_PATH estiver configurado no ambiente, valida que seja
-    um caminho absoluto (disparando ValueError caso contrário) e o resolve.
-    Caso padrão: retorna BACKEND_DIR / 'data' / 'caderno.db'.
+    Precedência: CADERNO_DATABASE_PATH (absoluto) > LEITORUM_STORAGE_ROOT/db/caderno.db >
+    BACKEND_DIR / 'data' / 'caderno.db'. Nunca cria pastas.
     """
     configured = os.environ.get("CADERNO_DATABASE_PATH")
     if configured:
@@ -175,18 +218,39 @@ def get_database_path() -> Path:
         if not path.is_absolute():
             raise ValueError("CADERNO_DATABASE_PATH deve ser um caminho absoluto.")
         return path.resolve()
+    root_db = get_root_database_path()
+    if root_db is not None:
+        return root_db
     return BACKEND_DIR / "data" / "caderno.db"
 
 
 def get_backup_dir(database_path: Path | None = None) -> Path:
-    """Retorna o diretório dedicado a snapshots e backups (<db_dir>/backups).
+    """Retorna o diretório dedicado a snapshots e backups.
 
-    Garante que o diretório exista antes de retornar seu caminho canônico resolvido.
+    Com a raiz de armazenamento ativa, é ``<raiz>/backups`` (exige o marcador da raiz); senão,
+    ``<pasta do banco>/backups``. Garante que o diretório exista.
     """
+    if _uses_root(database_path):
+        return _root_subdir("backups")
     base_db = database_path or get_database_path()
     backup_dir = base_db.parent / "backups"
     backup_dir.mkdir(parents=True, exist_ok=True)
     return backup_dir.resolve()
+
+
+def get_secondary_backup_dir() -> Path | None:
+    """Segunda cópia dos backups (``LEITORUM_SECONDARY_BACKUP_DIR``), obrigatoriamente fora da raiz."""
+    configured = os.environ.get("LEITORUM_SECONDARY_BACKUP_DIR", "").strip()
+    if not configured:
+        return None
+    path = Path(configured).expanduser()
+    if not path.is_absolute():
+        raise ValueError("LEITORUM_SECONDARY_BACKUP_DIR deve ser um caminho absoluto.")
+    root = get_storage_root()
+    if root is not None and path.resolve().is_relative_to(root.resolve()):
+        raise ValueError("A segunda cópia de backup precisa ficar fora da pasta de armazenamento.")
+    path.mkdir(parents=True, exist_ok=True)
+    return path.resolve()
 
 
 def get_covers_dir(database_path: Path | None = None) -> Path:
@@ -203,6 +267,8 @@ def get_covers_dir(database_path: Path | None = None) -> Path:
         if not path.is_absolute():
             raise ValueError("CADERNO_COVERS_DIR deve ser um caminho absoluto.")
         covers_dir = path.resolve()
+    elif _uses_root(database_path):
+        return _root_subdir("covers")
     else:
         base_db = database_path or get_database_path()
         covers_dir = (base_db.parent / "covers").resolve()
@@ -225,6 +291,8 @@ def get_avatars_dir(database_path: Path | None = None) -> Path:
         if not path.is_absolute():
             raise ValueError("CADERNO_AVATARS_DIR deve ser um caminho absoluto.")
         avatars_dir = path.resolve()
+    elif _uses_root(database_path):
+        return _root_subdir("avatars")
     else:
         base_db = database_path or get_database_path()
         avatars_dir = (base_db.parent / "avatars").resolve()

@@ -713,3 +713,34 @@ Base: EXP-023 e ADR-010 do `document-intelligence/`, aceitos pelo usuário.
 - **Conferência visual pendente com o usuário:** temas, 320 px, teclado e celular.
 - A qualidade em texto real **não está demonstrada** (0,50 em 3 estudos, EXP-023). Repetir a medida com 30 ou mais
   estudos e ampliar as pistas de Referências (recomendações do ADR-010).
+
+---
+
+## Sessão: Feature 090, fatia A — Armazenamento no HD com migração segura (27/10/2026)
+
+Arquitetura completa (cofre de imagens, ciclo de vida, cotas) planejada e aprovada pelo usuário com as
+recomendações Q1–Q6: [`specs/090-armazenamento-hd-cofre-cotas/`](../../../specs/090-armazenamento-hd-cofre-cotas/plan.md).
+Execução em três fatias, cada uma com o próprio commit. Esta é a **fatia A**.
+
+### O que foi entregue
+1. `LEITORUM_STORAGE_ROOT`, com `db/`, `backups/` e as pastas legadas `covers/` e `avatars/`, e o marcador
+   `.leitorum-storage.json`. A precedência das variáveis `CADERNO_*` é mantida.
+2. **Falha segura:** sem o HD certo (marcador e `storage_id` iguais ao da tabela nova `storage_settings`), o
+   `iniciar.py` para e **não cria nada**. Um HD que some com o servidor rodando dá `503`, sem banco novo.
+3. Trava `leitorum.lock` enquanto o servidor roda (`app/core/server_lock.py`).
+4. Segunda cópia dos backups em `LEITORUM_SECONDARY_BACKUP_DIR`, fora do HD, com SHA-256 conferido.
+5. Script `scripts/migrate_storage_to_hd.py` (`--plan`, `--execute`, `--verify`, `--rollback-info`), conforme o
+   contrato.
+6. Migração Alembic `0030_storage_settings`, com snapshot pré-migração automático.
+
+### Evidências
+- `pytest`: 541 aprovados e 1 pulado (com `CADERNO_DATABASE_PATH` descartável). `npm test`: 633. `npm run build`: ok.
+- Banco ativo e HD real não tocados.
+
+### Ponto de continuação
+- **Fase 6 (A020–A023), com aprovação a cada passo:**
+  1. confirmar a pasta no `D:\` (sugestão `D:\Leitorum`) e a segunda cópia de backup;
+  2. atualizar o banco ativo (migração 0030, com snapshot);
+  3. rodar `--plan`;
+  4. rodar `--execute` e `--verify`.
+- Depois: fatia B (cofre de imagens) e fatia C (fotos de conferência, retenção, "Minhas Imagens e Espaço", cotas).

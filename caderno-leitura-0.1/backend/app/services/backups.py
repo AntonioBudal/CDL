@@ -85,6 +85,35 @@ def get_database_metadata_and_counts(database_path: Path) -> tuple[str | None, d
     return schema_revision, counts
 
 
+def copy_to_secondary(backup_path: Path) -> Path | None:
+    """Copia um backup guardado para LEITORUM_SECONDARY_BACKUP_DIR (fora do HD), com SHA-256 conferido.
+
+    Feature 090-A: backup só no mesmo disco do banco não protege contra a perda do disco. Falha aqui
+    gera aviso e não invalida o backup principal. Devolve o caminho da cópia ou ``None``.
+    """
+    import shutil
+
+    from app.core.config import get_secondary_backup_dir
+
+    try:
+        secondary = get_secondary_backup_dir()
+        if secondary is None:
+            return None
+        source = Path(backup_path).resolve()
+        target = secondary / source.name
+        temporary = target.with_name(target.name + ".tmp")
+        shutil.copyfile(source, temporary)
+        if calculate_file_sha256(temporary) != calculate_file_sha256(source):
+            temporary.unlink(missing_ok=True)
+            logger.warning("Segunda cópia de backup descartada: SHA-256 diferente (%s)", source.name)
+            return None
+        temporary.replace(target)
+        return target
+    except (OSError, ValueError) as exc:
+        logger.warning("Segunda cópia de backup não foi feita (%s): %s", Path(backup_path).name, type(exc).__name__)
+        return None
+
+
 def create_database_backup(
     destination: Path,
     *,

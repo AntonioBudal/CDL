@@ -81,3 +81,58 @@ npm test
 
 > [!CAUTION]
 > Nunca execute testes com a variável `CADERNO_DATABASE_PATH` configurada apontando para `backend/data/caderno.db`. Em ambientes de desenvolvimento/teste, garanta sempre que as fixtures temporárias sejam utilizadas.
+
+---
+
+## 5. Armazenamento no HD de 1 TB (feature 090-A)
+
+A raiz `LEITORUM_STORAGE_ROOT` (por exemplo `D:\Leitorum`) guarda:
+- `db/caderno.db`;
+- `backups/`;
+- as pastas legadas `covers/` e `avatars/`;
+- o marcador `.leitorum-storage.json`.
+
+O `storage_id` do marcador precisa ser igual ao gravado no banco (tabela `storage_settings`). Se o disco estiver
+ausente ou for outro, o `iniciar.py` para com a mensagem `[ARMAZENAMENTO]` e **não cria nada**.
+
+### Precedência dos caminhos
+
+`CADERNO_DATABASE_PATH`, `CADERNO_COVERS_DIR` e `CADERNO_AVATARS_DIR`, quando definidos, vencem a raiz. Sem eles,
+os caminhos derivam de `LEITORUM_STORAGE_ROOT`. Sem nenhum dos dois, vale `backend/data/` (comportamento
+anterior).
+
+### Migração assistida (servidor parado)
+
+```powershell
+# 1. Atualizar o banco (cria o snapshot pré-migração automaticamente)
+py -3.13 instalar.py
+# 2. Conferir sem gravar nada
+backend\.venv\Scripts\python scripts\migrate_storage_to_hd.py --target D:\Leitorum --plan
+# 3. Migrar (só depois de ler o relatório do passo 2)
+backend\.venv\Scripts\python scripts\migrate_storage_to_hd.py --target D:\Leitorum --execute
+# 4. Conferir a instalação migrada
+backend\.venv\Scripts\python scripts\migrate_storage_to_hd.py --verify
+```
+
+O script:
+- abre o banco de origem só para leitura e o copia pela API de backup;
+- confere a cópia (`integrity_check`, `foreign_key_check`, contagens e SHA-256 lógico das linhas, revisão
+  Alembic);
+- copia os backups com SHA-256;
+- só então grava `LEITORUM_STORAGE_ROOT` no `.env`, guardando o anterior em `.env.bak-<data>`.
+
+Qualquer falha desfaz o que foi criado no destino e mantém o `.env`.
+
+### Voltar atrás
+
+O banco de origem fica intacto. Com o servidor parado, copie o `.env.bak-<data>` mais recente sobre o `.env`.
+`--rollback-info` lista os arquivos. Mantenha a origem por pelo menos 30 dias antes de apagá-la manualmente.
+
+### Recomendações para o disco
+
+- HD interno ou sempre conectado, em NTFS; nunca unidade de rede.
+- Desativar a suspensão do disco nas opções de energia do Windows.
+- **Ativar o BitLocker na unidade.** O banco (textos dos estudos) e os backups no HD não são cifrados pelo
+  Leitorum.
+- Configurar `LEITORUM_SECONDARY_BACKUP_DIR` fora do HD. Backup só no mesmo disco não protege contra a perda do
+  disco.

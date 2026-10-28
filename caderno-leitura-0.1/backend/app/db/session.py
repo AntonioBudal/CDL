@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+import os
 from functools import lru_cache
 from pathlib import Path
 from sqlite3 import Connection
@@ -6,7 +7,7 @@ from sqlite3 import Connection
 from sqlalchemy import URL, Engine, create_engine, event
 from sqlalchemy.orm import Session
 
-from app.core.config import get_database_path
+from app.core.config import get_database_path, get_root_database_path, get_storage_root
 
 
 def sqlite_url(path: Path) -> URL:
@@ -46,9 +47,16 @@ def _configure_connection(connection: Connection, _record: object) -> None:
         connection.autocommit = previous
 
 
+def _inside_storage_root(path: Path) -> bool:
+    root = get_storage_root()
+    return root is not None and path.resolve().is_relative_to(root.resolve())
+
+
 def create_sqlite_engine(path: Path, *, enable_foreign_keys: bool = True) -> Engine:
     url = sqlite_url(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
+    # Sob a raiz de armazenamento (HD), a pasta nunca é criada aqui: disco ausente não vira banco vazio.
+    if not _inside_storage_root(path):
+        path.parent.mkdir(parents=True, exist_ok=True)
     engine = create_engine(
         url,
         connect_args={"check_same_thread": False, "autocommit": False, "timeout": 10},
@@ -62,6 +70,12 @@ def create_sqlite_engine(path: Path, *, enable_foreign_keys: bool = True) -> Eng
 
 @lru_cache(maxsize=8)
 def _get_engine_for_path(path: Path) -> Engine:
+    root_db = get_root_database_path()
+    if root_db is not None and os.path.normcase(path.resolve()) == os.path.normcase(root_db.resolve()):
+        from app.core.storage import verify_root
+
+        # Uma vez por caminho (o engine fica em cache): marcador presente e mesma identidade do banco.
+        verify_root(get_storage_root(), path)
     return create_sqlite_engine(path)
 
 

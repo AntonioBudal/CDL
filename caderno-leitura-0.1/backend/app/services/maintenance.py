@@ -11,6 +11,7 @@ import zipfile
 
 from app.core.config import get_backup_dir, get_database_path
 from app.services.backups import (
+    copy_to_secondary,
     calculate_file_sha256,
     create_backup_bundle,
     create_database_backup,
@@ -86,6 +87,7 @@ def create_pre_upgrade_snapshot(database_path: Path | None = None) -> Path | Non
 
     create_database_backup(destination=snapshot_path, source=source)
     rotate_pre_upgrade_snapshots(backup_dir, keep=5)
+    copy_to_secondary(snapshot_path)
 
     return snapshot_path
 
@@ -108,6 +110,7 @@ def create_pre_restore_snapshot(database_path: Path | None = None) -> Path | Non
 
     create_database_backup(destination=snapshot_path, source=source)
     rotate_pre_restore_snapshots(backup_dir, keep=5)
+    copy_to_secondary(snapshot_path)
 
     return snapshot_path
 
@@ -311,6 +314,7 @@ def _cli_criar_backup(args: argparse.Namespace) -> int:
 
         dest_path = Path(dest).resolve()
         created = create_backup_bundle(destination=dest_path)
+        copy_to_secondary(created)
         info = inspect_backup_bundle(created)
 
         if args.json:

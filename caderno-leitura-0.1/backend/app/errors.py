@@ -57,6 +57,15 @@ def register_database_error_handlers(application: FastAPI) -> None:
             content={"detail": "Não foi possível salvar porque os dados conflitam com uma restrição do banco."},
         )
 
+    from app.core.storage import StorageError
+
+    @application.exception_handler(StorageError)
+    async def storage_unavailable(_request: Request, _error: StorageError) -> JSONResponse:
+        return JSONResponse(
+            status_code=503,
+            content={"detail": "A pasta de armazenamento do Leitorum não está disponível. Confira o HD configurado."},
+        )
+
     @application.exception_handler(OperationalError)
     async def database_unavailable(_request: Request, _error: OperationalError) -> JSONResponse:
         return JSONResponse(

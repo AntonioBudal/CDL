@@ -146,6 +146,24 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
+    # Feature 090-A: com LEITORUM_STORAGE_ROOT, o HD precisa estar presente e ser o certo; nada é criado.
+    storage_root = None
+    try:
+        from app.core.config import get_root_database_path, get_storage_root
+        from app.core.storage import StorageError, verify_root
+
+        root_db = get_root_database_path()
+        if root_db is not None:
+            storage_root = get_storage_root()
+            verify_root(storage_root, root_db)
+    except ValueError as error:
+        print(f"Erro na configuração do armazenamento: {error}", file=sys.stderr)
+        return 1
+    except StorageError as error:
+        print(f"\n[ARMAZENAMENTO] {error}", file=sys.stderr)
+        print("O Leitorum não foi iniciado e nenhum arquivo foi criado.\n", file=sys.stderr)
+        return 1
+
     try:
         import uvicorn
         from app.main import app
@@ -206,6 +224,8 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"PC: http://127.0.0.1:{args.port}")
     print(f"Banco usado: {db_path}")
+    if storage_root is not None:
+        print(f"Armazenamento: {storage_root}")
 
     if args.host == "0.0.0.0":
         try:
@@ -244,6 +264,14 @@ def main(argv: list[str] | None = None) -> int:
 
     print("Para encerrar, pressione Ctrl+C nesta janela.", flush=True)
 
+    from app.core import server_lock
+
+    try:
+        server_lock.acquire(args.port)
+    except RuntimeError as error:
+        print(f"\n[ERRO] {error}", file=sys.stderr)
+        return 1
+
     try:
         uvicorn.run(
             app,
@@ -264,6 +292,8 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 1
         raise
+    finally:
+        server_lock.release()
 
     return 0
 
