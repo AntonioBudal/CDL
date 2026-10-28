@@ -174,13 +174,13 @@ proteção real contra perda são **cópias em outros lugares**.
 
 Esta fase não roda automaticamente. Cada passo abaixo espera a sua confirmação.
 
-- [ ] A020 Você informa o caminho no HD (por exemplo `D:\Leitorum`) e se quer a segunda cópia de backup (e onde, fora
+- [X] A020 Você informa o caminho no HD (por exemplo `D:\Leitorum`) e se quer a segunda cópia de backup (e onde, fora
   do HD).
-- [ ] A021 Com o servidor parado, rodo a atualização normal do banco: `alembic upgrade head` pela instalação, que cria
+- [X] A021 Com o servidor parado, rodo a atualização normal do banco: `alembic upgrade head` pela instalação, que cria
   o snapshot pré-migração verificado automaticamente. Ela aplica a migração `0030` no banco ativo. **Só com a sua
   aprovação.**
-- [ ] A022 Rodo `--plan` contra o banco real e o HD. O banco é só lido e nada é gravado. Apresento o relatório.
-- [ ] A023 Com a sua aprovação do relatório, rodo `--execute`, depois `--verify`, e informo como voltar atrás.
+- [X] A022 Rodo `--plan` contra o banco real e o HD. O banco é só lido e nada é gravado. Apresento o relatório.
+- [X] A023 Com a sua aprovação do relatório, rodo `--execute`, depois `--verify`, e informo como voltar atrás.
 
 ---
 

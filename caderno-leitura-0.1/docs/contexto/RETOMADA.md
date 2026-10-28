@@ -744,3 +744,21 @@ Execução em três fatias, cada uma com o próprio commit. Esta é a **fatia A*
   3. rodar `--plan`;
   4. rodar `--execute` e `--verify`.
 - Depois: fatia B (cofre de imagens) e fatia C (fotos de conferência, retenção, "Minhas Imagens e Espaço", cotas).
+
+### Execução no ambiente real (28/10/2026, com aprovação do usuário a cada passo)
+1. **Segunda cópia de backup:** `LEITORUM_SECONDARY_BACKUP_DIR=C:\Users\User\Documents\Leitorum-backups` no `.env`.
+2. **Banco ativo:** atualizado de `0029` para `0030_storage_settings`, com snapshot automático verificado
+   (`caderno-pre-migracao-20261028-015113.db`, também na segunda cópia).
+3. **`--plan` para `D:\Leitorum`:** nenhum impedimento; NTFS; 949 GB livres.
+4. **`--execute`:**
+   - `result = ok`; 28 tabelas conferidas (167 linhas, SHA-256 lógico igual);
+   - 8 backups copiados com SHA-256;
+   - origem intacta (`source_sha256_unchanged = true`);
+   - `.env` anterior em `.env.bak-20261028-015334`;
+   - `storage_id` `a7fe89e7-b725-4bd3-a269-5284d8b984c2`.
+5. **`--verify`:** ok.
+
+**Rollback:** com o servidor parado, copiar `.env.bak-20261028-015334` sobre o `.env`. O banco original continua
+em `backend\data\caderno.db`; manter por pelo menos 30 dias.
+
+**Pendente com o usuário:** ativar a "Proteção do sistema" no `D:\` e criar o primeiro ponto de restauração.
