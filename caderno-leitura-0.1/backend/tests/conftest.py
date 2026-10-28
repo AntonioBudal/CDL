@@ -23,6 +23,23 @@ TEST_GOOGLE_CLIENT_ID = "test-client-id.apps.googleusercontent.com"
 
 
 @pytest.fixture(autouse=True)
+def isolated_media_vault(tmp_path, monkeypatch):
+    """Feature 090-B: chave mestra de teste e cofre próprio em tmp_path para cada teste."""
+    import base64
+
+    from app.services import media_service
+
+    monkeypatch.setenv("LEITORUM_MEDIA_MASTER_KEY", base64.b64encode(os.urandom(32)).decode())
+    monkeypatch.delenv("LEITORUM_MEDIA_KEY_FILE", raising=False)
+    vault_dir = tmp_path / "cofre-de-teste"
+    vault_dir.mkdir()
+    monkeypatch.setattr(media_service, "_vault_dir", lambda: vault_dir)
+    media_service.reset_cache()
+    yield vault_dir
+    media_service.reset_cache()
+
+
+@pytest.fixture(autouse=True)
 def reset_auth_rate_limiter_fixture():
     """Garante que a memória do rate limiter seja reiniciada para cada teste."""
     from app.core.rate_limiter import auth_rate_limiter

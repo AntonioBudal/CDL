@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import io
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -22,7 +23,9 @@ from app.models.local_credential import LocalCredential
 from app.models.study import Study
 from app.models.user import User
 from app.models.user_profile import UserProfile
+from app.services.media_service import UUID_RE
 from app.services.profile_service import get_or_create_profile
+from app.services.vault import MAGIC, media_path
 
 USER_A_ID = "11111111-1111-1111-1111-111111111111"
 USER_B_ID = "22222222-2222-2222-2222-222222222222"
@@ -264,7 +267,7 @@ def _generate_synthetic_image(width: int = 500, height: int = 300, format: str =
     return buf.getvalue()
 
 
-def test_upload_avatar_validates_and_resizes_square(profile_harness):
+def test_upload_avatar_validates_and_resizes_square(profile_harness, isolated_media_vault):
     client = profile_harness.client_for(USER_A_ID)
     img_data = _generate_synthetic_image(500, 300, "PNG")
 
@@ -274,15 +277,17 @@ def test_upload_avatar_validates_and_resizes_square(profile_harness):
     )
     assert res.status_code == 200, res.text
     avatar_url = res.json()["avatar_url"]
-    assert avatar_url.startswith("/api/avatars/avatar_")
-    assert avatar_url.endswith(".webp")
+    assert avatar_url.startswith("/api/avatars/")
+    media_id = avatar_url.split("/")[-1]
+    assert UUID_RE.match(media_id)
 
-    # Verifica arquivo salvo fisicamente
-    filename = avatar_url.split("/")[-1]
-    saved_path = profile_harness.avatars_dir / filename
-    assert saved_path.exists()
+    # Feature 090-B: no disco só existe o arquivo cifrado
+    saved_path = media_path(isolated_media_vault, uuid.UUID(media_id))
+    assert saved_path.read_bytes().startswith(MAGIC)
 
-    with Image.open(saved_path) as saved_img:
+    res_img = client.get(avatar_url)
+    assert res_img.status_code == 200
+    with Image.open(io.BytesIO(res_img.content)) as saved_img:
         assert saved_img.format == "WEBP"
         assert saved_img.size == (256, 256)
 
@@ -313,7 +318,7 @@ def test_upload_avatar_rejects_large_file(profile_harness):
     assert "limite máximo" in res.json()["detail"].lower()
 
 
-def test_delete_avatar_removes_file(profile_harness):
+def test_delete_avatar_removes_file(profile_harness, isolated_media_vault):
     client = profile_harness.client_for(USER_A_ID)
     img_data = _generate_synthetic_image(200, 200, "PNG")
     res = client.post(
@@ -321,8 +326,7 @@ def test_delete_avatar_removes_file(profile_harness):
         files={"file": ("foto.png", img_data, "image/png")},
     )
     avatar_url = res.json()["avatar_url"]
-    filename = avatar_url.split("/")[-1]
-    saved_path = profile_harness.avatars_dir / filename
+    saved_path = media_path(isolated_media_vault, uuid.UUID(avatar_url.split("/")[-1]))
     assert saved_path.exists()
 
     # Deleta avatar

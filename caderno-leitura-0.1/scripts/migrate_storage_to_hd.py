@@ -393,7 +393,11 @@ def execute(ctx: Context, progress: Callable[[str], None] = print) -> dict:
         conn = sqlite3.connect(temporary)
         try:
             conn.execute("PRAGMA journal_mode=WAL")
-            conn.execute("INSERT INTO storage_settings (id, storage_id) VALUES (1, ?)", (storage_id,))
+            conn.execute(
+                "INSERT INTO storage_settings (id, storage_id) VALUES (1, ?) "
+                "ON CONFLICT(id) DO UPDATE SET storage_id = excluded.storage_id",
+                (storage_id,),
+            )
             conn.commit()
             if conn.execute("PRAGMA quick_check").fetchall() != [("ok",)]:
                 raise MigrationError("5", "integrity_failed", "A cópia falhou no quick_check final.")
@@ -442,6 +446,87 @@ def execute(ctx: Context, progress: Callable[[str], None] = print) -> dict:
     report_path = ctx.target / f"migration-report-{stamp}.json"
     report_path.write_text(json.dumps(ctx.report, ensure_ascii=False, indent=1), encoding="utf-8")
     return ctx.report
+
+
+def _webp_for(kind: str, data: bytes) -> bytes:
+    """Arquivo legado (WebP, JPEG ou PNG) → WebP otimizado e sem metadados, como no upload novo."""
+    from app.services import media_service
+    from app.services.avatar_service import validate_and_crop_avatar
+    from app.services.cover_service import validate_and_optimize_image
+
+    if kind == "avatar":
+        return media_service.strip_webp(validate_and_crop_avatar(data))
+    return media_service.strip_webp(validate_and_optimize_image(data))
+
+
+def vault_import(plan: bool, lock_path: Path = server_lock.LOCK_PATH, port: int = 8000) -> dict:
+    """Fatia 090-B: leva as capas e os avatares em claro para o cofre cifrado. Originais nunca apagados."""
+    from sqlalchemy.orm import Session
+
+    from app.core.config import get_avatars_dir, get_backup_dir, get_covers_dir, get_database_path
+    from app.db.session import get_engine
+    from app.models.book import Book
+    from app.models.user_profile import UserProfile
+    from app.services import media_service
+
+    if server_lock.active_lock(lock_path) or port_in_use(port):
+        raise MigrationError("vault", "server_running", "O Leitorum está em execução: pare o servidor antes de importar.")
+    report: dict = {"mode": "vault-import-plan" if plan else "vault-import"}
+    with Session(get_engine(), expire_on_commit=False) as session:
+        covers_dir, avatars_dir = get_covers_dir(), get_avatars_dir()
+        covers: dict[tuple[str, str], list[Book]] = {}
+        for book in session.query(Book).filter(Book.cover_image.is_not(None)).all():
+            if media_service.by_reference(session, book.cover_image) is None:
+                covers.setdefault((book.user_id, book.cover_image), []).append(book)
+        avatars = [
+            profile for profile in session.query(UserProfile).filter(UserProfile.avatar_url.like("/api/avatars/%")).all()
+            if media_service.by_reference(session, profile.avatar_url) is None
+        ]
+        items = [("cover", user_id, name, books) for (user_id, name), books in covers.items()]
+        items += [("avatar", profile.user_id, profile.avatar_url.rsplit("/", 1)[-1], [profile]) for profile in avatars]
+        found = [(kind, user_id, name, refs) for kind, user_id, name, refs in items
+                 if ((covers_dir if kind == "cover" else avatars_dir) / name).is_file()]
+        report.update({
+            "legacy_references": len(items),
+            "files_found": len(found),
+            "files_missing": len(items) - len(found),
+            "bytes": sum(((covers_dir if k == "cover" else avatars_dir) / n).stat().st_size for k, _u, n, _r in found),
+            "vault_state": media_service.peek_status(session),
+        })
+        if plan:
+            return report
+        media_service.require_vault(session)
+        snapshot = get_backup_dir() / f"caderno-pre-cofre-{now_stamp()}.db"
+        create_database_backup(destination=snapshot, source=get_database_path())
+        copy_to_secondary(snapshot)
+        report["pre_import_snapshot"] = snapshot.name
+        from fastapi import HTTPException
+
+        originals, invalid = [], 0
+        for kind, user_id, name, refs in found:
+            source = (covers_dir if kind == "cover" else avatars_dir) / name
+            try:
+                webp = _webp_for(kind, source.read_bytes())
+            except HTTPException:
+                invalid += 1  # arquivo legado ilegível: fica como está, a referência não muda
+                continue
+            book_id = refs[0].id if kind == "cover" else None
+            row = media_service.store(session, user_id=user_id, kind=kind, webp=webp, book_id=book_id)
+            if media_service.read(session, row) != webp:
+                session.rollback()
+                raise MigrationError("vault", "roundtrip_failed", "A imagem cifrada não voltou idêntica; nada mais foi importado.")
+            for ref in refs:
+                if kind == "cover":
+                    ref.cover_image = row.id
+                else:
+                    ref.avatar_url = f"/api/avatars/{row.id}"
+            session.commit()
+            originals.append(str(source))
+        report["imported"] = len(originals)
+        report["files_invalid"] = invalid
+        report["originals_kept"] = originals
+        report["result"] = "ok"
+    return report
 
 
 def verify_current() -> dict:
@@ -495,6 +580,8 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--execute", action="store_true")
     mode.add_argument("--verify", action="store_true")
     mode.add_argument("--rollback-info", action="store_true")
+    mode.add_argument("--vault-import", action="store_true")
+    mode.add_argument("--vault-import-plan", action="store_true")
     parser.add_argument("--target")
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--replace-database-path", action="store_true")
@@ -503,6 +590,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.verify:
             result = verify_current()
+        elif args.vault_import or args.vault_import_plan:
+            result = vault_import(plan=args.vault_import_plan, port=args.port)
         else:
             ctx = build_context(args)
             if args.rollback_info:
@@ -514,7 +603,7 @@ def main(argv: list[str] | None = None) -> int:
                           **preconditions(ctx)}
             else:
                 result = execute(ctx)
-    except (MigrationError, StorageError, ValueError) as error:
+    except (RuntimeError, ValueError) as error:  # MigrationError, StorageError e cofre trancado
         step = getattr(error, "step", "-")
         code = getattr(error, "code", type(error).__name__)
         print(json.dumps({"result": "falhou", "step": step, "code": code, "message": str(error)},

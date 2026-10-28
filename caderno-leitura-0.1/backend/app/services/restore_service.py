@@ -51,7 +51,7 @@ def safe_extract_zip(zip_path: Path, target_dir: Path) -> list[str]:
                 continue
 
             top_level = parts[0]
-            if top_level not in ("caderno.db", "manifest.json", "covers"):
+            if top_level not in ("caderno.db", "manifest.json", "covers", "vault"):
                 raise ValueError(f"Arquivo não autorizado contido no backup: {member.filename}")
 
             zf.extract(member, target_dir)
@@ -104,6 +104,7 @@ def restore_backup_package(
     *,
     target_db: Path | None = None,
     target_covers: Path | None = None,
+    target_vault: Path | None = None,
 ) -> RestoreResultResponse:
     """Restaura o acervo a partir de um pacote .zip ou arquivo .db isolado.
 
@@ -138,6 +139,7 @@ def restore_backup_package(
                 raise ValueError(error_msg)
             extracted_db = sandbox_p / "caderno.db"
             extracted_covers = sandbox_p / "covers"
+            extracted_vault = sandbox_p / "vault"
         else:
             # Suporte a arquivo .db direto
             extracted_db = sandbox_p / "caderno.db"
@@ -146,6 +148,11 @@ def restore_backup_package(
             if not is_ok:
                 raise ValueError(f"O arquivo enviado não é uma base SQLite válida: {error_msg}")
             extracted_covers = None
+            extracted_vault = None
+
+        # Identidade do armazenamento atual (feature 090): o backup não pode trocar o storage_id da raiz,
+        # senão o Leitorum deixaria de reconhecer o próprio HD.
+        current_identity = _read_storage_settings(active_db)
 
         # 2. Snapshot compulsório de salvaguarda do acervo ativo
         pre_snapshot = create_pre_restore_snapshot(active_db)
@@ -166,6 +173,12 @@ def restore_backup_package(
                         shutil.copy2(cover_file, active_covers / cover_file.name)
                         covers_restored += 1
 
+            _keep_storage_identity(active_db, current_identity)
+            media_restored = 0
+            if extracted_vault is not None and extracted_vault.is_dir():
+                media_restored = _restore_vault(extracted_vault, target_vault)
+            vault_warning = _vault_key_warning(manifest)
+
             # Metadados e contagens finais do acervo restaurado
             schema_rev, counts = get_database_metadata_and_counts(active_db)
             created_at_str = manifest.created_at if manifest else None
@@ -178,6 +191,8 @@ def restore_backup_package(
                 schema_revision=schema_rev,
                 counts=counts,
                 covers_restored=covers_restored,
+                media_restored=media_restored,
+                vault_warning=vault_warning,
             )
 
         except Exception as exc:
@@ -191,3 +206,76 @@ def restore_backup_package(
             raise RuntimeError(
                 f"Falha na restauração. O acervo anterior foi restaurado via rollback: {exc}"
             ) from exc
+
+
+def _read_storage_settings(database: Path) -> tuple[str, str | None] | None:
+    """(storage_id, impressão digital) do banco ativo antes da restauração, se existirem."""
+    import sqlite3
+
+    if not database.is_file():
+        return None
+    try:
+        conn = sqlite3.connect(f"{database.resolve().as_uri()}?mode=ro", uri=True)
+        try:
+            row = conn.execute("SELECT storage_id, media_key_fingerprint FROM storage_settings WHERE id = 1").fetchone()
+        finally:
+            conn.close()
+    except sqlite3.Error:
+        return None
+    return (row[0], row[1]) if row else None
+
+
+def _keep_storage_identity(database: Path, identity: tuple[str, str | None] | None) -> None:
+    """Regrava o storage_id da instalação atual no banco restaurado (feature 090)."""
+    import sqlite3
+
+    if identity is None:
+        return
+    conn = sqlite3.connect(database)
+    try:
+        exists = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='storage_settings'"
+        ).fetchone()
+        if not exists:
+            return
+        conn.execute(
+            "INSERT INTO storage_settings (id, storage_id) VALUES (1, ?) "
+            "ON CONFLICT(id) DO UPDATE SET storage_id = excluded.storage_id",
+            (identity[0],),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _restore_vault(extracted_vault: Path, target: Path | None = None) -> int:
+    """Copia os .enc do pacote (já conferidos pelo manifesto) para o cofre ativo."""
+    from app.core.config import get_vault_dir
+
+    target = target or get_vault_dir()
+    restored = 0
+    for enc in extracted_vault.rglob("*.enc"):
+        destination = target / enc.relative_to(extracted_vault)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(enc, destination)
+        restored += 1
+    return restored
+
+
+def _vault_key_warning(manifest: BackupManifestSchema | None) -> str | None:
+    """Aviso quando as imagens do pacote foram cifradas com outra chave mestra."""
+    if manifest is None or not manifest.key_fingerprint:
+        return None
+    from app.core.media_key import MediaKeyError, fingerprint, load_master_key
+
+    try:
+        key = load_master_key()
+    except MediaKeyError:
+        key = None
+    if key is not None and fingerprint(key) == manifest.key_fingerprint:
+        return None
+    return (
+        "As imagens deste backup foram cifradas com outra chave. Elas só abrem com a chave original: "
+        "use o código de recuperação dela (instalar.py --media-key --restore)."
+    )
+

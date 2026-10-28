@@ -5,6 +5,7 @@ from app.models.book import Book
 from app.models.canvas_frame import CanvasFrame
 from app.models.category import Category, book_categories
 from app.models.chapter import Chapter
+from app.models.encrypted_media import EncryptedMedia
 from app.models.external_identity import ExternalIdentity
 from app.models.friendship import Friendship
 from app.models.inbox_capture import InboxCapture
@@ -32,6 +33,7 @@ __all__ = [
     "CanvasFrame",
     "Category",
     "Chapter",
+    "EncryptedMedia",
     "ExternalIdentity",
     "Friendship",
     "InboxCapture",

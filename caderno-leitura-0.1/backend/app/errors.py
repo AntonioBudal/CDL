@@ -58,6 +58,16 @@ def register_database_error_handlers(application: FastAPI) -> None:
         )
 
     from app.core.storage import StorageError
+    from app.services.media_service import VaultLocked
+
+    @application.exception_handler(VaultLocked)
+    async def vault_locked(_request: Request, error: VaultLocked) -> JSONResponse:
+        from app.routers.media import VAULT_MESSAGES
+
+        return JSONResponse(
+            status_code=503,
+            content={"detail": VAULT_MESSAGES.get(error.state, VAULT_MESSAGES["key_missing"]), "code": "vault_locked"},
+        )
 
     @application.exception_handler(StorageError)
     async def storage_unavailable(_request: Request, _error: StorageError) -> JSONResponse:

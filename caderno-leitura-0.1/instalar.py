@@ -38,11 +38,25 @@ def install_motor() -> bool:
     return True
 
 
+def media_key(restore: bool) -> int:
+    """Cofre de imagens (feature 090-B): roda no Python do backend, com o terminal interativo."""
+    python = venv_python(ENVIRONMENT)
+    if not python.is_file():
+        print("Instale o Leitorum antes (py -3.13 instalar.py).", file=sys.stderr)
+        return 1
+    command = [str(python), str(ROOT / "scripts" / "media_key.py")] + (["--restore"] if restore else [])
+    return subprocess.run(command, cwd=ROOT).returncode
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Instalar o Caderno de Leitura Alpha 0.1.")
     parser.add_argument("--dev", action="store_true", help="Instalar também as dependências dos testes Python.")
     parser.add_argument("--motor", action="store_true", help="Instalar também o motor de leitura da digitalização de caderno (opcional).")
+    parser.add_argument("--media-key", action="store_true", help="Criar a chave do cofre de imagens (mostra o código de recuperação uma vez).")
+    parser.add_argument("--restore", action="store_true", help="Com --media-key: recriar a chave a partir do código de recuperação.")
     args = parser.parse_args()
+    if args.media_key:
+        return media_key(args.restore)
     if sys.version_info[:2] != (3, 13):
         print("Use Python 3.13: no Windows, execute py -3.13 instalar.py.", file=sys.stderr)
         return 1

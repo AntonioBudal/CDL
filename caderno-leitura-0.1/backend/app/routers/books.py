@@ -201,7 +201,7 @@ async def upload_book_cover(
         raise HTTPException(status_code=404, detail="Livro não encontrado.")
 
     data = await file.read()
-    filename = process_and_save_cover(data)
+    filename = process_and_save_cover(data, session=session, user_id=current_user.id, book_id=book_id)
     updated_book = set_book_cover(session, book_id, filename)
     return CoverResponse(
         book_id=updated_book.id,
@@ -222,7 +222,7 @@ def import_book_cover_url(
     if book.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Livro não encontrado.")
 
-    filename = download_cover_from_url(payload.url)
+    filename = download_cover_from_url(payload.url, session=session, user_id=current_user.id, book_id=book_id)
     updated_book = set_book_cover(session, book_id, filename)
     return CoverResponse(
         book_id=updated_book.id,

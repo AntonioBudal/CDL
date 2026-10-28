@@ -16,6 +16,10 @@ class BackupManifestSchema(BaseModel):
     generator: str = "Caderno de Leitura Backup Engine"
     counts: BackupCounts = Field(default_factory=BackupCounts)
     files: dict[str, str] = Field(default_factory=dict)
+    # Cofre de imagens (feature 090-B): arquivos .enc cifrados; a chave nunca vai no pacote.
+    vault_files: int = 0
+    key_fingerprint: str | None = None
+    storage_id: str | None = None
 
 
 class RestoreResultResponse(BaseModel):
@@ -26,6 +30,8 @@ class RestoreResultResponse(BaseModel):
     schema_revision: str | None = None
     counts: dict[str, int] = Field(default_factory=dict)
     covers_restored: int = 0
+    media_restored: int = 0
+    vault_warning: str | None = None
 
 
 class SnapshotInspectionResponse(BaseModel):

@@ -18,7 +18,9 @@ def _load_env_file() -> None:
                             k, v = line.split("=", 1)
                             k = k.strip()
                             v = v.strip().strip("'\"")
-                            if is_pytest and k == "REQUIRE_AUTH":
+                            # Testes nunca herdam o HD real nem a segunda cópia de backup (feature 090).
+                            if is_pytest and k in ("REQUIRE_AUTH", "LEITORUM_STORAGE_ROOT",
+                                                   "LEITORUM_SECONDARY_BACKUP_DIR"):
                                 continue
                             if k and k not in os.environ:
                                 os.environ[k] = v
@@ -236,6 +238,15 @@ def get_backup_dir(database_path: Path | None = None) -> Path:
     backup_dir = base_db.parent / "backups"
     backup_dir.mkdir(parents=True, exist_ok=True)
     return backup_dir.resolve()
+
+
+def get_vault_dir() -> Path:
+    """Cofre de imagens cifradas (feature 090-B): ``<raiz>/vault`` com a raiz ativa; senão, junto do banco."""
+    if _uses_root(None):
+        return _root_subdir("vault")
+    vault = get_database_path().parent / "vault"
+    vault.mkdir(parents=True, exist_ok=True)
+    return vault.resolve()
 
 
 def get_secondary_backup_dir() -> Path | None:

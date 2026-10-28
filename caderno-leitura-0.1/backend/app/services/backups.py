@@ -197,6 +197,7 @@ def create_backup_bundle(
     *,
     source_db: Path | None = None,
     covers_dir: Path | None = None,
+    vault_dir: Path | None = None,
     app_version: str = "0.3.0",
 ) -> Path:
     """Gera um pacote universal compactado .zip contendo caderno.db, covers/ e manifest.json.
@@ -241,6 +242,16 @@ def create_backup_bundle(
                     file_hashes[rel_name] = calculate_file_sha256(cover)
                     cover_files.append(cover)
 
+        # 4b. Cofre de imagens cifradas (feature 090-B): só os .enc; a chave nunca entra no pacote.
+        vault_files: list[tuple[Path, str]] = []
+        vault_path = _bundle_vault_dir(vault_dir)
+        if vault_path is not None and vault_path.is_dir():
+            for enc in sorted(vault_path.rglob("*.enc")):
+                rel_name = f"vault/{enc.relative_to(vault_path).as_posix()}"
+                file_hashes[rel_name] = calculate_file_sha256(enc)
+                vault_files.append((enc, rel_name))
+        key_fingerprint, storage_id = _storage_identity(temp_db)
+
         # 5. Monta e grava o manifest.json
         manifest = BackupManifestSchema(
             app_version=app_version,
@@ -254,6 +265,9 @@ def create_backup_bundle(
                 covers=len(cover_files),
             ),
             files=file_hashes,
+            vault_files=len(vault_files),
+            key_fingerprint=key_fingerprint,
+            storage_id=storage_id,
         )
 
         temp_manifest = tmp_p / "manifest.json"
@@ -265,5 +279,28 @@ def create_backup_bundle(
             zf.write(temp_db, arcname="caderno.db")
             for cover in cover_files:
                 zf.write(cover, arcname=f"covers/{cover.name}")
+            for enc, rel_name in vault_files:
+                zf.write(enc, arcname=rel_name)
 
     return dest_path
+
+
+def _bundle_vault_dir(vault_dir: Path | None) -> Path | None:
+    if vault_dir is not None:
+        return Path(vault_dir).resolve()
+    try:
+        from app.core.config import get_vault_dir
+
+        return get_vault_dir()
+    except Exception:  # noqa: BLE001 — sem cofre disponível, o pacote sai só com banco e capas
+        return None
+
+
+def _storage_identity(database: Path) -> tuple[str | None, str | None]:
+    """Impressão digital da chave e storage_id gravados no banco (sem a chave)."""
+    try:
+        with closing(sqlite3.connect(f"{database.resolve().as_uri()}?mode=ro", uri=True)) as conn:
+            row = conn.execute("SELECT media_key_fingerprint, storage_id FROM storage_settings WHERE id = 1").fetchone()
+    except sqlite3.Error:
+        return None, None
+    return (row[0], row[1]) if row else (None, None)

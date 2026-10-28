@@ -171,8 +171,8 @@ versão guardada para conferência é a otimizada e cifrada.
   | Tipo | Quem lê |
   | :--- | :--- |
   | `notebook_page` | **só o dono** (`media.user_id == current_user.id`) |
-  | `avatar` | quem já pode ver o perfil pelas regras atuais (o próprio, amigos, perfis públicos ou descobríveis) |
-  | `cover` | o dono do livro e quem recebeu o livro por compartilhamento (regras do `sharing_service`) |
+  | `avatar` | **qualquer usuário logado sem bloqueio com o dono** (`is_blocked_between`). Os avatares aparecem em listas de amigos, pedidos, busca e livros compartilhados; exigir "ver o perfil" quebraria essas telas. Hoje eles são públicos até para quem não está logado |
+  | `cover` | quem pode ler o livro: `can_read_book` do `sharing_service` (dono; público; amigos; bloqueio nega) |
 
   Restringir avatar e capa só ao dono quebraria o perfil, as amizades e os livros compartilhados, que já existem.
 - **Resposta para quem não pode ver:** `404`, e não `403`, para não revelar a existência da mídia.

@@ -239,6 +239,19 @@ def delete_account_permanently(
     session.execute(delete(StudyCanvasNode).where(StudyCanvasNode.user_id == user_id_copy))
     session.execute(delete(CanvasFrame).where(CanvasFrame.user_id == user_id_copy))
 
+    # Imagens do cofre (feature 090-B): arquivo e linha, antes dos estudos e do usuário.
+    from app.models.encrypted_media import EncryptedMedia
+    from app.services import media_service
+
+    for media in session.scalars(select(EncryptedMedia).where(EncryptedMedia.user_id == user_id_copy)).all():
+        try:
+            media_service.delete(session, media)
+        except Exception:  # noqa: BLE001 — sem o cofre disponível, a linha sai; o arquivo vira órfão e é limpo depois
+            pass
+        if media in session:
+            session.delete(media)
+    session.flush()
+
     # Estudos
     session.execute(delete(Study).where(Study.user_id == user_id_copy))
 

@@ -762,3 +762,38 @@ Execução em três fatias, cada uma com o próprio commit. Esta é a **fatia A*
 em `backend\data\caderno.db`; manter por pelo menos 30 dias.
 
 **Pendente com o usuário:** ativar a "Proteção do sistema" no `D:\` e criar o primeiro ponto de restauração.
+
+## Sessão: Feature 090, fatia B — Cofre de imagens criptografadas (28/10/2026)
+
+### O que foi entregue
+1. **Formato `.enc` v1** (`app/services/vault.py`): AES-256-GCM, chave por arquivo via HKDF-SHA256, cabeçalho de
+   36 bytes e dados associados com `user_id`. Miniatura cifrada `<id>.thumb.enc` com variante própria.
+2. **Chave mestra** (`app/core/media_key.py`): DPAPI em `%LOCALAPPDATA%\Leitorum\media-master.key` ou
+   `LEITORUM_MEDIA_MASTER_KEY`; recusada dentro do HD; impressão digital em `storage_settings`; código de
+   recuperação base32 com verificação. Instalação: `instalar.py --media-key [--restore]` (`scripts/media_key.py`).
+3. **Tabela `encrypted_media`** (migração `0031_encrypted_media`, já com os campos da fatia C).
+4. **Avatares e capas pelo cofre**, com metadados removidos. Rotas `/api/avatars` e `/api/covers` exigem sessão e
+   aplicam a regra de acesso; nova API `/api/media` (listar, ver, miniatura, apagar). Erros `404`, `409`, `422` e
+   `503 vault_locked`. Respostas sem cache.
+5. **Backup, restauração, exportação e exclusão de conta** cientes do cofre (restauração mantém o `storage_id`
+   atual e avisa sobre chave diferente).
+6. **Importação dos arquivos antigos:** `migrate_storage_to_hd.py --vault-import-plan` (só leitura) e
+   `--vault-import` (snapshot `caderno-pre-cofre-*`, ida e volta conferida, originais mantidos).
+7. **Frontend:** tratador global de avatar quebrado (`src/utils/avatarFallback.ts`), no lugar do componente
+   previsto em B010b.
+8. **Testes nunca herdam do `.env`** a raiz do HD nem a segunda cópia de backup (`config._load_env_file`). Motivo:
+   um `alembic upgrade` manual no banco descartável chegou a copiar o snapshot dele para a segunda cópia real. O
+   arquivo era só do banco de teste, foi conferido por SHA-256 e retirado de lá.
+
+### Evidências
+- `pytest`: 592 aprovados e 1 pulado (linha de base 546 e 1), com `CADERNO_DATABASE_PATH` descartável. `npm test`:
+  636 (linha de base 633). `npm run build`: ok.
+- Latência (SC-007), página de ruído 2000 × 1500: página p95 16,3 ms (meta 150); miniatura p95 13,6 ms (meta 80).
+- Banco no HD continua em `0030`; nenhuma chave instalada; `D:\Leitorum\vault` não existe ainda.
+
+### Ponto de continuação (portão; cada passo com aprovação)
+1. **B023 — você:** `py -3.13 instalar.py --media-key` no seu terminal; guardar o código de recuperação fora do
+   computador. Eu não rodo esse passo.
+2. **B024:** com o servidor parado, atualizar o banco do HD para `0031` (snapshot automático e segunda cópia).
+3. **B025:** `--vault-import-plan`, relatório e, com aprovação, `--vault-import` e conferência.
+- Depois: fatia C (fotos de conferência, retenção, "Minhas Imagens e Espaço", cotas).

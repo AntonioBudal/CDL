@@ -30,7 +30,7 @@ o desta tabela e o do banco aberto. Se não baterem, o app não inicia (research
 | `status` | TEXT(12) NOT NULL | `pending` \| `active` \| `deleting` \| `missing` (`CHECK`) |
 | `study_id` | INTEGER NULL FK `studies.id` | `ON DELETE SET NULL`; **apagar a mídia nunca toca no estudo** |
 | `book_id` | INTEGER NULL FK `books.id` | `ON DELETE SET NULL`; capas e páginas (para listar por livro) |
-| `byte_size` | INTEGER NOT NULL | tamanho do `.enc` em disco; é o que conta na cota |
+| `byte_size` | INTEGER NOT NULL | tamanho em disco do `.enc` mais a miniatura `<id>.thumb.enc`; é o que conta na cota |
 | `plain_size` | INTEGER NOT NULL | tamanho do WebP antes de cifrar (informativo) |
 | `width` / `height` | INTEGER NOT NULL | dimensões depois da otimização |
 | `content_type` | TEXT(32) NOT NULL | `image/webp` |
@@ -53,8 +53,10 @@ o desta tabela e o do banco aberto. Se não baterem, o app não inicia (research
 - `CHECK (kind <> 'notebook_page' OR expires_at IS NOT NULL OR keep_forever = 1)`.
 
 **Referências existentes** (sem mudança de tipo):
-- `user_profiles.avatar_url` passa a guardar `/api/media/<id>/content`;
-- `books.cover_image` passa a guardar `media:<id>`.
+- `user_profiles.avatar_url` passa a guardar `/api/avatars/<media_id>`;
+- `books.cover_image` passa a guardar `<media_id>`.
+
+As rotas de hoje continuam sendo as usadas pelo frontend (decisão da fatia B).
 
 As rotas antigas `/api/avatars/{arquivo}` e `/api/covers/{arquivo}` resolvem os valores antigos durante a
 transição (research R5 e R10).

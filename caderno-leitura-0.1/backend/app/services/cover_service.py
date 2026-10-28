@@ -91,14 +91,13 @@ def validate_and_optimize_image(data: bytes, max_width: int = MAX_COVER_WIDTH) -
         ) from exc
 
 
-def process_and_save_cover(data: bytes) -> str:
-    """Processa o binário da imagem, otimiza para WebP e salva no diretório persistente de capas."""
-    optimized_bytes = validate_and_optimize_image(data)
-    filename = f"{uuid.uuid4().hex}.webp"
-    covers_dir = get_covers_dir()
-    file_path = covers_dir / filename
-    file_path.write_bytes(optimized_bytes)
-    return filename
+def process_and_save_cover(data: bytes, *, session: Session, user_id: str, book_id: int) -> str:
+    """Otimiza para WebP sem metadados e grava cifrado no cofre (feature 090-B); devolve o ``media_id``."""
+    from app.services import media_service
+
+    optimized_bytes = media_service.strip_webp(validate_and_optimize_image(data))
+    row = media_service.store(session, user_id=user_id, kind="cover", webp=optimized_bytes, book_id=book_id)
+    return row.id
 
 
 def validate_safe_url(url_str: str) -> str:
@@ -146,7 +145,7 @@ def validate_safe_url(url_str: str) -> str:
     return url_str
 
 
-def download_cover_from_url(url_str: str) -> str:
+def download_cover_from_url(url_str: str, *, session: Session, user_id: str, book_id: int) -> str:
     """Baixa com segurança uma imagem a partir de uma URL direta e persiste como capa."""
     safe_url = validate_safe_url(url_str)
 
@@ -180,7 +179,7 @@ def download_cover_from_url(url_str: str) -> str:
                     detail="O arquivo de imagem excede o limite máximo permitido de 5 MB.",
                 )
 
-            return process_and_save_cover(data)
+            return process_and_save_cover(data, session=session, user_id=user_id, book_id=book_id)
 
     except httpx.TimeoutException as exc:
         raise HTTPException(
@@ -198,6 +197,20 @@ def delete_cover_file_if_orphan(session: Session, filename: str | None, current_
     """Remove o arquivo físico de capa do disco se nenhum outro livro estiver referenciando-o."""
     if not filename:
         return False
+
+    # Capa no cofre (feature 090-B): apaga a mídia cifrada quando nenhum outro livro a usa.
+    from app.services import media_service
+
+    media = media_service.by_reference(session, filename)
+    if media is not None:
+        others = session.query(Book).filter(Book.cover_image == media.id)
+        if current_book_id is not None:
+            others = others.filter(Book.id != current_book_id)
+        if others.count() > 0 or media.kind != "cover":
+            return False
+        media_service.delete(session, media)
+        session.commit()
+        return True
 
     base_name = os.path.basename(filename)
     if not SAFE_FILENAME_REGEX.match(base_name):

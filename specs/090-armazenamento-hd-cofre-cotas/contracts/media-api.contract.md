@@ -119,8 +119,8 @@ Lista as páginas vinculadas ao estudo, no mesmo formato de item. Só para o don
 | Rota | Mudança |
 | :--- | :--- |
 | `POST /api/digitize/preview` | campo de formulário opcional `keep_photo=true`; a resposta ganha `stored_media: {id, byte_size, pending_until} \| null` e `storage_warning` (cota cheia, chave ausente). Sem `keep_photo`, tudo segue como na 086 |
-| `POST /api/profile/avatar` e upload/URL de capa | gravam no cofre e devolvem a nova URL `/api/media/<id>/content` |
-| `GET /api/avatars/{arquivo}` e `GET /api/covers/{arquivo}` | resolvem para a mídia cifrada com a mesma regra de acesso; sem arquivo em claro depois do `--vault-import` |
+| `POST /api/profile/avatar` e upload/URL de capa | gravam no cofre; `avatar_url` passa a `/api/avatars/<media_id>` e `cover_image` passa a `<media_id>`, ou seja, as **mesmas rotas de hoje**, e o frontend não muda |
+| `GET /api/avatars/{nome}` e `GET /api/covers/{nome}` | passam a **exigir sessão**. Se `nome` é um `media_id`, decifram do cofre; se é um arquivo legado, servem enquanto ele existir. As duas usam a regra de acesso do tipo e devolvem `404` sem permissão |
 
 **Erros de cota** (qualquer gravação): `507` com `code` `user_quota` ou `server_quota`, mais `detail` em
 português e `usage` (o mesmo objeto de `/usage`).

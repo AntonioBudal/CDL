@@ -100,19 +100,35 @@ def upload_avatar(
     session: DatabaseSession,
     file: UploadFile = File(...),
 ) -> AvatarResponse:
-    from app.services.avatar_service import (
-        delete_avatar_file,
-        save_avatar_file,
-        validate_and_crop_avatar,
-    )
+    from app.services import media_service
+    from app.services.avatar_service import validate_and_crop_avatar
+
     data = file.file.read()
-    cropped_bytes = validate_and_crop_avatar(data)
+    cropped_bytes = media_service.strip_webp(validate_and_crop_avatar(data))
     profile = get_or_create_profile(current_user, session)
-    delete_avatar_file(profile.avatar_url)
-    new_url = save_avatar_file(current_user.id, cropped_bytes)
+    old_url = profile.avatar_url
+    # Feature 090-B: o avatar vai cifrado para o cofre; a URL continua na mesma rota de sempre.
+    row = media_service.store(session, user_id=current_user.id, kind="avatar", webp=cropped_bytes)
+    new_url = f"/api/avatars/{row.id}"
     profile.avatar_url = new_url
+    _discard_old_avatar(session, current_user.id, old_url)
     session.commit()
     return AvatarResponse(avatar_url=new_url)
+
+
+def _discard_old_avatar(session: Session, user_id: str, old_url: str | None) -> None:
+    """Apaga o avatar anterior: do cofre (duas fases) ou o arquivo legado em claro."""
+    from app.services import media_service
+    from app.services.avatar_service import delete_avatar_file
+
+    if not old_url or not old_url.startswith("/api/avatars/"):
+        return
+    old = media_service.by_reference(session, old_url)
+    if old is not None:
+        if old.kind == "avatar" and old.user_id == user_id:
+            media_service.delete(session, old)
+        return
+    delete_avatar_file(old_url)
 
 
 @router.delete(
@@ -124,11 +140,10 @@ def remove_avatar(
     current_user: CurrentUser,
     session: DatabaseSession,
 ) -> AvatarResponse:
-    from app.services.avatar_service import delete_avatar_file
-
     profile = get_or_create_profile(current_user, session)
-    delete_avatar_file(profile.avatar_url)
+    old_url = profile.avatar_url
     profile.avatar_url = None
+    _discard_old_avatar(session, current_user.id, old_url)
     session.commit()
     return AvatarResponse(avatar_url=None)
 
@@ -136,13 +151,32 @@ def remove_avatar(
 avatars_router = APIRouter(prefix="/avatars", tags=["Avatares"])
 
 
-@avatars_router.get("/{filename}", summary="Servir arquivo de imagem de avatar processado")
-def serve_avatar(filename: str):
-    from app.core.config import get_avatars_dir
+@avatars_router.get("/{filename}", summary="Servir o avatar (cofre cifrado ou arquivo legado)")
+def serve_avatar(filename: str, current_user: CurrentUser, session: DatabaseSession):
+    """Exige sessão (feature 090-B). Avatar visível a quem está logado e não tem bloqueio com o dono."""
+    import re
 
-    avatars_dir = get_avatars_dir()
-    filepath = avatars_dir / filename
-    if not filepath.exists() or not filepath.is_file():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Avatar não encontrado.")
-    return Response(content=filepath.read_bytes(), media_type="image/webp")
+    from app.core.config import get_avatars_dir
+    from app.models.user_profile import UserProfile
+    from app.routers.media import IMAGE_HEADERS, media_response
+    from app.services import media_service
+    from app.services.friendship_service import is_blocked_between
+
+    not_found = HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Avatar não encontrado.")
+    row = media_service.by_reference(session, filename)
+    if row is not None:
+        if row.kind != "avatar" or not media_service.can_view(session, current_user.id, row):
+            raise not_found
+        return media_response(session, row)
+    if not re.fullmatch(r"[A-Za-z0-9_\-]+\.webp", filename):
+        raise not_found
+    profile = session.query(UserProfile).filter(UserProfile.avatar_url == f"/api/avatars/{filename}").first()
+    if profile is None or (
+        profile.user_id != current_user.id and is_blocked_between(session, current_user.id, profile.user_id)
+    ):
+        raise not_found
+    filepath = get_avatars_dir() / filename
+    if not filepath.is_file():
+        raise not_found
+    return Response(content=filepath.read_bytes(), media_type="image/webp", headers=IMAGE_HEADERS)
 

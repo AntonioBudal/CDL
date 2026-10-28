@@ -27,6 +27,7 @@ from app.routers import (
     friends,
     health,
     imports,
+    media,
     inbox,
     notifications,
     preferences,
@@ -73,6 +74,18 @@ async def lifespan(app: FastAPI):
             break
     except Exception:
         pass
+
+    # Cofre de imagens (feature 090-B): confere a chave na partida; um cofre trancado não impede o resto do app.
+    if "pytest" not in sys.modules:
+        try:
+            from app.db.session import get_session
+            from app.services import media_service
+
+            for session in get_session():
+                logger.info("Cofre de imagens: %s", media_service.vault_status(session)["state"])
+                break
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Cofre de imagens não verificado na partida: %s", type(exc).__name__)
 
     # Camada de proteção 2 (feature 090-A): backup automático na partida e a cada hora, se vencido.
     auto_backup = None
@@ -137,6 +150,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(canvas.router, prefix="/api")
     application.include_router(imports.router, prefix="/api")
     application.include_router(digitize.router, prefix="/api")
+    application.include_router(media.router, prefix="/api")
     application.include_router(trash.router, prefix="/api")
     application.include_router(covers.router, prefix="/api")
     application.include_router(dashboard.router, prefix="/api")

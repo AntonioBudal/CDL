@@ -3,8 +3,10 @@ import App from './App.vue'
 import { router } from './router'
 import './appearance-bootstrap.js'
 import { usePreferences } from './composables/usePreferences'
+import { installAvatarFallback } from './utils/avatarFallback'
 
 // Leitura síncrona das preferências e do tema antes da montagem para evitar FOUC e reset
 usePreferences().loadFromLocal()
 
+installAvatarFallback()
 createApp(App).use(router).mount('#app')

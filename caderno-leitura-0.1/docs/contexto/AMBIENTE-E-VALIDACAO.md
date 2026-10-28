@@ -167,3 +167,60 @@ são **cópias em outros lugares**:
    **Limite:** o Windows cria esses pontos sozinho só em atualizações e instalações. Para ter versões frequentes,
    crie pontos manualmente ou agende a criação no Agendador de Tarefas. A proteção também não substitui as
    camadas 1 e 2, porque fica no mesmo disco.
+
+## 6. Cofre de imagens criptografadas (feature 090-B)
+
+Avatares e capas (e, na fatia C, as fotos de páginas) nunca ficam em claro no disco. Cada imagem é limpa de
+metadados (EXIF, GPS, ICC, XMP), otimizada em WebP e cifrada com AES-256-GCM em `<raiz>/vault/<aa>/<id>.enc`,
+mais uma miniatura cifrada `<id>.thumb.enc`. Sem raiz configurada, o cofre fica em `backend/data/vault`.
+
+### A chave mestra
+- Fica **fora do HD**: `%LOCALAPPDATA%\Leitorum\media-master.key`, protegida pelo Windows (DPAPI, só abre com o
+  seu usuário do Windows). Quem copiar o `D:\` leva só arquivos cifrados.
+- Alternativa sem DPAPI: `LEITORUM_MEDIA_MASTER_KEY` (base64 de 32 bytes) num `.env` fora do HD.
+- O banco guarda só a **impressão digital** da chave (16 hex), para detectar chave trocada. A chave nunca vai
+  para backups, logs nem para o pacote `.zip`.
+
+### Instalar a chave (uma vez)
+```
+py -3.13 instalar.py --media-key
+```
+Mostra o **código de recuperação uma única vez**. Anote e guarde fora do computador (papel, cofre de senhas).
+Sem ele, reinstalar o Windows ou perder o arquivo da chave torna as imagens cifradas ilegíveis para sempre.
+
+Para reinstalar a chave em outro Windows ou depois de formatar:
+```
+py -3.13 instalar.py --media-key --restore
+```
+O código é conferido com a impressão digital registrada no acervo; um código de outro acervo é recusado.
+
+### Sem a chave
+O Leitorum continua funcionando: livros, estudos e textos abrem normalmente. Só as imagens do cofre respondem
+`503 vault_locked` ("cofre trancado"), avatares viram o fundo do círculo e capas mostram o marcador padrão.
+Novos uploads de imagem também respondem `503` até a chave voltar. Uma chave diferente da registrada tranca o
+cofre do mesmo jeito (`key_mismatch`), sem sobrescrever nada.
+
+### Importar as capas e avatares antigos (servidor parado)
+```
+.\backend\.venv\Scripts\python.exe scripts\migrate_storage_to_hd.py --vault-import-plan
+.\backend\.venv\Scripts\python.exe scripts\migrate_storage_to_hd.py --vault-import
+```
+- `--vault-import-plan` só lê: conta referências legadas, arquivos encontrados e ausentes, e o estado do cofre.
+- `--vault-import` faz snapshot `caderno-pre-cofre-*.db` (com segunda cópia), cifra cada arquivo, confere a ida e
+  volta e troca a referência no banco. **Os originais não são apagados**; o relatório lista quais podem ser
+  apagados depois de você conferir. Referência sem arquivo fica como estava. Rodar de novo não duplica nada.
+
+### Acesso e privacidade
+| Tipo | Quem vê |
+| :--- | :--- |
+| avatar | qualquer usuário logado sem bloqueio com o dono |
+| capa | quem pode ler o livro que a usa |
+| página de caderno | só o dono |
+
+Sem permissão, a resposta é `404`. As imagens são servidas com `Cache-Control: private, no-store` e nunca ficam
+no cache do navegador. A exportação da conta (LGPD) traz as imagens decifradas em `imagens/`.
+
+### Backup e restauração
+O pacote `.zip` leva os `.enc` com SHA-256 no manifesto, a impressão digital da chave e o `storage_id`. A
+restauração confere os SHA-256, mantém o `storage_id` da instalação atual e avisa quando o pacote foi cifrado com
+outra chave (nesse caso, use `--media-key --restore` com o código daquela chave).

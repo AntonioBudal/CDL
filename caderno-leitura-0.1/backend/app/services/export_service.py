@@ -1316,8 +1316,27 @@ def generate_account_export_zip(
         zf.writestr("dados_acervo.json", json.dumps(acervo_data, ensure_ascii=False, indent=2))
         for rel_path, content in markdown_files:
             zf.writestr(rel_path, content)
+        # Feature 090-B: portabilidade (LGPD) exige formato aberto; as imagens vão decifradas.
+        for rel_path, content in _decrypted_user_images(session, user.id):
+            zf.writestr(rel_path, content)
 
     now_str = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
     filename = f"caderno-dados-{user.username}-{now_str}.zip"
     return zip_buffer.getvalue(), filename
+
+
+def _decrypted_user_images(session: Session, user_id: str) -> list[tuple[str, bytes]]:
+    """Imagens do usuário decifradas para o ZIP de exportação; cofre trancado ou arquivo ausente são pulados."""
+    from app.models.encrypted_media import EncryptedMedia
+    from app.services import media_service
+
+    folders = {"notebook_page": "imagens/paginas", "avatar": "imagens/avatar", "cover": "imagens/capas"}
+    out = []
+    rows = session.query(EncryptedMedia).filter(EncryptedMedia.user_id == user_id, EncryptedMedia.status == "active").all()
+    for row in rows:
+        try:
+            out.append((f"{folders.get(row.kind, 'imagens')}/{row.id}.webp", media_service.read(session, row)))
+        except (media_service.VaultLocked, media_service.MediaMissing, media_service.MediaIntegrity):
+            continue
+    return out
 

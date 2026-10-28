@@ -1,5 +1,6 @@
 """Testes automatizados isolados para capas de livros (upload, URL, SSRF, ciclo de vida e lixeira)."""
 import io
+import uuid
 from pathlib import Path
 from unittest.mock import patch
 
@@ -14,11 +15,16 @@ from app.core.config import BACKEND_DIR
 from app.db.session import create_sqlite_engine, get_session
 from app.main import create_app
 from app.models.book import Book
+from app.services.media_service import UUID_RE
+from app.services.vault import MAGIC, media_path
 
 
 @pytest.fixture
-def client_and_covers(tmp_path, monkeypatch):
-    """Configura ambiente hermético com banco SQLite e diretório de capas efêmeros em tmp_path."""
+def client_and_covers(tmp_path, monkeypatch, isolated_media_vault):
+    """Configura ambiente hermético com banco SQLite e cofre de imagens efêmeros em tmp_path.
+
+    Feature 090-B: as capas novas vão cifradas para o cofre; o segundo item devolvido é o diretório do cofre.
+    """
     db_path = tmp_path / "acervo_test" / "caderno.db"
     covers_path = tmp_path / "acervo_test" / "covers"
     db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -43,9 +49,24 @@ def client_and_covers(tmp_path, monkeypatch):
 
     try:
         with TestClient(application) as client:
-            yield client, covers_path, db_path
+            yield client, isolated_media_vault, db_path
     finally:
         engine.dispose()
+
+
+def vault_file(vault_dir: Path, media_id: str) -> Path:
+    """Arquivo .enc da imagem no cofre."""
+    return media_path(vault_dir, uuid.UUID(media_id))
+
+
+def served_image(client, url: str) -> Image.Image:
+    """Baixa a imagem decifrada pela rota autenticada."""
+    res = client.get(url)
+    assert res.status_code == 200, res.text
+    assert res.headers["content-type"] == "image/webp"
+    img = Image.open(io.BytesIO(res.content))
+    img.load()
+    return img
 
 
 def generate_synthetic_image(width: int = 1000, height: int = 1500, format: str = "JPEG") -> bytes:
@@ -81,24 +102,23 @@ def test_upload_cover_success_and_resize(client_and_covers):
     assert res_upload.status_code == 200
     payload = res_upload.json()
     assert payload["book_id"] == book_id
-    assert payload["cover_image"].endswith(".webp")
+    assert UUID_RE.match(payload["cover_image"])
     assert payload["cover_url"] == f"/api/covers/{payload['cover_image']}"
 
-    # 4. Verifica arquivo gerado em disco
-    saved_file = covers_dir / payload["cover_image"]
+    # 4. No disco só existe o arquivo cifrado (feature 090-B)
+    saved_file = vault_file(covers_dir, payload["cover_image"])
     assert saved_file.is_file()
+    blob = saved_file.read_bytes()
+    assert blob.startswith(MAGIC)
+    assert b"RIFF" not in blob[:64] and b"WEBP" not in blob
 
-    with Image.open(saved_file) as img:
+    # 5. A rota controlada devolve a imagem decifrada, sem cache
+    with served_image(client, payload["cover_url"]) as img:
         assert img.format == "WEBP"
         assert img.width == 800
         assert img.height == 1200  # Proporção mantida
-
-    # 5. Acessa rota controlada GET /api/covers/{filename}
     res_get = client.get(payload["cover_url"])
-    assert res_get.status_code == 200
-    assert res_get.headers["content-type"] == "image/webp"
-    assert "max-age=86400" in res_get.headers.get("cache-control", "")
-    assert len(res_get.content) > 0
+    assert "no-store" in res_get.headers.get("cache-control", "")
 
 
 def test_upload_cover_supports_various_formats_and_color_modes(client_and_covers):
@@ -133,12 +153,11 @@ def test_upload_cover_supports_various_formats_and_color_modes(client_and_covers
         )
         assert res_upload.status_code == 200, f"Falha para formato {fmt} ({mode}): {res_upload.text}"
         payload = res_upload.json()
-        assert payload["cover_image"].endswith(".webp")
+        assert UUID_RE.match(payload["cover_image"])
 
-        saved_file = covers_dir / payload["cover_image"]
-        assert saved_file.is_file()
+        assert vault_file(covers_dir, payload["cover_image"]).is_file()
 
-        with Image.open(saved_file) as saved_img:
+        with served_image(client, payload["cover_url"]) as saved_img:
             assert saved_img.format == "WEBP"
             assert saved_img.width <= 800
 
@@ -238,10 +257,10 @@ def test_import_cover_from_url_success(client_and_covers):
             assert res.status_code == 200
             payload = res.json()
             assert payload["book_id"] == book_id
-            assert payload["cover_image"].endswith(".webp")
+            assert UUID_RE.match(payload["cover_image"])
 
-            # Verifica integridade no disco
-            cover_file = covers_dir / payload["cover_image"]
+            # Verifica o arquivo cifrado no cofre
+            cover_file = vault_file(covers_dir, payload["cover_image"])
             assert cover_file.is_file()
 
 
@@ -261,7 +280,7 @@ def test_remove_cover_cleans_file(client_and_covers):
     img = generate_synthetic_image()
     res_up = client.post(f"/api/books/{book_id}/cover", files={"file": ("c.jpg", img, "image/jpeg")})
     filename = res_up.json()["cover_image"]
-    file_path = covers_dir / filename
+    file_path = vault_file(covers_dir, filename)
     assert file_path.is_file()
 
     # 2. Remove capa
@@ -286,12 +305,12 @@ def test_replace_cover_deletes_old_file(client_and_covers):
 
     # Upload da capa 1
     res1 = client.post(f"/api/books/{book_id}/cover", files={"file": ("c1.jpg", generate_synthetic_image(), "image/jpeg")})
-    file1 = covers_dir / res1.json()["cover_image"]
+    file1 = vault_file(covers_dir, res1.json()["cover_image"])
     assert file1.is_file()
 
     # Upload da capa 2
     res2 = client.post(f"/api/books/{book_id}/cover", files={"file": ("c2.jpg", generate_synthetic_image(), "image/jpeg")})
-    file2 = covers_dir / res2.json()["cover_image"]
+    file2 = vault_file(covers_dir, res2.json()["cover_image"])
     assert file2.is_file()
 
     # file1 deve ter sido apagado, file2 deve existir
@@ -308,7 +327,7 @@ def test_trash_preserves_cover_file_and_permanent_delete_purges_it(client_and_co
 
     res_up = client.post(f"/api/books/{book_id}/cover", files={"file": ("c.jpg", generate_synthetic_image(), "image/jpeg")})
     filename = res_up.json()["cover_image"]
-    file_path = covers_dir / filename
+    file_path = vault_file(covers_dir, filename)
     assert file_path.is_file()
 
     # 1. Move para a lixeira

@@ -7,21 +7,33 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
 
 from app.core.config import get_covers_dir
+from app.dependencies import CurrentUser, DatabaseSession
 
 router = APIRouter(prefix="/covers", tags=["covers"])
 
 SAFE_FILENAME_REGEX = re.compile(r"^[a-zA-Z0-9_\-]+\.(webp|jpg|jpeg|png)$", re.IGNORECASE)
 
 
-@router.get("/{filename}", summary="Servir arquivo de capa de livro")
-def get_cover_image(filename: str) -> FileResponse:
-    """Retorna o arquivo de imagem da capa armazenado no servidor com cache HTTP.
+@router.get("/{filename}", summary="Servir a capa do livro (cofre cifrado ou arquivo legado)")
+def get_cover_image(filename: str, current_user: CurrentUser, session: DatabaseSession):
+    """Exige sessão (feature 090-B). A capa é servida a quem pode ler um livro que a usa; senão, 404."""
+    from app.models.book import Book
+    from app.routers.media import IMAGE_HEADERS, media_response
+    from app.services import media_service
+    from app.services.sharing_service import can_read_book
 
-    Aplica validação rígida contra path traversal e sanitização de nome.
-    """
-    # 1. Valida nome seguro contra path traversal e caracteres perigosos
+    row = media_service.by_reference(session, filename)
+    if row is not None:
+        if row.kind != "cover" or not media_service.can_view(session, current_user.id, row):
+            raise HTTPException(status_code=404, detail="Capa não encontrada.")
+        return media_response(session, row)
+
+    # 1. Valida nome seguro contra path traversal e caracteres perigosos (arquivo legado em claro)
     if not SAFE_FILENAME_REGEX.match(filename) or ".." in filename or "/" in filename or "\\" in filename:
         raise HTTPException(status_code=400, detail="Nome de arquivo inválido.")
+    books = session.query(Book).filter(Book.cover_image == filename, Book.deleted_at.is_(None)).all()
+    if not any(can_read_book(session, current_user.id, book) for book in books):
+        raise HTTPException(status_code=404, detail="Capa não encontrada.")
 
     # 2. Localiza arquivo no diretório dedicado de capas
     covers_dir = get_covers_dir()
@@ -42,10 +54,4 @@ def get_cover_image(filename: str) -> FileResponse:
     elif ext == ".png":
         media_type = "image/png"
 
-    return FileResponse(
-        path=file_path,
-        media_type=media_type,
-        headers={
-            "Cache-Control": "public, max-age=86400",
-        },
-    )
+    return FileResponse(path=file_path, media_type=media_type, headers=IMAGE_HEADERS)
