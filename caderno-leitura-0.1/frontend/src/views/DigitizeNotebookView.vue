@@ -7,15 +7,23 @@ import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import EmptyState from '../components/ui/EmptyState.vue'
 import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
 import Icon from '../components/ui/Icon.vue'
+import OrganizedSectionsEditor from '../components/OrganizedSectionsEditor.vue'
 import { positiveId, type Book, type Chapter } from '../types'
 import { DIGITIZE_ACCEPT, DIGITIZE_EXIT_SHORTCUTS, DIGITIZE_SECTIONS } from '../types/digitize'
+import { ORGANIZE_SECTIONS, type OrganizeSection } from '../types/organize'
+import type { OrganizeReviewItem } from '../composables/useSectionOrganizer'
 
 const draft = useDigitizeDraft({
   status: api.getDigitizeStatus,
   preview: api.previewDigitize,
   createStudy: api.createStudy,
+  organize: api.organizeText,
 })
 const { state, canSave, uncertainLines } = draft
+const organizer = draft.organizer
+// Organizar nas 4 seções (feature 089): disponível só se o artefato do organizador estiver íntegro.
+const organizeAvailable = ref<boolean | null>(null)
+const organizedEditor = ref<InstanceType<typeof OrganizedSectionsEditor> | null>(null)
 // A leitura em andamento pode ser abandonada (é cancelada ao sair); só o salvamento segura a navegação.
 useUnsavedChanges(() => draft.dirty.value, () => state.phase === 'saving')
 
@@ -111,6 +119,45 @@ function selectLine(line: UncertainLine) {
   textarea.scrollTop = Math.max(0, (before - 2) * lineHeight)
 }
 
+async function loadOrganizeStatus() {
+  try {
+    organizeAvailable.value = (await api.getOrganizeStatus(statusRequest.signal)).available
+  } catch {
+    if (!statusRequest.signal.aborted) organizeAvailable.value = false
+  }
+}
+
+async function organizeText() {
+  if (await draft.organize()) {
+    await nextTick()
+    const first = await organizedEditor.value?.reveal('summary')
+    first?.focus()
+  }
+}
+
+async function backToSingleText() {
+  if (organizer.edited.value && !window.confirm('Voltar para o texto único descarta as alterações feitas nas 4 seções. Continuar?')) return
+  draft.unorganize()
+  await nextTick()
+  editor.value?.focus()
+}
+
+async function moveItem(item: OrganizeReviewItem, event: Event) {
+  const select = event.target as HTMLSelectElement
+  const target = select.value as OrganizeSection
+  select.value = ''
+  if (target && organizer.move(item.index, target)) {
+    const textarea = await organizedEditor.value?.reveal(target)
+    textarea?.focus()
+  }
+}
+
+function sectionLabel(key: OrganizeSection) {
+  return ORGANIZE_SECTIONS.find(item => item.key === key)?.label ?? key
+}
+
+const extraWarnings = computed(() => organizer.state.warnings.filter(warning => warning.code !== 'suggestion'))
+
 async function save() {
   if (await draft.save()) {
     await nextTick()
@@ -128,6 +175,7 @@ async function startAnother() {
 watch(() => state.bookId, loadChapters)
 onMounted(() => {
   void draft.checkStatus(statusRequest.signal)
+  void loadOrganizeStatus()
   void loadBooks()
 })
 onBeforeUnmount(() => {
@@ -250,7 +298,56 @@ onBeforeUnmount(() => {
             <figcaption class="muted-text">{{ state.fileName }}</figcaption>
           </figure>
 
-          <div class="editor-column">
+          <div v-if="organizer.state.loading" class="editor-column" aria-busy="true">
+            <p class="muted-text" role="status">Organizando o texto nas 4 seções…</p>
+            <LoadingSkeleton shape="rect" :lines="4" height="5rem" gap="1rem" />
+          </div>
+
+          <div v-else-if="organizer.state.active" class="editor-column organized-column">
+            <div class="notice warning draft-notice" role="note">
+              <Icon name="alert-triangle" :size="18" aria-hidden="true" />
+              <p>
+                <strong>Distribuição automática.</strong> A sugestão pode colocar trechos na seção errada: confira cada seção
+                antes de salvar. Nenhuma palavra foi alterada.
+              </p>
+            </div>
+            <p v-for="warning in extraWarnings" :key="warning.code" class="notice" role="status">{{ warning.message }}</p>
+
+            <section v-if="organizer.reviewItems.value.length" class="uncertain" aria-labelledby="review-sections-heading">
+              <h3 id="review-sections-heading">Seções para conferir ({{ organizer.reviewItems.value.length }})</h3>
+              <p class="muted-text">Atribuição incerta. Mova o trecho se a seção sugerida não for a certa.</p>
+              <ul class="uncertain-list">
+                <li v-for="item in organizer.reviewItems.value" :key="item.index" class="review-item">
+                  <span class="review-text">
+                    <Icon :name="item.movable ? 'eye' : 'check'" :size="16" aria-hidden="true" />
+                    <span class="uncertain-number">{{ sectionLabel(item.section) }}</span>
+                    <span class="uncertain-text">{{ item.movable ? item.text : 'já editado' }}</span>
+                  </span>
+                  <label class="sr-only" :for="`move-${item.index}`">Mover o trecho para outra seção</label>
+                  <select :id="`move-${item.index}`" class="move-select" :disabled="!item.movable" @change="moveItem(item, $event)">
+                    <option value="">Mover para…</option>
+                    <option v-for="option in ORGANIZE_SECTIONS.filter(o => o.key !== item.section)" :key="option.key" :value="option.key">
+                      {{ option.label }}
+                    </option>
+                  </select>
+                </li>
+              </ul>
+            </section>
+
+            <OrganizedSectionsEditor
+              ref="organizedEditor"
+              v-model:sections="organizer.state.sections"
+              id-prefix="digitize-organized"
+              :review-counts="organizer.reviewCounts.value"
+            />
+            <div class="actions">
+              <button type="button" class="secondary" @click="backToSingleText">
+                <Icon name="rotate-ccw" :size="18" aria-hidden="true" /> Voltar para texto único
+              </button>
+            </div>
+          </div>
+
+          <div v-else class="editor-column">
             <section v-if="uncertainLines.length" class="uncertain" aria-labelledby="uncertain-heading">
               <h3 id="uncertain-heading">Linhas para conferir ({{ uncertainLines.length }})</h3>
               <p class="muted-text">Leitura incerta. Toque numa linha para selecioná-la no texto.</p>
@@ -318,7 +415,7 @@ onBeforeUnmount(() => {
             </div>
           </div>
 
-          <fieldset class="section-choice">
+          <fieldset v-if="!organizer.state.active" class="section-choice">
             <legend>Seção do estudo que recebe o texto</legend>
             <div class="section-options">
               <label v-for="option in DIGITIZE_SECTIONS" :key="option.key" class="section-option">
@@ -326,6 +423,26 @@ onBeforeUnmount(() => {
                 <span>{{ option.label }}</span>
               </label>
             </div>
+            <div class="organize-row">
+              <button
+                type="button"
+                class="secondary"
+                :disabled="organizeAvailable !== true || organizer.state.loading || !state.text.trim()"
+                @click="organizeText"
+              >
+                <Icon name="grid" :size="18" aria-hidden="true" /> Organizar nas 4 seções
+              </button>
+              <p v-if="organizeAvailable === false" class="muted-text small">
+                Organização automática indisponível nesta instalação.
+              </p>
+              <p v-else-if="manyUncertain" class="muted-text small">
+                Muitas linhas tiveram leitura incerta: corrija o texto antes de organizar para uma sugestão melhor.
+              </p>
+              <p v-else class="muted-text small">
+                Sugere a divisão do texto entre Resumo, Explicação, Conceitos e Referências, para você conferir.
+              </p>
+            </div>
+            <p v-if="organizer.state.error" class="notice error" role="alert">{{ organizer.state.error.message }}</p>
           </fieldset>
 
           <p v-if="state.error" class="notice error" role="alert">{{ state.error.message }}</p>
@@ -625,6 +742,59 @@ h2[tabindex='-1']:focus:not(:focus-visible) {
   background: var(--color-selected-bg);
   color: var(--color-selected-text);
   font-weight: 650;
+}
+
+.organize-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--space-unit) * 0.75);
+  margin-top: calc(var(--space-unit) * 0.9);
+}
+
+.organize-row button {
+  min-height: 44px;
+}
+
+.organize-row p {
+  margin: 0;
+}
+
+.organized-column {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-unit) * 0.75);
+}
+
+.review-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--space-unit) * 0.5);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-control);
+  padding: calc(var(--space-unit) * 0.4) calc(var(--space-unit) * 0.6);
+}
+
+.review-text {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--space-unit) * 0.4);
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.move-select {
+  width: auto;
+  min-height: 44px;
+  flex: 0 0 auto;
+}
+
+.move-select:focus-visible {
+  outline: var(--focus-width, 2px) solid var(--color-accent);
+  outline-offset: var(--focus-offset, 2px);
 }
 
 .section-option input {

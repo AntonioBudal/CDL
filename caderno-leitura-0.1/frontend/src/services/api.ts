@@ -62,6 +62,7 @@ import type {
 } from '../types/notifications.ts'
 
 import type { DigitizePreview, DigitizeStatus } from '../types/digitize.ts'
+import type { OrganizeRequest, OrganizeResult, OrganizeStatus } from '../types/organize.ts'
 
 export interface NotificationReadAllResponse {
   marked_count: number
@@ -316,6 +317,10 @@ export const api = {
     method: 'POST', body: JSON.stringify(payload),
   }),
   getDigitizeStatus: (signal?: AbortSignal) => request<DigitizeStatus>('/digitize/status', { signal }),
+  getOrganizeStatus: (signal?: AbortSignal) => request<OrganizeStatus>('/imports/organize/status', { signal }),
+  organizeText: (payload: OrganizeRequest, signal?: AbortSignal) => request<OrganizeResult>('/imports/organize', {
+    method: 'POST', body: JSON.stringify(payload), signal,
+  }),
   previewDigitize: (file: File, signal?: AbortSignal) => {
     const formData = new FormData()
     formData.append('file', file)

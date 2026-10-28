@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Response
+from fastapi.responses import JSONResponse
 
+from app.dependencies import CurrentUser
 from app.schemas.imports import ImportPreviewRead, ImportPreviewRequest, ImportWarningRead
+from app.schemas.organize import OrganizeRead, OrganizeRequest, OrganizeStatusRead
 from app.services.import_parser import parse_response
+from app.services.organizer import loader as organizer
 
 router = APIRouter(prefix="/imports", tags=["Importação"])
 
@@ -24,3 +28,36 @@ def preview_import(payload: ImportPreviewRequest, response: Response) -> ImportP
         unassigned_text=parsed.unassigned_text,
         warnings=[ImportWarningRead.model_validate(warning) for warning in parsed.warnings],
     )
+
+
+NO_STORE = {"Cache-Control": "no-store"}
+
+
+@router.get(
+    "/organize/status",
+    response_model=OrganizeStatusRead,
+    summary="Informar se a organização nas 4 seções está disponível",
+    description="Confere uma vez se o artefato do organizador está presente e íntegro. Não acessa o banco.",
+)
+def organize_status(_current_user: CurrentUser, response: Response) -> OrganizeStatusRead:
+    response.headers.update(NO_STORE)
+    return OrganizeStatusRead(**organizer.status())
+
+
+@router.post(
+    "/organize",
+    response_model=OrganizeRead,
+    summary="Sugerir a distribuição do texto nas 4 seções do estudo",
+    description=(
+        "Divide o texto em trechos e sugere a seção de cada um (Resumo, Explicação, Conceitos, Referências), "
+        "sem alterar nenhuma palavra. Não acessa o banco nem lê estudos. Após revisar, use POST /api/studies."
+    ),
+    responses={413: {}, 422: {}, 503: {}},
+)
+def organize_text(payload: OrganizeRequest, _current_user: CurrentUser):
+    lines = [line.model_dump() for line in payload.lines] if payload.lines else None
+    try:
+        result = organizer.organize(payload.text, lines)
+    except organizer.OrganizeError as error:
+        return JSONResponse(status_code=error.status, content={"detail": error.detail, "code": error.code}, headers=NO_STORE)
+    return JSONResponse(content=OrganizeRead(**result).model_dump(mode="json"), headers=NO_STORE)

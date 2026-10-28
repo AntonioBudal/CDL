@@ -14,6 +14,8 @@ import type {
   DigitizeStatus,
   DigitizeUnavailableReason,
 } from '../types/digitize.ts'
+import type { OrganizeRequest, OrganizeResult } from '../types/organize.ts'
+import { useSectionOrganizer } from './useSectionOrganizer.ts'
 
 export type DigitizePhase = 'checking' | 'unavailable' | 'idle' | 'reading' | 'review' | 'saving' | 'saved' | 'error'
 
@@ -21,6 +23,8 @@ interface DigitizeGateway {
   status: (signal?: AbortSignal) => Promise<DigitizeStatus>
   preview: (file: File, signal?: AbortSignal) => Promise<DigitizePreview>
   createStudy: (payload: StudyCreate) => Promise<Study>
+  /** Organização nas 4 seções (feature 089); opcional para quem só digitaliza. */
+  organize?: (payload: OrganizeRequest, signal?: AbortSignal) => Promise<OrganizeResult>
 }
 
 interface DigitizeEnvironment {
@@ -70,11 +74,17 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
     saved: null as Study | null,
   })
   let reading: AbortController | null = null
+  const organizer = useSectionOrganizer({
+    organize: (payload, signal) => gateway.organize
+      ? gateway.organize(payload, signal)
+      : Promise.reject(new Error('A organização automática não está disponível.')),
+  })
 
   const busy = computed(() => state.phase === 'reading' || state.phase === 'saving')
-  const dirty = computed(() => (state.phase === 'review' || state.phase === 'saving') && state.text.trim() !== '')
+  const hasContent = computed(() => organizer.state.active ? organizer.hasText.value : state.text.trim() !== '')
+  const dirty = computed(() => (state.phase === 'review' || state.phase === 'saving') && hasContent.value)
   const canSave = computed(() => state.phase === 'review' && positiveId(state.chapterId) !== null
-    && state.title.trim() !== '' && state.text.trim() !== '')
+    && state.title.trim() !== '' && hasContent.value)
   const uncertainLines = computed<UncertainLine[]>(() => (state.preview?.lines ?? [])
     .filter(line => line.low_confidence && line.text.trim() !== '')
     .map(line => ({ index: line.index, number: line.index + 1, text: line.text, revised: !state.text.includes(line.text) })))
@@ -167,7 +177,8 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
       summary: '', explanation: '', concepts: '', references: '',
       notes: '',
     }
-    payload[state.section] = state.text
+    if (organizer.state.active) Object.assign(payload, organizer.state.sections)
+    else payload[state.section] = state.text
     state.phase = 'saving'
     state.error = null
     try {
@@ -187,8 +198,24 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
     }
   }
 
+  /** Organiza o texto revisado nas 4 seções, com a posição das linhas lidas quando houver. */
+  async function organize(): Promise<boolean> {
+    if (state.phase !== 'review') return false
+    const lines = (state.preview?.lines ?? [])
+      .filter(line => Array.isArray(line.bbox))
+      .map(line => ({ text: line.text, bbox: line.bbox ?? null, confidence: line.confidence }))
+    return organizer.organize(state.text, lines)
+  }
+
+  /** Volta ao texto único exatamente como estava antes de organizar. */
+  function unorganize() {
+    if (!organizer.state.active) return
+    state.text = organizer.revert()
+  }
+
   function reset() {
     if (busy.value) return
+    organizer.reset()
     releasePhoto()
     // Livro e capítulo ficam: a próxima página costuma ir para o mesmo destino.
     Object.assign(state, {
@@ -197,10 +224,14 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
   }
 
   function dispose() {
+    organizer.cancel()
     reading?.abort()
     reading = null
     releasePhoto()
   }
 
-  return { state, busy, dirty, canSave, uncertainLines, checkStatus, choose, cancel, save, reset, dispose }
+  return {
+    state, busy, dirty, canSave, uncertainLines, organizer, checkStatus, choose, cancel, save, reset, dispose,
+    organize, unorganize,
+  }
 }

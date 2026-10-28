@@ -133,7 +133,8 @@ def test_preview_returns_lines_confidence_and_draft_warning(client, motor):
     assert body["low_confidence_count"] == 1
     assert [w["code"] for w in body["warnings"]] == ["draft"]
     assert body["engine"] == {"name": "leitorum-motor", "version": "0.0.0-teste", "reader": "Leitor de Teste", "license_status": "VERIFIED"}
-    assert "bbox" not in json.dumps(body)
+    # Feature 089: a caixa de cada linha passa a ser devolvida (campo aditivo, para a organização usar).
+    assert [line["bbox"] for line in body["lines"]] == [[0, 0, 10, 10], [0, 0, 10, 10]]
     assert response.headers["cache-control"] == "no-store"
     assert_cleaned(trace)
 

@@ -274,18 +274,25 @@ def _engine_failed() -> DigitizeError:
     return DigitizeError(500, "engine_failed", "O motor de leitura falhou nesta imagem. Tente outra foto.")
 
 
+def _bbox(value: Any) -> list[int] | None:
+    """Caixa da linha como 4 inteiros, ou ``None`` se o motor não mandou uma caixa válida."""
+    if isinstance(value, (list, tuple)) and len(value) == 4 and all(isinstance(v, (int, float)) for v in value):
+        return [int(round(v)) for v in value]
+    return None
+
+
 def to_preview(result: Any, threshold: float, elapsed_ms: int) -> DigitizePreviewRead:
     """Traduz a saída ``leitorum-motor/1``; levanta ``engine_failed`` se o formato não confere."""
     try:
         if result["schema"] != MOTOR_SCHEMA:
             raise ValueError
-        raw_lines = [(str(line["text"]), float(line["confidence"])) for line in result["lines"]]
+        raw_lines = [(str(line["text"]), float(line["confidence"]), _bbox(line.get("bbox"))) for line in result["lines"]]
         engine = DigitizeEngineRead(**{key: str(result["engine"][key]) for key in ("name", "version", "reader", "license_status")})
     except (KeyError, TypeError, ValueError):
         raise _engine_failed()
     lines = [
-        DigitizeLineRead(index=index, text=text, confidence=min(1.0, max(0.0, confidence)), low_confidence=confidence < threshold)
-        for index, (text, confidence) in enumerate(raw_lines)
+        DigitizeLineRead(index=index, text=text, confidence=min(1.0, max(0.0, confidence)), low_confidence=confidence < threshold, bbox=bbox)
+        for index, (text, confidence, bbox) in enumerate(raw_lines)
     ]
     uncertain = sum(line.low_confidence for line in lines)
     codes = ["draft"]

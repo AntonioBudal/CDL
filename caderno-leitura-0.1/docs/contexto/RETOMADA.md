@@ -680,3 +680,36 @@ completo, com aprovação a cada artefato: [`specs/086-digitalizar-caderno-estud
   - leitura com a rede desligada.
 - **Tarefa sugerida à parte:** isolar a manutenção de inicialização (`lifespan`) nos testes. Hoje ela abre o banco
   ativo quando `CADERNO_DATABASE_PATH` não está definido.
+
+---
+
+## Sessão: Feature 089 — Organizar nas 4 Seções (27/10/2026)
+
+Feature avulsa, pedida pelo usuário, fora do Roadmap 0.9 (o estado da 0.9 não muda). Ciclo Spec Kit completo, com
+aprovação a cada artefato: [`specs/089-organizar-quatro-secoes/`](../../../specs/089-organizar-quatro-secoes/spec.md).
+Base: EXP-023 e ADR-010 do `document-intelligence/`, aceitos pelo usuário.
+
+### O que foi entregue
+1. **Backend:**
+   - organizador em Python puro (`app/services/organizer/`). O `engine.py` é cópia literal do EXP-023; o
+     artefato `organizer-v1.json` tem SHA-256 fixado;
+   - `GET /api/imports/organize/status` e `POST /api/imports/organize`, sem acesso ao banco e sem texto em log;
+   - campo aditivo `bbox` nas linhas de `POST /api/digitize/preview`.
+2. **Digitalização:**
+   - botão "Organizar nas 4 seções" com 4 editores (abas no celular);
+   - "Seções para conferir" com "Mover para…";
+   - "Voltar para texto único", que restaura o texto exato;
+   - salvamento das 4 seções com o registro de origem intacto.
+3. **Importação:** "Organizar automaticamente" no texto não classificado, com "Desfazer organização".
+
+### Evidências
+- `pytest`: 513 aprovados e 1 pulado (com `CADERNO_DATABASE_PATH` descartável). `npm test`: 633. `npm run build`: ok.
+- Paridade com o EXP-023: 144/144 casos, no teste e pela API.
+- p95 de 17 ms por página no servidor.
+- Sem o artefato, a função fica indisponível e o resto segue igual.
+- Banco ativo não aberto.
+
+### Ponto de continuação
+- **Conferência visual pendente com o usuário:** temas, 320 px, teclado e celular.
+- A qualidade em texto real **não está demonstrada** (0,50 em 3 estudos, EXP-023). Repetir a medida com 30 ou mais
+  estudos e ampliar as pistas de Referências (recomendações do ADR-010).

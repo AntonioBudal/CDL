@@ -14,6 +14,17 @@ import { positiveId, SECTION_LABELS, type Book, type Chapter, type InboxCapture 
 const route = useRoute()
 const draft = useImportDraft(api)
 const { state, stale, hasManualChanges, hasAnalysis, canSave, assignUnassignedToSection } = draft
+// Organizar nas 4 seções (feature 089): botão só aparece com o organizador disponível.
+const organizeAvailable = ref(false)
+const organizeStatusRequest = new AbortController()
+
+async function loadOrganizeStatus() {
+  try {
+    organizeAvailable.value = (await api.getOrganizeStatus(organizeStatusRequest.signal)).available
+  } catch {
+    organizeAvailable.value = false
+  }
+}
 useUnsavedChanges(() => draft.dirty.value, () => state.preparing || state.saving)
 const { refreshCount: refreshInboxCount } = useInboxCount()
 
@@ -220,6 +231,7 @@ async function startAnother() {
 
 watch(() => state.bookId, loadChapters, { immediate: true })
 onMounted(async () => {
+  void loadOrganizeStatus()
   await loadBooks()
   if (promotingInboxId.value) {
     await loadPromotionCapture()
@@ -227,6 +239,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
+  organizeStatusRequest.abort()
   bookRequest?.abort()
   chapterRequest?.abort()
   if (pulseTimer) clearTimeout(pulseTimer)
@@ -507,6 +520,13 @@ onBeforeUnmount(() => {
                 <p class="field-hint">O trecho abaixo não foi identificado como título de seção. Atribua-o com 1 clique a uma das seções ou salve direto (será anexado à Explicação):</p>
               </div>
               <pre class="unassigned-preview">{{ state.preview.unassigned_text }}</pre>
+              <div v-if="organizeAvailable" class="unassigned-organize">
+                <button type="button" class="button secondary" :disabled="state.organizing" @click="draft.organizeUnassigned()">
+                  {{ state.organizing ? 'Organizando…' : 'Organizar automaticamente' }}
+                </button>
+                <span class="field-hint">Sugere a seção de cada trecho; você confere antes de salvar.</span>
+              </div>
+              <p v-if="state.organizeError" class="notice error" role="alert">{{ state.organizeError }}</p>
               <div class="unassigned-actions">
                 <span class="action-label">Mover para:</span>
                 <button type="button" class="button secondary small" @click="assignUnassignedToSection('summary')">Resumo</button>
@@ -517,6 +537,14 @@ onBeforeUnmount(() => {
             </div>
 
             <!-- Cartões Estruturados das Quatro Seções -->
+            <div v-if="state.organizeSnapshot" class="notice warning organize-undo" role="status">
+              <p>
+                <strong>Distribuição automática.</strong> O texto não classificado foi sugerido nas seções abaixo: confira
+                cada uma antes de salvar.
+              </p>
+              <button type="button" class="button secondary" @click="draft.undoOrganize()">Desfazer organização</button>
+            </div>
+
             <div class="preview-cards-stack" role="region" aria-label="Seções Estruturadas">
               <article
                 v-for="sec in SECTION_LABELS"
@@ -563,6 +591,25 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.unassigned-organize,
+.organize-undo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--space-unit) * 0.6);
+  margin: calc(var(--space-unit) * 0.6) 0;
+}
+
+.unassigned-organize .button,
+.organize-undo .button {
+  min-height: 44px;
+}
+
+.organize-undo p {
+  margin: 0;
+  flex: 1 1 16rem;
+}
+
 .preview-cards-stack {
   display: flex;
   flex-direction: column;

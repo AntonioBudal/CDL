@@ -2,10 +2,18 @@ import { computed, reactive } from 'vue'
 import { ApiError, errorMessage } from '../services/api.ts'
 import { positiveId, SECTION_LABELS } from '../types.ts'
 import type { AnalysisSections, ImportPreview, Study, StudyCreate, StudyTemplateId } from '../types.ts'
+import type { OrganizeRequest, OrganizeResult } from '../types/organize.ts'
 
 interface ImportGateway {
   preview: (source: string) => Promise<ImportPreview>
   createStudy: (payload: StudyCreate) => Promise<Study>
+  /** Organização nas 4 seções (feature 089); opcional. */
+  organizeText?: (payload: OrganizeRequest, signal?: AbortSignal) => Promise<OrganizeResult>
+}
+
+interface OrganizeSnapshot {
+  sections: AnalysisSections
+  unassigned: string
 }
 
 const emptySections = (): AnalysisSections => ({ summary: '', explanation: '', concepts: '', references: '' })
@@ -16,6 +24,7 @@ export function useImportDraft(gateway: ImportGateway) {
     template_id: 'classico' as StudyTemplateId,
     sections: emptySections(), preview: null as ImportPreview | null, saved: null as Study | null,
     preparing: false, saving: false, previewError: '', saveError: '',
+    organizing: false, organizeError: '', organizeSnapshot: null as OrganizeSnapshot | null,
   })
   const stale = computed(() => state.preview !== null && state.sourceResponse !== state.preview.source_response)
   const hasManualChanges = computed(() => state.preview !== null && SECTION_LABELS.some(({ key }) => state.sections[key] !== state.preview?.[key]))
@@ -39,6 +48,8 @@ export function useImportDraft(gateway: ImportGateway) {
         return false
       }
       state.preview = preview
+      state.organizeSnapshot = null
+      state.organizeError = ''
       for (const { key } of SECTION_LABELS) state.sections[key] = preview[key]
       state.saveError = ''
       return true
@@ -101,12 +112,46 @@ export function useImportDraft(gateway: ImportGateway) {
     state.preview.unassigned_text = ''
   }
 
+  /** Distribui o texto não classificado entre as 4 seções (sugestão), guardando o estado para desfazer. */
+  async function organizeUnassigned(): Promise<boolean> {
+    const unassigned = state.preview?.unassigned_text ?? ''
+    if (!gateway.organizeText || state.organizing || !state.preview || !unassigned.trim()) return false
+    state.organizing = true
+    state.organizeError = ''
+    try {
+      const result = await gateway.organizeText({ text: unassigned })
+      if (!state.preview || state.preview.unassigned_text !== unassigned) return false
+      state.organizeSnapshot = { sections: { ...state.sections }, unassigned }
+      for (const { key } of SECTION_LABELS) {
+        const addition = result.sections[key]
+        if (!addition) continue
+        state.sections[key] = state.sections[key].trim() ? `${state.sections[key].trimEnd()}\n\n${addition}` : addition
+      }
+      state.preview.unassigned_text = ''
+      return true
+    } catch (error) {
+      state.organizeError = errorMessage(error)
+      return false
+    } finally { state.organizing = false }
+  }
+
+  /** Desfaz a última organização: seções e texto não classificado voltam exatamente ao que eram. */
+  function undoOrganize(): boolean {
+    const snapshot = state.organizeSnapshot
+    if (!snapshot || !state.preview) return false
+    state.sections = { ...snapshot.sections }
+    state.preview.unassigned_text = snapshot.unassigned
+    state.organizeSnapshot = null
+    return true
+  }
+
   function reset() {
     if (state.saving || state.preparing) return
     state.title = ''; state.location = ''; state.sourceResponse = ''; state.notes = ''
     state.template_id = 'classico'
     state.sections = emptySections(); state.preview = null; state.saved = null
     state.previewError = ''; state.saveError = ''
+    state.organizeSnapshot = null; state.organizeError = ''
   }
 
   return {
@@ -119,6 +164,8 @@ export function useImportDraft(gateway: ImportGateway) {
     prepare,
     handlePaste,
     assignUnassignedToSection,
+    organizeUnassigned,
+    undoOrganize,
     save,
     reset,
   }

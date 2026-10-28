@@ -17,6 +17,7 @@ class DigitizeLineRead(OutputModel):
     text: str
     confidence: float = Field(ge=0, le=1)
     low_confidence: bool
+    bbox: list[int] | None = Field(default=None, description="Caixa [x0, y0, x1, y1] da linha na imagem recebida.")
 
 
 class DigitizeWarningRead(OutputModel):

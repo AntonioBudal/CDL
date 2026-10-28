@@ -12,6 +12,8 @@ export interface DigitizeLine {
   text: string
   confidence: number
   low_confidence: boolean
+  /** Caixa [x0, y0, x1, y1] da linha na imagem (feature 089); usada pela organização nas 4 seções. */
+  bbox?: number[] | null
 }
 
 export interface DigitizeWarning {
