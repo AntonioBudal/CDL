@@ -67,3 +67,19 @@ Organizador nos formatos reais de fichamento sem piorar o que o v1 já acerta?
 - **Recursos:** sem download, menos de 50 MB, menos de 500 MB de RAM.
 - **Privacidade:** a do EXP-024 (cópia pela API de backup, `mode=ro`, apagada no fim, só números).
 - **Escopo:** nada em `caderno-leitura-0.1/`. A troca do artefato no Leitorum depende da feature de produto.
+
+## 5. Decisão tomada na validação (F02, antes de abrir o teste)
+
+| Modo (validação) | EXP-024 *holdout*, média | Referências do P1 | P3 | EXP-023, 6 condições |
+| :--- | ---: | ---: | ---: | :--- |
+| v1 | 0,662 | 0,000 | 0,979 | 0,920 / 0,871 / 0,886 / 0,846 / 0,801 / 0,736 |
+| `full` (retreino de todos os pesos) | 0,827 | 0,933 | **0,872** | até **2,9 pontos abaixo** do v1 |
+| **`cues`** (v1 congelado, só as 4 pistas aprendidas) | **0,740** | **0,507** | 0,979 | **idêntico ao v1** nas 6 |
+
+- **Escolhido o `cues`.** O `full` ganha mais nos fichamentos, mas desloca o modelo inteiro: o P3 perde 10,7
+  pontos e as páginas do EXP-023 reprovariam a H2.
+- O `cues` só muda o que as pistas tocam:
+  - pesos, viés, temperatura (β = 1,25) e margem de "conferir" (0,20) do v1 continuam iguais;
+  - L2 = 0,001, escolhida na validação.
+- **Artefato:** `artifacts/organizer-v2.json`, SHA-256 `9f6530a32726d593142b7a2de3bce3efc1c0095abf3a91335364db6343978aee`
+  (determinístico: o retreino dá o mesmo hash).
