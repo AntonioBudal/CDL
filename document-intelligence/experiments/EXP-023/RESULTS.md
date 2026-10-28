@@ -1,7 +1,7 @@
 # EXP-023: Relatório de Resultados — Organização Automática nas 4 Seções do Estudo
 
 * **Status:** `CONCLUÍDO` (executado em 2026-10-27, com as decisões do usuário da spec §11). A adoção no produto
-  está no [ADR-010](../../docs/adr/ADR-010-organizacao-nas-4-secoes.md), como `PROPOSED`, à espera do usuário.
+  está no [ADR-010](../../docs/adr/ADR-010-organizacao-nas-4-secoes.md), `ACCEPTED` pelo usuário em 2026-10-27.
 * **Executor:** Claude Code
 * **Artefatos:**
   - [spec.md](./spec.md);

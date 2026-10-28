@@ -1,6 +1,6 @@
 # ADR-010: Organização do texto nas 4 seções do Estudo como sugestão revisável, em Python puro
 
-* **Status:** PROPOSED (aguarda decisão do usuário)
+* **Status:** ACCEPTED (aprovado pelo usuário em 2026-10-27; implementação no Leitorum pela feature 089)
 * **Data:** 2026-10-27
 * **Decisores:** Usuário; Claude Code (proposta e execução do EXP-023)
 * **Experimento de suporte:** [EXP-023](../../experiments/EXP-023/RESULTS.md)
@@ -17,7 +17,7 @@ que distribua o texto lido entre Resumo, Explicação, Conceitos e Referências.
 - em CPU, com menos de 200 ms;
 - auditável.
 
-## 2. Decisão proposta
+## 2. Decisão
 
 1. **Adotar a pipeline do EXP-023 como sugestão sob demanda**, nunca como distribuição automática:
    - **segmentação:** linhas → blocos → sentenças, com geometria quando houver;

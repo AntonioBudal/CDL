@@ -124,7 +124,7 @@ Este documento define a ordem cronológica, as dependências e o escopo planejad
 ### Promoção ao Leitorum — feature 086 *(2026-10-27, decisão do usuário)*
 - **Resultado**: pipeline do ADR-008 com o leitor original levado ao Leitorum (`caderno-leitura-0.1/motor/`, tela `/digitalizar`), texto como rascunho a revisar e salvo como Estudo. Validação com foto crua de celular dispensada pelo usuário. Paridade com o EXP-019: 458/458 linhas idênticas nas páginas do EXP-022. Ver ADR-008 §5.
 
-### `EXP-023` — Organização nas 4 Seções do Estudo *(CONCLUÍDO em 2026-10-27; ADR-010 proposto)*
+### `EXP-023` — Organização nas 4 Seções do Estudo *(CONCLUÍDO em 2026-10-27; ADR-010 aceito pelo usuário)*
 - **Resultado**: pipeline em Python puro (pistas + n-gramas de caracteres + Viterbi com custo de troca por coesão), < 10 ms por página. Páginas fictícias: Macro-F1 0,93 (limpo) e 0,82 (CER 25 %, com geometria); portão de produto atingido. Estudos reais do usuário (N = 3, só números): 0,50, lacuna de domínio. H1 e H2 refutadas (léxico e matriz relacional ajudam pouco); transição e propagação desligadas pela validação.
 
 ### `EXP-004` — Classificação Semântica
