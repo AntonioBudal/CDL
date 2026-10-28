@@ -12,7 +12,7 @@ Este arquivo é o diário de bordo: é atualizado ao fim de cada fase, antes do 
 | F01 | Pesquisa e especificação: `spec.md`, `plan.md`, `tasks.md` | **concluída e aprovada em 2026-10-28** | `F01` |
 | F02 | Fluxos longitudinais sintéticos e simulador de feedback | **concluída em 2026-10-28** | `F02` |
 | F03 | Motor adaptativo em Python puro e travas anti-regressão | **concluída em 2026-10-28** | `F03` |
-| F04 | Calibração, curvas de aprendizado, ablações, estresse e D-usuário | pendente | — |
+| F04 | Calibração, curvas de aprendizado, ablações, estresse e D-usuário | em andamento (limiares congelados) | — |
 | F05 | `RESULTS.md`, ADR-011 (se houver adoção) e fechamento; **para para revisão do usuário** | pendente | — |
 
 ## F00 — Linha de base (2026-10-28)
@@ -216,7 +216,40 @@ Os testes cobrem:
 - confusões aprendidas;
 - ausência de NumPy.
 
+## F04 — Calibração (2026-10-28, SÓ fluxos de validação)
+
+### Limiares congelados ANTES de abrir o teste
+
+- **`artifacts/thresholds.json`:** SHA-256 (LF) `bbe665e42b7f092a3c01711fd27a7f2de8d80eb74bbf3b5147090086c336b7d1`.
+  Registro da busca em `artifacts/tuning-log.json`.
+- **Limiares das hipóteses:** os da spec §7, **sem afrouxar nenhum**, mesmo com a validação indicando que H2, H4 e
+  H5 (replay) devem falhar.
+
+### O que a busca por coordenadas escolheu
+
+- **Organizador:**
+
+  | Parâmetro | Padrão | Escolhido |
+  | :--- | ---: | ---: |
+  | $\eta_0$ | 0,3 | **0,1** |
+  | `unreviewed_factor` | 0,2 | **0,05** |
+  | `eps_replay` | 0,02 | 0,02 |
+  | $\mu$ | 0,02 | 0,02 |
+  | $\Delta_{\max}$ | 4 | 4 |
+  | `eps_step` | 0,05 | 0,05 |
+  | colunas de centróide | ligadas | ligadas (empate com desligadas) |
+  | $T_{\text{user}}$ | ligada | ligada |
+
+- **Pontuação:** padrão 0,604 → escolhida 0,681. A escolha **troca ganho no R1 por zero queda no R3**:
+  - R1 em t = 40: 0,517 / 0,509 / 0,977 / 0,722 nos perfis P1–P4. O padrão dava 0,544 / 0,553 / 0,981 / 0,771.
+  - Quedas além de 1 ponto abaixo do V4 no R3: **todas 0**. O padrão caía até 3,7 pontos no P2.
+- **Leitura:**
+  - escolhido: θ = 0,5, candidato com contagem ≥ 2, $\alpha$ do canal 20, peso do livro 3;
+  - na validação, queda relativa do CER de **5,9 %**, preservando **99,1 %** das palavras certas (meta 99,5 %);
+  - a curadoria só chega a 0,95 de precisão com `curate_known_min` = 6 (0,954).
+- **Teste do tempo de atualização:** uma rodada falhou uma vez com a máquina carregada (suíte em 48 s contra 15 s,
+  RAM livre 0,9 GB) e passou na repetição. O p95 da H5 é medido na avaliação, com a máquina parada.
+
 ## Próximo passo
 
-F04: `calibrate.py` (só validação, `thresholds.json` congelado antes do teste), `evaluate.py --split test`,
-`dusuario_continual.py` (banco ativo do D:, só números) e auditoria dos benchmarks.
+F04: `evaluate.py --split test` (uma vez), D-usuário no banco ativo do D: e auditoria dos benchmarks.

@@ -335,6 +335,19 @@ class AdaptiveReader:
         lc["threshold"] = self.threshold(state)
         return report
 
+    def learn_text(self, user_id: str, book_id: str | None, text: str) -> None:
+        """Só o léxico, de um estudo salvo sem leitura de máquina (digitado ou importado)."""
+        lex = self.state_for(user_id)["reading"]["lexicon"]
+        tables = [lex["user"]]
+        if book_id:
+            tables.append(lex["books"].setdefault(book_id, {}))
+        for word in WORD.findall(text):
+            surface = word.lower()
+            key = fold(surface)
+            for table in tables:
+                table.setdefault(key, {})
+                table[key][surface] = table[key].get(surface, 0.0) + 1.0
+
     def threshold(self, state: dict) -> float | None:
         lc = state["reading"]["low_confidence"]
         if lc["n"] < 30 or lc["b"] >= 0:

@@ -1,0 +1,49 @@
+{
+ "experiment": "EXP-024",
+ "frozen_before_test": true,
+ "split_used": "val",
+ "organizer": {
+  "eta0": 0.1,
+  "unreviewed_factor": 0.05,
+  "eps_replay": 0.02,
+  "mu": 0.02,
+  "delta_max": 4.0,
+  "eps_step": 0.05,
+  "learn_centroids": true,
+  "use_T": true
+ },
+ "reader": {
+  "theta": 0.5,
+  "candidate_min": 2.0,
+  "alpha_channel": 20.0,
+  "weight_book": 3.0,
+  "curate_known_min": 6.0
+ },
+ "hypotheses": {
+  "H1": {
+   "min_gain_macro_f1_mean": 0.08,
+   "min_gain_references_profile_P1": 0.2
+  },
+  "H2": {
+   "min_cer_relative_drop": 0.15,
+   "min_accent_relative_drop": 0.3,
+   "min_preserved": 0.995,
+   "min_curation_precision": 0.95
+  },
+  "H3": {
+   "max_drop_below_v4_any_t": 0.01,
+   "min_share_of_r1_gain": 0.7
+  },
+  "H4": {
+   "min_ratio_first_click_gain": 2.0
+  },
+  "H5": {
+   "update_ms_p95": 25.0,
+   "organize_overhead_ms_p95": 5.0,
+   "state_kb_500_studies": 512.0,
+   "replay_500_s": 2.0
+  }
+ },
+ "hypotheses_note": "Limiares da spec §7 mantidos sem alteração depois da validação (nenhum foi afrouxado).",
+ "elapsed_s": 2463.8
+}
