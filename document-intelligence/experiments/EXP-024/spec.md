@@ -1,6 +1,6 @@
 # EXP-024 — Melhoria Contínua Autônoma do Organizador e da Pós-Correção da Digitalização (especificação)
 
-**Created**: 2026-10-28 · **Status**: `RASCUNHO PARA REVISÃO` (fase F01; código só depois da revisão do usuário)
+**Created**: 2026-10-28 · **Status**: `CONCLUÍDO` em 2026-10-28 ([RESULTS](./RESULTS.md)); F01 aprovada pelo usuário; portão de adoção não atingido
 
 **Input**: pedido do usuário (2026-10-28). O Organizador das 4 seções (EXP-023, feature 089) e a leitura da
 digitalização (ADR-008, feature 086) devem melhorar sozinhos com o uso. Os sinais são estes:

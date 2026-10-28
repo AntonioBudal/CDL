@@ -13,7 +13,7 @@ Este arquivo é o diário de bordo: é atualizado ao fim de cada fase, antes do 
 | F02 | Fluxos longitudinais sintéticos e simulador de feedback | **concluída em 2026-10-28** | `F02` |
 | F03 | Motor adaptativo em Python puro e travas anti-regressão | **concluída em 2026-10-28** | `F03` |
 | F04 | Calibração, curvas de aprendizado, ablações, estresse e D-usuário | **concluída em 2026-10-28** | `F04` (2 commits) |
-| F05 | `RESULTS.md`, ADR-011 (se houver adoção) e fechamento; **para para revisão do usuário** | pendente | — |
+| F05 | `RESULTS.md`, ADR-011 (se houver adoção) e fechamento; **para para revisão do usuário** | **concluída em 2026-10-28; aguardando revisão do usuário** | `F05` |
 
 ## F00 — Linha de base (2026-10-28)
 
@@ -285,6 +285,22 @@ Os testes cobrem:
 - **Medição de tempo:** a máquina estava com 0,9 GB de RAM livre e mais lenta que nos testes de fumaça (p50 de
   34–42 ms contra 9–20 ms). Mesmo assim, o replay e o tamanho do estado falham por estrutura, não por carga.
 
+## F05 — Fechamento (2026-10-28)
+
+- [RESULTS.md](./RESULTS.md): vereditos de H1–H5 (todas refutadas), curvas, ablações, R3 com e sem travas, cliques,
+  leitura, D-usuário, custo, limites, recomendação e reprodução.
+- **ADR-011 não foi escrito:** o portão de adoção (H1, H3 e H5) não foi atingido. A recomendação de um
+  `organizer-v2` estático com as pistas novas fica para um experimento ou ADR próprio, se o usuário quiser.
+- `CLAUDE.md` atualizado com o estado.
+- **Teste de tempo ajustado com aprovação do usuário (2026-10-28):** `test_incremental_update_is_fast` passou a
+  exigir mediana < 60 ms (limite de regressão), em vez de < 25 ms, porque a H5 foi refutada. O comentário no
+  teste registra a mudança.
+- **Validação global:**
+  - `uv run pytest`: 239 aprovados;
+  - `uv run ruff check .`: sem avisos;
+  - testes do EXP-023 e do EXP-024 no ambiente do experimento: 60 aprovados e 1 pulado;
+  - LDF no ambiente principal: 2 aprovados.
+
 ## Próximo passo
 
-F05: `RESULTS.md`, CLAUDE.md, validação global e commit. Parar para a revisão do usuário.
+Revisão do usuário. Nada vai ao Leitorum sem decisão dele.

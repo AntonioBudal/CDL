@@ -100,8 +100,10 @@ def test_learning_is_deterministic():
 
 
 def test_incremental_update_is_fast():
+    # Limite de regressão, não a meta: a H5 (p95 ≤ 25 ms) foi refutada no teste (RESULTS.md §5,
+    # p95 de 73–87 ms). Mudança aprovada pelo usuário em 2026-10-28; antes exigia mediana < 25 ms.
     _engine, _reader, _user, times = engine_with_history()
-    assert statistics.median(times[2:]) < 25.0  # p95 medido na F04 (H5)
+    assert statistics.median(times[2:]) < 60.0
 
 
 def test_users_are_isolated():

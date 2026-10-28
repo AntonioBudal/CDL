@@ -103,16 +103,16 @@ Caminhos relativos a `document-intelligence/`; `E` = `experiments/EXP-024`; `O` 
 
 ## F05 — Resultados e fechamento
 
-- [ ] T040 `E/RESULTS.md`: veredito de H1–H5, tabelas de ablação, curvas, R3, D-usuário, limites e comandos de
+- [x] T040 `E/RESULTS.md`: veredito de H1–H5, tabelas de ablação, curvas, R3, D-usuário, limites e comandos de
   reprodução.
-- [ ] T041 Se o portão de adoção for atingido, `docs/adr/ADR-011-melhoria-continua-autonoma.md`:
+- [x] T041 (não aplicável: portão não atingido, sem ADR-011) Se o portão de adoção for atingido, `docs/adr/ADR-011-melhoria-continua-autonoma.md`:
   - schema do estado por usuário;
   - contrato do pacote de feedback;
   - garantias de segurança;
   - proposta do LDF 2.1 para as 4 seções.
-- [ ] T042 `CLAUDE.md` (estado) e `STATE.md`; validação global (`uv run pytest`, `uv run ruff check .` e testes do
+- [x] T042 `CLAUDE.md` (estado) e `STATE.md`; validação global (`uv run pytest`, `uv run ruff check .` e testes do
   EXP-023 e do EXP-024); `git status` limpo.
-- [ ] T043 Commit `F05 … resultados, ADR-011 e fechamento do experimento`. **Parar para revisão.**
+- [x] T043 Commit `F05 … resultados, ADR-011 e fechamento do experimento`. **Parar para revisão.**
 
 ## Dependências
 
