@@ -3,7 +3,12 @@
 Ordem de carga:
 1. ``LEITORUM_MEDIA_MASTER_KEY`` (base64 de 32 bytes), para ambientes sem DPAPI;
 2. arquivo ``LEITORUM_MEDIA_KEY_FILE`` (padrão ``%LOCALAPPDATA%\\Leitorum\\media-master.key``),
-   protegido por DPAPI no escopo do usuário do Windows.
+   protegido por DPAPI no escopo da máquina.
+
+Escopo da máquina porque o servidor roda como serviço do Windows (``LocalSystem``) e os scripts de instalação
+rodam com o usuário: com o escopo do usuário, o serviço não abriria a chave. Quem protege o arquivo é a pasta do
+perfil (só o usuário, ``SYSTEM`` e administradores leem). Por isso o ``.env`` deve fixar
+``LEITORUM_MEDIA_KEY_FILE``: o ``%LOCALAPPDATA%`` do serviço é outro.
 
 A chave nunca pode ficar dentro de ``LEITORUM_STORAGE_ROOT`` (o HD): quem copiar o disco não leva a chave.
 Nada aqui registra a chave ou o código de recuperação em log.
@@ -23,6 +28,12 @@ from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 KEY_BYTES = 32
 FILE_PREFIX = b"LMKEY1"
 SALT = b"leitorum-media-v1"
+CRYPTPROTECT_UI_FORBIDDEN = 0x01
+CRYPTPROTECT_LOCAL_MACHINE = 0x04
+# O escopo fica gravado no próprio blob: a leitura não precisa (nem aceita) o flag de máquina, e blobs antigos
+# no escopo do usuário continuam abrindo para esse usuário.
+PROTECT_FLAGS = CRYPTPROTECT_UI_FORBIDDEN | CRYPTPROTECT_LOCAL_MACHINE
+UNPROTECT_FLAGS = CRYPTPROTECT_UI_FORBIDDEN
 
 
 class MediaKeyError(RuntimeError):
@@ -45,11 +56,12 @@ def _dpapi(data: bytes, protect: bool) -> bytes:
     source = Blob(len(data), ctypes.cast(buffer, ctypes.POINTER(ctypes.c_char)))
     target = Blob()
     crypt32, kernel32 = ctypes.windll.crypt32, ctypes.windll.kernel32
-    flags = 0x01  # CRYPTPROTECT_UI_FORBIDDEN
     if protect:
-        ok = crypt32.CryptProtectData(ctypes.byref(source), "Leitorum", None, None, None, flags, ctypes.byref(target))
+        ok = crypt32.CryptProtectData(ctypes.byref(source), "Leitorum", None, None, None, PROTECT_FLAGS,
+                                      ctypes.byref(target))
     else:
-        ok = crypt32.CryptUnprotectData(ctypes.byref(source), None, None, None, None, flags, ctypes.byref(target))
+        ok = crypt32.CryptUnprotectData(ctypes.byref(source), None, None, None, None, UNPROTECT_FLAGS,
+                                        ctypes.byref(target))
     if not ok:
         raise MediaKeyError("O Windows não conseguiu proteger ou abrir a chave (DPAPI).")
     try:
@@ -62,6 +74,8 @@ def _dpapi(data: bytes, protect: bool) -> bytes:
 
 
 def key_file_path() -> Path:
+    import app.core.config  # noqa: F401 — garante o .env carregado (LEITORUM_MEDIA_KEY_FILE) também nos scripts
+
     configured = os.environ.get("LEITORUM_MEDIA_KEY_FILE", "").strip()
     if configured:
         path = Path(configured).expanduser()

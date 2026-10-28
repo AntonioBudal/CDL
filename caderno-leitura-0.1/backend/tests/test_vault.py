@@ -148,6 +148,22 @@ def test_key_file_is_refused_inside_storage_root(tmp_path, monkeypatch):
     assert not (root / "chave").exists()
 
 
+def test_dpapi_protects_in_machine_scope_for_the_windows_service():
+    # O serviço (LocalSystem) e o terminal do usuário precisam abrir o mesmo arquivo de chave.
+    assert media_key.PROTECT_FLAGS & media_key.CRYPTPROTECT_LOCAL_MACHINE
+    assert media_key.PROTECT_FLAGS & media_key.CRYPTPROTECT_UI_FORBIDDEN
+    assert not media_key.UNPROTECT_FLAGS & media_key.CRYPTPROTECT_LOCAL_MACHINE
+
+
+def test_key_file_path_comes_from_env(tmp_path, monkeypatch):
+    path = tmp_path / "Leitorum" / "media-master.key"
+    monkeypatch.setenv("LEITORUM_MEDIA_KEY_FILE", str(path))
+    assert media_key.key_file_path() == path
+    monkeypatch.setenv("LEITORUM_MEDIA_KEY_FILE", "relativo\\media-master.key")
+    with pytest.raises(MediaKeyError):
+        media_key.key_file_path()
+
+
 @pytest.mark.skipif(os.name != "nt", reason="DPAPI só existe no Windows")
 def test_dpapi_key_file_roundtrip_and_no_overwrite(tmp_path, monkeypatch):
     monkeypatch.delenv("LEITORUM_MEDIA_MASTER_KEY", raising=False)

@@ -175,8 +175,13 @@ metadados (EXIF, GPS, ICC, XMP), otimizada em WebP e cifrada com AES-256-GCM em 
 mais uma miniatura cifrada `<id>.thumb.enc`. Sem raiz configurada, o cofre fica em `backend/data/vault`.
 
 ### A chave mestra
-- Fica **fora do HD**: `%LOCALAPPDATA%\Leitorum\media-master.key`, protegida pelo Windows (DPAPI, só abre com o
-  seu usuário do Windows). Quem copiar o `D:\` leva só arquivos cifrados.
+- Fica **fora do HD**, no caminho fixado por `LEITORUM_MEDIA_KEY_FILE` no `.env` (aqui,
+  `C:\Users\User\AppData\Local\Leitorum\media-master.key`). Quem copiar o `D:\` leva só arquivos cifrados.
+- É protegida pelo Windows (DPAPI) **no escopo da máquina**, porque o servidor roda como serviço `Leitorum`
+  (NSSM, conta `LocalSystem`) e os scripts rodam com o seu usuário: os dois precisam abrir o mesmo arquivo. O
+  arquivo só sai deste computador decifrável com o código de recuperação; dentro dele, quem o protege é a pasta
+  do seu perfil (só você, `SYSTEM` e administradores leem). Sem `LEITORUM_MEDIA_KEY_FILE`, o serviço procuraria
+  em `C:\Windows\System32\config\systemprofile\AppData\Local` e o cofre ficaria trancado.
 - Alternativa sem DPAPI: `LEITORUM_MEDIA_MASTER_KEY` (base64 de 32 bytes) num `.env` fora do HD.
 - O banco guarda só a **impressão digital** da chave (16 hex), para detectar chave trocada. A chave nunca vai
   para backups, logs nem para o pacote `.zip`.
