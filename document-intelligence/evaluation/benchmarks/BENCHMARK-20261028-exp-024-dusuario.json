@@ -1,0 +1,38 @@
+{
+ "studies_total": 4,
+ "studies_eligible": 4,
+ "users": 2,
+ "users_with_2_or_more": 2,
+ "prequential_evaluated": 2,
+ "first_studies_excluded": 2,
+ "update_ms_p95": 95.75,
+ "digitized_studies": 2,
+ "v4_static": {
+  "macro_f1": 0.5992,
+  "per_section_f1": {
+   "summary": 0.7997,
+   "explanation": 0.5455,
+   "concepts": 0.6656,
+   "references": 0.3862
+  },
+  "windowdiff": 0.718,
+  "chars_to_move": 0.3976
+ },
+ "adaptive": {
+  "macro_f1": 0.6672,
+  "per_section_f1": {
+   "summary": 0.7027,
+   "explanation": 0.642,
+   "concepts": 0.9135,
+   "references": 0.4105
+  },
+  "windowdiff": 0.7169,
+  "chars_to_move": 0.3382
+ },
+ "gain_macro_f1": 0.068,
+ "reading": {
+  "cer_raw": 0.0045,
+  "cer_corrected": 0.0076
+ },
+ "elapsed_s": 14.62
+}

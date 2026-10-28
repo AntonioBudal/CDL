@@ -84,22 +84,22 @@ Caminhos relativos a `document-intelligence/`; `E` = `experiments/EXP-024`; `O` 
 
 ## F04 — Calibração, curvas, ablações, estresse e D-usuário
 
-- [ ] T030 `E/harness/calibrate.py`: grade só nos fluxos de validação, gravando `E/artifacts/thresholds.json`
+- [x] T030 `E/harness/calibrate.py`: grade só nos fluxos de validação, gravando `E/artifacts/thresholds.json`
   (SHA-256 no `STATE.md`) e os limiares finais das hipóteses, **antes** do teste.
-- [ ] T031 `E/harness/evaluate.py --split test`, uma vez. Mede:
+- [x] T031 `E/harness/evaluate.py --split test`, uma vez. Mede:
   - escada cumulativa e *leave-one-out*;
   - curvas em $t = 1, 5, 10, 20, 40$ (Organizador e leitura);
   - R3 com e sem travas;
   - E4 com $k = 0..3$ cliques e três ordens;
   - custo (latência e KB do estado);
   - replay de 500 estudos.
-- [ ] T032 `E/harness/dusuario_continual.py`, **com o banco ativo do D:**, escolhido pelo usuário na revisão da F01:
+- [x] T032 `E/harness/dusuario_continual.py`, **com o banco ativo do D:**, escolhido pelo usuário na revisão da F01:
   - cópia pela API de backup em pasta temporária, origem e cópia em `mode=ro`, apagada no `finally`;
   - avaliação prequencial com $T_{\text{user}}$ desligado;
   - só números.
-- [ ] T033 Revisor (subagente) audita os JSON de benchmark: só números e chaves fixas. Gravar em
+- [x] T033 Revisor (subagente) audita os JSON de benchmark: só números e chaves fixas. Gravar em
   `evaluation/benchmarks/`.
-- [ ] T034 `STATE.md`; commit `F04 … calibracao, curvas de aprendizado, ablacoes e benchmarks`.
+- [x] T034 `STATE.md`; commit `F04 … calibracao, curvas de aprendizado, ablacoes e benchmarks`.
 
 ## F05 — Resultados e fechamento
 

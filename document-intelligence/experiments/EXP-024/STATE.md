@@ -12,7 +12,7 @@ Este arquivo é o diário de bordo: é atualizado ao fim de cada fase, antes do 
 | F01 | Pesquisa e especificação: `spec.md`, `plan.md`, `tasks.md` | **concluída e aprovada em 2026-10-28** | `F01` |
 | F02 | Fluxos longitudinais sintéticos e simulador de feedback | **concluída em 2026-10-28** | `F02` |
 | F03 | Motor adaptativo em Python puro e travas anti-regressão | **concluída em 2026-10-28** | `F03` |
-| F04 | Calibração, curvas de aprendizado, ablações, estresse e D-usuário | em andamento (limiares congelados) | — |
+| F04 | Calibração, curvas de aprendizado, ablações, estresse e D-usuário | **concluída em 2026-10-28** | `F04` (2 commits) |
 | F05 | `RESULTS.md`, ADR-011 (se houver adoção) e fechamento; **para para revisão do usuário** | pendente | — |
 
 ## F00 — Linha de base (2026-10-28)
@@ -250,6 +250,41 @@ Os testes cobrem:
 - **Teste do tempo de atualização:** uma rodada falhou uma vez com a máquina carregada (suíte em 48 s contra 15 s,
   RAM livre 0,9 GB) e passou na repetição. O p95 da H5 é medido na avaliação, com a máquina parada.
 
+## F04 — Teste, ablações, estresse e D-usuário (2026-10-28)
+
+- **Teste aberto uma vez**, no commit `249fd51` (árvore limpa), com o `thresholds.json` congelado. Levou 1 432 s.
+- **Benchmarks** (auditados por um subagente revisor antes de gravar: só números e identificadores fixos; no
+  D-usuário, nenhum texto):
+  - `evaluation/benchmarks/BENCHMARK-20261028-exp-024-continual.json`, SHA-256
+    `401708a640651cd97e598a035023f7abff67d53c532bb9eca3210574c0d4601c`;
+  - `evaluation/benchmarks/BENCHMARK-20261028-exp-024-dusuario.json`, SHA-256
+    `cb6a800b6a2a6665a39c22f57549776698b20d0e6067130436258406ea5e874c`.
+- **D-usuário:** banco ativo do D: (decisão do usuário), cópia pela API de backup em pasta temporária, apagada no
+  fim (conferido: nenhuma pasta sobrou), saída só com números. São 4 estudos de 2 usuários; 2 entram na avaliação
+  prequencial.
+
+### Resumo (detalhes e vereditos no RESULTS.md, F05)
+
+| Hipótese | Resultado no teste | Veredito |
+| :--- | :--- | :--- |
+| H1 | Macro-F1 médio 0,704 → 0,758 em t = 40 no R1 (+5,3; meta +8). Referências do P1: 0,000 → 0,783 (+78; meta +20). P2 cai 5,2 | **refutada** (só a parte de referências passa) |
+| H2 | CER 25 %: queda relativa de 6,0–7,4 % (meta 15 %); acentos 10–19 % (meta 30 %); palavras certas preservadas 98,2–99,8 % (meta 99,5 %); curadoria 0,87–0,94 (meta 0,95). A CER 10 %, o CER cai 14,7–20,1 % | **refutada** |
+| H3 | R3: pior queda abaixo do V4 de 2,3 pontos (meta 1); mantém 64 % do ganho do R1 (meta 70 %). Sem travas, o R3 termina **abaixo** do V4 (0,693 contra 0,704; pior queda 8,0) | **refutada**, mas as travas valem 4,6 pontos no R3 |
+| H4 | ganho do 1º clique com entropia × acoplamento e re-decodificação ≈ o da ordem por margem (0,87× a 1,24×) | **refutada** |
+| H5 | atualização do Organizador p95 de 73–87 ms (meta 25); acréscimo na organização 6,9 ms (meta 5); estado com 500 estudos em 16 livros 749 KB (meta 512); replay de 500 estudos 32,8 s (meta 2) | **refutada** |
+| D-usuário | Macro-F1 0,599 → 0,667 (N = 2). Leitura: CER 0,45 % → 0,76 %, ou seja, a pós-correção estragou texto quase limpo (N = 2) | alerta |
+
+- **Portão de adoção: não atingido.** Sem ADR-011 de adoção.
+- **Ablações (R1, t = 40):**
+  - só os pesos online sobre o diff, sem travas (`E1_diff`): 0,773;
+  - com pistas novas e centróides (`E2_contexto`): **0,777**, o melhor;
+  - motor completo: 0,758.
+  - Gating e travas custam ~2 pontos no R1 e protegem no R3.
+  - $T_{\text{user}}$ atrapalha: sem ele, 0,776.
+  - O portão-sombra da semente e a projeção não agiram no teste; a trava ativa é o replay.
+- **Medição de tempo:** a máquina estava com 0,9 GB de RAM livre e mais lenta que nos testes de fumaça (p50 de
+  34–42 ms contra 9–20 ms). Mesmo assim, o replay e o tamanho do estado falham por estrutura, não por carga.
+
 ## Próximo passo
 
-F04: `evaluate.py --split test` (uma vez), D-usuário no banco ativo do D: e auditoria dos benchmarks.
+F05: `RESULTS.md`, CLAUDE.md, validação global e commit. Parar para a revisão do usuário.
