@@ -75,6 +75,12 @@ uv run python -m leitorum_di
 
   Recomendação: um `organizer-v2` estático com as pistas novas, e o produto passar a registrar o pacote de
   feedback antes de qualquer aprendizado online.
+- **EXP-025 concluído em 2026-10-28 por delegação** ([RESULTS](./experiments/EXP-025/RESULTS.md),
+  [ADR-011](./docs/adr/ADR-011-organizer-v2-estatico.md) `PROPOSED`): `organizer-v2` estático, o v1 congelado
+  mais as 4 pistas de referência do EXP-024 aprendidas em lote. Fichamentos fictícios 0,704 → 0,751 (Referências
+  do P1 0,00 → 0,55; P4 −1,5 ponto); EXP-023 idêntico ao v1; estudos reais (N = 4) 0,535 = 0,535, as pistas não
+  disparam; custo 0,017 ms por página, mas a latência pré-registrada reprova por ruído (até +2,18 ms). Integração no
+  Leitorum por feature própria (Spec Kit), com o registro `leitorum-feedback/1`.
 - **Tarefa Atual**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).

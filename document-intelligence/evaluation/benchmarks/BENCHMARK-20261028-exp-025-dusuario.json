@@ -1,0 +1,28 @@
+{
+ "studies_total": 4,
+ "studies_eligible": 4,
+ "users": 2,
+ "v1": {
+  "macro_f1": 0.5348,
+  "per_section_f1": {
+   "summary": 0.7422,
+   "explanation": 0.5346,
+   "concepts": 0.5034,
+   "references": 0.3592
+  },
+  "windowdiff": 0.7592,
+  "chars_to_move": 0.4363
+ },
+ "v2": {
+  "macro_f1": 0.5348,
+  "per_section_f1": {
+   "summary": 0.7422,
+   "explanation": 0.5346,
+   "concepts": 0.5034,
+   "references": 0.3592
+  },
+  "windowdiff": 0.7592,
+  "chars_to_move": 0.4363
+ },
+ "gain_macro_f1": 0.0
+}

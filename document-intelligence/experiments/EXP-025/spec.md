@@ -1,6 +1,6 @@
 # EXP-025 — `organizer-v2` estático com as pistas de referência reais (especificação, plano e tarefas)
 
-**Created**: 2026-10-28 · **Status**: `EM EXECUÇÃO` (pedido do usuário de 2026-10-28; execução por delegação)
+**Created**: 2026-10-28 · **Status**: `CONCLUÍDO` (2026-10-28, por delegação; ver [RESULTS.md](./RESULTS.md) e o ADR-011 `PROPOSED`)
 
 **Input**: pedido do usuário depois do EXP-024, passo 1. Treinar e exportar um `organizer-v2.json` **estático**
 (sem estado por usuário) que incorpore as pistas de Referências que, no EXP-024, levaram o F1 de Referências do
