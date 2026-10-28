@@ -132,6 +132,16 @@ onBeforeUnmount(() => {
           </RouterLink>
 
           <RouterLink
+            to="/minhas-imagens"
+            class="user-menu-item"
+            role="menuitem"
+            @click="closeDropdown"
+          >
+            <Icon name="image" :size="16" />
+            <span>Minhas Imagens e Espaço</span>
+          </RouterLink>
+
+          <RouterLink
             v-if="isAdmin"
             to="/admin"
             class="user-menu-item"

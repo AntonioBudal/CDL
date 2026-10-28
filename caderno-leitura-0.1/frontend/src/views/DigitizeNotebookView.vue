@@ -12,12 +12,15 @@ import { positiveId, type Book, type Chapter } from '../types'
 import { DIGITIZE_ACCEPT, DIGITIZE_EXIT_SHORTCUTS, DIGITIZE_SECTIONS } from '../types/digitize'
 import { ORGANIZE_SECTIONS, type OrganizeSection } from '../types/organize'
 import type { OrganizeReviewItem } from '../composables/useSectionOrganizer'
+import type { MediaUsage } from '../types/media'
+import { VAULT_STATE_TEXT, shortDate, usageText } from '../utils/mediaFormat'
 
 const draft = useDigitizeDraft({
   status: api.getDigitizeStatus,
   preview: api.previewDigitize,
   createStudy: api.createStudy,
   organize: api.organizeText,
+  storePhoto: api.storeStudyPhoto,
 })
 const { state, canSave, uncertainLines } = draft
 const organizer = draft.organizer
@@ -42,6 +45,27 @@ const chaptersError = ref('')
 let bookRequest: AbortController | null = null
 let chapterRequest: AbortController | null = null
 const statusRequest = new AbortController()
+
+// Foto de conferência (feature 090-C): a caixa some quando não há espaço ou o cofre está trancado.
+const mediaUsage = ref<MediaUsage | null>(null)
+const photoBlocked = computed(() => {
+  const usage = mediaUsage.value
+  if (!usage) return ''
+  const vault = usage.vault?.state ?? 'ready'
+  if (vault !== 'ready') return VAULT_STATE_TEXT[vault]
+  if (usage.user.level === 'full') return 'Seu espaço de imagens está cheio; libere espaço para guardar fotos.'
+  if (usage.server.level === 'full') return 'O servidor está sem espaço para novas imagens.'
+  return ''
+})
+watch(photoBlocked, (blocked) => { if (blocked) state.keepPhoto = false })
+
+async function loadMediaUsage() {
+  try {
+    mediaUsage.value = await api.getMediaUsage()
+  } catch {
+    mediaUsage.value = null // sem o uso, a caixa continua; o servidor recusa com o motivo se faltar espaço
+  }
+}
 
 const selectedBook = computed(() => books.value.find(item => item.id === positiveId(state.bookId)))
 const unavailableDescription = computed(() => state.unavailableReason === 'integrity_failed'
@@ -177,6 +201,7 @@ onMounted(() => {
   void draft.checkStatus(statusRequest.signal)
   void loadOrganizeStatus()
   void loadBooks()
+  void loadMediaUsage()
 })
 onBeforeUnmount(() => {
   statusRequest.abort()
@@ -269,6 +294,13 @@ onBeforeUnmount(() => {
         <Icon name="check-circle" :size="18" aria-hidden="true" /> Estudo salvo como rascunho
       </p>
       <h2 id="saved-heading" ref="resultHeading" tabindex="-1">{{ state.saved.title }}</h2>
+      <p v-if="state.photoExpiresAt" class="muted-text">
+        Foto guardada cifrada até {{ shortDate(state.photoExpiresAt) }}, para conferir na folha original do estudo.
+      </p>
+      <p v-else-if="state.photoWarning" class="notice error" role="alert">
+        A foto não foi guardada: {{ state.photoWarning }}
+        <RouterLink to="/minhas-imagens">Abrir Minhas Imagens e Espaço</RouterLink>
+      </p>
       <div class="actions">
         <RouterLink class="button primary" :to="{ name: 'study', params: { bookId: state.bookId, studyId: state.saved.id } }">Abrir estudo</RouterLink>
         <button type="button" class="secondary" @click="startAnother">Digitalizar outra página</button>
@@ -445,6 +477,28 @@ onBeforeUnmount(() => {
             <p v-if="organizer.state.error" class="notice error" role="alert">{{ organizer.state.error.message }}</p>
           </fieldset>
 
+          <div class="keep-photo">
+            <label class="keep-photo-option">
+              <input
+                v-model="state.keepPhoto"
+                type="checkbox"
+                :disabled="Boolean(photoBlocked)"
+                aria-describedby="keep-photo-help"
+              >
+              <span>Guardar a foto com o estudo para conferência (apagada automaticamente em 30 dias)</span>
+            </label>
+            <p id="keep-photo-help" class="muted-text small">
+              <template v-if="photoBlocked">
+                {{ photoBlocked }} <RouterLink to="/minhas-imagens">Minhas Imagens e Espaço</RouterLink>
+              </template>
+              <template v-else-if="mediaUsage">
+                Seu espaço: {{ usageText(mediaUsage.user.used_bytes, mediaUsage.user.quota_bytes) }}. A foto fica
+                cifrada e só você a vê; no celular, ela é enviada de novo ao salvar.
+              </template>
+              <template v-else>A foto fica cifrada e só você a vê.</template>
+            </p>
+          </div>
+
           <p v-if="state.error" class="notice error" role="alert">{{ state.error.message }}</p>
           <div class="actions">
             <button type="submit" class="primary" :disabled="!canSave">
@@ -464,8 +518,14 @@ onBeforeUnmount(() => {
         <h2 id="transparency-heading">Onde a leitura acontece</h2>
         <p class="muted-text">
           A foto é processada no computador onde o Leitorum está instalado, inclusive quando você a envia pelo celular na
-          rede local. Nada é enviado para a internet, e a foto é apagada assim que a leitura termina; só o texto que você
-          salvar fica no acervo.
+          rede local. Nada é enviado para a internet.
+          <template v-if="state.keepPhoto">
+            A leitura apaga a foto ao terminar; como você marcou para guardá-la, ela é enviada de novo ao salvar e fica
+            guardada cifrada no seu espaço por 30 dias, salvo se você a mantiver.
+          </template>
+          <template v-else>
+            A foto é apagada assim que a leitura termina; só o texto que você salvar fica no acervo.
+          </template>
         </p>
         <p class="muted-text">
           O texto é um rascunho do leitor de licença livre (PP-OCRv6) e erra com frequência em letra cursiva. Revise sempre.
@@ -821,6 +881,39 @@ h2[tabindex='-1']:focus:not(:focus-visible) {
   display: inline-flex;
   align-items: center;
   gap: calc(var(--space-unit) * 0.4);
+}
+
+.keep-photo {
+  display: grid;
+  gap: 0.35rem;
+  margin: 1rem 0;
+}
+
+.keep-photo-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  min-height: 44px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.keep-photo-option input {
+  width: 22px;
+  height: 22px;
+  margin: 0.1rem 0 0;
+  flex-shrink: 0;
+  accent-color: var(--color-accent);
+}
+
+.keep-photo-option input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.keep-photo-option:has(input:disabled) {
+  cursor: not-allowed;
+  color: var(--color-text-secondary);
 }
 
 .transparency {

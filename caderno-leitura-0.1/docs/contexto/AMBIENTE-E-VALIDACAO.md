@@ -229,3 +229,42 @@ no cache do navegador. A exportação da conta (LGPD) traz as imagens decifradas
 O pacote `.zip` leva os `.enc` com SHA-256 no manifesto, a impressão digital da chave e o `storage_id`. A
 restauração confere os SHA-256, mantém o `storage_id` da instalação atual e avisa quando o pacote foi cifrado com
 outra chave (nesse caso, use `--media-key --restore` com o código daquela chave).
+
+## 7. Fotos de conferência, retenção e cotas (feature 090-C)
+
+### Foto de conferência
+- Na revisão da digitalização, a caixa "Guardar a foto com o estudo para conferência" vem **desmarcada**. Sem ela,
+  nada muda em relação à 086: a foto é apagada assim que a leitura termina.
+- Com a caixa marcada, o navegador reenvia a foto ao salvar (`POST /api/studies/{id}/media`). O servidor a reduz
+  para até 2000 px em WebP, sem metadados, e a guarda cifrada. Se a foto for recusada (cota, cofre trancado), o
+  estudo continua salvo e a tela diz o motivo.
+- No estudo, "Folha original (N)" abre a foto ao lado do texto no computador, ou em abas no celular, com zoom.
+- Apagar uma foto nunca altera o estudo, os textos nem as versões.
+
+### Retenção automática
+O job roda na partida do servidor e a cada `LEITORUM_MEDIA_JOB_INTERVAL_HOURS` (6 h). Ele:
+- apaga fotos de página com mais de 30 dias (`LEITORUM_MEDIA_RETENTION_DAYS`);
+- apaga as fotos de um estudo concluído 7 dias depois de o job ver a conclusão
+  (`LEITORUM_MEDIA_COMPLETED_GRACE_DAYS`; desligue com `LEITORUM_MEDIA_DELETE_ON_COMPLETED=false`). Se o estudo
+  deixar de estar concluído, a contagem recomeça;
+- dá 7 dias às fotos cujo estudo foi purgado da lixeira;
+- remove sobras: gravações interrompidas, `.tmp` velhos e arquivos sem registro no banco (só depois de 24 h);
+- marca como "Arquivo indisponível" a foto cujo arquivo sumiu, e volta ao normal se ele reaparecer.
+
+Fotos "Mantidas permanentemente", capas e avatares nunca expiram. O log do job só tem contagens e tamanhos.
+
+### Cotas
+| Variável | Padrão | O que limita |
+| :--- | :--- | :--- |
+| `LEITORUM_USER_STORAGE_QUOTA_BYTES` | 1 GiB | soma das imagens de cada usuário (páginas, capas e avatar) |
+| `LEITORUM_GLOBAL_STORAGE_QUOTA_BYTES` | 900 GiB | soma das imagens de todos |
+| `LEITORUM_STORAGE_FREE_MARGIN_BYTES` | 2 GiB | espaço livre mínimo que precisa sobrar no HD |
+
+- Passar de qualquer limite recusa a gravação com `507`, o uso atual e o atalho para "Minhas Imagens e Espaço".
+- A verificação vale mesmo com envios simultâneos.
+- Só o administrador vê quanto o servidor inteiro ocupa. Os demais veem o estado: normal, quase cheio ou cheio.
+- Um valor inválido em qualquer variável desta seção impede o servidor de iniciar, com o nome da variável no log.
+
+### Minhas Imagens e Espaço (`/minhas-imagens`)
+Pelo menu do usuário ou em Ajustes. Mostra o uso, as imagens com a validade, e permite apagar uma, várias ou em
+lote ("estudos concluídos" e "mais de 30 dias", sempre com a prévia de quantas e quantos MB antes de confirmar).

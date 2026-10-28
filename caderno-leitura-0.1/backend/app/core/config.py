@@ -400,3 +400,76 @@ def get_digitize_min_free_bytes() -> int:
     except ValueError:
         megabytes = DEFAULT_DIGITIZE_MIN_FREE_MB
     return max(0, megabytes) * 1024 * 1024
+
+
+# --- Cotas e retenção do cofre de imagens (feature 090-C) ------------------------------------------
+# Diferente das demais variáveis, um valor inválido aqui não cai no padrão em silêncio: errar a cota ou a
+# retenção não pode passar despercebido, então validate_media_settings() impede a partida.
+
+GIB = 1024**3
+MEDIA_INT_SETTINGS: dict[str, tuple[int, int, int | None]] = {
+    # variável: (padrão, mínimo, máximo)
+    "LEITORUM_USER_STORAGE_QUOTA_BYTES": (GIB, 1, None),
+    "LEITORUM_GLOBAL_STORAGE_QUOTA_BYTES": (900 * GIB, 1, None),
+    "LEITORUM_STORAGE_FREE_MARGIN_BYTES": (2 * GIB, 0, None),
+    "LEITORUM_MEDIA_RETENTION_DAYS": (30, 1, 3650),
+    "LEITORUM_MEDIA_COMPLETED_GRACE_DAYS": (7, 0, 3650),
+    "LEITORUM_MEDIA_JOB_INTERVAL_HOURS": (6, 1, 720),
+}
+
+
+def _media_int(name: str) -> int:
+    default, minimum, maximum = MEDIA_INT_SETTINGS[name]
+    raw = os.environ.get(name, "").strip().replace("_", "")
+    if not raw:
+        return default
+    try:
+        value = int(raw)
+    except ValueError:
+        raise ValueError(f"{name} deve ser um número inteiro (recebido: {raw!r}).") from None
+    if value < minimum or (maximum is not None and value > maximum):
+        limit = f"entre {minimum} e {maximum}" if maximum is not None else f"maior ou igual a {minimum}"
+        raise ValueError(f"{name} deve ser {limit} (recebido: {value}).")
+    return value
+
+
+def get_user_storage_quota_bytes() -> int:
+    return _media_int("LEITORUM_USER_STORAGE_QUOTA_BYTES")
+
+
+def get_global_storage_quota_bytes() -> int:
+    return _media_int("LEITORUM_GLOBAL_STORAGE_QUOTA_BYTES")
+
+
+def get_storage_free_margin_bytes() -> int:
+    return _media_int("LEITORUM_STORAGE_FREE_MARGIN_BYTES")
+
+
+def get_media_retention_days() -> int:
+    return _media_int("LEITORUM_MEDIA_RETENTION_DAYS")
+
+
+def get_media_completed_grace_days() -> int:
+    return _media_int("LEITORUM_MEDIA_COMPLETED_GRACE_DAYS")
+
+
+def get_media_job_interval_hours() -> int:
+    return _media_int("LEITORUM_MEDIA_JOB_INTERVAL_HOURS")
+
+
+def get_media_delete_on_completed() -> bool:
+    raw = os.environ.get("LEITORUM_MEDIA_DELETE_ON_COMPLETED", "").strip().lower()
+    if not raw:
+        return True
+    if raw in ("1", "true", "yes", "sim", "on"):
+        return True
+    if raw in ("0", "false", "no", "nao", "não", "off"):
+        return False
+    raise ValueError(f"LEITORUM_MEDIA_DELETE_ON_COMPLETED deve ser true ou false (recebido: {raw!r}).")
+
+
+def validate_media_settings() -> None:
+    """Confere todas as configurações de cota e retenção; levanta ValueError com o nome da variável."""
+    for name in MEDIA_INT_SETTINGS:
+        _media_int(name)
+    get_media_delete_on_completed()

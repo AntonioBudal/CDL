@@ -20,7 +20,9 @@ import HighlightActionPopover from '../components/HighlightActionPopover.vue'
 import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
 import DropdownMenu from '../components/ui/DropdownMenu.vue'
 import Icon from '../components/ui/Icon.vue'
+import OriginalPageViewer from '../components/media/OriginalPageViewer.vue'
 import { useStudyHighlights } from '../composables/useStudyHighlights'
+import { useOriginalPage } from '../composables/useOriginalPage'
 import { useActiveReadingSession } from '../composables/useActiveReadingSession'
 import { formatQuoteText, useTextSelection } from '../composables/useTextSelection'
 import { useFloatingToast } from '../composables/useFloatingToast'
@@ -432,6 +434,72 @@ async function handleTrash() {
 async function load() { await resource.load(route.params.bookId, route.params.studyId) }
 watch([() => route.params.bookId, () => route.params.studyId], load, { immediate: true })
 
+// Folha original (feature 090-C): fotos de conferência do estudo, só para o dono; pedidas ao carregar o estudo
+// (só a lista) e a imagem só quando o painel abre.
+const originalPage = useOriginalPage({
+  list: api.listStudyMedia,
+  setKeep: api.setMediaKeep,
+  remove: api.deleteMedia,
+})
+const photoOpen = ref(false)
+const photoTab = ref<'text' | 'photo'>('text')
+const narrowQuery = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(max-width: 899px)') : null
+const isNarrow = ref(narrowQuery?.matches ?? false)
+const onNarrowChange = (event: MediaQueryListEvent) => { isNarrow.value = event.matches }
+const PHOTO_WIDTH_KEY = 'leitorum_original_page_width'
+const PHOTO_WIDTH_MIN = 320
+const PHOTO_WIDTH_MAX = 960
+const photoWidth = ref(readPhotoWidth())
+let gutterDrag: { x: number; width: number } | null = null
+
+function readPhotoWidth(): number {
+  try {
+    const saved = Number(localStorage.getItem(PHOTO_WIDTH_KEY))
+    if (Number.isFinite(saved) && saved >= PHOTO_WIDTH_MIN && saved <= PHOTO_WIDTH_MAX) return saved
+  } catch {
+    // sem armazenamento local: usa o padrão
+  }
+  return 520
+}
+
+function setPhotoWidth(value: number) {
+  photoWidth.value = Math.round(Math.min(PHOTO_WIDTH_MAX, Math.max(PHOTO_WIDTH_MIN, value)))
+  try { localStorage.setItem(PHOTO_WIDTH_KEY, String(photoWidth.value)) } catch { /* opcional */ }
+}
+
+function startGutterDrag(event: PointerEvent) {
+  gutterDrag = { x: event.clientX, width: photoWidth.value }
+  ;(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId)
+}
+
+function moveGutter(event: PointerEvent) {
+  if (gutterDrag) setPhotoWidth(gutterDrag.width - (event.clientX - gutterDrag.x))
+}
+
+function gutterKey(event: KeyboardEvent) {
+  if (event.key === 'ArrowLeft') setPhotoWidth(photoWidth.value + 32)
+  else if (event.key === 'ArrowRight') setPhotoWidth(photoWidth.value - 32)
+  else return
+  event.preventDefault()
+}
+
+function openOriginalPage() {
+  photoOpen.value = true
+  photoTab.value = 'photo'
+}
+
+function closeOriginalPage() {
+  photoOpen.value = false
+  photoTab.value = 'text'
+}
+
+watch(() => (canEdit.value ? state.context?.study.id : null), (studyId) => {
+  closeOriginalPage()
+  originalPage.state.items = []
+  if (studyId) void originalPage.load(studyId)
+}, { immediate: true })
+watch(() => originalPage.count.value, (count) => { if (count === 0) closeOriginalPage() })
+
 watch(activeSection, async () => {
   clearSelection()
   await nextTick()
@@ -483,7 +551,10 @@ onMounted(() => {
   }
 })
 
+onMounted(() => narrowQuery?.addEventListener('change', onNarrowChange))
 onBeforeUnmount(() => {
+  narrowQuery?.removeEventListener('change', onNarrowChange)
+  originalPage.dispose()
   window.removeEventListener('keydown', onActiveReadingKeydown)
   resource.cancel()
   if (toastTimer) clearTimeout(toastTimer)
@@ -557,6 +628,16 @@ onBeforeUnmount(() => {
         </div>
       </div>
       <div class="header-actions">
+        <button
+          v-if="originalPage.count.value > 0"
+          type="button"
+          class="secondary original-page-btn"
+          :aria-pressed="photoOpen"
+          @click="photoOpen ? closeOriginalPage() : openOriginalPage()"
+        >
+          <Icon name="image" :size="18" aria-hidden="true" />
+          Folha original ({{ originalPage.count.value }})
+        </button>
         <!-- Ação Primária: Editar estudo (se canEdit) -->
         <RouterLink
           v-if="canEdit"
@@ -670,8 +751,41 @@ onBeforeUnmount(() => {
       @close="activeReadingSession.endSession"
     />
 
+    <div v-if="photoOpen && isNarrow" class="photo-tabs" role="tablist" aria-label="Texto ou folha original">
+      <button
+        id="photo-tab-text"
+        type="button"
+        role="tab"
+        class="secondary"
+        :aria-selected="photoTab === 'text'"
+        aria-controls="photo-panel-text"
+        @click="photoTab = 'text'"
+      >
+        Texto
+      </button>
+      <button
+        id="photo-tab-photo"
+        type="button"
+        role="tab"
+        class="secondary"
+        :aria-selected="photoTab === 'photo'"
+        aria-controls="photo-panel-photo"
+        @click="photoTab = 'photo'"
+      >
+        Folha original
+      </button>
+    </div>
     <div
+      class="study-photo-split"
+      :class="{ 'with-photo': photoOpen && !isNarrow }"
+      :style="photoOpen && !isNarrow ? { gridTemplateColumns: `minmax(0, 1fr) 12px ${photoWidth}px` } : undefined"
+    >
+    <div
+      id="photo-panel-text"
+      v-show="!(photoOpen && isNarrow && photoTab === 'photo')"
       class="reader-layout reader-static-surface"
+      :role="photoOpen && isNarrow ? 'tabpanel' : undefined"
+      :aria-labelledby="photoOpen && isNarrow ? 'photo-tab-text' : undefined"
       @study-active-toggle="handleActiveToggle"
     >
       <div class="reader-content-column">
@@ -699,6 +813,37 @@ onBeforeUnmount(() => {
           {{ canEdit ? 'Nenhuma anotação ainda. Registre suas interpretações em “Editar estudo”.' : 'Nenhuma anotação pública registrada.' }}
         </p>
       </aside>
+    </div>
+    <div
+      v-if="photoOpen && !isNarrow"
+      class="split-gutter"
+      role="separator"
+      tabindex="0"
+      aria-orientation="vertical"
+      aria-label="Ajustar a largura da folha original"
+      :aria-valuenow="photoWidth"
+      :aria-valuemin="PHOTO_WIDTH_MIN"
+      :aria-valuemax="PHOTO_WIDTH_MAX"
+      @pointerdown="startGutterDrag"
+      @pointermove="moveGutter"
+      @pointerup="gutterDrag = null"
+      @pointercancel="gutterDrag = null"
+      @keydown="gutterKey"
+    />
+    <aside
+      v-if="photoOpen"
+      v-show="!isNarrow || photoTab === 'photo'"
+      id="photo-panel-photo"
+      class="panel split-photo"
+      :role="isNarrow ? 'tabpanel' : undefined"
+      :aria-labelledby="isNarrow ? 'photo-tab-photo' : undefined"
+    >
+      <OriginalPageViewer
+        :viewer="originalPage"
+        :study-title="state.context.study.title"
+        @close="closeOriginalPage"
+      />
+    </aside>
     </div>
     <details class="original-response"><summary>Consultar Fichamento da Fonte</summary><pre>{{ state.context.study.source_response }}</pre></details>
 
@@ -1331,6 +1476,70 @@ onBeforeUnmount(() => {
   100% {
     box-shadow: 0 0 0 0 rgba(234, 179, 8, 0);
     outline: 2px solid transparent;
+  }
+}
+
+/* Folha original (feature 090-C) */
+.original-page-btn {
+  min-height: 44px;
+}
+
+.original-page-btn[aria-pressed='true'] {
+  border-color: var(--color-accent);
+}
+
+.study-photo-split.with-photo {
+  display: grid;
+  align-items: start;
+}
+
+.study-photo-split.with-photo .reader-layout {
+  grid-template-columns: 1fr;
+}
+
+.split-gutter {
+  align-self: stretch;
+  min-height: 200px;
+  cursor: col-resize;
+  border-radius: 6px;
+  background: linear-gradient(var(--color-border-strong), var(--color-border-strong)) center / 2px 100% no-repeat;
+}
+
+.split-gutter:hover,
+.split-gutter:focus-visible {
+  background-color: var(--color-surface-hover);
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.split-photo {
+  position: sticky;
+  top: 1rem;
+  height: calc(100vh - 2rem);
+  min-height: 420px;
+}
+
+.photo-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.photo-tabs button {
+  flex: 1;
+  min-height: 44px;
+}
+
+.photo-tabs button[aria-selected='true'] {
+  border-color: var(--color-accent);
+  font-weight: 700;
+}
+
+@media (max-width: 899px) {
+  .split-photo {
+    position: static;
+    height: auto;
+    min-height: 70vh;
   }
 }
 </style>

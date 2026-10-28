@@ -53,6 +53,7 @@ Representa o contrato de validação para cada uma das 25 rotas nomeadas de `rou
 | 23 | `admin` | `/admin` | `views/AdminView.vue` | 2 | Contido | $\ge 44\text{px}$ |
 | 24 | `support` | `/apoie` | `views/SupportView.vue` | 5 | Contido | $\ge 44\text{px}$ |
 | 25 | `not-found` | `/:pathMatch(.*)*` | `views/NotFoundView.vue` | 5 | Contido | $\ge 44\text{px}$ |
+| 26 | `media-space` | `/minhas-imagens` | `views/MediaSpaceView.vue` | 1 | Contido | $\ge 44\text{px}$ |
 
 ---
 

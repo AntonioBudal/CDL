@@ -805,3 +805,38 @@ em `backend\data\caderno.db`; manter por pelo menos 30 dias.
   `LocalSystem` abre a chave. Imagem aparecendo = chave lida e impressão digital registrada no acervo. Erro `503`
   = o serviço não abriu a chave.
 - Depois: fatia C (fotos de conferência, retenção, "Minhas Imagens e Espaço", cotas).
+
+## Sessão: Feature 090, fatia C — Fotos de conferência, retenção, "Minhas Imagens e Espaço" e cotas (28/10/2026)
+
+Ciclo Spec Kit próprio da fatia: [`spec-C.md`](../../../specs/090-armazenamento-hd-cofre-cotas/spec-C.md),
+[`plan-C.md`](../../../specs/090-armazenamento-hd-cofre-cotas/plan-C.md) e
+[`tasks-C.md`](../../../specs/090-armazenamento-hd-cofre-cotas/tasks-C.md), aprovados com as recomendações C-Q1 a
+C-Q4.
+
+### O que foi entregue
+1. **Cotas** (`app/services/media_quota.py`): 1 GiB por usuário, 900 GiB no servidor e 2 GiB de margem livre no HD,
+   verificados em toda gravação no cofre (página, capa e avatar), inclusive com envios simultâneos. Recusa com
+   `507`. Só o administrador vê os números do servidor.
+2. **Foto de conferência:** caixa desmarcada por padrão na revisão da digitalização; com ela, o navegador reenvia a
+   foto ao salvar (`POST /api/studies/{id}/media`). Falha na foto nunca desfaz o estudo.
+3. **Folha original** no estudo: painel ao lado do texto com divisória (computador) ou abas (celular), zoom,
+   manter e apagar.
+4. **Retenção** (`app/services/media_retention.py`, na partida e a cada 6 h): 30 dias por idade, 7 dias depois de
+   concluído (coluna `completed_seen_at`, migração `0032`), órfãs da lixeira, sobras e reconciliação do cofre. Log
+   só com contagens.
+5. **Minhas Imagens e Espaço** (`/minhas-imagens`, no menu do usuário e em Ajustes): medidores, lote com prévia,
+   filtros, seleção e ações por imagem.
+6. Configurações novas no `.env` (`AMBIENTE-E-VALIDACAO.md` §7); valor inválido impede a partida.
+
+### Evidências
+- `pytest` 635 aprovados e 1 pulado (linha de base 595); `npm test` 653 (linha de base 639); build ok.
+- SC-004 em páginas fictícias: mediana de 101 KB depois da otimização; CER da otimizada 0,00 % contra 0,77 % da
+  original.
+- Banco no HD continua em `0031`; nada foi gravado no ambiente real.
+
+### Ponto de continuação (portão; cada passo com aprovação)
+1. **C036:** com o serviço parado, migrar o banco do HD para `0032` (snapshot automático e segunda cópia).
+   **Até lá, não reiniciar o serviço:** o código novo procura `completed_seen_at`, que o banco do HD ainda não tem.
+2. **C037 — usuário:** religar o serviço e conferir "Minhas Imagens e Espaço", "Folha original" e a caixa da
+   digitalização nos 10 temas, em 320 px e no teclado; uma digitalização de teste com a caixa marcada. Depois,
+   trocar "Pendente" por "Pass" na linha 26 do contrato da feature 081.

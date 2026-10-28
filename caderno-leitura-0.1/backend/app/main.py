@@ -53,6 +53,11 @@ logger = logging.getLogger("leitorum.security")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Cotas e retenção do cofre (feature 090-C): configuração inválida impede a partida.
+    from app.core.config import validate_media_settings
+
+    validate_media_settings()
+
     # Auditoria de segurança de credenciais e chave de sessão na inicialização
     is_safe, warning_msg = audit_session_secret()
     if warning_msg and not is_safe:
@@ -89,15 +94,19 @@ async def lifespan(app: FastAPI):
 
     # Camada de proteção 2 (feature 090-A): backup automático na partida e a cada hora, se vencido.
     auto_backup = None
+    media_retention = None
     if "pytest" not in sys.modules:
         auto_backup = asyncio.create_task(_auto_backup_loop())
+        # Retenção do cofre (feature 090-C): na partida e a cada LEITORUM_MEDIA_JOB_INTERVAL_HOURS.
+        media_retention = asyncio.create_task(_media_retention_loop())
     try:
         yield
     finally:
-        if auto_backup is not None:
-            auto_backup.cancel()
-            with suppress(asyncio.CancelledError):
-                await auto_backup
+        for task in (auto_backup, media_retention):
+            if task is not None:
+                task.cancel()
+                with suppress(asyncio.CancelledError):
+                    await task
 
 
 async def _auto_backup_loop() -> None:
@@ -109,6 +118,18 @@ async def _auto_backup_loop() -> None:
         except Exception as exc:  # noqa: BLE001 — nunca derruba o servidor; só registra o tipo
             logger.warning("Backup automático falhou: %s", type(exc).__name__)
         await asyncio.sleep(3600)
+
+
+async def _media_retention_loop() -> None:
+    from app.core.config import get_media_job_interval_hours
+    from app.services.media_retention import run_once
+
+    while True:
+        try:
+            await asyncio.to_thread(run_once)
+        except Exception as exc:  # noqa: BLE001 — nunca derruba o servidor; só registra o tipo
+            logger.warning("Retenção do cofre falhou: %s", type(exc).__name__)
+        await asyncio.sleep(get_media_job_interval_hours() * 3600)
 
 
 def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
@@ -151,6 +172,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(imports.router, prefix="/api")
     application.include_router(digitize.router, prefix="/api")
     application.include_router(media.router, prefix="/api")
+    application.include_router(media.study_router, prefix="/api")
     application.include_router(trash.router, prefix="/api")
     application.include_router(covers.router, prefix="/api")
     application.include_router(dashboard.router, prefix="/api")

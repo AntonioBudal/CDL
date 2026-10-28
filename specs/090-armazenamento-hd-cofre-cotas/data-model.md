@@ -39,7 +39,8 @@ o desta tabela e o do banco aberto. Se não baterem, o app não inicia (research
 | `sha256` | TEXT(64) NOT NULL | do arquivo `.enc` inteiro (backup e migração sem chave) |
 | `keep_forever` | BOOLEAN NOT NULL DEFAULT 0 | "Manter permanentemente" (só `notebook_page`) |
 | `expires_at` | DATETIME NULL | `created_at + retenção` para páginas; `NULL` para avatar e capa |
-| `pending_until` | DATETIME NULL | validade do vínculo pendente (24 h) |
+| `pending_until` | DATETIME NULL | reservado (o vínculo pendente de 24 h saiu na decisão C-Q1) |
+| `completed_seen_at` | DATETIME NULL | fatia C, migração `0032`: quando o job viu o estudo `concluido`; a foto sai 7 dias depois, salvo se mantida. Limpa se o estudo deixar de estar concluído |
 | `created_at` / `updated_at` | DATETIME NOT NULL | UTC |
 
 **Índices**:

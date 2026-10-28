@@ -69,6 +69,17 @@ def register_database_error_handlers(application: FastAPI) -> None:
             content={"detail": VAULT_MESSAGES.get(error.state, VAULT_MESSAGES["key_missing"]), "code": "vault_locked"},
         )
 
+    from app.services.media_quota import QuotaExceeded
+
+    @application.exception_handler(QuotaExceeded)
+    async def quota_exceeded(_request: Request, error: QuotaExceeded) -> JSONResponse:
+        # 507 Insufficient Storage (feature 090-C): o uso vai junto para a tela mostrar quanto ocupa.
+        return JSONResponse(
+            status_code=507,
+            content={"detail": error.detail, "code": error.code, "usage": error.usage},
+            headers={"Cache-Control": "no-store"},
+        )
+
     @application.exception_handler(StorageError)
     async def storage_unavailable(_request: Request, _error: StorageError) -> JSONResponse:
         return JSONResponse(

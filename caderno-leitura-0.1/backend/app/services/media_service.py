@@ -147,6 +147,8 @@ def prepare_page(data: bytes) -> bytes:
                 raise HTTPException(status_code=413, detail="A imagem tem resolução grande demais.")
             image.load()
             page = ImageOps.exif_transpose(image).convert("RGB")
+    except Image.DecompressionBombError as error:
+        raise HTTPException(status_code=413, detail="A imagem tem resolução grande demais.") from error
     except (UnidentifiedImageError, OSError) as error:
         raise HTTPException(status_code=422, detail="A imagem está corrompida ou incompleta.") from error
     page.thumbnail((PAGE_MAX_SIDE, PAGE_MAX_SIDE), Image.Resampling.LANCZOS)
@@ -178,14 +180,18 @@ def store(session: Session, *, user_id: str, kind: str, webp: bytes, book_id: in
     """Cifra e grava a imagem e a miniatura; a linha fica ``pending`` até os arquivos estarem no disco.
 
     A miniatura sai pronta aqui porque decodificar uma página grande a cada visita passa do orçamento de
-    latência. ``byte_size`` soma os dois arquivos. O chamador faz o commit.
+    latência. ``byte_size`` soma os dois arquivos e é reservado na cota (fatia C) antes de gravar; sem espaço,
+    levanta ``media_quota.QuotaExceeded`` e nada é gravado. O chamador faz o commit.
     """
+    from app.services import media_quota
+
     state = require_vault(session)
     media_id = uuid.uuid4()
     with Image.open(io.BytesIO(webp)) as image:
         width, height = image.size
     blob = vault.encrypt(state["key"], user_id, media_id, webp, state["epoch"])
     thumb_blob = vault.encrypt(state["key"], user_id, media_id, thumbnail(webp), state["epoch"], THUMB_VARIANT)
+    media_quota.reserve(session, user_id, str(media_id), len(blob) + len(thumb_blob))
     row = EncryptedMedia(
         id=str(media_id), user_id=user_id, kind=kind, status="pending", book_id=book_id, study_id=study_id,
         byte_size=len(blob) + len(thumb_blob), plain_size=len(webp), width=width, height=height, content_type="image/webp",

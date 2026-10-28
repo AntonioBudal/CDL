@@ -971,6 +971,19 @@ onBeforeUnmount(() => {
             </p>
           </article>
 
+          <!-- Imagens guardadas no cofre (feature 090-C) -->
+          <article class="system-card">
+            <h3>Imagens guardadas</h3>
+            <p class="muted">
+              Fotos de páginas, capas e foto de perfil ficam cifradas no servidor e ocupam o seu espaço.
+            </p>
+            <div class="actions wrap">
+              <RouterLink class="button secondary text-link" to="/minhas-imagens">
+                Minhas Imagens e Espaço
+              </RouterLink>
+            </div>
+          </article>
+
           <!-- Card 3: Armazenamento do Navegador -->
           <article class="system-card">
             <h3>Armazenamento do Navegador</h3>

@@ -41,6 +41,7 @@
 | `user-profile` | `/@:username` | **1** | Perfil público de leitor e lista de estudos compartilhados com alvos táteis acessíveis. |
 | `settings` | `/ajustes` | **2** | Central de ajustes com abas roláveis horizontalmente e botão flutuante (FAB) de preview posicionado acima da barra inferior. |
 | `trash` | `/lixeira` | **1** | Lixeira com restauração e expurgo. Barra de lote fixa posicionada respeitando `--mobile-nav-offset`. |
+| `media-space` | `/minhas-imagens` | **1** | Minhas Imagens e Espaço (feature 090-C): medidores, lote com prévia e grade de cartões em uma coluna no celular, com ações de 44 px. Barra de seleção fixa respeitando `--mobile-nav-offset`. |
 | `connection` | `/conexao` | **5** | Tela de sincronização P2P e pareamento móvel com QR code centralizado. |
 | `digitize-notebook` | `/digitalizar` (alias `/scan`) | **5** | Captura óptica de cadernos físicos e importação fotográfica. |
 | `import` | `/importar` | **2** | Ateliê de importação e parsing. Em telas `<1024px`, os dois painéis alternam como abas de visualização. |

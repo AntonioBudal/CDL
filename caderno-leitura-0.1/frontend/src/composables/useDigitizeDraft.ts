@@ -15,6 +15,7 @@ import type {
   DigitizeUnavailableReason,
 } from '../types/digitize.ts'
 import type { OrganizeRequest, OrganizeResult } from '../types/organize.ts'
+import type { StudyPhotoResult } from '../types/media.ts'
 import { useSectionOrganizer } from './useSectionOrganizer.ts'
 
 export type DigitizePhase = 'checking' | 'unavailable' | 'idle' | 'reading' | 'review' | 'saving' | 'saved' | 'error'
@@ -25,6 +26,8 @@ interface DigitizeGateway {
   createStudy: (payload: StudyCreate) => Promise<Study>
   /** Organização nas 4 seções (feature 089); opcional para quem só digitaliza. */
   organize?: (payload: OrganizeRequest, signal?: AbortSignal) => Promise<OrganizeResult>
+  /** Guarda a foto com o estudo salvo, para conferência (feature 090-C); só com a caixa marcada. */
+  storePhoto?: (studyId: number, file: File) => Promise<StudyPhotoResult>
 }
 
 interface DigitizeEnvironment {
@@ -72,8 +75,14 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
     title: '',
     error: null as { code: DigitizeErrorCode; message: string } | null,
     saved: null as Study | null,
+    // Foto de conferência (feature 090-C): desmarcada por padrão; sem ela, a foto some como na 086.
+    keepPhoto: false,
+    photoExpiresAt: null as string | null,
+    photoWarning: '',
   })
   let reading: AbortController | null = null
+  // A foto fica só na memória do navegador durante a revisão, para ser reenviada se o leitor pedir.
+  let photo: File | null = null
   const organizer = useSectionOrganizer({
     organize: (payload, signal) => gateway.organize
       ? gateway.organize(payload, signal)
@@ -93,6 +102,7 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
     if (state.previewUrl) environment.revokeObjectURL(state.previewUrl)
     state.previewUrl = ''
     state.fileName = ''
+    photo = null
   }
 
   function fail(code: DigitizeErrorCode, message: string) {
@@ -129,6 +139,7 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
     reading = controller
     state.fileName = file.name
     state.previewUrl = environment.createObjectURL(file)
+    photo = file
     state.phase = 'reading'
     try {
       const preview = await gateway.preview(file, controller.signal)
@@ -181,11 +192,10 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
     else payload[state.section] = state.text
     state.phase = 'saving'
     state.error = null
+    state.photoExpiresAt = null
+    state.photoWarning = ''
     try {
       state.saved = await gateway.createStudy(payload)
-      state.phase = 'saved'
-      releasePhoto()
-      return state.saved
     } catch (error) {
       state.error = {
         code: 'save_failed',
@@ -196,6 +206,18 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
       state.phase = 'review'
       return null
     }
+    // O estudo já está salvo: uma falha ao guardar a foto só vira aviso, nunca desfaz o estudo.
+    if (state.keepPhoto && photo && gateway.storePhoto) {
+      try {
+        const stored = await gateway.storePhoto(state.saved.id, photo)
+        state.photoExpiresAt = stored.item.expires_at
+      } catch (error) {
+        state.photoWarning = errorMessage(error)
+      }
+    }
+    state.phase = 'saved'
+    releasePhoto()
+    return state.saved
   }
 
   /** Organiza o texto revisado nas 4 seções, com a posição das linhas lidas quando houver. */
@@ -220,6 +242,7 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
     // Livro e capítulo ficam: a próxima página costuma ir para o mesmo destino.
     Object.assign(state, {
       phase: 'idle', preview: null, text: '', section: DIGITIZE_DEFAULT_SECTION, title: '', error: null, saved: null,
+      keepPhoto: false, photoExpiresAt: null, photoWarning: '',
     })
   }
 

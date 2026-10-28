@@ -62,6 +62,9 @@ import type {
 } from '../types/notifications.ts'
 
 import type { DigitizePreview, DigitizeStatus } from '../types/digitize.ts'
+import type {
+  BulkDeleteRequest, BulkDeleteResult, MediaItem, MediaList, MediaListParams, MediaUsage, StudyPhotoResult,
+} from '../types/media.ts'
 import type { OrganizeRequest, OrganizeResult, OrganizeStatus } from '../types/organize.ts'
 
 export interface NotificationReadAllResponse {
@@ -325,6 +328,36 @@ export const api = {
     const formData = new FormData()
     formData.append('file', file)
     return request<DigitizePreview>('/digitize/preview', { method: 'POST', body: formData, signal })
+  },
+
+  // Imagens do cofre (feature 090-C): uso e cota, lista, manter, apagar e fotos do estudo.
+  getMediaUsage: (signal?: AbortSignal) => request<MediaUsage>('/media/usage', { signal }),
+  listMedia: (params: MediaListParams = {}, signal?: AbortSignal) => {
+    const query = new URLSearchParams()
+    if (params.kind) query.set('kind', params.kind)
+    if (params.book_id) query.set('book_id', String(params.book_id))
+    if (params.sort) query.set('sort', params.sort)
+    if (params.limit) query.set('limit', String(params.limit))
+    if (params.offset) query.set('offset', String(params.offset))
+    const suffix = query.toString()
+    return request<MediaList>(`/media${suffix ? `?${suffix}` : ''}`, { signal })
+  },
+  setMediaKeep: (id: string, keepForever: boolean) => request<MediaItem>(`/media/${encodeURIComponent(id)}`, {
+    method: 'PATCH', body: JSON.stringify({ keep_forever: keepForever }),
+  }),
+  deleteMedia: (id: string) => request<{ freed_bytes: number }>(`/media/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+  }),
+  bulkDeleteMedia: (payload: BulkDeleteRequest) => request<BulkDeleteResult>('/media/bulk-delete', {
+    method: 'POST', body: JSON.stringify(payload),
+  }),
+  listStudyMedia: (studyId: number, signal?: AbortSignal) => request<{ items: MediaItem[] }>(
+    `/studies/${studyId}/media`, { signal },
+  ),
+  storeStudyPhoto: (studyId: number, file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return request<StudyPhotoResult>(`/studies/${studyId}/media`, { method: 'POST', body: formData })
   },
 
   // Métodos de Destaques e Ações Contextuais

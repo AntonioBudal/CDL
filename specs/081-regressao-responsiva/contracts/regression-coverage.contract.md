@@ -78,6 +78,9 @@ O sistema reconhece estritamente os seguintes limites canônicos de responsivida
 | 23 | `admin` | Pass | Pass | Pass | Pass | Pass | Pass | Pass | Pass | Pass |
 | 24 | `support` | Pass | Pass | Pass | Pass | Pass | Pass | Pass | Pass | Pass |
 | 25 | `not-found` | Pass | Pass | Pass | Pass | Pass | Pass | Pass | Pass | Pass |
+| 26 | `media-space` | Pendente | Pendente | Pendente | Pendente | Pendente | Pendente | Pendente | Pendente | Pendente |
+
+A linha 26 (`/minhas-imagens`, feature 090-C) entra como pendente até a conferência visual do usuário (C037).
 
 ---
 

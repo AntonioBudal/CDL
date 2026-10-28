@@ -82,6 +82,7 @@ export const router = createRouter({
     { path: '/amigos', alias: ['/friends'], name: 'friends', component: () => import('../views/FriendsView.vue'), meta: { title: 'Amigos e Leitores' } },
     { path: '/conexao', name: 'connection', component: () => import('../views/ConnectionView.vue'), meta: { title: 'Conexão' } },
     { path: '/ajustes', name: 'settings', component: () => import('../views/SettingsView.vue'), meta: { title: 'Ajustes' } },
+    { path: '/minhas-imagens', name: 'media-space', component: () => import('../views/MediaSpaceView.vue'), meta: { title: 'Minhas Imagens e Espaço' } },
     { path: '/lixeira', name: 'trash', component: () => import('../views/TrashView.vue'), meta: { title: 'Lixeira' } },
     { path: '/@:username', alias: ['/u/:username'], name: 'user-profile', component: () => import('../views/UserProfileView.vue'), meta: { title: 'Perfil do Leitor' } },
     { path: '/admin', name: 'admin', component: () => import('../views/AdminView.vue'), meta: { title: 'Administração', requiresAdmin: true } },

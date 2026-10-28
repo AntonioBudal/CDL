@@ -13,7 +13,8 @@ class EncryptedMedia(Base):
     """Imagem do usuário guardada cifrada no cofre (feature 090; arquivo ``vault/<aa>/<id>.enc``).
 
     Apagar uma mídia nunca toca no estudo nem no livro: ``study_id`` e ``book_id`` usam ``SET NULL``.
-    ``byte_size`` (tamanho do ``.enc``) é o que conta na cota. Os campos de retenção são usados na fatia C.
+    ``byte_size`` (tamanho do ``.enc`` mais a miniatura) é o que conta na cota. ``completed_seen_at`` é quando o
+    job de retenção viu o estudo concluído (fatia C): a foto sai depois da espera, salvo se for mantida.
     """
 
     __tablename__ = "encrypted_media"
@@ -44,6 +45,7 @@ class EncryptedMedia(Base):
     keep_forever: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default=text("0"))
     expires_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
     pending_until: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
+    completed_seen_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         UTCDateTime, default=utc_now, server_default=text("CURRENT_TIMESTAMP"), nullable=False
     )
