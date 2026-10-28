@@ -9,7 +9,7 @@ Este arquivo é o diário de bordo: é atualizado ao fim de cada fase, antes do 
 | Fase | Conteúdo | Estado | Commit |
 | :--- | :--- | :--- | :--- |
 | F00 | Diagnóstico e linha de base (só leitura) | **concluída em 2026-10-28** | `F00` (este) |
-| F01 | Pesquisa e especificação: `spec.md`, `plan.md`, `tasks.md` | pendente; **para para revisão do usuário** | — |
+| F01 | Pesquisa e especificação: `spec.md`, `plan.md`, `tasks.md` | **concluída em 2026-10-28; aguardando revisão do usuário** | `F01` |
 | F02 | Fluxos longitudinais sintéticos e simulador de feedback | pendente | — |
 | F03 | Motor adaptativo em Python puro e travas anti-regressão | pendente | — |
 | F04 | Calibração, curvas de aprendizado, ablações, estresse e D-usuário | pendente | — |
@@ -66,6 +66,23 @@ Este arquivo é o diário de bordo: é atualizado ao fim de cada fase, antes do 
    identidade de escritor. Os "confundidores recorrentes por escritor" do simulador terão de ser sintéticos,
    declarados como tal.
 
+## F01 — Especificação (2026-10-28)
+
+- **Artefatos:** [spec.md](./spec.md), [plan.md](./plan.md) e [tasks.md](./tasks.md).
+- **Decisões de Categoria 2 registradas:**
+  - pesos por **regressão logística online com âncora L2 e projeção**, e não Passive-Aggressive, para preservar a
+    calibração (spec §4.6);
+  - movimentos de seção em RFC 6902 sobre `organizer-result/1`, e correções de leitura em `human_corrections` do
+    LDF 2.0 (spec §6.1);
+  - pesos iniciais dos sinais (spec §6.3);
+  - schema do estado `leitorum-learning-state/1` (plan §4.1).
+- **Achados que mudaram o desenho:**
+  - estudos importados não alimentam $T_{\text{user}}$, porque as colunas não guardam a ordem das unidades;
+  - no D-usuário, $T_{\text{user}}$ fica desligado, porque as pseudo-páginas estão na ordem canônica e isso daria
+    ganho falso.
+- **Pendente com o usuário (revisão da F01):** qual banco o D-usuário da F04 lê — a origem congelada em
+  `caderno-leitura-0.1/backend/data/` ou o banco ativo em `D:\Leitorum\db\`.
+
 ## Próximo passo
 
-F01: escrever `spec.md`, `plan.md` e `tasks.md` e parar para a revisão do usuário.
+Revisão do usuário. Depois, F02 (dados congelados antes de qualquer código do motor).
