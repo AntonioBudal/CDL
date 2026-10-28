@@ -146,6 +146,30 @@ Caminhos relativos a `C:\Users\User\caderno`; `L/` = `caderno-leitura-0.1/`.
 - [X] A019 Atualizar `L/docs/contexto/RETOMADA.md` e criar **um** commit `feature — armazenamento no HD com
   migração segura`.
 
+## Phase 5b: Camadas extras de proteção (pedido do usuário, 2026-10-27: "quero as camadas 2 e 3")
+
+Proteger a pasta inteira por permissão do Windows quebraria o SQLite, a rotação de backups e a restauração. A
+proteção real contra perda são **cópias em outros lugares**.
+
+- [X] A024 **Backup automático diário (camada 2):**
+  - em `L/backend/app/services/maintenance.py`, a função `run_auto_backup_if_due(now)` cria
+    `caderno-auto-<data>.db` na pasta de backups quando o último automático tem mais de
+    `LEITORUM_AUTO_BACKUP_HOURS` (padrão 24; `0` desliga);
+  - usa a API de backup com verificação de integridade, faz a segunda cópia (`copy_to_secondary`) e mantém os
+    `LEITORUM_AUTO_BACKUP_KEEP` mais recentes (padrão 14) **nas duas pastas**, apagando só arquivos
+    `caderno-auto-*`;
+  - em `L/backend/app/main.py`, uma tarefa `asyncio` no `lifespan` roda a verificação na partida e a cada hora,
+    em thread separada, e é cancelada no desligamento;
+  - desligada sob pytest, salvo pedido explícito.
+- [X] A025 Testes em `tmp_path`:
+  - criação quando vence;
+  - nada antes do prazo;
+  - rotação só dos automáticos (snapshots pré-migração e pacotes intactos);
+  - segunda cópia com rotação;
+  - `0` desliga.
+- [X] A026 **"Proteção do sistema" no `D:\` (camada 3):** instruções passo a passo na documentação e no relatório
+  final. **O usuário ativa**, por ser configuração de segurança do Windows.
+
 ## Phase 6: Execução no ambiente real (PORTÃO; só com aprovação explícita em chat)
 
 Esta fase não roda automaticamente. Cada passo abaixo espera a sua confirmação.

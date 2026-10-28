@@ -136,3 +136,34 @@ O banco de origem fica intacto. Com o servidor parado, copie o `.env.bak-<data>`
   Leitorum.
 - Configurar `LEITORUM_SECONDARY_BACKUP_DIR` fora do HD. Backup só no mesmo disco não protege contra a perda do
   disco.
+
+### Camadas extras de proteção contra perda (pedido do usuário, 2026-10-27)
+
+Bloquear a exclusão da pasta inteira por permissão do Windows quebraria o Leitorum. O SQLite cria e apaga
+`-wal` e `-shm`, a rotação apaga backups antigos e a restauração substitui o banco. A proteção real contra perda
+são **cópias em outros lugares**:
+
+1. **Segunda cópia de cada backup** em `LEITORUM_SECONDARY_BACKUP_DIR`, fora do HD.
+2. **Backup automático:**
+   - o servidor cria `caderno-auto-<data>.db` na partida e confere a cada hora se o último tem mais de
+     `LEITORUM_AUTO_BACKUP_HOURS` (padrão 24);
+   - guarda os `LEITORUM_AUTO_BACKUP_KEEP` mais recentes (padrão 14) na pasta de backups do HD **e** na segunda
+     cópia;
+   - nunca apaga snapshots pré-migração nem pacotes `.zip`.
+3. **"Proteção do sistema" no `D:\`** (versões anteriores do Windows). É você quem ativa, por ser configuração de
+   segurança do sistema. Para ativar:
+   1. No menu Iniciar, digite **"Criar um ponto de restauração"** e abra.
+   2. Na aba **Proteção do Sistema**, selecione a unidade **HD (D:)** e clique em **Configurar…**.
+   3. Marque **"Ativar a proteção do sistema"** e ajuste o **Uso Máximo** para cerca de 5 % (~50 GB). Clique em
+      **OK**.
+   4. Ainda na aba, clique em **Criar…** e dê um nome como "Leitorum depois da migração". Repita sempre que fizer
+      uma mudança grande.
+
+   **Para recuperar uma pasta ou arquivo apagado:**
+   1. No Explorador, clique com o botão direito em `D:\` (ou na pasta que continha o item) e escolha
+      **Propriedades → Versões anteriores**.
+   2. Escolha a data e use **Abrir** para conferir ou **Restaurar**.
+
+   **Limite:** o Windows cria esses pontos sozinho só em atualizações e instalações. Para ter versões frequentes,
+   crie pontos manualmente ou agende a criação no Agendador de Tarefas. A proteção também não substitui as
+   camadas 1 e 2, porque fica no mesmo disco.

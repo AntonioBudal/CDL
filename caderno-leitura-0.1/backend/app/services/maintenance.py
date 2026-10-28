@@ -1,15 +1,16 @@
 """Serviços de manutenção, snapshot pré-migração/restauração, retenção, inspeção e CLI."""
 import argparse
 from contextlib import closing
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 import json
 import logging
+import os
 from pathlib import Path
 import sqlite3
 import sys
 import zipfile
 
-from app.core.config import get_backup_dir, get_database_path
+from app.core.config import get_backup_dir, get_database_path, get_secondary_backup_dir
 from app.services.backups import (
     copy_to_secondary,
     calculate_file_sha256,
@@ -19,6 +20,82 @@ from app.services.backups import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+AUTO_BACKUP_PREFIX = "caderno-auto-"
+AUTO_BACKUP_STAMP = "%Y%m%d-%H%M%S"
+
+
+def auto_backup_settings() -> tuple[float, int]:
+    """Intervalo em horas (``LEITORUM_AUTO_BACKUP_HOURS``, 0 desliga) e quantos guardar (``..._KEEP``)."""
+    try:
+        hours = float(os.environ.get("LEITORUM_AUTO_BACKUP_HOURS", "24"))
+    except ValueError:
+        hours = 24.0
+    try:
+        keep = int(os.environ.get("LEITORUM_AUTO_BACKUP_KEEP", "14"))
+    except ValueError:
+        keep = 14
+    return hours, max(1, keep)
+
+
+def _auto_backup_time(path: Path) -> datetime | None:
+    try:
+        stamp = path.stem[len(AUTO_BACKUP_PREFIX):]
+        return datetime.strptime(stamp, AUTO_BACKUP_STAMP).replace(tzinfo=UTC)
+    except ValueError:
+        return None
+
+
+def _auto_backups(folder: Path) -> list[Path]:
+    """Backups automáticos da pasta, do mais novo para o mais antigo (pela data no nome)."""
+    if not folder.is_dir():
+        return []
+    found = [p for p in folder.glob(f"{AUTO_BACKUP_PREFIX}*.db") if _auto_backup_time(p) is not None]
+    return sorted(found, key=_auto_backup_time, reverse=True)
+
+
+def rotate_auto_backups(folder: Path, keep: int) -> list[Path]:
+    """Mantém os ``keep`` automáticos mais recentes; nunca toca em outros backups."""
+    removed = []
+    for path in _auto_backups(folder)[keep:]:
+        try:
+            path.unlink()
+            removed.append(path)
+        except OSError as exc:
+            logger.warning("Falha ao remover backup automático antigo %s: %s", path.name, type(exc).__name__)
+    return removed
+
+
+def run_auto_backup_if_due(now: datetime | None = None, *, database_path: Path | None = None) -> Path | None:
+    """Camada de proteção 2 (feature 090-A): backup automático do banco quando o último ficou velho.
+
+    Cópia pela API de backup com verificação de integridade, segunda cópia fora do HD e retenção só dos
+    arquivos ``caderno-auto-*`` nas duas pastas. Devolve o backup criado ou ``None``.
+    """
+    hours, keep = auto_backup_settings()
+    if hours <= 0:
+        return None
+    source = (database_path or get_database_path()).resolve()
+    if not source.is_file() or source.stat().st_size == 0:
+        return None
+    backup_dir = get_backup_dir(database_path)
+    now = now or datetime.now(UTC)
+    latest = _auto_backups(backup_dir)
+    if latest and now - _auto_backup_time(latest[0]) < timedelta(hours=hours):
+        return None
+    path = backup_dir / f"{AUTO_BACKUP_PREFIX}{now.strftime(AUTO_BACKUP_STAMP)}.db"
+    create_database_backup(destination=path, source=source)
+    rotate_auto_backups(backup_dir, keep)
+    if copy_to_secondary(path) is not None:
+        try:
+            secondary = get_secondary_backup_dir()
+        except ValueError:
+            secondary = None
+        if secondary is not None:
+            rotate_auto_backups(secondary, keep)
+    logger.info("Backup automático criado: %s", path.name)
+    return path
 
 
 def rotate_pre_upgrade_snapshots(backup_dir: Path, keep: int = 5) -> list[Path]:

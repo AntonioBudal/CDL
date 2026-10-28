@@ -1,6 +1,8 @@
-from contextlib import asynccontextmanager
+import asyncio
+from contextlib import asynccontextmanager, suppress
 import logging
 from pathlib import Path
+import sys
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -71,7 +73,29 @@ async def lifespan(app: FastAPI):
             break
     except Exception:
         pass
-    yield
+
+    # Camada de proteção 2 (feature 090-A): backup automático na partida e a cada hora, se vencido.
+    auto_backup = None
+    if "pytest" not in sys.modules:
+        auto_backup = asyncio.create_task(_auto_backup_loop())
+    try:
+        yield
+    finally:
+        if auto_backup is not None:
+            auto_backup.cancel()
+            with suppress(asyncio.CancelledError):
+                await auto_backup
+
+
+async def _auto_backup_loop() -> None:
+    from app.services.maintenance import run_auto_backup_if_due
+
+    while True:
+        try:
+            await asyncio.to_thread(run_auto_backup_if_due)
+        except Exception as exc:  # noqa: BLE001 — nunca derruba o servidor; só registra o tipo
+            logger.warning("Backup automático falhou: %s", type(exc).__name__)
+        await asyncio.sleep(3600)
 
 
 def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
