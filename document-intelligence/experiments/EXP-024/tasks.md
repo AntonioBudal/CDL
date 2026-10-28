@@ -57,29 +57,29 @@ Caminhos relativos a `document-intelligence/`; `E` = `experiments/EXP-024`; `O` 
 
 ## F03 — Motor adaptativo e travas
 
-- [ ] T020 `E/harness/state.py`: schema `leitorum-learning-state/1`, poda determinística, (de)serialização.
-- [ ] T021 `E/harness/diff_signal.py`:
+- [x] T020 `E/harness/state.py`: schema `leitorum-learning-state/1`, poda determinística, (de)serialização.
+- [x] T021 `E/harness/diff_signal.py`:
   - alinhamento de unidades e de leitura;
   - `classify_edit`;
   - JSON Patch: LDF 2.0 `human_corrections` e `organizer-result/1`.
-- [ ] T022 `E/harness/adaptive_organizer.py`:
+- [x] T022 `E/harness/adaptive_organizer.py`:
   - centróides hierárquicos incrementais;
   - pistas novas de referência e `ref_shape_user` (peso 0 na âncora);
   - regressão logística online ancorada com projeção;
   - $\beta$ e $T_{\text{user}}$;
   - `review_order` por $g_i$;
   - `click` com re-decodificação e passo local (E4b).
-- [ ] T023 `E/harness/adaptive_ocr_corrector.py`:
+- [x] T023 `E/harness/adaptive_ocr_corrector.py`:
   - léxico de escopo;
   - confusões pessoais com prior global e suporte mínimo;
   - canal ruidoso com proteção;
   - logístico de `low_confidence`;
   - curadoria.
-- [ ] T024 `E/harness/safety_gate.py`: gate de recompensa, projeção, portão-sombra (sementes e canário),
+- [x] T024 `E/harness/safety_gate.py`: gate de recompensa, projeção, portão-sombra (sementes e canário),
   snapshot e rollback.
-- [ ] T025 `E/tests/test_diff_signal.py` e `E/tests/test_adaptive_engine.py` (plan §6), incluindo atualização
+- [x] T025 `E/tests/test_diff_signal.py` e `E/tests/test_adaptive_engine.py` (plan §6), incluindo atualização
   destrutiva injetada → rollback, isolamento por `user_id` e p95 < 25 ms.
-- [ ] T026 `ruff` sem avisos; `STATE.md`; commit `F03 … motor autonomo de melhoria continua e travas
+- [x] T026 `ruff` sem avisos; `STATE.md`; commit `F03 … motor autonomo de melhoria continua e travas
   anti-regressao`.
 
 ## F04 — Calibração, curvas, ablações, estresse e D-usuário

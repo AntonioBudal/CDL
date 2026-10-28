@@ -11,7 +11,7 @@ Este arquivo é o diário de bordo: é atualizado ao fim de cada fase, antes do 
 | F00 | Diagnóstico e linha de base (só leitura) | **concluída em 2026-10-28** | `F00` (este) |
 | F01 | Pesquisa e especificação: `spec.md`, `plan.md`, `tasks.md` | **concluída e aprovada em 2026-10-28** | `F01` |
 | F02 | Fluxos longitudinais sintéticos e simulador de feedback | **concluída em 2026-10-28** | `F02` |
-| F03 | Motor adaptativo em Python puro e travas anti-regressão | pendente | — |
+| F03 | Motor adaptativo em Python puro e travas anti-regressão | **concluída em 2026-10-28** | `F03` |
 | F04 | Calibração, curvas de aprendizado, ablações, estresse e D-usuário | pendente | — |
 | F05 | `RESULTS.md`, ADR-011 (se houver adoção) e fechamento; **para para revisão do usuário** | pendente | — |
 
@@ -142,7 +142,81 @@ Conteúdo normalizado para LF; conferido por `streams.verify_frozen()`.
 | `uv run ruff check .` e `uv run ruff format --check experiments/EXP-024` | sem avisos |
 | `uv run pytest` | 239 aprovados |
 
+## F03 — Motor adaptativo e travas (2026-10-28)
+
+### Módulos (só biblioteca padrão; teste garante que nenhum importa NumPy)
+
+| Arquivo | Conteúdo |
+| :--- | :--- |
+| `harness/state.py` | schema `leitorum-learning-state/1`, poda determinística, (de)serialização |
+| `harness/diff_signal.py` | alinhamento sugestão × salvo e lido × revisado, `classify_edit`, RFC 6902 (LDF 2.0 e `organizer-result/1`) |
+| `harness/adaptive_organizer.py` | pistas novas, centróides do leitor e do livro, regressão logística online ancorada, $T_{\text{user}}$, $\beta$, ordem por informação e clique (E4/E4b) |
+| `harness/adaptive_ocr_corrector.py` | léxico de 1ª parte, confusões pessoais, canal ruidoso, `low_confidence`, curadoria |
+| `harness/safety_gate.py` | pesos por página (gating), projeção, portão-sombra |
+
+### Mudanças de desenho em relação à spec (achados medidos nos fluxos de VALIDAÇÃO, nunca no teste)
+
+1. **Centróides do leitor e do livro viraram colunas novas** (`usim_*`, `bsim_*`, peso 0 na âncora), em vez de
+   misturados aos centróides-semente (spec §4.3).
+   - Misturados, eles pioravam sem parar: P1, só centróides, 0,456 → 0,363.
+   - Causa: os pesos $W_0$ do EXP-023 foram treinados para semelhanças contra a semente. Trocar o centróide muda
+     escala e sentido das colunas `sim_*` sob pesos fixos. Além disso, o vocabulário do livro aparece nas quatro
+     seções, e a semelhança passa a medir assunto, não seção.
+   - A versão contrastiva (tirar a média das 4 seções) não resolveu.
+   - Com colunas novas, a âncora reproduz o V4 exatamente e o aprendizado decide quanto confiar nelas.
+2. **Trecho mantido sem marca "conferir" vale pouco** (`unreviewed_factor` = 0,2). É a própria previsão confiante
+   do motor; aprender dela é autotreino e reforça erros. O trecho marcado que o leitor conferiu e manteve continua
+   com o peso cheio.
+3. **Portão com replay do próprio leitor** (além da semente): a atualização é desfeita se piorar o acerto nas
+   últimas 120 correções confiáveis do leitor (ε = 0,02). Sem ele, o perfil P3 (estilo que o V4 já acerta, 0,975)
+   caía para 0,884 no R3; com ele, o pior ponto ficou em 0,954.
+4. **Curadoria com léxico:** a linha curada precisa ter todas as palavras já conhecidas no léxico antes da página.
+   Precisão nos fluxos de validação: 0,49 → 0,91 (R1) e 0,88 (R3), com menos pares.
+5. **O pacote de feedback leva o layout** das linhas (`organizer.layout`): sem ele, a re-análise na hora de
+   aprender segmentava diferente da sugestão ("misaligned").
+6. **Tamanho do estado:** somas podadas em 2 000 entradas por seção no usuário e 300 no livro, números com 5 casas.
+
+### Primeiros sinais (smoke na validação, parâmetros ainda não calibrados)
+
+- **Organizador, Macro-F1 *holdout* em texto limpo, V4 → t = 40 (R1):**
+  - P1 0,456 → 0,582;
+  - P2 0,406 → 0,513;
+  - P3 0,975 → 0,975;
+  - P4 0,590 → 0,585.
+
+  O replay rejeitou de 12 a 22 das 40 atualizações; o equilíbrio fica para a calibração.
+- **Leitura (P1, 25 % de CER):**
+  - CER 23,2 % → 22,2 % (queda relativa de 4 %);
+  - erro em acentos 76 % → 67 %.
+
+  Mesmo com limiares agressivos, o teto ficou em 21,6 % e 59,5 %: a 25 % de CER muitas palavras têm 2 ou mais
+  erros. É o mesmo achado do EXP-011, e a H2 pode ser refutada.
+- **Limiar de `low_confidence`:** quase não se forma no simulador, porque a 25 % de CER quase toda linha é editada.
+
+### Verificações
+
+| Comando | Resultado |
+| :--- | :--- |
+| `uv run --frozen --project experiments/EXP-023/envs/organizer python -m pytest experiments/EXP-024/tests` | 43 aprovados, 1 pulado (o de LDF) |
+| `uv run pytest experiments/EXP-024/tests/test_ldf_patches.py` (ambiente principal, com `jsonschema`) | 2 aprovados |
+| `uv run ruff check .` e `uv run ruff format --check experiments/EXP-024` | sem avisos |
+| `uv run pytest` | 239 aprovados |
+
+Os testes cobrem:
+- âncora igual ao V4 do EXP-023 e usuário novo igual ao estático;
+- texto nunca reescrito e determinismo;
+- mediana da atualização < 25 ms (o p95 é medido na F04);
+- isolamento por `user_id`;
+- projeção;
+- rollback pelo portão-sombra e pelo replay;
+- gating;
+- ida e volta do estado (< 512 KB);
+- clique;
+- restauração de acento e proteção de palavra conhecida;
+- confusões aprendidas;
+- ausência de NumPy.
+
 ## Próximo passo
 
-F03: motor adaptativo (`state.py`, `diff_signal.py`, `adaptive_organizer.py`, `adaptive_ocr_corrector.py`,
-`safety_gate.py`) e testes.
+F04: `calibrate.py` (só validação, `thresholds.json` congelado antes do teste), `evaluate.py --split test`,
+`dusuario_continual.py` (banco ativo do D:, só números) e auditoria dos benchmarks.

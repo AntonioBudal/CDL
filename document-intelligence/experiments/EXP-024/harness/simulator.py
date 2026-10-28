@@ -313,6 +313,7 @@ def session(
             "reverted": reverted,
             "clicks": clicks,
             "text": user_text,
+            "layout": layout,
         },
         "reading": {
             "source_lines": [ln["text"] for ln in lines],
