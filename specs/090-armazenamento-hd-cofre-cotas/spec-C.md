@@ -2,7 +2,8 @@
 
 **Feature**: `090-armazenamento-hd-cofre-cotas`, fatia C | **Created**: 2026-10-28
 
-**Status**: Aprovada em 2026-10-28 com as recomendações C-Q1 a C-Q4 (§7); plano em [plan-C.md](plan-C.md).
+**Status**: Concluída em 2026-10-28 (aprovada com as recomendações C-Q1 a C-Q4, §7); plano em
+[plan-C.md](plan-C.md) e tarefas em [tasks-C.md](tasks-C.md).
 
 **Base**:
 - [spec.md](spec.md): US3 a US7, FR-008 a FR-012, SC-004 a SC-006 e decisões Q1 e Q4;

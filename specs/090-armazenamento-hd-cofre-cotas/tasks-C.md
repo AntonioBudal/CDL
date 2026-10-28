@@ -251,12 +251,24 @@ Caminhos relativos a `C:\Users\User\caderno`; `L/` = `caderno-leitura-0.1/`.
 
 ## Phase 11: Ambiente real (PORTÃO; cada passo só com a sua aprovação)
 
-- [ ] C036 Com o serviço parado, atualizar o banco no HD para a `0032` (snapshot automático verificado e segunda
+- [x] C036 Com o serviço parado, atualizar o banco no HD para a `0032` (snapshot automático verificado e segunda
   cópia) e conferir.
-- [ ] C037 **Você** religa o serviço e faz a conferência visual (SC-010):
+
+  **Resultado (28/10/2026):** antes, serviço parado, porta 8000 livre, `quick_check` ok. Snapshot
+  `caderno-pre-migracao-20261028-164420.db` (versão `0031`) íntegro, segunda cópia com o mesmo SHA-256. Depois,
+  banco em `0032_media_completed_seen`, `quick_check` e `foreign_key_check` ok, coluna `completed_seen_at` criada,
+  a capa existente intacta. A retenção de 5 snapshots retirou do HD o `caderno-pre-migracao-20261011-141854.db`,
+  que continua em `backend\dataackups`.
+- [x] C037 **Você** religa o serviço e faz a conferência visual (SC-010):
   - "Minhas Imagens e Espaço", "Folha original" e a caixa na digitalização;
   - nos 10 temas, em 320 px e no teclado;
   - uma digitalização de teste com a caixa marcada.
+
+  **Resultado (28/10/2026):** o usuário religou o serviço, digitalizou uma página real com a caixa marcada e
+  conferiu as telas nos temas, em 320 px e no teclado: tudo ok. Conferência no HD, só com metadados: uma página
+  `active` de 1526 × 2000 px, com 69 KB no cofre (imagem mais miniatura), cabeçalho `LMV1`, nenhuma assinatura de
+  imagem em claro, ligada ao estudo e ao livro, e saída automática em 27/11/2026. A linha 26 do contrato da
+  feature 081 passou de "Pendente" para "Pass".
 
 ---
 

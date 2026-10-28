@@ -834,9 +834,15 @@ C-Q4.
   original.
 - Banco no HD continua em `0031`; nada foi gravado no ambiente real.
 
-### Ponto de continuação (portão; cada passo com aprovação)
-1. **C036:** com o serviço parado, migrar o banco do HD para `0032` (snapshot automático e segunda cópia).
-   **Até lá, não reiniciar o serviço:** o código novo procura `completed_seen_at`, que o banco do HD ainda não tem.
-2. **C037 — usuário:** religar o serviço e conferir "Minhas Imagens e Espaço", "Folha original" e a caixa da
-   digitalização nos 10 temas, em 320 px e no teclado; uma digitalização de teste com a caixa marcada. Depois,
-   trocar "Pendente" por "Pass" na linha 26 do contrato da feature 081.
+### Ambiente real (C036–C037, concluído em 28/10/2026)
+- **C036:** banco do HD em `0032_media_completed_seen`. Snapshot `caderno-pre-migracao-20261028-164420.db`
+  íntegro, com segunda cópia conferida por SHA-256. A primeira tentativa foi adiada porque o `Stop-Service` não
+  tinha parado o serviço (PowerShell sem administrador): conferir sempre com `Get-Service Leitorum` antes de migrar.
+- **C037:** o usuário digitalizou uma página real com a caixa marcada (69 KB no cofre, cifrada, saída automática
+  em 27/11/2026) e conferiu as telas nos temas, em 320 px e no teclado. Rota `media-space` aprovada no contrato
+  da feature 081.
+
+### Ponto de continuação
+- Feature 090 concluída nas três fatias (A, B e C).
+- Ainda com o usuário: ativar a "Proteção do sistema" no `D:\`; conferências visuais pendentes das features 086 e
+  089.
