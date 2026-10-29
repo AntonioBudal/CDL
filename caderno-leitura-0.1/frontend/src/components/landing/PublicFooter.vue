@@ -167,7 +167,7 @@ import Icon from '../ui/Icon.vue'
 
 .btn-footer-secondary:hover {
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .btn-footer-secondary:focus-visible {
@@ -197,7 +197,7 @@ import Icon from '../ui/Icon.vue'
 }
 
 .footer-brand-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .footer-brand-name {
@@ -228,7 +228,7 @@ import Icon from '../ui/Icon.vue'
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-accent);
+  color: var(--color-link);
   margin-bottom: 1rem;
 }
 
@@ -252,7 +252,7 @@ import Icon from '../ui/Icon.vue'
 }
 
 .nav-links a:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
   text-decoration: underline;
   text-underline-offset: 3px;
 }

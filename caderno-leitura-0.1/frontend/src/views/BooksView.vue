@@ -591,7 +591,7 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 .book-list-action {
   flex-shrink: 0;
   font-size: 0.88rem;
-  color: var(--color-accent);
+  color: var(--color-link);
   font-weight: 600;
   margin-left: auto;
   padding-left: 0.5rem;

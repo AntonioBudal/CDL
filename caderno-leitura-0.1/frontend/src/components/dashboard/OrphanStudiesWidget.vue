@@ -110,7 +110,7 @@ const props = withDefaults(
 }
 
 .header-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .widget-title {
@@ -138,7 +138,7 @@ const props = withDefaults(
 
 .badge-count.badge-alert {
   background: rgba(234, 179, 8, 0.15);
-  color: #ca8a04;
+  color: var(--color-warning-text);
   border-color: rgba(234, 179, 8, 0.3);
 }
 
@@ -235,7 +235,7 @@ const props = withDefaults(
 }
 
 .study-title-link:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
   text-decoration: underline;
 }
 
@@ -261,7 +261,7 @@ const props = withDefaults(
   min-width: 44px;
   padding: 0.5rem 0.875rem;
   background: var(--color-surface);
-  color: var(--color-accent);
+  color: var(--color-link);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md, 0.5rem);
   font-size: 0.8125rem;

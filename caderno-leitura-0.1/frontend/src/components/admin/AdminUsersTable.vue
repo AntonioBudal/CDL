@@ -281,7 +281,7 @@ function formatDate(dateStr?: string | null): string {
   font-size: 0.7rem;
   font-weight: 600;
   background-color: var(--color-primary-subtle, #dbeafe);
-  color: var(--color-primary, #1d4ed8);
+  color: var(--color-link, #1d4ed8);
   padding: 0.1rem 0.4rem;
   border-radius: 4px;
 }

@@ -346,7 +346,7 @@ async function handleDownload() {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-accent, #475569);
+  color: var(--color-link, #475569);
 }
 
 .modal-header h2 {

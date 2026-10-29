@@ -237,7 +237,7 @@ function onStartPractice() {
   height: 36px;
   border-radius: 50%;
   background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.1));
-  color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-link, var(--color-primary, #3b82f6));
 }
 
 .readiness-core {
@@ -258,7 +258,7 @@ function onStartPractice() {
 .pending-count {
   font-size: 1.45rem;
   font-weight: 700;
-  color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-link, var(--color-primary, #3b82f6));
 }
 
 .estimated-time {

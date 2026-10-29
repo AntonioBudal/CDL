@@ -796,7 +796,7 @@ onMounted(loadTrash)
 }
 
 .filter-tab.active {
-  color: var(--color-primary, #0f172a);
+  color: var(--color-link, #0f172a);
   background: var(--color-surface-soft);
   font-weight: 600;
 }
@@ -893,7 +893,7 @@ onMounted(loadTrash)
 
 .book-badge {
   background: var(--color-surface-soft, #e0e7ff);
-  color: var(--color-primary, #3730a3);
+  color: var(--color-link, #3730a3);
   border: 1px solid var(--color-border);
 }
 

@@ -447,7 +447,7 @@ function formatDate(isoDate: string): string {
 }
 
 .context-book-link:hover .book-title {
-  color: var(--color-accent, var(--color-primary, #2563eb));
+  color: var(--color-link, var(--color-primary, #2563eb));
   text-decoration: underline;
 }
 
@@ -654,7 +654,7 @@ function formatDate(isoDate: string): string {
   padding: 0;
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--color-accent, var(--color-primary, #2563eb));
+  color: var(--color-link, var(--color-primary, #2563eb));
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -750,7 +750,7 @@ function formatDate(isoDate: string): string {
   border: none;
   font-size: 0.75rem;
   font-weight: 500;
-  color: var(--color-accent, var(--color-primary, #2563eb));
+  color: var(--color-link, var(--color-primary, #2563eb));
   cursor: pointer;
   padding: 0.2rem 0.4rem;
   border-radius: 4px;

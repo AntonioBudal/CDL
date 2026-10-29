@@ -131,7 +131,7 @@ onMounted(() => {
 }
 
 .back-link:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .back-icon {
@@ -152,7 +152,7 @@ onMounted(() => {
 }
 
 .error-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
   margin-bottom: 0.75rem;
 }
 
@@ -167,7 +167,7 @@ onMounted(() => {
 
 .spinning-icon {
   animation: spin 1.2s linear infinite;
-  color: var(--color-accent);
+  color: var(--color-link);
   margin-bottom: 0.5rem;
 }
 

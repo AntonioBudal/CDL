@@ -668,7 +668,7 @@ onMounted(async () => {
 
 .chip.highlight {
   background-color: var(--color-surface-soft);
-  color: var(--color-accent);
+  color: var(--color-link);
   border-color: var(--color-accent);
 }
 
@@ -680,7 +680,7 @@ onMounted(async () => {
   margin-bottom: 1.5rem;
   background-color: var(--color-surface-soft);
   border: 1px solid var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-link);
   border-radius: var(--radius-sm, 6px);
 }
 
@@ -719,7 +719,7 @@ onMounted(async () => {
 }
 
 .tab-btn.active {
-  color: var(--color-primary);
+  color: var(--color-link);
   border-bottom-color: var(--color-primary);
   font-weight: 600;
 }
@@ -854,7 +854,7 @@ onMounted(async () => {
 }
 
 .person-name-link:hover .person-name {
-  color: var(--color-primary);
+  color: var(--color-link);
 }
 
 .person-name {
@@ -936,7 +936,7 @@ onMounted(async () => {
   height: 44px;
   border-radius: 50%;
   background-color: var(--color-surface-soft);
-  color: var(--color-primary);
+  color: var(--color-link);
   flex-shrink: 0;
 }
 
@@ -990,7 +990,7 @@ onMounted(async () => {
 
 .suggestion-chip:hover {
   border-color: var(--color-primary);
-  color: var(--color-primary);
+  color: var(--color-link);
 }
 
 .empty-state {
@@ -1036,7 +1036,7 @@ onMounted(async () => {
   height: 64px;
   border-radius: 50%;
   background: var(--color-surface-soft);
-  color: var(--color-primary);
+  color: var(--color-link);
   margin-bottom: 0.25rem;
 }
 

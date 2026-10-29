@@ -521,7 +521,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 .reset-filters-btn {
   background: transparent;
   border: none;
-  color: var(--color-accent, #1d4ed8);
+  color: var(--color-link, #1d4ed8);
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
@@ -578,7 +578,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 }
 
 .header-sort-btn:hover {
-  color: var(--color-accent, #1d4ed8);
+  color: var(--color-link, #1d4ed8);
 }
 
 .header-sort-btn[aria-sort="ascending"],
@@ -715,7 +715,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 }
 
 .row-title-link:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
   text-decoration: underline;
 }
 

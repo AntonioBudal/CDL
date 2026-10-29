@@ -68,7 +68,7 @@ import { RouterLink } from 'vue-router'
 
 .footer-link:hover {
   text-decoration: underline;
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 @media (max-width: 640px) {

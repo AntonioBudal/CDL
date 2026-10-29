@@ -169,7 +169,7 @@ const emit = defineEmits<{
 
 .history-item:hover .history-query-text,
 .history-item:hover .history-item-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .remove-history-btn {

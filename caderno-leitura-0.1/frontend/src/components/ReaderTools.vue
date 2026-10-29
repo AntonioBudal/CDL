@@ -149,7 +149,7 @@ onBeforeUnmount(() => {
   font-weight: 700;
   line-height: 1;
   background-color: var(--color-accent-subtle, rgba(37, 99, 235, 0.15));
-  color: var(--color-primary, #2563eb);
+  color: var(--color-link, #2563eb);
 }
 
 .active-reading-toggle.is-active .badge-count {

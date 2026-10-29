@@ -143,7 +143,7 @@ const formattedTime = computed(() => {
   height: 56px;
   border-radius: 50%;
   background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.1));
-  color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-link, var(--color-primary, #3b82f6));
   margin: 0 auto 0.5rem;
 }
 

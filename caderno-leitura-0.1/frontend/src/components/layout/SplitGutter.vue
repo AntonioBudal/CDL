@@ -187,7 +187,7 @@ function onKeyDown(event: KeyboardEvent) {
 
 .gutter-toggle-btn:hover {
   background: var(--color-surface-hover);
-  color: var(--color-accent);
+  color: var(--color-link);
   border-color: var(--color-accent);
 }
 

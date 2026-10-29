@@ -366,7 +366,7 @@ defineExpose({
   padding: 0.5rem 0.875rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
   background-color: transparent;
   border: 1px solid var(--color-border, #d1d5db);
   border-radius: 6px;
@@ -537,7 +537,7 @@ defineExpose({
 }
 
 .connected-title-link:hover {
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
   text-decoration: underline;
 }
 
@@ -599,7 +599,7 @@ defineExpose({
 }
 
 .edit-relation-btn:hover {
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
   background-color: #eff6ff;
 }
 

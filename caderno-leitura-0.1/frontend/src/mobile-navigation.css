@@ -159,7 +159,7 @@
 }
 
 .settings-tab[aria-selected="true"] {
-  color: var(--color-accent);
+  color: var(--color-link);
   border-bottom-color: var(--color-accent);
   font-weight: 700;
 }
@@ -271,7 +271,7 @@
   .mobile-tab-bar button.selected,
   .mobile-tab-item.selected,
   .mobile-tab-item[aria-current="page"] {
-    color: var(--color-accent);
+    color: var(--color-link);
     font-weight: 700;
   }
 

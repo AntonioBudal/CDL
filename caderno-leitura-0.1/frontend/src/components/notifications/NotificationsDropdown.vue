@@ -194,7 +194,7 @@ onUnmounted(() => {
   font-size: 0.72rem;
   font-weight: 600;
   background-color: var(--color-primary-light, #e0e7ff);
-  color: var(--color-primary, #4338ca);
+  color: var(--color-link, #4338ca);
   padding: 0.15rem 0.45rem;
   border-radius: 9999px;
 }
@@ -250,7 +250,7 @@ onUnmounted(() => {
 
 .filter-tab.active {
   background-color: var(--color-surface, #ffffff);
-  color: var(--color-primary, #2563eb);
+  color: var(--color-link, #2563eb);
   font-weight: 600;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }

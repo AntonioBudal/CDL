@@ -351,7 +351,7 @@ async function handleRegister() {
 }
 
 .auth-link {
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
   font-weight: 600;
   text-decoration: none;
 }

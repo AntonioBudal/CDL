@@ -307,7 +307,7 @@ function formatDate(isoStr: string): string {
 }
 
 .study-card:hover .card-title-link {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .study-card:hover .card-date {
@@ -351,7 +351,7 @@ function formatDate(isoStr: string): string {
 }
 
 .card-title-link:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .card-location {
@@ -402,7 +402,7 @@ function formatDate(isoStr: string): string {
 .card-action-link {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--color-accent, #1d4ed8);
+  color: var(--color-link, #1d4ed8);
   text-decoration: none;
 }
 

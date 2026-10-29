@@ -456,7 +456,7 @@ onMounted(fetchSharedStudies)
   height: 2rem;
   border-radius: 9999px;
   background: var(--color-surface-soft);
-  color: var(--color-accent);
+  color: var(--color-link);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -529,7 +529,7 @@ onMounted(fetchSharedStudies)
 }
 
 .study-title a:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .book-subtitle {
@@ -561,7 +561,7 @@ onMounted(fetchSharedStudies)
   padding: 0.35rem 0.75rem;
   font-size: 0.8125rem;
   font-weight: 650;
-  color: var(--color-accent);
+  color: var(--color-link);
   text-decoration: none;
   border-radius: var(--radius-control);
   transition: background 0.15s ease, color 0.15s ease;

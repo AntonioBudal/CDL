@@ -189,7 +189,7 @@ const restrictionNotice = computed(() => {
 .profile-avatar-initials {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-link);
   letter-spacing: 0.04em;
   user-select: none;
 }
@@ -263,7 +263,7 @@ const restrictionNotice = computed(() => {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--color-accent);
+  color: var(--color-link);
   font-size: 1rem;
   margin-bottom: 0.5rem;
 }
@@ -308,7 +308,7 @@ const restrictionNotice = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .flame-icon {

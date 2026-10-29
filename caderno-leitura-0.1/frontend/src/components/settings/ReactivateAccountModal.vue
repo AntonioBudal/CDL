@@ -217,7 +217,7 @@ async function handleReactivate() {
 }
 
 .modal-title-icon {
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
 }
 
 .modal-close {

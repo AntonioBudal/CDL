@@ -447,7 +447,7 @@ onUnmounted(() => {
 .avatar-initials-preview {
   font-size: 2.25rem;
   font-weight: 600;
-  color: var(--color-accent);
+  color: var(--color-link);
   letter-spacing: 0.05em;
   user-select: none;
 }
@@ -480,7 +480,7 @@ onUnmounted(() => {
 }
 
 .dropzone-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .dropzone-text {

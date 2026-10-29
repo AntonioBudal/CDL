@@ -336,7 +336,7 @@ onMounted(() => {
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
   background: var(--color-surface-soft);
-  color: var(--color-accent);
+  color: var(--color-link);
   border: 1px solid var(--color-border);
 }
 
@@ -383,7 +383,7 @@ onMounted(() => {
 .btn-github-link:hover {
   background-color: var(--color-surface-hover);
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .btn-github-link:focus-visible {

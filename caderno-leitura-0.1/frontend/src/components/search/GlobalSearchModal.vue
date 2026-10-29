@@ -507,7 +507,7 @@ onUnmounted(() => {
 .filter-toggle-btn.is-active {
   background: color-mix(in srgb, var(--color-accent) 15%, var(--color-surface));
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .filter-dot {
@@ -615,7 +615,7 @@ onUnmounted(() => {
 .mode-btn.is-active {
   background: color-mix(in srgb, var(--color-accent) 15%, var(--color-surface));
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-link);
   font-weight: 600;
 }
 
@@ -707,7 +707,7 @@ onUnmounted(() => {
   padding: 0.4rem 0.75rem;
   background: color-mix(in srgb, var(--color-accent) 15%, var(--color-surface));
   border: 1px solid var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-link);
   border-radius: var(--radius-control, 4px);
   font-weight: 600;
   font-size: 0.8125rem;

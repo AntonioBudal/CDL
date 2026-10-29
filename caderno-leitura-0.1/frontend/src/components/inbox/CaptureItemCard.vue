@@ -397,13 +397,13 @@ async function handleDelete() {
 /* Imunidade cromática total aos 10 temas */
 .badge-inbox {
   background-color: var(--color-surface-hover);
-  color: var(--color-primary);
+  color: var(--color-link);
   border: 1px solid var(--color-border);
 }
 
 .badge-promoted {
   background-color: var(--color-surface-hover);
-  color: var(--color-accent);
+  color: var(--color-link);
   border: 1px solid var(--color-border);
 }
 
@@ -469,7 +469,7 @@ async function handleDelete() {
 }
 
 .delete-btn:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .card-body {
@@ -491,7 +491,7 @@ async function handleDelete() {
   align-self: flex-start;
   background: transparent;
   border: none;
-  color: var(--color-primary);
+  color: var(--color-link);
   font-size: 0.8rem;
   cursor: pointer;
   padding: 0;
@@ -528,7 +528,7 @@ async function handleDelete() {
 }
 
 .promoted-study-link {
-  color: var(--color-accent);
+  color: var(--color-link);
   text-decoration: underline;
 }
 
@@ -578,7 +578,7 @@ async function handleDelete() {
 .card-error {
   margin-top: 6px;
   font-size: 0.8rem;
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 /* Responsividade móvel para alvos táteis */

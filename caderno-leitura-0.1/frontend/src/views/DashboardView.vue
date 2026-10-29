@@ -454,7 +454,7 @@ onMounted(() => {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .dashboard-header h1 {
@@ -704,13 +704,13 @@ onMounted(() => {
 
 .badge-book {
   background: var(--color-info-bg, #eff4fa);
-  color: var(--color-accent, #1d4ed8);
+  color: var(--color-link, #1d4ed8);
   border: 1px solid var(--color-info-border, #c5d2e3);
 }
 
 .badge-study {
   background: color-mix(in srgb, var(--color-accent) 15%, var(--color-surface));
-  color: var(--color-accent);
+  color: var(--color-link);
   border: 1px solid color-mix(in srgb, var(--color-accent) 30%, var(--color-surface));
 }
 
@@ -748,7 +748,7 @@ onMounted(() => {
 .timeline-link {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--color-accent);
+  color: var(--color-link);
   text-decoration: none;
   min-height: 44px;
   min-width: 44px;

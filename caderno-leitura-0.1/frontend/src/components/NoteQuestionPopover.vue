@@ -350,7 +350,7 @@ onBeforeUnmount(() => {
 .question-icon {
   width: 16px;
   height: 16px;
-  color: var(--color-primary, #3b82f6);
+  color: var(--color-link, #3b82f6);
   flex-shrink: 0;
 }
 

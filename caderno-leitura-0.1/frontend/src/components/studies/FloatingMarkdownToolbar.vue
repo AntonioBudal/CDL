@@ -167,7 +167,7 @@ onBeforeUnmount(() => {
 }
 
 .floating-tool-btn:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
   background-color: var(--color-page);
 }
 

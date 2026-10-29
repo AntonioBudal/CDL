@@ -832,7 +832,7 @@ onMounted(() => {
 }
 
 .title-icon {
-  color: var(--color-primary, #2563eb);
+  color: var(--color-link, #2563eb);
 }
 
 .page-subtitle {
@@ -1113,7 +1113,7 @@ onMounted(() => {
 }
 
 .admin-tab-btn.active {
-  color: var(--color-primary, #2563eb);
+  color: var(--color-link, #2563eb);
   border-bottom-color: var(--color-primary, #2563eb);
 }
 
@@ -1198,7 +1198,7 @@ onMounted(() => {
   text-decoration: none;
   border: 1px solid var(--color-border, #d1d5db);
   background-color: var(--color-surface, #fff);
-  color: var(--color-primary, #2563eb);
+  color: var(--color-link, #2563eb);
 }
 
 .btn-preview-link:hover {
@@ -1262,7 +1262,7 @@ onMounted(() => {
 }
 
 .toggle-label.label-active {
-  color: var(--color-primary, #2563eb);
+  color: var(--color-link, #2563eb);
 }
 
 .form-grid {

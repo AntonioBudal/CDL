@@ -327,7 +327,7 @@ onUnmounted(() => {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
   margin-bottom: 0.5rem;
 }
 

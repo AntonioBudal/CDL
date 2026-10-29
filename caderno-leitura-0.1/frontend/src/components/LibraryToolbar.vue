@@ -341,7 +341,7 @@ function onClearClick() {
 .clear-filters-btn {
   background: none;
   border: none;
-  color: var(--accent, #3b82f6);
+  color: var(--color-link, #3b82f6);
   text-decoration: underline;
   cursor: pointer;
   font-size: 0.82rem;

@@ -112,7 +112,7 @@ import Icon from '../ui/Icon.vue'
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--color-accent);
+  color: var(--color-link);
   margin-bottom: 1rem;
 }
 
@@ -184,7 +184,7 @@ import Icon from '../ui/Icon.vue'
 }
 
 .btn-secondary-cta:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .btn-secondary-cta:focus-visible {
@@ -224,7 +224,7 @@ import Icon from '../ui/Icon.vue'
   padding: 0.2rem 0.5rem;
   border-radius: var(--radius-sm, 4px);
   background-color: var(--color-surface-hover, rgba(0, 0, 0, 0.05));
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .index-card-ref {

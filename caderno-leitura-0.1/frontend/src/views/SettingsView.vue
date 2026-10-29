@@ -1265,7 +1265,7 @@ onBeforeUnmount(() => {
 .avatar-thumb-initials {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-link);
   letter-spacing: 0.04em;
   user-select: none;
 }
@@ -1290,7 +1290,7 @@ onBeforeUnmount(() => {
 }
 
 .required-mark {
-  color: #dc2626;
+  color: var(--color-error-text);
 }
 
 .field-hint {
@@ -1392,7 +1392,7 @@ onBeforeUnmount(() => {
 }
 
 .shield-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
   flex-shrink: 0;
   margin-top: 0.15rem;
 }
@@ -1745,7 +1745,7 @@ onBeforeUnmount(() => {
   .tab-icon {
     flex-shrink: 0;
     margin-top: 0.15rem;
-    color: var(--color-accent);
+    color: var(--color-link);
   }
 
   .tab-text-wrap {
@@ -1806,7 +1806,7 @@ onBeforeUnmount(() => {
 
   .settings-nav .settings-tab[aria-selected="true"] {
     border-bottom-color: var(--color-accent);
-    color: var(--color-accent);
+    color: var(--color-link);
   }
 
   .tab-desc {

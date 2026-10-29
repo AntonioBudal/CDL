@@ -252,7 +252,7 @@ function onTabKeydown(event: KeyboardEvent, currentIndex: number) {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-accent);
+  color: var(--color-link);
   display: block;
   margin-bottom: 0.75rem;
 }
@@ -310,7 +310,7 @@ function onTabKeydown(event: KeyboardEvent, currentIndex: number) {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .work-title {
@@ -378,7 +378,7 @@ function onTabKeydown(event: KeyboardEvent, currentIndex: number) {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-accent);
+  color: var(--color-link);
   margin-bottom: 0.25rem;
 }
 
@@ -401,7 +401,7 @@ function onTabKeydown(event: KeyboardEvent, currentIndex: number) {
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--color-accent);
+  color: var(--color-link);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md, 6px);
@@ -458,7 +458,7 @@ function onTabKeydown(event: KeyboardEvent, currentIndex: number) {
 
 .notebook-tab-btn.is-active-tab {
   background-color: var(--color-surface);
-  color: var(--color-accent);
+  color: var(--color-link);
   border-color: var(--color-border);
   border-bottom-color: var(--color-surface);
   margin-bottom: -1px;
@@ -492,7 +492,7 @@ function onTabKeydown(event: KeyboardEvent, currentIndex: number) {
   padding: 0.3rem 0.65rem;
   border-radius: var(--radius-sm, 4px);
   background-color: var(--color-page);
-  color: var(--color-accent);
+  color: var(--color-link);
   border: 1px solid var(--color-border);
   margin-bottom: 0.75rem;
 }
@@ -560,7 +560,7 @@ function onTabKeydown(event: KeyboardEvent, currentIndex: number) {
 }
 
 .insight-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
   flex-shrink: 0;
   margin-top: 2px;
 }

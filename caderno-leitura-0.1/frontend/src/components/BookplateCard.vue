@@ -264,7 +264,7 @@ async function handleShare() {
 
 .bookplate-badge.alert-badge {
   background-color: var(--color-surface-soft);
-  color: var(--color-accent);
+  color: var(--color-link);
   border-color: var(--color-accent);
 }
 
@@ -303,7 +303,7 @@ async function handleShare() {
   transform: scale(1.04);
   background-color: var(--color-surface-soft);
   border-color: var(--color-primary);
-  color: var(--color-primary);
+  color: var(--color-link);
 }
 
 @media (prefers-reduced-motion: reduce) {

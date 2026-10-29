@@ -218,7 +218,7 @@ function handleReviewAgain() {
   height: 68px;
   border-radius: 50%;
   background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.1));
-  color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-link, var(--color-primary, #3b82f6));
   margin-bottom: 0.25rem;
 }
 
@@ -257,7 +257,7 @@ function handleReviewAgain() {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-link, var(--color-primary, #3b82f6));
 }
 
 .demo-sentence {
@@ -276,7 +276,7 @@ function handleReviewAgain() {
   border-radius: 6px;
   background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.12));
   border: 1px dashed var(--color-accent, currentColor);
-  color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-link, var(--color-primary, #3b82f6));
   font-family: inherit;
   font-size: 1.05rem;
   font-weight: 600;
@@ -338,7 +338,7 @@ function handleReviewAgain() {
   padding: 0.2rem 0.5rem;
   min-height: auto;
   font-size: 0.775rem;
-  color: var(--color-accent, #3b82f6);
+  color: var(--color-link, #3b82f6);
   cursor: pointer;
   text-decoration: underline;
 }

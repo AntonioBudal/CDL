@@ -158,7 +158,7 @@ const formattedDuration = computed(() => {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
   background-color: var(--color-accent-subtle, #eff6ff);
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;

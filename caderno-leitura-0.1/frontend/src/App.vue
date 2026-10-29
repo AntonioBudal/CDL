@@ -200,7 +200,7 @@ const isMoreMenuOpen = ref(false)
 
 .footer-link:hover,
 .footer-support-link:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
   text-decoration: underline;
 }
 

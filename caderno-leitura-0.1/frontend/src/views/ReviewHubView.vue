@@ -570,7 +570,7 @@ onUnmounted(() => {
 }
 
 .hub-tab-item.active {
-  color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-link, var(--color-primary, #3b82f6));
   border-bottom-color: var(--color-accent, var(--color-primary, #3b82f6));
 }
 

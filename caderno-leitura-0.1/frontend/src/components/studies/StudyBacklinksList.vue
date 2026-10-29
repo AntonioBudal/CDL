@@ -149,7 +149,7 @@ defineExpose({
 }
 
 .backlinks-icon {
-  color: var(--color-primary, #3b82f6);
+  color: var(--color-link, #3b82f6);
   flex-shrink: 0;
 }
 
@@ -239,7 +239,7 @@ defineExpose({
   min-height: 44px;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: var(--color-primary, #3b82f6);
+  color: var(--color-link, #3b82f6);
   text-decoration: none;
   transition: color 0.15s ease;
 }

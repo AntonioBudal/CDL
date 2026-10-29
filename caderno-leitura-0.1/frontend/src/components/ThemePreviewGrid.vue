@@ -278,7 +278,7 @@ function onKeydown(event: KeyboardEvent, currentIndex: number) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-accent);
+  color: var(--color-link);
   margin-left: 0.25rem;
 }
 

@@ -210,7 +210,7 @@ onUnmounted(() => {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
   background-color: var(--color-accent-subtle, #eff6ff);
   padding: 0.2rem 0.5rem;
   border-radius: 9999px;
@@ -308,7 +308,7 @@ onUnmounted(() => {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
 }
 
 .card-current-tag {

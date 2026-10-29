@@ -1256,7 +1256,7 @@ onBeforeUnmount(() => {
   padding: 0.2rem 0.55rem;
   border-radius: 9999px;
   background-color: var(--color-accent-subtle, #eff6ff);
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
   border: 1px solid var(--color-border-subtle, rgba(37, 99, 235, 0.2));
   letter-spacing: 0.02em;
 }

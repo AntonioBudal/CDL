@@ -930,7 +930,7 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
 
 .focus-toggle-btn.active {
   background-color: var(--color-selected-bg, var(--color-surface-soft));
-  color: var(--color-accent);
+  color: var(--color-link);
   border-color: var(--color-accent);
 }
 
@@ -1147,7 +1147,7 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
 }
 
 .chapter-pill.selected .chapter-pill-num {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .chapter-pill-active-tools {

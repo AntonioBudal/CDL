@@ -97,7 +97,7 @@ onBeforeUnmount(() => {
   padding: 0.08em 0.35em;
   border-radius: 4px;
   background-color: var(--color-surface-hover, rgba(59, 130, 246, 0.08));
-  color: var(--color-primary, #3b82f6);
+  color: var(--color-link, #3b82f6);
   font-weight: 500;
   text-decoration: none;
   border-bottom: 1px dotted var(--color-primary, #3b82f6);

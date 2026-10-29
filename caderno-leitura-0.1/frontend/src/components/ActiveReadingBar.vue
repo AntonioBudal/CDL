@@ -200,7 +200,7 @@ const currentPositionText = computed(() => {
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   background-color: var(--color-accent-subtle, rgba(37, 99, 235, 0.1));
-  color: var(--color-primary, #2563eb);
+  color: var(--color-link, #2563eb);
   font-weight: 600;
   font-size: 0.8125rem;
 }

@@ -270,7 +270,7 @@ const commitments: CommitmentItem[] = [
 }
 
 .pillar-icon-box {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .pillar-title {
@@ -348,7 +348,7 @@ const commitments: CommitmentItem[] = [
 
 .commitment-icon-wrap {
   margin-bottom: 1rem;
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .commitment-title {

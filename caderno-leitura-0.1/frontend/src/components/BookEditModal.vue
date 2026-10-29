@@ -409,7 +409,7 @@ async function save() {
 }
 
 .required {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .modal-actions {

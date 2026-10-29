@@ -215,7 +215,7 @@
 }
 
 :root[data-highlight='bold'] .markdown-content mark {
-  color: var(--color-accent);
+  color: var(--color-link);
   background: transparent;
   font-weight: 700;
 }
@@ -676,4 +676,4 @@
 
 .tabs-scroll-content::-webkit-scrollbar {
   display: none;
-}
+}

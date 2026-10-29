@@ -52,6 +52,41 @@ test('texto secundário, link, erro e texto sobre o destaque têm contraste mín
   assert.deepEqual(failures, [])
 })
 
+test('Grafite e Noite Suave: link sobre fundos de selo e aba e texto sutil passam de 4,5:1 (revisão das outras telas)', () => {
+  const failures = []
+  for (const { name, vars } of themes.filter(t => ['grafite', 'noite-suave'].includes(t.name))) {
+    const pairs = {
+      'link sobre superfície suave': [vars['--color-link'], vars['--color-surface-soft']],
+      'link sobre seleção': [vars['--color-link'], vars['--color-selected-bg']],
+      'texto sutil sobre superfície': [vars['--color-subtle'], vars['--color-surface']],
+      'texto sutil sobre superfície suave': [vars['--color-subtle'], vars['--color-surface-soft']],
+      'texto sutil sobre página': [vars['--color-subtle'], vars['--color-page']],
+      'aviso': [vars['--color-warning-text'], vars['--color-warning-bg']],
+    }
+    for (const [label, [fg, bg]] of Object.entries(pairs)) {
+      const value = ratio(fg, bg)
+      if (value < 4.5) failures.push(`${name}: ${label} ${value.toFixed(2)}`)
+    }
+  }
+  assert.deepEqual(failures, [])
+})
+
+test('nenhuma regra usa a cor de destaque (ou os apelidos --color-primary e --accent) como cor de texto: o texto usa --color-link', () => {
+  const offenders = []
+  const walk = dir => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) walk(full)
+      else if (/\.(css|vue)$/.test(entry.name)) {
+        const content = fs.readFileSync(full, 'utf-8')
+        if (/(?<![-\w])color:\s*var\(--(?:color-accent|color-primary|accent)\s*[,)]/.test(content)) offenders.push(path.relative(process.cwd(), full))
+      }
+    }
+  }
+  walk(path.resolve(process.cwd(), 'src'))
+  assert.deepEqual(offenders, [])
+})
+
 test('o link usa o token próprio, e a tela de digitalização dá 44 px aos links das ações', () => {
   const style = fs.readFileSync(path.resolve(process.cwd(), 'src/style.css'), 'utf-8')
   assert.match(style, /\.text-link \{ color: var\(--color-link\);/)

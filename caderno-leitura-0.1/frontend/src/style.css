@@ -143,7 +143,7 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: calc(var(--space-
 .book-number { font-size: .875rem; color: var(--color-meta); margin-bottom: calc(var(--space-unit) * 1.5); font-variant-numeric: tabular-nums; }
 .book-card h2 { font-size: 1.3rem; }
 .book-card p { font-size: .9375rem; color: var(--color-muted); }
-.card-action { margin-top: auto; padding-top: calc(var(--space-unit) * 1); font-size: .875rem; font-weight: 650; color: var(--color-accent); }
+.card-action { margin-top: auto; padding-top: calc(var(--space-unit) * 1); font-size: .875rem; font-weight: 650; color: var(--color-link); }
 .list-caption { font-size: .875rem; color: var(--color-muted); margin: 0 0 calc(var(--space-unit) * 1); }
 .empty-state, .state-panel { background: var(--color-surface); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-panel); padding: calc(var(--space-unit) * 2.25); }
 .empty-state p { color: var(--color-muted); max-width: 42rem; }
@@ -210,7 +210,7 @@ dd { margin: 0; overflow-wrap: anywhere; }
 .response-label { font-size: .875rem; font-weight: 650; }
 .skip-link { position: fixed; left: 1rem; top: -5rem; z-index: 10; background: var(--color-inverse-bg); color: var(--color-on-inverse); padding: calc(var(--space-unit) * .8) calc(var(--space-unit) * 1); border-radius: var(--radius-badge); }
 .skip-link:focus { top: 1rem; }
-.study-title-link { color: var(--color-accent); text-underline-offset: .2em; }
+.study-title-link { color: var(--color-link); text-underline-offset: .2em; }
 .reader-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: calc(var(--space-unit) * 1.25); flex-wrap: wrap; }
 .reader-heading > div { flex: 1 1 20rem; min-width: 0; }
 .reader-layout { display: grid; grid-template-columns: minmax(0, 1fr) 20rem; gap: calc(var(--space-unit) * 1.5); align-items: start; }
@@ -236,7 +236,7 @@ dd { margin: 0; overflow-wrap: anywhere; }
 .markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4, .markdown-content h5, .markdown-content h6 { font-size: 1.25rem; letter-spacing: 0; line-height: 1.4; margin: calc(var(--space-unit) * 1.5) 0 calc(var(--space-unit) * .75); }
 .markdown-content ul, .markdown-content ol { padding-left: calc(var(--space-unit) * 1.5); margin: 0 0 calc(var(--space-unit) * 1.1); }
 .markdown-content li + li { margin-top: calc(var(--space-unit) * .35); }
-.markdown-content a { color: var(--color-accent); text-decoration: underline; text-underline-offset: .2em; }
+.markdown-content a { color: var(--color-link); text-decoration: underline; text-underline-offset: .2em; }
 .markdown-content blockquote { border-left: var(--edge-thin) solid var(--color-border-strong); padding: calc(var(--space-unit) * .25) 0 calc(var(--space-unit) * .25) calc(var(--space-unit) * 1); margin: calc(var(--space-unit) * 1) 0; color: var(--color-muted); }
 .markdown-content code { padding: calc(var(--space-unit) * .1) calc(var(--space-unit) * .3); background: var(--color-surface-inset); border-radius: var(--radius-code); font-size: .9em; }
 .markdown-content pre { margin: calc(var(--space-unit) * 1) 0; }
@@ -569,7 +569,7 @@ button, .button, input, textarea, select { box-shadow: var(--shadow-control); }
   }
 
   .mobile-studio-tab-btn.is-active {
-    color: var(--color-accent);
+    color: var(--color-link);
     background-color: var(--color-page);
     font-weight: 600;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -642,7 +642,7 @@ button, .button, input, textarea, select { box-shadow: var(--shadow-control); }
   line-height: 0;
   vertical-align: -0.15em;
   opacity: 0.45;
-  color: var(--color-accent, var(--color-primary, currentColor));
+  color: var(--color-link, var(--color-primary, currentColor));
   user-select: none;
 }
 
@@ -714,7 +714,7 @@ button, .button, input, textarea, select { box-shadow: var(--shadow-control); }
   padding: 0.15rem 0.6rem;
   border-radius: 6px;
   background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.12));
-  color: var(--color-accent, var(--color-primary, #3b82f6));
+  color: var(--color-link, var(--color-primary, #3b82f6));
   font-weight: 600;
   cursor: pointer;
   border: 1px dashed var(--color-accent, currentColor);

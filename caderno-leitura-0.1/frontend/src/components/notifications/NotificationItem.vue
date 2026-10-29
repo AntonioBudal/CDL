@@ -282,7 +282,7 @@ async function handleMarkRead(event: Event) {
 
 .notification-avatar-initials {
   background: var(--color-primary-light, #e0e7ff);
-  color: var(--color-primary, #4338ca);
+  color: var(--color-link, #4338ca);
   font-weight: 600;
   font-size: 0.85rem;
 }

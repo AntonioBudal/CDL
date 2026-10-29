@@ -116,11 +116,11 @@ const emit = defineEmits<{
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .hero-eyebrow-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .hero-year {

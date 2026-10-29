@@ -81,7 +81,7 @@ const { activeTheme, statusMessage, applyTheme } = useVisitorTheme()
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-accent);
+  color: var(--color-link);
   display: block;
   margin-bottom: 0.75rem;
 }
@@ -119,7 +119,7 @@ const { activeTheme, statusMessage, applyTheme } = useVisitorTheme()
 }
 
 .active-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .active-badge-label {
@@ -127,7 +127,7 @@ const { activeTheme, statusMessage, applyTheme } = useVisitorTheme()
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .active-instruction {

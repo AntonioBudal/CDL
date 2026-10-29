@@ -88,7 +88,7 @@ function handleManualSync() {
 }
 
 .status-syncing {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .status-offline,

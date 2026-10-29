@@ -140,7 +140,7 @@ function onKeyDown(event: KeyboardEvent) {
 
 .view-tab-btn.is-active {
   background-color: var(--color-surface, #ffffff);
-  color: var(--color-accent, #1d4ed8);
+  color: var(--color-link, #1d4ed8);
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }

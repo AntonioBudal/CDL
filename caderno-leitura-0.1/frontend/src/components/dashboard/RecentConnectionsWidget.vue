@@ -146,7 +146,7 @@ function formatRelativeTime(isoStr: string): string {
 }
 
 .header-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .widget-title {
@@ -252,7 +252,7 @@ function formatRelativeTime(isoStr: string): string {
 
 .relation-badge.badge-contradict {
   background: rgba(239, 68, 68, 0.1);
-  color: #dc2626;
+  color: var(--color-error-text);
   border-color: rgba(239, 68, 68, 0.3);
 }
 
@@ -315,7 +315,7 @@ function formatRelativeTime(isoStr: string): string {
 }
 
 .node-study-link:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
   text-decoration: underline;
 }
 

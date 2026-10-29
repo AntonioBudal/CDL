@@ -533,7 +533,7 @@ onMounted(() => {
 }
 
 .group-icon {
-  color: var(--color-primary, #2563eb);
+  color: var(--color-link, #2563eb);
 }
 
 .group-book-title {

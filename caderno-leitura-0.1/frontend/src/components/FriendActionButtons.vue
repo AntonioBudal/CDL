@@ -413,13 +413,13 @@ async function handleUnblock() {
 
 .friends-pill {
   background-color: var(--color-surface-soft);
-  color: var(--color-primary);
+  color: var(--color-link);
   border: 1px solid var(--color-border);
 }
 
 .blocked-pill {
   background-color: var(--color-surface-soft);
-  color: var(--color-accent);
+  color: var(--color-link);
   border: 1px solid var(--color-border);
 }
 
@@ -431,7 +431,7 @@ async function handleUnblock() {
 
 .danger-hover:hover {
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .dialog-overlay {

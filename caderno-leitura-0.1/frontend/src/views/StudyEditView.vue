@@ -328,7 +328,7 @@ onBeforeUnmount(() => { disposed = true; resource.cancel() })
 
 .draft-status-pill.saving {
   background-color: var(--color-surface-hover, rgba(0, 0, 0, 0.05));
-  color: var(--color-accent);
+  color: var(--color-link);
   border: var(--border-width) solid var(--color-accent);
 }
 

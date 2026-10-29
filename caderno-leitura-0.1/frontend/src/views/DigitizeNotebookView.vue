@@ -647,7 +647,7 @@ h2[tabindex='-1']:focus:not(:focus-visible) {
   display: grid;
   place-items: center;
   background: var(--color-surface-soft);
-  color: var(--color-accent);
+  color: var(--color-link);
   margin-bottom: calc(var(--space-unit) * 0.75);
   flex-shrink: 0;
 }

@@ -323,7 +323,7 @@ onBeforeUnmount(() => {
 }
 
 .header-icon {
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
 }
 
 .header-title {
@@ -503,7 +503,7 @@ onBeforeUnmount(() => {
 }
 
 .checked-icon {
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
 }
 
 .types-grid {

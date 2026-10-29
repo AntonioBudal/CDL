@@ -444,7 +444,7 @@ onUnmounted(() => {
 }
 
 .share-modal-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .share-modal-title {
@@ -772,7 +772,7 @@ onUnmounted(() => {
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-link);
   overflow: hidden;
   flex-shrink: 0;
 }

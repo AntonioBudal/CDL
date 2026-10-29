@@ -41,7 +41,7 @@ withDefaults(defineProps<StatusBadgeProps>(), {
 
 .badge-accent {
   background: color-mix(in srgb, var(--accent, #3b82f6) 12%, transparent);
-  color: var(--accent, #3b82f6);
+  color: var(--color-link, #3b82f6);
   border: 1px solid color-mix(in srgb, var(--accent, #3b82f6) 25%, transparent);
 }
 

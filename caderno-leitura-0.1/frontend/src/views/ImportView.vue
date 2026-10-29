@@ -721,7 +721,7 @@ onBeforeUnmount(() => {
   height: 44px;
   border-radius: 10px;
   background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.03));
-  color: var(--color-accent, #3b82f6);
+  color: var(--color-link, #3b82f6);
   display: flex;
   align-items: center;
   justify-content: center;

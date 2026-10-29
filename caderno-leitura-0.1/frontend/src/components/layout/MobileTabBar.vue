@@ -151,7 +151,7 @@ const isReviewActive = computed(() => ['review', 'study-session'].includes(Strin
 
   .mobile-tab-item.selected,
   .mobile-tab-item[aria-current="page"] {
-    color: var(--color-accent);
+    color: var(--color-link);
     font-weight: 700;
   }
 

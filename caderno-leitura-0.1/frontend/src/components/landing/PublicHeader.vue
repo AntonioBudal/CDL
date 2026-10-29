@@ -91,7 +91,7 @@ import Icon from '../ui/Icon.vue'
 }
 
 .brand-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .brand-name {
@@ -121,7 +121,7 @@ import Icon from '../ui/Icon.vue'
 }
 
 .nav-anchor-link:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .nav-anchor-link:focus-visible {
@@ -153,7 +153,7 @@ import Icon from '../ui/Icon.vue'
 
 .btn-login-header:hover {
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .btn-login-header:focus-visible {

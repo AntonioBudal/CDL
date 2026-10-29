@@ -323,7 +323,7 @@ onBeforeUnmount(() => {
   padding: 0.1rem 0.35rem;
   border-radius: var(--radius-badge, 0.25rem);
   background-color: var(--color-info-bg, var(--color-surface-soft));
-  color: var(--color-accent);
+  color: var(--color-link);
   margin-top: 0.25rem;
 }
 

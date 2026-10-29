@@ -272,7 +272,7 @@ onUnmounted(() => {
 
 .badge-question {
   background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.12));
-  color: var(--color-accent, #3b82f6);
+  color: var(--color-link, #3b82f6);
 }
 
 .badge-hidden {
@@ -322,7 +322,7 @@ onUnmounted(() => {
   padding: 0.15rem 0.55rem;
   border-radius: 6px;
   background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.12));
-  color: var(--color-accent, #3b82f6);
+  color: var(--color-link, #3b82f6);
   font-weight: 600;
   border: 1px dashed var(--color-accent, currentColor);
   transition: all 220ms ease;
@@ -350,7 +350,7 @@ onUnmounted(() => {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-accent, #3b82f6);
+  color: var(--color-link, #3b82f6);
 }
 
 .expected-answer {

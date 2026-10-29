@@ -157,7 +157,7 @@ function formatRelativeTime(isoStr: string): string {
 }
 
 .header-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .widget-title {
@@ -288,7 +288,7 @@ function formatRelativeTime(isoStr: string): string {
 }
 
 .study-title-link:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
   text-decoration: underline;
 }
 
@@ -318,7 +318,7 @@ function formatRelativeTime(isoStr: string): string {
   min-width: 44px;
   padding: 0.5rem 0.875rem;
   background: var(--color-surface);
-  color: var(--color-accent);
+  color: var(--color-link);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md, 0.5rem);
   font-size: 0.875rem;
@@ -358,7 +358,7 @@ function formatRelativeTime(isoStr: string): string {
 }
 
 .btn-toggle-expand:hover {
-  color: var(--color-accent);
+  color: var(--color-link);
   border-color: var(--color-accent);
   background: var(--color-surface-hover);
 }

@@ -960,3 +960,27 @@ Spec aprovada com as recomendações Q1 a Q5:
 - **Pendente:** a cor de destaque ainda é usada como cor de texto em cerca de 180 regras, além do `.text-link`. Elas
   não foram revisadas uma a uma. A auditoria cobriu só as telas da 086 e da 089.
 
+
+## Sessão: Contraste das demais telas nos temas Grafite e Noite Suave (29/10/2026)
+
+- **Método:** auditoria do DOM num servidor de validação, com banco temporário e dados fictícios.
+  - cada tela carregada do zero num iframe, com o tema salvo nas preferências;
+  - 17 telas internas mais as 5 públicas (início, login, cadastro, sobre, apoie).
+- **Causas encontradas:**
+  1. a cor de destaque usada como cor de texto (170 regras, inclusive pelos apelidos `--color-primary` e `--accent`);
+  2. a cor sutil usada em texto;
+  3. vermelho e amarelo fixos no código (asterisco de obrigatório, contador de alerta, selo de contradição).
+- **Correção:**
+  - todo texto que usava o destaque passa a usar `--color-link`. Fora do Grafite e da Noite Suave, ele é igual ao
+    destaque, então nada muda nos outros temas;
+  - `--color-link` ficou mais claro na Noite Suave (`#a5b4c8`) e no Grafite (`#b8b2ad`), para passar também sobre
+    selos e abas;
+  - `--color-subtle`: Noite Suave `#959ca8`, Grafite `#9c9c9c`;
+  - as cores fixas passaram aos tokens de erro e de aviso.
+- **Resultado:** nenhuma falha nas 22 telas nos dois temas. Ficam só os separadores decorativos "·" e "•", que
+  não carregam informação.
+- **Teste:** `theme-contrast-tokens.test.mjs`. Cobre os novos pares nos dois temas e falha se alguma regra voltar a
+  usar o destaque como cor de texto.
+- **Fora do escopo (achado pelo cálculo dos tokens):**
+  - Cinza Neutro: cor sutil com 3,6 a 4,2:1;
+  - Pergaminho: link sobre seleção com 4,06:1.

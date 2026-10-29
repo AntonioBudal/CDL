@@ -228,7 +228,7 @@ async function handleSave() {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-primary, #4f46e5);
+  color: var(--color-link, #4f46e5);
   margin-bottom: 2px;
 }
 

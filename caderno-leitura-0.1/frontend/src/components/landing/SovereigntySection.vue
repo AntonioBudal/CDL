@@ -163,7 +163,7 @@ const milestones: HistoricalMilestone[] = [
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-accent);
+  color: var(--color-link);
   display: block;
   margin-bottom: 0.75rem;
 }
@@ -210,7 +210,7 @@ const milestones: HistoricalMilestone[] = [
   height: 44px;
   border-radius: var(--radius-md, 8px);
   background-color: var(--color-page);
-  color: var(--color-accent);
+  color: var(--color-link);
   border: 1px solid var(--color-border);
   margin-bottom: 1.25rem;
 }
@@ -279,7 +279,7 @@ const milestones: HistoricalMilestone[] = [
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .timeline-title {
@@ -312,7 +312,7 @@ const milestones: HistoricalMilestone[] = [
   gap: 0.45rem;
   font-size: 0.975rem;
   font-weight: 600;
-  color: var(--color-accent);
+  color: var(--color-link);
   text-decoration: underline;
   text-underline-offset: 4px;
   min-height: 44px;

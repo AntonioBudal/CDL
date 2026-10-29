@@ -244,7 +244,7 @@ function handleKeyDown(event: KeyboardEvent) {
 
 .search-result-item:hover .result-title,
 .search-result-item.is-selected .result-title {
-  color: var(--color-accent);
+  color: var(--color-link);
 }
 
 .result-arrow-icon {
@@ -255,7 +255,7 @@ function handleKeyDown(event: KeyboardEvent) {
 
 .search-result-item:hover .result-arrow-icon,
 .search-result-item.is-selected .result-arrow-icon {
-  color: var(--color-accent);
+  color: var(--color-link);
   transform: translateX(2px);
 }
 

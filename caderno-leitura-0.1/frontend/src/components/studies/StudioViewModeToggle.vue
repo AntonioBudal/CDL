@@ -102,7 +102,7 @@ function setMode(mode: StudioViewMode) {
 }
 
 .toggle-btn.is-active {
-  color: var(--color-accent);
+  color: var(--color-link);
   background-color: var(--color-page);
   font-weight: 600;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);

@@ -658,7 +658,7 @@ onUnmounted(() => {
 .tab-indicator {
   font-size: 1rem;
   line-height: 0.8;
-  color: var(--color-primary, #3b82f6);
+  color: var(--color-link, #3b82f6);
 }
 
 .editor-tab-pill.is-active .tab-indicator {
@@ -833,7 +833,7 @@ onUnmounted(() => {
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   background-color: var(--color-accent-subtle, #eff6ff);
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
 }
 
 .template-active-name {
@@ -962,7 +962,7 @@ onUnmounted(() => {
 
 .choice-tag.recommended {
   background-color: var(--color-accent-subtle, #eff6ff);
-  color: var(--color-accent, #2563eb);
+  color: var(--color-link, #2563eb);
 }
 
 .choice-tag.warning {

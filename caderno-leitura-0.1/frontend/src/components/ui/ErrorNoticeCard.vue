@@ -73,7 +73,7 @@ function onRetry() {
   height: 40px;
   border-radius: 8px;
   background-color: var(--color-surface-soft, var(--color-surface-subtle, #f1f5f9));
-  color: var(--color-accent, var(--color-primary, #64748b));
+  color: var(--color-link, var(--color-primary, #64748b));
 }
 
 .error-notice-content {
