@@ -473,3 +473,18 @@ def validate_media_settings() -> None:
     for name in MEDIA_INT_SETTINGS:
         _media_int(name)
     get_media_delete_on_completed()
+    get_organizer_adapter_enabled()
+
+
+# --- Adaptador do organizador (feature 091-C) ------------------------------------------------------
+# Desligado por padrão (decisão do usuário depois da medição do EXP-025, F05): o estado continua sendo
+# aprendido a cada registro, mas a sugestão só usa o adaptador com "on". Valor inválido impede a partida.
+
+
+def get_organizer_adapter_enabled() -> bool:
+    raw = os.environ.get("LEITORUM_ORGANIZER_ADAPTER", "").strip().lower()
+    if raw in ("", "off"):
+        return False
+    if raw == "on":
+        return True
+    raise ValueError(f"LEITORUM_ORGANIZER_ADAPTER deve ser on ou off (recebido: {raw!r}).")

@@ -14,7 +14,7 @@ import type {
   DigitizeStatus,
   DigitizeUnavailableReason,
 } from '../types/digitize.ts'
-import type { OrganizeRequest, OrganizeResult } from '../types/organize.ts'
+import type { OrganizerFeedbackRequest, OrganizeRequest, OrganizeResult } from '../types/organize.ts'
 import type { StudyPhotoResult } from '../types/media.ts'
 import { useSectionOrganizer } from './useSectionOrganizer.ts'
 
@@ -28,6 +28,8 @@ interface DigitizeGateway {
   organize?: (payload: OrganizeRequest, signal?: AbortSignal) => Promise<OrganizeResult>
   /** Guarda a foto com o estudo salvo, para conferência (feature 090-C); só com a caixa marcada. */
   storePhoto?: (studyId: number, file: File) => Promise<StudyPhotoResult>
+  /** Registro silencioso do feedback do organizador e da leitura (feature 091-B). */
+  sendFeedback?: (studyId: number, payload: OrganizerFeedbackRequest) => Promise<void>
 }
 
 interface DigitizeEnvironment {
@@ -214,6 +216,13 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
       } catch (error) {
         state.photoWarning = errorMessage(error)
       }
+    }
+    // Registro do feedback (091-B): em silêncio e sem esperar; uma falha nunca chega ao leitor (FR-007).
+    const send = gateway.sendFeedback
+    if (send) {
+      const studyId = state.saved.id
+      const payload: OrganizerFeedbackRequest = { origin: 'digitize', organizer: organizer.suggestion() }
+      Promise.resolve().then(() => send(studyId, payload)).catch(() => {})
     }
     state.phase = 'saved'
     releasePhoto()

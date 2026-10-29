@@ -41,7 +41,8 @@ export interface OrganizeResult {
   segments: OrganizeSegment[]
   explicit_headings: boolean
   review_count: number
-  engine: { name: string; version: string; sha256: string }
+  /** `adapter`: estudos revisados, quando a sugestão veio do adaptador do usuário (feature 091-C). */
+  engine: { name: string; version: string; sha256: string; adapter?: number | null }
   elapsed_ms: number
   warnings: OrganizeWarning[]
 }
@@ -53,3 +54,43 @@ export interface OrganizeStatus {
 }
 
 export type OrganizeErrorCode = 'too_large' | 'empty_text' | 'unavailable' | 'error'
+
+// Registro silencioso do feedback (feature 091-B): contrato de POST /api/studies/{id}/organizer-feedback.
+
+export interface OrganizerSuggestionSegment {
+  index: number
+  start: number
+  end: number
+  section: OrganizeSection
+  confidence: number
+  review: boolean
+}
+
+/** O que o organizador sugeriu, como o navegador recebeu; `reverted` quando o leitor voltou ao texto único. */
+export interface OrganizerSuggestion {
+  engine: { version: string; sha256: string; adapter: number | null }
+  outcome: 'saved' | 'reverted'
+  text: string
+  segments: OrganizerSuggestionSegment[]
+  /** Linhas com posição enviadas ao organizador (091-C), para o adaptador realinhar a página. */
+  lines?: OrganizeLine[]
+}
+
+export interface OrganizerFeedbackRequest {
+  origin: 'digitize' | 'import'
+  organizer: OrganizerSuggestion | null
+}
+
+/** Converte a resposta do organizador no que o registro guarda (sem o texto de cada trecho, que está em `text`). */
+export function toSuggestion(
+  result: OrganizeResult, text: string, outcome: OrganizerSuggestion['outcome'] = 'saved', lines?: OrganizeLine[] | null,
+): OrganizerSuggestion {
+  const suggestion: OrganizerSuggestion = {
+    engine: { version: result.engine.version, sha256: result.engine.sha256, adapter: result.engine.adapter ?? null },
+    outcome,
+    text,
+    segments: result.segments.map(({ index, start, end, section, confidence, review }) => ({ index, start, end, section, confidence, review })),
+  }
+  if (lines && lines.length) suggestion.lines = lines
+  return suggestion
+}

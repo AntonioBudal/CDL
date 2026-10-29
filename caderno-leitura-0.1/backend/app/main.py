@@ -30,6 +30,7 @@ from app.routers import (
     media,
     inbox,
     notifications,
+    organizer_feedback,
     preferences,
     profile,
     review,
@@ -173,6 +174,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(digitize.router, prefix="/api")
     application.include_router(media.router, prefix="/api")
     application.include_router(media.study_router, prefix="/api")
+    application.include_router(organizer_feedback.router, prefix="/api")
     application.include_router(trash.router, prefix="/api")
     application.include_router(covers.router, prefix="/api")
     application.include_router(dashboard.router, prefix="/api")

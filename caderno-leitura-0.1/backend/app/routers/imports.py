@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Response
 from fastapi.responses import JSONResponse
 
-from app.dependencies import CurrentUser
+from app.dependencies import CurrentUser, DatabaseSession
 from app.schemas.imports import ImportPreviewRead, ImportPreviewRequest, ImportWarningRead
 from app.schemas.organize import OrganizeRead, OrganizeRequest, OrganizeStatusRead
 from app.services.import_parser import parse_response
+from app.services.organizer import adapter_service
 from app.services.organizer import loader as organizer
 
 router = APIRouter(prefix="/imports", tags=["Importação"])
@@ -50,14 +51,16 @@ def organize_status(_current_user: CurrentUser, response: Response) -> OrganizeS
     summary="Sugerir a distribuição do texto nas 4 seções do estudo",
     description=(
         "Divide o texto em trechos e sugere a seção de cada um (Resumo, Explicação, Conceitos, Referências), "
-        "sem alterar nenhuma palavra. Não acessa o banco nem lê estudos. Após revisar, use POST /api/studies."
+        "sem alterar nenhuma palavra. Não lê estudos nem grava no banco; só com o adaptador ligado "
+        "(LEITORUM_ORGANIZER_ADAPTER=on) lê o estado do adaptador do usuário. Após revisar, use POST /api/studies."
     ),
     responses={413: {}, 422: {}, 503: {}},
 )
-def organize_text(payload: OrganizeRequest, _current_user: CurrentUser):
+def organize_text(payload: OrganizeRequest, current_user: CurrentUser, session: DatabaseSession):
     lines = [line.model_dump() for line in payload.lines] if payload.lines else None
+    user_state, count = adapter_service.user_state_for_suggestion(session, current_user.id)
     try:
-        result = organizer.organize(payload.text, lines)
+        result = organizer.organize(payload.text, lines, user_state, count)
     except organizer.OrganizeError as error:
         return JSONResponse(status_code=error.status, content={"detail": error.detail, "code": error.code}, headers=NO_STORE)
     return JSONResponse(content=OrganizeRead(**result).model_dump(mode="json"), headers=NO_STORE)

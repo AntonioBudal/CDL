@@ -65,7 +65,7 @@ import type { DigitizePreview, DigitizeStatus } from '../types/digitize.ts'
 import type {
   BulkDeleteRequest, BulkDeleteResult, MediaItem, MediaList, MediaListParams, MediaUsage, StudyPhotoResult,
 } from '../types/media.ts'
-import type { OrganizeRequest, OrganizeResult, OrganizeStatus } from '../types/organize.ts'
+import type { OrganizerFeedbackRequest, OrganizeRequest, OrganizeResult, OrganizeStatus } from '../types/organize.ts'
 
 export interface NotificationReadAllResponse {
   marked_count: number
@@ -359,6 +359,10 @@ export const api = {
     formData.append('file', file)
     return request<StudyPhotoResult>(`/studies/${studyId}/media`, { method: 'POST', body: formData })
   },
+  /** Registro silencioso do feedback do organizador (feature 091-B); a resposta é sempre ignorada. */
+  sendOrganizerFeedback: (studyId: number, payload: OrganizerFeedbackRequest) => request<void>(`/studies/${studyId}/organizer-feedback`, {
+    method: 'POST', body: JSON.stringify(payload),
+  }),
 
   // Métodos de Destaques e Ações Contextuais
   listStudyHighlights: (studyId: number, section?: string, signal?: AbortSignal) => {

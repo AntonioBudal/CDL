@@ -21,6 +21,7 @@ const draft = useDigitizeDraft({
   createStudy: api.createStudy,
   organize: api.organizeText,
   storePhoto: api.storeStudyPhoto,
+  sendFeedback: api.sendOrganizerFeedback,
 })
 const { state, canSave, uncertainLines } = draft
 const organizer = draft.organizer

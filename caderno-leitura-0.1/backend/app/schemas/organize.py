@@ -41,6 +41,7 @@ class OrganizeEngineRead(OutputModel):
     name: str
     version: str
     sha256: str
+    adapter: int | None = None  # feature 091-C: estudos revisados, quando a sugestão veio do adaptador
 
 
 class OrganizeWarningRead(OutputModel):

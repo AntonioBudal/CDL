@@ -11,6 +11,7 @@ from app.models.friendship import Friendship
 from app.models.inbox_capture import InboxCapture
 from app.models.local_credential import LocalCredential
 from app.models.notification import Notification
+from app.models.organizer_feedback import OrganizerFeedback, OrganizerUserState
 from app.models.resource_permission import ResourcePermission
 from app.models.search_history import SearchHistory
 from app.models.study import Study
@@ -39,6 +40,8 @@ __all__ = [
     "InboxCapture",
     "LocalCredential",
     "Notification",
+    "OrganizerFeedback",
+    "OrganizerUserState",
     "ResourcePermission",
     "SearchHistory",
     "Study",

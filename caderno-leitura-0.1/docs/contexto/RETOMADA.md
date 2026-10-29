@@ -846,3 +846,83 @@ C-Q4.
 - Feature 090 concluída nas três fatias (A, B e C).
 - Ainda com o usuário: ativar a "Proteção do sistema" no `D:\`; conferências visuais pendentes das features 086 e
   089.
+
+---
+
+## Sessão: Feature 091 — Organizador v2 e Registro do Feedback (28/10/2026)
+
+Spec aprovada com as recomendações Q1 a Q5:
+[`specs/091-organizer-v2-feedback/`](../../../specs/091-organizer-v2-feedback/spec.md). Três fatias:
+- **A:** troca para o v2;
+- **B:** registro `leitorum-feedback/1`, com migração `0033`;
+- **C:** adaptador dormente até 30 estudos revisados.
+
+### Fatia A — organizador v2 (implementada em 28/10/2026)
+1. `app/services/organizer/engine_v2.py`: cópia literal do `organizer_v2.py` do EXP-025 (commit `f8ab9e0`). São
+   as 4 pistas de referência lidas do próprio artefato (`extra_cues`). O `engine.py` não mudou.
+2. `loader.py` carrega `organizer-v2.json` (SHA-256 `9f6530a3…8aee`) e responde `version: "2"`. Um artefato com
+   pistas diferentes das conhecidas dá `integrity_failed`.
+3. `organizer-v1.json` removido. **Para voltar ao v1:** reverter a troca no `loader.py` e restaurar o artefato pelo
+   Git.
+4. Testes:
+   - paridade nos 192 casos do `organizer-parity-v2.json`;
+   - nos 144 casos do v1, seções iguais em todos e resultado idêntico nos 140 sem pista;
+   - `test_organizer_v2.py`: pistas, referência em lista e artefato adulterado.
+
+### Ponto de continuação
+- **Fatia A concluída (A015):** serviço reiniciado às 20:08 (`Stop-Service` e `Start-Service` como administrador);
+  o status responde `version: "2"`.
+  - **Atenção:** as duas tentativas anteriores não chegaram ao serviço. Para saber se um reinício pegou, conferir
+    no log do NSSM (Aplicativo, fonte `nssm`) os eventos 1040 de STOP/START e o horário de criação do processo.
+### Fatia B — registro silencioso do feedback (implementada em 28/10/2026)
+1. **Migração `0033_organizer_feedback`:** as tabelas `organizer_feedback` (um registro por estudo, `CASCADE` por
+   estudo e por usuário) e `organizer_user_state` (vazia até a fatia C).
+2. **Diff:** `app/services/organizer/feedback_signal.py`, cópia literal do `diff_signal.py` do EXP-024 (commit
+   `070c9e8`).
+3. **Montagem do registro:** `app/services/organizer/feedback.py`, com seções e texto lido vindos do banco.
+   - **Proteções:** só o dono, até 10 minutos depois de criar o estudo, um registro por estudo; teto de 256 KB e de
+     80 linhas lidas.
+   - **Desvio do plano:** o teto de 400 linhas levaria cerca de 26 s de alinhamento.
+4. **Rota `POST /api/studies/{id}/organizer-feedback`:** responde sempre `204`; uma falha só vira código no log.
+5. **Frontend:** a digitalização envia sempre; a importação, só se organizou. O envio fica fora da espera do
+   salvamento, e uma falha não aparece. "Voltar para o texto único" envia a sugestão como `reverted`.
+6. **Página "Sobre":** ganhou o parágrafo do registro local (Q2).
+7. **Exclusão de conta:** apaga as duas tabelas de forma explícita, além da cascata.
+8. **Ambiente real (B024–B027, 28/10/2026):**
+   - o banco do D: está em `0033_organizer_feedback`;
+   - snapshot `caderno-pre-migracao-20261028-234228.db` (revisão `0032`) íntegro, com o mesmo SHA-256 em
+     `D:\Leitorum\backups`, `D:\Leitorum\db\backups` e `Documents\Leitorum-backups`;
+   - uma digitalização de teste gerou 1 registro (`digitize`, revisado, 1 920 bytes), conferido só por contagens;
+   - **lição:** migrar só com o `.env`, sem `CADERNO_DATABASE_PATH`. Com essa variável, o snapshot vai para
+     `db\backups`;
+   - **lição:** pedidos de parada e reinício do serviço podem não chegar. Conferir sempre pelo log do NSSM.
+
+### Fatia C — adaptador dormente (implementada em 28/10/2026)
+1. **Referência no EXP-025 (F05, commit `c8a5082`):**
+   - `adapter_v2.py`: E1 + E2 + gating sobre o v2, sem `T_user`, *replay* nem portão-sombra, mais a guarda dos
+     últimos 20 registros;
+   - medição no teste do EXP-024 (Macro-F1 médio):
+
+     | Regime | v2 | Adaptador sempre ligado | Regra do produto |
+     | :--- | ---: | ---: | ---: |
+     | R1 | 0,751 | 0,772 | 0,759 |
+     | R3 | 0,751 | 0,772 | **0,733** |
+
+   - o P2 perde de 6 a 8 pontos; a guarda herda o viés da sugestão exibida.
+2. **Decisão do usuário (opção A):** a ativação fica **desligada** (`LEITORUM_ORGANIZER_ADAPTER=off`, padrão). O
+   estado continua sendo aprendido a cada registro. Ligar depende de um experimento com os registros reais.
+3. **Produto:**
+   - `adapter.py` e `adapter_state.py`: cópias literais, com paridade passo a passo no `adapter-parity-v2.json`;
+   - `adapter_service.py`: estado por usuário, lock, teto de 1 MB, liberação (chave, 30 revisados, artefato
+     atual e guarda);
+   - `engine.adapter` na resposta de `/api/imports/organize`;
+   - `lines` no registro da digitalização;
+   - `backend/scripts/rebuild_organizer_state.py`: reconstrução com o serviço parado, `--dry-run` por padrão.
+4. **Página "Sobre":** a frase passou a "Não enviamos seus textos para treinar modelos de terceiros".
+
+### Ponto de continuação
+- **Feature 091 concluída** nas três fatias. O serviço está no v2, com o registro ligado e o adaptador aprendendo
+  em silêncio, com a ativação desligada.
+- **Próximo passo possível:** com 30 ou mais registros revisados reais, um experimento (só números) para decidir
+  se o adaptador liga e com qual guarda.
+- **Ainda com o usuário:** a "Proteção do sistema" no `D:\`; as conferências visuais das features 086 e 089.

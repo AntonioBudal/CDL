@@ -1,4 +1,4 @@
-"""Feature 089: API de organização nas 4 seções, com banco descartável em tmp_path e textos fictícios.
+"""Features 089 e 091: API de organização nas 4 seções, com banco descartável em tmp_path e textos fictícios.
 
 O cliente é criado sem ``with`` para não rodar a manutenção de inicialização (lifespan).
 """
@@ -19,7 +19,7 @@ from app.db.session import create_sqlite_engine, get_session
 from app.main import create_app
 from app.services.organizer import loader
 
-FIXTURE = Path(__file__).with_name("fixtures") / "organizer-parity-v1.json"
+FIXTURE = Path(__file__).with_name("fixtures") / "organizer-parity-v2.json"
 PAGE = (
     "O capítulo trata de um tema de teste e apresenta a ideia central do autor fictício.\n"
     "Leitura de teste: leitura feita para conferir a organização automática.\n"
@@ -66,7 +66,7 @@ def by_text(body):
 def test_status_available(client):
     response = client[0].get("/api/imports/organize/status")
     assert response.status_code == 200
-    assert response.json() == {"available": True, "reason": None, "version": "1"}
+    assert response.json() == {"available": True, "reason": None, "version": "2"}
     assert response.headers["cache-control"] == "no-store"
 
 
@@ -80,7 +80,7 @@ def test_missing_artifact_makes_feature_unavailable(client, monkeypatch, tmp_pat
 
 
 def test_corrupted_artifact_fails_integrity(client, monkeypatch, tmp_path):
-    fake = tmp_path / "organizer-v1.json"
+    fake = tmp_path / "organizer-v2.json"
     fake.write_text('{"versao": "adulterada"}', encoding="utf-8")
     monkeypatch.setattr(loader, "ARTIFACT", fake)
     loader.reset_cache()
@@ -102,6 +102,7 @@ def test_organize_is_lossless_and_sections_are_original_text(client):
     assert body["review_count"] == sum(s["review"] for s in body["segments"])
     assert body["warnings"][0]["code"] == "suggestion"
     assert body["engine"]["name"] == "leitorum-organizer"
+    assert body["engine"]["adapter"] is None  # 091-C: adaptador desligado por padrão e sem registros
     assert response.headers["cache-control"] == "no-store"
 
 

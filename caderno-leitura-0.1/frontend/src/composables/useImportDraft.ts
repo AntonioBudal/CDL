@@ -2,13 +2,16 @@ import { computed, reactive } from 'vue'
 import { ApiError, errorMessage } from '../services/api.ts'
 import { positiveId, SECTION_LABELS } from '../types.ts'
 import type { AnalysisSections, ImportPreview, Study, StudyCreate, StudyTemplateId } from '../types.ts'
-import type { OrganizeRequest, OrganizeResult } from '../types/organize.ts'
+import { toSuggestion } from '../types/organize.ts'
+import type { OrganizerFeedbackRequest, OrganizerSuggestion, OrganizeRequest, OrganizeResult } from '../types/organize.ts'
 
 interface ImportGateway {
   preview: (source: string) => Promise<ImportPreview>
   createStudy: (payload: StudyCreate) => Promise<Study>
   /** Organização nas 4 seções (feature 089); opcional. */
   organizeText?: (payload: OrganizeRequest, signal?: AbortSignal) => Promise<OrganizeResult>
+  /** Registro silencioso do feedback do organizador (feature 091-B); só quando houve organização. */
+  sendOrganizerFeedback?: (studyId: number, payload: OrganizerFeedbackRequest) => Promise<void>
 }
 
 interface OrganizeSnapshot {
@@ -26,6 +29,8 @@ export function useImportDraft(gateway: ImportGateway) {
     preparing: false, saving: false, previewError: '', saveError: '',
     organizing: false, organizeError: '', organizeSnapshot: null as OrganizeSnapshot | null,
   })
+  // Sugestão da última organização, para o registro do feedback (091-B); fora do estado reativo, não aparece na tela.
+  let suggestion: OrganizerSuggestion | null = null
   const stale = computed(() => state.preview !== null && state.sourceResponse !== state.preview.source_response)
   const hasManualChanges = computed(() => state.preview !== null && SECTION_LABELS.some(({ key }) => state.sections[key] !== state.preview?.[key]))
   const hasAnalysis = computed(() => SECTION_LABELS.some(({ key }) => state.sections[key].trim()))
@@ -88,6 +93,12 @@ export function useImportDraft(gateway: ImportGateway) {
     try {
       const saved = await gateway.createStudy(payload)
       state.saved = saved
+      // Registro do feedback (091-B): em silêncio e sem esperar; uma falha nunca chega ao leitor (FR-007).
+      const send = gateway.sendOrganizerFeedback
+      const organizer = suggestion
+      if (send && organizer) {
+        Promise.resolve().then(() => send(saved.id, { origin: 'import', organizer })).catch(() => {})
+      }
       return saved
     } catch (error) {
       state.saveError = error instanceof ApiError && error.status === 0
@@ -122,6 +133,7 @@ export function useImportDraft(gateway: ImportGateway) {
       const result = await gateway.organizeText({ text: unassigned })
       if (!state.preview || state.preview.unassigned_text !== unassigned) return false
       state.organizeSnapshot = { sections: { ...state.sections }, unassigned }
+      suggestion = toSuggestion(result, unassigned)
       for (const { key } of SECTION_LABELS) {
         const addition = result.sections[key]
         if (!addition) continue
@@ -142,6 +154,7 @@ export function useImportDraft(gateway: ImportGateway) {
     state.sections = { ...snapshot.sections }
     state.preview.unassigned_text = snapshot.unassigned
     state.organizeSnapshot = null
+    if (suggestion) suggestion = { ...suggestion, outcome: 'reverted' }
     return true
   }
 
@@ -152,6 +165,7 @@ export function useImportDraft(gateway: ImportGateway) {
     state.sections = emptySections(); state.preview = null; state.saved = null
     state.previewError = ''; state.saveError = ''
     state.organizeSnapshot = null; state.organizeError = ''
+    suggestion = null
   }
 
   return {

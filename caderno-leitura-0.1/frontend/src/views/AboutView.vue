@@ -57,7 +57,7 @@ const commitments: CommitmentItem[] = [
   {
     icon: 'shield',
     title: 'Privacidade Constitucional',
-    description: 'Suas notas e anotações pertencem unicamente a você. Não usamos seus textos para treinar modelos, nem vendemos seus hábitos de leitura.',
+    description: 'Suas notas e anotações pertencem unicamente a você. Não enviamos seus textos para treinar modelos de terceiros, nem vendemos seus hábitos de leitura. Quando você digitaliza uma página ou usa "Organizar nas 4 seções", o Leitorum guarda localmente, junto do estudo, o que foi sugerido e o que você corrigiu, para melhorar a organização. Esses dados não saem do seu computador e são apagados junto com o estudo.',
   },
   {
     icon: 'eye-off',

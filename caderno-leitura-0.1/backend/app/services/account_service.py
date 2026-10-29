@@ -252,6 +252,12 @@ def delete_account_permanently(
             session.delete(media)
     session.flush()
 
+    # Registros do organizador (feature 091-B); a cascata das FKs também os removeria.
+    from app.models.organizer_feedback import OrganizerFeedback, OrganizerUserState
+
+    session.execute(delete(OrganizerFeedback).where(OrganizerFeedback.user_id == user_id_copy))
+    session.execute(delete(OrganizerUserState).where(OrganizerUserState.user_id == user_id_copy))
+
     # Estudos
     session.execute(delete(Study).where(Study.user_id == user_id_copy))
 

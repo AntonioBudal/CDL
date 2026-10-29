@@ -1,8 +1,12 @@
-"""Carga do artefato do organizador e operação de organização (feature 089); sem acesso ao banco.
+"""Carga do artefato do organizador e operação de organização (features 089 e 091); sem acesso ao banco.
 
-O artefato ``organizer-v1.json`` vem do EXP-023 e tem o SHA-256 fixado aqui. É carregado uma vez por
+O artefato ``organizer-v2.json`` vem do EXP-025 (ADR-011): o v1 do EXP-023 congelado mais 4 pistas fixas de
+referência, lidas do próprio artefato por ``engine_v2``. Tem o SHA-256 fixado aqui. É carregado uma vez por
 processo, sob lock. Se estiver ausente ou não conferir, a função fica indisponível e o resto do backend
 segue igual. Nunca registra o texto organizado em log.
+
+Com o estado de um usuário (feature 091-C, só com o adaptador ligado e liberado por ``adapter_service``), a
+sugestão vem do adaptador sobre o mesmo artefato; sem estado, é o v2 puro.
 """
 
 from __future__ import annotations
@@ -15,11 +19,11 @@ import time
 from pathlib import Path
 from typing import Any
 
-from app.services.organizer import engine
+from app.services.organizer import adapter, engine, engine_v2
 
-ARTIFACT = Path(__file__).resolve().parents[2] / "data" / "organizer" / "organizer-v1.json"
-EXPECTED_SHA256 = "60d6538de49495e4bfc01e00f048d5f4c0d1e55a7a84d6df33de9fee99c40d28"
-VERSION = "1"
+ARTIFACT = Path(__file__).resolve().parents[2] / "data" / "organizer" / "organizer-v2.json"
+EXPECTED_SHA256 = "9f6530a32726d593142b7a2de3bce3efc1c0095abf3a91335364db6343978aee"
+VERSION = "2"
 MAX_CHARS = 50_000
 MAX_UNITS = 400
 
@@ -55,8 +59,13 @@ def _load() -> dict[str, Any]:
                 body = path.read_bytes()
                 if hashlib.sha256(body).hexdigest() != EXPECTED_SHA256:
                     raise ValueError("SHA-256")
-                model = engine.Model.from_json(json.loads(body.decode("utf-8")))
-                _state = {"available": True, "reason": None, "organizer": engine.Organizer(model)}
+                organizer = engine_v2.from_artifact(json.loads(body.decode("utf-8")))
+                _state = {
+                    "available": True,
+                    "reason": None,
+                    "organizer": organizer,
+                    "adapter": adapter.AdapterV2(organizer, EXPECTED_SHA256),
+                }
             except (OSError, ValueError, KeyError, TypeError):
                 _state = {"available": False, "reason": "integrity_failed"}
         if not _state["available"]:
@@ -75,8 +84,23 @@ def status() -> dict[str, Any]:
     return {"available": state["available"], "reason": state["reason"], "version": VERSION if state["available"] else None}
 
 
-def organize(text: str, lines: list[dict[str, Any]] | None = None) -> dict[str, Any]:
-    """Sugere a distribuição de ``text`` nas 4 seções; levanta ``OrganizeError`` nos limites do contrato."""
+def adapter_engine() -> adapter.AdapterV2 | None:
+    """O adaptador sobre o artefato carregado (feature 091-C), ou ``None`` se o organizador estiver indisponível."""
+    state = _load()
+    return state["adapter"] if state["available"] else None
+
+
+def organize(
+    text: str,
+    lines: list[dict[str, Any]] | None = None,
+    user_state: dict | None = None,
+    adapter_count: int | None = None,
+) -> dict[str, Any]:
+    """Sugere a distribuição de ``text`` nas 4 seções; levanta ``OrganizeError`` nos limites do contrato.
+
+    ``user_state`` (o estado do adaptador do usuário) só chega quando o adaptador está ligado e liberado; então
+    ``adapter_count`` (estudos revisados) vai em ``engine.adapter``.
+    """
     started = time.perf_counter()
     if not text.strip():
         raise OrganizeError(422, "empty_text", "Não há texto para organizar.")
@@ -87,10 +111,17 @@ def organize(text: str, lines: list[dict[str, Any]] | None = None) -> dict[str, 
         raise OrganizeError(503, "unavailable", "A organização automática não está disponível nesta instalação.")
     organizer: engine.Organizer = state["organizer"]
     options = engine.Options()
-    units, _lines, vecs, xs = organizer.analyse(text, lines or None, options)
+    if user_state is None:
+        units, _lines, vecs, xs = organizer.analyse(text, lines or None, options)
+    else:
+        units, vecs, xs = state["adapter"].analyse(user_state, text, lines, None)
     if len(units) > MAX_UNITS:
         raise OrganizeError(413, "too_large", "O texto tem trechos demais para organizar de uma vez (máximo de 400).")
-    result = organizer.decide(units, vecs, xs, options)
+    if user_state is None:
+        result = organizer.decide(units, vecs, xs, options)
+    else:
+        probs = state["adapter"].probabilities(xs, state["adapter"].weights(user_state))
+        result = organizer.decide(units, vecs, xs, options, probs=probs)
     segments = [
         {
             "index": s["index"],
@@ -113,7 +144,12 @@ def organize(text: str, lines: list[dict[str, Any]] | None = None) -> dict[str, 
         "segments": segments,
         "explicit_headings": result["explicit_headings"],
         "review_count": sum(s["review"] for s in segments),
-        "engine": {"name": "leitorum-organizer", "version": VERSION, "sha256": EXPECTED_SHA256},
+        "engine": {
+            "name": "leitorum-organizer",
+            "version": VERSION,
+            "sha256": EXPECTED_SHA256,
+            "adapter": adapter_count if user_state is not None else None,
+        },
         "elapsed_ms": elapsed_ms,
         "warnings": [{"code": c, "message": WARNING_MESSAGES[c]} for c in codes],
     }

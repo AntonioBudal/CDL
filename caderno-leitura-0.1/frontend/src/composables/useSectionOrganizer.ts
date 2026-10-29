@@ -1,9 +1,10 @@
 import { computed, reactive } from 'vue'
 import { ApiError, errorMessage } from '../services/api.ts'
-import { ORGANIZE_SECTIONS } from '../types/organize.ts'
+import { ORGANIZE_SECTIONS, toSuggestion } from '../types/organize.ts'
 import type {
   OrganizeErrorCode,
   OrganizeLine,
+  OrganizerSuggestion,
   OrganizeRequest,
   OrganizeResult,
   OrganizeSection,
@@ -65,6 +66,11 @@ export function useSectionOrganizer(gateway: OrganizeGateway) {
     error: null as { code: OrganizeErrorCode; message: string } | null,
   })
   let controller: AbortController | null = null
+  // Para o registro silencioso do feedback (feature 091-B): a resposta da última organização e, se o leitor voltou
+  // ao texto único, a sugestão marcada como revertida.
+  let lastResult: OrganizeResult | null = null
+  let lastLines: OrganizeLine[] | null = null
+  let reverted: OrganizerSuggestion | null = null
 
   const edited = computed(() => state.active && KEYS.some(k => state.sections[k] !== state.built[k]))
   const hasText = computed(() => KEYS.some(k => state.sections[k].trim() !== ''))
@@ -102,6 +108,9 @@ export function useSectionOrganizer(gateway: OrganizeGateway) {
       const result = await gateway.organize(payload, current.signal)
       if (current.signal.aborted) return false
       state.snapshot = text
+      lastResult = result
+      lastLines = lines && lines.length ? lines : null
+      reverted = null
       state.segments = result.segments.map(s => ({ index: s.index, text: s.text, review: s.review }))
       state.assignment = result.segments.map(s => s.section)
       for (const k of KEYS) {
@@ -155,20 +164,31 @@ export function useSectionOrganizer(gateway: OrganizeGateway) {
     return true
   }
 
+  /** A sugestão do organizador para o registro do feedback; `null` se o leitor nunca organizou. */
+  function suggestion(): OrganizerSuggestion | null {
+    if (state.active && lastResult) return toSuggestion(lastResult, state.snapshot, 'saved', lastLines)
+    return reverted
+  }
+
   /** Sai do modo organizado e devolve o texto exato de antes de organizar. */
   function revert(): string {
     const text = state.snapshot
+    const kept = state.active && lastResult ? toSuggestion(lastResult, text, 'reverted', lastLines) : null
     reset()
+    reverted = kept
     return text
   }
 
   function reset() {
     cancel()
+    lastResult = null
+    lastLines = null
+    reverted = null
     Object.assign(state, {
       active: false, snapshot: '', segments: [], assignment: [], sections: empty(), built: empty(),
       warnings: [], explicitHeadings: false, error: null,
     })
   }
 
-  return { state, edited, hasText, reviewItems, reviewCounts, organize, cancel, move, revert, reset }
+  return { state, edited, hasText, reviewItems, reviewCounts, organize, cancel, move, revert, reset, suggestion }
 }

@@ -2,6 +2,15 @@
 
 **Feature**: `089-organizar-quatro-secoes` | Router: `backend/app/routers/imports.py` | Prefixo: `/api/imports`
 
+> **Feature 091, fatia A (ADR-011):** o artefato passou ao `organizer-v2.json`. `version` é `"2"` e o
+> `sha256` é `9f6530a3…`. A forma das respostas não mudou.
+>
+> **Feature 091, fatia C:** `engine.adapter` (`null` ou um número) entra na resposta.
+> - É `null` quando a sugestão é o v2 puro, que é sempre o caso com `LEITORUM_ORGANIZER_ADAPTER=off`, o padrão.
+> - Com `on`, traz o número de estudos revisados quando a sugestão veio do adaptador do usuário: 30 ou mais e a
+>   guarda favorável.
+> - Só com `on` a rota lê o estado do adaptador no banco. Ela nunca grava.
+
 As duas rotas:
 - exigem usuário autenticado (`CurrentUser`);
 - respondem com `Cache-Control: no-store`;
@@ -13,7 +22,7 @@ As duas rotas:
 
 **200**
 ```json
-{ "available": true, "reason": null, "version": "1" }
+{ "available": true, "reason": null, "version": "2" }
 ```
 ```json
 { "available": false, "reason": "integrity_failed", "version": null }
@@ -59,7 +68,7 @@ Sugere a distribuição do texto entre as 4 seções. **Não grava nada.** Para 
   ],
   "explicit_headings": false,
   "review_count": 0,
-  "engine": { "name": "leitorum-organizer", "version": "1", "sha256": "60d6538d…" },
+  "engine": { "name": "leitorum-organizer", "version": "2", "sha256": "9f6530a3…" },
   "elapsed_ms": 4,
   "warnings": [{ "code": "suggestion", "message": "Distribuição automática: confira as seções antes de salvar." }]
 }

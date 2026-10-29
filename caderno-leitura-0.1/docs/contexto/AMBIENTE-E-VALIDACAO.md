@@ -268,3 +268,40 @@ Fotos "Mantidas permanentemente", capas e avatares nunca expiram. O log do job s
 ### Minhas Imagens e Espaço (`/minhas-imagens`)
 Pelo menu do usuário ou em Ajustes. Mostra o uso, as imagens com a validade, e permite apagar uma, várias ou em
 lote ("estudos concluídos" e "mais de 30 dias", sempre com a prévia de quantas e quantos MB antes de confirmar).
+
+## 8. Organizador v2 e registro do feedback (feature 091)
+
+- **Organizador:** `backend/app/data/organizer/organizer-v2.json` (EXP-025, ADR-011), com o SHA-256 fixado em
+  `app/services/organizer/loader.py`. Um artefato ausente ou adulterado só desliga "Organizar nas 4 seções". O
+  artefato é lido uma vez por processo: depois de trocá-lo, reinicie o serviço.
+- **Migração `0033_organizer_feedback`:** cria duas tabelas:
+  - `organizer_feedback`: um registro `leitorum-feedback/1` por estudo salvo pela digitalização ou depois de
+    organizar;
+  - `organizer_user_state`: o estado do adaptador, preenchido a partir da fatia C.
+- **Privacidade:**
+  - o registro guarda o texto organizado, as seções salvas e as correções de leitura no banco local, como o
+    estudo;
+  - sai junto com o estudo, o livro ou a conta;
+  - não entra no ZIP de portabilidade;
+  - o log tem só o código e as contagens (`organizer-feedback: recorded (...)`).
+- **Conferir sem ler o conteúdo:**
+  `SELECT origin, reviewed, size_bytes FROM organizer_feedback ORDER BY id DESC LIMIT 5`, numa cópia feita pela API
+  de backup.
+
+### Adaptador do organizador (feature 091-C)
+
+| Variável | Padrão | Efeito |
+| :--- | :--- | :--- |
+| `LEITORUM_ORGANIZER_ADAPTER` | `off` | `on` deixa a sugestão usar o adaptador do usuário, com 30 ou mais estudos revisados e a guarda favorável. Valor inválido impede a partida. |
+
+- **Atualização:** o estado do adaptador é atualizado a cada registro, mesmo com `off`.
+- **Por que desligado:** no teste do EXP-025 (F05), a regra do produto ficou abaixo do v2 com feedback ruidoso.
+  Ligar depende de um experimento com os registros reais.
+- **Reconstrução:** com o serviço parado, a partir de `backend`. A segunda linha grava, depois do snapshot:
+
+  ```powershell
+  .venv\Scripts\python scripts\rebuild_organizer_state.py --all
+  .venv\Scripts\python scripts\rebuild_organizer_state.py --all --execute
+  ```
+
+  A saída tem só contagens.
