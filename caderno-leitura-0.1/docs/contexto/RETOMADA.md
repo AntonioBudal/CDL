@@ -984,3 +984,25 @@ Spec aprovada com as recomendações Q1 a Q5:
 - **Fora do escopo (achado pelo cálculo dos tokens):**
   - Cinza Neutro: cor sutil com 3,6 a 4,2:1;
   - Pergaminho: link sobre seleção com 4,06:1.
+  Os dois foram corrigidos logo depois (seção abaixo).
+
+## Contraste do Cinza Neutro e do Pergaminho (2026-10-29)
+
+- **Cinza Neutro:**
+  - a cor sutil vai de `#71717a` para `#5f5f68`, com pelo menos 4,5:1 sobre página, superfície, superfície suave e
+    inset;
+  - os selos de status "revisado" e "concluído" falhavam até sobre a superfície (3,7 a 4,4:1) e passam a usar as
+    cores de aviso e de sucesso do tema, `#92400e` e `#166534`.
+- **Pergaminho:**
+  - ganha um `--color-link` próprio, `#7A2A14`, e o selo "em estudo" usa a mesma cor. O destaque `#873018` continua
+    nos botões e nas bordas;
+  - a cor sutil vai de `#674024` para `#623D22`;
+  - o texto de sucesso e o selo "concluído" vão de `#365024` para `#334B21`;
+  - antes, todos esses ficavam entre 4,06 e 4,30:1 sobre o fundo selecionado.
+- **Conferência:** 22 telas medidas nos dois temas, 17 internas e 5 públicas, com o mesmo método da revisão anterior.
+  Nenhuma falha, fora os separadores decorativos e as capas geradas, cujo texto branco fica sobre gradiente escuro.
+- **Teste:** `theme-contrast-tokens.test.mjs` tem um teste novo para os dois temas. Ele falha com as cores antigas.
+- **Fora do escopo (achado pelo cálculo dos tokens):**
+  - Papel Fosco: selos "revisado" e "concluído" com 4,07 a 4,41:1 sobre superfície suave, seleção e fundo de
+    informação;
+  - Solarized: texto de sucesso sobre seleção com 4,39:1.

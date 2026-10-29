@@ -71,6 +71,23 @@ test('Grafite e Noite Suave: link sobre fundos de selo e aba e texto sutil passa
   assert.deepEqual(failures, [])
 })
 
+test('Cinza Neutro e Pergaminho: texto sutil, link e selos de status passam de 4,5:1 sobre os fundos', () => {
+  const failures = []
+  const status = ['rascunho', 'estudo', 'revisado', 'concluido'].map(s => `--color-status-${s}-text`)
+  for (const { name, vars } of themes.filter(t => ['cinza-neutro', 'pergaminho'].includes(t.name))) {
+    const link = vars['--color-link'] ?? vars['--color-accent']
+    for (const bg of ['--color-page', '--color-surface', '--color-surface-soft', '--color-surface-inset', '--color-selected-bg']) {
+      const pairs = { 'texto sutil': vars['--color-subtle'], link, sucesso: vars['--color-success-text'] }
+      for (const s of status) pairs[s.slice(8)] = vars[s]
+      for (const [label, fg] of Object.entries(pairs)) {
+        const value = ratio(fg, vars[bg])
+        if (value < 4.5 && !(label === 'texto sutil' && bg === '--color-selected-bg')) failures.push(`${name}: ${label} sobre ${bg} ${value.toFixed(2)}`)
+      }
+    }
+  }
+  assert.deepEqual(failures, [])
+})
+
 test('nenhuma regra usa a cor de destaque (ou os apelidos --color-primary e --accent) como cor de texto: o texto usa --color-link', () => {
   const offenders = []
   const walk = dir => {

@@ -47,7 +47,7 @@
 
 :root[data-theme="cinza-neutro"] {
   color-scheme: light;
-  --color-text: #2b2b2b; --color-muted: #52525b; --color-subtle: #71717a;
+  --color-text: #2b2b2b; --color-muted: #52525b; --color-subtle: #5f5f68;
   --color-placeholder: #52525b; --color-meta: #52525b; --color-page: #e8e8e8;
   --color-surface: #f0f0f0; --color-surface-soft: #dedede; --color-surface-inset: #e0e0e0;
   --color-surface-readonly: #e8e8e8; --color-surface-disabled: #dedede; --color-card-hover: #dedede;
@@ -64,8 +64,8 @@
   --color-success-text: #166534; --color-success-marker: #166534;
   --color-status-rascunho-text: #3f3f46; --color-status-rascunho-border: #a1a1aa;
   --color-status-estudo-text: #1d4ed8; --color-status-estudo-border: #3b82f6;
-  --color-status-revisado-text: #b45309; --color-status-revisado-border: #f59e0b;
-  --color-status-concluido-text: #15803d; --color-status-concluido-border: #22c55e;
+  --color-status-revisado-text: #92400e; --color-status-revisado-border: #f59e0b;
+  --color-status-concluido-text: #166534; --color-status-concluido-border: #22c55e;
 }
 
 :root[data-theme="grafite"] {
@@ -116,11 +116,11 @@
 
 :root[data-theme="pergaminho"] {
   color-scheme: light;
-  --color-text: #35200F; --color-muted: #603B20; --color-subtle: #674024;
+  --color-text: #35200F; --color-muted: #603B20; --color-subtle: #623D22;
   --color-placeholder: #603B20; --color-meta: #603B20; --color-page: #E7CCA0;
   --color-surface: #F2DDB6; --color-surface-soft: #DFBF8C; --color-surface-inset: #EAD0A3;
   --color-surface-readonly: #E7CCA0; --color-surface-disabled: #DFBF8C; --color-card-hover: #DFBF8C;
-  --color-surface-hover: #DFBF8C; --color-accent: #873018; --color-accent-hover: #632510;
+  --color-surface-hover: #DFBF8C; --color-accent: #873018; --color-accent-hover: #632510; --color-link: #7A2A14;
   --color-on-accent: #FFF4DC; --color-selected-text: #612713; --color-selected-bg: #D9AB73;
   --color-tab-hover: #D9AB73; --color-inverse-bg: #35200F; --color-on-inverse: #E7CCA0;
   --color-hover-text: #1a0f05; --color-tab-hover-text: #1a0f05; --color-accent-hover-text: #FFF4DC;
@@ -130,11 +130,11 @@
   --color-error-bg: #F5C6AE; --color-error-text: #821D20; --color-error-border: #821D20;
   --color-error-detail: #821D20; --color-error-marker: #821D20; --color-warning-bg: #EAC786;
   --color-warning-text: #543209; --color-warning-border: #543209; --color-warning-marker: #543209;
-  --color-success-text: #365024; --color-success-marker: #365024;
+  --color-success-text: #334B21; --color-success-marker: #365024;
   --color-status-rascunho-text: #35200F; --color-status-rascunho-border: #B58D58;
-  --color-status-estudo-text: #873018; --color-status-estudo-border: #873018;
+  --color-status-estudo-text: #7A2A14; --color-status-estudo-border: #873018;
   --color-status-revisado-text: #543209; --color-status-revisado-border: #85562F;
-  --color-status-concluido-text: #365024; --color-status-concluido-border: #365024;
+  --color-status-concluido-text: #334B21; --color-status-concluido-border: #365024;
 }
 
 :root[data-theme="e-ink"] {
