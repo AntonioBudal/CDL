@@ -264,3 +264,41 @@ modo organizado aparece com aviso e lista de conferência.
 | SC-005 | T010, T024 |
 | SC-006 | T014, T022, T024 |
 | SC-007 | T023 |
+
+**Conferência visual pelo agente (28/10/2026, features 086 e 089, servidor de validação com banco temporário e só
+dados fictícios):**
+- **Método:** o painel do navegador ficou escondido, então não houve captura de tela. A auditoria foi pelo DOM:
+  - estados inicial, lendo, revisão, organizado (com e sem trechos para conferir), salvo e erro;
+  - 1280 px e 320 px;
+  - os 10 temas.
+- **Passou:**
+  - **Layout:** sem rolagem horizontal em 320 px; hierarquia h1 → h2 → h3 sem saltos; campos com rótulo.
+  - **Alvos e foco:** alvos de 44 px (rádios e caixa pelo rótulo); regras de `:focus-visible` em todos os
+    controles, inclusive no E-Ink.
+  - **Abas em 320 px:** tabindex alternado; setas, Home e End com foco e painel sincronizados; uma aba visível por
+    vez.
+  - **Organização:** "Mover para" troca de aba e foca o editor; "Voltar para texto único" sem edição restaura o
+    texto, e com edição pede confirmação e respeita "Cancelar".
+  - **Leitura e salvamento:** `aria-busy`, `role=status` e `aria-live` na leitura; o foco vai para o resultado
+    depois de salvar e para o erro.
+- **Falhas de contraste (WCAG, mínimo 4,5:1):**
+  - **Grafite:** textos `muted-text` com 4,05:1, `eyebrow` e `lead` com 4,49:1, botão principal com 3,56:1 e link
+    com 2,99:1;
+  - **Noite Suave:** no erro, `notice error` com 4,26:1 e o link "Importar texto digitado" (`text-link`, cor de
+    destaque) com 3,15:1.
+- **Alvo pequeno:** o link "Importar texto digitado" no erro tem 26 px de altura.
+- **Não conferido:**
+  - estado "indisponível", que exige tirar o motor;
+  - celular físico;
+  - visual em captura de tela.
+- **Correção das falhas acima (29/10/2026, commit da correção de cores):**
+  - token novo `--color-link` (padrão: a cor de destaque), mais claro na Noite Suave (`#94a3b8`) e no Grafite
+    (`#a8a29e`); o `.text-link` passa a usá-lo;
+  - texto secundário, placeholder e meta do Grafite: `#888888` → `#a0a0a0`;
+  - erro na Noite Suave: `#f43f5e` → `#fb7185`;
+  - links das ações da digitalização com 44 px.
+  - **Nova auditoria:** nenhuma falha nos 6 estados × 10 temas.
+  - **Teste:** `tests/theme-contrast-tokens.test.mjs` confere os pares de contraste dos 10 temas a partir do
+    `palettes.css`. Ele falha com as cores antigas.
+- **Achado à parte:** o laço de redirecionamento do primeiro acesso sem login (`REQUIRE_AUTH=false` com o dono sem
+  senha) foi corrigido em 29/10/2026 (commit `209964c`).

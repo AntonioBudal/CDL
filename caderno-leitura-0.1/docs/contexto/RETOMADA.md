@@ -944,3 +944,19 @@ Spec aprovada com as recomendações Q1 a Q5:
 - **Validação:**
   - suítes: `pytest` 693 aprovados e 1 pulado; `npm test` 669; build ok;
   - no navegador, com banco temporário: `/livros` → "Primeiro Acesso" → senha de teste → `/livros`.
+
+## Sessão: Contraste dos temas Grafite e Noite Suave (29/10/2026)
+
+- **Origem:** a conferência visual das features 086 e 089, feita pelo agente por auditoria do DOM num servidor de
+  validação com dados fictícios. As falhas e o método estão no `tasks.md` das duas features.
+- **Correção:**
+  - token `--color-link` em `tokens.css` (padrão: a cor de destaque), mais claro na Noite Suave e no Grafite; o
+    `.text-link` passa a usá-lo;
+  - texto secundário do Grafite mais claro (`#a0a0a0`);
+  - erro da Noite Suave mais claro (`#fb7185`);
+  - links das ações da digitalização com 44 px.
+- **Teste:** `frontend/tests/theme-contrast-tokens.test.mjs`, contraste ≥ 4,5:1 dos pares de texto dos 10 temas,
+  calculado do `palettes.css`.
+- **Pendente:** a cor de destaque ainda é usada como cor de texto em cerca de 180 regras, além do `.text-link`. Elas
+  não foram revisadas uma a uma. A auditoria cobriu só as telas da 086 e da 089.
+

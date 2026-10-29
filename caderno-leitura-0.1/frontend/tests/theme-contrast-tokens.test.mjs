@@ -1,0 +1,62 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import fs from 'node:fs'
+import path from 'node:path'
+
+// Contraste mínimo (WCAG AA, 4,5:1) dos pares de texto dos 10 temas, calculado direto do palettes.css.
+// Origem: conferência visual das features 086 e 089 (Grafite e Noite Suave reprovavam em texto secundário, link e
+// mensagem de erro).
+
+const css = fs.readFileSync(path.resolve(process.cwd(), 'src/palettes.css'), 'utf-8')
+const themes = [...css.matchAll(/:root\[data-theme="([\w-]+)"\]\s*\{([\s\S]*?)\}/g)].map(([, name, body]) => ({
+  name,
+  vars: Object.fromEntries([...body.matchAll(/(--[\w-]+):\s*(#[0-9a-fA-F]{3,6})/g)].map(([, k, v]) => [k, v])),
+}))
+
+function luminance(hex) {
+  let h = hex.slice(1)
+  if (h.length === 3) h = [...h].map(c => c + c).join('')
+  const [r, g, b] = [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16) / 255)
+    .map(v => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4))
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+function ratio(a, b) {
+  const [la, lb] = [luminance(a), luminance(b)]
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05)
+}
+
+test('os 10 temas estão no palettes.css', () => {
+  assert.deepEqual(themes.map(t => t.name).sort(), [
+    'cinza-neutro', 'e-ink', 'fiorde', 'grafite', 'monocromatico', 'noite-suave', 'papel-fosco', 'pergaminho', 'solario', 'voltagem',
+  ])
+})
+
+test('texto secundário, link, erro e texto sobre o destaque têm contraste mínimo de 4,5:1 em todos os temas', () => {
+  const failures = []
+  for (const { name, vars } of themes) {
+    const link = vars['--color-link'] ?? vars['--color-accent']
+    const pairs = {
+      'texto secundário sobre superfície': [vars['--color-muted'], vars['--color-surface']],
+      'texto secundário sobre página': [vars['--color-muted'], vars['--color-page']],
+      'link sobre superfície': [link, vars['--color-surface']],
+      'link sobre página': [link, vars['--color-page']],
+      'mensagem de erro': [vars['--color-error-text'], vars['--color-error-bg']],
+      'texto sobre o destaque': [vars['--color-on-accent'], vars['--color-accent']],
+    }
+    for (const [label, [fg, bg]] of Object.entries(pairs)) {
+      const value = ratio(fg, bg)
+      if (value < 4.5) failures.push(`${name}: ${label} ${value.toFixed(2)}`)
+    }
+  }
+  assert.deepEqual(failures, [])
+})
+
+test('o link usa o token próprio, e a tela de digitalização dá 44 px aos links das ações', () => {
+  const style = fs.readFileSync(path.resolve(process.cwd(), 'src/style.css'), 'utf-8')
+  assert.match(style, /\.text-link \{ color: var\(--color-link\);/)
+  const tokens = fs.readFileSync(path.resolve(process.cwd(), 'src/tokens.css'), 'utf-8')
+  assert.match(tokens, /--color-link: var\(--color-accent\);/)
+  const view = fs.readFileSync(path.resolve(process.cwd(), 'src/views/DigitizeNotebookView.vue'), 'utf-8')
+  assert.match(view, /\.exit-card \.text-link,\n\.actions \.text-link \{\n {2}display: inline-flex;\n {2}align-items: center;\n {2}min-height: 44px;/)
+})

@@ -15,6 +15,9 @@
   --color-surface-hover: #f1f5f9;
   --color-accent: #1d4ed8;
   --color-accent-hover: #1e40af;
+  /* Cor de link como texto; igual ao destaque, salvo nos temas escuros em que o destaque é fundo de botão e fica
+     escuro demais como texto (contraste mínimo 4,5:1). */
+  --color-link: var(--color-accent);
   --color-on-accent: #fff;
   --color-selected-text: #163ba6;
   --color-selected-bg: #eaf0ff;

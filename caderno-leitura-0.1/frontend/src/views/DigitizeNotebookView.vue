@@ -872,7 +872,8 @@ h2[tabindex='-1']:focus:not(:focus-visible) {
   margin-top: calc(var(--space-unit) * 1);
 }
 
-.exit-card .text-link {
+.exit-card .text-link,
+.actions .text-link {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
