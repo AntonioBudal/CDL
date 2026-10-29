@@ -602,7 +602,7 @@ onBeforeUnmount(() => {
 
 .modal-btn-primary {
   background-color: var(--color-accent, #2563eb);
-  color: #ffffff;
+  color: var(--color-on-accent);
 }
 
 .modal-btn-primary:hover:not(:disabled) {

@@ -367,7 +367,7 @@ async function handleMarkRead(event: Event) {
   font-weight: 500;
   border-radius: 4px;
   background-color: var(--color-primary, #2563eb);
-  color: #ffffff;
+  color: var(--color-on-accent);
   border: none;
   cursor: pointer;
   transition: opacity 0.15s ease;

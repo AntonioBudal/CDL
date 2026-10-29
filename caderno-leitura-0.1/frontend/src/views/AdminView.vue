@@ -1336,7 +1336,7 @@ onMounted(() => {
 
 .btn-save-support {
   background-color: var(--color-primary, #2563eb);
-  color: #fff;
+  color: var(--color-on-accent);
   border: none;
   font-weight: 600;
 }

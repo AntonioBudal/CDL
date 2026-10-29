@@ -43,6 +43,7 @@ test('texto secundário, link, erro e texto sobre o destaque têm contraste mín
       'link sobre página': [link, vars['--color-page']],
       'mensagem de erro': [vars['--color-error-text'], vars['--color-error-bg']],
       'texto sobre o destaque': [vars['--color-on-accent'], vars['--color-accent']],
+      'texto sobre o hover do destaque': [vars['--color-accent-hover-text'], vars['--color-accent-hover']],
     }
     for (const [label, [fg, bg]] of Object.entries(pairs)) {
       const value = ratio(fg, bg)
@@ -126,6 +127,49 @@ test('regra com o fundo de seleção usa o texto de seleção (no E-Ink e no Mon
   assert.deepEqual(offenders, [])
   const book = fs.readFileSync(path.resolve(process.cwd(), 'src/views/BookView.vue'), 'utf-8')
   assert.match(book, /\.chapter-pill\.selected \.chapter-pill-num \{\s*color: var\(--color-selected-text\);/)
+})
+
+test('regra com o fundo de destaque não fixa texto branco: usa --color-on-accent (no Fiorde e no Voltagem o destaque é claro)', () => {
+  const offenders = []
+  const walk = dir => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) walk(full)
+      else if (/\.(css|vue)$/.test(entry.name)) {
+        const content = fs.readFileSync(full, 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '')
+        for (const [, selector, body] of content.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+          if (!/(?:^|[;\s{])background(?:-color)?:\s*var\(--(?:color-accent|color-primary|accent|color-accent-hover|color-primary-hover)\s*[,)]/.test(body)) continue
+          if (/(?:^|[;\s{])color:\s*(?:#fff\b|#ffffff\b|white\b)/i.test(body)) offenders.push(`${path.relative(process.cwd(), full)}: ${selector.trim().split('\n').pop()}`)
+        }
+      }
+    }
+  }
+  walk(path.resolve(process.cwd(), 'src'))
+  assert.deepEqual(offenders, [])
+  const editor = fs.readFileSync(path.resolve(process.cwd(), 'src/components/StudyEditorFields.vue'), 'utf-8')
+  assert.match(editor, /\.editor-tab-pill\.is-active \.tab-indicator \{\s*color: var\(--color-on-accent\);/)
+})
+
+test('hover: regra que pinta o hover do destaque troca o texto junto (na Noite Suave e no Grafite esse fundo é claro), e a descrição da aba de Ajustes acompanha a aba', () => {
+  const offenders = []
+  const walk = dir => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) walk(full)
+      else if (/\.(css|vue)$/.test(entry.name)) {
+        const content = fs.readFileSync(full, 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '')
+        for (const [, selector, body] of content.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+          if (!/(?:^|[;\s{])background(?:-color)?:\s*var\(--(?:color-accent-hover|color-primary-hover)\s*[,)]/.test(body)) continue
+          const color = body.match(/(?:^|[;\s{])color:\s*([^;]+);/)
+          if (!color || !/accent-hover-text/.test(color[1])) offenders.push(`${path.relative(process.cwd(), full)}: ${selector.trim().split('\n').pop()}`)
+        }
+      }
+    }
+  }
+  walk(path.resolve(process.cwd(), 'src'))
+  assert.deepEqual(offenders, [])
+  const settings = fs.readFileSync(path.resolve(process.cwd(), 'src/views/SettingsView.vue'), 'utf-8')
+  assert.match(settings, /\.settings-tab:hover \.tab-desc \{\s*color: var\(--color-tab-hover-text\);/)
 })
 
 test('E-Ink: o hover sublinha em vez de inverter, e as capas geradas têm fundo preto', () => {

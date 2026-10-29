@@ -107,7 +107,7 @@ onBeforeUnmount(() => {
 
 :deep(.study-internal-mention:hover) {
   background-color: var(--color-primary, #3b82f6);
-  color: #ffffff;
+  color: var(--color-on-accent);
   border-bottom-color: transparent;
   text-decoration: none;
 }

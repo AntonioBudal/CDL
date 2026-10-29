@@ -561,6 +561,7 @@ onUnmounted(() => {
 
 .share-copy-btn:hover {
   background-color: var(--color-accent-hover, var(--color-accent));
+  color: var(--color-accent-hover-text);
 }
 
 .share-copy-btn.copied {

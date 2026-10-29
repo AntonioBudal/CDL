@@ -1053,4 +1053,30 @@ Spec aprovada com as recomendações Q1 a Q5:
   - a presença do sublinhado e do fundo das capas no E-Ink.
 
   Os três falham com o código antigo.
-- **Pendente:** os outros oito temas foram conferidos só com as telas paradas, sem a simulação de hover.
+- **Pendente:** os outros oito temas foram conferidos só com as telas paradas, sem a simulação de hover. Feito logo
+  depois (seção abaixo).
+
+## Hover nos outros oito temas (2026-10-29)
+
+- **Simulação:** a mesma do E-Ink, nas 22 telas dos oito temas. Ela mede também a página inteira com o `html` em
+  hover, e assim cobriu as telas internas paradas do Fiorde e do Voltagem, que ainda não tinham sido conferidas.
+- **Achados:**
+  - **Branco fixo sobre o destaque:** 27 regras usavam `#fff`, `#ffffff` ou `white` como texto sobre
+    `--color-accent` ou `--color-primary`. No Fiorde e no Voltagem o destaque é claro, e o texto ficava com 1,1 a
+    1,7:1. Entre elas: selo do segmento ativo da caixa de entrada, aba ativa do editor, botões de login e cadastro,
+    botões principais de modais. Também o indicador da aba ativa do editor, numa regra à parte. Todas passam a
+    `--color-on-accent`, que nos temas claros já era branco ou quase branco;
+  - **Hover do destaque sem trocar o texto:** 13 regras pintavam `--color-accent-hover` sem trocar a cor. Na Noite
+    Suave e no Grafite esse fundo é claro, e o texto branco ficava com 2,5:1, por exemplo em "Continuar Leitura" e
+    "Criar Conta". Todas passam a `--color-accent-hover-text`, e o mesmo vale para `.hero-continue-btn:hover`;
+  - **Descrição das abas de Ajustes:** no hover, sobre `--color-tab-hover`, ficava com 3,9 a 4,1:1 na Noite Suave e
+    no Grafite. Agora acompanha `--color-tab-hover-text`.
+- **Resultado:** os 10 temas estão sem falhas nas 22 telas, paradas e com hover. Depois da última correção, as
+  telas internas foram repetidas nos quatro temas escuros; nos claros, o teste de tokens garante o par.
+- **Testes:** em `theme-contrast-tokens.test.mjs`:
+  - uma varredura que proíbe branco fixo sobre o destaque;
+  - uma varredura que exige `--color-accent-hover-text` onde o fundo é o hover do destaque;
+  - a descrição da aba de Ajustes no hover;
+  - o par texto e fundo do hover do destaque nos 10 temas.
+
+  As varreduras falham com o código antigo.

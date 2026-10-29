@@ -129,7 +129,7 @@ onBeforeUnmount(() => {
 
 .active-reading-toggle.is-active {
   background-color: var(--color-primary, #2563eb);
-  color: #ffffff;
+  color: var(--color-on-accent);
   border-color: var(--color-primary, #2563eb);
 }
 

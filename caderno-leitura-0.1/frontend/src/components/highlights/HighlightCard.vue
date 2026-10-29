@@ -881,7 +881,7 @@ function formatDate(isoDate: string): string {
   font-size: 0.75rem;
   font-weight: 600;
   background-color: var(--color-accent, #ef4444);
-  color: #ffffff;
+  color: var(--color-on-accent);
   border: none;
   border-radius: 5px;
   cursor: pointer;

@@ -500,7 +500,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 
 .status-pill.is-active {
   background-color: var(--color-accent, #1d4ed8);
-  color: #ffffff;
+  color: var(--color-on-accent);
   border-color: var(--color-accent, #1d4ed8);
 }
 

@@ -651,7 +651,7 @@ onUnmounted(() => {
 
 .editor-tab-pill.is-active {
   background: var(--color-primary, #3b82f6);
-  color: #ffffff;
+  color: var(--color-on-accent);
   border-color: var(--color-primary, #3b82f6);
 }
 
@@ -662,7 +662,7 @@ onUnmounted(() => {
 }
 
 .editor-tab-pill.is-active .tab-indicator {
-  color: #ffffff;
+  color: var(--color-on-accent);
 }
 
 .view-mode-toggle-btn {

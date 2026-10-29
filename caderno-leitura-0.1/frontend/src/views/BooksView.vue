@@ -469,6 +469,7 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 
 .add-book-btn:hover {
   background-color: var(--color-accent-hover);
+  color: var(--color-accent-hover-text);
   transform: translateY(-1px);
 }
 

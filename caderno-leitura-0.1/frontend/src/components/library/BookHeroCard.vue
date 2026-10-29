@@ -183,6 +183,7 @@ const emit = defineEmits<{
 
 .hero-continue-btn:hover {
   background-color: var(--color-accent-hover);
+  color: var(--color-accent-hover-text);
   transform: translateY(-1px);
 }
 

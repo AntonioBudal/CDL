@@ -573,7 +573,7 @@ onUnmounted(() => {
   padding: 1px 6px;
   border-radius: 9999px;
   background-color: var(--color-primary);
-  color: #ffffff;
+  color: var(--color-on-accent);
 }
 
 /* Busca Integrada */

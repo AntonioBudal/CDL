@@ -266,7 +266,7 @@ defineExpose({
   padding: 8px 16px;
   border-radius: var(--radius-md, 6px);
   background-color: var(--color-primary);
-  color: #ffffff;
+  color: var(--color-on-accent);
   border: none;
   cursor: pointer;
   transition: opacity 150ms ease, background-color 150ms ease;

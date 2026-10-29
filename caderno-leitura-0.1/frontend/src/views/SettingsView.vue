@@ -1766,6 +1766,11 @@ onBeforeUnmount(() => {
     line-height: 1.3;
   }
 
+  /* No hover a aba ganha o fundo de aba em hover, onde o texto secundário não tem contraste nos temas escuros. */
+  .settings-tab:hover .tab-desc {
+    color: var(--color-tab-hover-text);
+  }
+
   .settings-sidebar {
     position: sticky;
     top: 1.5rem;

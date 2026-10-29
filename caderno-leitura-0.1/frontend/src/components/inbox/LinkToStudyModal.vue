@@ -600,11 +600,12 @@ async function handleLink() {
 
 .button-primary {
   background-color: var(--color-primary, #4f46e5);
-  color: #ffffff;
+  color: var(--color-on-accent);
 }
 
 .button-primary:hover:not(:disabled) {
   background-color: var(--color-primary-hover, #4338ca);
+  color: var(--color-accent-hover-text);
 }
 
 .button:disabled {

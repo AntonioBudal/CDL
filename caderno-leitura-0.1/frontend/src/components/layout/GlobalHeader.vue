@@ -295,7 +295,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
 .quick-capture-trigger-btn:hover {
   background-color: var(--color-accent-hover, var(--color-accent));
   border-color: var(--color-accent-hover, var(--color-accent));
-  color: var(--color-on-accent, #ffffff);
+  color: var(--color-accent-hover-text);
   transform: translateY(-1px);
 }
 
@@ -417,6 +417,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
 
 .public-register-btn:hover {
   background-color: var(--color-accent-hover);
+  color: var(--color-accent-hover-text);
 }
 
 @media (max-width: 900px) {

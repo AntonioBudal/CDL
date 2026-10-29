@@ -417,7 +417,7 @@ defineExpose({
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #ffffff;
+  color: var(--color-on-accent);
   background-color: var(--color-accent, #2563eb);
   border: none;
   border-radius: 6px;
@@ -668,7 +668,7 @@ defineExpose({
   padding: 0.375rem 0.875rem;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: #ffffff;
+  color: var(--color-on-accent);
   background-color: var(--color-accent, #2563eb);
   border: none;
   border-radius: 6px;

@@ -320,12 +320,13 @@ const formattedDuration = computed(() => {
 
 .btn-primary {
   background-color: var(--color-accent, #2563eb);
-  color: #ffffff;
+  color: var(--color-on-accent);
   border: 1px solid transparent;
 }
 
 .btn-primary:hover {
   background-color: var(--color-accent-hover, #1d4ed8);
+  color: var(--color-accent-hover-text);
 }
 
 .btn-secondary {

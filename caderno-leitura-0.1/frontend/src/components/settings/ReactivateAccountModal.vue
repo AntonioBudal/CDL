@@ -347,7 +347,7 @@ async function handleReactivate() {
   cursor: pointer;
   background: var(--color-accent, #2563eb);
   border: 1px solid var(--color-accent, #2563eb);
-  color: white;
+  color: var(--color-on-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;

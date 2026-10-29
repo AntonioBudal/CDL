@@ -312,7 +312,7 @@ onBeforeUnmount(() => {
   font-size: 0.75rem;
   font-weight: 500;
   background: var(--color-primary, #18181b);
-  color: #fff;
+  color: var(--color-on-accent);
   border: none;
   border-radius: 4px;
   cursor: pointer;

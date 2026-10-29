@@ -253,11 +253,12 @@ button.secondary:hover:not(:disabled) {
 
 button.primary {
   background: var(--color-primary, #2b6cb0);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 button.primary:hover:not(:disabled) {
   background: var(--color-primary-hover, #2c5282);
+  color: var(--color-accent-hover-text);
 }
 
 button.danger-button {

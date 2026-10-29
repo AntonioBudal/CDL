@@ -417,12 +417,13 @@ async function handleSave() {
 
 .button-primary {
   background-color: var(--color-accent, #2563eb);
-  color: #ffffff;
+  color: var(--color-on-accent);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(37, 99, 235, 0.2);
 }
 
 .button-primary:hover:not(:disabled) {
   background-color: var(--color-accent-hover, #1d4ed8);
+  color: var(--color-accent-hover-text);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(37, 99, 235, 0.25);
   transform: translateY(-1px);
 }

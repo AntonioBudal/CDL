@@ -685,7 +685,7 @@ onMounted(() => {
   align-items: center;
   gap: 0.45rem;
   background-color: var(--color-primary, #2563eb);
-  color: #ffffff;
+  color: var(--color-on-accent);
   border: none;
   border-radius: 6px;
   padding: 0.65rem 1.25rem;
@@ -699,6 +699,7 @@ onMounted(() => {
 
 .btn-action-primary:hover {
   background-color: var(--color-primary-hover, #1d4ed8);
+  color: var(--color-accent-hover-text);
 }
 
 /* Micro-Toast Flutuante de Confirmação */
@@ -820,7 +821,7 @@ onMounted(() => {
 .pagination-page-btn.is-active {
   background-color: var(--color-primary, #2563eb);
   border-color: var(--color-primary, #2563eb);
-  color: #ffffff;
+  color: var(--color-on-accent);
   font-weight: 700;
 }
 

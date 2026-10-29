@@ -288,7 +288,7 @@ async function handleReactivated() {
   padding: 0.75rem 1rem;
   border-radius: var(--radius-control, 6px);
   background: var(--color-accent, #2563eb);
-  color: #ffffff;
+  color: var(--color-on-accent);
   font-size: 0.9375rem;
   font-weight: 600;
   border: none;

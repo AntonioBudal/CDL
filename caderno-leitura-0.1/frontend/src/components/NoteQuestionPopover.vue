@@ -482,11 +482,12 @@ onBeforeUnmount(() => {
 
 .submit-btn {
   background: var(--color-primary, #18181b);
-  color: #ffffff;
+  color: var(--color-on-accent);
 }
 
 .submit-btn:hover:not(:disabled) {
   background: var(--color-primary-hover, #27272a);
+  color: var(--color-accent-hover-text);
 }
 
 .submit-btn:disabled {

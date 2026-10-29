@@ -675,5 +675,6 @@ onMounted(fetchSharedStudies)
 
 .reset-filters-btn:hover {
   background: var(--color-accent-hover);
+  color: var(--color-accent-hover-text);
 }
 </style>
