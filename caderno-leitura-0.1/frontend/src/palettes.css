@@ -112,6 +112,8 @@
   --color-status-estudo-text: #111111; --color-status-estudo-border: #111111;
   --color-status-revisado-text: #111111; --color-status-revisado-border: #111111;
   --color-status-concluido-text: #111111; --color-status-concluido-border: #111111;
+  /* Tons suaves: nos outros temas valem a cor de seleção; aqui a seleção é preta, então o tom suave é cinza claro. */
+  --color-primary-subtle: #f1f5f9; --color-accent-subtle: #f1f5f9; --accent-subtle: #f1f5f9;
 }
 
 :root[data-theme="pergaminho"] {
@@ -143,10 +145,10 @@
   --color-placeholder: #000000; --color-meta: #000000; --color-page: #FFFFFF;
   --color-surface: #FFFFFF; --color-surface-soft: #FFFFFF; --color-surface-inset: #FFFFFF;
   --color-surface-readonly: #FFFFFF; --color-surface-disabled: #FFFFFF; --color-card-hover: #FFFFFF;
-  --color-surface-hover: #000000; --color-accent: #000000; --color-accent-hover: #000000;
+  --color-surface-hover: #FFFFFF; --color-accent: #000000; --color-accent-hover: #000000;
   --color-on-accent: #FFFFFF; --color-selected-text: #FFFFFF; --color-selected-bg: #000000;
-  --color-tab-hover: #000000; --color-inverse-bg: #000000; --color-on-inverse: #FFFFFF;
-  --color-hover-text: #FFFFFF; --color-tab-hover-text: #FFFFFF; --color-accent-hover-text: #FFFFFF;
+  --color-tab-hover: #FFFFFF; --color-inverse-bg: #000000; --color-on-inverse: #FFFFFF;
+  --color-hover-text: #000000; --color-tab-hover-text: #000000; --color-accent-hover-text: #FFFFFF;
   --color-border: #000000; --color-border-strong: #000000; --color-border-hover: #000000;
   --color-border-list: #000000; --color-border-divider: #000000; --color-border-step: #000000;
   --color-book-marker: #000000; --color-info-bg: #FFFFFF; --color-info-border: #000000;
@@ -158,6 +160,8 @@
   --color-status-estudo-text: #000000; --color-status-estudo-border: #000000;
   --color-status-revisado-text: #000000; --color-status-revisado-border: #000000;
   --color-status-concluido-text: #000000; --color-status-concluido-border: #000000;
+  /* Tons suaves: nos outros temas valem a cor de seleção; aqui a seleção é preta, então o tom suave é o papel. */
+  --color-primary-subtle: #FFFFFF; --color-accent-subtle: #FFFFFF; --accent-subtle: #FFFFFF;
   --line-height-reading: 1.9;
 }
 

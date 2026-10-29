@@ -1021,3 +1021,36 @@ Spec aprovada com as recomendações Q1 a Q5:
 - **Conferência:** 22 telas medidas nos dois temas, 17 internas e 5 públicas, sem falhas.
 - **Teste:** o teste de `theme-contrast-tokens.test.mjs` agora cobre Papel Fosco, Cinza Neutro, Pergaminho e
   Solarized. Ele falha com as cores antigas.
+
+## Contraste do E-Ink e do Monocromático (2026-10-29)
+
+- **Método novo: hover.** Além das telas paradas, a conferência simulou o hover elemento por elemento, com até 600
+  por tela. As regras `:hover` foram alteradas no próprio lugar da folha de estilo, para manter a ordem e a
+  especificidade. Uma primeira versão acrescentava as regras no fim da folha e acusava falsos problemas, porque
+  ganhava empates que a regra `.selected` vence no navegador.
+- **Causa:** nos dois temas, a seleção é preta. No E-Ink, o hover também era preto: `--color-surface-hover` e
+  `--color-tab-hover` com texto branco. Muitos componentes usam esses fundos sem trocar a cor do texto:
+  - no hover: abas de navegação, abas de Ajustes, abas da biblioteca, cartões de estudo e linhas de tabela;
+  - parados: o contador do painel, o selo da caixa de entrada e o `code` da lista de citações.
+
+  Os apelidos `--color-primary-subtle`, `--color-accent-subtle` e `--accent-subtle` valem a cor de seleção, e com
+  isso o selo "Você", a pílula "Modelo" e outros 13 selos de modais e da revisão ficavam com texto preto sobre
+  fundo preto.
+- **Correção:**
+  - **Hover no E-Ink:** sublinha em vez de inverter. O fundo de hover e o de aba em hover viraram branco, e o texto
+    de hover, preto. Uma regra no `themes.css` sublinha links, botões e abas sob o mouse;
+  - **Tons suaves:** no E-Ink e no Monocromático, `--color-primary-subtle`, `--color-accent-subtle` e
+    `--accent-subtle` deixam de ser a seleção: branco no E-Ink, `#f1f5f9` no Monocromático. Nos outros temas nada
+    muda;
+  - **Seleção:**
+    - o número do capítulo selecionado e o botão de foco ativo, na página do livro, passam ao texto de seleção;
+    - a linha em foco da lista de estudos passa ao tom suave;
+  - **Capas geradas no E-Ink:** fundo preto sólido. O E-Ink remove gradientes, e o texto branco ficava sobre branco.
+- **Resultado:** nenhuma falha nas 22 telas nos dois temas, paradas e com hover.
+- **Testes:** três novos em `theme-contrast-tokens.test.mjs`:
+  - os pares de hover e tom suave nos dois temas;
+  - uma varredura que exige o texto de seleção em toda regra com o fundo de seleção;
+  - a presença do sublinhado e do fundo das capas no E-Ink.
+
+  Os três falham com o código antigo.
+- **Pendente:** os outros oito temas foram conferidos só com as telas paradas, sem a simulação de hover.

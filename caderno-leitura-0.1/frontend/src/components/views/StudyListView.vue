@@ -660,7 +660,7 @@ function getAriaSort(col: SortColumn): 'ascending' | 'descending' | 'none' {
 }
 
 .study-row-item.is-focused {
-  background-color: var(--color-selected-bg, #eaf0ff);
+  background-color: var(--color-accent-subtle, #eaf0ff);
   border-left: 3px solid var(--color-accent, #1d4ed8);
 }
 

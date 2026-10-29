@@ -88,6 +88,52 @@ test('Papel Fosco, Cinza Neutro, Pergaminho e Solarized: texto sutil, link, suce
   assert.deepEqual(failures, [])
 })
 
+test('E-Ink e Monocromático: o texto passa de 4,5:1 sobre os fundos de hover e os tons suaves, e a seleção usa o texto de seleção', () => {
+  const failures = []
+  for (const { name, vars } of themes.filter(t => ['e-ink', 'monocromatico'].includes(t.name))) {
+    const link = vars['--color-link'] ?? vars['--color-accent']
+    const texts = { texto: vars['--color-text'], secundário: vars['--color-muted'], sutil: vars['--color-subtle'], link, hover: vars['--color-hover-text'], 'hover de aba': vars['--color-tab-hover-text'] }
+    // Esses fundos recebem texto comum em muitos componentes, que trocam o fundo no hover sem trocar a cor do texto.
+    for (const bg of ['--color-surface-hover', '--color-tab-hover', '--color-card-hover', '--color-primary-subtle', '--color-accent-subtle', '--accent-subtle']) {
+      for (const [label, fg] of Object.entries(texts)) {
+        const value = ratio(fg, vars[bg])
+        if (value < 4.5) failures.push(`${name}: ${label} sobre ${bg} ${value.toFixed(2)}`)
+      }
+    }
+    const selected = ratio(vars['--color-selected-text'], vars['--color-selected-bg'])
+    if (selected < 4.5) failures.push(`${name}: seleção ${selected.toFixed(2)}`)
+  }
+  assert.deepEqual(failures, [])
+})
+
+test('regra com o fundo de seleção usa o texto de seleção (no E-Ink e no Monocromático a seleção é preta)', () => {
+  const offenders = []
+  const walk = dir => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) walk(full)
+      else if (/\.(css|vue)$/.test(entry.name)) {
+        const content = fs.readFileSync(full, 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '')
+        for (const [, selector, body] of content.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+          if (!/(?:^|[;\s{])background(?:-color)?:\s*var\(--color-selected-bg\b/.test(body)) continue
+          const color = body.match(/(?:^|[;\s{])color:\s*([^;]+);/)
+          if (!color || !/selected-text|on-accent/.test(color[1])) offenders.push(`${path.relative(process.cwd(), full)}: ${selector.trim().split('\n').pop()}`)
+        }
+      }
+    }
+  }
+  walk(path.resolve(process.cwd(), 'src'))
+  assert.deepEqual(offenders, [])
+  const book = fs.readFileSync(path.resolve(process.cwd(), 'src/views/BookView.vue'), 'utf-8')
+  assert.match(book, /\.chapter-pill\.selected \.chapter-pill-num \{\s*color: var\(--color-selected-text\);/)
+})
+
+test('E-Ink: o hover sublinha em vez de inverter, e as capas geradas têm fundo preto', () => {
+  const themesCss = fs.readFileSync(path.resolve(process.cwd(), 'src/themes.css'), 'utf-8')
+  assert.match(themesCss, /:root\[data-theme='e-ink'\] :is\(a, button, \[role='tab'\], \[role='button'\], summary\):hover:not\(:disabled\) \{\s*text-decoration: underline;/)
+  assert.match(themesCss, /:root\[data-theme='e-ink'\] \.book-cover-placeholder \{\s*background-color: #000000 !important;/)
+})
+
 test('nenhuma regra usa a cor de destaque (ou os apelidos --color-primary e --accent) como cor de texto: o texto usa --color-link', () => {
   const offenders = []
   const walk = dir => {

@@ -48,6 +48,18 @@
   text-underline-offset: .2em;
 }
 
+/* Hover no E-Ink: sublinha em vez de inverter. O fundo de hover é branco (palettes.css), porque a maior parte dos
+   componentes troca o fundo no hover sem trocar a cor do texto. */
+:root[data-theme='e-ink'] :is(a, button, [role='tab'], [role='button'], summary):hover:not(:disabled) {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+/* Capas geradas: o E-Ink remove o gradiente, e o texto branco precisa de fundo. */
+:root[data-theme='e-ink'] .book-cover-placeholder {
+  background-color: #000000 !important;
+}
+
 /* Foco visível sobre o fundo preto das abas. */
 :root[data-theme='e-ink']
 .study-tabs [role='tab']:is([aria-selected='true'], :hover):focus-visible {
