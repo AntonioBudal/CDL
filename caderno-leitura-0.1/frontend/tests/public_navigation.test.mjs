@@ -18,12 +18,14 @@ test('router/index.ts define rotas públicas da raiz (/) e Sobre (/sobre)', () =
 })
 
 test('router/index.ts redireciona usuários autenticados da raiz (/) para o acervo', () => {
-  const routerPath = path.join(srcDir, 'router', 'index.ts')
-  const content = fs.readFileSync(routerPath, 'utf8')
+  // A decisão saiu para router/guard.ts (correção do laço do primeiro acesso); o comportamento é testado em
+  // router-owner-setup-guard.test.mjs.
+  const content = fs.readFileSync(path.join(srcDir, 'router', 'guard.ts'), 'utf8')
+  const router = fs.readFileSync(path.join(srcDir, 'router', 'index.ts'), 'utf8')
 
-  assert.ok(content.includes("to.path === '/'"), 'Guarda deve interceptar navegação para a raiz')
-  assert.ok(content.includes('auth.isAuthenticated.value'), 'Guarda deve checar se usuário está autenticado')
-  assert.ok(content.includes("let target = '/livros'"), 'Alvo padrão para logados deve ser /livros')
+  assert.ok(content.includes("input.path === '/'"), 'Guarda deve interceptar navegação para a raiz')
+  assert.ok(router.includes('isAuthenticated: auth.isAuthenticated.value'), 'Guarda deve checar se usuário está autenticado')
+  assert.ok(content.includes("'/livros'"), 'Alvo padrão para logados deve ser /livros')
 })
 
 test('LandingView.vue apresenta proposta de valor e chamadas de ação para login e registro', () => {

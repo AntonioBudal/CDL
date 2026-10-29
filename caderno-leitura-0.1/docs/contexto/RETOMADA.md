@@ -926,3 +926,21 @@ Spec aprovada com as recomendações Q1 a Q5:
 - **Próximo passo possível:** com 30 ou mais registros revisados reais, um experimento (só números) para decidir
   se o adaptador liga e com qual guarda.
 - **Ainda com o usuário:** a "Proteção do sistema" no `D:\`; as conferências visuais das features 086 e 089.
+
+---
+
+## Sessão: Correção do laço do primeiro acesso (29/10/2026)
+
+- **Sintoma:** num banco novo sem login obrigatório (`REQUIRE_AUTH=false`), com o proprietário ainda sem senha, a
+  página travava. O roteador mandava tudo para `/primeiro-acesso`, e a regra de usuário autenticado mandava de
+  volta para `/livros`, sem fim. Achado durante as conferências visuais da 086 e da 089.
+- **Correção:**
+  - a decisão do `router.beforeEach` foi para `frontend/src/router/guard.ts` (`resolveNavigation`, função pura);
+  - com o primeiro acesso pendente, só `/primeiro-acesso` é permitido, e essa regra vem antes da de usuário
+    autenticado.
+- **Testes:**
+  - `tests/router-owner-setup-guard.test.mjs` segue os redirecionamentos e falha em caso de laço;
+  - o `public_navigation.test.mjs` passou a olhar o `guard.ts`.
+- **Validação:**
+  - suítes: `pytest` 693 aprovados e 1 pulado; `npm test` 669; build ok;
+  - no navegador, com banco temporário: `/livros` → "Primeiro Acesso" → senha de teste → `/livros`.

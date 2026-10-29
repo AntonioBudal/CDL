@@ -9,6 +9,7 @@ import NotFoundView from '../views/NotFoundView.vue'
 import DigitizeNotebookView from '../views/DigitizeNotebookView.vue'
 import { updateSeoMeta } from '../composables/useSeoMeta'
 import { useAuthStore } from '../stores/auth.ts'
+import { resolveNavigation } from './guard.ts'
 import { api } from '../services/api'
 
 export const router = createRouter({
@@ -113,44 +114,26 @@ router.beforeEach(async (to, _from, next) => {
   const auth = useAuthStore()
   await auth.checkAuth()
 
-  // Se o proprietário ainda não cadastrou a senha mestra inicial
-  if (auth.ownerSetupRequired.value && to.path !== '/primeiro-acesso') {
-    return next('/primeiro-acesso')
+  let homePreference: string | null = null
+  try {
+    homePreference = typeof window !== 'undefined' && window.localStorage
+      ? window.localStorage.getItem('caderno_home_view')
+      : null
+  } catch {
+    // ignore
   }
 
-  const isPublicRoute = to.meta.public === true || ['/login', '/registro', '/primeiro-acesso'].includes(to.path)
-
-  // Se não estiver autenticado e tentar acessar rota protegida
-  if (!auth.isAuthenticated.value && !isPublicRoute) {
-    return next({ path: '/login', query: to.fullPath !== '/' ? { redirect: to.fullPath } : undefined })
-  }
-
-  // Se usuário autenticado tentar acessar raiz (Landing Page) ou telas de login/registro
-  if (auth.isAuthenticated.value) {
-    if (to.path === '/' || ['/login', '/registro', '/primeiro-acesso'].includes(to.path)) {
-      let target = '/livros'
-      try {
-        const pref = typeof window !== 'undefined' && window.localStorage
-          ? window.localStorage.getItem('caderno_home_view')
-          : null
-        if (pref === 'dashboard') {
-          target = '/dashboard'
-        }
-      } catch {
-        // ignore
-      }
-      return next(target)
-    }
-  }
-
-  // Se rota requer privilégios de administrador (RBAC)
-  if (to.meta.requiresAdmin === true || to.path === '/admin') {
-    if (!auth.isAdmin.value) {
-      return next({ path: '/livros', query: { aviso: 'acesso-restrito' } })
-    }
-  }
-
-  next()
+  const redirect = resolveNavigation({
+    path: to.path,
+    fullPath: to.fullPath,
+    isPublicMeta: to.meta.public === true,
+    requiresAdmin: to.meta.requiresAdmin === true,
+    isAuthenticated: auth.isAuthenticated.value,
+    isAdmin: auth.isAdmin.value,
+    ownerSetupRequired: auth.ownerSetupRequired.value,
+    homePreference,
+  })
+  return redirect === null ? next() : next(redirect)
 })
 
 router.afterEach((to) => {
