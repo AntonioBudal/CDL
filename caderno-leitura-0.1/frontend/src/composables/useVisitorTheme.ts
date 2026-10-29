@@ -43,7 +43,7 @@ export function useVisitorTheme() {
     }
     saveStoredTheme(themeId)
     const label = getThemeLabel(themeId)
-    statusMessage.value = `Tema aplicado: ${label}. A página inteira foi repintada.`
+    statusMessage.value = `Tema aplicado: ${label}.`
   }
 
   function resetToOriginal() {

@@ -72,7 +72,9 @@ export function updateSeoMeta(meta: SeoMeta): void {
   setMetaTag('meta[property="og:url"]', 'property', 'og:url', canonicalUrl)
   setMetaTag('meta[property="og:type"]', 'property', 'og:type', meta.ogType || 'website')
   setMetaTag('meta[property="og:site_name"]', 'property', 'og:site_name', 'Leitorum')
-  const ogImage = meta.ogImage || '/assets/og-cover.png'
+  // Open Graph e Twitter exigem URL absoluta para a imagem.
+  const ogImagePath = meta.ogImage || '/assets/og-cover.png'
+  const ogImage = /^https?:\/\//.test(ogImagePath) ? ogImagePath : new URL(ogImagePath, canonicalUrl).href
   setMetaTag('meta[property="og:image"]', 'property', 'og:image', ogImage)
 
   // Twitter Card
@@ -93,7 +95,7 @@ export function buildWebApplicationSchema(baseUrl = 'https://leitorum.com'): Web
     '@type': 'WebApplication',
     name: 'Leitorum',
     url: baseUrl,
-    description: 'Caderno pessoal de leitura e estudos em camadas. Metodologia de fichamento analítico, privacidade total e soberania local-first.',
+    description: 'Caderno de leitura e fichamento: estudos por livro e capítulo com resumo, explicação, conceitos e referências.',
     applicationCategory: 'EducationalApplication',
     operatingSystem: 'All',
     author: {

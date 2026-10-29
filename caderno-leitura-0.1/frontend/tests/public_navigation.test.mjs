@@ -28,15 +28,22 @@ test('router/index.ts redireciona usuários autenticados da raiz (/) para o acer
   assert.ok(content.includes("'/livros'"), 'Alvo padrão para logados deve ser /livros')
 })
 
-test('LandingView.vue apresenta proposta de valor e chamadas de ação para login e registro', () => {
+test('Página inicial oferece cadastro, entrada, Sobre e Apoie sem repetir a navegação do App', () => {
   const landingPath = path.join(srcDir, 'views', 'LandingView.vue')
   assert.ok(fs.existsSync(landingPath), 'LandingView.vue deve existir')
 
-  const content = fs.readFileSync(landingPath, 'utf8')
-  assert.ok(content.includes('to="/registro"'), 'Deve conter link para criar conta /registro')
-  assert.ok(content.includes('to="/login"'), 'Deve conter link para login /login')
-  assert.ok(content.includes('to="/sobre"'), 'Deve conter link para aprofundar na metodologia /sobre')
-  assert.ok(content.includes('to="/apoie"'), 'Deve conter link para apoiar o projeto /apoie')
+  // A chamada principal fica no hero; Entrar, Sobre e Apoie vêm do cabeçalho público do App (GlobalHeader).
+  const hero = fs.readFileSync(path.join(srcDir, 'components', 'landing', 'HeroSection.vue'), 'utf8')
+  assert.ok(hero.includes('to="/registro"'), 'Hero deve conter link para criar conta /registro')
+
+  const header = fs.readFileSync(path.join(srcDir, 'components', 'layout', 'GlobalHeader.vue'), 'utf8')
+  assert.ok(header.includes('to="/login"'), 'Cabeçalho público deve conter link para /login')
+  assert.ok(header.includes('to="/sobre"'), 'Cabeçalho público deve conter link para /sobre')
+  assert.ok(header.includes('to="/apoie"'), 'Cabeçalho público deve conter link para /apoie')
+
+  const landing = fs.readFileSync(landingPath, 'utf8')
+  assert.ok(!landing.includes('PublicHeader') && !landing.includes('PublicFooter'), 'Landing não deve renderizar um segundo cabeçalho ou rodapé')
+  assert.ok(!/<main[\s>]/.test(landing), 'Landing não deve abrir um segundo <main> dentro do App')
 })
 
 test('AboutView.vue detalha a metodologia de estudos em 4 partes', () => {

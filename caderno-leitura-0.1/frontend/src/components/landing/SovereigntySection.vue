@@ -1,334 +1,108 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
-import Icon from '../ui/Icon.vue'
-import type { IconName } from '../../types'
-
-interface PrincipleItem {
-  icon: IconName
+interface DataFact {
   title: string
   description: string
 }
 
-interface HistoricalMilestone {
-  era: string
-  title: string
-  description: string
-}
-
-const principles: PrincipleItem[] = [
+// Afirmações conferidas no código: export_service (Markdown, texto e .zip da conta), ausência de scripts de
+// análise no frontend e de clientes de IA no backend; as únicas saídas de rede são google_auth_service e
+// cover_service (e o script de login do Google no navegador, quando o login com Google está ativado).
+const facts: DataFact[] = [
   {
-    icon: 'shield',
-    title: 'Sem anúncios nem rastreadores ocultos',
-    description:
-      'Zero telemetria, zero cookies de rastreamento e zero monetização da sua atenção. Nenhum terceiro monitora quais livros você estuda ou que páginas você lê.',
+    title: 'Onde ficam',
+    description: 'No servidor em que este Leitorum está instalado, em um banco de dados SQLite.',
   },
   {
-    icon: 'lock',
-    title: 'Suas notas não alimentam modelos externos',
+    title: 'Exportação',
     description:
-      'Nenhum texto, citação ou comentário seu é transmitido a serviços externos de IA nem utilizado para treinamento de modelos de linguagem de terceiros.',
+      'Um livro ou um estudo pode ser exportado em Markdown ou texto simples. A exportação da conta gera um arquivo .zip com os estudos em Markdown, os dados em JSON e as imagens enviadas.',
   },
   {
-    icon: 'download',
-    title: 'Você pode levar tudo embora a qualquer instante',
+    title: 'Sem anúncios nem análise de uso',
     description:
-      'Soberania local-first: exporte seu acervo completo em formatos abertos e perenes (Markdown, JSON e backup SQLite). Seus cadernos pertencem a você para sempre.',
+      'O Leitorum não tem anúncios nem ferramentas de análise de terceiros, e os textos não são enviados a serviços de inteligência artificial.',
   },
   {
-    icon: 'heart',
-    title: 'Software independente mantido para leitores',
+    title: 'Conexões externas',
     description:
-      'Código auditável e transparente, sem pressão de algoritmos ou de retenção comercial. Um projeto concebido para durar décadas, não apenas trimestres fiscais.',
-  },
-]
-
-const milestones: HistoricalMilestone[] = [
-  {
-    era: 'Século XVI',
-    title: 'Cadernos de Lugares-Comuns (Commonplace Books)',
-    description:
-      'De Erasmo de Roterdã a Montaigne, leitores mantinham cadernos artesanais onde transcreviam e agrupavam citações capitais sob rubricas temáticas, construindo uma extensão física da memória.',
-  },
-  {
-    era: '1706',
-    title: 'O Método de Índice de John Locke',
-    description:
-      'O filósofo inglês sistematiza em tratado o método de indexação alfabética rápida de anotações, resolvendo o problema de encontrar trechos cruzados sem desorganizar as páginas do caderno.',
-  },
-  {
-    era: 'Hoje',
-    title: 'O Fichamento em Camadas no Leitorum',
-    description:
-      'Reunimos cinco séculos de sabedoria leitora em uma bancada digital sem ruído: quatro camadas cognitivas, marcações marginais, revisão espaçada e independência absoluta de nuvens proprietárias.',
+      'Só acontecem no login com Google, quando ele está ativado nesta instalação, e ao buscar uma capa pelo endereço que você informar.',
   },
 ]
 </script>
 
 <template>
-  <section id="principios" class="sovereignty-section" aria-labelledby="principles-heading">
-    <div class="sovereignty-container">
-      <!-- Seção 1: Quatro Garantias de Soberania -->
-      <div class="principles-block">
-        <div class="section-intro">
-          <span class="section-eyebrow">Soberania e Privacidade</span>
-          <h2 id="principles-heading" class="section-title">
-            Seus pensamentos não são matéria-prima de ninguém.
-          </h2>
-          <p class="section-lead">
-            Cadernos íntimos de anotações exigem um pacto ético de confiança inviolável. Nossos quatro compromissos com a sua integridade:
-          </p>
-        </div>
+  <section id="dados" class="sovereignty-section" aria-labelledby="data-heading">
+    <h2 id="data-heading" class="section-title">Seus dados</h2>
 
-        <div class="principles-grid">
-          <div
-            v-for="p in principles"
-            :key="p.title"
-            class="principle-card"
-          >
-            <div class="principle-icon-wrapper">
-              <Icon :name="p.icon" :size="22" />
-            </div>
-            <h3 class="principle-title">{{ p.title }}</h3>
-            <p class="principle-desc">{{ p.description }}</p>
-          </div>
-        </div>
+    <dl class="facts-list">
+      <div v-for="fact in facts" :key="fact.title" class="fact-item">
+        <dt class="fact-title">{{ fact.title }}</dt>
+        <dd class="fact-desc">{{ fact.description }}</dd>
       </div>
+    </dl>
 
-      <hr class="sovereignty-divider" />
-
-      <!-- Seção 2: Linhagem Histórica dos Commonplace Books -->
-      <div class="history-block">
-        <div class="section-intro">
-          <span class="section-eyebrow">Tradição Intelectual</span>
-          <h2 class="section-title">
-            Uma linhagem de quinhentos anos de leitura atenta.
-          </h2>
-          <p class="section-lead">
-            O Leitorum não inventou o ato de ler devagar; apenas resgatou a tradição dos maiores pensadores da história e a colocou ao alcance das suas mãos.
-          </p>
-        </div>
-
-        <div class="timeline-container">
-          <div
-            v-for="(m, idx) in milestones"
-            :key="m.era"
-            class="timeline-card"
-          >
-            <div class="timeline-era-badge">
-              <span class="era-index">{{ idx + 1 }}</span>
-              <span class="era-label">{{ m.era }}</span>
-            </div>
-            <h3 class="timeline-title">{{ m.title }}</h3>
-            <p class="timeline-desc">{{ m.description }}</p>
-          </div>
-        </div>
-
-        <div class="institutional-links-row">
-          <RouterLink to="/sobre" class="text-link-button">
-            <span>Ler o ensaio sobre a metodologia</span>
-            <Icon name="arrow-right" :size="16" />
-          </RouterLink>
-
-          <RouterLink to="/apoie" class="text-link-button secondary">
-            <span>Apoie o desenvolvimento independente</span>
-            <Icon name="heart" :size="16" />
-          </RouterLink>
-        </div>
-      </div>
-    </div>
+    <p class="source-note">
+      O código-fonte está publicado no
+      <a href="https://github.com/AntonioBudal/CDL" target="_blank" rel="noopener noreferrer">GitHub</a>.
+    </p>
   </section>
 </template>
 
 <style scoped>
 .sovereignty-section {
-  padding-block: clamp(4rem, 8vw, 7.5rem);
-  background-color: var(--color-page);
-  color: var(--color-text);
-  border-bottom: 1px solid var(--color-border-divider, var(--color-border));
-}
-
-.sovereignty-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 clamp(1rem, 4vw, 3rem);
-}
-
-.section-intro {
-  max-width: 68ch;
-  margin-bottom: clamp(2rem, 4vw, 3.5rem);
-}
-
-.section-eyebrow {
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-link);
-  display: block;
-  margin-bottom: 0.75rem;
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
 }
 
 .section-title {
   font-family: var(--font-reading, "Caderno EB Garamond", serif);
-  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-size: clamp(1.75rem, 3vw, 2.4rem);
   font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-  margin: 0 0 1rem 0;
+  line-height: 1.2;
+  margin: 0 0 1.75rem 0;
   color: var(--color-text);
 }
 
-.section-lead {
+.facts-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: 1.5rem 3rem;
+  margin: 0;
+}
+
+.fact-item {
+  min-width: 0;
+}
+
+.fact-title {
   font-size: 1.05rem;
-  line-height: 1.65;
-  color: var(--color-text);
-  margin: 0;
-  opacity: 0.95;
-}
-
-/* Grade de Princípios de Soberania */
-.principles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.75rem;
-}
-
-.principle-card {
-  padding: 1.75rem;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg, 10px);
-  display: flex;
-  flex-direction: column;
-}
-
-.principle-icon-wrapper {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md, 8px);
-  background-color: var(--color-page);
-  color: var(--color-link);
-  border: 1px solid var(--color-border);
-  margin-bottom: 1.25rem;
-}
-
-.principle-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  line-height: 1.3;
-  margin: 0 0 0.75rem 0;
-  color: var(--color-text);
-}
-
-.principle-desc {
-  font-size: 0.925rem;
-  line-height: 1.55;
-  color: var(--color-text);
-  opacity: 0.88;
-  margin: 0;
-}
-
-.sovereignty-divider {
-  border: 0;
-  border-top: 1px solid var(--color-border-divider, var(--color-border));
-  margin: clamp(3.5rem, 6vw, 5.5rem) 0;
-}
-
-/* Linha do Tempo Histórica */
-.timeline-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: 1.75rem;
-  margin-bottom: 2.5rem;
-}
-
-.timeline-card {
-  padding: 1.75rem;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg, 10px);
-  display: flex;
-  flex-direction: column;
-}
-
-.timeline-era-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.era-index {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  font-size: 0.75rem;
   font-weight: 700;
-  background-color: var(--color-accent);
-  color: var(--color-on-accent, #ffffff);
-}
-
-.era-label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-link);
-}
-
-.timeline-title {
-  font-family: var(--font-reading, "Caderno EB Garamond", serif);
-  font-size: 1.35rem;
-  font-weight: 600;
-  line-height: 1.25;
-  margin: 0 0 0.75rem 0;
+  line-height: 1.35;
+  margin: 0 0 0.35rem 0;
   color: var(--color-text);
 }
 
-.timeline-desc {
-  font-size: 0.925rem;
-  line-height: 1.55;
-  color: var(--color-text);
-  opacity: 0.88;
+.fact-desc {
+  font-size: 1rem;
+  line-height: 1.6;
   margin: 0;
+  color: var(--color-text);
 }
 
-.institutional-links-row {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  flex-wrap: wrap;
+.source-note {
+  margin: 2rem 0 0 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
 }
 
-.text-link-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.975rem;
-  font-weight: 600;
+.source-note a {
   color: var(--color-link);
   text-decoration: underline;
-  text-underline-offset: 4px;
-  min-height: 44px;
-  transition: opacity 0.15s ease;
+  text-underline-offset: 3px;
 }
 
-.text-link-button:hover {
-  opacity: 0.8;
-}
-
-.text-link-button.secondary {
-  color: var(--color-text);
-}
-
-.text-link-button:focus-visible {
+.source-note a:focus-visible {
   outline: 2px solid var(--color-accent);
-  outline-offset: 4px;
+  outline-offset: 2px;
 }
 </style>

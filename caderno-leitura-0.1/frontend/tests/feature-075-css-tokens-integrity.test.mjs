@@ -22,7 +22,7 @@ test('Feature 075 - Correções Visuais, de Cor e de Disposição', async (t) =>
   const userDropdownPath = path.resolve(srcDir, 'components/layout/UserDropdown.vue')
   const emptyStatePath = path.resolve(srcDir, 'components/ui/EmptyState.vue')
   const friendsViewPath = path.resolve(srcDir, 'views/FriendsView.vue')
-  const publicFooterPath = path.resolve(srcDir, 'components/landing/PublicFooter.vue')
+  const landingDataPath = path.resolve(srcDir, 'components/landing/SovereigntySection.vue')
   const supportViewPath = path.resolve(srcDir, 'views/SupportView.vue')
   const useVisitorThemePath = path.resolve(srcDir, 'composables/useVisitorTheme.ts')
 
@@ -170,11 +170,11 @@ test('Feature 075 - Correções Visuais, de Cor e de Disposição', async (t) =>
   })
 
   await t.test('6. [US5] Páginas Públicas: Link Código Aberto, Apoio e Persistência do Tema da Visita', () => {
-    const publicFooter = fs.readFileSync(publicFooterPath, 'utf-8')
+    const landingData = fs.readFileSync(landingDataPath, 'utf-8')
     assert.match(
-      publicFooter,
+      landingData,
       /https:\/\/github\.com\/AntonioBudal\/CDL/,
-      'PublicFooter deve apontar para o repositório oficial https://github.com/AntonioBudal/CDL'
+      'A seção "Seus dados" da página inicial deve apontar para o repositório oficial https://github.com/AntonioBudal/CDL'
     )
 
     const supportView = fs.readFileSync(supportViewPath, 'utf-8')

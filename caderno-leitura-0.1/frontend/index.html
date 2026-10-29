@@ -6,8 +6,8 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>Leitorum — Caderno de Leitura</title>
-    <meta name="description" content="Caderno pessoal de leitura e estudos em camadas. Metodologia em 4 partes, privacidade total, zero anúncios e dados sob seu controle." />
+    <title>Caderno de leitura e fichamento — Leitorum</title>
+    <meta name="description" content="Organize livros por capítulo e escreva estudos com resumo, explicação, conceitos e referências. Marque trechos, revise o que marcou e exporte em Markdown." />
     <meta name="theme-color" content="#09090b" />
     <link rel="canonical" href="https://leitorum.com" />
 
@@ -20,8 +20,8 @@
 
     <!-- Open Graph -->
     <meta property="og:site_name" content="Leitorum" />
-    <meta property="og:title" content="Leitorum — Caderno de Leitura" />
-    <meta property="og:description" content="Caderno pessoal de leitura e estudos em camadas. Metodologia em 4 partes, privacidade total, zero anúncios e dados sob seu controle." />
+    <meta property="og:title" content="Caderno de leitura e fichamento — Leitorum" />
+    <meta property="og:description" content="Organize livros por capítulo e escreva estudos com resumo, explicação, conceitos e referências. Marque trechos, revise o que marcou e exporte em Markdown." />
     <meta property="og:url" content="https://leitorum.com" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://leitorum.com/assets/og-cover.png" />
@@ -30,8 +30,8 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Leitorum — Caderno de Leitura" />
-    <meta name="twitter:description" content="Caderno pessoal de leitura e estudos em camadas. Metodologia em 4 partes, privacidade total, zero anúncios e dados sob seu controle." />
+    <meta name="twitter:title" content="Caderno de leitura e fichamento — Leitorum" />
+    <meta name="twitter:description" content="Organize livros por capítulo e escreva estudos com resumo, explicação, conceitos e referências. Marque trechos, revise o que marcou e exporte em Markdown." />
     <meta name="twitter:image" content="https://leitorum.com/assets/og-cover.png" />
 
     <!-- Schema.org JSON-LD Baseline -->
@@ -41,7 +41,7 @@
       "@type": "WebApplication",
       "name": "Leitorum",
       "url": "https://leitorum.com",
-      "description": "Caderno pessoal de leitura e estudos em camadas.",
+      "description": "Caderno de leitura e fichamento: estudos por livro e capítulo com resumo, explicação, conceitos e referências.",
       "applicationCategory": "EducationalApplication",
       "operatingSystem": "All",
       "offers": {
@@ -71,40 +71,25 @@
   </head>
   <body> 
     <div id="app">
-      <header>
-        <p>Caderno de leitura e estudo em camadas</p>
-        <h1>Ler devagar é uma forma de pensar.</h1>
-      </header>
       <main>
+        <h1>Caderno de leitura e fichamento</h1>
         <p>
-          O Leitorum é um ambiente calmo para quem estuda obras fundamentais. Em vez de acumular páginas lidas às pressas, pratique o fichamento em quatro camadas cognitivas: resuma a essência, explique os mecanismos, isole conceitos e teça conexões duradouras.
+          Organize seus livros por capítulo e escreva, para cada trecho, um resumo, uma explicação, os conceitos e as referências. Marque passagens, revise o que marcou e exporte tudo quando quiser.
         </p>
-        <nav aria-label="Ações de início">
-          <a href="/registro">Criar Conta Gratuita</a>
-          <a href="/login">Já possuo conta (Entrar)</a>
-        </nav>
-        <section>
-          <h2>O Método de Fichamento em 4 Dimensões</h2>
-          <p>
-            1. Resumo analítico: O que a obra diz em essência?<br />
-            2. Explicação aprofundada: Como e por que o autor sustenta a tese?<br />
-            3. Conceitos-chave: Quais categorias teóricas foram formuladas?<br />
-            4. Referências e conexões: Com quais tradições este texto dialoga?
-          </p>
-        </section>
-        <section>
-          <h2>Soberania e Privacidade Absoluta</h2>
-          <p>
-            Sem anúncios nem rastreadores. Suas anotações pessoais não alimentam modelos externos de inteligência artificial. Seus dados sob seu controle exclusivo com exportação completa em formatos abertos.
-          </p>
-        </section>
+        <p><a href="/registro">Criar conta</a> · <a href="/login">Entrar</a></p>
+        <h2>O que dá para fazer</h2>
+        <ul>
+          <li>Livros, capítulos e estudos, com a página ou o local de cada trecho.</li>
+          <li>Quatro partes por estudo: resumo, explicação, conceitos e referências.</li>
+          <li>Marcações (destaque, citação, nota, pergunta ou trecho oculto) e revisão das perguntas e trechos ocultos.</li>
+          <li>Importação de fichamentos, histórico de versões, busca e compartilhamento com amigos ou por link.</li>
+        </ul>
+        <h2>Seus dados</h2>
+        <p>
+          Os dados ficam no servidor em que o Leitorum está instalado, em SQLite. A conta pode ser exportada em um .zip com os estudos em Markdown, os dados em JSON e as imagens.
+        </p>
+        <p><a href="/sobre">Sobre o Leitorum</a> · <a href="/apoie">Apoie o Leitorum</a></p>
       </main>
-      <footer>
-        <nav aria-label="Navegação institucional">
-          <a href="/sobre">Sobre a metodologia</a>
-          <a href="/apoie">Apoie o projeto</a>
-        </nav>
-      </footer>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

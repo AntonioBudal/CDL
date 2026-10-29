@@ -25,7 +25,7 @@ export const router = createRouter({
       meta: {
         title: 'Início',
         public: true,
-        description: 'Caderno pessoal de leitura e estudos em camadas. Metodologia em 4 partes, privacidade total e zero anúncios.',
+        description: 'Organize livros por capítulo e escreva estudos com resumo, explicação, conceitos e referências. Marque trechos, revise o que marcou e exporte em Markdown.',
       },
     },
     {

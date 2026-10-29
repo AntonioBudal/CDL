@@ -102,6 +102,12 @@ test('updateSeoMeta injeta meta tags Open Graph e Twitter Cards para rotas públ
   assert.ok(ogUrl)
   assert.equal(ogUrl.getAttribute('content'), 'https://leitorum.com/livros')
 
+  // Open Graph e Twitter só aceitam imagem com URL absoluta.
+  const ogImage = document.head.querySelector('meta[property="og:image"]')
+  assert.equal(ogImage.getAttribute('content'), 'https://leitorum.com/assets/og-cover.png')
+  const twitterImage = document.head.querySelector('meta[name="twitter:image"]')
+  assert.equal(twitterImage.getAttribute('content'), 'https://leitorum.com/assets/og-cover.png')
+
   const twitterCard = document.head.querySelector('meta[name="twitter:card"]')
   assert.ok(twitterCard)
   assert.equal(twitterCard.getAttribute('content'), 'summary_large_image')

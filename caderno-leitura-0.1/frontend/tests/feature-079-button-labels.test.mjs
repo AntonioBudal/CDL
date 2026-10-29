@@ -84,22 +84,14 @@ describe('Feature 079: Rótulos de Botões e Linhas Texto + Botão em Telas Estr
     )
   })
 
-  it('US2: HeroSection e PublicFooter flexibilizam botoes sem corte por altura rigida', () => {
+  it('US2: HeroSection flexibiliza botoes sem corte por altura rigida', () => {
     const heroPath = path.join(srcDir, 'components/landing/HeroSection.vue')
-    const footerPath = path.join(srcDir, 'components/landing/PublicFooter.vue')
-
     const heroContent = fs.readFileSync(heroPath, 'utf-8')
-    const footerContent = fs.readFileSync(footerPath, 'utf-8')
 
     assert.doesNotMatch(
       heroContent,
       /height:\s*48px;\s*overflow:\s*hidden/,
       'HeroSection nao deve cortar texto de botao com height fixa e overflow hidden'
-    )
-    assert.doesNotMatch(
-      footerContent,
-      /height:\s*48px;\s*overflow:\s*hidden/,
-      'PublicFooter nao deve cortar texto de botao com height fixa e overflow hidden'
     )
   })
 
@@ -157,7 +149,6 @@ describe('Feature 079: Rótulos de Botões e Linhas Texto + Botão em Telas Estr
       'components/review/ReviewSummaryModal.vue',
       'components/session/SessionSummaryModal.vue',
       'components/landing/HeroSection.vue',
-      'components/landing/PublicFooter.vue',
       'components/auth/SessionsManager.vue',
       'views/SettingsView.vue',
       'components/sync/ConflictResolutionModal.vue',
