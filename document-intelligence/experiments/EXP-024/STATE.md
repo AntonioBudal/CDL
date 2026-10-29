@@ -13,7 +13,7 @@ Este arquivo é o diário de bordo: é atualizado ao fim de cada fase, antes do 
 | F02 | Fluxos longitudinais sintéticos e simulador de feedback | **concluída em 2026-10-28** | `F02` |
 | F03 | Motor adaptativo em Python puro e travas anti-regressão | **concluída em 2026-10-28** | `F03` |
 | F04 | Calibração, curvas de aprendizado, ablações, estresse e D-usuário | **concluída em 2026-10-28** | `F04` (2 commits) |
-| F05 | `RESULTS.md`, ADR-011 (se houver adoção) e fechamento; **para para revisão do usuário** | **concluída em 2026-10-28; aguardando revisão do usuário** | `F05` |
+| F05 | `RESULTS.md`, ADR-011 (se houver adoção) e fechamento; **para para revisão do usuário** | **concluída em 2026-10-28; revisada pelo usuário** (ver "Revisão do usuário") | `F05` |
 
 ## F00 — Linha de base (2026-10-28)
 
@@ -301,6 +301,32 @@ Os testes cobrem:
   - testes do EXP-023 e do EXP-024 no ambiente do experimento: 60 aprovados e 1 pulado;
   - LDF no ambiente principal: 2 aprovados.
 
+## Revisão do usuário (registrada em 2026-10-29)
+
+O usuário revisou o experimento pelas decisões que tomou sobre as três recomendações do RESULTS.md §8:
+
+| Recomendação | Decisão e execução |
+| :--- | :--- |
+| 1. `organizer-v2` estático com as pistas novas de referência | EXP-025; [ADR-011](../../docs/adr/ADR-011-organizer-v2-estatico.md) `ACCEPTED` pelo usuário em 2026-10-28, com a ressalva da H4. O número ADR-011 ficou com esse ADR, porque o EXP-024 não escreveu ADR. No Leitorum pela feature 091, fatia A. |
+| 2. Registrar o pacote `leitorum-feedback/1` e as `human_corrections` antes de aprender | Feature 091, fatia B: um registro por estudo salvo pela digitalização ou depois de organizar, no banco local. |
+| 3. Não ligar a pós-correção automática da leitura | Mantida desligada (feature 091, FR-016); as correções de leitura só ficam registradas. |
+
+Na fatia C da 091, o adaptador do EXP-025 F05 (E1 + E2 + gating sobre o v2, sem $T_{\text{user}}$ nem replay) foi ao
+produto com a **ativação desligada** (opção A do usuário).
+
+**Contagem dos registros reais (2026-10-29).** Cópia temporária do banco ativo do D: pela API de backup, origem e
+cópia em `mode=ro`, apagada no fim; só contagens, nenhuma coluna de texto lida:
+
+| Medida | Valor |
+| :--- | ---: |
+| Registros `leitorum-feedback/1` | 1 |
+| Revisados (contam para a ativação) | 1, de origem digitalização, de 2026-10-28 |
+| Usuários com registro | 1 |
+| Estados do adaptador | 0 (ativação desligada) |
+| Estudos no banco, para comparar | 6 |
+
 ## Próximo passo
 
-Revisão do usuário. Nada vai ao Leitorum sem decisão dele.
+Retomar o aprendizado online só com **pelo menos 30 registros revisados** reais (RESULTS.md §8), num experimento
+novo (EXP-026) sobre os registros, que decide se o adaptador pode ser ligado e por que as pistas de referência não
+disparam nos formatos reais. Até lá, o trabalho do Organizador depende de uso, não de código.

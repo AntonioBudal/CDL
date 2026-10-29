@@ -64,7 +64,8 @@ uv run python -m leitorum_di
 - **EXP-022 concluído com ressalva em 2026-10-27 por delegação** ([RESULTS](./experiments/EXP-022/RESULTS.md)): páginas do BRESSAY impressas e fotografadas pelo usuário, mas entregues já convertidas e recortadas (sem inclinação de câmera) — leitor ajustado 11,0 % contra 10,7 % nas mesmas páginas digitalizadas. Página limpa por software lê como digitalização; o custo da foto crua do celular segue sem medida (pede fotos JPG/HEIC sem conversão).
 - **Pipeline promovido ao Leitorum em 2026-10-27** (feature 086 do Leitorum, decisão do usuário; [ADR-008 §5](./docs/adr/ADR-008-pipeline-de-referencia.md)): leitor original (Apache-2.0) em `caderno-leitura-0.1/motor/`, texto como rascunho salvo como Estudo; validação com foto crua dispensada pelo usuário; paridade 458/458 linhas com o EXP-019. A regra de escopo abaixo continua: o trabalho no Leitorum foi autorizado pelo usuário para essa feature, não para os experimentos.
 - **EXP-023 concluído em 2026-10-27** ([RESULTS](./experiments/EXP-023/RESULTS.md), [ADR-010](./docs/adr/ADR-010-organizacao-nas-4-secoes.md) `ACCEPTED` pelo usuário): organização do texto nas 4 seções do Estudo em Python puro, < 10 ms por página; páginas fictícias 0,93 / 0,82 de Macro-F1 (limpo / CER 25 %); estudos reais do usuário (N = 3, cópia via backup em modo leitura, só números) 0,50. Proposta: botão revisável no Leitorum, calibração local desligada; implementação no Leitorum pela feature 089 (Spec Kit próprio).
-- **EXP-024 concluído em 2026-10-28** ([RESULTS](./experiments/EXP-024/RESULTS.md); aguarda revisão do usuário):
+- **EXP-024 concluído em 2026-10-28** ([RESULTS](./experiments/EXP-024/RESULTS.md); revisado pelo usuário, com as
+  três recomendações executadas pelo EXP-025 e pela feature 091 do Leitorum):
   melhoria contínua do Organizador e da pós-correção da leitura, em Python puro, com dados fictícios congelados,
   leitor simulado e D-usuário prequencial (banco ativo do D:, só números). **Portão de adoção não atingido;
   H1–H5 refutadas.** Achados:
@@ -88,6 +89,8 @@ uv run python -m leitorum_di
     sugestão exibida;
   - o usuário escolheu a opção A: o adaptador vai ao produto com a **ativação desligada**, e ligar depende de um
     experimento com os registros reais.
+- **Registros reais de feedback (contagem de 2026-10-29, só números):** 1 registro revisado, de 30 necessários para
+  o EXP-026 que decide ligar o adaptador ([STATE do EXP-024](./experiments/EXP-024/STATE.md), "Revisão do usuário").
 - **Tarefa Atual**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).

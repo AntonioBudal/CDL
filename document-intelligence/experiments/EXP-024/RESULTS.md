@@ -1,7 +1,8 @@
 # EXP-024: Relatório de Resultados — Melhoria Contínua Autônoma do Organizador e da Pós-Correção da Leitura
 
-* **Status:** `CONCLUÍDO` (2026-10-28). **Portão de adoção não atingido**: nenhuma adoção no produto e nenhum
-  ADR-011 de adoção. Aguarda a revisão do usuário.
+* **Status:** `CONCLUÍDO` (2026-10-28). **Portão de adoção não atingido**: nenhuma adoção do motor adaptativo no
+  produto e nenhum ADR de adoção. **Revisado pelo usuário:** as três recomendações do §8 foram levadas adiante pelo
+  EXP-025 (ADR-011) e pela feature 091 do Leitorum; ver [STATE.md](./STATE.md), "Revisão do usuário".
 * **Executor:** Claude Code
 * **Artefatos:**
   - [spec.md](./spec.md), [plan.md](./plan.md), [tasks.md](./tasks.md), [STATE.md](./STATE.md);
