@@ -81,6 +81,13 @@ uv run python -m leitorum_di
   do P1 0,00 → 0,55; P4 −1,5 ponto); EXP-023 idêntico ao v1; estudos reais (N = 4) 0,535 = 0,535, as pistas não
   disparam; custo 0,017 ms por página, mas a latência pré-registrada reprova por ruído (até +2,18 ms). Integração no
   Leitorum por feature própria (Spec Kit), com o registro `leitorum-feedback/1`.
+  **F05 (adaptador de referência para a feature 091-C):** E1 + E2 + gating sobre o v2, sem `T_user` nem *replay*.
+  - no teste do EXP-024, o adaptador sempre ligado dá 0,772 contra 0,751 do v2 (R1 e R3);
+  - o P2 perde de 6 a 8 pontos;
+  - a regra do produto, com a guarda dos últimos 20, fica em 0,733 no R3, porque a guarda herda o viés da
+    sugestão exibida;
+  - o usuário escolheu a opção A: o adaptador vai ao produto com a **ativação desligada**, e ligar depende de um
+    experimento com os registros reais.
 - **Tarefa Atual**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).

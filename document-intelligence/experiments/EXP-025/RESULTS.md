@@ -113,3 +113,63 @@ uv run --frozen --project experiments/EXP-023/envs/organizer pytest experiments/
 ```
 
 O `dusuario_static.py` exige `--db` e roda só sobre uma cópia temporária (ver o cabeçalho do script).
+
+## 6. F05 — adaptador online de referência (feature 091-C do Leitorum)
+
+Pedido pela feature 091 do Leitorum, decisões C-Q1 e C-Q2 aprovadas pelo usuário em 2026-10-28.
+
+**O que é:** `harness/adapter_v2.py`, o adaptador enxuto sobre o v2.
+- **E1:** pesos online sobre o diff de revisão, com âncora L2 e projeção;
+- **E2:** centróides do leitor e do livro, e a forma de linha de referência;
+- **gating:** página revertida, ou com pouca retenção e sem correções, não ensina nada;
+- **guarda:** os últimos 20 registros (pelo menos 10), medidos antes de aprender. O adaptador só é usado se
+  acertou tanto quanto o v2.
+
+Fica de fora `T_user`, *replay* e portão-sombra. Os parâmetros são os congelados do EXP-024 (`thresholds.json`), e
+um teste confere isso.
+
+**Medição** (`harness/evaluate_adapter.py`, uma rodada nos fluxos de **teste** do EXP-024, 63 s). O registro vira
+`leitorum-feedback/1`, sem nota, como no Leitorum. Macro-F1 médio dos 4 perfis no *holdout*:
+
+| Regime | v2 estático | Adaptador sempre ligado | Regra do produto (30 revisados e guarda) |
+| :--- | ---: | ---: | ---: |
+| R1 (implícito) | 0,751 | **0,772** | 0,759 |
+| R3 (20 % ruidoso) | 0,751 | **0,772** | **0,733** |
+
+- **O aprendizado rende na média:** cerca de +2 pontos nos dois regimes, sem portão nem *replay*. No fichamento em
+  lista (P1), as Referências vão de 0,54 a 0,87–0,92.
+- **O P2 piora em todos os modos:** perde de 6 a 8 pontos (0,693 → 0,617–0,629). O P3 no R1 também cai (0,973 →
+  0,955).
+- **A guarda erra a escolha:**
+  - no P1, recusou o adaptador, que era 10 pontos melhor;
+  - no P2, com o regime R3, aceitou o adaptador, que era 7,6 pontos pior.
+
+  **Causa provável:** a guarda compara as sugestões com as seções salvas, e o leitor simulado só corrige parte dos
+  erros. O que fica salvo herda a sugestão exibida. Com o v2 exibido até a ativação, a medida favorece o v2.
+- **Custos:** atualização com mediana de 20 ms e p95 de 30 ms; estado de 919 KB em 500 estudos.
+  - **ficam dentro** dos tetos do produto (150 ms e 1 MB);
+  - **passam** das metas da H5 do EXP-024 (25 ms e 512 KB).
+
+**Decisão do usuário (opção A):** o adaptador vai para o Leitorum com a ativação **desligada** por configuração.
+- o estado e as medidas da guarda continuam sendo gravados a cada registro;
+- ligar depende de um experimento com os registros reais (N ≥ 30, só números) que valide o adaptador e uma guarda
+  sem o viés da sugestão exibida. Um exemplo: contar só os trechos em que o leitor decidiu, isto é, os movidos e
+  os marcados para conferir.
+
+**Paridade para o produto:** `artifacts/adapter-parity-v2.json`, SHA-256
+`bef19d2605d53d79fe588ebbc137efccc8263b290730bb52d1bb476a9c58bb3e`, determinístico.
+- 40 passos: 20 páginas do P1 e 20 do P4, dos fluxos de **validação**, 2 usuários, regime R1;
+- cada passo traz o registro, a sugestão esperada antes de aprender, o código do `learn`, a norma de ΔW e o
+  SHA-256 do estado.
+
+**Benchmark:** `evaluation/benchmarks/BENCHMARK-20261028-exp-025-adapter.json`, auditado por um subagente.
+- **Veredito:** aprovado, com três ressalvas, todas atendidas:
+  - versionar os arquivos da F05 junto com o benchmark;
+  - registrar as metas da H5;
+  - usar páginas de validação nos testes e na paridade.
+- **Coluna `product` no modo `raw`:** vale 0,7875 no R1. Os números da tabela são do modo `product`.
+
+```powershell
+uv run --frozen --project experiments/EXP-023/envs/organizer python experiments/EXP-025/harness/evaluate_adapter.py
+uv run --frozen --project experiments/EXP-023/envs/organizer python experiments/EXP-025/harness/export_adapter_parity.py
+```

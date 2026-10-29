@@ -1,0 +1,452 @@
+{
+ "experiment": "EXP-025",
+ "phase": "F05",
+ "split": "test",
+ "git": {
+  "commit": "6bfa1ad",
+  "clean": false
+ },
+ "runs": {
+  "R1-raw-P1": {
+   "v2": {
+    "macro_f1": 0.6383,
+    "f1_references": 0.5447
+   },
+   "adapter": {
+    "macro_f1": 0.7531,
+    "f1_references": 0.9163
+   },
+   "product": {
+    "macro_f1": 0.7531,
+    "f1_references": 0.9163
+   },
+   "product_uses_adapter": true,
+   "pages_shown_by_adapter": 40,
+   "reviewed": 40,
+   "codes": {
+    "learned": 40
+   },
+   "guard_last20": {
+    "adapter": 0.8585,
+    "static": 0.7831
+   },
+   "update_ms_p95": 18.33
+  },
+  "R1-raw-P2": {
+   "v2": {
+    "macro_f1": 0.6928,
+    "f1_references": 0.9609
+   },
+   "adapter": {
+    "macro_f1": 0.6286,
+    "f1_references": 0.9406
+   },
+   "product": {
+    "macro_f1": 0.6928,
+    "f1_references": 0.9609
+   },
+   "product_uses_adapter": false,
+   "pages_shown_by_adapter": 40,
+   "reviewed": 35,
+   "codes": {
+    "learned": 35,
+    "gated": 5
+   },
+   "guard_last20": {
+    "adapter": 0.8345,
+    "static": 0.8708
+   },
+   "update_ms_p95": 18.24
+  },
+  "R1-raw-P3": {
+   "v2": {
+    "macro_f1": 0.9732,
+    "f1_references": 0.9911
+   },
+   "adapter": {
+    "macro_f1": 0.9545,
+    "f1_references": 0.9911
+   },
+   "product": {
+    "macro_f1": 0.9545,
+    "f1_references": 0.9911
+   },
+   "product_uses_adapter": true,
+   "pages_shown_by_adapter": 40,
+   "reviewed": 38,
+   "codes": {
+    "learned": 38,
+    "gated": 2
+   },
+   "guard_last20": {
+    "adapter": 0.89,
+    "static": 0.8825
+   },
+   "update_ms_p95": 26.67
+  },
+  "R1-raw-P4": {
+   "v2": {
+    "macro_f1": 0.6991,
+    "f1_references": 0.8171
+   },
+   "adapter": {
+    "macro_f1": 0.7498,
+    "f1_references": 0.8964
+   },
+   "product": {
+    "macro_f1": 0.7498,
+    "f1_references": 0.8964
+   },
+   "product_uses_adapter": true,
+   "pages_shown_by_adapter": 40,
+   "reviewed": 36,
+   "codes": {
+    "learned": 36,
+    "gated": 4
+   },
+   "guard_last20": {
+    "adapter": 0.8655,
+    "static": 0.7971
+   },
+   "update_ms_p95": 23.36
+  },
+  "R1-product-P1": {
+   "v2": {
+    "macro_f1": 0.6383,
+    "f1_references": 0.5447
+   },
+   "adapter": {
+    "macro_f1": 0.7393,
+    "f1_references": 0.891
+   },
+   "product": {
+    "macro_f1": 0.6383,
+    "f1_references": 0.5447
+   },
+   "product_uses_adapter": false,
+   "pages_shown_by_adapter": 0,
+   "reviewed": 40,
+   "codes": {
+    "learned": 40
+   },
+   "guard_last20": {
+    "adapter": 0.848,
+    "static": 0.8729
+   },
+   "update_ms_p95": 24.16
+  },
+  "R1-product-P2": {
+   "v2": {
+    "macro_f1": 0.6928,
+    "f1_references": 0.9609
+   },
+   "adapter": {
+    "macro_f1": 0.6167,
+    "f1_references": 0.9418
+   },
+   "product": {
+    "macro_f1": 0.6928,
+    "f1_references": 0.9609
+   },
+   "product_uses_adapter": false,
+   "pages_shown_by_adapter": 0,
+   "reviewed": 35,
+   "codes": {
+    "learned": 35,
+    "gated": 5
+   },
+   "guard_last20": {
+    "adapter": 0.8357,
+    "static": 0.872
+   },
+   "update_ms_p95": 18.1
+  },
+  "R1-product-P3": {
+   "v2": {
+    "macro_f1": 0.9732,
+    "f1_references": 0.9911
+   },
+   "adapter": {
+    "macro_f1": 0.9545,
+    "f1_references": 0.9911
+   },
+   "product": {
+    "macro_f1": 0.9545,
+    "f1_references": 0.9911
+   },
+   "product_uses_adapter": true,
+   "pages_shown_by_adapter": 8,
+   "reviewed": 38,
+   "codes": {
+    "learned": 38,
+    "gated": 2
+   },
+   "guard_last20": {
+    "adapter": 0.89,
+    "static": 0.8783
+   },
+   "update_ms_p95": 30.71
+  },
+  "R1-product-P4": {
+   "v2": {
+    "macro_f1": 0.6991,
+    "f1_references": 0.8171
+   },
+   "adapter": {
+    "macro_f1": 0.7498,
+    "f1_references": 0.8964
+   },
+   "product": {
+    "macro_f1": 0.7498,
+    "f1_references": 0.8964
+   },
+   "product_uses_adapter": true,
+   "pages_shown_by_adapter": 7,
+   "reviewed": 36,
+   "codes": {
+    "learned": 36,
+    "gated": 4
+   },
+   "guard_last20": {
+    "adapter": 0.8105,
+    "static": 0.7955
+   },
+   "update_ms_p95": 23.68
+  },
+  "R3-raw-P1": {
+   "v2": {
+    "macro_f1": 0.6383,
+    "f1_references": 0.5447
+   },
+   "adapter": {
+    "macro_f1": 0.7408,
+    "f1_references": 0.8746
+   },
+   "product": {
+    "macro_f1": 0.7408,
+    "f1_references": 0.8746
+   },
+   "product_uses_adapter": true,
+   "pages_shown_by_adapter": 40,
+   "reviewed": 38,
+   "codes": {
+    "gated": 2,
+    "learned": 38
+   },
+   "guard_last20": {
+    "adapter": 0.8793,
+    "static": 0.7434
+   },
+   "update_ms_p95": 17.46
+  },
+  "R3-raw-P2": {
+   "v2": {
+    "macro_f1": 0.6928,
+    "f1_references": 0.9609
+   },
+   "adapter": {
+    "macro_f1": 0.6249,
+    "f1_references": 0.9418
+   },
+   "product": {
+    "macro_f1": 0.6249,
+    "f1_references": 0.9418
+   },
+   "product_uses_adapter": true,
+   "pages_shown_by_adapter": 40,
+   "reviewed": 37,
+   "codes": {
+    "learned": 37,
+    "gated": 3
+   },
+   "guard_last20": {
+    "adapter": 0.8745,
+    "static": 0.8215
+   },
+   "update_ms_p95": 18.15
+  },
+  "R3-raw-P3": {
+   "v2": {
+    "macro_f1": 0.9732,
+    "f1_references": 0.9911
+   },
+   "adapter": {
+    "macro_f1": 0.9793,
+    "f1_references": 0.9911
+   },
+   "product": {
+    "macro_f1": 0.9793,
+    "f1_references": 0.9911
+   },
+   "product_uses_adapter": true,
+   "pages_shown_by_adapter": 40,
+   "reviewed": 38,
+   "codes": {
+    "learned": 38,
+    "gated": 2
+   },
+   "guard_last20": {
+    "adapter": 0.9132,
+    "static": 0.8704
+   },
+   "update_ms_p95": 31.32
+  },
+  "R3-raw-P4": {
+   "v2": {
+    "macro_f1": 0.6991,
+    "f1_references": 0.8171
+   },
+   "adapter": {
+    "macro_f1": 0.742,
+    "f1_references": 0.8964
+   },
+   "product": {
+    "macro_f1": 0.742,
+    "f1_references": 0.8964
+   },
+   "product_uses_adapter": true,
+   "pages_shown_by_adapter": 40,
+   "reviewed": 38,
+   "codes": {
+    "learned": 38,
+    "gated": 2
+   },
+   "guard_last20": {
+    "adapter": 0.8658,
+    "static": 0.8031
+   },
+   "update_ms_p95": 24.49
+  },
+  "R3-product-P1": {
+   "v2": {
+    "macro_f1": 0.6383,
+    "f1_references": 0.5447
+   },
+   "adapter": {
+    "macro_f1": 0.7307,
+    "f1_references": 0.8349
+   },
+   "product": {
+    "macro_f1": 0.6383,
+    "f1_references": 0.5447
+   },
+   "product_uses_adapter": false,
+   "pages_shown_by_adapter": 0,
+   "reviewed": 37,
+   "codes": {
+    "gated": 3,
+    "learned": 37
+   },
+   "guard_last20": {
+    "adapter": 0.8261,
+    "static": 0.8663
+   },
+   "update_ms_p95": 18.51
+  },
+  "R3-product-P2": {
+   "v2": {
+    "macro_f1": 0.6928,
+    "f1_references": 0.9609
+   },
+   "adapter": {
+    "macro_f1": 0.6171,
+    "f1_references": 0.9418
+   },
+   "product": {
+    "macro_f1": 0.6171,
+    "f1_references": 0.9418
+   },
+   "product_uses_adapter": true,
+   "pages_shown_by_adapter": 3,
+   "reviewed": 36,
+   "codes": {
+    "learned": 36,
+    "gated": 4
+   },
+   "guard_last20": {
+    "adapter": 0.8329,
+    "static": 0.8187
+   },
+   "update_ms_p95": 18.54
+  },
+  "R3-product-P3": {
+   "v2": {
+    "macro_f1": 0.9732,
+    "f1_references": 0.9911
+   },
+   "adapter": {
+    "macro_f1": 0.9793,
+    "f1_references": 0.9911
+   },
+   "product": {
+    "macro_f1": 0.9793,
+    "f1_references": 0.9911
+   },
+   "product_uses_adapter": true,
+   "pages_shown_by_adapter": 8,
+   "reviewed": 38,
+   "codes": {
+    "learned": 38,
+    "gated": 2
+   },
+   "guard_last20": {
+    "adapter": 0.9271,
+    "static": 0.8781
+   },
+   "update_ms_p95": 28.79
+  },
+  "R3-product-P4": {
+   "v2": {
+    "macro_f1": 0.6991,
+    "f1_references": 0.8171
+   },
+   "adapter": {
+    "macro_f1": 0.7223,
+    "f1_references": 0.8766
+   },
+   "product": {
+    "macro_f1": 0.6991,
+    "f1_references": 0.8171
+   },
+   "product_uses_adapter": false,
+   "pages_shown_by_adapter": 0,
+   "reviewed": 38,
+   "codes": {
+    "learned": 38,
+    "gated": 2
+   },
+   "guard_last20": {
+    "adapter": 0.8462,
+    "static": 0.8671
+   },
+   "update_ms_p95": 23.91
+  }
+ },
+ "mean-R1-raw": {
+  "v2": 0.7509,
+  "adapter": 0.7715,
+  "product": 0.7875
+ },
+ "mean-R1-product": {
+  "v2": 0.7509,
+  "adapter": 0.7651,
+  "product": 0.7589
+ },
+ "mean-R3-raw": {
+  "v2": 0.7509,
+  "adapter": 0.7717,
+  "product": 0.7717
+ },
+ "mean-R3-product": {
+  "v2": 0.7509,
+  "adapter": 0.7623,
+  "product": 0.7334
+ },
+ "costs": {
+  "studies": 500,
+  "update_ms_p50": 20.18,
+  "update_ms_p95": 30.49,
+  "state_kb": 918.8
+ },
+ "elapsed_s": 63.5
+}
