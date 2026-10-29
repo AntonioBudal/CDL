@@ -1006,3 +1006,18 @@ Spec aprovada com as recomendações Q1 a Q5:
   - Papel Fosco: selos "revisado" e "concluído" com 4,07 a 4,41:1 sobre superfície suave, seleção e fundo de
     informação;
   - Solarized: texto de sucesso sobre seleção com 4,39:1.
+  Os dois foram corrigidos logo depois (seção abaixo).
+
+## Contraste do Papel Fosco e do Solarized (2026-10-29)
+
+- **Papel Fosco:** os selos "revisado" e "concluído" passam a usar as cores de aviso e de sucesso do tema, `#92400e`
+  e `#166534`, como no Cinza Neutro.
+- **Solarized:** o texto de sucesso e o selo "concluído" vão de `#526B00` para `#4E6600`. O marcador e a borda
+  continuam `#526B00`.
+- **Cor fixa no código:** o aviso de conta Google vinculada em Ajustes (`.identity-status-linked`, em
+  `SessionsManager.vue`) usava um verde fixo, `#15803d`. Com ele, o texto ficava em 4,09:1 no Solarized e 2,86:1 nos
+  temas escuros. Agora usa `--color-success-text`. Os outros verdes e âmbares fixos trazem fundo próprio e passam de
+  4,5:1.
+- **Conferência:** 22 telas medidas nos dois temas, 17 internas e 5 públicas, sem falhas.
+- **Teste:** o teste de `theme-contrast-tokens.test.mjs` agora cobre Papel Fosco, Cinza Neutro, Pergaminho e
+  Solarized. Ele falha com as cores antigas.

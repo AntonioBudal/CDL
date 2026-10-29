@@ -18,8 +18,8 @@
   --color-success-text: #166534; --color-success-marker: #166534;
   --color-status-rascunho-text: #475569; --color-status-rascunho-border: #94a3b8;
   --color-status-estudo-text: #1d4ed8; --color-status-estudo-border: #3b82f6;
-  --color-status-revisado-text: #b45309; --color-status-revisado-border: #f59e0b;
-  --color-status-concluido-text: #15803d; --color-status-concluido-border: #22c55e;
+  --color-status-revisado-text: #92400e; --color-status-revisado-border: #f59e0b;
+  --color-status-concluido-text: #166534; --color-status-concluido-border: #22c55e;
 }
 
 :root[data-theme="noite-suave"] {
@@ -177,11 +177,11 @@
   --color-error-bg: #F5D8CA; --color-error-text: #9B3428; --color-error-border: #9B3428;
   --color-error-detail: #9B3428; --color-error-marker: #9B3428; --color-warning-bg: #F6E1A4;
   --color-warning-text: #795100; --color-warning-border: #795100; --color-warning-marker: #795100;
-  --color-success-text: #526B00; --color-success-marker: #526B00;
+  --color-success-text: #4E6600; --color-success-marker: #526B00;
   --color-status-rascunho-text: #2E4249; --color-status-rascunho-border: #B9B199;
   --color-status-estudo-text: #00686D; --color-status-estudo-border: #00686D;
   --color-status-revisado-text: #795100; --color-status-revisado-border: #A84B00;
-  --color-status-concluido-text: #526B00; --color-status-concluido-border: #526B00;
+  --color-status-concluido-text: #4E6600; --color-status-concluido-border: #526B00;
 }
 
 :root[data-theme="fiorde"] {

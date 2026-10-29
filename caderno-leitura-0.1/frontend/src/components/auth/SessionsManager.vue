@@ -602,7 +602,7 @@ onMounted(() => {
   align-items: center;
   gap: 0.35rem;
   font-size: 0.8125rem;
-  color: #15803d;
+  color: var(--color-success-text);
   font-weight: 500;
   margin: 0;
 }

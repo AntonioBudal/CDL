@@ -71,10 +71,10 @@ test('Grafite e Noite Suave: link sobre fundos de selo e aba e texto sutil passa
   assert.deepEqual(failures, [])
 })
 
-test('Cinza Neutro e Pergaminho: texto sutil, link e selos de status passam de 4,5:1 sobre os fundos', () => {
+test('Papel Fosco, Cinza Neutro, Pergaminho e Solarized: texto sutil, link, sucesso e selos de status passam de 4,5:1 sobre os fundos', () => {
   const failures = []
   const status = ['rascunho', 'estudo', 'revisado', 'concluido'].map(s => `--color-status-${s}-text`)
-  for (const { name, vars } of themes.filter(t => ['cinza-neutro', 'pergaminho'].includes(t.name))) {
+  for (const { name, vars } of themes.filter(t => ['papel-fosco', 'cinza-neutro', 'pergaminho', 'solario'].includes(t.name))) {
     const link = vars['--color-link'] ?? vars['--color-accent']
     for (const bg of ['--color-page', '--color-surface', '--color-surface-soft', '--color-surface-inset', '--color-selected-bg']) {
       const pairs = { 'texto sutil': vars['--color-subtle'], link, sucesso: vars['--color-success-text'] }
