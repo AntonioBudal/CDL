@@ -13,7 +13,7 @@ from app.schemas.account import (
 )
 from app.schemas.auth import AuthSuccessResponse
 from app.services import account_service, audit_service, export_service
-from app.services.persistence import commit_changes
+from app.services.persistence import checkpoint_after_purge, commit_changes
 from app.services.session_service import clear_session_cookie, create_session, set_session_cookie
 
 logger = logging.getLogger(__name__)
@@ -98,6 +98,7 @@ def delete_account_endpoint(
         password=payload.password,
     )
     commit_changes(session)
+    checkpoint_after_purge(session)
     clear_session_cookie(response, request)
 
     return AccountLifecycleResponse(

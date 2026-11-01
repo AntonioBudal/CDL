@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from datetime import UTC, datetime, timedelta
 from typing import Any, TypeVar
 
@@ -10,6 +11,8 @@ from sqlalchemy.orm import Session
 from app.db.base import Base
 
 from app.errors import ConcurrencyConflictError
+
+logger = logging.getLogger(__name__)
 
 Record = TypeVar("Record", bound=Base)
 
@@ -47,6 +50,30 @@ def get_user_resource_or_404(
         raise HTTPException(status_code=404, detail=f"{label} não encontrado.")
 
     return record
+
+
+def checkpoint_after_purge(session: Session) -> None:
+    """Depois de uma exclusão permanente já confirmada, leva o WAL para o banco e o trunca (F0.10.02).
+
+    Com secure_delete, as páginas do banco já saem zeradas; o WAL, porém, guarda as versões antigas até o checkpoint.
+    Leitores abertos podem impedir o TRUNCATE: a exclusão não falha por isso, e o resultado vai para o log.
+    """
+    # A conexão do engine fica sempre em transação (autocommit=False); a leitura aberta da própria sessão impediria
+    # o TRUNCATE. Como em _configure_connection, o PRAGMA roda com autocommit ligado e o estado é restaurado.
+    try:
+        session.commit()
+        raw = session.connection().connection.dbapi_connection
+        previous = raw.autocommit
+        raw.autocommit = True
+        try:
+            busy, log_frames, checkpointed = raw.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
+        finally:
+            raw.autocommit = previous
+    except Exception as error:  # noqa: BLE001 — a exclusão já foi confirmada; o checkpoint é só higiene
+        logger.warning("Checkpoint do WAL após exclusão permanente falhou: %s", type(error).__name__)
+        return
+    if busy:
+        logger.info("Checkpoint do WAL após exclusão ficou parcial (log=%s, gravados=%s).", log_frames, checkpointed)
 
 
 def commit_changes(session: Session) -> None:

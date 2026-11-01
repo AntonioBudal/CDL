@@ -1111,3 +1111,34 @@ Spec aprovada com as recomendações Q1 a Q5:
 - **Testes:** `feature-092-header-leve.test.mjs` (posição das regras, classe `quiet` em cada controle, "Capturar"
   sem ela, modo de visualização, sem hex de fallback); 3 pares novos em `theme-contrast-tokens.test.mjs`. O teste
   da F0.8.01 que proibia o atalho "Ctrl K" na busca passou a exigir a pílula só com espaço no header.
+
+## F0.10.02 — Endurecimento de segurança e privacidade verificável (2026-11-01)
+
+- **Spec, plano e tarefas:** `specs/093-endurecimento-seguranca/` (entregues juntos, aprovação única).
+- **CSP:** montada por `build_csp()` a cada pedido. Sem domínios de fontes (são locais), `img-src 'self' data:
+  blob:` (imagem externa num Markdown não carrega mais), `object-src 'none'` e `script-src` sem `'unsafe-inline'`.
+  `https://accounts.google.com` entra em `script-src`, `connect-src` e `frame-src` só quando `GOOGLE_CLIENT_ID`
+  está definido.
+- **Bootstrap de aparência:** no build, o plugin do Vite emite `dist/appearance-bootstrap.js` e o chama por
+  `<script src>` clássico no `<head>` (bloqueante, antes da pintura); no `vite dev` segue inline.
+- **Cabeçalhos:** `Referrer-Policy: same-origin`; `X-Robots-Tag: noindex, nofollow` em tudo, exceto `/`, `/sobre`,
+  `/apoie`, `/compartilhado/*`, `/robots.txt`, `/sitemap.xml` e `/.well-known/*`.
+- **Origem:** `core/origin_guard.py` recusa com 403 `POST`/`PUT`/`PATCH`/`DELETE` em `/api/` vindos de outra
+  origem; aceita `Host`, `X-Forwarded-Host`, `CADERNO_CORS_ORIGINS` e `LEITORUM_TRUSTED_ORIGINS`. Sem `Origin`, só
+  recusa com `Sec-Fetch-Site` cross-site ou same-site.
+- **`/.well-known/security.txt`:** RFC 9116; contato padrão nos avisos de segurança do GitHub,
+  `LEITORUM_SECURITY_CONTACT` substitui.
+- **Exclusão física:** `PRAGMA secure_delete=ON` em toda conexão e `checkpoint_after_purge()` (`wal_checkpoint(
+  TRUNCATE)` com autocommit, porque a conexão do engine vive em transação) depois de exclusão permanente de livro
+  ou estudo, esvaziar a lixeira, expurgo de 30 dias (só se algo saiu) e exclusão de conta (no router, depois do
+  commit). Teste com sentinela fictício confere os bytes do `.db` e do `-wal`; o controle sem o pragma encontra o
+  sentinela.
+- **Verificação:** 34 testes novos; 212 testes de backend relacionados (segurança, SEO, lixeira, conta, auth,
+  sessão) passam; build ok. No navegador: landing e `/livros` só com o próprio servidor na aba Rede; `/login` com
+  o botão do Google e só `accounts.google.com`; nenhuma violação de CSP no console; criar livro, lixeira e
+  restaurar funcionando com a conferência de origem.
+- **Limitações registradas:** backups antigos guardam o conteúdo até a rotação; `style-src 'unsafe-inline'` e o
+  sanitizador por lista de bloqueio continuam; o efeito do `Referrer-Policy: same-origin` no login com Google só
+  foi visto até o botão carregar (sem concluir um login real).
+- **Achado:** o sitemap e o `robots.txt` anunciam `/compartilhado/{id}`, rota que não existe no frontend (404).
+  Fica para a feature de cadernos públicos do Roadmap 1.0.

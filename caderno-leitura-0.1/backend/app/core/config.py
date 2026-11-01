@@ -337,6 +337,20 @@ def get_cors_allowed_origins() -> list[str]:
     return [orig for orig in origins if orig != "*"]
 
 
+def get_trusted_origins() -> list[str]:
+    """Origens extras aceitas pela conferência de origem (F0.10.02), em LEITORUM_TRUSTED_ORIGINS, separadas por vírgula."""
+    val = os.environ.get("LEITORUM_TRUSTED_ORIGINS", "")
+    return [item.strip().rstrip("/") for item in val.split(",") if item.strip() and item.strip() != "*"]
+
+
+DEFAULT_SECURITY_CONTACT = "https://github.com/AntonioBudal/CDL/security/advisories/new"
+
+
+def get_security_contact() -> str:
+    """Contato publicado em /.well-known/security.txt (RFC 9116); LEITORUM_SECURITY_CONTACT substitui o padrão."""
+    return os.environ.get("LEITORUM_SECURITY_CONTACT", "").strip() or DEFAULT_SECURITY_CONTACT
+
+
 def get_session_secret() -> str:
     """Retorna a chave secreta de sessão configurada no ambiente."""
     return os.environ.get("CADERNO_SESSION_SECRET", DEFAULT_DEVELOPMENT_SESSION_SECRET).strip()

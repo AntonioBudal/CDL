@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.db.types import utc_now
 from app.models import Book, Chapter, Study
-from app.services.persistence import commit_changes, get_or_404, get_user_resource_or_404
+from app.services.persistence import checkpoint_after_purge, commit_changes, get_or_404, get_user_resource_or_404
 
 
 def trash_book(session: Session, book_id: int, user_id: str | None = None) -> Book:
@@ -60,6 +60,8 @@ def permanent_delete_book(session: Session, book_id: int, user_id: str | None = 
     if cover_image:
         from app.services.cover_service import delete_cover_file_if_orphan
         delete_cover_file_if_orphan(session, cover_image, current_book_id=book_id)
+
+    checkpoint_after_purge(session)
 
 
 def trash_study(session: Session, study_id: int, user_id: str | None = None) -> Study:
@@ -127,6 +129,7 @@ def permanent_delete_study(session: Session, study_id: int, user_id: str | None 
         study = get_or_404(session, Study, study_id, "Estudo")
     session.delete(study)
     commit_changes(session)
+    checkpoint_after_purge(session)
 
 
 def get_trash_items(session: Session, user_id: str | None = None, threshold_days: int = 30) -> dict:
@@ -234,6 +237,9 @@ def empty_trash(session: Session, user_id: str | None = None) -> tuple[int, int]
         for c in cover_images:
             delete_cover_file_if_orphan(session, c)
 
+    if purged_books or purged_studies:
+        checkpoint_after_purge(session)
+
     return purged_books, purged_studies
 
 
@@ -276,5 +282,8 @@ def purge_expired_trash(session: Session, user_id: str | None = None, threshold_
 
         for c in cover_images:
             delete_cover_file_if_orphan(session, c)
+
+    if purged_books or purged_studies:
+        checkpoint_after_purge(session)
 
     return purged_books, purged_studies

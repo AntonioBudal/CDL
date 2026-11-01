@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
 from app.core.config import audit_session_secret, get_cors_allowed_origins
+from app.core.origin_guard import OriginGuardMiddleware
 from app.core.security_headers import SecurityHeadersMiddleware
 from app.errors import register_database_error_handlers, register_global_error_handlers
 from app.frontend import register_frontend
@@ -151,6 +152,10 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
             allow_methods=["*"],
             allow_headers=["*"],
         )
+
+    # Recusa pedidos que alteram dados vindos de outra origem (F0.10.02). Registrado antes do de cabeçalhos para
+    # ficar por dentro dele: a resposta 403 também sai com a CSP e os demais cabeçalhos.
+    application.add_middleware(OriginGuardMiddleware)
 
     # Injeção incondicional de cabeçalhos de segurança consagrados e CSP em modo Enforce (T005, T014)
     application.add_middleware(SecurityHeadersMiddleware)

@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime, timedelta
+
 from fastapi import APIRouter, Request, Response
 
+from app.core.config import get_security_contact
 from app.dependencies import DatabaseSession
 from app.services.seo_service import generate_robots_txt, generate_sitemap_xml
 
@@ -23,6 +26,21 @@ def get_sitemap_xml(session: DatabaseSession, request: Request) -> Response:
     base_url = str(request.base_url).rstrip("/")
     content = generate_sitemap_xml(session=session, base_url=base_url)
     return Response(content=content, media_type="application/xml; charset=utf-8")
+
+
+@router.get("/.well-known/security.txt", response_class=Response, summary="Contato de segurança (RFC 9116)")
+def get_security_txt(request: Request) -> Response:
+    """Publica como relatar falhas de segurança; Expires fica sempre a um ano da data do pedido (F0.10.02)."""
+    base_url = str(request.base_url).rstrip("/")
+    expires = (datetime.now(UTC) + timedelta(days=365)).strftime("%Y-%m-%dT00:00:00Z")
+    lines = [
+        f"Contact: {get_security_contact()}",
+        f"Expires: {expires}",
+        "Preferred-Languages: pt, en",
+        f"Canonical: {base_url}/.well-known/security.txt",
+    ]
+    content = "".join(line + "\n" for line in lines)
+    return Response(content=content, media_type="text/plain; charset=utf-8")
 
 
 @router.get("/site.webmanifest", response_class=Response, summary="Manifesto da aplicação web")

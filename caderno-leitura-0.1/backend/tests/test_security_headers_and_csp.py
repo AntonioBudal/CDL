@@ -63,7 +63,8 @@ def test_mandatory_security_headers_present_on_api_endpoints(security_client):
     headers = response.headers
     # OWASP Core Security Headers
     assert headers.get("X-Content-Type-Options") == "nosniff"
-    assert headers.get("Referrer-Policy") == "strict-origin-when-cross-origin"
+    # F0.10.02: same-origin (antes strict-origin-when-cross-origin).
+    assert headers.get("Referrer-Policy") == "same-origin"
     assert headers.get("Permissions-Policy") == "camera=(), microphone=(), geolocation=()"
     assert headers.get("X-Frame-Options") == "SAMEORIGIN"
 
@@ -72,9 +73,11 @@ def test_mandatory_security_headers_present_on_api_endpoints(security_client):
     assert csp is not None
     assert "default-src 'self'" in csp
     assert "frame-ancestors 'self'" in csp
-    assert "https://accounts.google.com" in csp
-    assert "https://fonts.googleapis.com" in csp
-    assert "https://fonts.gstatic.com" in csp
+    # F0.10.02: sem domínios de fontes (são locais) e sem Google quando o login com Google está desligado;
+    # os casos com e sem Google estão em test_security_hardening.py.
+    assert "https://fonts.googleapis.com" not in csp
+    assert "https://fonts.gstatic.com" not in csp
+    assert "'unsafe-inline'" not in csp.split("script-src", 1)[1].split(";", 1)[0]
 
 
 def test_security_headers_present_on_public_routes(security_client):

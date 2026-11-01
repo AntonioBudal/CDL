@@ -41,6 +41,10 @@ def _configure_connection(connection: Connection, _record: object) -> None:
             cursor.execute("PRAGMA foreign_keys=ON")
             if cursor.execute("PRAGMA foreign_keys").fetchone()[0] != 1:
                 raise RuntimeError("Nao foi possivel ativar as chaves estrangeiras do SQLite.")
+            # F0.10.02: conteudo apagado e sobrescrito com zeros nas paginas do banco (exclusao fisica real).
+            cursor.execute("PRAGMA secure_delete=ON")
+            if cursor.execute("PRAGMA secure_delete").fetchone()[0] != 1:
+                raise RuntimeError("Nao foi possivel ativar o secure_delete do SQLite.")
         finally:
             cursor.close()
     finally:
