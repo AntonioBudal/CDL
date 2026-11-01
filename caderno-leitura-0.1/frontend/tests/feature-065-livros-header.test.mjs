@@ -26,7 +26,11 @@ test('F0.8.01 - GlobalHeader.vue estrutura 3 blocos semânticos, centralização
   assert.ok(content.includes('SyncStatusBadge'), 'Deve conter badge de sincronização')
 
   // Refinamentos visuais da Diretiva 0.8
-  assert.ok(!content.includes('search-kbd'), 'Botão de busca não deve exibir badge de teclado Ctrl K')
+  // F0.10.01 reverteu esta decisão: a busca é uma pílula "Buscar · Ctrl K", mas o rótulo e o atalho só aparecem
+  // quando o header tem espaço (container query de 1400 px); fora disso, o botão continua só com o ícone.
+  assert.ok(content.includes('search-kbd'), 'Pílula de busca deve mostrar o atalho Ctrl K em telas largas')
+  assert.match(content, /\.search-label,\s*\.search-kbd\s*\{\s*display:\s*none;/, 'Rótulo e atalho ficam ocultos por padrão')
+  assert.match(content, /@container app-header \(min-width: 1400px\)[\s\S]*\.search-kbd\s*\{\s*display:\s*inline-flex/, 'Atalho só aparece quando o header tem espaço')
   assert.ok(content.includes(':name="\'plus\'"') || content.includes('name="plus"'), 'Botão de captura rápida deve renderizar ícone plus (+)')
   assert.ok(!content.includes('quick-capture-label'), 'Botão de captura rápida deve conter apenas o + sem texto longo')
 })

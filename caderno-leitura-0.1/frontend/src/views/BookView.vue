@@ -627,7 +627,7 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
                   <div v-if="selectedChapter?.id === chapter.id" class="chapter-pill-active-tools">
                     <button
                       type="button"
-                      class="pill-tool-btn"
+                      class="pill-tool-btn quiet"
                       :disabled="idx === 0 || movingChapter"
                       title="Mover capítulo para trás"
                       aria-label="Mover capítulo para trás"
@@ -637,7 +637,7 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
                     </button>
                     <button
                       type="button"
-                      class="pill-tool-btn"
+                      class="pill-tool-btn quiet"
                       :disabled="idx === chapters.length - 1 || movingChapter"
                       title="Mover capítulo para frente"
                       aria-label="Mover capítulo para frente"
@@ -647,7 +647,7 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
                     </button>
                     <button
                       type="button"
-                      class="pill-tool-btn"
+                      class="pill-tool-btn quiet"
                       title="Renomear capítulo"
                       aria-label="Renomear capítulo"
                       @click.prevent="startEditChapter(chapter)"

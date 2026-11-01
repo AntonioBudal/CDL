@@ -162,7 +162,7 @@ onBeforeUnmount(() => {
     <div class="controls">
       <button
         type="button"
-        class="control-btn"
+        class="control-btn quiet"
         :aria-label="userPaused ? 'Retomar a troca automática' : 'Pausar a troca automática'"
         @click="togglePause"
       >
@@ -174,7 +174,7 @@ onBeforeUnmount(() => {
           v-for="(slide, idx) in slides"
           :key="slide.id"
           type="button"
-          class="dot-btn"
+          class="dot-btn quiet"
           :class="{ 'is-current': idx === current }"
           :aria-label="`Mostrar ${slide.label}`"
           :aria-current="idx === current ? 'true' : undefined"
@@ -586,15 +586,15 @@ onBeforeUnmount(() => {
   }
 }
 
-/* O sistema global de botões (appearance-advanced.css e superclasses) pinta todo <button> com o destaque;
-   aqui os controles do carrossel voltam a ser neutros, com especificidade suficiente para vencer. */
+/* Cores pela variante .quiet (appearance-advanced.css). A geometria precisa vencer a regra global de botões
+   (min-height) e as superclasses (raio e sombra), daí a especificidade reforçada. */
+.control-btn {
+  --quiet-bg: var(--color-surface);
+  --quiet-border: var(--color-border);
+}
+
 .showcase .controls .control-btn.control-btn,
 .showcase .controls .dot-btn.dot-btn {
-  --button-bg: var(--color-surface);
-  --button-fg: var(--color-text);
-  --button-border: var(--color-border);
-  --button-hover-bg: var(--color-surface-hover, var(--color-surface));
-  --button-hover-fg: var(--color-hover-text, var(--color-text));
   width: 44px;
   min-width: 44px;
   height: 44px;
@@ -602,11 +602,5 @@ onBeforeUnmount(() => {
   padding: 0;
   border-radius: 50%;
   box-shadow: none;
-}
-
-.showcase .controls .dot-btn.dot-btn {
-  --button-bg: transparent;
-  --button-border: transparent;
-  --button-hover-bg: transparent;
 }
 </style>

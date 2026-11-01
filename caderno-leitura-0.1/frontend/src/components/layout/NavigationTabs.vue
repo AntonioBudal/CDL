@@ -193,7 +193,7 @@ onBeforeUnmount(() => {
     <div ref="moreContainerRef" class="more-menu-container">
       <button
         type="button"
-        class="nav-tab-link more-trigger-btn"
+        class="nav-tab-link more-trigger-btn quiet"
         :class="{
           selected: isMoreRouteActive,
           active: isMoreOpen,

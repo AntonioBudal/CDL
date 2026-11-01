@@ -1080,3 +1080,34 @@ Spec aprovada com as recomendações Q1 a Q5:
   - o par texto e fundo do hover do destaque nos 10 temas.
 
   As varreduras falham com o código antigo.
+
+## F0.10.01 — Header leve e variante neutra de botão (2026-11-01)
+
+- **Plano:** primeira feature do Roadmap 0.10 (o plano mestre de 2026-11-01 foi renumerado para 0.10, 0.11 e 1.0,
+  porque 0.8 e 0.9 já eram roadmaps entregues). Spec, plano e tarefas em `specs/092-header-leve-botao-neutro/`.
+- **Causa do "efeito blocos de Lego":** a regra global `:root :is(button, .button):not([role='tab'])…` de
+  `appearance-advanced.css` tem especificidade (0,4,0) e pinta todo `<button>` com o destaque. Os estilos dos
+  componentes, com (0,2,0), perdem. Abas são `<a>` e escapavam; os controles da direita do header são `<button>`.
+- **Solução:** variante `.quiet` (base, hover e disabled) logo depois das regras `outline`, `ghost` e `block`, no
+  padrão da `.secondary`: só troca as variáveis `--button-*`, mais `width: auto` contra o modo `block`. Ganchos
+  `--quiet-bg` e `--quiet-border` deixam o componente dar fundo e borda sutis.
+- **Onde entrou:** "Mais" (header e barra inferior do celular), sincronização, busca, notificações, perfil,
+  ferramentas da pílula do capítulo, botões de limpar e modo de visualização não selecionado da estante, e os
+  controles do carrossel e da vitrine de temas da landing (que tinham reforços caso a caso). "Capturar" continua
+  como a única ação com destaque.
+- **Busca em pílula:** "Buscar · Ctrl K" só quando o header tem espaço. Com a grade `1fr auto 1fr` e o contêiner
+  padrão de 74rem, a coluna da direita tem ~236 px e a pílula pede ~314 px; com a media query de 1024 px da spec,
+  ela invadia o "Mais". Ficou uma container query de 1400 px no `.header-inner`: na prática, a pílula aparece no
+  contêiner fluido em telas largas, e no resto o botão é só o ícone.
+- **Sincronização:** ícone com ponto de estado (sucesso, sincronizando, offline, erro), sem os hex de fallback;
+  alvo de 44 px em telas de toque.
+- **Estante:** `LibraryToolbar.vue` trocou aliases antigos com hex de fallback (`--muted`, `--text`, `--bg-hover`,
+  `--border`, `--bg-surface`, `--card`, `--accent`) pelos tokens canônicos.
+- **Verificação no navegador (servidor de validação, banco fictício):** 2.880 medições na página do livro (10 temas
+  × 6 configurações de superclasse × estilos padrão, outline e ghost × largura padrão e block) e 180 na estante:
+  nenhum controle neutro com o fundo do destaque, nenhum esticado no modo block, "Capturar" sempre com destaque e o
+  modo de visualização ativo também. Contraste em repouso e com hover simulado: 380 medições, nenhuma abaixo de
+  4,5:1. Sem rolagem horizontal em 1920, 1366, 768 e 375 px.
+- **Testes:** `feature-092-header-leve.test.mjs` (posição das regras, classe `quiet` em cada controle, "Capturar"
+  sem ela, modo de visualização, sem hex de fallback); 3 pares novos em `theme-contrast-tokens.test.mjs`. O teste
+  da F0.8.01 que proibia o atalho "Ctrl K" na busca passou a exigir a pílula só com espaço no header.

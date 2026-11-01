@@ -32,7 +32,7 @@ function handleManualSync() {
 <template>
   <button
     type="button"
-    class="sync-status-badge"
+    class="sync-status-badge quiet"
     :class="[`status-${status}`, { 'is-offline': !isOnline }]"
     :aria-label="`Status de sincronização: ${label}. Clique para sincronizar agora.`"
     :title="`Status: ${label}. Clique para sincronizar agora.`"
@@ -45,6 +45,7 @@ function handleManualSync() {
       <AlertTriangle v-else-if="status === 'conflict'" :size="15" />
       <AlertCircle v-else-if="status === 'error'" :size="15" />
       <Check v-else :size="15" />
+      <span class="status-dot" aria-hidden="true"></span>
     </span>
   </button>
 </template>
@@ -83,28 +84,37 @@ function handleManualSync() {
   opacity: 0.75;
 }
 
-.status-idle {
-  color: var(--color-muted);
-}
-
-.status-syncing {
-  color: var(--color-link);
-}
-
-.status-offline,
-.is-offline {
-  color: var(--color-warning, #b45309);
-}
-
-.status-conflict,
-.status-error {
-  color: var(--color-error-marker, #dc2626);
-}
-
+/* O botão usa a variante .quiet (texto do tema); o estado aparece no ponto, com o rótulo em title e aria-label. */
 .icon-container {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.status-dot {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-success);
+  box-shadow: 0 0 0 2px var(--color-surface);
+}
+
+.status-syncing .status-dot {
+  background: var(--color-link);
+}
+
+.status-offline .status-dot,
+.is-offline .status-dot {
+  background: var(--color-warning-marker, var(--color-warning));
+}
+
+.status-conflict .status-dot,
+.status-error .status-dot {
+  background: var(--color-error-marker);
 }
 
 .spin-icon {
@@ -117,6 +127,13 @@ function handleManualSync() {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Alvo de toque de 44 px, como os vizinhos do header. */
+@media (pointer: coarse) {
+  .sync-status-badge {
+    min-width: 44px;
   }
 }
 

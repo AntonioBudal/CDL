@@ -65,7 +65,7 @@ onBeforeUnmount(() => {
   <div ref="containerRef" class="user-dropdown-container">
     <button
       type="button"
-      class="user-trigger-btn"
+      class="user-trigger-btn quiet"
       :class="{ active: isOpen }"
       aria-haspopup="menu"
       :aria-expanded="isOpen"

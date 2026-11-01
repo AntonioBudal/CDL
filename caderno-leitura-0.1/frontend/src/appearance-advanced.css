@@ -318,6 +318,31 @@
   flex: 0 0 100%;
 }
 
+/* Variante neutra (F0.10.01): controles secundários (header, ferramentas de capítulo, botões de limpar) sem o
+   fundo do destaque. Empata em especificidade com .secondary e com os modos outline/ghost/block; por isso fica
+   depois deles. --quiet-bg e --quiet-border são ganchos para o componente dar um fundo sutil (ex.: pílula de busca). */
+:root :is(button, .button).quiet:not([role='tab']):not(.group-toggle-btn) {
+  --button-bg: var(--quiet-bg, transparent);
+  --button-fg: var(--color-text);
+  --button-border: var(--quiet-border, transparent);
+  --button-hover-bg: var(--color-surface-hover, var(--color-surface-soft));
+  --button-hover-fg: var(--color-hover-text, var(--color-text));
+  width: auto;
+  flex: 0 0 auto;
+}
+
+:root :is(button, .button).quiet:not([role='tab']):not(.group-toggle-btn):hover:not(:disabled) {
+  background: var(--button-hover-bg);
+  color: var(--button-hover-fg);
+}
+
+:root :is(button, .button).quiet:not([role='tab']):not(.group-toggle-btn):disabled {
+  background: var(--button-bg);
+  color: var(--color-muted);
+  border-color: var(--button-border);
+  border-style: solid;
+}
+
 :root[data-button-width='block'] .actions {
   flex-wrap: wrap;
 }

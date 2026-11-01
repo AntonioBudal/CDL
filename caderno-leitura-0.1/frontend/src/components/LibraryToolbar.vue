@@ -90,7 +90,7 @@ function onClearClick() {
         <button
           v-if="hasActiveSearch"
           type="button"
-          class="search-clear-btn"
+          class="search-clear-btn quiet"
           aria-label="Limpar campo de busca"
           title="Limpar busca (Esc)"
           @click="onClearClick"
@@ -106,7 +106,7 @@ function onClearClick() {
         </span>
         <button
           type="button"
-          class="clear-filters-btn"
+          class="clear-filters-btn quiet"
           title="Limpar filtros aplicados"
           @click="emit('clearAllFilters')"
         >
@@ -139,7 +139,7 @@ function onClearClick() {
           <button
             v-if="selectedCategory"
             type="button"
-            class="category-clear-btn"
+            class="category-clear-btn quiet"
             aria-label="Limpar filtro de categoria"
             title="Limpar categoria"
             @click="emit('update:selectedCategory', null)"
@@ -172,7 +172,7 @@ function onClearClick() {
         <button
           type="button"
           class="view-mode-btn"
-          :class="{ active: viewMode === 'grid' }"
+          :class="{ active: viewMode === 'grid', quiet: viewMode !== 'grid' }"
           :aria-pressed="viewMode === 'grid'"
           title="Exibir em grade de capas"
           @click="emit('update:viewMode', 'grid')"
@@ -188,7 +188,7 @@ function onClearClick() {
         <button
           type="button"
           class="view-mode-btn"
-          :class="{ active: viewMode === 'list' }"
+          :class="{ active: viewMode === 'list', quiet: viewMode !== 'list' }"
           :aria-pressed="viewMode === 'list'"
           title="Exibir em lista compacta"
           @click="emit('update:viewMode', 'list')"
@@ -237,7 +237,7 @@ function onClearClick() {
 .search-icon {
   position: absolute;
   left: 0.75rem;
-  color: var(--muted, #666);
+  color: var(--color-muted);
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -254,7 +254,7 @@ function onClearClick() {
 }
 
 .search-input:focus {
-  outline: 2px solid var(--accent, #3b82f6);
+  outline: 2px solid var(--color-accent);
   outline-offset: -1px;
 }
 
@@ -263,7 +263,7 @@ function onClearClick() {
   right: 0.5rem;
   background: none;
   border: none;
-  color: var(--muted, #888);
+  color: var(--color-muted);
   font-size: 1rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
@@ -271,14 +271,14 @@ function onClearClick() {
 }
 
 .search-clear-btn:hover {
-  color: var(--text, #111);
-  background-color: var(--bg-hover, rgba(0, 0, 0, 0.05));
+  color: var(--color-text);
+  background-color: var(--color-surface-hover);
 }
 
 .search-result-count {
   margin: 0;
   font-size: 0.82rem;
-  color: var(--muted, #666);
+  color: var(--color-muted);
   padding-left: 0.25rem;
 }
 
@@ -306,16 +306,16 @@ function onClearClick() {
   padding: 0.45rem 1.75rem 0.45rem 0.65rem;
   font-size: 0.9rem;
   border-radius: var(--radius-sm, 6px);
-  border: 1px solid var(--border, #ccc);
-  background-color: var(--bg-surface, var(--card, #fff));
-  color: var(--text, #222);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .category-select:focus {
-  outline: 2px solid var(--accent, #3b82f6);
+  outline: 2px solid var(--color-accent);
 }
 
 .category-clear-btn {
@@ -323,7 +323,7 @@ function onClearClick() {
   right: 0.35rem;
   background: none;
   border: none;
-  color: var(--muted, #888);
+  color: var(--color-muted);
   font-size: 0.85rem;
   cursor: pointer;
   padding: 0.2rem 0.35rem;
@@ -331,7 +331,7 @@ function onClearClick() {
 }
 
 .category-clear-btn:hover {
-  color: var(--text, #111);
+  color: var(--color-text);
 }
 
 .active-category-indicator {
@@ -341,7 +341,7 @@ function onClearClick() {
 .clear-filters-btn {
   background: none;
   border: none;
-  color: var(--color-link, #3b82f6);
+  color: var(--color-link);
   text-decoration: underline;
   cursor: pointer;
   font-size: 0.82rem;
@@ -350,7 +350,7 @@ function onClearClick() {
 }
 
 .clear-filters-btn:hover {
-  color: var(--accent-hover, #2563eb);
+  color: var(--color-link);
 }
 
 .sort-control-group {
@@ -361,7 +361,7 @@ function onClearClick() {
 
 .control-label {
   font-size: 0.88rem;
-  color: var(--muted, #666);
+  color: var(--color-muted);
   white-space: nowrap;
 }
 
@@ -369,14 +369,14 @@ function onClearClick() {
   padding: 0.45rem 0.65rem;
   font-size: 0.9rem;
   border-radius: var(--radius-sm, 6px);
-  border: 1px solid var(--border, #ccc);
-  background-color: var(--bg-surface, var(--card, #fff));
-  color: var(--text, #222);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
 }
 
 .sort-select:focus {
-  outline: 2px solid var(--accent, #3b82f6);
+  outline: 2px solid var(--color-accent);
 }
 
 .view-mode-toggle {

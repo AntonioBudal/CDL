@@ -44,6 +44,10 @@ test('texto secundário, link, erro e texto sobre o destaque têm contraste mín
       'mensagem de erro': [vars['--color-error-text'], vars['--color-error-bg']],
       'texto sobre o destaque': [vars['--color-on-accent'], vars['--color-accent']],
       'texto sobre o hover do destaque': [vars['--color-accent-hover-text'], vars['--color-accent-hover']],
+      // Variante .quiet (F0.10.01): controles neutros do header sobre a superfície, pílula de busca e hover.
+      'botão neutro sobre superfície': [vars['--color-text'], vars['--color-surface']],
+      'pílula de busca (texto sobre superfície suave)': [vars['--color-text'], vars['--color-surface-soft']],
+      'botão neutro no hover': [vars['--color-hover-text'] ?? vars['--color-text'], vars['--color-surface-hover']],
     }
     for (const [label, [fg, bg]] of Object.entries(pairs)) {
       const value = ratio(fg, bg)

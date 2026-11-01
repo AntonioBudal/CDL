@@ -64,7 +64,7 @@ function step(delta: number) {
       </div>
 
       <div class="rail-wrap">
-        <button type="button" class="rail-nav" aria-label="Tema anterior" @click="step(-1)">
+        <button type="button" class="rail-nav quiet" aria-label="Tema anterior" @click="step(-1)">
           <Icon name="chevron-left" :size="18" />
         </button>
 
@@ -73,7 +73,7 @@ function step(delta: number) {
             <button
               :ref="(el) => { if (el) itemRefs[idx] = el as HTMLElement }"
               type="button"
-              class="theme-chip"
+              class="theme-chip quiet"
               :class="{ 'is-active': theme.id === activeTheme }"
               :aria-pressed="theme.id === activeTheme"
               @click="select(theme.id, idx)"
@@ -87,7 +87,7 @@ function step(delta: number) {
           </li>
         </ul>
 
-        <button type="button" class="rail-nav" aria-label="Próximo tema" @click="step(1)">
+        <button type="button" class="rail-nav quiet" aria-label="Próximo tema" @click="step(1)">
           <Icon name="chevron-right" :size="18" />
         </button>
       </div>
@@ -359,17 +359,22 @@ function step(delta: number) {
   }
 }
 
-/* Neutraliza o estilo global de <button> (destaque como fundo) nos controles da vitrine. */
+/* Cores pela variante .quiet (appearance-advanced.css), com fundo e borda pelos ganchos --quiet-*. A geometria
+   precisa vencer a regra global de botões e as superclasses, daí a especificidade reforçada. */
+.rail-nav,
+.theme-chip {
+  --quiet-bg: var(--color-surface);
+  --quiet-border: var(--color-border);
+}
+
+.theme-chip.is-active {
+  --quiet-border: var(--color-accent);
+}
+
 .showcase-body .rail-wrap .rail-nav.rail-nav,
 .showcase-body .rail-wrap .theme-chip.theme-chip {
-  --button-bg: var(--color-surface);
-  --button-fg: var(--color-text);
-  --button-border: var(--color-border);
-  --button-hover-bg: var(--color-surface-hover, var(--color-surface));
-  --button-hover-fg: var(--color-hover-text, var(--color-text));
   box-shadow: none;
   min-height: 44px;
-  width: auto;
 }
 
 .showcase-body .rail-wrap .rail-nav.rail-nav {
@@ -384,7 +389,6 @@ function step(delta: number) {
 }
 
 .showcase-body .rail-wrap .theme-chip.theme-chip.is-active {
-  --button-border: var(--color-accent);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 35%, transparent);
 }
 </style>

@@ -72,7 +72,7 @@ const isReviewActive = computed(() => ['review', 'study-session'].includes(Strin
     <!-- Mais -->
     <button
       type="button"
-      class="mobile-tab-item mobile-tab-more-trigger mobile-more-trigger"
+      class="mobile-tab-item mobile-tab-more-trigger mobile-more-trigger quiet"
       aria-haspopup="dialog"
       aria-label="Mais opções de navegação"
       @click="emit('open-more')"

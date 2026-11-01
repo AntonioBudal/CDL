@@ -82,12 +82,14 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
           <!-- Busca Global (Apenas Ícone de Busca) -->
           <button
             type="button"
-            class="header-tool-btn search-trigger-btn"
+            class="header-tool-btn search-trigger-btn quiet"
             aria-label="Abrir busca global de estudos (Ctrl+K)"
             title="Buscar (Ctrl+K)"
             @click="openSearch"
           >
             <Icon name="search" :size="16" />
+            <span class="search-label" aria-hidden="true">Buscar</span>
+            <kbd class="search-kbd" aria-hidden="true">Ctrl K</kbd>
           </button>
 
           <!-- Captura Rápida (Apenas o + com destaque primário) -->
@@ -105,7 +107,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
           <div class="notifications-nav-container">
             <button
               type="button"
-              class="btn-notifications-trigger"
+              class="btn-notifications-trigger quiet"
               :class="{
                 'has-unread': notificationsService.unread.value > 0,
                 active: notificationsService.open.value,
@@ -170,6 +172,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
   align-items: center;
   gap: calc(var(--space-unit, 1rem) * 0.75);
   min-height: 3.75rem;
+  container: app-header / inline-size;
 }
 
 /* 3 Zonas Operacionais */
@@ -270,13 +273,49 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
   outline-offset: 2px;
 }
 
+/* Pílula sutil de busca: fundo e borda pelos ganchos da variante .quiet (appearance-advanced.css). O rótulo e o
+   atalho só aparecem quando o próprio header tem espaço: com a grade 1fr auto 1fr, a coluna da direita fica com
+   ~236 px no contêiner padrão (74rem), e a pílula completa pede ~314 px. Daí a container query, e não uma media
+   query pela largura da tela; na prática, a pílula aparece no contêiner fluido em telas largas. */
 .search-trigger-btn {
-  width: 36px;
+  --quiet-bg: var(--color-surface-soft, var(--color-surface));
+  --quiet-border: var(--color-border);
   height: 36px;
   min-width: 36px;
   padding: 0;
+  gap: 0.5rem;
   justify-content: center;
   border-radius: 9999px;
+}
+
+.search-label,
+.search-kbd {
+  display: none;
+}
+
+@container app-header (min-width: 1400px) {
+  .search-trigger-btn {
+    padding: 0 0.5rem 0 0.75rem;
+  }
+
+  .search-label {
+    display: inline;
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .search-kbd {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.05rem 0.4rem;
+    font-family: inherit;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-surface);
+  }
 }
 
 .quick-capture-trigger-btn {
