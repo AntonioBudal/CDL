@@ -24,7 +24,8 @@ test('Feature 074 - Página Inicial sem Login (SEO), revisada: apresentação ob
 
   await t.test('1. [US1] Hero informativo com uma chamada principal', () => {
     const hero = fs.readFileSync(heroPath, 'utf-8')
-    assert.match(hero, /<h1[^>]*>Caderno de leitura e fichamento<\/h1>/, 'H1 deve dizer o que o produto é')
+    assert.match(hero, /<h1[^>]*>[\s\S]*Leitorum[\s\S]*caderno de leitura e fichamento[\s\S]*<\/h1>/, 'H1 deve trazer a marca e dizer o que o produto é')
+    assert.match(hero, /HeroShowcase/, 'Hero deve exibir a ilustração da interface')
     assert.match(hero, /to="\/registro"/, 'Hero deve conter CTA para criar conta')
     assert.match(hero, /href="#exemplo"/, 'Hero deve levar ao exemplo de estudo')
     assert.doesNotMatch(hero, /Ler devagar é uma forma de pensar/, 'Slogan antigo não deve voltar')
@@ -67,7 +68,7 @@ test('Feature 074 - Página Inicial sem Login (SEO), revisada: apresentação ob
 
     const showcase = fs.readFileSync(showcasePath, 'utf-8')
     assert.match(showcase, /id="temas"/, 'Mostruário deve responder à âncora #temas')
-    assert.match(showcase, /ThemePreviewGrid/, 'Deve reutilizar ThemePreviewGrid')
+    assert.match(showcase, /CANONICAL_THEME_PREVIEWS/, 'Prévia deve usar as cores do catálogo canônico de temas')
     assert.match(showcase, /aria-live="polite"/, 'Deve conter anúncio aria-live acessível')
     assert.doesNotMatch(showcase, /Ateliê de Paletas/, 'Rótulo antigo não deve voltar')
 
@@ -110,7 +111,7 @@ test('Feature 074 - Página Inicial sem Login (SEO), revisada: apresentação ob
     const indexHtml = fs.readFileSync(indexPath, 'utf-8')
     assert.match(indexHtml, /rel="preload" href="\/fonts\/eb-garamond/, 'Preload de EB Garamond presente')
     assert.match(indexHtml, /rel="preload" href="\/fonts\/source-sans-3/, 'Preload de Source Sans 3 presente')
-    assert.match(indexHtml, /<div id="app">[\s\S]*<h1>Caderno de leitura e fichamento<\/h1>/, 'Conteúdo vital indexável dentro de #app')
+    assert.match(indexHtml, /<div id="app">[\s\S]*<h1>Leitorum: seu caderno de leitura e fichamento<\/h1>/, 'Conteúdo vital indexável dentro de #app')
     assert.match(indexHtml, /<title>Caderno de leitura e fichamento — Leitorum<\/title>/, 'Título estático igual ao da página montada')
 
     const router = fs.readFileSync(routerPath, 'utf-8')

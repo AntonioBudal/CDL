@@ -3,6 +3,7 @@ import { ref, computed, nextTick } from 'vue'
 import { LANDING_SIMULATOR_DATA } from '../../data/landingSimulator'
 import type { SimulatorDimensionId } from '../../data/landingSimulator'
 import Icon from '../ui/Icon.vue'
+import { vReveal } from '../../composables/useReveal'
 
 const activeDimensionId = ref<SimulatorDimensionId>('resumo')
 const tabRefs = ref<HTMLElement[]>([])
@@ -58,14 +59,14 @@ function onTabKeydown(event: KeyboardEvent, currentIndex: number) {
 <template>
   <section id="exemplo" class="simulator-section" aria-labelledby="simulator-heading">
     <div class="simulator-container">
-      <div class="section-intro">
+      <div v-reveal class="section-intro">
         <h2 id="simulator-heading" class="section-title">Exemplo de estudo</h2>
         <p class="section-lead">
           Um estudo do prólogo de <em>{{ work.title }}</em>, de {{ work.author }}. Escolha uma das quatro partes para ver o que foi anotado e a que passagem ela se refere.
         </p>
       </div>
 
-      <div class="open-book-workbench">
+      <div v-reveal="120" class="open-book-workbench">
         <article class="work-page" aria-labelledby="work-heading">
           <header class="work-header">
             <h3 id="work-heading" class="work-meta">
@@ -117,11 +118,20 @@ function onTabKeydown(event: KeyboardEvent, currentIndex: number) {
             tabindex="0"
             class="notebook-content-panel"
           >
-            <p class="dim-description">{{ activeDimension.description }}</p>
-            <p v-if="activeDimension.content" class="dim-body-text">{{ activeDimension.content }}</p>
-            <ul v-if="activeDimension.items.length" class="insights-list">
-              <li v-for="(item, idx) in activeDimension.items" :key="idx" class="insight-item">{{ item }}</li>
-            </ul>
+            <Transition name="panel-swap" mode="out-in">
+              <div :key="activeDimension.id">
+                <p class="dim-description">{{ activeDimension.description }}</p>
+                <p v-if="activeDimension.content" class="dim-body-text">{{ activeDimension.content }}</p>
+                <ul v-if="activeDimension.items.length" class="insights-list">
+                  <li
+                    v-for="(item, idx) in activeDimension.items"
+                    :key="idx"
+                    class="insight-item"
+                    :style="{ '--i': idx }"
+                  >{{ item }}</li>
+                </ul>
+              </div>
+            </Transition>
           </div>
         </div>
       </div>
@@ -222,19 +232,48 @@ function onTabKeydown(event: KeyboardEvent, currentIndex: number) {
   color: var(--color-text);
 }
 
+/* O grifo "corre" sobre a passagem: o fundo cresce da esquerda para a direita ao ativar a aba. */
 .highlight-text {
   background-color: transparent;
+  background-image: linear-gradient(var(--color-selected-bg, #f3d7b5), var(--color-selected-bg, #f3d7b5));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
   color: inherit;
   border-bottom: 1px dashed var(--color-border);
   padding: 0 2px;
   border-radius: 2px;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-size 0.6s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s ease, border-color 0.3s ease;
 }
 
 .highlight-text.is-active {
-  background-color: var(--color-selected-bg, #f3d7b5);
+  background-size: 100% 100%;
   color: var(--color-selected-text, var(--color-text));
   border-bottom: 2px solid var(--color-accent);
+}
+
+.panel-swap-enter-active,
+.panel-swap-leave-active {
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.panel-swap-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.panel-swap-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.panel-swap-enter-active .insight-item {
+  animation: item-in 0.35s ease both;
+  animation-delay: calc(var(--i) * 70ms + 80ms);
+}
+
+@keyframes item-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: none; }
 }
 
 .notebook-panel {
@@ -379,6 +418,18 @@ function onTabKeydown(event: KeyboardEvent, currentIndex: number) {
   .notebook-tab-btn.is-active-tab {
     border-bottom: 1px solid var(--color-border);
     margin-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .highlight-text,
+  .panel-swap-enter-active,
+  .panel-swap-leave-active {
+    transition: none;
+  }
+
+  .panel-swap-enter-active .insight-item {
+    animation: none;
   }
 }
 </style>

@@ -38,3 +38,26 @@ useSeoMeta({
   color: var(--color-text);
 }
 </style>
+
+<style>
+/* Revelação ao rolar (diretiva v-reveal em composables/useReveal.ts); global para valer em todas as seções. */
+.landing-page .reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.landing-page .reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-page .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+</style>

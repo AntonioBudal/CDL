@@ -55,11 +55,23 @@ test('Feature 075 - Correções Visuais, de Cor e de Disposição', async (t) =>
     const missingVars = new Map()
     const varUseRegex = /var\(\s*(--[a-zA-Z0-9_-]+)/g
 
+    // Propriedades locais de um componente (declaradas no próprio .vue, em CSS ou em :style) e as definidas
+    // por script com setProperty (ex.: diretiva v-reveal) não são tokens globais e contam como declaradas.
+    const localDecl = /(--[a-zA-Z0-9_-]+)['"]?\s*:/g
+    const setPropDecl = /setProperty\(\s*['"](--[a-zA-Z0-9_-]+)/g
+    const scriptVars = new Set()
+    for (const file of walk(srcDir).concat(fs.readdirSync(path.join(srcDir, 'composables')).map((f) => path.join(srcDir, 'composables', f)))) {
+      const content = fs.readFileSync(file, 'utf-8')
+      while ((m = setPropDecl.exec(content)) !== null) scriptVars.add(m[1])
+    }
+
     for (const file of vueFiles) {
       const content = fs.readFileSync(file, 'utf-8')
+      const localVars = new Set()
+      while ((m = localDecl.exec(content)) !== null) localVars.add(m[1])
       while ((m = varUseRegex.exec(content)) !== null) {
         const v = m[1]
-        if (!definedVars.has(v)) {
+        if (!definedVars.has(v) && !localVars.has(v) && !scriptVars.has(v)) {
           missingVars.set(v, (missingVars.get(v) || 0) + 1)
         }
       }
