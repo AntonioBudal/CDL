@@ -4,9 +4,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import func, select
 
-from app.models import Study
+from app.models import Chapter, Study
 from app.schemas.study import StudyMoveRequest
 from app.schemas.study_grouping import StudyStatusUpdate
 from app.services.persistence import check_optimistic_lock, commit_changes, get_or_404
@@ -178,6 +178,56 @@ def move_study(session: Session, study_id: int, payload: StudyMoveRequest) -> li
             .order_by(Study.parent_study_id.nullsfirst(), Study.position, Study.id)
         ).all()
     )
+
+
+def change_study_chapter(session: Session, study: Study, target: Chapter) -> Study:
+    """Leva o estudo e toda a sua subárvore para outro capítulo do mesmo livro (F0.10.02.5).
+
+    O estudo vira raiz no destino, no fim da lista; os irmãos que ficaram na origem são renumerados. Os subestudos
+    (inclusive os da lixeira, que guardam o capítulo para a restauração) acompanham, mantendo a hierarquia entre si.
+    """
+    if study.deleted_at is not None:
+        raise HTTPException(status_code=400, detail="Não é possível mover um estudo que está na lixeira.")
+    source = study.chapter
+    if source is None or source.book_id != target.book_id:
+        raise HTTPException(status_code=400, detail="O capítulo de destino precisa ser do mesmo livro.")
+    if source.id == target.id:
+        return study
+
+    old_parent_id = study.parent_study_id
+    subtree_ids = get_descendant_ids(session, study.id, include_deleted=True)
+
+    remaining_siblings = list(
+        session.scalars(
+            select(Study)
+            .where(
+                Study.chapter_id == source.id,
+                Study.parent_study_id == old_parent_id,
+                Study.id != study.id,
+                Study.deleted_at.is_(None),
+            )
+            .order_by(Study.position, Study.id)
+        ).all()
+    )
+    for idx, sibling in enumerate(remaining_siblings):
+        sibling.position = idx
+
+    target_roots = session.scalar(
+        select(func.count())
+        .select_from(Study)
+        .where(Study.chapter_id == target.id, Study.parent_study_id.is_(None), Study.deleted_at.is_(None))
+    ) or 0
+    study.chapter_id = target.id
+    study.parent_study_id = None
+    study.position = target_roots
+    study.version += 1
+    if subtree_ids:
+        for descendant in session.scalars(select(Study).where(Study.id.in_(subtree_ids))).all():
+            descendant.chapter_id = target.id
+
+    commit_changes(session)
+    session.refresh(study)
+    return study
 
 
 def update_study_status(session: Session, study_id: int, payload: StudyStatusUpdate) -> Study:

@@ -14,3 +14,5 @@
 - [x] T009 Testes novos e vizinhos (capítulos, livros, F0.10.01) e `npm run build`.
 - [x] T010 Navegador, 1366 e 375 px: capa, contraste nos 10 temas, criar/renomear/mover/excluir com recarga.
 - [x] T011 `RETOMADA.md`, marcar tarefas, commit e resumo.
+- [x] T012 Complemento pedido em 2026-11-02: mudar um estudo existente de capítulo (`POST /api/studies/{id}/chapter`,
+  `ChangeChapterModal` na tela de leitura), com testes de backend, frontend e navegador.

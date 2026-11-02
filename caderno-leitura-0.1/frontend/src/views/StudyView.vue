@@ -8,6 +8,7 @@ import ReaderTools from '../components/ReaderTools.vue'
 import ActiveReadingBar from '../components/ActiveReadingBar.vue'
 import ExportModal from '../components/ExportModal.vue'
 import TrashConfirmModal from '../components/TrashConfirmModal.vue'
+import ChangeChapterModal from '../components/ChangeChapterModal.vue'
 import StudyBacklinksList from '../components/studies/StudyBacklinksList.vue'
 import StudyRelationsList from '../components/relations/StudyRelationsList.vue'
 import CreateRelationModal from '../components/relations/CreateRelationModal.vue'
@@ -29,7 +30,7 @@ import { useFloatingToast } from '../composables/useFloatingToast'
 import { useHighlightColorPreference } from '../composables/useHighlightColorPreference'
 import { getStudyTemplate } from '../constants/studyTemplates'
 import type { HighlightClickEvent } from '../utils/highlightRenderer'
-import type { BreadcrumbItem, HighlightColor, ResourceVisibility, Study, StudySectionKey, TextSelectionContext } from '../types.ts'
+import type { BreadcrumbItem, Chapter, HighlightColor, ResourceVisibility, Study, StudySectionKey, TextSelectionContext } from '../types.ts'
 
 
 const route = useRoute()
@@ -65,6 +66,10 @@ const breadcrumbItems = computed<BreadcrumbItem[]>(() => {
 
 const exportModalOpen = ref(false)
 const confirmTrashOpen = ref(false)
+const changeChapterOpen = ref(false)
+const changeChapterOptions = ref<Chapter[]>([])
+const changingChapter = ref(false)
+const changeChapterError = ref('')
 const createRelationModalOpen = ref(false)
 const shareModalOpen = ref(false)
 const historyModalOpen = ref(false)
@@ -431,6 +436,34 @@ async function handleTrash() {
   }
 }
 
+// Mudar o estudo de capítulo (F0.10.02.5): lista os capítulos do livro, move e recarrega o contexto (trilha e
+// capítulo exibidos passam a ser os novos).
+async function openChangeChapter() {
+  if (!state.context) return
+  changeChapterError.value = ''
+  try {
+    changeChapterOptions.value = await api.listChapters(state.context.book.id)
+    changeChapterOpen.value = true
+  } catch (error) {
+    trashError.value = errorMessage(error)
+  }
+}
+
+async function handleChangeChapter(chapterId: number) {
+  if (!state.context || changingChapter.value) return
+  changingChapter.value = true
+  changeChapterError.value = ''
+  try {
+    await api.changeStudyChapter(state.context.study.id, chapterId, state.context.study.version)
+    changeChapterOpen.value = false
+    await load()
+  } catch (error) {
+    changeChapterError.value = errorMessage(error)
+  } finally {
+    changingChapter.value = false
+  }
+}
+
 async function load() { await resource.load(route.params.bookId, route.params.studyId) }
 watch([() => route.params.bookId, () => route.params.studyId], load, { immediate: true })
 
@@ -714,6 +747,19 @@ onBeforeUnmount(() => {
                 </button>
               </div>
 
+              <!-- Mudar de capítulo (F0.10.02.5) -->
+              <button
+                v-if="canEdit"
+                type="button"
+                class="secondary change-chapter-action header-icon-btn"
+                aria-label="Mudar o estudo de capítulo"
+                title="Mudar de capítulo"
+                @click="openChangeChapter"
+              >
+                <Icon name="folder" :size="16" />
+                <span>Mudar de capítulo</span>
+              </button>
+
               <!-- Separação espacial entre ações comuns e a ação destrutiva de exclusão -->
               <div v-if="canEdit" class="header-actions-divider" aria-hidden="true"></div>
 
@@ -866,6 +912,18 @@ onBeforeUnmount(() => {
       :source-study-title="state.context.study.title"
       @close="createRelationModalOpen = false"
       @relation-created="handleRelationCreated"
+    />
+
+    <ChangeChapterModal
+      v-if="canEdit"
+      :open="changeChapterOpen"
+      :study-title="state.context.study.title"
+      :chapters="changeChapterOptions"
+      :current-chapter-id="state.context.chapter.id"
+      :loading="changingChapter"
+      :error="changeChapterError"
+      @close="changeChapterOpen = false"
+      @confirm="handleChangeChapter"
     />
 
     <TrashConfirmModal

@@ -14,6 +14,7 @@ from app.schemas.sharing import (
 from app.schemas.study import (
     ANALYSIS_FIELDS,
     ANALYSIS_REQUIRED_MESSAGE,
+    StudyChapterChange,
     StudyCreate,
     StudyMoveRequest,
     StudyPatch,
@@ -40,7 +41,7 @@ from app.services.sharing_service import (
     update_study_visibility,
 )
 from app.services.study_mention_service import sync_study_mentions
-from app.services.study_service import move_study, update_study_status
+from app.services.study_service import change_study_chapter, move_study, update_study_status
 from app.services.study_version_service import record_study_version_on_change
 from app.services.trash_service import permanent_delete_study, restore_study, trash_study
 
@@ -169,6 +170,34 @@ def move_study_endpoint(
 ):
     check_study_mutation_permission(session, study_id, current_user.id)
     return move_study(session, study_id, payload)
+
+
+@router.post("/studies/{study_id}/chapter", response_model=StudyRead, summary="Mudar o estudo de capítulo")
+def change_study_chapter_endpoint(
+    study_id: Identifier,
+    payload: StudyChapterChange,
+    session: DatabaseSession,
+    current_user: CurrentUser,
+):
+    """Leva o estudo, com os subestudos, para outro capítulo do mesmo livro (F0.10.02.5)."""
+    study = check_study_mutation_permission(session, study_id, current_user.id)
+    target = session.get(Chapter, payload.chapter_id)
+    if target is None or target.book is None or target.book.user_id != current_user.id or target.book.deleted_at is not None:
+        raise HTTPException(status_code=404, detail="Capítulo não encontrado.")
+    if payload.expected_version is not None:
+        check_optimistic_version(
+            current_version=study.version,
+            expected_version=payload.expected_version,
+            entity_id=study.id,
+            entity_type="study",
+            server_updated_at=study.updated_at,
+            server_data=StudyRead.model_validate(study).model_dump(mode="json"),
+            label="Estudo",
+        )
+    moved = change_study_chapter(session, study, target)
+    study_read = StudyRead.model_validate(moved)
+    study_read.can_edit = True
+    return study_read
 
 
 @router.patch(

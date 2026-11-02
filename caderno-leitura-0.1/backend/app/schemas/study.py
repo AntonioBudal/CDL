@@ -79,6 +79,13 @@ class StudyPatch(InputModel):
         return self
 
 
+class StudyChapterChange(InputModel):
+    """Leva o estudo (com os subestudos) para outro capítulo do mesmo livro (F0.10.02.5)."""
+
+    chapter_id: RecordId
+    expected_version: int | None = Field(default=None, ge=1, strict=False)
+
+
 class StudyMoveRequest(InputModel):
     parent_study_id: RecordId | None = Field(default=None, description="ID do estudo pai ou None para nó raiz.")
     target_position: int = Field(default=0, ge=0, description="Posição ordinal desejada entre os irmãos.")

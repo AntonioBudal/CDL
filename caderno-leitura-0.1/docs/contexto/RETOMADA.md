@@ -1170,3 +1170,11 @@ Spec aprovada com as recomendações Q1 a Q5:
   livros e lixeira, build ok.
 - **Navegador (banco fictício, 1366 e 375 px):** capa 48×72 sem cobrir o título; renomear, mover e excluir no
   desktop e no celular, conferidos também pela API depois de cada ação; capítulo com estudos recusado.
+- **Complemento (mesmo dia): mudar o estudo de capítulo.** `POST /api/studies/{id}/chapter` (`change_study_chapter`
+  em `study_service.py`): só capítulos do mesmo livro e do mesmo dono; o estudo vira raiz no fim do capítulo de
+  destino, os irmãos da origem são renumerados e a subárvore inteira (inclusive subestudos na lixeira) acompanha;
+  aceita `expected_version` (409 se desatualizado). Na tela de leitura, item "Mudar de capítulo" no menu "Mais
+  opções", que abre o `ChangeChapterModal` (capítulo atual listado e desabilitado); depois de mover, o contexto é
+  recarregado e a trilha mostra o capítulo novo. Testes: `test_study_chapter_change.py` (6) e mais um caso em
+  `feature-094-capa-capitulos.test.mjs`; `npm test` 694; 133 testes de backend de estudos e capítulos; navegador em
+  1366 e 375 px com dados fictícios.

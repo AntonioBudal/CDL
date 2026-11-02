@@ -316,6 +316,9 @@ export const api = {
   updateStudy: (id: number, payload: StudyPatch) => request<Study>(`/studies/${id}`, {
     method: 'PATCH', body: JSON.stringify(payload),
   }),
+  changeStudyChapter: (id: number, chapterId: number, expectedVersion?: number) => request<Study>(`/studies/${id}/chapter`, {
+    method: 'POST', body: JSON.stringify({ chapter_id: chapterId, expected_version: expectedVersion }),
+  }),
   preview: (source: string) => request<ImportPreview>('/imports/preview', {
     method: 'POST', body: JSON.stringify({ source_response: source }),
   }),

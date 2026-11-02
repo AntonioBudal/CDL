@@ -37,3 +37,13 @@ test('2. celular: menu "Gerenciar capítulo" com as quatro ações e campo de re
   }
   assert.match(bookView, /class="chapters-mobile-edit"/)
 })
+
+test('2. tela de leitura: mudar o estudo de capítulo pelo menu "Mais opções"', () => {
+  const studyView = fs.readFileSync(path.join(srcDir, 'views/StudyView.vue'), 'utf-8')
+  const modal = fs.readFileSync(path.join(srcDir, 'components/ChangeChapterModal.vue'), 'utf-8')
+  assert.match(studyView, /aria-label="Mudar o estudo de capítulo"[\s\S]{0,200}@click="openChangeChapter"/)
+  assert.match(studyView, /<ChangeChapterModal[\s\S]{0,500}@confirm="handleChangeChapter"/)
+  assert.match(api, /changeStudyChapter:\s*\(id: number, chapterId: number, expectedVersion\?: number\)/)
+  assert.match(modal, /role="dialog"/)
+  assert.match(modal, /:disabled="chapter\.id === currentChapterId"/, 'O capítulo atual aparece, mas não pode ser escolhido')
+})
