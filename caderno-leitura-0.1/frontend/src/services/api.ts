@@ -307,6 +307,9 @@ export const api = {
   moveChapter: (bookId: number, chapterId: number, direction: 'up' | 'down') => request<Chapter[]>(`/books/${bookId}/chapters/${chapterId}/move`, {
     method: 'POST', body: JSON.stringify({ direction }),
   }),
+  deleteChapter: (bookId: number, chapterId: number) => request<Chapter[]>(`/books/${bookId}/chapters/${chapterId}`, {
+    method: 'DELETE',
+  }),
 
   listStudies: (chapterId: number, signal?: AbortSignal) => request<StudySummary[]>(`/chapters/${chapterId}/studies`, { signal }),
   getStudy: (id: number, signal?: AbortSignal) => request<Study>(`/studies/${id}`, { signal }),

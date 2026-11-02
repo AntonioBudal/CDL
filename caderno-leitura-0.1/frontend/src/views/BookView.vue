@@ -44,6 +44,10 @@ const bookId = computed(() => positiveId(route.params.bookId))
 const isCreatingChapterInline = ref(false)
 const newChapterInputRef = ref<HTMLInputElement | null>(null)
 const editChapterInputRef = ref<HTMLInputElement | null>(null)
+const mobileEditChapterInputRef = ref<HTMLInputElement | null>(null)
+const chapterToDelete = ref<Chapter | null>(null)
+const confirmDeleteChapterOpen = ref(false)
+const deletingChapter = ref(false)
 const chaptersScrollRef = ref<HTMLElement | null>(null)
 
 // Modo Foco (recolhe faixas superior e inferior para máxima imersão)
@@ -72,6 +76,7 @@ const trashStudyError = ref('')
 const selectedChapter = computed(() => route.query.chapter == null
   ? chapters.value[0] ?? null
   : chapters.value.find(chapter => chapter.id === positiveId(route.query.chapter)) ?? null)
+const selectedChapterIndex = computed(() => chapters.value.findIndex(chapter => chapter.id === selectedChapter.value?.id))
 
 const breadcrumbItems = computed<BreadcrumbItem[]>(() => [
   { label: 'Livros', to: '/livros' },
@@ -182,7 +187,11 @@ function startEditChapter(ch: Chapter) {
   editChapterName.value = ch.name
   editChapterError.value = ''
   nextTick(() => {
-    editChapterInputRef.value?.focus()
+    // Dentro do v-for das pílulas o ref vira lista; antes, .focus() lançava erro e nenhum campo recebia foco.
+    const inline = editChapterInputRef.value as HTMLInputElement | HTMLInputElement[] | null
+    const candidates = [...(Array.isArray(inline) ? inline : [inline]), mobileEditChapterInputRef.value]
+    // Só um dos campos está visível: o inline no desktop, o de baixo do seletor no celular.
+    candidates.find(input => input?.offsetParent)?.focus()
   })
 }
 
@@ -223,10 +232,49 @@ async function moveChapter(chapterId: number, direction: 'up' | 'down') {
   try {
     const reordered = await api.moveChapter(id, chapterId, direction)
     chapters.value = reordered
+    // Sem ?chapter= na URL, a seleção é o primeiro da lista; fixa o capítulo movido para a seleção não pular.
+    if (route.query.chapter == null) {
+      await router.replace({ name: 'book', params: { bookId: id }, query: { chapter: chapterId } })
+    }
   } catch (error) {
     chapterError.value = errorMessage(error)
   } finally {
     movingChapter.value = false
+  }
+}
+
+// Exclusão de capítulo (F0.10.02.5): só capítulo vazio; com estudos, avisa antes e a API recusa com 409.
+function requestDeleteChapter(ch: Chapter) {
+  chapterError.value = ''
+  if (selectedChapter.value?.id === ch.id && studies.value.length > 0) {
+    const n = studies.value.length
+    chapterError.value = `Este capítulo tem ${n} ${n === 1 ? 'estudo' : 'estudos'}. Mova ou exclua os estudos antes de excluir o capítulo.`
+    return
+  }
+  chapterToDelete.value = ch
+  confirmDeleteChapterOpen.value = true
+}
+
+async function confirmDeleteChapter() {
+  const id = bookId.value
+  const target = chapterToDelete.value
+  if (id === null || !target || deletingChapter.value) return
+  deletingChapter.value = true
+  chapterError.value = ''
+  const index = chapters.value.findIndex(c => c.id === target.id)
+  try {
+    const remaining = await api.deleteChapter(id, target.id)
+    chapters.value = remaining
+    confirmDeleteChapterOpen.value = false
+    chapterToDelete.value = null
+    // Vai para o capítulo anterior ao excluído (ou o primeiro, se era o primeiro).
+    const neighbor = remaining[Math.max(0, index - 1)]
+    await router.replace({ name: 'book', params: { bookId: id }, query: neighbor ? { chapter: neighbor.id } : {} })
+  } catch (error) {
+    confirmDeleteChapterOpen.value = false
+    chapterError.value = errorMessage(error)
+  } finally {
+    deletingChapter.value = false
   }
 }
 
@@ -509,6 +557,67 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
                   {{ idx + 1 }}. {{ ch.name }}
                 </option>
               </select>
+
+              <!-- Gerenciamento do capítulo selecionado no celular (F0.10.02.5): mesmas ações das pílulas do desktop -->
+              <div v-if="selectedChapter" class="chapters-mobile-manage">
+                <DropdownMenu align="right" aria-label="Gerenciar capítulo">
+                  <template #trigger="{ isOpen, toggle, onKeydown }">
+                    <button
+                      type="button"
+                      class="secondary chapters-mobile-manage-trigger"
+                      :aria-expanded="isOpen"
+                      aria-label="Gerenciar capítulo"
+                      title="Gerenciar capítulo"
+                      @click="toggle"
+                      @keydown="onKeydown"
+                    >
+                      <Icon name="more-horizontal" :size="18" />
+                    </button>
+                  </template>
+                  <template #default="{ close }">
+                    <div class="book-mobile-actions-menu" role="menu">
+                      <button
+                        type="button"
+                        class="dropdown-item quiet"
+                        role="menuitem"
+                        :disabled="selectedChapterIndex <= 0 || movingChapter"
+                        @click="moveChapter(selectedChapter.id, 'up'); close()"
+                      >
+                        <Icon name="chevron-up" :size="16" />
+                        <span>Mover para trás</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="dropdown-item quiet"
+                        role="menuitem"
+                        :disabled="selectedChapterIndex >= chapters.length - 1 || movingChapter"
+                        @click="moveChapter(selectedChapter.id, 'down'); close()"
+                      >
+                        <Icon name="chevron-down" :size="16" />
+                        <span>Mover para frente</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="dropdown-item quiet"
+                        role="menuitem"
+                        @click="startEditChapter(selectedChapter); close()"
+                      >
+                        <Icon name="pencil" :size="16" />
+                        <span>Renomear</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="dropdown-item danger-item quiet"
+                        role="menuitem"
+                        @click="requestDeleteChapter(selectedChapter); close()"
+                      >
+                        <Icon name="trash" :size="16" />
+                        <span>Excluir</span>
+                      </button>
+                    </div>
+                  </template>
+                </DropdownMenu>
+              </div>
             </div>
 
             <!-- Criação de Novo Capítulo (Inline e Compacta) -->
@@ -563,6 +672,28 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
           </div>
 
           <p v-if="chapterError" class="notice error chapter-bar-notice" role="alert">{{ chapterError }}</p>
+
+          <!-- Renomear no celular: a faixa de pílulas fica oculta, então o campo aparece abaixo do seletor -->
+          <form
+            v-if="selectedChapter && editingChapterId === selectedChapter.id"
+            class="chapters-mobile-edit"
+            @submit.prevent="saveChapter(selectedChapter)"
+          >
+            <label for="mobile-chapter-rename" class="sr-only">Novo nome do capítulo</label>
+            <input
+              id="mobile-chapter-rename"
+              ref="mobileEditChapterInputRef"
+              v-model="editChapterName"
+              required
+              placeholder="Nome do capítulo"
+              class="chapters-mobile-edit-input"
+              :disabled="savingChapterName"
+              @keydown.esc="cancelEditChapter"
+            />
+            <button type="submit" class="primary" :disabled="savingChapterName || !editChapterName.trim()">Salvar</button>
+            <button type="button" class="secondary" :disabled="savingChapterName" @click="cancelEditChapter">Cancelar</button>
+            <p v-if="editChapterError" class="notice error" role="alert">{{ editChapterError }}</p>
+          </form>
 
           <!-- Faixa Rolável de Abas / Pílulas de Capítulos -->
           <nav
@@ -653,6 +784,15 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
                       @click.prevent="startEditChapter(chapter)"
                     >
                       <Icon name="pencil" :size="12" />
+                    </button>
+                    <button
+                      type="button"
+                      class="pill-tool-btn quiet"
+                      title="Excluir capítulo"
+                      aria-label="Excluir capítulo"
+                      @click.prevent="requestDeleteChapter(chapter)"
+                    >
+                      <Icon name="trash" :size="12" />
                     </button>
                   </div>
                 </div>
@@ -829,6 +969,18 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
         :loading="trashingBook"
         @close="confirmTrashBookOpen = false"
         @confirm="handleTrashBook"
+      />
+
+      <TrashConfirmModal
+        v-if="chapterToDelete"
+        :open="confirmDeleteChapterOpen"
+        title="Excluir capítulo?"
+        :message="`Deseja excluir o capítulo “${chapterToDelete.name}”? Esta ação não pode ser desfeita.`"
+        confirm-label="Excluir capítulo"
+        danger
+        :loading="deletingChapter"
+        @close="confirmDeleteChapterOpen = false"
+        @confirm="confirmDeleteChapter"
       />
 
       <TrashConfirmModal
@@ -1028,8 +1180,22 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
   padding: 1px 8px;
 }
 
-.chapters-mobile-select-wrap {
+.chapters-mobile-select-wrap,
+.chapters-mobile-edit {
   display: none;
+}
+
+/* Rótulos só para leitor de tela; a classe não existe globalmente, e o rótulo do seletor aparecia na tela. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .chapters-create-wrap {
@@ -1148,6 +1314,14 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
 
 .chapter-pill.selected .chapter-pill-num {
   color: var(--color-selected-text);
+}
+
+/* Sobre o fundo da seleção, as ferramentas usam a cor de texto da seleção (F0.10.02.5): nos temas claros o fundo
+   selecionado é escuro, e o texto padrão da variante .quiet sumia (1,0 a 2,0:1). */
+.chapter-pill.selected .pill-tool-btn {
+  --quiet-fg: var(--color-selected-text);
+  --quiet-fg-disabled: color-mix(in srgb, var(--color-selected-text) 50%, var(--color-selected-bg));
+  --quiet-border: color-mix(in srgb, var(--color-selected-text) 35%, transparent);
 }
 
 .chapter-pill-active-tools {
@@ -1422,7 +1596,7 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
     flex-shrink: 0;
   }
 
-  .book-header-cover :deep(.book-cover),
+  .book-header-cover :deep(.book-cover-container),
   .book-header-cover :deep(img) {
     width: 48px !important;
     height: 72px !important;
@@ -1559,6 +1733,30 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
     gap: 0.5rem;
     width: 100%;
     margin-bottom: 0.25rem;
+  }
+
+  .chapters-mobile-manage-trigger {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 0.6rem;
+  }
+
+  .chapters-mobile-edit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .chapters-mobile-edit-input {
+    flex: 1 1 100%;
+    min-height: 44px;
+  }
+
+  .chapters-mobile-edit .notice {
+    flex-basis: 100%;
+    margin: 0;
   }
 
   .chapters-mobile-select {

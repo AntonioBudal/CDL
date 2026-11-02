@@ -1142,3 +1142,31 @@ Spec aprovada com as recomendações Q1 a Q5:
   foi visto até o botão carregar (sem concluir um login real).
 - **Achado:** o sitemap e o `robots.txt` anunciam `/compartilhado/{id}`, rota que não existe no frontend (404).
   Fica para a feature de cadernos públicos do Roadmap 1.0.
+
+## F0.10.02.5 — Correções visuais e gerenciamento de capítulos (2026-11-02, emergência)
+
+- **Spec, plano e tarefas:** `specs/094-correcoes-capa-capitulos/`.
+- **Capa no celular:** a regra móvel de `BookView.vue` mirava `:deep(.book-cover)`, classe que não existe mais; o
+  `BookCover.vue` usa `.book-cover-container` (140 px no tamanho `md`). A imagem encolhia para 48×72 e o container
+  seguia com 140×210, cobrindo o título. Agora a regra mira o container. Desktop sem mudança.
+- **Ícones do capítulo selecionado:** as ferramentas usam a variante `.quiet` (texto do tema), mas ficam sobre
+  `--color-selected-bg`; nos temas claros davam 1,0 a 2,0:1. A variante ganhou os ganchos `--quiet-fg` e
+  `--quiet-fg-disabled`, e a pílula selecionada passa `--color-selected-text`: mínimo de 5,1:1 nos 10 temas (os
+  desabilitados ficam em ~2,9:1, visíveis e apagados).
+- **Excluir capítulo:** `DELETE /api/books/{id}/chapters/{id}` só para capítulo vazio; com estudos (ativos ou na
+  lixeira) responde 409 e nada é apagado; senão renumera as posições. Na interface, botão de lixeira nas
+  ferramentas do capítulo (desktop) e item "Excluir" no menu móvel, com confirmação (`TrashConfirmModal`, `danger`);
+  com estudos ativos, o aviso aparece antes, sem abrir a confirmação.
+- **Celular:** menu "Gerenciar capítulo" (⋯) ao lado do seletor, com mover para trás, mover para frente, renomear e
+  excluir; renomear abre um campo abaixo do seletor.
+- **Defeitos antigos corrigidos no caminho (mesma tela, mesmas ações):**
+  - mover o capítulo selecionado sem `?chapter=` na URL fazia a seleção pular para o novo primeiro capítulo; agora
+    a URL fixa o capítulo movido;
+  - `editChapterInputRef` dentro do `v-for` vira lista, e `.focus()` lançava erro: nenhum campo de renomear recebia
+    foco (desktop inclusive);
+  - o rótulo "Selecione o capítulo" usava `.sr-only`, classe inexistente, e aparecia na tela espremendo o seletor.
+- **Testes:** `test_chapter_delete.py` (5) e `feature-094-capa-capitulos.test.mjs` (4); o teste da F0.10.01 passou
+  a contar 4 ferramentas e a aceitar o gancho `--quiet-fg`. `npm test` 693, 93 testes de backend de capítulos,
+  livros e lixeira, build ok.
+- **Navegador (banco fictício, 1366 e 375 px):** capa 48×72 sem cobrir o título; renomear, mover e excluir no
+  desktop e no celular, conferidos também pela API depois de cada ação; capítulo com estudos recusado.

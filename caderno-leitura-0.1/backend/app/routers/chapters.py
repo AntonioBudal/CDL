@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 from sqlalchemy import func, select
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
-from app.models import Book, Chapter
+from app.models import Book, Chapter, Study
 from app.schemas.chapter import ChapterCreate, ChapterMove, ChapterPatch, ChapterRead
 from app.schemas.common import SQLITE_MAX_INTEGER
 from app.services.persistence import check_optimistic_lock, commit_changes, get_user_resource_or_404
@@ -106,3 +106,42 @@ def move_chapter(
 
     commit_changes(session)
     return chapters
+
+
+@router.delete("/{chapter_id}", response_model=list[ChapterRead], summary="Excluir capítulo vazio")
+def delete_chapter(
+    book_id: Identifier,
+    chapter_id: Identifier,
+    session: DatabaseSession,
+    current_user: CurrentUser,
+):
+    """Exclui um capítulo sem estudos e renumera os demais (F0.10.02.5).
+
+    Estudos nunca saem junto: com algum estudo, ativo ou na lixeira (que guarda o capítulo para a restauração), a
+    exclusão é recusada com 409. A chave estrangeira de studies.chapter_id já é RESTRICT.
+    """
+    get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
+    chapter = session.scalar(select(Chapter).where(Chapter.id == chapter_id, Chapter.book_id == book_id))
+    if chapter is None:
+        raise HTTPException(status_code=404, detail="Capítulo não encontrado.")
+
+    study_count = session.scalar(select(func.count()).select_from(Study).where(Study.chapter_id == chapter_id)) or 0
+    if study_count:
+        noun = "estudo" if study_count == 1 else "estudos"
+        raise HTTPException(
+            status_code=409,
+            detail=(
+                f"Este capítulo tem {study_count} {noun} (contando os da lixeira). "
+                "Mova ou exclua os estudos antes de excluir o capítulo."
+            ),
+        )
+
+    session.delete(chapter)
+    session.flush()
+    remaining = list(
+        session.scalars(select(Chapter).where(Chapter.book_id == book_id).order_by(Chapter.position, Chapter.id)).all()
+    )
+    for position, item in enumerate(remaining):
+        item.position = position
+    commit_changes(session)
+    return remaining

@@ -43,7 +43,8 @@ test('1. appearance-advanced.css define .quiet depois de todas as regras globais
 
   const body = css.slice(base, css.indexOf('}', base))
   assert.match(body, /--button-bg:\s*var\(--quiet-bg,\s*transparent\)/)
-  assert.match(body, /--button-fg:\s*var\(--color-text\)/)
+  // F0.10.02.5: o texto aceita o gancho --quiet-fg (pílula selecionada), com o texto do tema como padrão.
+  assert.match(body, /--button-fg:\s*var\(--quiet-fg,\s*var\(--color-text\)\)/)
   assert.match(body, /--button-border:\s*var\(--quiet-border,\s*transparent\)/)
   assert.match(body, /--button-hover-fg:\s*var\(--color-hover-text/)
   assert.match(body, /width:\s*auto/)
@@ -57,7 +58,7 @@ test('2. Controles secundários do header e das páginas de livros usam .quiet',
     ['components/sync/SyncStatusBadge.vue', 'sync-status-badge', 1],
     ['components/layout/UserDropdown.vue', 'user-trigger-btn', 1],
     ['components/layout/MobileTabBar.vue', 'mobile-more-trigger', 1],
-    ['views/BookView.vue', 'pill-tool-btn', 3],
+    ['views/BookView.vue', 'pill-tool-btn', 4], // mover x2, renomear e excluir (F0.10.02.5)
     ['components/LibraryToolbar.vue', 'search-clear-btn', 1],
     ['components/LibraryToolbar.vue', 'category-clear-btn', 1],
     ['components/LibraryToolbar.vue', 'clear-filters-btn', 1],
