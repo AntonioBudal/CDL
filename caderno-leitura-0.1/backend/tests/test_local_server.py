@@ -89,7 +89,11 @@ def test_compiled_interface_and_api_work_in_one_python_server_and_persist_after_
         assert '/src/main.ts' not in page.text
         assert '@vite/client' not in page.text
         for url in assets.urls:
-            assert url.startswith('/assets/'), url
+            # F0.10.02: o bootstrap de aparência sai na raiz, sem hash no nome; por isso precisa de no-cache.
+            if url == '/appearance-bootstrap.js':
+                assert client.get(url).headers.get('cache-control') == 'no-cache'
+            else:
+                assert url.startswith('/assets/'), url
             response = client.get(url)
             assert response.status_code == 200
             assert response.content == (get_frontend_dist_path() / url.lstrip('/')).read_bytes()
