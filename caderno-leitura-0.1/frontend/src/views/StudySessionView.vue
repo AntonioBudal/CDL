@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import SessionProgressHeader from '../components/session/SessionProgressHeader.vue'
 import SessionSummaryModal from '../components/session/SessionSummaryModal.vue'
+import StudyContextDrawer from '../components/review/StudyContextDrawer.vue'
 import { useStructuredStudySession } from '../composables/useActiveReadingSession.ts'
 
 const route = useRoute()
@@ -11,7 +12,11 @@ const studySession = useStructuredStudySession()
 
 const sessionId = computed(() => Number(route.params.sessionId))
 
+// Gaveta de contexto (F0.10.04): enquanto aberta, os atalhos da sessão ficam desligados.
+const contextOpen = ref(false)
+
 function onKeydown(e: KeyboardEvent) {
+  if (contextOpen.value) return
   studySession.handleKeydown(e, () => {
     void router.push('/revisao')
   })
@@ -110,6 +115,15 @@ onUnmounted(() => {
           <div class="answer-content">
             {{ studySession.currentCard.value.expected_answer }}
           </div>
+          <button type="button" class="secondary context-open-btn" @click="contextOpen = true">
+            Ver o estudo
+          </button>
+          <StudyContextDrawer
+            :open="contextOpen"
+            :study-id="studySession.currentCard.value.study_id"
+            :study-title="studySession.currentCard.value.study_title"
+            @close="contextOpen = false"
+          />
         </div>
 
         <!-- Área de Ação e Avaliação -->

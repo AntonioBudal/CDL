@@ -1199,3 +1199,26 @@ Spec aprovada com as recomendações Q1 a Q5:
 - **Testes:** `test_system_status.py` (12) e `feature-095-painel-sistema.test.mjs` (4); `npm test` 698; 142 testes
   de backend relacionados; build ok. Navegador (banco fictício, `LEITORUM_BUILD_COMMIT=1111111` forçado): aviso de
   divergência, integridade "Banco íntegro", bloco de backups, link para Conta, 1366 e 375 px sem rolagem lateral.
+
+## F0.10.04 — Revisão: baldes, sessões de 5/10/15 e gaveta de contexto (2026-11-03)
+
+- **Spec, plano e tarefas:** `specs/096-revisao-baldes-sessao/`.
+- **Baldes:** Novos, Difícil, Médio e Fácil, derivados de `last_rating` (sem migração). `GET /api/review/stats`
+  devolve `buckets` e aceita `book_id`, `chapter_id` e `kind` só para eles (a faixa de prontidão segue global);
+  `GET /api/review/items?bucket=` filtra sem mudar a ordem. Filtros comuns em `_scope_filters()`.
+- **Sessão estruturada sem balde:** ao reabrir, o servidor recalcula os cartões pendentes a partir do escopo gravado
+  em `study_sessions`, que não guarda o balde; guardar exigiria migração. A tela avisa quando há balde escolhido.
+- **Tamanho da sessão:** 5, 10 ou 15 (padrão 10), em `localStorage` (`caderno_review_session_size`), nas três
+  entradas (prática no hub, revisar mais e sessão estruturada).
+- **Gaveta "Ver o estudo":** `StudyContextDrawer.vue` (Drawer + MarkdownContent com as 4 partes), só depois de
+  revelar a resposta, no hub e na sessão estruturada; com a gaveta aberta, os atalhos de teclado do cartão (Espaço,
+  1, 2, 3) ficam desligados.
+- **Filtros da revisão:** os botões de tipo, balde e tamanho usavam o fundo de destaque mesmo sem estar
+  selecionados (regra global de botões) e, no celular, encolhiam cortando o texto. Agora só o selecionado tem
+  destaque (`.quiet` nos demais) e eles quebram linha.
+- **Testes:** `test_review_buckets.py` (9) e `feature-096-revisao-baldes.test.mjs` (3). Navegador (dados
+  fictícios): pedido `limit=5&bucket=hard`, sessão com 3 itens difíceis, gaveta, atalho bloqueado, contraste dos
+  filtros nos 10 temas (240 medições, sem falhas), 375 px sem rolagem lateral nem texto cortado.
+- **Fecho do lote de 5 (F0.10.01, .02, .02.5, .03 e .04):** `npm test` 701; `pytest` completo 759 aprovados e 1
+  pulado depois de corrigir `test_local_server.py` (exigia todo script em `/assets/`; desde a F0.10.02 o bootstrap
+  de aparência fica na raiz, com `no-cache`), em commit próprio; build ok.

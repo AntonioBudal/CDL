@@ -1156,6 +1156,16 @@ export interface ReviewBookItem {
   items_count: number
 }
 
+// Baldes da revisão (F0.10.04): "new" = nunca avaliado; os demais = última avaliação.
+export type ReviewBucket = 'new' | 'hard' | 'medium' | 'easy'
+
+export interface ReviewBucketCounts {
+  new: number
+  hard: number
+  medium: number
+  easy: number
+}
+
 export interface ReviewStatsResponse {
   total_eligible: number
   total_questions: number
@@ -1163,6 +1173,7 @@ export interface ReviewStatsResponse {
   reviewed_today: number
   pending_review: number
   books: ReviewBookItem[]
+  buckets?: ReviewBucketCounts
 }
 
 export interface ReviewReadinessMetrics {

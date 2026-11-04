@@ -8,6 +8,8 @@ from pydantic import Field
 from app.schemas.common import InputModel, OutputModel, RecordId
 
 ReviewRating = Literal["easy", "medium", "hard"]
+# Baldes da revisão (F0.10.04): "new" = nunca avaliado; os demais = última avaliação.
+ReviewBucket = Literal["new", "hard", "medium", "easy"]
 
 
 class ReviewRecordRequest(InputModel):
@@ -46,6 +48,13 @@ class ReviewBookItem(OutputModel):
     items_count: int
 
 
+class ReviewBucketCounts(OutputModel):
+    new: int = 0
+    hard: int = 0
+    medium: int = 0
+    easy: int = 0
+
+
 class ReviewStatsResponse(OutputModel):
     total_eligible: int
     total_questions: int
@@ -53,3 +62,4 @@ class ReviewStatsResponse(OutputModel):
     reviewed_today: int
     pending_review: int
     books: list[ReviewBookItem] = Field(default_factory=list)
+    buckets: ReviewBucketCounts = Field(default_factory=ReviewBucketCounts)

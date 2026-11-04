@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { api, startStudySession, getStudySessionsHistory } from '../services/api.ts'
 import { reviewApi } from '../api/review.ts'
 import { useReviewSession } from '../composables/useReviewSession.ts'
-import type { Chapter, ReviewStatsResponse, StudySession, SessionScopeType } from '../types.ts'
+import type { Chapter, ReviewBucket, ReviewStatsResponse, StudySession, SessionScopeType } from '../types.ts'
 import ReviewStatsHeader from '../components/review/ReviewStatsHeader.vue'
 import ReviewCard from '../components/review/ReviewCard.vue'
 import ReviewPedagogicalEmpty from '../components/review/ReviewPedagogicalEmpty.vue'
@@ -51,10 +51,44 @@ function stopTimer() {
   }
 }
 
+// Baldes e tamanho da sessão (F0.10.04). O tamanho é preferência do navegador; o balde vale para a prática no hub
+// (a sessão estruturada recalcula os cartões a partir do escopo salvo, que não guarda o balde).
+const SESSION_SIZE_KEY = 'caderno_review_session_size'
+const selectedBucket = ref<ReviewBucket | 'all'>('all')
+const sessionSize = ref(readSessionSize())
+
+function readSessionSize(): number {
+  try {
+    const stored = Number(window.localStorage.getItem(SESSION_SIZE_KEY))
+    return [5, 10, 15].includes(stored) ? stored : 10
+  } catch {
+    return 10
+  }
+}
+
+function setSessionSize(size: number) {
+  sessionSize.value = size
+  try {
+    window.localStorage.setItem(SESSION_SIZE_KEY, String(size))
+  } catch {
+    // Sem armazenamento local: o tamanho vale só nesta visita.
+  }
+}
+
+const bucketFilter = computed(() => (selectedBucket.value === 'all' ? undefined : selectedBucket.value))
+
 async function fetchStats() {
   loadingStats.value = true
   try {
-    stats.value = await reviewApi.getStats()
+    stats.value = await reviewApi.getStats(undefined, {
+      book_id: selectedBookId.value ?? undefined,
+      chapter_id: selectedChapterId.value ?? undefined,
+      kind: selectedKind.value !== 'all' ? selectedKind.value : undefined,
+    })
+    // Se o balde escolhido ficou vazio no filtro novo, volta para "Todos os níveis".
+    if (selectedBucket.value !== 'all' && (stats.value.buckets?.[selectedBucket.value] ?? 0) === 0) {
+      selectedBucket.value = 'all'
+    }
   } catch (err: unknown) {
     console.error('Erro ao carregar estatísticas de revisão:', err)
   } finally {
@@ -80,11 +114,16 @@ watch(selectedBookId, (newBookId) => {
 })
 
 const eligibleCountForSelection = computed(() => {
+  if (bucketFilter.value) return stats.value.buckets?.[bucketFilter.value] ?? 0
   if (selectedBookId.value) {
     const found = stats.value.books.find((b) => b.book_id === selectedBookId.value)
     return found ? found.items_count : 0
   }
   return stats.value.total_eligible
+})
+
+watch([selectedBookId, selectedChapterId, selectedKind], () => {
+  void fetchStats()
 })
 
 async function startReview() {
@@ -94,7 +133,8 @@ async function startReview() {
     book_id: selectedBookId.value ?? undefined,
     chapter_id: selectedChapterId.value ?? undefined,
     kind: selectedKind.value !== 'all' ? selectedKind.value : undefined,
-    limit: 10,
+    limit: sessionSize.value,
+    bucket: selectedBucket.value === 'all' ? undefined : selectedBucket.value,
   })
 }
 
@@ -111,7 +151,8 @@ async function handleReviewMore() {
     book_id: selectedBookId.value ?? undefined,
     chapter_id: selectedChapterId.value ?? undefined,
     kind: selectedKind.value !== 'all' ? selectedKind.value : undefined,
-    limit: 10,
+    limit: sessionSize.value,
+    bucket: bucketFilter.value,
   })
 }
 
@@ -143,7 +184,7 @@ async function startStructuredSession(scope: SessionScopeType = 'quick') {
     const payload = {
       scope_type: scope,
       book_id: scope === 'book' ? selectedBookId.value : null,
-      limit: 10,
+      limit: sessionSize.value,
     }
     const created = await startStudySession(payload)
     void router.push(`/estudo/sessao/${created.id}`)
@@ -234,6 +275,10 @@ onUnmounted(() => {
           @update:selected-book-id="selectedBookId = $event"
           @update:selected-chapter-id="selectedChapterId = $event"
           @update:selected-kind="selectedKind = $event"
+          :selected-bucket="selectedBucket"
+          :session-size="sessionSize"
+          @update:bucket="selectedBucket = $event"
+          @update:size="setSessionSize"
           @start-practice="startReview"
         />
 
@@ -266,7 +311,7 @@ onUnmounted(() => {
             <span>
               Iniciar Sessão Estruturada
               <template v-if="selectedBookId">do Livro</template>
-              <template v-else>Rápida (10 itens)</template>
+              <template v-else>Rápida ({{ sessionSize }} itens)</template>
             </span>
           </button>
           <button
@@ -275,8 +320,11 @@ onUnmounted(() => {
             :disabled="loadingStats || session.state.loading"
             @click="startReview"
           >
-            Prática Rápida neste Hub ({{ Math.min(10, eligibleCountForSelection) }} itens)
+            Prática Rápida neste Hub ({{ Math.min(sessionSize, eligibleCountForSelection) }} itens)
           </button>
+          <p v-if="selectedBucket !== 'all'" class="bucket-session-note muted">
+            A sessão estruturada usa todos os níveis; o filtro de dificuldade vale para a prática neste hub.
+          </p>
         </div>
       </div>
 

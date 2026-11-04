@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Chapter, ReviewStatsResponse } from '../../types.ts'
+import type { Chapter, ReviewBucket, ReviewStatsResponse } from '../../types.ts'
 
 const props = withDefaults(
   defineProps<{
@@ -10,8 +10,12 @@ const props = withDefaults(
     selectedKind?: string
     chapters?: Chapter[]
     loading?: boolean
+    selectedBucket?: ReviewBucket | 'all'
+    sessionSize?: number
   }>(),
   {
+    selectedBucket: 'all',
+    sessionSize: 10,
     selectedBookId: null,
     selectedChapterId: null,
     selectedKind: 'all',
@@ -25,7 +29,22 @@ const emit = defineEmits<{
   (e: 'update:selectedChapterId', value: number | null): void
   (e: 'update:selectedKind', value: string): void
   (e: 'start-practice'): void
+  (e: 'update:bucket', value: ReviewBucket | 'all'): void
+  (e: 'update:size', value: number): void
 }>()
+
+// Baldes (F0.10.04): contagem dentro do filtro atual; balde vazio fica desabilitado.
+const BUCKETS: { id: ReviewBucket; label: string }[] = [
+  { id: 'new', label: 'Novos' },
+  { id: 'hard', label: 'Difícil' },
+  { id: 'medium', label: 'Médio' },
+  { id: 'easy', label: 'Fácil' },
+]
+const SESSION_SIZES = [5, 10, 15]
+
+function bucketCount(id: ReviewBucket): number {
+  return props.stats?.buckets?.[id] ?? 0
+}
 
 const estimatedMinutes = computed(() => {
   const count = props.stats?.pending_review ?? 0
@@ -114,6 +133,53 @@ function onStartPractice() {
       </div>
     </div>
 
+    <!-- Baldes por dificuldade e tamanho da sessão (F0.10.04) -->
+    <div class="bucket-toolbar">
+      <div class="bucket-filter" role="radiogroup" aria-label="Filtrar por dificuldade">
+        <button
+          type="button"
+          class="filter-pill bucket-pill"
+          :class="{ active: selectedBucket === 'all', quiet: selectedBucket !== 'all' }"
+          role="radio"
+          :aria-checked="selectedBucket === 'all'"
+          @click="emit('update:bucket', 'all')"
+        >
+          Todos os níveis
+        </button>
+        <button
+          v-for="bucket in BUCKETS"
+          :key="bucket.id"
+          type="button"
+          class="filter-pill bucket-pill"
+          :class="[`bucket-${bucket.id}`, { active: selectedBucket === bucket.id, quiet: selectedBucket !== bucket.id }]"
+          role="radio"
+          :aria-checked="selectedBucket === bucket.id"
+          :disabled="loading || bucketCount(bucket.id) === 0"
+          @click="emit('update:bucket', bucket.id)"
+        >
+          <span class="bucket-dot" aria-hidden="true"></span>
+          {{ bucket.label }}
+          <span class="bucket-count">{{ bucketCount(bucket.id) }}</span>
+        </button>
+      </div>
+      <div class="size-filter" role="radiogroup" aria-label="Itens por sessão">
+        <span class="size-label" aria-hidden="true">Itens por sessão</span>
+        <button
+          v-for="size in SESSION_SIZES"
+          :key="size"
+          type="button"
+          class="filter-pill size-pill"
+          :class="{ active: sessionSize === size, quiet: sessionSize !== size }"
+          role="radio"
+          :aria-checked="sessionSize === size"
+          :aria-label="`${size} itens por sessão`"
+          @click="emit('update:size', size)"
+        >
+          {{ size }}
+        </button>
+      </div>
+    </div>
+
     <!-- Barra de Filtros e Escopo -->
     <div class="filters-toolbar">
       <!-- Pílulas de Alternância Rápida de Tipo -->
@@ -121,7 +187,7 @@ function onStartPractice() {
         <button
           type="button"
           class="filter-pill"
-          :class="{ active: selectedKind === 'all' }"
+          :class="{ active: selectedKind === 'all', quiet: selectedKind !== 'all' }"
           role="radio"
           :aria-checked="selectedKind === 'all'"
           @click="setKind('all')"
@@ -131,7 +197,7 @@ function onStartPractice() {
         <button
           type="button"
           class="filter-pill"
-          :class="{ active: selectedKind === 'question' }"
+          :class="{ active: selectedKind === 'question', quiet: selectedKind !== 'question' }"
           role="radio"
           :aria-checked="selectedKind === 'question'"
           @click="setKind('question')"
@@ -141,7 +207,7 @@ function onStartPractice() {
         <button
           type="button"
           class="filter-pill"
-          :class="{ active: selectedKind === 'hidden' }"
+          :class="{ active: selectedKind === 'hidden', quiet: selectedKind !== 'hidden' }"
           role="radio"
           :aria-checked="selectedKind === 'hidden'"
           @click="setKind('hidden')"
@@ -342,6 +408,7 @@ function onStartPractice() {
 
 .kind-filter {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.375rem;
   background-color: var(--color-surface, #ffffff);
   padding: 0.25rem;
@@ -349,7 +416,11 @@ function onStartPractice() {
   border: 1px solid var(--color-border-subtle, #e2e8f0);
 }
 
+/* Só o filtro selecionado usa o destaque; os demais usam a variante .quiet (a regra global de botões pintaria
+   todos). No celular, os botões quebram linha em vez de encolher e cortar o texto (F0.10.04). */
 .filter-pill {
+  flex: 0 0 auto;
+  white-space: nowrap;
   min-height: 44px;
   min-width: 44px;
   padding: 0.5rem 1rem;
@@ -457,5 +528,58 @@ function onStartPractice() {
   .review-select {
     width: 100%;
   }
+}
+
+/* Baldes e tamanho da sessão (F0.10.04) */
+.bucket-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.bucket-filter,
+.size-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bucket-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bucket-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border-strong, var(--color-border));
+}
+
+.bucket-new .bucket-dot { background: var(--color-link); }
+.bucket-hard .bucket-dot { background: var(--color-error-marker); }
+.bucket-medium .bucket-dot { background: var(--color-warning-marker, var(--color-warning)); }
+.bucket-easy .bucket-dot { background: var(--color-success); }
+
+.bucket-count {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.size-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  margin-right: 0.15rem;
+}
+
+.size-pill {
+  min-width: 44px;
+  justify-content: center;
 }
 </style>

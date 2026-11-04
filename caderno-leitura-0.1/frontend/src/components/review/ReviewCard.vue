@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import type { ReviewItemRead, ReviewRating } from '../../types.ts'
+import StudyContextDrawer from './StudyContextDrawer.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -21,6 +22,8 @@ const emit = defineEmits<{
 }>()
 
 const liveAnnouncement = ref('')
+// Gaveta de contexto (F0.10.04): enquanto aberta, os atalhos do cartão ficam desligados.
+const contextOpen = ref(false)
 
 watch(
   () => props.isRevealed,
@@ -34,6 +37,7 @@ watch(
 )
 
 function handleKeydown(event: KeyboardEvent) {
+  if (contextOpen.value) return
   // Ignora se o foco estiver em campo de texto
   const tag = (event.target as HTMLElement)?.tagName?.toLowerCase()
   if (tag === 'input' || tag === 'textarea' || tag === 'select') return
@@ -161,6 +165,9 @@ onUnmounted(() => {
       </div>
 
       <div v-else class="rating-actions">
+        <button v-if="isRevealed" type="button" class="secondary context-open-btn" @click="contextOpen = true">
+          Ver o estudo
+        </button>
         <div class="rating-prompt">Como foi recordar este conteúdo?</div>
         <div class="rating-buttons" role="group" aria-label="Avalie sua facilidade de recordação">
           <button
@@ -196,6 +203,12 @@ onUnmounted(() => {
       </div>
     </div>
   </article>
+  <StudyContextDrawer
+    :open="contextOpen"
+    :study-id="item.study_id"
+    :study-title="item.study_title"
+    @close="contextOpen = false"
+  />
 </template>
 
 <style scoped>

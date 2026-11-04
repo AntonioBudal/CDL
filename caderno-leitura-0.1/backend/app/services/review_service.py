@@ -15,14 +15,76 @@ from app.models.study import Study
 from app.models.study_highlight import StudyHighlight
 from app.schemas.review import (
     ReviewBookItem,
+    ReviewBucketCounts,
     ReviewItemRead,
     ReviewStatsResponse,
 )
 from app.services.persistence import commit_changes
 
 
-def get_review_stats(session: Session, user_id: str) -> ReviewStatsResponse:
-    """Calcula estatísticas consolidadas de itens de revisão para o usuário ativo."""
+def _scope_filters(
+    user_id: str,
+    book_id: int | None = None,
+    chapter_id: int | None = None,
+    kind: str | None = None,
+    bucket: str | None = None,
+) -> list:
+    """Filtros comuns da revisão: itens do leitor, fora da lixeira, por tipo, livro, capítulo e balde (F0.10.04)."""
+    filters = [
+        StudyHighlight.user_id == user_id,
+        Study.deleted_at.is_(None),
+        Book.deleted_at.is_(None),
+    ]
+    if kind in ("question", "hidden"):
+        filters.append(StudyHighlight.kind == kind)
+    else:
+        filters.append(StudyHighlight.kind.in_(["question", "hidden"]))
+    if book_id is not None:
+        filters.append(Book.id == book_id)
+    if chapter_id is not None:
+        filters.append(Chapter.id == chapter_id)
+    if bucket == "new":
+        filters.append(StudyHighlight.last_rating.is_(None))
+    elif bucket in ("hard", "medium", "easy"):
+        filters.append(StudyHighlight.last_rating == bucket)
+    return filters
+
+
+def get_bucket_counts(
+    session: Session,
+    user_id: str,
+    book_id: int | None = None,
+    chapter_id: int | None = None,
+    kind: str | None = None,
+) -> ReviewBucketCounts:
+    """Quantos itens há em cada balde dentro do filtro atual; os baldes vêm de last_rating, sem coluna nova."""
+    rows = session.execute(
+        select(StudyHighlight.last_rating, func.count(StudyHighlight.id))
+        .join(Study, StudyHighlight.study_id == Study.id)
+        .join(Chapter, Study.chapter_id == Chapter.id)
+        .join(Book, Chapter.book_id == Book.id)
+        .where(*_scope_filters(user_id, book_id, chapter_id, kind))
+        .group_by(StudyHighlight.last_rating)
+    ).all()
+    counts = {"new": 0, "hard": 0, "medium": 0, "easy": 0}
+    for rating, count in rows:
+        key = "new" if rating is None else rating
+        if key in counts:
+            counts[key] += count
+    return ReviewBucketCounts(**counts)
+
+
+def get_review_stats(
+    session: Session,
+    user_id: str,
+    book_id: int | None = None,
+    chapter_id: int | None = None,
+    kind: str | None = None,
+) -> ReviewStatsResponse:
+    """Calcula estatísticas consolidadas de itens de revisão para o usuário ativo.
+
+    Os números da faixa de prontidão continuam globais; só os baldes seguem os filtros (F0.10.04).
+    """
     base_filter = [
         StudyHighlight.user_id == user_id,
         StudyHighlight.kind.in_(["question", "hidden"]),
@@ -74,6 +136,7 @@ def get_review_stats(session: Session, user_id: str) -> ReviewStatsResponse:
     ]
 
     return ReviewStatsResponse(
+        buckets=get_bucket_counts(session, user_id, book_id, chapter_id, kind),
         total_eligible=total_eligible,
         total_questions=total_questions,
         total_hidden=total_hidden,
@@ -90,25 +153,11 @@ def get_review_items(
     chapter_id: int | None = None,
     kind: str | None = None,
     limit: int = 10,
+    bucket: str | None = None,
 ) -> list[ReviewItemRead]:
-    """Retorna itens de estudo priorizados para a sessão de Active Recall."""
+    """Retorna itens de estudo priorizados para a sessão de Active Recall; ``bucket`` só filtra, sem mudar a ordem."""
     safe_limit = min(max(1, limit), 50)
-
-    filters = [
-        StudyHighlight.user_id == user_id,
-        Study.deleted_at.is_(None),
-        Book.deleted_at.is_(None),
-    ]
-
-    if kind in ("question", "hidden"):
-        filters.append(StudyHighlight.kind == kind)
-    else:
-        filters.append(StudyHighlight.kind.in_(["question", "hidden"]))
-
-    if book_id is not None:
-        filters.append(Book.id == book_id)
-    if chapter_id is not None:
-        filters.append(Chapter.id == chapter_id)
+    filters = _scope_filters(user_id, book_id, chapter_id, kind, bucket)
 
     stmt = (
         select(

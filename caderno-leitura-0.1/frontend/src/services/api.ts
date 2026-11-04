@@ -10,7 +10,7 @@ import type {
   SearchResponse, SearchHistoryResponse, UserRead,
   AuthConfigResponse, AuthSuccessResponse, SessionItem, ExternalIdentityRead,
   AuditLogListResponse, DeactivateAccountRequest, ReactivateAccountRequest, DeleteAccountRequest,
-  ReviewItemRead, ReviewRating, ReviewStatsResponse,
+  ReviewBucket, ReviewItemRead, ReviewRating, ReviewStatsResponse,
   BacklinksResponse, StudyCandidateOption,
   InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
   StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
@@ -253,10 +253,16 @@ export const api = {
     request<CategorySuggestion>(`/categories/suggest?q=${encodeURIComponent(q.trim())}`, { signal }),
   getCategoryStats: (signal?: AbortSignal) =>
     request<CategoryStats>('/categories/stats', { signal }),
-  getReviewStats: (signal?: AbortSignal) =>
-    request<ReviewStatsResponse>('/review/stats', { signal }),
+  getReviewStats: (signal?: AbortSignal, filters?: { book_id?: number; chapter_id?: number; kind?: string }) => {
+    // Os filtros só mudam a contagem dos baldes (F0.10.04); os números da faixa de prontidão são globais.
+    const parts: string[] = []
+    if (filters?.book_id !== undefined) parts.push(`book_id=${filters.book_id}`)
+    if (filters?.chapter_id !== undefined) parts.push(`chapter_id=${filters.chapter_id}`)
+    if (filters?.kind && filters.kind !== 'all') parts.push(`kind=${encodeURIComponent(filters.kind)}`)
+    return request<ReviewStatsResponse>(`/review/stats${parts.length ? `?${parts.join('&')}` : ''}`, { signal })
+  },
   getReviewItems: (
-    params?: { book_id?: number; chapter_id?: number; kind?: string; limit?: number },
+    params?: { book_id?: number; chapter_id?: number; kind?: string; limit?: number; bucket?: ReviewBucket },
     signal?: AbortSignal,
   ) => {
     const queryParts: string[] = []
@@ -264,6 +270,7 @@ export const api = {
     if (params?.chapter_id !== undefined) queryParts.push(`chapter_id=${params.chapter_id}`)
     if (params?.kind && params.kind !== 'all') queryParts.push(`kind=${encodeURIComponent(params.kind)}`)
     if (params?.limit !== undefined) queryParts.push(`limit=${params.limit}`)
+    if (params?.bucket) queryParts.push(`bucket=${params.bucket}`)
     const qs = queryParts.length ? `?${queryParts.join('&')}` : ''
     return request<ReviewItemRead[]>(`/review/items${qs}`, { signal })
   },

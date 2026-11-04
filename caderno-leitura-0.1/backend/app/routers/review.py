@@ -5,6 +5,7 @@ from fastapi import APIRouter, Query
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
 from app.schemas.review import (
+    ReviewBucket,
     ReviewItemRead,
     ReviewRecordRequest,
     ReviewRecordResponse,
@@ -27,8 +28,17 @@ router = APIRouter(prefix="/review", tags=["Central de Revisão"])
 def get_stats(
     session: DatabaseSession,
     current_user: CurrentUser,
+    book_id: int | None = Query(default=None, description="Filtra só a contagem dos baldes"),
+    chapter_id: int | None = Query(default=None, description="Filtra só a contagem dos baldes"),
+    kind: str | None = Query(default=None, description="Filtra só a contagem dos baldes (question ou hidden)"),
 ):
-    return get_review_stats(session=session, user_id=current_user.id)
+    return get_review_stats(
+        session=session,
+        user_id=current_user.id,
+        book_id=book_id,
+        chapter_id=chapter_id,
+        kind=kind,
+    )
 
 
 @router.get(
@@ -43,6 +53,7 @@ def get_items(
     chapter_id: int | None = Query(default=None, description="Filtrar por ID do capítulo"),
     kind: str | None = Query(default=None, description="Filtrar por tipo (question ou hidden)"),
     limit: int = Query(default=10, ge=1, le=50, description="Quantidade de itens no lote"),
+    bucket: ReviewBucket | None = Query(default=None, description="Só itens de um balde: new, hard, medium ou easy"),
 ):
     return get_review_items(
         session=session,
@@ -51,6 +62,7 @@ def get_items(
         chapter_id=chapter_id,
         kind=kind,
         limit=limit,
+        bucket=bucket,
     )
 
 
