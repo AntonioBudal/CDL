@@ -1,6 +1,17 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { readFileSync } from 'node:fs'
+import { execSync } from 'node:child_process'
+
+// Commit da interface (F0.10.03), comparado no painel de Sistema com o do servidor para avisar quando o serviço
+// não foi reiniciado depois de um build. Sem git disponível, fica "desconhecido" e o painel não acusa divergência.
+function buildCommit(): string {
+  try {
+    return execSync('git rev-parse --short=7 HEAD', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim() || 'desconhecido'
+  } catch {
+    return 'desconhecido'
+  }
+}
 
 // Tema e fonte aplicados antes da primeira pintura (F0.10.02): no build, o bootstrap sai como arquivo clássico e
 // bloqueante (appearance-bootstrap.js), para a CSP não precisar de script inline; no dev, segue inline.
@@ -15,6 +26,9 @@ function readBootstrap(): string {
 }
 
 export default defineConfig({
+  define: {
+    __BUILD_COMMIT__: JSON.stringify(buildCommit()),
+  },
   plugins: [
     {
       name: 'appearance-before-paint',

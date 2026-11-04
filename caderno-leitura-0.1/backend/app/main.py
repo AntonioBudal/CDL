@@ -46,6 +46,7 @@ from app.routers import (
     study_versions,
     support,
     sync,
+    system,
     trash,
     users,
 )
@@ -161,6 +162,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.add_middleware(SecurityHeadersMiddleware)
 
     application.include_router(health.router, prefix="/api")
+    application.include_router(system.router, prefix="/api")
     application.include_router(auth.router, prefix="/api")
     application.include_router(account.router, prefix="/api")
     application.include_router(admin.router, prefix="/api")

@@ -55,6 +55,31 @@ def _auto_backups(folder: Path) -> list[Path]:
     return sorted(found, key=_auto_backup_time, reverse=True)
 
 
+def auto_backup_status(now: datetime | None = None, *, database_path: Path | None = None) -> dict:
+    """Situação dos backups automáticos para o painel de Sistema (F0.10.03), sem caminhos de arquivo."""
+    hours, keep = auto_backup_settings()
+    try:
+        secondary = get_secondary_backup_dir() is not None
+    except ValueError:
+        secondary = False
+    try:
+        backups = _auto_backups(get_backup_dir(database_path))
+    except (OSError, ValueError):
+        backups = []
+    last = _auto_backup_time(backups[0]) if backups else None
+    now = now or datetime.now(UTC)
+    overdue = hours > 0 and (last is None or now - last > timedelta(hours=2 * hours))
+    return {
+        "enabled": hours > 0,
+        "interval_hours": hours,
+        "keep": keep,
+        "count": len(backups),
+        "last_at": last,
+        "overdue": overdue,
+        "secondary_configured": secondary,
+    }
+
+
 def rotate_auto_backups(folder: Path, keep: int) -> list[Path]:
     """Mantém os ``keep`` automáticos mais recentes; nunca toca em outros backups."""
     removed = []

@@ -1178,3 +1178,24 @@ Spec aprovada com as recomendações Q1 a Q5:
   recarregado e a trilha mostra o capítulo novo. Testes: `test_study_chapter_change.py` (6) e mais um caso em
   `feature-094-capa-capitulos.test.mjs`; `npm test` 694; 133 testes de backend de estudos e capítulos; navegador em
   1366 e 375 px com dados fictícios.
+
+## F0.10.03 — Painel de Sistema: segurança, backups e soberania (2026-11-03)
+
+- **Spec, plano e tarefas:** `specs/095-painel-sistema-soberania/`.
+- **Versão em execução:** `core/build_info.py` lê o commit de `LEITORUM_BUILD_COMMIT` ou do `.git` (HEAD, ref solta,
+  `packed-refs`, HEAD destacado, `gitdir:`), sem chamar o `git`, subindo no máximo 3 pastas acima de `backend/`
+  (mais que isso acharia repositórios alheios, como um `.git` na pasta do usuário). A interface leva o próprio
+  commit no build (`__BUILD_COMMIT__`, `vite.config.ts`). O painel avisa quando os dois diferem — o caso do 405 de
+  2026-11-02 — e quando a revisão do banco não é a última migração do código.
+- **API:** `GET /api/system/status` (versão, commit, revisão atual e esperada, Google ligado, `secure_delete`; bloco
+  de backups só para administrador, sem caminhos) e `POST /api/system/integrity-check` (administrador;
+  `quick_check` + `foreign_key_check` em modo somente leitura, mensagem sem o caminho do banco).
+- **Backups:** `maintenance.auto_backup_status()` — ligado, intervalo, quantos guardar, quantos há, último, atrasado
+  (mais que o dobro do intervalo) e segunda cópia configurada.
+- **Tela:** `SystemSovereigntyCard.vue` na aba Sistema, com "Seus dados e a exclusão" (só o que o código faz,
+  conferido na F0.10.02) e link para a exportação na aba Conta; o card de conexão mostra o commit da interface; o
+  `DatabaseBackup` (backup manual e restauração) passou a aparecer só para administrador, porque a API sempre
+  recusava os demais.
+- **Testes:** `test_system_status.py` (12) e `feature-095-painel-sistema.test.mjs` (4); `npm test` 698; 142 testes
+  de backend relacionados; build ok. Navegador (banco fictício, `LEITORUM_BUILD_COMMIT=1111111` forçado): aviso de
+  divergência, integridade "Banco íntegro", bloco de backups, link para Conta, 1366 e 375 px sem rolagem lateral.

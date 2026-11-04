@@ -4,6 +4,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router'
 import AppearanceControls from '../components/AppearanceControls.vue'
 import AppearancePreview from '../components/AppearancePreview.vue'
 import DatabaseBackup from '../components/DatabaseBackup.vue'
+import SystemSovereigntyCard from '../components/settings/SystemSovereigntyCard.vue'
 import ConfirmResetModal from '../components/ConfirmResetModal.vue'
 import RestoreModal from '../components/RestoreModal.vue'
 import SessionsManager from '../components/auth/SessionsManager.vue'
@@ -374,6 +375,7 @@ function setHomeViewPreference(val: HomeViewPreference) {
 // --- Portabilidade e Exportação Completa de Dados (F10 - US5) ---
 const router = useRouter()
 const authStore = useAuthStore()
+const interfaceCommit = __BUILD_COMMIT__ || 'desconhecido'
 
 const isExporting = ref(false)
 const exportMessage = ref<{ text: string; type: 'success' | 'error' } | null>(null)
@@ -948,7 +950,7 @@ onBeforeUnmount(() => {
                   <span v-else>▲ Indisponível</span>
                 </span>
                 <span v-if="healthCheck.version" class="muted" style="margin-left: 0.5rem;">
-                  v{{ healthCheck.version }}
+                  v{{ healthCheck.version }} · interface <code>{{ interfaceCommit }}</code>
                 </span>
               </div>
 
@@ -1036,7 +1038,10 @@ onBeforeUnmount(() => {
           </article>
 
           <!-- Card 5: Backup do Acervo -->
-          <DatabaseBackup @open-restore="isRestoreModalOpen = true" />
+          <SystemSovereigntyCard @open-account="selectTab('conta')" />
+
+          <!-- Backup manual e restauração: a API só aceita administrador (F0.10.03) -->
+          <DatabaseBackup v-if="authStore.isAdmin.value" @open-restore="isRestoreModalOpen = true" />
         </section>
 
         <!-- Aba 4: Conta & Dispositivos (F02) -->
