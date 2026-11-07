@@ -6,18 +6,19 @@ import {
   formatCitationPlain,
 } from '../src/utils/citationFormatter.ts'
 
-test('T023 - citationFormatter: formatCitationABNT gera referência acadêmica completa', () => {
+test('T023 - citationFormatter: formatCitationABNT gera citação direta ABNT (F0.10.05)', () => {
   const item = {
     selected_text: 'A leitura é um ato de criação partilhada entre o autor e o leitor.',
     book_title: 'Uma História da Leitura',
     book_author: 'Alberto Manguel',
+    book_year: 1997,
     chapter_title: 'O Leitor Silencioso',
   }
 
-  const result = formatCitationABNT(item)
+  const result = formatCitationABNT(item, { literal: true })
   assert.equal(
     result,
-    '"A leitura é um ato de criação partilhada entre o autor e o leitor." (ALBERTO MANGUEL, Uma História da Leitura, cap. O Leitor Silencioso).'
+    '"A leitura é um ato de criação partilhada entre o autor e o leitor." (Manguel, 1997).'
   )
 })
 
@@ -29,8 +30,8 @@ test('T023 - citationFormatter: formatCitationABNT trata graciosamente campos au
     chapter_title: null,
   }
 
-  const result = formatCitationABNT(item)
-  assert.equal(result, '"Texto sem autor nem capítulo." (Livro Anônimo).')
+  const result = formatCitationABNT(item, { literal: true })
+  assert.equal(result, '"Texto sem autor nem capítulo." (Livro..., [s. d.]).')
 })
 
 test('T023 - citationFormatter: formatCitationMarkdown gera bloco de citação Markdown', () => {
@@ -43,7 +44,7 @@ test('T023 - citationFormatter: formatCitationMarkdown gera bloco de citação M
 
   const result = formatCitationMarkdown(item)
   assert.ok(result.startsWith('> O hábito da leitura acalma os ânimos e eleva o espírito.'))
-  assert.ok(result.includes('— Montaigne, *Ensaios* (Dos Livros)'))
+  assert.ok(result.includes('— Montaigne, *Ensaios*, Dos Livros'))
 })
 
 test('T023 - citationFormatter: formatCitationMarkdown trata ausência de autor e capítulo', () => {

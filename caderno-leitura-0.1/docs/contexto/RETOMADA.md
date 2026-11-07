@@ -1222,3 +1222,27 @@ Spec aprovada com as recomendações Q1 a Q5:
 - **Fecho do lote de 5 (F0.10.01, .02, .02.5, .03 e .04):** `npm test` 701; `pytest` completo 759 aprovados e 1
   pulado depois de corrigir `test_local_server.py` (exigia todo script em `/assets/`; desde a F0.10.02 o bootstrap
   de aparência fica na raiz, com `no-cache`), em commit próprio; build ok.
+
+## F0.10.05 — Destaques: cópia ABNT e tipografia citação × anotação (2026-11-07)
+
+- **Spec, plano e tarefas:** `specs/098-destaques-abnt-tipografia/`. Primeira feature do lote 2.
+- **Citação literal × texto do leitor:** quase todo destaque é feito sobre o texto do próprio leitor, mas todo
+  cartão aparecia entre aspas e era copiado como citação direta. Agora o leitor marca "Citação literal" no cartão
+  (`aria-pressed`, só para Destaque, Anotação e Citação), que grava `kind = quote` pelo `PATCH` existente (sem
+  migração; desmarcar volta a `note` se houver nota, senão `highlight`). Atualização otimista com reversão em erro
+  e ajuste do resumo por tipo.
+- **Tipografia:** citação literal em serifa, com aspas e o rótulo "Palavras do autor"; texto do leitor em sans, sem
+  aspas, borda tracejada e o rótulo da seção de origem ("Do seu Resumo", "Do fichamento importado" etc.).
+- **ABNT:** `citationFormatter.ts` reescrito. Chamada da NBR 10520:2023 (sobrenome em maiúsculas e minúsculas,
+  "Nome Sobrenome" e "Sobrenome, Nome", Júnior/Filho/Neto/Sobrinho, até 3 autores com `;`, 4 ou mais com `et al.`,
+  sem autor pela primeira palavra do título, sem ano `[s. d.]`, sem página). Literal → citação direta com aspas
+  (aspas internas viram simples); texto do leitor → citação indireta. Novo item "Referência (NBR 6023)", com HTML
+  (título em itálico) via `utils/clipboard.ts` (`ClipboardItem` → `writeText` → `textarea`). Markdown com o ano.
+- **API:** a biblioteca devolve `book_year` e `book_subtitle`.
+- **Cartão:** menu de formatos fecha com Esc (foco volta ao gatilho), clique fora e depois de copiar; "Copiado"
+  anunciado em `aria-live`; controles secundários com `.quiet` (Salvar e Confirmar mantêm o destaque).
+- **Testes:** `test_highlight_library_book_meta.py` (2) e `feature-098-destaques-abnt.test.mjs` (19); ajustado
+  `citation_formatter.test.mjs` ao formato novo; 43 testes de Destaques no frontend e 8 no backend; build ok.
+  Navegador (dados fictícios): cópias direta, indireta, referência em texto e HTML, menu com Esc e clique fora,
+  alternância persistida, contraste nos 10 temas (mínimo 4,83:1), menu dentro da tela em 375 px.
+- **Fora:** página da citação, editora e cidade (exigem migração; referências do 0.11) e a cópia da tela do estudo.

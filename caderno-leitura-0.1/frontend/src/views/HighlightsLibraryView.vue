@@ -180,6 +180,41 @@ async function handleEditNote(id: number, studyId: number, newNote: string) {
   }
 }
 
+// F0.10.05: marcar/desmarcar citação literal (tipo quote), com atualização otimista e reversão em erro.
+const SUMMARY_KEY_BY_KIND: Partial<Record<HighlightKind, keyof HighlightLibrarySummary>> = {
+  highlight: 'total_highlights',
+  note: 'total_notes',
+  quote: 'total_quotes',
+}
+
+function shiftSummary(fromKind: HighlightKind, toKind: HighlightKind) {
+  if (!summary.value) return
+  const fromKey = SUMMARY_KEY_BY_KIND[fromKind]
+  const toKey = SUMMARY_KEY_BY_KIND[toKind]
+  if (fromKey) summary.value[fromKey] = Math.max(0, summary.value[fromKey] - 1)
+  if (toKey) summary.value[toKey] += 1
+}
+
+async function handleToggleLiteral(id: number, studyId: number, nextKind: HighlightKind) {
+  const target = items.value.find((it) => it.id === id)
+  if (!target || target.kind === nextKind) return
+  const previousKind = target.kind
+  target.kind = nextKind
+  shiftSummary(previousKind, nextKind)
+  try {
+    const updated = await updateStudyHighlight(studyId, id, { kind: nextKind })
+    target.kind = updated.kind
+    target.updated_at = updated.updated_at
+    floatingToast.showToast({
+      message: nextKind === 'quote' ? 'Marcado como citação literal' : 'Tratado como texto seu',
+    })
+  } catch {
+    target.kind = previousKind
+    shiftSummary(nextKind, previousKind)
+    floatingToast.showToast({ message: 'Não foi possível salvar a marcação. Tente de novo.' })
+  }
+}
+
 async function handleDeleteHighlight(id: number, studyId: number) {
   try {
     await deleteStudyHighlight(studyId, id)
@@ -347,6 +382,7 @@ onMounted(() => {
           @edit-note="handleEditNote"
           @delete="handleDeleteHighlight"
           @copied="handleHighlightCopied"
+          @toggle-literal="handleToggleLiteral"
         />
       </div>
 
@@ -382,6 +418,7 @@ onMounted(() => {
               @edit-note="handleEditNote"
               @delete="handleDeleteHighlight"
               @copied="handleHighlightCopied"
+              @toggle-literal="handleToggleLiteral"
             />
           </div>
         </section>

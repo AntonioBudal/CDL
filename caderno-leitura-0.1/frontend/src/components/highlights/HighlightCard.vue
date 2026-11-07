@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { HighlightKind, HighlightLibraryItem } from '../../types'
 import { HIGHLIGHT_SEMANTIC_CATEGORIES } from '../../types'
-import { formatCitationABNT, formatCitationMarkdown } from '../../utils/citationFormatter'
+import {
+  formatCitationABNT,
+  formatCitationMarkdown,
+  formatReferenceABNT,
+} from '../../utils/citationFormatter'
+import { copyRich } from '../../utils/clipboard'
 import Icon from '../ui/Icon.vue'
 
 const props = defineProps<{
@@ -14,6 +19,7 @@ const emit = defineEmits<{
   (e: 'edit-note', id: number, studyId: number, note: string): void
   (e: 'delete', id: number, studyId: number): void
   (e: 'copied', text: string): void
+  (e: 'toggle-literal', id: number, studyId: number, nextKind: HighlightKind): void
 }>()
 
 const isEditing = ref(false)
@@ -22,7 +28,33 @@ const isConfirmingDelete = ref(false)
 const isExpanded = ref(false)
 const isCopied = ref(false)
 const showCopyMenu = ref(false)
+const liveMessage = ref('')
+const copyWrapperRef = ref<HTMLElement | null>(null)
+const copyTriggerRef = ref<HTMLButtonElement | null>(null)
 let copyTimer: ReturnType<typeof setTimeout> | null = null
+
+/* F0.10.05: citação literal (palavras do autor) × texto do leitor. */
+const LITERAL_TOGGLE_KINDS: HighlightKind[] = ['highlight', 'note', 'quote']
+const isLiteral = computed(() => props.item.kind === 'quote')
+const canToggleLiteral = computed(() => LITERAL_TOGGLE_KINDS.includes(props.item.kind))
+
+const sectionOriginLabels: Record<string, string> = {
+  summary: 'Do seu Resumo',
+  explanation: 'Da sua Explicação',
+  concepts: 'Dos seus Conceitos',
+  references: 'Das suas Referências',
+  source_response: 'Do fichamento importado',
+}
+const originLabel = computed(() => sectionOriginLabels[props.item.section] || 'Do seu estudo')
+
+function toggleLiteral() {
+  const nextKind: HighlightKind = isLiteral.value
+    ? (props.item.note || '').trim()
+      ? 'note'
+      : 'highlight'
+    : 'quote'
+  emit('toggle-literal', props.item.id, props.item.study_id, nextKind)
+}
 
 const maxLength = 260
 const isLongText = computed(() => (props.item.selected_text || '').length > maxLength)
@@ -90,48 +122,84 @@ function confirmDelete() {
   emit('delete', props.item.id, props.item.study_id)
 }
 
-function fallbackCopyText(text: string) {
-  try {
-    const textArea = document.createElement('textarea')
-    textArea.value = text
-    textArea.style.position = 'fixed'
-    textArea.style.left = '-999999px'
-    textArea.style.top = '-999999px'
-    document.body.appendChild(textArea)
-    textArea.focus()
-    textArea.select()
-    document.execCommand('copy')
-    textArea.remove()
-  } catch {
-    // Falha silenciosa
+type CopyFormat = 'abnt' | 'reference' | 'markdown'
+
+const copyFormatMessages: Record<CopyFormat, string> = {
+  abnt: 'Citação ABNT copiada',
+  reference: 'Referência ABNT copiada',
+  markdown: 'Citação em Markdown copiada',
+}
+
+const copyButtonTitle = computed(() =>
+  isLiteral.value ? 'Copiar citação direta (ABNT)' : 'Copiar citação indireta (ABNT)'
+)
+
+function closeCopyMenu(returnFocus = false) {
+  if (!showCopyMenu.value) return
+  showCopyMenu.value = false
+  if (returnFocus) nextTick(() => copyTriggerRef.value?.focus())
+}
+
+function onDocumentPointerDown(event: PointerEvent) {
+  const target = event.target as Node | null
+  if (target && copyWrapperRef.value?.contains(target)) return
+  closeCopyMenu()
+}
+
+function onDocumentKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    event.stopPropagation()
+    closeCopyMenu(true)
   }
 }
 
-async function handleCopyCitation(format: 'abnt' | 'markdown' = 'abnt') {
-  showCopyMenu.value = false
-  const formattedText =
-    format === 'markdown'
-      ? formatCitationMarkdown(props.item)
-      : formatCitationABNT(props.item)
+watch(showCopyMenu, (open) => {
+  if (typeof document === 'undefined') return
+  if (open) {
+    document.addEventListener('pointerdown', onDocumentPointerDown)
+    document.addEventListener('keydown', onDocumentKeydown)
+  } else {
+    document.removeEventListener('pointerdown', onDocumentPointerDown)
+    document.removeEventListener('keydown', onDocumentKeydown)
+  }
+})
 
-  try {
-    if (navigator?.clipboard?.writeText) {
-      await navigator.clipboard.writeText(formattedText)
-    } else {
-      fallbackCopyText(formattedText)
-    }
-  } catch {
-    fallbackCopyText(formattedText)
+onBeforeUnmount(() => {
+  if (typeof document !== 'undefined') {
+    document.removeEventListener('pointerdown', onDocumentPointerDown)
+    document.removeEventListener('keydown', onDocumentKeydown)
+  }
+  if (copyTimer) clearTimeout(copyTimer)
+})
+
+async function handleCopyCitation(format: CopyFormat = 'abnt') {
+  const fromMenu = showCopyMenu.value
+  closeCopyMenu(fromMenu)
+
+  let text: string
+  let html: string | undefined
+  if (format === 'markdown') {
+    text = formatCitationMarkdown(props.item)
+  } else if (format === 'reference') {
+    const reference = formatReferenceABNT(props.item)
+    text = reference.text
+    html = reference.html
+  } else {
+    text = formatCitationABNT(props.item, { literal: isLiteral.value })
   }
 
-  isCopied.value = true
+  const ok = await copyRich(text, html)
+  liveMessage.value = ok ? copyFormatMessages[format] : 'Não foi possível copiar automaticamente'
+
+  isCopied.value = ok
   if (copyTimer) clearTimeout(copyTimer)
   copyTimer = setTimeout(() => {
     isCopied.value = false
+    liveMessage.value = ''
     copyTimer = null
   }, 1500)
 
-  emit('copied', formattedText)
+  if (ok) emit('copied', text)
 }
 
 function formatDate(isoDate: string): string {
@@ -191,13 +259,13 @@ function formatDate(isoDate: string): string {
         </span>
 
         <!-- Botão de Cópia Contextual com Microfeedback -->
-        <div class="copy-action-wrapper">
+        <div ref="copyWrapperRef" class="copy-action-wrapper">
           <button
             type="button"
-            class="btn-copy-quote"
+            class="btn-copy-quote quiet"
             :class="{ 'is-copied': isCopied }"
-            :title="isCopied ? 'Citação copiada!' : 'Copiar citação (ABNT)'"
-            :aria-label="isCopied ? 'Citação copiada' : 'Copiar citação formatada'"
+            :title="isCopied ? 'Copiado' : copyButtonTitle"
+            :aria-label="copyButtonTitle"
             @click="handleCopyCitation('abnt')"
           >
             <Icon :name="isCopied ? 'check' : 'copy'" :size="15" aria-hidden="true" />
@@ -206,10 +274,12 @@ function formatDate(isoDate: string): string {
 
           <!-- Gatilho de Opções de Formato de Cópia -->
           <button
+            ref="copyTriggerRef"
             type="button"
-            class="btn-copy-dropdown-trigger"
+            class="btn-copy-dropdown-trigger quiet"
             title="Mais formatos de citação"
-            aria-label="Opções de citação"
+            aria-label="Mais formatos de citação"
+            aria-haspopup="menu"
             :aria-expanded="showCopyMenu"
             @click="showCopyMenu = !showCopyMenu"
           >
@@ -220,33 +290,45 @@ function formatDate(isoDate: string): string {
           <div v-if="showCopyMenu" class="copy-formats-menu" role="menu">
             <button
               type="button"
-              class="copy-menu-item"
+              class="copy-menu-item quiet"
               role="menuitem"
               @click="handleCopyCitation('abnt')"
             >
               <Icon name="book-open" :size="14" aria-hidden="true" />
-              <span>Formato ABNT (Acadêmico)</span>
+              <span>{{ isLiteral ? 'Citação direta (ABNT)' : 'Citação indireta (ABNT)' }}</span>
             </button>
             <button
               type="button"
-              class="copy-menu-item"
+              class="copy-menu-item quiet"
+              role="menuitem"
+              @click="handleCopyCitation('reference')"
+            >
+              <Icon name="book" :size="14" aria-hidden="true" />
+              <span>Referência (NBR 6023)</span>
+            </button>
+            <button
+              type="button"
+              class="copy-menu-item quiet"
               role="menuitem"
               @click="handleCopyCitation('markdown')"
             >
               <Icon name="link" :size="14" aria-hidden="true" />
-              <span>Formato Markdown (> citação)</span>
+              <span>Markdown (&gt; citação)</span>
             </button>
           </div>
+          <span class="visually-hidden-live" role="status" aria-live="polite">{{ liveMessage }}</span>
         </div>
       </div>
     </header>
 
-    <!-- Corpo da Ficha: Citação Editorial com Aspas Clássicas -->
+    <!-- Corpo da Ficha: citação literal (serifa, aspas) × texto do leitor (sans, sem aspas) -->
     <div class="card-body">
       <blockquote
-        class="highlight-quote editorial-quote commonplace-quote"
+        v-if="isLiteral"
+        class="highlight-quote editorial-quote commonplace-quote literal-quote"
         :class="`border-tone-${item.color}`"
       >
+        <span class="excerpt-origin">Palavras do autor</span>
         <span class="editorial-quote-mark" aria-hidden="true">“</span>
         <span class="quote-text">{{ displayText }}</span>
         <span class="editorial-quote-mark" aria-hidden="true">”</span>
@@ -254,13 +336,32 @@ function formatDate(isoDate: string): string {
         <button
           v-if="isLongText"
           type="button"
-          class="btn-toggle-expand"
+          class="btn-toggle-expand quiet"
           :aria-expanded="isExpanded"
           @click="isExpanded = !isExpanded"
         >
           {{ isExpanded ? 'Ver menos' : 'Expandir contexto' }}
         </button>
       </blockquote>
+
+      <div
+        v-else
+        class="highlight-quote reader-excerpt"
+        :class="`border-tone-${item.color}`"
+      >
+        <span class="excerpt-origin">{{ originLabel }}</span>
+        <p class="reader-excerpt-text">{{ displayText }}</p>
+
+        <button
+          v-if="isLongText"
+          type="button"
+          class="btn-toggle-expand quiet"
+          :aria-expanded="isExpanded"
+          @click="isExpanded = !isExpanded"
+        >
+          {{ isExpanded ? 'Ver menos' : 'Expandir contexto' }}
+        </button>
+      </div>
 
       <!-- Área de Anotação Reflexiva do Leitor / Edição In-Card -->
       <div v-if="isEditing" class="note-edit-box">
@@ -288,7 +389,7 @@ function formatDate(isoDate: string): string {
           </button>
           <button
             type="button"
-            class="btn-action btn-cancel"
+            class="btn-action btn-cancel quiet"
             aria-label="Cancelar edição"
             @click="cancelEditing"
           >
@@ -305,7 +406,7 @@ function formatDate(isoDate: string): string {
           <span>Anotação de Estudo</span>
           <button
             type="button"
-            class="btn-edit-note-inline"
+            class="btn-edit-note-inline quiet"
             title="Editar esta anotação"
             aria-label="Editar anotação"
             @click="startEditing"
@@ -321,7 +422,7 @@ function formatDate(isoDate: string): string {
       <div v-else class="add-note-prompt">
         <button
           type="button"
-          class="btn-add-note-inline"
+          class="btn-add-note-inline quiet"
           aria-label="Adicionar anotação a este trecho"
           @click="startEditing"
         >
@@ -359,7 +460,7 @@ function formatDate(isoDate: string): string {
           </button>
           <button
             type="button"
-            class="btn-cancel-delete"
+            class="btn-cancel-delete quiet"
             aria-label="Cancelar exclusão"
             @click="cancelDelete"
           >
@@ -368,10 +469,27 @@ function formatDate(isoDate: string): string {
         </div>
 
         <template v-else>
+          <!-- F0.10.05: marcar como palavras do autor (tipo quote) -->
+          <button
+            v-if="canToggleLiteral"
+            type="button"
+            class="btn-card-action btn-literal-toggle quiet"
+            :aria-pressed="isLiteral"
+            :title="
+              isLiteral
+                ? 'Marcado como citação literal: copia como citação direta. Clique para tratar como texto seu.'
+                : 'Marque se este trecho reproduz as palavras do autor'
+            "
+            @click="toggleLiteral"
+          >
+            <Icon :name="isLiteral ? 'check' : 'book-open'" :size="14" aria-hidden="true" />
+            <span>Citação literal</span>
+          </button>
+
           <!-- Botão de Excluir -->
           <button
             type="button"
-            class="btn-card-action btn-delete"
+            class="btn-card-action btn-delete quiet"
             title="Excluir destaque"
             aria-label="Excluir destaque"
             @click="promptDelete"
@@ -644,6 +762,88 @@ function formatDate(isoDate: string): string {
 .quote-text {
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+/* F0.10.05: rótulo de origem do trecho e texto do leitor (sans, sem aspas) */
+.excerpt-origin {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.reader-excerpt-text {
+  margin: 0;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.reader-excerpt {
+  border-left-style: dashed;
+}
+
+.visually-hidden-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Controles neutros (.quiet) do cartão: bordas sutis onde o grupo precisa delas */
+.btn-copy-quote,
+.btn-copy-dropdown-trigger,
+.btn-literal-toggle,
+.btn-cancel,
+.btn-cancel-delete,
+.btn-add-note-inline {
+  --quiet-border: var(--color-border-strong, var(--color-border));
+}
+
+.btn-copy-quote,
+.btn-copy-dropdown-trigger {
+  min-height: 44px;
+}
+
+.btn-copy-dropdown-trigger {
+  width: 36px;
+}
+
+.btn-literal-toggle[aria-pressed='true'] {
+  --quiet-bg: var(--color-selected-bg);
+  --quiet-fg: var(--color-selected-text);
+  --quiet-border: var(--color-selected-bg);
+}
+
+.btn-copy-quote.is-copied {
+  --quiet-fg: var(--color-success-text, var(--color-text));
+}
+
+.copy-menu-item {
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 44px;
+}
+
+.btn-toggle-expand {
+  min-height: 44px;
+  --quiet-fg: var(--color-link, var(--color-text));
+}
+
+.btn-edit-note-inline {
+  --quiet-fg: var(--color-link, var(--color-text));
 }
 
 .btn-toggle-expand {

@@ -56,6 +56,8 @@ class HighlightLibraryItemRead(OutputModel):
     book_id: RecordId
     book_title: str
     book_author: str | None = None
+    book_year: int | None = None
+    book_subtitle: str = ""
     section: SectionName
     start_offset: int
     end_offset: int

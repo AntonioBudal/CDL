@@ -1363,6 +1363,8 @@ export interface HighlightLibraryItem {
   book_id: number
   book_title: string
   book_author?: string | null
+  book_year?: number | null
+  book_subtitle?: string
   section: string
   start_offset: number
   end_offset: number
