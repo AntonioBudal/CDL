@@ -1,6 +1,6 @@
 # HANDOFF — Leitorum (leia primeiro)
 
-**Atualizado em:** 2026-11-07, na conversa CDL-Main.
+**Atualizado em:** 2026-11-07, no fecho do lote 2 do 0.10 (conversa em worktree, levada ao `main`).
 **Para quem:** cada conversa nova de lote (0.10, 0.11, 1.0). Leia este arquivo, `AGENTS.md` e o roadmap do lote antes
 de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/docs/contexto/RETOMADA.md`.
 
@@ -10,8 +10,10 @@ de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/d
 
 - **Plano mestre** de 2026-11-01, renumerado para **0.10, 0.11 e 1.0** (os números 0.8 e 0.9 já eram roadmaps
   entregues). **Prazo combinado:** terminar os três até **15/11/2026**, cerca de 2 features por dia.
-- **`main`** está em dia com o trabalho até 2026-11-07, inclusive as duas features que tinham ficado só em branches
-  de conversas laterais (ver §4).
+- **`main`** está em dia com o trabalho até 2026-11-07: o lote 2 do 0.10 foi levado ao `main` por fast-forward a
+  cada feature. **Push pendente** (o usuário faz) e, depois dele, `Restart-Service -Name Leitorum`.
+- **Roadmap 0.10 concluído.** Próximo: **Roadmap 0.11** (motores), que começa com migração de banco (estados de
+  leitura) — exige pedido explícito e backup verificado (AGENTS.md §2).
 
 ### Roadmap 0.10 (redesenho, segurança e ergonomia)
 
@@ -22,14 +24,16 @@ de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/d
 | F0.10.02.5 Capa, contraste e gerenciamento de capítulos (emergência) | Concluída | `2b69b80`, `9477f80` | `specs/094-correcoes-capa-capitulos/` |
 | F0.10.03 Painel de Sistema (commit, revisão do banco, integridade, backups) | Concluída | `fdad9c4` | `specs/095-painel-sistema-soberania/` |
 | F0.10.04 Revisão: baldes, sessões 5/10/15, gaveta de contexto | Concluída | `d410760` | `specs/096-revisao-baldes-sessao/` |
-| **F0.10.05 Destaques** (cópia ABNT, tipografia citação × anotação) | **Próxima** | — | — |
-| F0.10.06 Importar (faixa de metadados, ganchos para referências em 3 escopos) | Pendente | — | — |
-| F0.10.07 Amigos (leituras e estudos em comum) | Pendente | — | — |
-| F0.10.08 Landing: seção de confiança e "Desafio F12" (TCO só com fontes e datas) | Pendente | — | — |
-| F0.10.10 Correções reservadas (lista do usuário; inclui talvez unificar os 3 botões de sessão da Revisão) | Pendente | — | — |
+| F0.10.05 Destaques: cópia ABNT (NBR 10520:2023 e 6023), citação literal × texto do leitor | Concluída | `e6ad68f` | `specs/098-destaques-abnt-tipografia/` |
+| F0.10.06 Importar: dados da obra na faixa, prévia da referência em 3 escopos (`referenceScopes.ts`) | Concluída | `da4a675` | `specs/099-importar-metadados-referencias/` |
+| F0.10.07 Amigos: leituras e estudos em comum no perfil (`/api/users/{username}/in-common`) | Concluída | `d17ee7e` | `specs/100-amigos-em-comum/` |
+| F0.10.08 Landing: Desafio F12 (endereços contatados e CSP ao vivo) e custo com fontes e datas | Concluída | `1ab3ae8` | `specs/101-landing-confianca-f12/` |
+| F0.10.10 Correções reservadas (6 itens aprovados em 2026-11-07) | Concluída | `f7dbc58` | `specs/102-correcoes-reservadas-010/` |
 
 Inbox e Lixeira do plano já estavam atendidas pelo código (auditoria de 2026-11-01); só conferir se surgir dúvida.
-O **lote 1** (F0.10.01 a .04) fechou com as suítes completas em 2026-11-03. O **lote 2** começa na F0.10.05.
+O **lote 1** (F0.10.01 a .04) fechou com as suítes completas em 2026-11-03. O **lote 2** (F0.10.05 a .10; não há
+F0.10.09) fechou em 2026-11-07: `npm test` 749/749, `pytest` completo 788 aprovados e 4 pulados, build ok; a
+única falha antiga (testes sensíveis a CRLF) foi corrigida em commit próprio (`0214933`).
 
 ### Roadmap 0.11 (motores) — nada iniciado
 
@@ -49,7 +53,7 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **098**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **103**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,
@@ -65,6 +69,15 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
 - **Depois do push, o serviço precisa reiniciar** para valer: `Restart-Service -Name Leitorum` (o usuário roda). Sem
   isso, a interface nova chama rotas que o backend antigo não tem (foi o 405 de 2026-11-02).
 - **Nunca rodar `npm run build` junto com o `pytest`.**
+- **Quebras de linha (CRLF × LF):** com `core.autocrlf`, o checkout principal e os worktrees ficam com arquivos
+  mistos (só os tocados viram CRLF). Testes que procuram trechos de código com `\n` devem importar
+  `tests/helpers/normalize-eol.mjs` (ou normalizar ao ler). Edições por script: preservar o CRLF do arquivo.
+- **Conversa em worktree:** depois de cada commit, `git -C C:/Users/User/caderno merge --ff-only <branch>` e
+  `npm run build` no checkout principal (o serviço serve o `dist` de lá). O worktree não tem `node_modules`: uma
+  junção para o do checkout principal resolve (`New-Item -ItemType Junction`).
+- **Landing no servidor de validação:** com `REQUIRE_AUTH` desligado o dono é redirecionado para `/livros`; criar
+  o arquivo `auth-on` ao lado do `serve.py` para ver a landing como visitante. Banco novo pede a senha mestra
+  (`POST /api/auth/setup-owner` com senha de teste gerada); POST/PUT pela API exigem o cabeçalho `Origin`.
 - **`pytest`:** desde 2026-11-07 o `conftest.py` aponta para um banco temporário e recusa o banco ativo (spec 097).
   Mesmo assim, rodar com `CADERNO_DATABASE_PATH` para um arquivo descartável, `LEITORUM_SECONDARY_BACKUP_DIR=""` e
   `LEITORUM_STORAGE_ROOT=""`. Suíte completa: ~7 min; em 2026-11-07, 778 aprovados e 1 pulado.
@@ -94,15 +107,19 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
 ## 5. Pendências e pontos a conferir
 
 - **Digitalização (086):** falta validação manual (temas, celular, 320 px, rede desligada) e o resultado de uma foto
-  real depois da correção de memória (088). Fatia futura possível: a mensagem "Não foi possível ler esta foto" aparece
-  também em recusas passageiras (`low_memory`, `busy`).
+  real depois da correção de memória (088). Desde a F0.10.10, `busy` e `low_memory` guardam a foto e oferecem
+  "Tentar de novo" (conferido só por testes: o servidor de validação não tem o motor de leitura).
+- **Preços da landing** (`components/landing/costSources.ts`, consultados em 07/11/2026): conferir nas fontes e
+  trocar valores e `checkedAt` quando forem revistos.
+- **Lote 2, conferências só por teste ou script:** cópia ABNT colada de fato no Word/Docs; conflito de versão (409)
+  ao completar os dados do livro na Importar; cópia da barra flutuante do estudo.
 - **Responsividade:** validação em aparelho real nunca foi registrada.
 - **Login com Google** com `Referrer-Policy: same-origin`: conferido só até o botão carregar; falta um login real.
 - **Celular via Tailscale:** se salvar der "Origem do pedido não autorizada", acrescentar a origem em
   `LEITORUM_TRUSTED_ORIGINS` (o log do serviço mostra qual foi recusada).
 - **Imagens externas** em estudos deixaram de carregar (CSP); caminho: enviar pela área de imagens.
-- **`/compartilhado/{id}`** está no sitemap e no `robots.txt`, mas a rota não existe no frontend (404): fica para os
-  cadernos públicos do 1.0.
-- **Licença:** o repositório não tem arquivo de licença; textos públicos dizem "código-fonte público", não "software
-  livre". O rodapé global do App ainda diz "Software Livre".
+- **`/compartilhado/{id}`:** a rota não existe no frontend; desde a F0.10.10 o `robots.txt` e o sitemap não a
+  anunciam (`seo_service.PUBLIC_STUDY_PAGES_ENABLED = False`). Ligar quando os cadernos públicos do 1.0 criarem a rota.
+- **Licença:** o repositório não tem arquivo de licença. Desde a F0.10.10 nenhum texto diz "software livre"; o
+  rodapé diz "Código-fonte público". Escolher uma licença é decisão do dono.
 - **`ROADMAP-0.10.md`, `ROADMAP-0.11.md`, `ROADMAP-1.0.md`:** ainda não escritos; este arquivo faz as vezes deles até lá.

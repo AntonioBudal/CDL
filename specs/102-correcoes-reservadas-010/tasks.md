@@ -12,5 +12,5 @@
 - [x] T007 Item 6: `superclasses.test.mjs` indiferente a CRLF.
 - [x] T008 Testes novos e ajustados; build; navegador (dados fictícios, 1366 e 375 px).
 - [x] T009 Commit; levar ao `main`; build no checkout principal.
-- [ ] T010 Fecho do lote 2: `npm test`, `pytest` completo (sozinho), build; falhas antigas em commit próprio.
-- [ ] T011 `HANDOFF.md` e `RETOMADA.md`; commit `docs`; levar ao `main`.
+- [x] T010 Fecho do lote 2: `npm test`, `pytest` completo (sozinho), build; falhas antigas em commit próprio.
+- [x] T011 `HANDOFF.md` e `RETOMADA.md`; commit `docs`; levar ao `main`.

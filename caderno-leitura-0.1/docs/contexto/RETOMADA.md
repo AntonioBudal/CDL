@@ -1326,3 +1326,16 @@ Spec aprovada com as recomendações Q1 a Q5:
   novo") e `test_seo_and_public_presence` (estado ligado). Navegador: hub com duas entradas em 1366 e 375 px,
   rodapé, `robots.txt` e sitemap sem `/compartilhado/`. A tela de erro passageiro da digitalização e a cópia no
   estudo foram conferidas só pelos testes (o servidor de validação não tem o motor de leitura).
+
+## Fecho do lote 2 do 0.10 (2026-11-07)
+
+- **Features:** F0.10.05 (`e6ad68f`), F0.10.06 (`da4a675`), F0.10.07 (`d17ee7e`), F0.10.08 (`1ab3ae8`), F0.10.10
+  (`f7dbc58`). Não há F0.10.09. **Roadmap 0.10 concluído.**
+- **Suítes:** `npm test` 749/749 e `pytest` completo 788 aprovados e 4 pulados (sozinho, banco descartável,
+  `LEITORUM_SECONDARY_BACKUP_DIR=""`, `LEITORUM_STORAGE_ROOT=""`); build ok.
+- **Falha antiga corrigida em commit próprio** (`0214933`): quatro testes de código-fonte (`theme-contrast-tokens`,
+  `dashboard-theme-contrast`, `feature-077-shell-mobile`, `friends`) falhavam quando o arquivo lido estava com CRLF
+  — no checkout principal, o `DigitizeNotebookView.vue` passou a sair com CRLF depois do merge. Novo
+  `tests/helpers/normalize-eol.mjs`, importado por eles.
+- **Conversa em worktree:** cada commit foi levado ao `main` por fast-forward e o build refeito no checkout
+  principal. Push e `Restart-Service -Name Leitorum` ficam com o usuário.
