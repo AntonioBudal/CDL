@@ -5,6 +5,7 @@ import { api, errorMessage } from '../services/api'
 import { useImportDraft } from '../composables/useImportDraft'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import StudyEditorFields from '../components/StudyEditorFields.vue'
+import ImportWorkMetaStrip from '../components/import/ImportWorkMetaStrip.vue'
 import StudioViewModeToggle, { type StudioViewMode } from '../components/studies/StudioViewModeToggle.vue'
 import FloatingMarkdownToolbar from '../components/studies/FloatingMarkdownToolbar.vue'
 import { applyFormatToTextarea, type MarkdownFormatAction } from '../utils/markdownFormatter'
@@ -222,6 +223,11 @@ async function save() {
   }
 }
 
+// F0.10.06: livro completado pela faixa da obra; troca na lista sem perder o rascunho.
+function onBookUpdated(updated: Book) {
+  books.value = books.value.map(item => (item.id === updated.id ? { ...item, ...updated } : item))
+}
+
 async function startAnother() {
   draft.reset()
   activeMobileTab.value = 'source'
@@ -326,8 +332,8 @@ onBeforeUnmount(() => {
             </div>
 
             <div class="meta-field-compact">
-              <label for="import-location">Localização <span class="optional">opcional</span></label>
-              <input id="import-location" v-model="state.location" placeholder="Ex.: p. 32–34" />
+              <label for="import-location">Página ou localização <span class="optional">opcional</span></label>
+              <input id="import-location" v-model="state.location" placeholder="Ex.: p. 32–34 ou Loc. 1820" />
             </div>
 
             <div class="meta-field-compact">
@@ -346,6 +352,15 @@ onBeforeUnmount(() => {
               {{ state.saving ? 'Salvando…' : 'Salvar estudo' }}
             </button>
           </div>
+
+          <!-- F0.10.06: dados da obra e prévia da referência em 3 escopos -->
+          <ImportWorkMetaStrip
+            :book="selectedBook"
+            :chapter="selectedChapter"
+            :location="state.location"
+            :references-text="state.sections.references"
+            @book-updated="onBookUpdated"
+          />
         </header>
 
         <!-- Avisos e Estados de Carga dos Metadados -->

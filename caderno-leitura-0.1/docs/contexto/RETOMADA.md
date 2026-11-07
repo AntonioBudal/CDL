@@ -1246,3 +1246,23 @@ Spec aprovada com as recomendações Q1 a Q5:
   Navegador (dados fictícios): cópias direta, indireta, referência em texto e HTML, menu com Esc e clique fora,
   alternância persistida, contraste nos 10 temas (mínimo 4,83:1), menu dentro da tela em 375 px.
 - **Fora:** página da citação, editora e cidade (exigem migração; referências do 0.11) e a cópia da tela do estudo.
+
+## F0.10.06 — Importar: faixa de metadados da obra e ganchos para referências (2026-11-07)
+
+- **Spec, plano e tarefas:** `specs/099-importar-metadados-referencias/`. O plano mestre não detalhava a feature; a
+  leitura aprovada: 3 escopos = **obra** (livro), **trecho** (capítulo e localização do estudo) e **obras citadas**
+  (seção Referências). Sem migração e sem mudança no backend.
+- **Ganchos:** `utils/referenceScopes.ts` (puro): `parseLocator` ("p. 32–34", "pp. 32-34", "pág. 7", "32-34" →
+  página com meia-risca; "Loc. 1820", "posição 1820" → `loc.`; o resto fica como texto), `referenceLines`,
+  `buildReferenceScopes` (com `missing` da obra) e `abntCallWithLocator` (reaproveita `abntAuthorCall` da F0.10.05).
+  O 0.11 deve gerar CSL-JSON, BibTeX e ABNT/APA a partir dele.
+- **Tela:** `components/import/ImportWorkMetaStrip.vue` dentro da faixa da Importar: linha `Autor · Ano · Subtítulo`
+  ("sem autor"/"sem ano" em tom neutro), aviso do efeito na citação, "Completar dados do livro" na própria faixa
+  (`PATCH /api/books/{id}` com `expected_version`; ano 1000–2100; erro mostrado sem perder o digitado; só com
+  `can_edit`), e a prévia "Como este estudo será citado" com a chamada (`(Sobrenome, ano, p. X)`) e os 3 escopos.
+  O campo da faixa passou a se chamar "Página ou localização", como no ajuste manual.
+- **Testes:** `feature-099-importar-metadados.test.mjs` (9); vizinhos da Importar passando; build ok. Navegador
+  (dados fictícios): livro sem ano completado na faixa (ano inválido recusado), prévia `(Modelo Júnior, 1999, p.
+  32–34)`, contraste nos 10 temas (mínimo 5,49:1), 320 e 375 px sem rolagem lateral.
+- **Achado fora do escopo:** no worktree, `tests/superclasses.test.mjs` (US1 da Invisível) falha porque o CSS saiu
+  com CRLF no checkout e o teste procura `button,\n  .button`; no checkout principal passa. Ver no fecho do lote.
