@@ -1286,3 +1286,20 @@ Spec aprovada com as recomendações Q1 a Q5:
   livro privado e estudo privado da amiga ausentes, "Ver todos" abrindo a aba filtrada, contraste nos 10 temas
   (mínimo 5,35:1), 375 px sem rolagem lateral.
 - **Fora:** ISBN (0.11), contagem "em comum" nos cartões da lista de amigos, destaques em comum.
+
+## F0.10.08 — Landing: Desafio F12 e custo com fontes e datas (2026-11-07)
+
+- **Spec, plano e tarefas:** `specs/101-landing-confianca-f12/`. Só frontend. O Notion entrou a pedido do usuário.
+- **Desafio F12** (`components/landing/TrustChallengeSection.vue`, `#desafio-f12`): três passos para abrir a aba
+  Rede; painel "Conferir nesta página" com os endereços que o navegador contatou (Resource Timing, agrupados por
+  origem em `utils/networkAudit.ts`, ignorando `data:`/`blob:`), "Conferir de novo" com `aria-live`; a CSP lida do
+  cabeçalho de um `HEAD` à raiz (ou o aviso de que não veio); nota sobre extensões e o login com Google.
+- **Quanto custa** (`components/landing/CostComparison.vue`, `#custo`, dados em `costSources.ts`): Leitorum
+  US$ 0 de licença, sem estimar energia nem máquina; Readwise (Full 9,99/12,99, Highlights 7,99/8,99, Lite
+  5,59/6,99 — anual por mês/mensal) e Notion (Free 0; Plus 10/12 por vaga), em dólar, conferidos nas páginas
+  oficiais em 07/11/2026. Cada linha mostra a fonte e a data; o teste recusa preço sem `sourceUrl` https ou
+  `checkedAt` ISO. **Para atualizar:** conferir as páginas e trocar valores e `checkedAt` no arquivo.
+- **Testes:** `feature-101-landing-confianca.test.mjs` (8); vizinhos da landing passando; build ok. Navegador
+  (servidor de validação com login exigido, visitante anônimo): painel com só `http://127.0.0.1:8010`, CSP real
+  (`default-src`, `script-src`, `img-src`, `connect-src`, `frame-ancestors`), contraste nos 10 temas (mínimo
+  5,35:1), 375 px sem rolagem da página (a tabela rola no próprio contêiner, focável).

@@ -4,6 +4,8 @@ import MethodSimulator from '../components/landing/MethodSimulator.vue'
 import FeatureList from '../components/landing/FeatureList.vue'
 import ThemeShowcase from '../components/landing/ThemeShowcase.vue'
 import SovereigntySection from '../components/landing/SovereigntySection.vue'
+import TrustChallengeSection from '../components/landing/TrustChallengeSection.vue'
+import CostComparison from '../components/landing/CostComparison.vue'
 import { buildWebApplicationSchema, useSeoMeta } from '../composables/useSeoMeta'
 
 const origin = typeof window !== 'undefined' ? window.location.origin : 'https://leitorum.com'
@@ -28,6 +30,9 @@ useSeoMeta({
     <FeatureList />
     <ThemeShowcase />
     <SovereigntySection />
+    <!-- F0.10.08: prova verificável e custo com fontes e datas -->
+    <TrustChallengeSection />
+    <CostComparison />
   </div>
 </template>
 
