@@ -1,6 +1,8 @@
 # Feature Specification: Isolamento do Banco Ativo na Suíte de Testes do Backend
 
-**Feature Branch**: `086-isolamento-banco-testes`
+**Feature Branch**: `097-isolamento-banco-testes`
+
+> Renumerada de 086 para 097 em 2026-11-07, ao entrar no `main` (o 086 já era `086-digitalizar-caderno-estudo`). Feita no branch `claude/intelligent-perlman-c530cd` em 2026-10-27.
 
 **Created**: 2026-10-27
 

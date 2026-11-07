@@ -1,8 +1,8 @@
 # Implementation Plan: Isolamento do Banco Ativo na Suíte de Testes do Backend
 
-**Branch**: `086-isolamento-banco-testes` | **Date**: 2026-10-27 | **Spec**: [spec.md](spec.md)
+**Branch**: `097-isolamento-banco-testes` | **Date**: 2026-10-27 | **Spec**: [spec.md](spec.md)
 
-**Input**: Feature specification from `specs/086-isolamento-banco-testes/spec.md`
+**Input**: Feature specification from `specs/097-isolamento-banco-testes/spec.md`
 
 ## Summary
 
@@ -98,7 +98,7 @@ caderno-leitura-0.1/
 │       ├── conftest.py                          # ALTERADO: bloco de isolamento no topo, guarda, hooks e fixtures
 │       └── test_active_database_isolation.py    # NOVO: testes-guarda
 └── docs/contexto/AMBIENTE-E-VALIDACAO.md        # ALTERADO: uma frase sobre o isolamento
-specs/086-isolamento-banco-testes/
+specs/097-isolamento-banco-testes/
 ├── spec.md
 └── plan.md
 ```

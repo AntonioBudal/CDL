@@ -1,6 +1,6 @@
 # Tasks: Isolamento do Banco Ativo na Suíte de Testes do Backend
 
-**Input**: Design documents from `specs/086-isolamento-banco-testes/`
+**Input**: Design documents from `specs/097-isolamento-banco-testes/`
 **Prerequisites**: [plan.md](plan.md), [spec.md](spec.md)
 
 ## Organization
@@ -69,7 +69,7 @@ As tarefas seguem as decisões D1–D5 do plano e estão mapeadas às histórias
 ## Phase 5: Polish — documentação e conferência final
 
 - [x] T014 [P] Atualizar a frase de `caderno-leitura-0.1/docs/contexto/AMBIENTE-E-VALIDACAO.md:64` para descrever o isolamento real (D5).
-- [x] T015 [P] Registrar no fim de `specs/086-isolamento-banco-testes/tasks.md` as evidências: interpretador, linha de base, resultado final e resultado do SC-002.
+- [x] T015 [P] Registrar no fim de `specs/097-isolamento-banco-testes/tasks.md` as evidências: interpretador, linha de base, resultado final e resultado do SC-002.
 - [x] T016 Conferir `git status` e `git diff --stat`. Só devem aparecer `conftest.py`, o teste novo, o doc e `specs/086-*`, e nada em `backend/app/` (SC-004). Também não pode haver `.db`, `.zip` ou pasta de dados entre os não rastreados.
 - [ ] T017 Submeter para aceite. O commit (`teste — isola o banco ativo da suíte do backend`) só é criado depois do aceite do usuário.
 
