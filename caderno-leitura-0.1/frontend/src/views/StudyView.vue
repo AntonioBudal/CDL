@@ -25,7 +25,8 @@ import OriginalPageViewer from '../components/media/OriginalPageViewer.vue'
 import { useStudyHighlights } from '../composables/useStudyHighlights'
 import { useOriginalPage } from '../composables/useOriginalPage'
 import { useActiveReadingSession } from '../composables/useActiveReadingSession'
-import { formatQuoteText, useTextSelection } from '../composables/useTextSelection'
+import { useTextSelection } from '../composables/useTextSelection'
+import { buildReferenceScopes, formatIndirectCitationWithLocator } from '../utils/referenceScopes'
 import { useFloatingToast } from '../composables/useFloatingToast'
 import { useHighlightColorPreference } from '../composables/useHighlightColorPreference'
 import { getStudyTemplate } from '../constants/studyTemplates'
@@ -313,12 +314,15 @@ async function handleAnnotate(payload: { note: string; color: HighlightColor; se
 async function handleCopyQuote(payload?: { selection?: TextSelectionContext }) {
   const sel = payload?.selection || selectionContext.value
   if (!sel || !state.context) return
-  const quote = formatQuoteText({
-    selected_text: sel.selected_text,
-    studyTitle: state.context.study.title,
-    bookTitle: state.context.book.title,
-    chapterName: state.context.chapter.name,
-  })
+  // F0.10.10: citação indireta ABNT (o texto do estudo é do leitor), com a página do estudo quando houver.
+  const quote = formatIndirectCitationWithLocator(
+    sel.selected_text,
+    buildReferenceScopes({
+      book: state.context.book,
+      chapter: state.context.chapter,
+      location: state.context.study.location,
+    }),
+  )
   try {
     if (navigator?.clipboard?.writeText) {
       await navigator.clipboard.writeText(quote)

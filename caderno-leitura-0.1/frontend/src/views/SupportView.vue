@@ -115,7 +115,7 @@ onMounted(() => {
         <section class="support-card info-card" aria-labelledby="heading-purpose">
           <h2 id="heading-purpose" class="card-title">Desenvolvimento Aberto e Independente</h2>
           <p class="card-description">
-            O Leitorum é desenvolvido de forma independente como software livre. A prioridade fundamental nesta fase é
+            O Leitorum é desenvolvido de forma independente, com código-fonte público. A prioridade fundamental nesta fase é
             consolidar uma ferramenta sólida, privativa e sem distrações para leitura reflexiva, organização de notas e estudos contínuos.
           </p>
           <p v-if="supportData.custom_message" class="custom-note">

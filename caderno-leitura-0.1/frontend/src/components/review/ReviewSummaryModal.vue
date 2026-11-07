@@ -7,9 +7,12 @@ const props = withDefaults(
     summary: { easy: number; medium: number; hard: number; total: number }
     hasMoreItems?: boolean
     elapsedSeconds?: number
+    /** F0.10.10: tamanho escolhido da sessão (5/10/15). */
+    moreCount?: number
   }>(),
   {
     hasMoreItems: true,
+    moreCount: 10,
     elapsedSeconds: 0,
   },
 )
@@ -94,7 +97,7 @@ const formattedTime = computed(() => {
           class="btn-action btn-primary"
           @click="emit('review-more')"
         >
-          Revisar mais 10
+          Revisar mais {{ moreCount }}
         </button>
         <button
           type="button"

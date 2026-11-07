@@ -51,6 +51,13 @@ const browserEnvironment = (): DigitizeEnvironment => ({
   today: () => new Date(),
 })
 
+/** F0.10.10: recusas passageiras do servidor; a foto fica guardada para tentar de novo. */
+export const DIGITIZE_TRANSIENT_CODES: readonly DigitizeErrorCode[] = ['busy', 'low_memory']
+
+export function isTransientDigitizeError(code: DigitizeErrorCode | null | undefined): boolean {
+  return !!code && DIGITIZE_TRANSIENT_CODES.includes(code)
+}
+
 export function defaultTitle(date: Date): string {
   const pad = (value: number) => String(value).padStart(2, '0')
   return `Página digitalizada em ${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`
@@ -153,8 +160,13 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
       return true
     } catch (error) {
       if (controller.signal.aborted) return false
-      releasePhoto()
       const code = errorCode(error)
+      if (isTransientDigitizeError(code)) {
+        // Servidor ocupado ou sem memória agora: mantém a foto para "Tentar de novo".
+        fail(code, errorMessage(error))
+        return false
+      }
+      releasePhoto()
       if (code === 'unavailable') {
         state.unavailableReason = 'not_installed'
         state.phase = 'unavailable'
@@ -244,6 +256,12 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
     state.text = organizer.revert()
   }
 
+  /** Reenvia a mesma foto depois de uma recusa passageira. */
+  async function retry(): Promise<boolean> {
+    if (!photo || !isTransientDigitizeError(state.error?.code)) return false
+    return choose(photo)
+  }
+
   function reset() {
     if (busy.value) return
     organizer.reset()
@@ -263,7 +281,7 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
   }
 
   return {
-    state, busy, dirty, canSave, uncertainLines, organizer, checkStatus, choose, cancel, save, reset, dispose,
+    state, busy, dirty, canSave, uncertainLines, organizer, checkStatus, choose, retry, cancel, save, reset, dispose,
     organize, unorganize,
   }
 }

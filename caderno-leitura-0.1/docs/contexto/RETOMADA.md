@@ -1303,3 +1303,26 @@ Spec aprovada com as recomendações Q1 a Q5:
   (servidor de validação com login exigido, visitante anônimo): painel com só `http://127.0.0.1:8010`, CSP real
   (`default-src`, `script-src`, `img-src`, `connect-src`, `frame-ancestors`), contraste nos 10 temas (mínimo
   5,35:1), 375 px sem rolagem da página (a tabela rola no próprio contêiner, focável).
+
+## F0.10.10 — Correções reservadas do 0.10 (2026-11-07)
+
+- **Spec, plano e tarefas:** `specs/102-correcoes-reservadas-010/`. Não havia lista no repositório; o usuário aprovou
+  seis itens (um do HANDOFF, três das pendências do HANDOFF §5, dois achados no lote 2). Sem migração.
+- **1. Revisão:** o hub tinha "Praticar Revisão Agora" e "Prática Rápida neste Hub" (a mesma função) e "Iniciar
+  Sessão Estruturada". Agora: "Praticar agora (N itens)" na faixa de prontidão e uma única ação secundária
+  `.quiet`, "Sessão registrada (até N itens)", com "Fica no histórico e pode ser retomada depois." O resumo do fim
+  de sessão dizia "Revisar mais 10" fixo; passou a usar o tamanho escolhido (`moreCount`).
+- **2. Licença:** rodapé (`App.vue`, `AppFooter.vue`) diz "Código-fonte público" com link para o repositório; a
+  página Apoie diz "com código-fonte público". Escolher uma licença continua com o dono do projeto.
+- **3. Digitalização:** `busy` e `low_memory` (`DIGITIZE_TRANSIENT_CODES`) guardam a foto; a tela diz "Não deu para
+  ler agora" e oferece "Tentar de novo" (`draft.retry()`), com "Tentar outra foto" como secundário.
+- **4. SEO:** `seo_service.PUBLIC_STUDY_PAGES_ENABLED = False` tira `Allow: /compartilhado/` do `robots.txt` e os
+  estudos do sitemap enquanto a rota não existe; o 1.0 liga. Testes nos dois estados.
+- **5. Cópia na tela do estudo:** a barra flutuante copia citação indireta ABNT com a página do estudo
+  (`formatIndirectCitationWithLocator` em `referenceScopes.ts`). `formatQuoteText` ficou (tem testes próprios).
+- **6. Teste:** `superclasses.test.mjs` normaliza CRLF ao ler arquivos; passa também no worktree.
+- **Testes:** `feature-102-correcoes-reservadas.test.mjs` (5), `test_seo_public_pages_flag.py` (3); ajustados
+  `feature-068-revisao-hub`, `review-hub-view`, `feature-086-digitalizar-caderno-estudo` (mais dois casos de "Tentar de
+  novo") e `test_seo_and_public_presence` (estado ligado). Navegador: hub com duas entradas em 1366 e 375 px,
+  rodapé, `robots.txt` e sitemap sem `/compartilhado/`. A tela de erro passageiro da digitalização e a cópia no
+  estudo foram conferidas só pelos testes (o servidor de validação não tem o motor de leitura).

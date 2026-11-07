@@ -171,7 +171,38 @@ test('erros da API viram mensagem em português com o código do contrato', asyn
   assert.equal(await draft.choose(photo()), false)
   assert.equal(draft.state.phase, 'error')
   assert.deepEqual(draft.state.error, { code: 'busy', message: 'Outra página está sendo lida agora.' })
-  assert.deepEqual(urls.revoked, ['blob:teste-1'], 'A foto é liberada no erro')
+  // F0.10.10: recusa passageira guarda a foto para "Tentar de novo".
+  assert.deepEqual(urls.revoked, [], 'A foto fica guardada em erro passageiro')
+})
+
+test('F0.10.10: "Tentar de novo" reenvia a mesma foto depois de erro passageiro', async () => {
+  let calls = 0
+  const sent = []
+  const { draft } = makeDraft({
+    preview: async (file) => {
+      calls += 1
+      sent.push(file)
+      if (calls === 1) throw new ApiError('Pouca memória.', 503, { detail: 'Pouca memória.', code: 'low_memory' })
+      return { text: 'Texto fictício', lines: [], warnings: [], engine: 'tesseract', elapsed_ms: 1 }
+    },
+  })
+  await draft.checkStatus()
+  const original = photo()
+  assert.equal(await draft.choose(original), false)
+  assert.equal(draft.state.error.code, 'low_memory')
+  assert.equal(await draft.retry(), true)
+  assert.equal(draft.state.phase, 'review')
+  assert.equal(sent[1], original, 'A mesma foto é reenviada')
+})
+
+test('F0.10.10: erro definitivo continua liberando a foto e retry não faz nada', async () => {
+  const { draft, urls } = makeDraft({
+    preview: async () => { throw new ApiError('Falhou.', 500, { detail: 'Falhou.', code: 'engine_failed' }) },
+  })
+  await draft.checkStatus()
+  assert.equal(await draft.choose(photo()), false)
+  assert.deepEqual(urls.revoked, ['blob:teste-1'])
+  assert.equal(await draft.retry(), false)
 })
 
 test('motor que some durante o uso leva ao estado indisponível', async () => {

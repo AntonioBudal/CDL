@@ -115,7 +115,7 @@ test('US1: ReviewHubView.vue exibe estado vazio acolhedor e botão Iniciar Revis
 
   // Estado vazio e botão de início
   assert.match(content, /empty-state|empty-review/)
-  assert.match(content, /Iniciar Revisão|start-review-btn/)
+  assert.match(content, /@start-practice="startReview"/) // F0.10.10: o início fica na faixa de prontidão
   assert.match(content, /ReviewStatsHeader/)
 })
 

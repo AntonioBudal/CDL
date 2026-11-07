@@ -2,7 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { api, errorMessage } from '../services/api'
-import { useDigitizeDraft, type UncertainLine } from '../composables/useDigitizeDraft'
+import { isTransientDigitizeError, useDigitizeDraft, type UncertainLine } from '../composables/useDigitizeDraft'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import EmptyState from '../components/ui/EmptyState.vue'
 import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
@@ -190,6 +190,14 @@ async function save() {
   }
 }
 
+const transientError = computed(() => isTransientDigitizeError(state.error?.code))
+
+async function retrySamePhoto() {
+  await draft.retry()
+  await nextTick()
+  resultHeading.value?.focus()
+}
+
 async function startAnother() {
   if (draft.dirty.value && !window.confirm('Descartar o texto desta página e enviar outra foto?')) return
   draft.reset()
@@ -281,10 +289,14 @@ onBeforeUnmount(() => {
 
     <!-- Erro -->
     <section v-else-if="state.phase === 'error'" class="panel" aria-labelledby="error-heading">
-      <h2 id="error-heading" ref="resultHeading" tabindex="-1">Não foi possível ler esta foto</h2>
+      <h2 id="error-heading" ref="resultHeading" tabindex="-1">
+        {{ transientError ? 'Não deu para ler agora' : 'Não foi possível ler esta foto' }}
+      </h2>
       <p class="notice error" role="alert">{{ state.error?.message }}</p>
       <div class="actions">
-        <button type="button" class="primary" @click="startAnother">Tentar outra foto</button>
+        <!-- F0.10.10: recusa passageira (servidor ocupado, pouca memória) guarda a foto para tentar de novo -->
+        <button v-if="transientError" type="button" class="primary" @click="retrySamePhoto">Tentar de novo</button>
+        <button type="button" :class="transientError ? 'secondary' : 'primary'" @click="startAnother">Tentar outra foto</button>
         <RouterLink class="text-link" to="/importar">Importar texto digitado</RouterLink>
       </div>
     </section>

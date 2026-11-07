@@ -138,3 +138,12 @@ export function abntCallWithLocator(scopes: ReferenceScopes): string {
   if (locator.kind === 'page' || locator.kind === 'loc') parts.push(formatLocator(locator))
   return `(${parts.join(', ')})`
 }
+
+/**
+ * Citação indireta (texto do leitor) com a chamada ABNT e o localizador do estudo (F0.10.10):
+ * "trecho (Fictícia, 2001, p. 32–34)." Quebras de linha viram espaço; ponto final do trecho não se repete.
+ */
+export function formatIndirectCitationWithLocator(text: string, scopes: ReferenceScopes): string {
+  const body = (text || '').replace(/\s+/g, ' ').trim().replace(/[.\s]+$/, '')
+  return `${body} ${abntCallWithLocator(scopes)}.`
+}

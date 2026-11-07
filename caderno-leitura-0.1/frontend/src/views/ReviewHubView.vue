@@ -279,6 +279,7 @@ onUnmounted(() => {
           :session-size="sessionSize"
           @update:bucket="selectedBucket = $event"
           @update:size="setSessionSize"
+          :practice-count="Math.min(sessionSize, eligibleCountForSelection)"
           @start-practice="startReview"
         />
 
@@ -297,33 +298,22 @@ onUnmounted(() => {
           @review-again="handleReviewMore"
         />
 
-        <!-- AÇÕES SECUNDÁRIAS (Sessão Estruturada / Prática Rápida Hub) -->
+        <!-- F0.10.10: uma só ação secundária. "Praticar agora" (faixa acima) é a prática rápida no hub;
+             a sessão registrada fica no histórico e pode ser retomada. -->
         <div v-if="stats.pending_review > 0" class="start-session-bar">
           <button
             type="button"
-            class="start-structured-btn"
+            class="start-structured-btn quiet"
             :disabled="loadingStats || startingStructured"
             @click="startStructuredSession(selectedBookId ? 'book' : 'quick')"
           >
-            <svg class="play-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-              <polygon points="5 3 19 12 5 21 5 3" />
-            </svg>
             <span>
-              Iniciar Sessão Estruturada
-              <template v-if="selectedBookId">do Livro</template>
-              <template v-else>Rápida ({{ sessionSize }} itens)</template>
+              Sessão registrada<template v-if="selectedBookId"> do livro</template> (até {{ sessionSize }} itens)
             </span>
           </button>
-          <button
-            type="button"
-            class="start-review-btn secondary-mode"
-            :disabled="loadingStats || session.state.loading"
-            @click="startReview"
-          >
-            Prática Rápida neste Hub ({{ Math.min(sessionSize, eligibleCountForSelection) }} itens)
-          </button>
+          <p class="start-session-hint muted">Fica no histórico e pode ser retomada depois.</p>
           <p v-if="selectedBucket !== 'all'" class="bucket-session-note muted">
-            A sessão estruturada usa todos os níveis; o filtro de dificuldade vale para a prática neste hub.
+            A sessão registrada usa todos os níveis; o filtro de dificuldade vale para "Praticar agora".
           </p>
         </div>
       </div>
@@ -437,6 +427,7 @@ onUnmounted(() => {
         :is-open="session.state.isCompleted"
         :summary="session.summary.value"
         :has-more-items="stats.pending_review > 0"
+        :more-count="sessionSize"
         :elapsed-seconds="sessionElapsedSeconds"
         @review-more="handleReviewMore"
         @finish="handleFinishSession"
@@ -643,9 +634,7 @@ onUnmounted(() => {
   gap: 0.625rem;
   min-height: 48px;
   padding: 0.75rem 1.75rem;
-  background-color: var(--color-accent, var(--color-primary, #3b82f6));
-  color: var(--color-on-accent, #ffffff);
-  border: 1px solid transparent;
+  --quiet-border: var(--color-border-strong, var(--color-border));
   border-radius: 8px;
   font-family: inherit;
   font-size: 0.9375rem;
@@ -675,22 +664,9 @@ onUnmounted(() => {
   outline-offset: 2px;
 }
 
-.start-review-btn.secondary-mode {
-  min-height: 48px;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  background-color: transparent;
-  color: var(--color-text-secondary, #475569);
-  border: 1px solid var(--color-border-strong, #cbd5e1);
-  font-family: inherit;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.start-review-btn.secondary-mode:hover {
-  background-color: var(--color-surface-soft, rgba(0, 0, 0, 0.04));
-  color: var(--color-text, #0f172a);
+.start-session-hint {
+  margin: 0;
+  font-size: 0.875rem;
 }
 
 /* Histórico de Sessões */
@@ -813,8 +789,7 @@ onUnmounted(() => {
     gap: 0.75rem;
   }
 
-  .start-structured-btn,
-  .start-review-btn.secondary-mode {
+  .start-structured-btn {
     width: 100%;
     justify-content: center;
     white-space: nowrap;

@@ -131,7 +131,7 @@ const isMoreMenuOpen = ref(false)
       <span class="footer-sep" aria-hidden="true">·</span>
       <RouterLink to="/apoie" class="footer-support-link">Apoie o Leitorum</RouterLink>
       <span class="footer-sep" aria-hidden="true">·</span>
-      <span class="footer-license">Software Livre</span>
+      <a class="footer-license" href="https://github.com/AntonioBudal/CDL" target="_blank" rel="noopener noreferrer">Código-fonte público</a>
     </div>
   </footer>
   <GlobalSearchModal />
@@ -206,7 +206,13 @@ const isMoreMenuOpen = ref(false)
 
 .footer-license {
   font-size: 0.8125rem;
-  opacity: 0.8;
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-license:hover {
+  color: var(--color-link);
+  text-decoration: underline;
 }
 
 @media (max-width: 767px) {

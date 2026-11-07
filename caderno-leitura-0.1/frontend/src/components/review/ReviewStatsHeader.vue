@@ -12,6 +12,8 @@ const props = withDefaults(
     loading?: boolean
     selectedBucket?: ReviewBucket | 'all'
     sessionSize?: number
+    /** F0.10.10: quantos itens a prática vai trazer (tamanho escolhido limitado ao que há). */
+    practiceCount?: number | null
   }>(),
   {
     selectedBucket: 'all',
@@ -21,6 +23,7 @@ const props = withDefaults(
     selectedKind: 'all',
     chapters: () => [],
     loading: false,
+    practiceCount: null,
   },
 )
 
@@ -128,7 +131,7 @@ function onStartPractice() {
           <svg class="practice-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
             <polygon points="5 3 19 12 5 21 5 3" />
           </svg>
-          <span>Praticar Revisão Agora</span>
+          <span>Praticar agora<template v-if="practiceCount"> ({{ practiceCount }} {{ practiceCount === 1 ? 'item' : 'itens' }})</template></span>
         </button>
       </div>
     </div>

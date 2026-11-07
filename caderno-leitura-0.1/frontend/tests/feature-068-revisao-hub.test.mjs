@@ -21,7 +21,7 @@ test('US1: ReviewStatsHeader implementa a Barra Unificada de Prontidão Intelect
   // Disparador de prática evidente
   assert.ok(content.includes('btn-start-practice'), 'Deve conter botão primário btn-start-practice')
   assert.ok(content.includes('data-testid="start-practice-btn"'), 'Deve conter data-testid para start-practice-btn')
-  assert.ok(content.includes('Praticar Revisão Agora'), 'Deve conter texto imperativo do botão')
+  assert.ok(content.includes('Praticar agora'), 'Deve conter texto imperativo do botão (F0.10.10)')
   assert.ok(content.includes("emit('start-practice')"), 'Deve emitir evento start-practice')
 
   // Banimento dos 5 cards dispersos de SaaS

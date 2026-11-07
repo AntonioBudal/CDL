@@ -2,6 +2,13 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import path from 'node:path'
+
+// F0.10.10: indiferente a CRLF/LF (checkouts no Windows podem converter as quebras de linha).
+const readFileSyncRaw = fs.readFileSync
+fs.readFileSync = (...args) => {
+  const content = readFileSyncRaw(...args)
+  return typeof content === 'string' ? content.replace(/\r\n/g, '\n') : content
+}
 import { useMagneticHover } from '../src/composables/useMagneticHover.ts'
 
 test('catálogo de aparência inclui os campos superclass e superclass-intensity', () => {

@@ -7,7 +7,7 @@ import { RouterLink } from 'vue-router'
     <div class="footer-inner">
       <div class="footer-left">
         <span class="footer-brand">Leitorum</span>
-        <span class="footer-license">Software Livre</span>
+        <a class="footer-license" href="https://github.com/AntonioBudal/CDL" target="_blank" rel="noopener noreferrer">Código-fonte público</a>
       </div>
       <nav class="footer-nav" aria-label="Navegação secundária do rodapé">
         <RouterLink to="/sobre" class="footer-link">Sobre o Leitorum</RouterLink>
@@ -57,7 +57,13 @@ import { RouterLink } from 'vue-router'
 
 .footer-license {
   font-size: 0.8125rem;
-  opacity: 0.8;
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-license:hover {
+  color: var(--color-link);
+  text-decoration: underline;
 }
 
 .footer-link {

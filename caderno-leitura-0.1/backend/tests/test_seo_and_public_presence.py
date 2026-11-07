@@ -61,8 +61,11 @@ def seo_client(tmp_path, monkeypatch) -> Generator[tuple[TestClient, sessionmake
     application.dependency_overrides.clear()
 
 
-def test_robots_txt_spec_compliance(seo_client):
-    """Verifica se /robots.txt segue as regras de permissão de rotas públicas e bloqueio de rotas privadas."""
+def test_robots_txt_spec_compliance(seo_client, monkeypatch):
+    """Com as páginas públicas de estudo ligadas (1.0); o padrão desligado está em test_seo_public_pages_flag.py.
+
+    Verifica se /robots.txt segue as regras de permissão de rotas públicas e bloqueio de rotas privadas."""
+    monkeypatch.setattr("app.services.seo_service.PUBLIC_STUDY_PAGES_ENABLED", True)
     client, _ = seo_client
     response = client.get("/robots.txt")
     assert response.status_code == 200
@@ -112,7 +115,9 @@ def test_x_robots_tag_middleware_protection(seo_client):
     assert response_books.headers.get("X-Robots-Tag") == "noindex, nofollow"
 
 
-def test_sitemap_xml_generation_and_strict_privacy(seo_client):
+def test_sitemap_xml_generation_and_strict_privacy(seo_client, monkeypatch):
+    # Com as páginas públicas de estudo ligadas (1.0); o padrão desligado está em test_seo_public_pages_flag.py.
+    monkeypatch.setattr("app.services.seo_service.PUBLIC_STUDY_PAGES_ENABLED", True)
     """Verifica a geração do sitemap.xml e a exclusão estrita de estudos privados ou excluídos."""
     client, session_maker = seo_client
 
