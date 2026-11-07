@@ -1266,3 +1266,23 @@ Spec aprovada com as recomendações Q1 a Q5:
   32–34)`, contraste nos 10 temas (mínimo 5,49:1), 320 e 375 px sem rolagem lateral.
 - **Achado fora do escopo:** no worktree, `tests/superclasses.test.mjs` (US1 da Invisível) falha porque o CSS saiu
   com CRLF no checkout e o teste procura `button,\n  .button`; no checkout principal passa. Ver no fecho do lote.
+
+## F0.10.07 — Amigos: leituras e estudos em comum (2026-11-07)
+
+- **Spec, plano e tarefas:** `specs/100-amigos-em-comum/`. Sem migração.
+- **API:** `GET /api/users/{username}/in-common` (`services/in_common_service.py`, `schemas/in_common.py`). Bloqueio,
+  usuário inexistente ou o próprio visitante → 404; não amigo → `is_friend: false` sem listas. Do lado do amigo, só
+  livros `friends`/`public` não excluídos e estudos que passam em `can_read_study`; livros privados dele nunca
+  aparecem, nem como contagem. Casamento por `normalize_title_key` (sem acentos, caixa, pontuação e subtítulo depois
+  de `:`) e, quando os dois têm autor, pelo sobrenome do primeiro autor (`first_author_surname_key`, aceita
+  "Sobrenome, Nome" e Júnior/Filho/Neto/Sobrinho). Até 30 livros (`books_truncated`) e 5 estudos por livro (com o
+  total); `shared_with_me_total` vem de `get_shared_studies_for_user(author=...)`.
+- **Tela:** `components/profile/ProfileInCommon.vue` no perfil de outro leitor (some para quem não é amigo): livros
+  em comum com "Seu livro", estudos do amigo com link de leitura, e "N estudos compartilhados com você — Ver todos",
+  que abre `/livros?aba=compartilhados&autor=usuario` (a Biblioteca e a `SharedStudiesList` passaram a ler esses
+  parâmetros).
+- **Testes:** `test_users_in_common.py` (8) e `feature-100-amigos-em-comum.test.mjs` (5); vizinhos de amizade,
+  compartilhamento, perfil e Biblioteca passando; build ok. Navegador (banco temporário, amiga fictícia semeada):
+  livro privado e estudo privado da amiga ausentes, "Ver todos" abrindo a aba filtrada, contraste nos 10 temas
+  (mínimo 5,35:1), 375 px sem rolagem lateral.
+- **Fora:** ISBN (0.11), contagem "em comum" nos cartões da lista de amigos, destaques em comum.

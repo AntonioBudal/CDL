@@ -5,6 +5,7 @@ import type { BreadcrumbItem, UserProfilePublic } from '../types.ts'
 import { useProfile } from '../composables/useProfile.ts'
 import { useAuthStore } from '../stores/auth.ts'
 import UserProfileCard from '../components/profile/UserProfileCard.vue'
+import ProfileInCommon from '../components/profile/ProfileInCommon.vue'
 import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
 import Icon from '../components/ui/Icon.vue'
 
@@ -99,6 +100,9 @@ onMounted(() => {
           :is-owner="isOwner"
           :show-edit-button="true"
         />
+
+        <!-- F0.10.07: leituras e estudos em comum (só no perfil de outro leitor) -->
+        <ProfileInCommon v-if="!isOwner" :username="publicProfile.username" />
       </div>
     </div>
   </section>

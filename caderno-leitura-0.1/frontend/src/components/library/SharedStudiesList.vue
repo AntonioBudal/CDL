@@ -6,13 +6,16 @@ import type { SharedStudySummary } from '../../types.ts'
 import Icon from '../ui/Icon.vue'
 import LoadingSkeleton from '../ui/LoadingSkeleton.vue'
 
+// F0.10.07: a Biblioteca pode abrir já filtrada por @autor (/livros?aba=compartilhados&autor=...).
+const props = defineProps<{ initialAuthor?: string }>()
+
 const loading = ref(true)
 const loadError = ref<string | null>(null)
 const items = ref<SharedStudySummary[]>([])
 const total = ref(0)
 
 const searchQuery = ref('')
-const authorFilter = ref('')
+const authorFilter = ref((props.initialAuthor || '').replace(/^@/, ''))
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
 async function fetchSharedStudies() {

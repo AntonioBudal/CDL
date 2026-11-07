@@ -21,7 +21,9 @@ const { handlePointerMove, handlePointerLeave } = useMagneticHover()
 
 const router = useRouter()
 const route = useRoute()
-const activeTab = ref<'meus-livros' | 'compartilhados'>('meus-livros')
+// F0.10.07: ?aba=compartilhados&autor=usuario abre a aba Compartilhados já filtrada.
+const activeTab = ref<'meus-livros' | 'compartilhados'>(route.query.aba === 'compartilhados' ? 'compartilhados' : 'meus-livros')
+const sharedAuthorFromUrl = typeof route.query.autor === 'string' ? route.query.autor : ''
 const books = ref<Book[]>([])
 const loading = ref(true)
 const loadError = ref('')
@@ -358,7 +360,7 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
     aria-labelledby="tab-compartilhados"
     class="shared-tab-panel"
   >
-    <SharedStudiesList />
+    <SharedStudiesList :initial-author="sharedAuthorFromUrl" />
   </div>
   </div>
 </template>

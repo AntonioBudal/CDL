@@ -38,6 +38,7 @@ import type {
   BookVisibility,
   SharedStudiesResponse,
   SharedBooksResponse,
+  InCommonResponse,
 } from '../types.ts'
 
 import type {
@@ -719,6 +720,9 @@ export const api = {
     const queryStr = searchParams.toString()
     return request<SharedBooksResponse>(`/shared/books${queryStr ? `?${queryStr}` : ''}`, { signal })
   },
+  // F0.10.07: leituras e estudos em comum com um amigo
+  getInCommon: (username: string, signal?: AbortSignal) =>
+    request<InCommonResponse>(`/users/${encodeURIComponent(username)}/in-common`, { signal }),
 
   // Administração e RBAC (F08)
   getAdminUsers: (

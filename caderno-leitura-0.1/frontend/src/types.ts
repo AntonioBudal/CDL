@@ -1592,5 +1592,27 @@ export * from './types/trash.ts'
 // --- Navegação e Casca Responsiva (Feature 082) ---
 export * from './types/navigation.ts'
 
+// --- Amigos: leituras e estudos em comum (F0.10.07, spec 100) ---
+export interface InCommonStudy {
+  id: number
+  title: string
+  chapter_name: string | null
+  book_id: number
+  updated_at: string
+}
 
+export interface InCommonBook {
+  title: string
+  author: string | null
+  my_book_id: number
+  friend_book_id: number
+  friend_studies: InCommonStudy[]
+  friend_studies_total: number
+}
 
+export interface InCommonResponse {
+  is_friend: boolean
+  books: InCommonBook[]
+  books_truncated: boolean
+  shared_with_me_total: number
+}

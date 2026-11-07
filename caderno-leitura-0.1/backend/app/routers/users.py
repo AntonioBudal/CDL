@@ -8,6 +8,8 @@ from sqlalchemy import func, select
 from app.dependencies import CurrentUser, DatabaseSession
 from app.models.user import User
 from app.schemas.profile import UserProfilePublicRead, UserSearchItem
+from app.schemas.in_common import InCommonResponse
+from app.services.in_common_service import get_in_common
 from app.services.friendship_service import (
     get_blocked_user_ids_bilateral,
     get_friends_summary,
@@ -120,3 +122,17 @@ def get_user_public_profile(
         reading_stats=stats,
         created_at=profile.created_at,
     )
+
+
+@router.get(
+    "/{username}/in-common",
+    response_model=InCommonResponse,
+    summary="Leituras e estudos em comum com um amigo (F0.10.07)",
+)
+def get_user_in_common(
+    username: str,
+    session: DatabaseSession,
+    current_user: CurrentUser,
+) -> InCommonResponse:
+    """Livros em comum e estudos legíveis do amigo; 404 para inexistente, si mesmo ou bloqueio."""
+    return get_in_common(session, current_user.id, username)
