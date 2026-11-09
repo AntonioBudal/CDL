@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import APIRouter, File, HTTPException, Response, UploadFile, status
 from sqlalchemy import asc, desc, false, or_, select, text
 
@@ -94,6 +96,10 @@ def get_book(book_id: Identifier, session: DatabaseSession, current_user: Curren
     book_read = BookRead.model_validate(book)
     book_read.can_edit = (book.user_id == current_user.id)
     if book.user_id != current_user.id:
+        # F0.11.01: o estado de leitura é pessoal; leitores de livros compartilhados não o recebem.
+        book_read.reading_state = None
+        book_read.reading_started_on = None
+        book_read.reading_finished_on = None
         owner_user = session.get(User, book.user_id)
         if owner_user:
             avatar_url = owner_user.profile.avatar_url if getattr(owner_user, "profile", None) else None
@@ -148,6 +154,26 @@ def create_book(payload: BookCreate, session: DatabaseSession, current_user: Cur
     return book
 
 
+def apply_reading_state_rules(book: Book, changes: dict, *, today: date) -> None:
+    """F0.11.01: datas automáticas ao mudar o estado e fim nunca antes do início.
+
+    "Lendo" sem início → início = hoje; "Lido" sem fim → fim = hoje (só quando vazias e não enviadas).
+    """
+    state = changes.get("reading_state", book.reading_state)
+    started = changes.get("reading_started_on", book.reading_started_on)
+    finished = changes.get("reading_finished_on", book.reading_finished_on)
+    if "reading_state" in changes and changes["reading_state"] != book.reading_state:
+        if state == "lendo" and started is None and "reading_started_on" not in changes:
+            started = changes["reading_started_on"] = today
+        if state == "lido" and finished is None and "reading_finished_on" not in changes:
+            finished = changes["reading_finished_on"] = today
+    if started is not None and finished is not None and finished < started:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="A data de fim da leitura não pode ser anterior à data de início.",
+        )
+
+
 @router.patch("/{book_id}", response_model=BookRead, summary="Atualizar metadados do livro")
 def update_book(book_id: Identifier, payload: BookPatch, session: DatabaseSession, current_user: CurrentUser):
     book = get_user_resource_or_404(session, Book, book_id, current_user.id, "Livro")
@@ -180,6 +206,7 @@ def update_book(book_id: Identifier, payload: BookPatch, session: DatabaseSessio
         assign_book_categories(session, book, payload.category_ids or [])
 
     changes = payload.model_dump(exclude_unset=True, exclude={"expected_updated_at", "expected_version", "category_ids"})
+    apply_reading_state_rules(book, changes, today=date.today())
     for name, value in changes.items():
         setattr(book, name, value)
 
@@ -278,6 +305,8 @@ def export_book(
         include_sections=include_sections,
         include_source=include_source,
         include_metadata=include_metadata,
+        # F0.11.01: estado de leitura só sai na exportação feita pelo dono.
+        include_reading_state=(book.user_id == current_user.id),
     )
     content, filename, media_type = generate_book_export(session, book_id, options)
     headers = {

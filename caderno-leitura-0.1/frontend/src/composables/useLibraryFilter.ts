@@ -1,5 +1,5 @@
 import { computed, ref, watch, type Ref } from 'vue'
-import type { Book, BookSortOption, LibraryViewMode } from '../types.ts'
+import type { Book, BookReadingState, BookSortOption, LibraryViewMode } from '../types.ts'
 import { useCategories } from './useCategories.ts'
 
 const STORAGE_KEY_VIEW_MODE = 'caderno_library_view_mode'
@@ -28,8 +28,15 @@ export function filterBooks(
   query: string,
   selectedCategory: string | null = null,
   descendantIds?: Set<string> | null,
+  readingState: LibraryReadingStateFilter = 'all',
 ): Book[] {
   let list = books
+  // F0.11.01: estado de leitura ('none' = livros sem estado).
+  if (readingState === 'none') {
+    list = list.filter((b) => !b.reading_state)
+  } else if (readingState !== 'all') {
+    list = list.filter((b) => b.reading_state === readingState)
+  }
   if (selectedCategory) {
     if (selectedCategory === '__uncategorized__') {
       list = list.filter((b) => !b.categories || b.categories.length === 0)
@@ -120,6 +127,28 @@ export function sortBooks(books: readonly Book[], sortBy: BookSortOption): Book[
 /**
  * Composable que gerencia estado reativo de busca, ordenação e modo de exibição com persistência.
  */
+export type LibraryReadingStateFilter = 'all' | 'none' | BookReadingState
+
+export const STORAGE_KEY_READING_STATE = 'caderno_library_reading_state'
+const READING_STATE_FILTERS: readonly LibraryReadingStateFilter[] = ['all', 'none', 'quero_ler', 'lendo', 'lido', 'abandonado']
+
+function loadReadingStateFilter(): LibraryReadingStateFilter {
+  try {
+    const saved = typeof localStorage !== 'undefined' ? localStorage.getItem(STORAGE_KEY_READING_STATE) : null
+    return saved && (READING_STATE_FILTERS as readonly string[]).includes(saved) ? (saved as LibraryReadingStateFilter) : 'all'
+  } catch {
+    return 'all'
+  }
+}
+
+function saveReadingStateFilter(value: LibraryReadingStateFilter) {
+  try {
+    if (typeof localStorage !== 'undefined') localStorage.setItem(STORAGE_KEY_READING_STATE, value)
+  } catch {
+    // navegador sem armazenamento: o filtro vale só nesta visita
+  }
+}
+
 export function useLibraryFilter(booksSource: Ref<Book[]>) {
   // Inicialização com recuperação do localStorage
   const savedViewMode = (typeof localStorage !== 'undefined'
@@ -142,6 +171,7 @@ export function useLibraryFilter(booksSource: Ref<Book[]>) {
 
   const searchQuery = ref('')
   const selectedCategory = ref<string | null>(null)
+  const readingStateFilter = ref<LibraryReadingStateFilter>(loadReadingStateFilter())
   const { getDescendantIds } = useCategories()
 
   const activeDescendants = computed(() => {
@@ -196,9 +226,15 @@ export function useLibraryFilter(booksSource: Ref<Book[]>) {
     selectedCategory.value = null
   }
 
+  function setReadingStateFilter(value: LibraryReadingStateFilter) {
+    readingStateFilter.value = value
+    saveReadingStateFilter(value)
+  }
+
   function clearAllFilters() {
     searchQuery.value = ''
     selectedCategory.value = null
+    setReadingStateFilter('all')
   }
 
   // Filtragem e ordenação computadas
@@ -208,6 +244,7 @@ export function useLibraryFilter(booksSource: Ref<Book[]>) {
       searchQuery.value,
       selectedCategory.value,
       activeDescendants.value,
+      readingStateFilter.value,
     )
     return sortBooks(filtered, sortBy.value)
   })
@@ -216,11 +253,14 @@ export function useLibraryFilter(booksSource: Ref<Book[]>) {
   const filteredCount = computed(() => filteredBooks.value.length)
   const hasActiveSearch = computed(() => !!searchQuery.value.trim())
   const hasActiveCategory = computed(() => !!selectedCategory.value)
-  const hasActiveFilters = computed(() => hasActiveSearch.value || hasActiveCategory.value)
+  const hasActiveReadingState = computed(() => readingStateFilter.value !== 'all')
+  const hasActiveFilters = computed(() => hasActiveSearch.value || hasActiveCategory.value || hasActiveReadingState.value)
 
   return {
     searchQuery,
     selectedCategory,
+    readingStateFilter,
+    setReadingStateFilter,
     viewMode,
     sortBy,
     filteredBooks,

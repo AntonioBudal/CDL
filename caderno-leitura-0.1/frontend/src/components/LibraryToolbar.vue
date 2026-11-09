@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import type { BookSortOption, LibraryViewMode } from '../types'
+import { BOOK_READING_STATE_OPTIONS, type BookSortOption, type LibraryViewMode } from '../types'
+import type { LibraryReadingStateFilter } from '../composables/useLibraryFilter'
 import { useCategories } from '../composables/useCategories'
 import Icon from './ui/Icon.vue'
 
@@ -14,6 +15,7 @@ const props = defineProps<{
   hasActiveSearch: boolean
   hasActiveCategory?: boolean
   hasActiveFilters?: boolean
+  readingStateFilter?: LibraryReadingStateFilter
 }>()
 
 const emit = defineEmits<{
@@ -21,6 +23,7 @@ const emit = defineEmits<{
   (e: 'update:selectedCategory', value: string | null): void
   (e: 'update:viewMode', value: LibraryViewMode): void
   (e: 'update:sortBy', value: BookSortOption): void
+  (e: 'update:readingStateFilter', value: LibraryReadingStateFilter): void
   (e: 'clearSearch'): void
   (e: 'clearCategory'): void
   (e: 'clearAllFilters'): void
@@ -147,6 +150,24 @@ function onClearClick() {
             <Icon name="x" :size="13" />
           </button>
         </div>
+      </div>
+
+      <!-- F0.11.01: estado de leitura -->
+      <div class="sort-control-group">
+        <label for="library-reading-state-select" class="control-label">Leitura:</label>
+        <select
+          id="library-reading-state-select"
+          class="sort-select"
+          :value="readingStateFilter || 'all'"
+          aria-label="Filtrar livros por estado de leitura"
+          @change="emit('update:readingStateFilter', ($event.target as HTMLSelectElement).value as LibraryReadingStateFilter)"
+        >
+          <option value="all">Todos</option>
+          <option v-for="option in BOOK_READING_STATE_OPTIONS" :key="option.value" :value="option.value">
+            {{ option.label }}
+          </option>
+          <option value="none">Sem estado</option>
+        </select>
       </div>
 
       <div class="sort-control-group">

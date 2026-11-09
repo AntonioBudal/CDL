@@ -112,6 +112,20 @@ export interface CategoryStats {
   total_book_associations: number
 }
 
+// F0.11.01: estado de leitura do livro (nulo = sem estado).
+export type BookReadingState = 'quero_ler' | 'lendo' | 'lido' | 'abandonado'
+
+export const BOOK_READING_STATE_OPTIONS: readonly { value: BookReadingState; label: string }[] = [
+  { value: 'quero_ler', label: 'Quero ler' },
+  { value: 'lendo', label: 'Lendo' },
+  { value: 'lido', label: 'Lido' },
+  { value: 'abandonado', label: 'Abandonado' },
+] as const
+
+export function bookReadingStateLabel(state: BookReadingState | null | undefined): string {
+  return BOOK_READING_STATE_OPTIONS.find(option => option.value === state)?.label ?? ''
+}
+
 export interface Book {
   id: number
   user_id?: string
@@ -120,6 +134,9 @@ export interface Book {
   subtitle?: string | null
   year?: number | null
   cover_image?: string | null
+  reading_state?: BookReadingState | null
+  reading_started_on?: string | null
+  reading_finished_on?: string | null
   created_at?: string | null
   updated_at?: string | null
   deleted_at?: string | null
@@ -165,6 +182,9 @@ export interface BookPatch {
   expected_updated_at?: string | null
   expected_version?: number | null
   category_ids?: string[]
+  reading_state?: BookReadingState | null
+  reading_started_on?: string | null
+  reading_finished_on?: string | null
 }
 
 export interface CoverResponse {

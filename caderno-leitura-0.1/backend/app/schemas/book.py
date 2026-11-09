@@ -1,10 +1,14 @@
-from datetime import datetime
-from typing import Self
+from datetime import date, datetime
+from typing import Literal, Self
 from pydantic import Field, field_validator, model_validator
 
 from app.schemas.category import CategoryRead
 from app.schemas.common import InputModel, NonBlankText, OutputModel
 from app.schemas.sharing import ResourceOwnerSummary
+
+
+# F0.11.01: estado de leitura do livro (nulo = sem estado).
+BookReadingState = Literal["quero_ler", "lendo", "lido", "abandonado"]
 
 
 class BookCreate(InputModel):
@@ -30,6 +34,9 @@ class BookPatch(InputModel):
     year: int | None = Field(default=None, ge=1000, le=2100)
     cover_image: str | None = None
     category_ids: list[str] | None = None
+    reading_state: BookReadingState | None = None
+    reading_started_on: date | None = Field(default=None, strict=False)
+    reading_finished_on: date | None = Field(default=None, strict=False)
     expected_updated_at: datetime | None = Field(default=None, strict=False)
     expected_version: int | None = Field(default=None, ge=1, strict=False, description="Versão esperada do livro para controle de concorrência")
 
@@ -56,6 +63,10 @@ class BookRead(OutputModel):
     subtitle: str | None = None
     year: int | None = None
     cover_image: str | None = None
+    # Só o dono recebe estes três (o router zera para leitores de livros compartilhados).
+    reading_state: BookReadingState | None = None
+    reading_started_on: date | None = None
+    reading_finished_on: date | None = None
     version: int = 1
     created_at: datetime | None = None
     updated_at: datetime | None = None

@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import BookCover from '../components/BookCover.vue'
+import BookReadingState from '../components/books/BookReadingState.vue'
 import BookEditModal from '../components/BookEditModal.vue'
 import CategoryBadge from '../components/CategoryBadge.vue'
 import ExportModal from '../components/ExportModal.vue'
@@ -400,6 +401,8 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
               {{ book.author || 'Autor não informado' }}
               <span v-if="book.year"> · {{ book.year }}</span>
             </p>
+            <!-- F0.11.01: estado de leitura (só o dono) -->
+            <BookReadingState v-if="book.can_edit !== false" :book="book" @saved="onBookSaved" />
 
             <div class="book-meta-actions-row">
               <div v-if="book.categories && book.categories.length > 0" class="book-categories-strip">

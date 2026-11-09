@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, ForeignKey, Index, Integer, String, Text, text
+from sqlalchemy import CheckConstraint, Date, ForeignKey, Index, Integer, String, Text, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.config import DEFAULT_OWNER_ID
@@ -27,6 +27,7 @@ class Book(Base):
         Index("ix_books_user_deleted", "user_id", "deleted_at"),
         Index("ix_books_sync", "user_id", "updated_at"),
         Index("ix_books_visibility", "visibility"),
+        Index("ix_books_user_reading_state", "user_id", "reading_state"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -56,6 +57,18 @@ class Book(Base):
         UTCDateTime(), default=None, server_default=None, nullable=True
     )
     cover_image: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    # F0.11.01 (migração 0034): estado de leitura do livro; nulo = sem estado.
+    reading_state: Mapped[str | None] = mapped_column(
+        String(20),
+        CheckConstraint(
+            "reading_state IS NULL OR reading_state IN ('quero_ler', 'lendo', 'lido', 'abandonado')",
+            name="chk_book_reading_state",
+        ),
+        nullable=True,
+        default=None,
+    )
+    reading_started_on: Mapped[date | None] = mapped_column(Date, nullable=True, default=None)
+    reading_finished_on: Mapped[date | None] = mapped_column(Date, nullable=True, default=None)
 
     chapters: Mapped[list[Chapter]] = relationship(
         back_populates="book",

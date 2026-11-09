@@ -1339,3 +1339,33 @@ Spec aprovada com as recomendações Q1 a Q5:
   `tests/helpers/normalize-eol.mjs`, importado por eles.
 - **Conversa em worktree:** cada commit foi levado ao `main` por fast-forward e o build refeito no checkout
   principal. Push e `Restart-Service -Name Leitorum` ficam com o usuário.
+
+## F0.11.01 — Estados de leitura do livro (2026-11-09)
+
+- **Spec, plano e tarefas:** `specs/103-estados-leitura-livro/`. Primeira feature do Roadmap 0.11. **Com migração**
+  (`0034_book_reading_state`).
+- **Banco:** `books.reading_state` (`quero_ler`, `lendo`, `lido`, `abandonado` ou nulo, com `CHECK` na coluna),
+  `reading_started_on` e `reading_finished_on` (datas), índice `ix_books_user_reading_state`. `ADD COLUMN` simples
+  (recriar `books` no SQLite esbarraria no `RESTRICT` de `chapters`); `downgrade` com `DROP COLUMN`. Livros antigos
+  ficam sem estado.
+- **API:** `BookPatch` aceita os três; `apply_reading_state_rules` (em `routers/books.py`) preenche início ao passar a
+  "Lendo" e fim ao passar a "Lido" quando vazios e recusa fim antes do início (422). `GET /api/books/{id}` zera os
+  três para quem não é o dono. Exportação do livro só leva o estado quando quem exporta é o dono
+  (`ExportOptions.include_reading_state`); o `.zip` da conta e a sincronização levam sempre (são do próprio dono).
+- **Tela:** `components/books/BookReadingState.vue` na página do livro (radiogroup com setas, datas, grava com
+  `expected_version`; durante a gravação usa `aria-busy` em vez de desabilitar, para não perder o foco); selo e
+  filtro "Leitura" na biblioteca (`useLibraryFilter`, `caderno_library_reading_state` no `localStorage`).
+- **Snapshot:** o script `migrar_com_backup.py` previsto na spec não foi criado — o `migrations/env.py` já faz o
+  snapshot validado antes de qualquer migração e aborta se falhar.
+- **Testes:** `test_book_reading_state.py` (10, inclusive migração subindo e descendo com dados fictícios e o snapshot
+  antes da 0034) e `feature-103-estados-leitura.test.mjs` (5); vizinhos passando; build ok. Navegador (banco
+  temporário migrado): estados, datas automáticas, recusa de fim < início, setas com foco, selo, filtro lembrado,
+  contraste nos 10 temas (mínimo 4,76:1), 320 px sem rolagem lateral.
+- **Implantação (banco ativo):** o `iniciar.py` recusa subir com migração pendente. Procedimento:
+1. Parar o serviço (PowerShell como administrador): `Stop-Service -Name Leitorum`.
+  2. Migrar, na pasta `caderno-leitura-0.1\backend` do checkout principal:
+     `.\.venv\Scripts\python.exe -m alembic upgrade head`. Antes de mexer no banco, o Alembic cria e valida o
+     snapshot `backups\caderno-pre-migracao-AAAAMMDD-HHMMSS.db` (com cópia na segunda pasta de backups, se configurada)
+     e aborta a migração se o snapshot falhar.
+  3. Conferir o snapshot: `.\.venv\Scripts\python.exe -m app.services.maintenance verificar-snapshot <caminho>`.
+  4. Iniciar o serviço: `Start-Service -Name Leitorum` (ou `Restart-Service`).

@@ -23,6 +23,10 @@ class ExportOptions(BaseModel):
         default=True,
         description="Incluir anotações pessoais do leitor",
     )
+    include_reading_state: bool = Field(
+        default=False,
+        description="Incluir estado e datas de leitura (F0.11.01; só quando quem exporta é o dono do livro)",
+    )
     include_sections: bool = Field(
         default=True,
         description="Incluir seções de análise (resumo, explicação, conceitos, referências)",

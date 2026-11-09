@@ -243,6 +243,12 @@ def format_book_markdown(
         lines.append(f"author: {_yaml_quote(book.author or '')}")
         lines.append(f"subtitle: {_yaml_quote(book.subtitle or '')}")
         lines.append(f"year: {book.year if book.year is not None else 'null'}")
+        if options.include_reading_state:
+            lines.append(f"reading_state: {_yaml_quote(book.reading_state or '')}")
+            started = book.reading_started_on.isoformat() if book.reading_started_on else None
+            finished = book.reading_finished_on.isoformat() if book.reading_finished_on else None
+            lines.append(f"reading_started_on: {_yaml_quote(started) if started else 'null'}")
+            lines.append(f"reading_finished_on: {_yaml_quote(finished) if finished else 'null'}")
         lines.append(f"categories: {cats_formatted}")
         if options.include_highlights and highlights_map:
             total_hls = sum(len(hls) for hls in highlights_map.values())
@@ -263,6 +269,8 @@ def format_book_markdown(
 
     if book.author:
         lines.append(f"**Autor:** {book.author}")
+    if options.include_reading_state:
+        lines.extend(_reading_state_lines(book, markdown=True))
         lines.append("")
 
     if categories:
@@ -355,6 +363,8 @@ def format_book_text(
             lines.append(f"Autor: {book.author}")
         if book.year:
             lines.append(f"Ano: {book.year}")
+        if options.include_reading_state:
+            lines.extend(_reading_state_lines(book, markdown=False))
         if categories:
             lines.append(f"Categorias: {', '.join(categories)}")
         if options.include_highlights and hls_map:
@@ -1056,6 +1066,29 @@ def format_book_digest_text(
     return "\n".join(lines)
 
 
+_READING_STATE_LABELS = {
+    "quero_ler": "Quero ler",
+    "lendo": "Lendo",
+    "lido": "Lido",
+    "abandonado": "Abandonado",
+}
+
+
+def _reading_state_lines(book: Book, *, markdown: bool) -> list[str]:
+    """F0.11.01: estado e datas de leitura em texto, só com o que existir."""
+    parts: list[str] = []
+    if book.reading_state:
+        parts.append(_READING_STATE_LABELS.get(book.reading_state, book.reading_state))
+    if book.reading_started_on:
+        parts.append(f"início {book.reading_started_on.strftime('%d/%m/%Y')}")
+    if book.reading_finished_on:
+        parts.append(f"fim {book.reading_finished_on.strftime('%d/%m/%Y')}")
+    if not parts:
+        return []
+    label = "**Leitura:**" if markdown else "Leitura:"
+    return [f"{label} {', '.join(parts)}"]
+
+
 def generate_book_export(
     session: Session,
     book_id: int,
@@ -1280,6 +1313,9 @@ def generate_account_export_zip(
             "author": book.author,
             "subtitle": book.subtitle,
             "year": book.year,
+            "reading_state": book.reading_state,
+            "reading_started_on": book.reading_started_on.isoformat() if book.reading_started_on else None,
+            "reading_finished_on": book.reading_finished_on.isoformat() if book.reading_finished_on else None,
             "categories": [c.name for c in book.categories] if book.categories else [],
             "chapters": chapters_data,
         })

@@ -12,8 +12,9 @@ de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/d
   entregues). **Prazo combinado:** terminar os três até **15/11/2026**, cerca de 2 features por dia.
 - **`main`** está em dia com o trabalho até 2026-11-07: o lote 2 do 0.10 foi levado ao `main` por fast-forward a
   cada feature. **Push pendente** (o usuário faz) e, depois dele, `Restart-Service -Name Leitorum`.
-- **Roadmap 0.10 concluído.** Próximo: **Roadmap 0.11** (motores), que começa com migração de banco (estados de
-  leitura) — exige pedido explícito e backup verificado (AGENTS.md §2).
+- **Roadmap 0.10 concluído.** **Roadmap 0.11** em andamento: F0.11.01 (estados de leitura do livro, migração
+  `0034`) concluída em 2026-11-09. **Depois do push, o banco ativo precisa da migração** (§3, "Migração no banco
+  ativo") antes de reiniciar o serviço.
 
 ### Roadmap 0.10 (redesenho, segurança e ergonomia)
 
@@ -35,9 +36,13 @@ O **lote 1** (F0.10.01 a .04) fechou com as suítes completas em 2026-11-03. O *
 F0.10.09) fechou em 2026-11-07: `npm test` 749/749, `pytest` completo 788 aprovados e 4 pulados, build ok; a
 única falha antiga (testes sensíveis a CRLF) foi corrigida em commit próprio (`0214933`).
 
-### Roadmap 0.11 (motores) — nada iniciado
+### Roadmap 0.11 (motores)
 
-Estados de leitura do livro (exige migração) · bandeja de triagem por capítulo · parsers Kindle/Kobo · ISBN (BrasilAPI
+| Feature | Situação | Spec |
+|---|---|---|
+| F0.11.01 Estados de leitura do livro (Quero ler, Lendo, Lido, Abandonado, datas) | Concluída (migração `0034`) | `specs/103-estados-leitura-livro/` |
+
+Pendentes, na ordem do plano: bandeja de triagem por capítulo · parsers Kindle/Kobo · ISBN (BrasilAPI
 e Open Library, só sob demanda) · referências em 3 escopos (CSL-JSON, BibTeX, ABNT/APA) · léxico de conceitos e `[[ ]]`
 · validador de paráfrase (Jaccard) · evolução da revisão (`difficulty_weight`, conceitos frágeis, cartões de conceito,
 Memória do Dia) · receptor KOReader/Readest · recorte de foto para a digitalização · cadernos de síntese com transclusão.
@@ -53,7 +58,7 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **103**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **104**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,
@@ -68,6 +73,15 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
   build antes do commit gera falso aviso de divergência.
 - **Depois do push, o serviço precisa reiniciar** para valer: `Restart-Service -Name Leitorum` (o usuário roda). Sem
   isso, a interface nova chama rotas que o backend antigo não tem (foi o 405 de 2026-11-02).
+- **Migração no banco ativo:** o `iniciar.py` recusa subir quando a revisão do banco não é a última do código.
+  Pelo AGENTS.md §2, só com pedido explícito. Procedimento:
+  1. Parar o serviço (PowerShell como administrador): `Stop-Service -Name Leitorum`.
+  2. Migrar, na pasta `caderno-leitura-0.1\backend` do checkout principal:
+     `.\.venv\Scripts\python.exe -m alembic upgrade head`. Antes de mexer no banco, o Alembic cria e valida o
+     snapshot `backups\caderno-pre-migracao-AAAAMMDD-HHMMSS.db` (com cópia na segunda pasta de backups, se configurada)
+     e aborta a migração se o snapshot falhar.
+  3. Conferir o snapshot: `.\.venv\Scripts\python.exe -m app.services.maintenance verificar-snapshot <caminho>`.
+  4. Iniciar o serviço: `Start-Service -Name Leitorum` (ou `Restart-Service`).
 - **Nunca rodar `npm run build` junto com o `pytest`.**
 - **Quebras de linha (CRLF × LF):** com `core.autocrlf`, o checkout principal e os worktrees ficam com arquivos
   mistos (só os tocados viram CRLF). Testes que procuram trechos de código com `\n` devem importar

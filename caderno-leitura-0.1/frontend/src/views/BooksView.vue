@@ -15,7 +15,7 @@ import { api, errorMessage } from '../services/api'
 import { useLibraryFilter } from '../composables/useLibraryFilter'
 import { useMagneticHover } from '../composables/useMagneticHover'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
-import type { Book } from '../types'
+import { bookReadingStateLabel, type Book } from '../types'
 
 const { handlePointerMove, handlePointerLeave } = useMagneticHover()
 
@@ -58,6 +58,8 @@ watch(isDrawerOpen, (isOpen) => {
 const {
   searchQuery,
   selectedCategory,
+  readingStateFilter,
+  setReadingStateFilter,
   viewMode,
   sortBy,
   filteredBooks,
@@ -225,6 +227,8 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
           :has-active-search="hasActiveSearch"
           :has-active-category="hasActiveCategory"
           :has-active-filters="hasActiveFilters"
+          :reading-state-filter="readingStateFilter"
+          @update:reading-state-filter="setReadingStateFilter"
           @update:search-query="searchQuery = $event"
           @update:selected-category="setSelectedCategory"
           @update:view-mode="setViewMode"
@@ -263,6 +267,7 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
               <span class="book-number" aria-hidden="true">{{ String(index + 1).padStart(2, '0') }}</span>
               <h2>{{ book.title }}</h2>
               <p>{{ book.author || 'Autor não informado' }}</p>
+              <span v-if="book.reading_state" class="reading-state-badge">{{ bookReadingStateLabel(book.reading_state) }}</span>
               <div v-if="book.categories && book.categories.length > 0" class="flex flex-wrap gap-1 mt-1.5 justify-center">
                 <CategoryBadge
                   v-for="cat in book.categories.slice(0, 2)"
@@ -302,7 +307,10 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
                   <span v-if="book.year" class="book-list-year" aria-label="Ano de publicação">({{ book.year }})</span>
                 </div>
                 <p v-if="book.subtitle" class="book-list-subtitle">{{ book.subtitle }}</p>
-                <p class="book-list-author">{{ book.author || 'Autor não informado' }}</p>
+                <p class="book-list-author">
+                  {{ book.author || 'Autor não informado' }}
+                  <span v-if="book.reading_state" class="reading-state-badge">{{ bookReadingStateLabel(book.reading_state) }}</span>
+                </p>
                 <div v-if="book.categories && book.categories.length > 0" class="flex flex-wrap gap-1 mt-1">
                   <CategoryBadge
                     v-for="cat in book.categories"
@@ -478,6 +486,20 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 .add-book-btn:focus-visible {
   outline: var(--focus-width, 3px) solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/* F0.11.01: selo discreto do estado de leitura */
+.reading-state-badge {
+  display: inline-block;
+  margin-top: 0.25rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--color-border-strong, var(--color-border));
+  border-radius: 999px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  white-space: nowrap;
 }
 
 .book-card-cover-wrapper {
