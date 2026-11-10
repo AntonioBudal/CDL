@@ -12,6 +12,7 @@ import type {
   AuditLogListResponse, DeactivateAccountRequest, ReactivateAccountRequest, DeleteAccountRequest,
   ReviewBucket, ReviewItemRead, ReviewRating, ReviewStatsResponse,
   BacklinksResponse, StudyCandidateOption,
+  EreaderChoice, EreaderImportResponse, EreaderPreviewResponse,
   InboxBookTrayResponse, InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
   StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
 } from '../types.ts'
@@ -506,6 +507,18 @@ export const api = {
     if (params?.offset != null) searchParams.set('offset', String(params.offset))
     const queryStr = searchParams.toString()
     return request<InboxCapture[]>(`/inbox${queryStr ? `?${queryStr}` : ''}`, { signal })
+  },
+  // F0.11.03: destaques do Kindle e do Kobo (o arquivo vai nas duas chamadas; o servidor não guarda nada)
+  previewEreaderImport: (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return request<EreaderPreviewResponse>('/inbox/ereader/preview', { method: 'POST', body: formData })
+  },
+  importEreaderHighlights: (file: File, choices: EreaderChoice[]) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('choices', JSON.stringify(choices))
+    return request<EreaderImportResponse>('/inbox/ereader/import', { method: 'POST', body: formData })
   },
   // F0.11.02: contagem da bandeja por capítulo
   getInboxBookTray: (bookId: number, signal?: AbortSignal) =>

@@ -1392,3 +1392,23 @@ Spec aprovada com as recomendações Q1 a Q5:
   contraste nos 10 temas (mínimo 5,35:1), 320 e 375 px sem rolagem lateral.
 - **Implantação:** o banco ativo ainda está antes da 0034; o mesmo `alembic upgrade head` aplica 0034 e 0035 com um
   snapshot antes (procedimento no HANDOFF).
+
+## F0.11.03 — Importar destaques do Kindle e do Kobo (2026-11-09)
+
+- **Spec, plano e tarefas:** `specs/105-importar-kindle-kobo/`. **Sem migração.**
+- **Parsers** (`services/ereader_import/`): `kindle.py` lê `My Clippings.txt` (BOM, CRLF, cabeçalho em inglês ou
+  português, título com parênteses, fim de posição abreviado "100-02", marcadores ignorados, seleção ajustada vira um
+  destaque só — o mais longo —, nota juntada ao destaque do mesmo lugar); `kobo.py` lê `KoboReader.sqlite` numa
+  cópia temporária aberta `mode=ro`, com `quick_check`, só `SELECT` em `Bookmark`/`content`, até 50 mil marcações;
+  a cópia é apagada no `finally`. `detect_format` reconhece pelo conteúdo.
+- **API:** `POST /api/inbox/ereader/preview` (só lê: por livro, contagens, duplicatas e sugestão de livro do acervo
+  — título normalizado, também sem os parênteses finais que o Kindle anexa, e sobrenome do primeiro autor) e
+  `POST /api/inbox/ereader/import` (arquivo + escolhas `existing`/`create`/`skip`). Cada destaque vira captura
+  `inbox` sem capítulo; `source_hint` como `Kindle · p. 32 · pos. 488–489 · 03/03/2025`; duplicata = mesmo livro +
+  texto + origem. Limites: Kindle 20 MB, Kobo 200 MB (leitura em blocos de 1 MB).
+- **Tela:** `views/EreaderImportView.vue` em `/inbox/importar-leitor` (nome `ereader-import`, registrado nos contratos de
+  responsividade das specs 076 e 081), botão na Mesa de Triagem.
+- **Testes:** `test_ereader_import.py` (11, com `My Clippings.txt` e `KoboReader.sqlite` sintéticos) e
+  `feature-105-importar-kindle-kobo.test.mjs` (3); vizinhos e guardas de rotas passando; build ok. Navegador (banco
+  temporário): Kindle e Kobo de ponta a ponta, reenvio sem duplicar, capturas na linha "sem capítulo" da bandeja,
+  contraste nos 10 temas (mínimo 5,49:1), 320/375/768/1024/1440 px sem rolagem lateral.

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { api, errorMessage } from '../services/api.ts'
 import { useInboxCount } from '../composables/useInboxCount.ts'
 import QuickThoughtDrop from '../components/inbox/QuickThoughtDrop.vue'
@@ -282,6 +282,8 @@ onUnmounted(() => {
       </div>
 
       <div class="header-actions">
+        <!-- F0.11.03 -->
+        <RouterLink to="/inbox/importar-leitor" class="button quiet ereader-import-link">Importar do Kindle ou Kobo</RouterLink>
         <kbd class="shortcut-pill" title="Atalho global para focar captura">Ctrl+Shift+C</kbd>
       </div>
     </header>
@@ -474,6 +476,14 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.ereader-import-link {
+  --quiet-border: var(--color-border-strong, var(--color-border));
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+}
+
 .inbox-book-filter {
   display: flex;
   flex-wrap: wrap;

@@ -37,6 +37,7 @@
 | `highlights` | `/highlights` (alias `/destaques`) | **1** | Biblioteca de passagens e notas. Filtros colapsáveis no mobile com botão de gatilho dedicado. |
 | `review` | `/review` (alias `/revisao`) | **1** | Central de revisão com fichas de memorização e gatilho de sessão. |
 | `inbox` | `/inbox` | **1** | Mesa de triagem e capturas rápidas. Lista fluida com processamento individual e em lote. |
+| `ereader-import` | `/inbox/importar-leitor` | **1** | Importar destaques do Kindle ou Kobo (F0.11.03): três passos em coluna única; a escolha de destino de cada livro quebra linha no celular, com campos e botões de 44 px. |
 | `friends` | `/amigos` | **1** | Gestão de conexões sociais e salão literário. Grids de amigos adaptados para `min(280px, 100%)`. |
 | `user-profile` | `/@:username` | **1** | Perfil público de leitor e lista de estudos compartilhados com alvos táteis acessíveis. |
 | `settings` | `/ajustes` | **2** | Central de ajustes com abas roláveis horizontalmente e botão flutuante (FAB) de preview posicionado acima da barra inferior. |

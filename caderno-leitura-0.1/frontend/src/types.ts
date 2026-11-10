@@ -1647,3 +1647,48 @@ export interface InCommonResponse {
   books_truncated: boolean
   shared_with_me_total: number
 }
+
+// --- Kindle e Kobo (F0.11.03, spec 105) ---
+export type EreaderSource = 'kindle' | 'kobo'
+
+export interface EreaderBookPreview {
+  key: string
+  title: string
+  author: string | null
+  highlights: number
+  notes: number
+  new_count: number
+  duplicate_count: number
+  suggested_action: 'existing' | 'create'
+  suggested_book_id: number | null
+  suggested_book_title: string | null
+}
+
+export interface EreaderPreviewResponse {
+  source: EreaderSource
+  books: EreaderBookPreview[]
+  skipped: number
+  total_entries: number
+}
+
+export interface EreaderChoice {
+  key: string
+  action: 'existing' | 'create' | 'skip'
+  book_id?: number | null
+}
+
+export interface EreaderImportedBook {
+  key: string
+  book_id: number
+  book_title: string
+  book_created: boolean
+  created: number
+  duplicates: number
+}
+
+export interface EreaderImportResponse {
+  source: EreaderSource
+  created: number
+  duplicates: number
+  books: EreaderImportedBook[]
+}

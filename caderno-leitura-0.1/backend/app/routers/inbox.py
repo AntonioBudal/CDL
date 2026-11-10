@@ -1,7 +1,10 @@
 """Roteador para a Caixa de Entrada de Capturas (Inbox de Conhecimento)."""
 from __future__ import annotations
 
-from fastapi import APIRouter, Query, Response, status
+import json
+
+from fastapi import APIRouter, File, Form, HTTPException, Query, Response, UploadFile, status
+from pydantic import TypeAdapter, ValidationError
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
 from app.schemas.inbox_capture import (
@@ -27,6 +30,57 @@ from app.services.inbox_service import (
 )
 
 router = APIRouter(prefix="/inbox", tags=["Caixa de Entrada de Capturas (Inbox)"])
+
+
+# --- F0.11.03: destaques do Kindle e do Kobo -------------------------------------------------------------------------
+
+from app.schemas.ereader_import import EreaderChoice, EreaderImportResponse, EreaderPreviewResponse  # noqa: E402
+from app.services.ereader_import.service import (  # noqa: E402
+    KOBO_MAX_BYTES,
+    build_preview,
+    parse_upload,
+    run_import,
+)
+
+_CHOICES = TypeAdapter(list[EreaderChoice])
+
+
+async def _read_upload(upload: UploadFile) -> bytes:
+    """Lê em blocos de 1 MB e recusa acima do maior limite (Kobo); o limite do Kindle é conferido no serviço."""
+    chunks: list[bytes] = []
+    size = 0
+    while chunk := await upload.read(1024 * 1024):
+        size += len(chunk)
+        if size > KOBO_MAX_BYTES:
+            raise HTTPException(status_code=413, detail="O arquivo passa de 200 MB.")
+        chunks.append(chunk)
+    return b"".join(chunks)
+
+
+@router.post("/ereader/preview", response_model=EreaderPreviewResponse, summary="Prévia de destaques do Kindle ou Kobo")
+async def ereader_preview_endpoint(
+    session: DatabaseSession,
+    current_user: CurrentUser,
+    file: UploadFile = File(...),
+):
+    """Só lê o arquivo: nada é gravado e o arquivo não fica no disco."""
+    parsed = parse_upload(await _read_upload(file))
+    return build_preview(session, current_user.id, parsed)
+
+
+@router.post("/ereader/import", response_model=EreaderImportResponse, summary="Importar destaques do Kindle ou Kobo")
+async def ereader_import_endpoint(
+    session: DatabaseSession,
+    current_user: CurrentUser,
+    file: UploadFile = File(...),
+    choices: str = Form(..., description="JSON: lista de {key, action: existing|create|skip, book_id}"),
+):
+    try:
+        parsed_choices = _CHOICES.validate_python(json.loads(choices))
+    except (ValueError, ValidationError) as exc:
+        raise HTTPException(status_code=422, detail="Escolhas inválidas para a importação.") from exc
+    parsed = parse_upload(await _read_upload(file))
+    return run_import(session, current_user.id, parsed, parsed_choices)
 
 
 @router.get("", response_model=list[InboxCaptureRead], summary="Listar capturas do usuário")
