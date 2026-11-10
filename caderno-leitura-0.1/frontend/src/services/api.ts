@@ -12,7 +12,7 @@ import type {
   AuditLogListResponse, DeactivateAccountRequest, ReactivateAccountRequest, DeleteAccountRequest,
   ReviewBucket, ReviewItemRead, ReviewRating, ReviewStatsResponse,
   BacklinksResponse, StudyCandidateOption,
-  InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
+  InboxBookTrayResponse, InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
   StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
 } from '../types.ts'
 
@@ -494,18 +494,22 @@ export const api = {
 
   // --- Caixa de Entrada de Capturas / Inbox (F 0.7.13) ---
   getInboxCaptures: (
-    params?: { status?: string; q?: string; book_id?: number; limit?: number; offset?: number },
+    params?: { status?: string; q?: string; book_id?: number; chapter_id?: number; limit?: number; offset?: number },
     signal?: AbortSignal,
   ) => {
     const searchParams = new URLSearchParams()
     if (params?.status && params.status !== 'all') searchParams.set('status', params.status)
     if (params?.q?.trim()) searchParams.set('q', params.q.trim())
     if (params?.book_id != null) searchParams.set('book_id', String(params.book_id))
+    if (params?.chapter_id != null) searchParams.set('chapter_id', String(params.chapter_id))
     if (params?.limit != null) searchParams.set('limit', String(params.limit))
     if (params?.offset != null) searchParams.set('offset', String(params.offset))
     const queryStr = searchParams.toString()
     return request<InboxCapture[]>(`/inbox${queryStr ? `?${queryStr}` : ''}`, { signal })
   },
+  // F0.11.02: contagem da bandeja por capítulo
+  getInboxBookTray: (bookId: number, signal?: AbortSignal) =>
+    request<InboxBookTrayResponse>(`/inbox/book-tray?book_id=${bookId}`, { signal }),
   getInboxCount: (signal?: AbortSignal) =>
     request<InboxCountResponse>('/inbox/count', { signal }),
   getInboxCapture: (id: number, signal?: AbortSignal) =>

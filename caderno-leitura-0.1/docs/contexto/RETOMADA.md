@@ -1369,3 +1369,26 @@ Spec aprovada com as recomendações Q1 a Q5:
      e aborta a migração se o snapshot falhar.
   3. Conferir o snapshot: `.\.venv\Scripts\python.exe -m app.services.maintenance verificar-snapshot <caminho>`.
   4. Iniciar o serviço: `Start-Service -Name Leitorum` (ou `Restart-Service`).
+
+## F0.11.02 — Bandeja de triagem por capítulo (2026-11-09)
+
+- **Spec, plano e tarefas:** `specs/104-bandeja-triagem-capitulo/`. **Com migração** (`0035_inbox_capture_chapter`).
+- **Banco:** `inbox_captures.chapter_id` (FK para `chapters`, `ON DELETE SET NULL`) e índice
+  `ix_inbox_captures_user_chapter_status`. `ADD COLUMN` simples; `downgrade` com `DROP COLUMN`.
+- **API:** criar/editar captura com `chapter_id` (capítulo de livro do próprio leitor e fora da lixeira, senão 404
+  "Capítulo associado não encontrado."); o capítulo define o livro; trocar só o livro limpa o capítulo; `null`
+  explícito limpa o capítulo. `GET /api/inbox?chapter_id=` e `GET /api/inbox/book-tray?book_id=` (contagens das
+  pendentes por capítulo e sem capítulo).
+- **Tela:** captura rápida com "Capítulo (Opcional)"; a página do livro informa livro e capítulo abertos
+  (`useQuickCapture().setPageContext`), então o botão global "Capturar" já vem preenchido. `ChapterTray.vue` na
+  área do capítulo (recolhível; "Virar estudo", "Arquivar", "Abrir na Mesa de Triagem", "Capturar neste capítulo";
+  texto recortado em 3 linhas — uma regra global troca o `display` de `<p>`, por isso há `max-height` além do
+  `line-clamp`); contagem nas pílulas dos capítulos; linha "N capturas do livro sem capítulo". Importar escolhe o
+  capítulo da captura promovida; o cartão da Mesa mostra "Livro · Capítulo" e edita o capítulo; a Mesa aceita
+  `?livro=ID`.
+- **Testes:** `test_inbox_chapter_tray.py` (6, inclusive migração e snapshot antes da 0035) e
+  `feature-104-bandeja-capitulo.test.mjs` (5); vizinhos passando; build ok. Navegador (banco temporário): contagens,
+  arquivar, captura global preenchida com livro e capítulo, "Virar estudo" com capítulo na Importar, Mesa filtrada,
+  contraste nos 10 temas (mínimo 5,35:1), 320 e 375 px sem rolagem lateral.
+- **Implantação:** o banco ativo ainda está antes da 0034; o mesmo `alembic upgrade head` aplica 0034 e 0035 com um
+  snapshot antes (procedimento no HANDOFF).

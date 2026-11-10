@@ -1474,6 +1474,8 @@ export interface InboxCapture {
   user_id: string
   book_id: number | null
   book_title?: string | null
+  chapter_id?: number | null
+  chapter_name?: string | null
   content: string
   source_hint: string | null
   status: InboxStatus
@@ -1487,13 +1489,22 @@ export interface InboxCaptureCreatePayload {
   content: string
   source_hint?: string | null
   book_id?: number | null
+  chapter_id?: number | null
 }
 
 export interface InboxCapturePatchPayload {
   content?: string
   source_hint?: string | null
   book_id?: number | null
+  /** F0.11.02: null limpa o capítulo; ausente não muda. */
+  chapter_id?: number | null
   status?: InboxStatus
+}
+
+/** F0.11.02: capturas pendentes de um livro, por capítulo. */
+export interface InboxBookTrayResponse {
+  by_chapter: Record<string, number>
+  without_chapter: number
 }
 
 export interface InboxCountResponse {

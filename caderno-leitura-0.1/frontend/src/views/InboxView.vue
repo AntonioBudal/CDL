@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { api, errorMessage } from '../services/api.ts'
 import { useInboxCount } from '../composables/useInboxCount.ts'
 import QuickThoughtDrop from '../components/inbox/QuickThoughtDrop.vue'
@@ -10,6 +10,13 @@ import Icon from '../components/ui/Icon.vue'
 import type { InboxCapture, TriageFilterTab } from '../types.ts'
 
 const router = useRouter()
+const route = useRoute()
+// F0.11.02: ?livro=ID abre a Mesa filtrada por um livro (link da bandeja do capítulo).
+const bookFilterId = computed<number | null>(() => {
+  const value = Number(route.query.livro)
+  return Number.isInteger(value) && value > 0 ? value : null
+})
+const bookFilterTitle = ref('')
 const { pendingCount, refreshCount, decrement, increment } = useInboxCount()
 
 // Estados principais
@@ -42,9 +49,11 @@ async function loadCaptures() {
     const list = await api.getInboxCaptures({
       status: activeTab.value,
       q: searchQuery.value.trim() || undefined,
+      book_id: bookFilterId.value ?? undefined,
       limit: 100,
     })
     captures.value = list
+    if (bookFilterId.value && list[0]?.book_title) bookFilterTitle.value = list[0].book_title
   } catch (err) {
     fetchError.value = errorMessage(err)
   } finally {
@@ -143,6 +152,9 @@ function handlePromote(capture: InboxCapture) {
   if (capture.book_id) {
     query.book = String(capture.book_id)
   }
+  if (capture.chapter_id) {
+    query.chapter = String(capture.chapter_id)
+  }
   router.push({
     path: '/importar',
     query,
@@ -237,6 +249,15 @@ watch(activeTab, () => {
   loadCaptures()
 })
 
+watch(bookFilterId, () => {
+  bookFilterTitle.value = ''
+  loadCaptures()
+})
+
+function clearBookFilter() {
+  router.replace({ path: '/inbox' })
+}
+
 onMounted(async () => {
   window.addEventListener('keydown', handleGlobalKeydown)
   await Promise.all([loadCaptures(), refreshCount()])
@@ -272,6 +293,12 @@ onUnmounted(() => {
         @created="onCaptureCreated"
       />
     </section>
+
+    <!-- F0.11.02: filtro por livro vindo da bandeja do capítulo -->
+    <p v-if="bookFilterId" class="inbox-book-filter" role="status">
+      Mostrando só as capturas do livro <strong>{{ bookFilterTitle || `#${bookFilterId}` }}</strong>.
+      <button type="button" class="quiet inbox-book-filter-clear" @click="clearBookFilter">Ver todas</button>
+    </p>
 
     <!-- Barra Segmentada de Triagem e Busca -->
     <div class="inbox-toolbar">
@@ -447,6 +474,21 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.inbox-book-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.inbox-book-filter-clear {
+  --quiet-border: var(--color-border-strong, var(--color-border));
+  min-height: 44px;
+}
+
 .inbox-view {
   display: flex;
   flex-direction: column;

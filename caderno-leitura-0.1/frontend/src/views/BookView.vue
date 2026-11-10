@@ -3,6 +3,8 @@ import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import BookCover from '../components/BookCover.vue'
 import BookReadingState from '../components/books/BookReadingState.vue'
+import ChapterTray from '../components/books/ChapterTray.vue'
+import { useQuickCapture } from '../composables/useQuickCapture'
 import BookEditModal from '../components/BookEditModal.vue'
 import CategoryBadge from '../components/CategoryBadge.vue'
 import ExportModal from '../components/ExportModal.vue'
@@ -362,7 +364,63 @@ watch(() => selectedChapter.value?.id, () => {
   })
 }, { immediate: true })
 
-onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abort() })
+// F0.11.02: bandeja de triagem por capítulo (capturas pendentes) e contexto da captura rápida.
+const quickCapture = useQuickCapture()
+const trayCounts = ref<{ by_chapter: Record<string, number>; without_chapter: number }>({ by_chapter: {}, without_chapter: 0 })
+const trayRefreshKey = ref(0)
+let trayRequest: AbortController | null = null
+const isOwnBook = computed(() => !!book.value && book.value.can_edit !== false)
+
+async function loadTrayCounts() {
+  trayRequest?.abort()
+  const id = book.value?.id
+  if (!id || !isOwnBook.value) {
+    trayCounts.value = { by_chapter: {}, without_chapter: 0 }
+    return
+  }
+  const controller = new AbortController()
+  trayRequest = controller
+  try {
+    const result = await api.getInboxBookTray(id, controller.signal)
+    if (!controller.signal.aborted) trayCounts.value = result
+  } catch {
+    // Sem contagem: a bandeja continua funcionando dentro do capítulo
+  }
+}
+
+function trayCount(chapterId: number): number {
+  return trayCounts.value.by_chapter[String(chapterId)] ?? 0
+}
+
+function onTrayChanged() {
+  void loadTrayCounts()
+}
+
+watch(() => book.value?.id, () => void loadTrayCounts())
+
+watch(
+  () => [book.value?.id ?? null, selectedChapter.value?.id ?? null, isOwnBook.value] as const,
+  ([currentBookId, chapterId, own]) => {
+    quickCapture.setPageContext(own ? currentBookId : null, own ? chapterId : null)
+  },
+  { immediate: true },
+)
+
+// Uma captura feita pelo modal enquanto esta página está aberta atualiza bandeja e contagens.
+watch(quickCapture.isOpen, (open, wasOpen) => {
+  if (wasOpen && !open) {
+    trayRefreshKey.value += 1
+    void loadTrayCounts()
+  }
+})
+
+onBeforeUnmount(() => {
+  disposed = true
+  bookRequest?.abort()
+  studyRequest?.abort()
+  trayRequest?.abort()
+  quickCapture.setPageContext(null, null)
+})
 </script>
 
 <template>
@@ -755,6 +813,12 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
                   >
                     <span class="chapter-pill-num">{{ idx + 1 }}.</span>
                     <span class="chapter-pill-text" :title="chapter.name">{{ chapter.name }}</span>
+                    <span
+                      v-if="trayCount(chapter.id)"
+                      class="chapter-tray-badge"
+                      :title="`${trayCount(chapter.id)} na bandeja`"
+                      :aria-label="`${trayCount(chapter.id)} na bandeja`"
+                    >{{ trayCount(chapter.id) }}</span>
                   </RouterLink>
 
                   <!-- Controles Contextuais Exclusivos do Capítulo Ativo -->
@@ -843,6 +907,18 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
             </div>
 
             <template v-else>
+              <!-- F0.11.02: bandeja do capítulo (só no livro do próprio leitor) -->
+              <ChapterTray
+                v-if="isOwnBook"
+                :book-id="book.id"
+                :chapter-id="selectedChapter.id"
+                :refresh-key="trayRefreshKey"
+                @changed="onTrayChanged"
+              />
+              <p v-if="isOwnBook && trayCounts.without_chapter > 0" class="tray-without-chapter">
+                {{ trayCounts.without_chapter === 1 ? '1 captura' : `${trayCounts.without_chapter} capturas` }} do livro sem capítulo.
+                <RouterLink :to="{ path: '/inbox', query: { livro: String(book.id) } }">Abrir na Mesa de Triagem</RouterLink>
+              </p>
               <p class="list-caption">{{ studies.length }} {{ studies.length === 1 ? 'estudo salvo' : 'estudos salvos' }}</p>
               <div class="studies-view-stage">
                 <Transition name="view-fade" mode="out-in">
@@ -1010,6 +1086,35 @@ onBeforeUnmount(() => { disposed = true; bookRequest?.abort(); studyRequest?.abo
 </template>
 
 <style scoped>
+/* F0.11.02: contagem da bandeja na pílula do capítulo e linha de capturas sem capítulo */
+.chapter-tray-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  margin-left: 0.35rem;
+  padding: 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-strong, var(--color-border));
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.tray-without-chapter {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.tray-without-chapter a {
+  color: var(--color-link);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .book-header {
   display: flex;
   justify-content: space-between;

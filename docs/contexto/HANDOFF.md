@@ -12,9 +12,9 @@ de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/d
   entregues). **Prazo combinado:** terminar os três até **15/11/2026**, cerca de 2 features por dia.
 - **`main`** está em dia com o trabalho até 2026-11-07: o lote 2 do 0.10 foi levado ao `main` por fast-forward a
   cada feature. **Push pendente** (o usuário faz) e, depois dele, `Restart-Service -Name Leitorum`.
-- **Roadmap 0.10 concluído.** **Roadmap 0.11** em andamento: F0.11.01 (estados de leitura do livro, migração
-  `0034`) concluída em 2026-11-09. **Depois do push, o banco ativo precisa da migração** (§3, "Migração no banco
-  ativo") antes de reiniciar o serviço.
+- **Roadmap 0.10 concluído.** **Roadmap 0.11** em andamento: F0.11.01 (migração `0034`) e F0.11.02 (migração
+  `0035`) concluídas em 2026-11-09. **O banco ativo ainda não recebeu nenhuma das duas**: aplicar com o
+  procedimento do §3 ("Migração no banco ativo") antes de reiniciar o serviço; um `upgrade head` aplica as duas.
 
 ### Roadmap 0.10 (redesenho, segurança e ergonomia)
 
@@ -41,8 +41,9 @@ F0.10.09) fechou em 2026-11-07: `npm test` 749/749, `pytest` completo 788 aprova
 | Feature | Situação | Spec |
 |---|---|---|
 | F0.11.01 Estados de leitura do livro (Quero ler, Lendo, Lido, Abandonado, datas) | Concluída (migração `0034`) | `specs/103-estados-leitura-livro/` |
+| F0.11.02 Bandeja de triagem por capítulo (captura com capítulo, bandeja na página do livro) | Concluída (migração `0035`) | `specs/104-bandeja-triagem-capitulo/` |
 
-Pendentes, na ordem do plano: bandeja de triagem por capítulo · parsers Kindle/Kobo · ISBN (BrasilAPI
+Pendentes, na ordem do plano: parsers Kindle/Kobo · ISBN (BrasilAPI
 e Open Library, só sob demanda) · referências em 3 escopos (CSL-JSON, BibTeX, ABNT/APA) · léxico de conceitos e `[[ ]]`
 · validador de paráfrase (Jaccard) · evolução da revisão (`difficulty_weight`, conceitos frágeis, cartões de conceito,
 Memória do Dia) · receptor KOReader/Readest · recorte de foto para a digitalização · cadernos de síntese com transclusão.
@@ -58,7 +59,7 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **104**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **105**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,

@@ -194,6 +194,8 @@ async function loadPromotionCapture() {
       }
     }
     if (capture.book_id && !state.bookId) {
+      // F0.11.02: a captura do capítulo já escolhe o capítulo na Importar.
+      if (capture.chapter_id) preferredChapter = capture.chapter_id
       state.bookId = String(capture.book_id)
     }
   } catch {

@@ -9,9 +9,11 @@ from sqlalchemy.orm import selectinload
 
 from app.db.types import utc_now
 from app.models.book import Book
+from app.models.chapter import Chapter
 from app.models.inbox_capture import InboxCapture
 from app.models.study import Study
 from app.schemas.inbox_capture import (
+    InboxBookTrayResponse,
     InboxCaptureCreate,
     InboxCapturePatch,
     InboxCaptureRead,
@@ -29,11 +31,14 @@ def _build_read_model(capture: InboxCapture) -> InboxCaptureRead:
         if capture.promoted_study and capture.promoted_study.deleted_at is None
         else None
     )
+    chapter_name = capture.chapter.name if capture.chapter_id and capture.chapter else None
     return InboxCaptureRead(
         id=capture.id,
         user_id=capture.user_id,
         book_id=capture.book_id,
         book_title=book_title,
+        chapter_id=capture.chapter_id,
+        chapter_name=chapter_name,
         content=capture.content,
         source_hint=capture.source_hint,
         status=capture.status,  # type: ignore[arg-type]
@@ -52,15 +57,20 @@ def list_inbox_captures(
     book_id: int | None = None,
     limit: int = 50,
     offset: int = 0,
+    chapter_id: int | None = None,
 ) -> list[InboxCaptureRead]:
     stmt = (
         select(InboxCapture)
         .options(
             selectinload(InboxCapture.book),
+            selectinload(InboxCapture.chapter),
             selectinload(InboxCapture.promoted_study),
         )
         .where(InboxCapture.user_id == user_id)
     )
+
+    if chapter_id is not None:
+        stmt = stmt.where(InboxCapture.chapter_id == chapter_id)
 
     if status_filter and status_filter != "all":
         stmt = stmt.where(InboxCapture.status == status_filter)
@@ -91,11 +101,44 @@ def count_inbox_captures(session: Session, user_id: str) -> InboxCountResponse:
     return InboxCountResponse(count=total)
 
 
+def _chapter_not_found() -> HTTPException:
+    return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Capítulo associado não encontrado.")
+
+
+def _owned_chapter(session: Session, user_id: str, chapter_id: int) -> Chapter:
+    """Capítulo de um livro do próprio leitor e fora da lixeira; senão 404 (sem revelar que existe)."""
+    chapter = session.scalar(
+        select(Chapter)
+        .join(Book, Chapter.book_id == Book.id)
+        .where(Chapter.id == chapter_id, Book.user_id == user_id, Book.deleted_at.is_(None))
+    )
+    if chapter is None:
+        raise _chapter_not_found()
+    return chapter
+
+
+def get_book_tray(session: Session, user_id: str, book_id: int) -> InboxBookTrayResponse:
+    """F0.11.02: contagem das capturas pendentes de um livro, por capítulo e sem capítulo."""
+    rows = session.execute(
+        select(InboxCapture.chapter_id, func.count(InboxCapture.id))
+        .where(
+            InboxCapture.user_id == user_id,
+            InboxCapture.book_id == book_id,
+            InboxCapture.status == "inbox",
+        )
+        .group_by(InboxCapture.chapter_id)
+    ).all()
+    by_chapter = {int(chapter_id): int(count) for chapter_id, count in rows if chapter_id is not None}
+    without = sum(int(count) for chapter_id, count in rows if chapter_id is None)
+    return InboxBookTrayResponse(by_chapter=by_chapter, without_chapter=without)
+
+
 def get_inbox_capture(session: Session, user_id: str, capture_id: int) -> InboxCapture:
     stmt = (
         select(InboxCapture)
         .options(
             selectinload(InboxCapture.book),
+            selectinload(InboxCapture.chapter),
             selectinload(InboxCapture.promoted_study),
         )
         .where(InboxCapture.id == capture_id, InboxCapture.user_id == user_id)
@@ -114,10 +157,17 @@ def create_inbox_capture(
     user_id: str,
     payload: InboxCaptureCreate,
 ) -> InboxCaptureRead:
-    if payload.book_id is not None:
+    book_id = payload.book_id
+    chapter_id = payload.chapter_id
+    if chapter_id is not None:
+        chapter = _owned_chapter(session, user_id, chapter_id)
+        if book_id is not None and book_id != chapter.book_id:
+            raise _chapter_not_found()
+        book_id = chapter.book_id
+    if book_id is not None:
         book = session.scalar(
             select(Book).where(
-                Book.id == payload.book_id,
+                Book.id == book_id,
                 Book.user_id == user_id,
                 Book.deleted_at.is_(None),
             )
@@ -130,7 +180,8 @@ def create_inbox_capture(
 
     capture = InboxCapture(
         user_id=user_id,
-        book_id=payload.book_id,
+        book_id=book_id,
+        chapter_id=chapter_id,
         content=payload.content.strip(),
         source_hint=payload.source_hint.strip() if payload.source_hint else None,
         status="inbox",
@@ -151,7 +202,18 @@ def update_inbox_capture(
 ) -> InboxCaptureRead:
     capture = get_inbox_capture(session, user_id, capture_id)
 
-    if payload.book_id is not None:
+    # F0.11.02: capítulo enviado (inclusive null) manda no livro; livro trocado sem capítulo limpa o capítulo.
+    chapter_sent = "chapter_id" in payload.model_fields_set
+    if chapter_sent and payload.chapter_id is not None:
+        chapter = _owned_chapter(session, user_id, payload.chapter_id)
+        if payload.book_id is not None and payload.book_id != chapter.book_id:
+            raise _chapter_not_found()
+        capture.chapter_id = chapter.id
+        capture.book_id = chapter.book_id
+    elif chapter_sent:
+        capture.chapter_id = None
+
+    if payload.book_id is not None and not (chapter_sent and payload.chapter_id is not None):
         book = session.scalar(
             select(Book).where(
                 Book.id == payload.book_id,
@@ -164,6 +226,8 @@ def update_inbox_capture(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Livro associado não encontrado.",
             )
+        if capture.book_id != payload.book_id:
+            capture.chapter_id = None
         capture.book_id = payload.book_id
 
     if payload.content is not None:

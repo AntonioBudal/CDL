@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { api, errorMessage } from '../../services/api.ts'
 import Icon from '../ui/Icon.vue'
-import type { InboxCapture } from '../../types.ts'
+import type { Chapter, InboxCapture } from '../../types.ts'
 
 const props = withDefaults(
   defineProps<{
@@ -28,6 +28,9 @@ const emit = defineEmits<{
 const isEditing = ref(false)
 const editContent = ref(props.capture.content)
 const editSourceHint = ref(props.capture.source_hint || '')
+// F0.11.02: capítulo da captura (só quando ela tem livro)
+const editChapterId = ref<number | null>(props.capture.chapter_id ?? null)
+const editChapters = ref<Chapter[]>([])
 const isSaving = ref(false)
 const isDeleting = ref(false)
 const isExpanded = ref(false)
@@ -76,8 +79,15 @@ const statusLabel = computed(() => {
 function startEdit() {
   editContent.value = props.capture.content
   editSourceHint.value = props.capture.source_hint || ''
+  editChapterId.value = props.capture.chapter_id ?? null
   actionError.value = null
   isEditing.value = true
+  editChapters.value = []
+  if (props.capture.book_id) {
+    api.listChapters(props.capture.book_id)
+      .then((list) => { editChapters.value = list })
+      .catch(() => { editChapters.value = [] })
+  }
 }
 
 function cancelEdit() {
@@ -93,6 +103,7 @@ async function saveEdit() {
     const updated = await api.updateInboxCapture(props.capture.id, {
       content: editContent.value.trim(),
       source_hint: editSourceHint.value.trim() || null,
+      ...(props.capture.book_id ? { chapter_id: editChapterId.value } : {}),
     })
     isEditing.value = false
     emit('updated', updated)
@@ -159,7 +170,7 @@ async function handleDelete() {
         <span class="card-date">{{ formattedDate }}</span>
         <span v-if="capture.book_title" class="book-badge" :title="`Livro: ${capture.book_title}`">
           <Icon name="book" size="xs" />
-          <span class="truncate">{{ capture.book_title }}</span>
+          <span class="truncate">{{ capture.book_title }}<template v-if="capture.chapter_name"> · {{ capture.chapter_name }}</template></span>
         </span>
       </div>
 
@@ -237,6 +248,13 @@ async function handleDelete() {
           placeholder="Fonte ou referência (opcional)"
           :disabled="isSaving"
         />
+      </div>
+      <div v-if="capture.book_id && editChapters.length > 0" class="edit-source-row">
+        <label :for="`edit-chapter-${capture.id}`" class="visually-hidden">Capítulo</label>
+        <select :id="`edit-chapter-${capture.id}`" v-model="editChapterId" class="edit-source-input" :disabled="isSaving">
+          <option :value="null">Sem capítulo</option>
+          <option v-for="c in editChapters" :key="c.id" :value="c.id">{{ c.name }}</option>
+        </select>
       </div>
       <div v-if="actionError" class="card-error" role="alert">{{ actionError }}</div>
       <div class="edit-actions">

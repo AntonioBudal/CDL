@@ -12,6 +12,7 @@ from app.db.types import UTCDateTime, utc_now
 
 if TYPE_CHECKING:
     from app.models.book import Book
+    from app.models.chapter import Chapter
     from app.models.study import Study
     from app.models.user import User
 
@@ -23,6 +24,7 @@ class InboxCapture(Base):
         Index("ix_inbox_captures_user_created", "user_id", "created_at"),
         Index("ix_inbox_captures_book_id", "book_id"),
         Index("ix_inbox_captures_promoted_study", "promoted_study_id"),
+        Index("ix_inbox_captures_user_chapter_status", "user_id", "chapter_id", "status"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -36,6 +38,12 @@ class InboxCapture(Base):
     book_id: Mapped[int | None] = mapped_column(
         Integer,
         ForeignKey("books.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    # F0.11.02 (migração 0035): capítulo de destino; excluído o capítulo, fica só o livro.
+    chapter_id: Mapped[int | None] = mapped_column(
+        Integer,
+        ForeignKey("chapters.id", ondelete="SET NULL"),
         nullable=True,
     )
     content: Mapped[str] = mapped_column(Text, nullable=False)
@@ -67,4 +75,5 @@ class InboxCapture(Base):
 
     user: Mapped[User] = relationship("User")
     book: Mapped[Book | None] = relationship("Book")
+    chapter: Mapped[Chapter | None] = relationship("Chapter")
     promoted_study: Mapped[Study | None] = relationship("Study")

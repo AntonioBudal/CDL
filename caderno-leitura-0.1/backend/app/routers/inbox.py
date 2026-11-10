@@ -5,6 +5,7 @@ from fastapi import APIRouter, Query, Response, status
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
 from app.schemas.inbox_capture import (
+    InboxBookTrayResponse,
     InboxCaptureCreate,
     InboxCapturePatch,
     InboxCaptureRead,
@@ -16,6 +17,7 @@ from app.services.inbox_service import (
     count_inbox_captures,
     create_inbox_capture,
     delete_inbox_capture,
+    get_book_tray,
     get_inbox_capture,
     link_inbox_capture,
     list_inbox_captures,
@@ -34,6 +36,7 @@ def list_captures_endpoint(
     status_filter: str | None = Query(default="inbox", alias="status", description="Filtro de status"),
     q: str | None = Query(default=None, description="Termo de busca textual"),
     book_id: int | None = Query(default=None, gt=0, description="Filtrar por livro associado"),
+    chapter_id: int | None = Query(default=None, gt=0, description="Filtrar por capítulo (F0.11.02)"),
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
 ):
@@ -45,7 +48,17 @@ def list_captures_endpoint(
         book_id=book_id,
         limit=limit,
         offset=offset,
+        chapter_id=chapter_id,
     )
+
+
+@router.get("/book-tray", response_model=InboxBookTrayResponse, summary="Capturas pendentes de um livro por capítulo")
+def book_tray_endpoint(
+    session: DatabaseSession,
+    current_user: CurrentUser,
+    book_id: int = Query(..., gt=0, description="Livro"),
+):
+    return get_book_tray(session=session, user_id=current_user.id, book_id=book_id)
 
 
 @router.get("/count", response_model=InboxCountResponse, summary="Obter contagem de itens pendentes no Inbox")

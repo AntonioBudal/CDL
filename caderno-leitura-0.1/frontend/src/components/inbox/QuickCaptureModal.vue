@@ -3,11 +3,12 @@ import { nextTick, ref, watch } from 'vue'
 import { useQuickCapture } from '../../composables/useQuickCapture'
 import { api } from '../../services/api'
 import Icon from '../ui/Icon.vue'
-import type { Book } from '../../types'
+import type { Book, Chapter } from '../../types'
 
 const {
   isOpen,
   defaultBookId,
+  defaultChapterId,
   defaultContent,
   defaultSource,
   submitting,
@@ -19,6 +20,11 @@ const {
 const content = ref('')
 const sourceHint = ref('')
 const selectedBookId = ref<number | null>(null)
+// F0.11.02: capítulo de destino (lista do livro escolhido)
+const selectedChapterId = ref<number | null>(null)
+const chapters = ref<Chapter[]>([])
+const loadingChapters = ref(false)
+let chaptersRequest: AbortController | null = null
 const books = ref<Book[]>([])
 const loadingBooks = ref(false)
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
@@ -37,11 +43,36 @@ async function loadBooks() {
   }
 }
 
+async function loadChapters(bookId: number | null, keepChapterId: number | null = null) {
+  chaptersRequest?.abort()
+  chapters.value = []
+  selectedChapterId.value = null
+  if (!bookId) return
+  const controller = new AbortController()
+  chaptersRequest = controller
+  loadingChapters.value = true
+  try {
+    const list = await api.listChapters(bookId, controller.signal)
+    if (controller.signal.aborted) return
+    chapters.value = list
+    if (keepChapterId && list.some((c) => c.id === keepChapterId)) selectedChapterId.value = keepChapterId
+  } catch {
+    // Sem capítulos: a captura fica só com o livro
+  } finally {
+    if (!controller.signal.aborted) loadingChapters.value = false
+  }
+}
+
+function onBookChange() {
+  void loadChapters(selectedBookId.value)
+}
+
 watch(isOpen, async (opened) => {
   if (opened) {
     content.value = defaultContent.value || ''
     sourceHint.value = defaultSource.value || ''
     selectedBookId.value = defaultBookId.value || null
+    void loadChapters(selectedBookId.value, defaultChapterId.value)
     successFeedback.value = false
     loadBooks()
     await nextTick()
@@ -66,6 +97,7 @@ async function handleSave() {
     content: content.value.trim(),
     source_hint: sourceHint.value.trim() || null,
     book_id: selectedBookId.value || null,
+    chapter_id: selectedChapterId.value || null,
   })
 
   if (result) {
@@ -146,11 +178,26 @@ async function handleSave() {
                 v-model="selectedBookId"
                 class="capture-select"
                 :disabled="submitting || loadingBooks"
+                @change="onBookChange"
               >
                 <option :value="null">Nenhum (ideia avulsa)</option>
                 <option v-for="b in books" :key="b.id" :value="b.id">
                   {{ b.title }}
                 </option>
+              </select>
+            </div>
+
+            <!-- F0.11.02: capítulo de destino (vai para a bandeja do capítulo) -->
+            <div v-if="selectedBookId && (chapters.length > 0 || loadingChapters)" class="field-group flex-1">
+              <label for="capture-chapter" class="field-label">Capítulo (Opcional)</label>
+              <select
+                id="capture-chapter"
+                v-model="selectedChapterId"
+                class="capture-select"
+                :disabled="submitting || loadingChapters"
+              >
+                <option :value="null">Sem capítulo</option>
+                <option v-for="c in chapters" :key="c.id" :value="c.id">{{ c.name }}</option>
               </select>
             </div>
           </div>
