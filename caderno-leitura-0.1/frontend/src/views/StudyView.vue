@@ -7,6 +7,7 @@ import StudyTabs from '../components/StudyTabs.vue'
 import ReaderTools from '../components/ReaderTools.vue'
 import ActiveReadingBar from '../components/ActiveReadingBar.vue'
 import ExportModal from '../components/ExportModal.vue'
+import ReferencePanel from '../components/references/ReferencePanel.vue'
 import TrashConfirmModal from '../components/TrashConfirmModal.vue'
 import ChangeChapterModal from '../components/ChangeChapterModal.vue'
 import StudyBacklinksList from '../components/studies/StudyBacklinksList.vue'
@@ -66,6 +67,8 @@ const breadcrumbItems = computed<BreadcrumbItem[]>(() => {
 })
 
 const exportModalOpen = ref(false)
+// F0.11.05: referência da obra e do trecho
+const referenceOpen = ref(false)
 const confirmTrashOpen = ref(false)
 const changeChapterOpen = ref(false)
 const changeChapterOptions = ref<Chapter[]>([])
@@ -736,6 +739,17 @@ onBeforeUnmount(() => {
                   <span>Exportar</span>
                 </button>
 
+                <!-- F0.11.05: Referência (obra, trecho e obras citadas) -->
+                <button
+                  type="button"
+                  class="secondary reference-action header-icon-btn"
+                  aria-label="Referência deste estudo"
+                  title="Referência (ABNT, APA, BibTeX, CSL-JSON)"
+                  @click="referenceOpen = true"
+                >
+                  <span>Referência</span>
+                </button>
+
                 <!-- Histórico de versões -->
                 <button
                   type="button"
@@ -939,6 +953,15 @@ onBeforeUnmount(() => {
       :loading="trashing"
       @close="confirmTrashOpen = false"
       @confirm="handleTrash"
+    />
+
+    <ReferencePanel
+      :open="referenceOpen"
+      :book="state.context.book"
+      :passage="{ chapter: state.context.chapter.name, location: state.context.study.location }"
+      :cited-text="state.context.study.references"
+      @close="referenceOpen = false"
+      @edit-book="referenceOpen = false; router.push({ name: 'book', params: { bookId: state.context.book.id } })"
     />
 
     <ExportModal

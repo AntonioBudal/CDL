@@ -4,6 +4,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router'
 import BookCover from '../components/BookCover.vue'
 import BookReadingState from '../components/books/BookReadingState.vue'
 import ChapterTray from '../components/books/ChapterTray.vue'
+import ReferencePanel from '../components/references/ReferencePanel.vue'
 import { useQuickCapture } from '../composables/useQuickCapture'
 import BookEditModal from '../components/BookEditModal.vue'
 import CategoryBadge from '../components/CategoryBadge.vue'
@@ -36,6 +37,8 @@ const chapterName = ref('')
 const chapterError = ref('')
 const creatingChapter = ref(false)
 const isEditingBook = ref(false)
+// F0.11.05: painel de referência (ABNT, APA, BibTeX, CSL-JSON)
+const referenceOpen = ref(false)
 const editingChapterId = ref<number | null>(null)
 const editChapterName = ref('')
 const editChapterError = ref('')
@@ -519,6 +522,15 @@ onBeforeUnmount(() => {
                         type="button"
                         class="dropdown-item"
                         role="menuitem"
+                        @click="referenceOpen = true; close()"
+                      >
+                        <Icon name="book-open" :size="16" />
+                        <span>Referência</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="dropdown-item"
+                        role="menuitem"
                         @click="isEditingBook = true; close()"
                       >
                         <Icon name="pencil" :size="16" />
@@ -566,6 +578,18 @@ onBeforeUnmount(() => {
           >
             <Icon name="download" :size="16" />
             <span class="btn-pill-label">Exportar anotações</span>
+          </button>
+
+          <!-- F0.11.05: Referência -->
+          <button
+            class="secondary icon-action-btn"
+            type="button"
+            title="Referência (ABNT, APA, BibTeX, CSL-JSON)"
+            aria-label="Referência"
+            @click="referenceOpen = true"
+          >
+            <Icon name="book-open" :size="16" />
+            <span class="btn-pill-label">Referência</span>
           </button>
 
           <!-- Editar Livro -->
@@ -1035,6 +1059,14 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- Modais Auxiliares -->
+      <ReferencePanel
+        v-if="book"
+        :open="referenceOpen"
+        :book="book"
+        @close="referenceOpen = false"
+        @edit-book="referenceOpen = false; isEditingBook = true"
+      />
+
       <BookEditModal
         v-if="book"
         :book="book"

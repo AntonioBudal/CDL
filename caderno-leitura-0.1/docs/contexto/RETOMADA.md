@@ -1436,3 +1436,22 @@ Spec aprovada com as recomendações Q1 a Q5:
   inválido recusado sem ir à rede, autor digitado preservado, aviso de ISBN repetido, "não encontrado", contraste nos
   10 temas (mínimo 5,49:1), 375 px sem rolagem lateral.
 - **Implantação:** o mesmo `upgrade head` do HANDOFF agora aplica 0034, 0035 e 0036.
+
+## F0.11.05 — Referências em 3 escopos (2026-11-09)
+
+- **Spec, plano e tarefas:** `specs/107-referencias-tres-escopos/`. Só frontend; sem migração.
+- **Formatos** (`utils/referenceFormats.ts`, puro): ABNT (NBR 6023, via `formatReferenceABNT`), APA 7ª ed. (iniciais,
+  partículas ignoradas, hífen "J.-P.", `&` antes do último, reticências acima de 20 autores, `(s.d.)`), BibTeX `@book`
+  (chave `sobrenome+ano+palavra`, escape numa passada só — escapar em etapas transformava `\` em
+  `\textbackslash\{\}` —, nome único entre chaves, `chapter`/`pages`/`note` no trecho) e CSL-JSON `type: book`
+  (`page` e `note` no trecho). Chamadas ABNT e APA (`p.`/`pp.`, `pos.`), `bibliography()` com ordem alfabética e chaves
+  únicas (`a`, `b`, …), `missingReferenceFields`.
+- **Tela:** `components/references/ReferencePanel.vue` (gaveta com abas ABNT/APA/BibTeX/CSL-JSON, Copiar com HTML para
+  ABNT/APA, Baixar, aviso do que falta com atalho para Editar livro, chamada do trecho, obras citadas "como você
+  escreveu", só em texto). As abas têm estilo próprio: a regra global de botões exclui `role="tab"`. Na página do
+  livro (botão e menu "Referência"), na do estudo (menu "Mais opções do estudo") e "Baixar bibliografia" na Biblioteca
+  sobre os livros filtrados.
+- **Testes:** `feature-107-referencias.test.mjs` (8); vizinhos e guarda de tokens (075 recusou `--color-focus`, que não
+  existe; usado `--ring-focus`) passando; build ok. Navegador (dados fictícios): quatro formatos com trecho, copiar
+  (texto + HTML), baixar `.txt`/`.bib`, obras citadas, aviso de campos ausentes, bibliografia BibTeX dos 6 livros,
+  contraste nos 10 temas (mínimo 5,11:1), 375 px sem rolagem lateral (conferido pela captura).

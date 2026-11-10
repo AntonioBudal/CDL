@@ -12,6 +12,7 @@ import BookHeroCard from '../components/library/BookHeroCard.vue'
 import Icon from '../components/ui/Icon.vue'
 import SharedStudiesList from '../components/library/SharedStudiesList.vue'
 import IsbnLookup, { type IsbnBookFields } from '../components/books/IsbnLookup.vue'
+import { REFERENCE_FORMATS, bibliography, type ReferenceFormat } from '../utils/referenceFormats'
 import { api, errorMessage } from '../services/api'
 import { useLibraryFilter } from '../composables/useLibraryFilter'
 import { useMagneticHover } from '../composables/useMagneticHover'
@@ -33,6 +34,25 @@ const title = ref('')
 const titleInput = ref<HTMLInputElement | null>(null)
 const author = ref('')
 const newBookCategoryIds = ref<string[]>([])
+// F0.11.05: bibliografia dos livros visíveis com os filtros atuais
+const bibliographyFormat = ref<ReferenceFormat>('abnt')
+const bibliographyMessage = ref('')
+function downloadBibliography() {
+  const info = REFERENCE_FORMATS.find((f) => f.value === bibliographyFormat.value)!
+  const list = filteredBooks.value
+  if (list.length === 0) return
+  const blob = new Blob([bibliography(list, info.value)], { type: `${info.mime};charset=utf-8` })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `bibliografia-leitorum.${info.value === 'abnt' || info.value === 'apa' ? `${info.value}.` : ''}${info.extension}`
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
+  bibliographyMessage.value = `Bibliografia ${info.label} com ${list.length} ${list.length === 1 ? 'livro' : 'livros'} baixada.`
+}
+
 // F0.11.04: dados vindos da busca por ISBN (subtítulo, ano, editora e local não têm campo no cadastro rápido)
 const newIsbn = ref('')
 const isbnExtras = ref<{ subtitle: string; year: string; publisher: string; place: string }>({ subtitle: '', year: '', publisher: '', place: '' })
@@ -263,6 +283,18 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
           @clear-category="clearCategory"
           @clear-all-filters="clearAllFilters"
         />
+
+        <!-- F0.11.05: bibliografia dos livros visíveis -->
+        <div v-if="filteredBooks.length > 0" class="bibliography-bar">
+          <label for="bibliography-format" class="bibliography-label">Baixar bibliografia</label>
+          <select id="bibliography-format" v-model="bibliographyFormat" class="bibliography-select">
+            <option v-for="f in REFERENCE_FORMATS" :key="f.value" :value="f.value">{{ f.label }}</option>
+          </select>
+          <button type="button" class="quiet bibliography-button" @click="downloadBibliography">
+            Baixar ({{ filteredBooks.length }} {{ filteredBooks.length === 1 ? 'livro' : 'livros' }})
+          </button>
+          <span class="visually-hidden-bib" role="status" aria-live="polite">{{ bibliographyMessage }}</span>
+        </div>
 
         <EmptyState
           v-if="filteredBooks.length === 0"
@@ -517,6 +549,42 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 .add-book-btn:focus-visible {
   outline: var(--focus-width, 3px) solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/* F0.11.05 */
+.bibliography-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0 0 1rem;
+}
+
+.bibliography-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.bibliography-select {
+  min-height: 44px;
+}
+
+.bibliography-button {
+  --quiet-border: var(--color-border-strong, var(--color-border));
+  min-height: 44px;
+}
+
+.visually-hidden-bib {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* F0.11.04 */
