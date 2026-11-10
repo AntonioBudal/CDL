@@ -159,6 +159,8 @@ def list_library_highlights(
             Book.author.label("book_author"),
             Book.year.label("book_year"),
             Book.subtitle.label("book_subtitle"),
+            Book.publisher.label("book_publisher"),
+            Book.publication_place.label("book_publication_place"),
         )
         .join(Study, StudyHighlight.study_id == Study.id)
         .join(Chapter, Study.chapter_id == Chapter.id)
@@ -226,6 +228,8 @@ def list_library_highlights(
             book_author=b_author,
             book_year=b_year,
             book_subtitle=b_subtitle or "",
+            book_publisher=b_publisher,
+            book_publication_place=b_place,
             section=hl.section,
             start_offset=hl.start_offset,
             end_offset=hl.end_offset,
@@ -238,7 +242,7 @@ def list_library_highlights(
             created_at=hl.created_at,
             updated_at=hl.updated_at,
         )
-        for hl, study_title, c_id, c_title, b_id, b_title, b_author, b_year, b_subtitle in rows
+        for hl, study_title, c_id, c_title, b_id, b_title, b_author, b_year, b_subtitle, b_publisher, b_place in rows
     ]
 
     books_stmt = (

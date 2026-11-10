@@ -28,6 +28,7 @@ class Book(Base):
         Index("ix_books_sync", "user_id", "updated_at"),
         Index("ix_books_visibility", "visibility"),
         Index("ix_books_user_reading_state", "user_id", "reading_state"),
+        Index("ix_books_user_isbn", "user_id", "isbn"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -69,6 +70,10 @@ class Book(Base):
     )
     reading_started_on: Mapped[date | None] = mapped_column(Date, nullable=True, default=None)
     reading_finished_on: Mapped[date | None] = mapped_column(Date, nullable=True, default=None)
+    # F0.11.04 (migração 0036): ISBN-13 sem separadores, editora e local de publicação.
+    isbn: Mapped[str | None] = mapped_column(String(13), nullable=True, default=None)
+    publisher: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    publication_place: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
 
     chapters: Mapped[list[Chapter]] = relationship(
         back_populates="book",

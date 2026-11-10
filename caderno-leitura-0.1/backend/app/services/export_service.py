@@ -243,6 +243,9 @@ def format_book_markdown(
         lines.append(f"author: {_yaml_quote(book.author or '')}")
         lines.append(f"subtitle: {_yaml_quote(book.subtitle or '')}")
         lines.append(f"year: {book.year if book.year is not None else 'null'}")
+        lines.append(f"isbn: {_yaml_quote(book.isbn or '')}")
+        lines.append(f"publisher: {_yaml_quote(book.publisher or '')}")
+        lines.append(f"publication_place: {_yaml_quote(book.publication_place or '')}")
         if options.include_reading_state:
             lines.append(f"reading_state: {_yaml_quote(book.reading_state or '')}")
             started = book.reading_started_on.isoformat() if book.reading_started_on else None
@@ -363,6 +366,10 @@ def format_book_text(
             lines.append(f"Autor: {book.author}")
         if book.year:
             lines.append(f"Ano: {book.year}")
+        if book.publisher or book.publication_place:
+            lines.append(f"Publicação: {', '.join(p for p in (book.publication_place, book.publisher) if p)}")
+        if book.isbn:
+            lines.append(f"ISBN: {book.isbn}")
         if options.include_reading_state:
             lines.extend(_reading_state_lines(book, markdown=False))
         if categories:
@@ -1316,6 +1323,9 @@ def generate_account_export_zip(
             "reading_state": book.reading_state,
             "reading_started_on": book.reading_started_on.isoformat() if book.reading_started_on else None,
             "reading_finished_on": book.reading_finished_on.isoformat() if book.reading_finished_on else None,
+            "isbn": book.isbn,
+            "publisher": book.publisher,
+            "publication_place": book.publication_place,
             "categories": [c.name for c in book.categories] if book.categories else [],
             "chapters": chapters_data,
         })

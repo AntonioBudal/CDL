@@ -8,6 +8,8 @@ from app.models import Book, User
 from app.models.category import book_categories
 from app.schemas.book import BookCreate, BookPatch, BookRead
 from app.schemas.cover import CoverResponse, CoverUrlRequest
+from app.schemas.isbn import IsbnExistingBook, IsbnLookupResponse
+from app.services import isbn_service
 from app.schemas.export import ExportFormat, ExportOptions, ExportType
 from app.schemas.sharing import ResourceOwnerSummary, VisibilityUpdateRequest
 from app.services.category_service import assign_book_categories, get_descendant_category_ids
@@ -83,6 +85,39 @@ def list_books(
         query = query.order_by(order_fn(sort_column), Book.id)
 
     return session.scalars(query).all()
+
+
+@router.get("/isbn/{isbn}", response_model=IsbnLookupResponse, summary="Buscar dados do livro pelo ISBN (sob demanda)")
+def lookup_book_isbn(isbn: str, session: DatabaseSession, current_user: CurrentUser):
+    """F0.11.04: consulta BrasilAPI e Open Library a partir do servidor; nada é gravado. Desligável por
+    ``LEITORUM_ISBN_LOOKUP=off`` (404)."""
+    if not isbn_service.isbn_lookup_enabled():
+        raise HTTPException(status_code=404, detail="A busca por ISBN está desligada neste servidor.")
+    try:
+        isbn13 = isbn_service.normalize_isbn(isbn)
+    except isbn_service.InvalidIsbnError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    try:
+        found = isbn_service.lookup_isbn(isbn13)
+    except isbn_service.IsbnServiceUnavailable as exc:
+        raise HTTPException(status_code=503, detail="Não foi possível consultar agora. Tente de novo mais tarde.") from exc
+    if found is None:
+        raise HTTPException(status_code=404, detail="Não encontrei este ISBN na BrasilAPI nem na Open Library.")
+    existing = session.scalar(
+        select(Book).where(Book.user_id == current_user.id, Book.isbn == isbn13, Book.deleted_at.is_(None))
+    )
+    return IsbnLookupResponse(
+        isbn=found.isbn,
+        source=found.source,
+        title=found.title,
+        subtitle=found.subtitle,
+        authors=found.authors,
+        author="; ".join(found.authors),
+        year=found.year,
+        publisher=found.publisher,
+        place=found.place,
+        existing_book=IsbnExistingBook(id=existing.id, title=existing.title) if existing else None,
+    )
 
 
 @router.get("/{book_id}", response_model=BookRead, summary="Consultar livro")

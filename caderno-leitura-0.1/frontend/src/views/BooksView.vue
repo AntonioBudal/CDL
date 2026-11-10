@@ -11,6 +11,7 @@ import Drawer from '../components/ui/Drawer.vue'
 import BookHeroCard from '../components/library/BookHeroCard.vue'
 import Icon from '../components/ui/Icon.vue'
 import SharedStudiesList from '../components/library/SharedStudiesList.vue'
+import IsbnLookup, { type IsbnBookFields } from '../components/books/IsbnLookup.vue'
 import { api, errorMessage } from '../services/api'
 import { useLibraryFilter } from '../composables/useLibraryFilter'
 import { useMagneticHover } from '../composables/useMagneticHover'
@@ -32,6 +33,23 @@ const title = ref('')
 const titleInput = ref<HTMLInputElement | null>(null)
 const author = ref('')
 const newBookCategoryIds = ref<string[]>([])
+// F0.11.04: dados vindos da busca por ISBN (subtítulo, ano, editora e local não têm campo no cadastro rápido)
+const newIsbn = ref('')
+const isbnExtras = ref<{ subtitle: string; year: string; publisher: string; place: string }>({ subtitle: '', year: '', publisher: '', place: '' })
+const isbnExtrasText = computed(() => [isbnExtras.value.subtitle, isbnExtras.value.publisher, isbnExtras.value.place, isbnExtras.value.year].filter(Boolean).join(' · '))
+function newBookCurrent(): IsbnBookFields {
+  return { title: title.value, author: author.value, ...isbnExtras.value }
+}
+function applyNewIsbn(fields: Partial<IsbnBookFields>) {
+  if (fields.title) title.value = fields.title
+  if (fields.author) author.value = fields.author
+  isbnExtras.value = {
+    subtitle: fields.subtitle ?? isbnExtras.value.subtitle,
+    year: fields.year ?? isbnExtras.value.year,
+    publisher: fields.publisher ?? isbnExtras.value.publisher,
+    place: fields.place ?? isbnExtras.value.place,
+  }
+}
 const saving = ref(false)
 const saveError = ref('')
 let request: AbortController | null = null
@@ -98,8 +116,16 @@ async function createBook() {
   saveError.value = ''
   let created: Book | null = null
   try {
-    created = await api.createBook(title.value, author.value, newBookCategoryIds.value)
+    const yearNumber = Number(isbnExtras.value.year)
+    created = await api.createBook(title.value, author.value, newBookCategoryIds.value, {
+      isbn: newIsbn.value.trim() || null,
+      subtitle: isbnExtras.value.subtitle || null,
+      year: Number.isInteger(yearNumber) && yearNumber >= 1000 && yearNumber <= 2100 ? yearNumber : null,
+      publisher: isbnExtras.value.publisher || null,
+      publication_place: isbnExtras.value.place || null,
+    })
     title.value = ''; author.value = ''; newBookCategoryIds.value = []
+    newIsbn.value = ''; isbnExtras.value = { subtitle: '', year: '', publisher: '', place: '' }
     isDrawerOpen.value = false
   } catch (error) {
     if (!disposed) saveError.value = errorMessage(error)
@@ -339,6 +365,11 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
     >
       <form @submit.prevent="createBook">
         <fieldset :disabled="saving">
+          <!-- F0.11.04: ISBN sob demanda -->
+          <div class="field">
+            <IsbnLookup v-model:isbn="newIsbn" id-prefix="new-book" :current="newBookCurrent()" :disabled="saving" @apply="applyNewIsbn" />
+            <p v-if="isbnExtrasText" class="isbn-extras">Também será gravado: {{ isbnExtrasText }}</p>
+          </div>
           <div class="field">
             <label for="book-title">Título do livro</label>
             <input id="book-title" ref="titleInput" v-model="title" required placeholder="Como aparece na capa" />
@@ -486,6 +517,13 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 .add-book-btn:focus-visible {
   outline: var(--focus-width, 3px) solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/* F0.11.04 */
+.isbn-extras {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
 }
 
 /* F0.11.01: selo discreto do estado de leitura */

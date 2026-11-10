@@ -1412,3 +1412,27 @@ Spec aprovada com as recomendações Q1 a Q5:
   `feature-105-importar-kindle-kobo.test.mjs` (3); vizinhos e guardas de rotas passando; build ok. Navegador (banco
   temporário): Kindle e Kobo de ponta a ponta, reenvio sem duplicar, capturas na linha "sem capítulo" da bandeja,
   contraste nos 10 temas (mínimo 5,49:1), 320/375/768/1024/1440 px sem rolagem lateral.
+
+## F0.11.04 — ISBN sob demanda (2026-11-09)
+
+- **Spec, plano e tarefas:** `specs/106-isbn-sob-demanda/`. **Com migração** (`0036_book_isbn_publisher`) e **uma saída
+  de rede nova**, só a pedido.
+- **Banco:** `books.isbn` (ISBN-13 sem separadores), `publisher` e `publication_place`, índice `ix_books_user_isbn`.
+- **Busca** (`services/isbn_service.py`): `normalize_isbn` (ISBN-10/13, dígito verificador, 10 → 13); `lookup_isbn`
+  consulta do **servidor** a BrasilAPI e, se não achar, a Open Library (`httpx`, 5 s, sem seguir redirecionamentos,
+  resposta até 512 KB, `User-Agent: Leitorum`, só o ISBN sai). `GET /api/books/isbn/{isbn}` → sugestão (com
+  `existing_book` se o leitor já tem o ISBN), 422 inválido, 404 não encontrado ou desligado, 503 fora do ar.
+  `LEITORUM_ISBN_LOOKUP=off` desliga; `/api/system/status` informa `isbn_lookup_enabled`. Transporte trocável
+  (`set_transport`) para testes — nenhum teste vai à internet.
+- **Tela:** `components/books/IsbnLookup.vue` no cadastro (gaveta) e na edição do livro: confere o ISBN antes de
+  buscar, mostra a sugestão com a fonte, "Usar estes dados" preenche só o que está vazio (ou tudo, se marcado),
+  avisa ISBN repetido. A página do livro mostra "Editora · Local · ISBN". A referência ABNT dos Destaques passa a
+  sair com "Local: Editora, ano." (`[S. l.]`/`[s. n.]` para o que faltar); a biblioteca de destaques devolve
+  `book_publisher` e `book_publication_place`. Exportações levam os três campos.
+- **Landing:** "Conexões externas" inclui a busca pelo ISBN ("sempre a seu pedido"); o Desafio F12 explica que capa por
+  endereço e ISBN saem do servidor, por isso não aparecem na lista do navegador. CSP inalterada.
+- **Testes:** `test_isbn_lookup.py` (11, com `httpx.MockTransport`) e `feature-106-isbn.test.mjs` (4); vizinhos
+  passando; build ok. Navegador (servidor de validação com transporte falso, sem rede): cadastro pelo ISBN-10,
+  inválido recusado sem ir à rede, autor digitado preservado, aviso de ISBN repetido, "não encontrado", contraste nos
+  10 temas (mínimo 5,49:1), 375 px sem rolagem lateral.
+- **Implantação:** o mesmo `upgrade head` do HANDOFF agora aplica 0034, 0035 e 0036.

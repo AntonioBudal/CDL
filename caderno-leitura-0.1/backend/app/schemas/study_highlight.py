@@ -58,6 +58,8 @@ class HighlightLibraryItemRead(OutputModel):
     book_author: str | None = None
     book_year: int | None = None
     book_subtitle: str = ""
+    book_publisher: str | None = None
+    book_publication_place: str | None = None
     section: SectionName
     start_offset: int
     end_offset: int

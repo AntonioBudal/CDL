@@ -2,6 +2,7 @@
 import { nextTick, ref, watch } from 'vue'
 import BookCover from './BookCover.vue'
 import CategoryInput from './CategoryInput.vue'
+import IsbnLookup, { type IsbnBookFields } from './books/IsbnLookup.vue'
 import Icon from './ui/Icon.vue'
 import { api, errorMessage } from '../services/api'
 import { bookAfterCoverChange } from '../utils/bookCover'
@@ -21,6 +22,10 @@ const title = ref('')
 const author = ref('')
 const subtitle = ref('')
 const year = ref<string>('')
+// F0.11.04
+const isbn = ref('')
+const publisher = ref('')
+const publicationPlace = ref('')
 const selectedCategoryIds = ref<string[]>([])
 const error = ref('')
 const saving = ref(false)
@@ -41,6 +46,9 @@ watch(
       author.value = props.book.author || ''
       subtitle.value = props.book.subtitle || ''
       year.value = props.book.year != null ? String(props.book.year) : ''
+      isbn.value = props.book.isbn || ''
+      publisher.value = props.book.publisher || ''
+      publicationPlace.value = props.book.publication_place || ''
       selectedCategoryIds.value = (props.book.categories || []).map((c) => c.id)
       currentCover.value = props.book.cover_image ?? null
       error.value = ''
@@ -135,6 +143,24 @@ function close() {
   emit('close')
 }
 
+const isbnCurrent = (): IsbnBookFields => ({
+  title: title.value,
+  subtitle: subtitle.value,
+  author: author.value,
+  year: year.value,
+  publisher: publisher.value,
+  place: publicationPlace.value,
+})
+
+function applyIsbn(fields: Partial<IsbnBookFields>) {
+  if (fields.title) title.value = fields.title
+  if (fields.subtitle) subtitle.value = fields.subtitle
+  if (fields.author) author.value = fields.author
+  if (fields.year) year.value = fields.year
+  if (fields.publisher) publisher.value = fields.publisher
+  if (fields.place) publicationPlace.value = fields.place
+}
+
 async function save() {
   const trimmedTitle = title.value.trim()
   if (!trimmedTitle) {
@@ -161,6 +187,9 @@ async function save() {
       author: author.value.trim() || null,
       subtitle: subtitle.value.trim() || '',
       year: parsedYear,
+      isbn: isbn.value.trim() || '',
+      publisher: publisher.value.trim() || null,
+      publication_place: publicationPlace.value.trim() || null,
       category_ids: selectedCategoryIds.value,
       expected_updated_at: props.book.updated_at ?? null,
     })
@@ -239,6 +268,19 @@ async function save() {
               type="text"
               placeholder="Ex.: Edição Comentada"
             />
+          </div>
+
+          <!-- F0.11.04: ISBN sob demanda, editora e local -->
+          <div class="field">
+            <IsbnLookup v-model:isbn="isbn" id-prefix="edit-book" :current="isbnCurrent()" :disabled="saving" @apply="applyIsbn" />
+          </div>
+          <div class="field">
+            <label for="edit-book-publisher-input">Editora <span class="optional">(opcional)</span></label>
+            <input id="edit-book-publisher-input" v-model="publisher" maxlength="200" />
+          </div>
+          <div class="field">
+            <label for="edit-book-place-input">Local de publicação <span class="optional">(opcional)</span></label>
+            <input id="edit-book-place-input" v-model="publicationPlace" maxlength="200" placeholder="Ex.: São Paulo" />
           </div>
 
           <div class="field">

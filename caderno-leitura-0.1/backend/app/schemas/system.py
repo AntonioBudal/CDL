@@ -23,6 +23,7 @@ class SystemStatus(BaseModel):
     schema_revision: str | None = None
     expected_schema_revisions: list[str]
     google_auth_enabled: bool
+    isbn_lookup_enabled: bool = True
     secure_delete: bool
     backups: BackupStatus | None = None
 

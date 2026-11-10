@@ -13,6 +13,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app import __version__
 from app.core.build_info import get_build_commit, get_expected_schema_revisions
 from app.core.config import get_database_path, is_google_auth_enabled
+from app.services.isbn_service import isbn_lookup_enabled
 from app.dependencies import AdminUser, CurrentUser, DatabaseSession
 from app.schemas.system import BackupStatus, IntegrityResult, SystemStatus
 from app.services.backups import verify_sqlite_integrity
@@ -47,6 +48,7 @@ def get_system_status(session: DatabaseSession, current_user: CurrentUser, respo
         schema_revision=_schema_revision(session),
         expected_schema_revisions=get_expected_schema_revisions(),
         google_auth_enabled=is_google_auth_enabled(),
+        isbn_lookup_enabled=isbn_lookup_enabled(),
         secure_delete=_secure_delete_enabled(session),
         backups=backups,
     )

@@ -117,7 +117,8 @@ onMounted(() => {
 
       <p class="trust-note">
         A lista mostra o que este navegador registrou. Extensões instaladas podem fazer pedidos próprios. Se o login
-        com Google estiver ativado, a tela de entrada fala com o Google; esta página, não.
+        com Google estiver ativado, a tela de entrada fala com o Google; esta página, não. A capa por endereço e a busca
+        pelo ISBN são feitas pelo servidor do Leitorum, a seu pedido; por isso não aparecem nesta lista.
       </p>
     </div>
   </section>

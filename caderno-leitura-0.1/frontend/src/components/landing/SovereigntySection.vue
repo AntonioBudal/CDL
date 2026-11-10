@@ -11,8 +11,9 @@ interface DataFact {
 }
 
 // Afirmações conferidas no código: export_service (Markdown, texto e .zip da conta), ausência de scripts de
-// análise no frontend e de clientes de IA no backend; as únicas saídas de rede são google_auth_service e
-// cover_service (e o script de login do Google no navegador, quando o login com Google está ativado).
+// análise no frontend e de clientes de IA no backend; as únicas saídas de rede são google_auth_service,
+// cover_service e isbn_service (F0.11.04, desligável por LEITORUM_ISBN_LOOKUP=off) — e o script de login do Google
+// no navegador, quando o login com Google está ativado.
 const facts: DataFact[] = [
   {
     title: 'Onde ficam',
@@ -34,7 +35,8 @@ const facts: DataFact[] = [
   },
   {
     title: 'Conexões externas',
-    description: 'Só no login com Google, se ativado, e ao buscar uma capa por endereço.',
+    description:
+      'Só no login com Google, se ativado, ao buscar uma capa por endereço e ao buscar dados de um livro pelo ISBN — sempre a seu pedido.',
     icon: 'globe',
     tags: ['Opcional'],
   },

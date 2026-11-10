@@ -6,7 +6,7 @@ export type CitationSourceItem = Pick<
   HighlightLibraryItem,
   'selected_text' | 'book_title' | 'book_author' | 'chapter_title'
 > &
-  Partial<Pick<HighlightLibraryItem, 'book_year' | 'book_subtitle'>>
+  Partial<Pick<HighlightLibraryItem, 'book_year' | 'book_subtitle' | 'book_publisher' | 'book_publication_place'>>
 
 /** Sufixos que a ABNT agrega ao sobrenome (SILVA JÚNIOR, COSTA NETO). */
 const SURNAME_SUFFIXES = new Set(['junior', 'júnior', 'jr', 'jr.', 'filho', 'neto', 'sobrinho'])
@@ -130,16 +130,20 @@ export function formatReferenceABNT(item: CitationSourceItem): { text: string; h
   const year = yearOf(item)
   const lead = authors ? `${stripFinalPeriod(authors)}. ` : ''
   const sub = subtitle ? `: ${subtitle}` : ''
+  // F0.11.04: "Local: Editora, ano." quando houver local ou editora ([S. l.] / [s. n.] para o que faltar).
+  const place = clean(item.book_publication_place)
+  const publisher = clean(item.book_publisher)
+  const imprint = place || publisher ? `${place || '[S. l.]'}: ${publisher || '[s. n.]'}, ${year}.` : `${year}.`
   if (!authors) {
     // Entrada pelo título: primeira palavra em caixa alta, sem itálico.
     const [first = '', ...rest] = title.split(' ')
     const entry = [first.toUpperCase(), ...rest].join(' ')
-    const text = `${entry}${sub}. ${year}.`
+    const text = `${entry}${sub}. ${imprint}`
     return { text, html: escapeHtml(text) }
   }
   return {
-    text: `${lead}${title}${sub}. ${year}.`,
-    html: `${escapeHtml(lead)}<i>${escapeHtml(title)}</i>${escapeHtml(sub)}. ${escapeHtml(year)}.`,
+    text: `${lead}${title}${sub}. ${imprint}`,
+    html: `${escapeHtml(lead)}<i>${escapeHtml(title)}</i>${escapeHtml(sub)}. ${escapeHtml(imprint)}`,
   }
 }
 

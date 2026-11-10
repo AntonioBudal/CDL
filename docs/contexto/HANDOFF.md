@@ -13,8 +13,9 @@ de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/d
 - **`main`** está em dia com o trabalho até 2026-11-07: o lote 2 do 0.10 foi levado ao `main` por fast-forward a
   cada feature. **Push pendente** (o usuário faz) e, depois dele, `Restart-Service -Name Leitorum`.
 - **Roadmap 0.10 concluído.** **Roadmap 0.11** em andamento: F0.11.01 (migração `0034`), F0.11.02 (migração
-  `0035`) e F0.11.03 (sem migração) concluídas em 2026-11-09. **O banco ativo ainda não recebeu nenhuma das duas**: aplicar com o
-  procedimento do §3 ("Migração no banco ativo") antes de reiniciar o serviço; um `upgrade head` aplica as duas.
+  `0035`), F0.11.03 (sem migração) e F0.11.04 (migração `0036`) concluídas em 2026-11-09. **O banco ativo ainda não recebeu
+  nenhuma das três migrações**: aplicar com o procedimento do §3 ("Migração no banco ativo") antes de reiniciar o serviço;
+  um `upgrade head` aplica as três.
 
 ### Roadmap 0.10 (redesenho, segurança e ergonomia)
 
@@ -43,9 +44,9 @@ F0.10.09) fechou em 2026-11-07: `npm test` 749/749, `pytest` completo 788 aprova
 | F0.11.01 Estados de leitura do livro (Quero ler, Lendo, Lido, Abandonado, datas) | Concluída (migração `0034`) | `specs/103-estados-leitura-livro/` |
 | F0.11.02 Bandeja de triagem por capítulo (captura com capítulo, bandeja na página do livro) | Concluída (migração `0035`) | `specs/104-bandeja-triagem-capitulo/` |
 | F0.11.03 Importar destaques do Kindle (`My Clippings.txt`) e do Kobo (`KoboReader.sqlite`) para a Mesa | Concluída (sem migração) | `specs/105-importar-kindle-kobo/` |
+| F0.11.04 ISBN sob demanda (BrasilAPI → Open Library, pelo servidor), editora e local; referência ABNT completa | Concluída (migração `0036`) | `specs/106-isbn-sob-demanda/` |
 
-Pendentes, na ordem do plano: ISBN (BrasilAPI
-e Open Library, só sob demanda) · referências em 3 escopos (CSL-JSON, BibTeX, ABNT/APA) · léxico de conceitos e `[[ ]]`
+Pendentes, na ordem do plano: referências em 3 escopos (CSL-JSON, BibTeX, ABNT/APA) · léxico de conceitos e `[[ ]]`
 · validador de paráfrase (Jaccard) · evolução da revisão (`difficulty_weight`, conceitos frágeis, cartões de conceito,
 Memória do Dia) · receptor KOReader/Readest · recorte de foto para a digitalização · cadernos de síntese com transclusão.
 
@@ -60,7 +61,7 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **106**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **107**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,
@@ -86,6 +87,8 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
   4. Iniciar o serviço: `Start-Service -Name Leitorum` (ou `Restart-Service`).
 - **Rota nova no frontend:** registrar o nome em `specs/076-estrategia-responsiva/contracts/responsive-decisions.contract.md`,
   `specs/081-regressao-responsiva/contracts/regression-coverage.contract.md` e `.../data-model.md` (guardas 076/081).
+- **Saídas de rede do servidor:** login com Google, capa por endereço e busca por ISBN (desligável com
+  `LEITORUM_ISBN_LOOKUP=off`). Qualquer saída nova precisa atualizar "Seus dados" e o Desafio F12 da landing.
 - **Nunca rodar `npm run build` junto com o `pytest`.**
 - **Quebras de linha (CRLF × LF):** com `core.autocrlf`, o checkout principal e os worktrees ficam com arquivos
   mistos (só os tocados viram CRLF). Testes que procuram trechos de código com `\n` devem importar

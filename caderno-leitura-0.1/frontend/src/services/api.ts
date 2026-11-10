@@ -12,7 +12,7 @@ import type {
   AuditLogListResponse, DeactivateAccountRequest, ReactivateAccountRequest, DeleteAccountRequest,
   ReviewBucket, ReviewItemRead, ReviewRating, ReviewStatsResponse,
   BacklinksResponse, StudyCandidateOption,
-  EreaderChoice, EreaderImportResponse, EreaderPreviewResponse,
+  EreaderChoice, EreaderImportResponse, EreaderPreviewResponse, IsbnLookupResponse, BookCreatePayload,
   InboxBookTrayResponse, InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
   StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
 } from '../types.ts'
@@ -228,9 +228,15 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 export const api = {
   listBooks: (signal?: AbortSignal) => request<Book[]>('/books', { signal }),
   getBook: (id: number, signal?: AbortSignal) => request<Book>(`/books/${id}`, { signal }),
-  createBook: (title: string, author?: string | null, category_ids?: string[]) => request<Book>('/books', {
+  createBook: (
+    title: string,
+    author?: string | null,
+    category_ids?: string[],
+    extra?: Pick<BookCreatePayload, 'subtitle' | 'year' | 'isbn' | 'publisher' | 'publication_place'>,
+  ) => request<Book>('/books', {
     method: 'POST',
     body: JSON.stringify({
+      ...(extra ?? {}),
       title: title.trim(),
       author: author ? author.trim() : null,
       category_ids: category_ids || [],
@@ -508,6 +514,9 @@ export const api = {
     const queryStr = searchParams.toString()
     return request<InboxCapture[]>(`/inbox${queryStr ? `?${queryStr}` : ''}`, { signal })
   },
+  // F0.11.04: busca de dados pelo ISBN (o servidor consulta BrasilAPI e Open Library)
+  lookupIsbn: (isbn: string, signal?: AbortSignal) =>
+    request<IsbnLookupResponse>(`/books/isbn/${encodeURIComponent(isbn.replace(/[\s.-]/g, ''))}`, { signal }),
   // F0.11.03: destaques do Kindle e do Kobo (o arquivo vai nas duas chamadas; o servidor não guarda nada)
   previewEreaderImport: (file: File) => {
     const formData = new FormData()

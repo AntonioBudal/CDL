@@ -137,6 +137,9 @@ export interface Book {
   reading_state?: BookReadingState | null
   reading_started_on?: string | null
   reading_finished_on?: string | null
+  isbn?: string | null
+  publisher?: string | null
+  publication_place?: string | null
   created_at?: string | null
   updated_at?: string | null
   deleted_at?: string | null
@@ -171,6 +174,9 @@ export interface BookCreatePayload {
   subtitle?: string | null
   year?: number | null
   category_ids?: string[]
+  isbn?: string | null
+  publisher?: string | null
+  publication_place?: string | null
 }
 
 export interface BookPatch {
@@ -185,6 +191,9 @@ export interface BookPatch {
   reading_state?: BookReadingState | null
   reading_started_on?: string | null
   reading_finished_on?: string | null
+  isbn?: string | null
+  publisher?: string | null
+  publication_place?: string | null
 }
 
 export interface CoverResponse {
@@ -1385,6 +1394,8 @@ export interface HighlightLibraryItem {
   book_author?: string | null
   book_year?: number | null
   book_subtitle?: string
+  book_publisher?: string | null
+  book_publication_place?: string | null
   section: string
   start_offset: number
   end_offset: number
@@ -1691,4 +1702,18 @@ export interface EreaderImportResponse {
   created: number
   duplicates: number
   books: EreaderImportedBook[]
+}
+
+// --- ISBN sob demanda (F0.11.04, spec 106) ---
+export interface IsbnLookupResponse {
+  isbn: string
+  source: 'brasilapi' | 'openlibrary'
+  title: string
+  subtitle: string
+  authors: string[]
+  author: string
+  year: number | null
+  publisher: string
+  place: string
+  existing_book: { id: number; title: string } | null
 }

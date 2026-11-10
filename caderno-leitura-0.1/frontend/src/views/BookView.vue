@@ -459,6 +459,10 @@ onBeforeUnmount(() => {
               {{ book.author || 'Autor não informado' }}
               <span v-if="book.year"> · {{ book.year }}</span>
             </p>
+            <!-- F0.11.04: editora, local e ISBN -->
+            <p v-if="book.publisher || book.publication_place || book.isbn" class="book-imprint">
+              {{ [book.publisher, book.publication_place, book.isbn ? `ISBN ${book.isbn}` : ''].filter(Boolean).join(' · ') }}
+            </p>
             <!-- F0.11.01: estado de leitura (só o dono) -->
             <BookReadingState v-if="book.can_edit !== false" :book="book" @saved="onBookSaved" />
 
@@ -1086,6 +1090,14 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+/* F0.11.04 */
+.book-imprint {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
+}
+
 /* F0.11.02: contagem da bandeja na pílula do capítulo e linha de capturas sem capítulo */
 .chapter-tray-badge {
   display: inline-flex;
