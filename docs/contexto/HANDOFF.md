@@ -1,6 +1,6 @@
 # HANDOFF — Leitorum (leia primeiro)
 
-**Atualizado em:** 2026-11-07, no fecho do lote 2 do 0.10 (conversa em worktree, levada ao `main`).
+**Atualizado em:** 2026-11-09, no fecho do lote 1 do 0.11 (conversa em worktree, levada ao `main`).
 **Para quem:** cada conversa nova de lote (0.10, 0.11, 1.0). Leia este arquivo, `AGENTS.md` e o roadmap do lote antes
 de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/docs/contexto/RETOMADA.md`.
 
@@ -12,10 +12,9 @@ de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/d
   entregues). **Prazo combinado:** terminar os três até **15/11/2026**, cerca de 2 features por dia.
 - **`main`** está em dia com o trabalho até 2026-11-07: o lote 2 do 0.10 foi levado ao `main` por fast-forward a
   cada feature. **Push pendente** (o usuário faz) e, depois dele, `Restart-Service -Name Leitorum`.
-- **Roadmap 0.10 concluído.** **Roadmap 0.11** em andamento: F0.11.01 (migração `0034`), F0.11.02 (migração
-  `0035`), F0.11.03 (sem migração) e F0.11.04 (migração `0036`) concluídas em 2026-11-09. **O banco ativo ainda não recebeu
-  nenhuma das três migrações**: aplicar com o procedimento do §3 ("Migração no banco ativo") antes de reiniciar o serviço;
-  um `upgrade head` aplica as três.
+- **Roadmap 0.10 concluído.** **Roadmap 0.11:** lote 1 (F0.11.01 a .05) concluído e fechado em 2026-11-09 com as
+  suítes completas. **O banco ativo ainda não recebeu as migrações 0034, 0035 e 0036**: aplicar com o procedimento do
+  §3 ("Migração no banco ativo") antes de reiniciar o serviço; um `upgrade head` aplica as três.
 
 ### Roadmap 0.10 (redesenho, segurança e ergonomia)
 
@@ -45,8 +44,12 @@ F0.10.09) fechou em 2026-11-07: `npm test` 749/749, `pytest` completo 788 aprova
 | F0.11.02 Bandeja de triagem por capítulo (captura com capítulo, bandeja na página do livro) | Concluída (migração `0035`) | `specs/104-bandeja-triagem-capitulo/` |
 | F0.11.03 Importar destaques do Kindle (`My Clippings.txt`) e do Kobo (`KoboReader.sqlite`) para a Mesa | Concluída (sem migração) | `specs/105-importar-kindle-kobo/` |
 | F0.11.04 ISBN sob demanda (BrasilAPI → Open Library, pelo servidor), editora e local; referência ABNT completa | Concluída (migração `0036`) | `specs/106-isbn-sob-demanda/` |
+| F0.11.05 Referências em 3 escopos: ABNT, APA, BibTeX e CSL-JSON (obra, trecho, obras citadas; bibliografia do acervo) | Concluída (sem migração) | `specs/107-referencias-tres-escopos/` |
 
-Pendentes, na ordem do plano: referências em 3 escopos (CSL-JSON, BibTeX, ABNT/APA) · léxico de conceitos e `[[ ]]`
+Lote 1 do 0.11 fechado em 2026-11-09: `npm test` 774/774, `pytest` 825 aprovados e 4 pulados, build ok; correção da
+chave estrangeira da 0035 em commit próprio (`fd2c5fc`).
+
+Pendentes, na ordem do plano (lote 2): léxico de conceitos e `[[ ]]`
 · validador de paráfrase (Jaccard) · evolução da revisão (`difficulty_weight`, conceitos frágeis, cartões de conceito,
 Memória do Dia) · receptor KOReader/Readest · recorte de foto para a digitalização · cadernos de síntese com transclusão.
 
@@ -61,7 +64,7 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **107**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **108**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,
@@ -89,6 +92,8 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
   `specs/081-regressao-responsiva/contracts/regression-coverage.contract.md` e `.../data-model.md` (guardas 076/081).
 - **Saídas de rede do servidor:** login com Google, capa por endereço e busca por ISBN (desligável com
   `LEITORUM_ISBN_LOOKUP=off`). Qualquer saída nova precisa atualizar "Seus dados" e o Desafio F12 da landing.
+- **Migração com chave estrangeira:** usar `batch_alter_table` com o nome da convenção (`fk_<tabela>_<coluna>_<alvo>`);
+  `ALTER TABLE ... ADD COLUMN ... REFERENCES` cria a chave sem nome e o `alembic check` falha.
 - **Nunca rodar `npm run build` junto com o `pytest`.**
 - **Quebras de linha (CRLF × LF):** com `core.autocrlf`, o checkout principal e os worktrees ficam com arquivos
   mistos (só os tocados viram CRLF). Testes que procuram trechos de código com `\n` devem importar
@@ -101,7 +106,7 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
   (`POST /api/auth/setup-owner` com senha de teste gerada); POST/PUT pela API exigem o cabeçalho `Origin`.
 - **`pytest`:** desde 2026-11-07 o `conftest.py` aponta para um banco temporário e recusa o banco ativo (spec 097).
   Mesmo assim, rodar com `CADERNO_DATABASE_PATH` para um arquivo descartável, `LEITORUM_SECONDARY_BACKUP_DIR=""` e
-  `LEITORUM_STORAGE_ROOT=""`. Suíte completa: ~7 min; em 2026-11-07, 778 aprovados e 1 pulado.
+  `LEITORUM_STORAGE_ROOT=""`. Suíte completa: ~7 min; em 2026-11-09, 825 aprovados e 4 pulados.
 - **Regra global de botões** (`appearance-advanced.css`, especificidade 0,4,0) pinta todo `<button>` com o destaque e
   vence o CSS dos componentes. Controles secundários usam a variante **`.quiet`** (ganchos `--quiet-bg`,
   `--quiet-border`, `--quiet-fg`, `--quiet-fg-disabled`). Elementos com cara de link dentro de texto: usar `<a>`.

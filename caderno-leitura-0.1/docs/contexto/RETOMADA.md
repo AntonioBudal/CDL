@@ -1455,3 +1455,17 @@ Spec aprovada com as recomendações Q1 a Q5:
   existe; usado `--ring-focus`) passando; build ok. Navegador (dados fictícios): quatro formatos com trecho, copiar
   (texto + HTML), baixar `.txt`/`.bib`, obras citadas, aviso de campos ausentes, bibliografia BibTeX dos 6 livros,
   contraste nos 10 temas (mínimo 5,11:1), 375 px sem rolagem lateral (conferido pela captura).
+
+## Fecho do lote 1 do 0.11 (2026-11-09)
+
+- **Features:** F0.11.01 (`e433f23`, migração 0034), F0.11.02 (`22b3b32`, migração 0035), F0.11.03 (`a5354c4`),
+  F0.11.04 (`3480a4a`, migração 0036), F0.11.05 (`b1db1e9`).
+- **Suítes:** `npm test` 774/774 (no checkout principal) e `pytest` completo 825 aprovados e 4 pulados (sozinho, banco
+  descartável); build ok.
+- **Falha de feature anterior, em commit próprio** (`fd2c5fc`): o `alembic check` (`test_migration_matches_models`)
+  acusou a `0035`: a chave estrangeira de `inbox_captures.chapter_id` foi criada sem nome (`ADD COLUMN ... REFERENCES`),
+  e o SQLite só guarda o nome de chave declarada na tabela. A migração passou a usar o modo batch (recria
+  `inbox_captures`, que nenhuma tabela referencia) com `fk_inbox_captures_chapter_id_chapters`. Ela ainda não tinha sido
+  aplicada no banco ativo; os testes de migração da F0.11.02 (subir com captura fictícia e descer) continuam passando.
+- **Lição:** chave estrangeira em migração nova vai por `batch_alter_table` com nome da convenção; `ADD COLUMN` serve
+  para colunas sem FK (como na 0034 e na 0036).

@@ -9,5 +9,5 @@
 - [x] T005 Biblioteca: "Baixar bibliografia".
 - [x] T006 Testes novos e vizinhos; `npm run build`; navegador (1366 e 375 px; 10 temas).
 - [x] T007 Commit; levar ao `main`; build no checkout principal.
-- [ ] T008 Fecho do lote: `npm test`, `pytest` completo (sozinho), build; falhas antigas em commit próprio.
-- [ ] T009 `HANDOFF.md` e `RETOMADA.md`; commit `docs`; levar ao `main`.
+- [x] T008 Fecho do lote: `npm test`, `pytest` completo (sozinho), build; falhas antigas em commit próprio.
+- [x] T009 `HANDOFF.md` e `RETOMADA.md`; commit `docs`; levar ao `main`.
