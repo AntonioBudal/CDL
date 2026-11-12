@@ -5,6 +5,7 @@ import { api, errorMessage } from '../services/api'
 import { useImportDraft } from '../composables/useImportDraft'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import StudyEditorFields from '../components/StudyEditorFields.vue'
+import ParaphrasePanel from '../components/studies/ParaphrasePanel.vue'
 import ImportWorkMetaStrip from '../components/import/ImportWorkMetaStrip.vue'
 import StudioViewModeToggle, { type StudioViewMode } from '../components/studies/StudioViewModeToggle.vue'
 import FloatingMarkdownToolbar from '../components/studies/FloatingMarkdownToolbar.vue'
@@ -599,6 +600,15 @@ onBeforeUnmount(() => {
                 />
               </div>
             </details>
+            <ParaphrasePanel
+              v-if="state.preview"
+              id-prefix="import"
+              v-model:sections="state.sections"
+              :chapter-id="positiveId(state.chapterId)"
+              :author="selectedBook?.author ?? null"
+              :year="selectedBook?.year ?? null"
+              :book-title="selectedBook?.title ?? null"
+            />
           </section>
         </main>
       </fieldset>

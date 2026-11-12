@@ -1751,6 +1751,19 @@ export interface ConceptDetail {
   mentions: ConceptOccurrence[]
 }
 
+// F0.11.07: fontes do validador de paráfrase
+export interface ParaphraseSource {
+  kind: 'quote' | 'capture'
+  label: string
+  text: string
+}
+
+export interface ParaphraseSources {
+  sources: ParaphraseSource[]
+  /** Citações literais marcadas neste estudo: frases que as contêm não são verificadas. */
+  declared_quotes: { section: string; text: string }[]
+}
+
 export interface ConceptCandidate {
   key: string
   term: string

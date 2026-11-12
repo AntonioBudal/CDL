@@ -42,6 +42,7 @@ from app.routers import (
     study_highlights,
     study_mentions,
     concepts,
+    paraphrase,
     study_relations,
     study_sessions,
     study_versions,
@@ -174,6 +175,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(inbox.router, prefix="/api")
     application.include_router(study_mentions.router, prefix="/api")
     application.include_router(concepts.router, prefix="/api")  # F0.11.06
+    application.include_router(paraphrase.router, prefix="/api")  # F0.11.07
     application.include_router(study_relations.router, prefix="/api")
     application.include_router(studies.router, prefix="/api")
     application.include_router(study_highlights.router, prefix="/api")

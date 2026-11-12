@@ -13,7 +13,7 @@ import type {
   ReviewBucket, ReviewItemRead, ReviewRating, ReviewStatsResponse,
   BacklinksResponse, StudyCandidateOption,
   EreaderChoice, EreaderImportResponse, EreaderPreviewResponse, IsbnLookupResponse, BookCreatePayload,
-  ConceptCandidate, ConceptDetail, ConceptListResponse,
+  ConceptCandidate, ConceptDetail, ConceptListResponse, ParaphraseSources,
   InboxBookTrayResponse, InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
   StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
 } from '../types.ts'
@@ -528,6 +528,11 @@ export const api = {
     request<ConceptDetail>(`/concepts/${encodeURIComponent(key)}`, { signal }),
   getConceptCandidates: (q: string, limit = 6, signal?: AbortSignal) =>
     request<ConceptCandidate[]>(`/concepts/candidates?q=${encodeURIComponent(q)}&limit=${limit}`, { signal }),
+  // F0.11.07: textos da fonte para o validador de paráfrase
+  getStudyParaphraseSources: (studyId: number, signal?: AbortSignal) =>
+    request<ParaphraseSources>(`/studies/${studyId}/paraphrase-sources`, { signal }),
+  getChapterParaphraseSources: (chapterId: number, signal?: AbortSignal) =>
+    request<ParaphraseSources>(`/chapters/${chapterId}/paraphrase-sources`, { signal }),
   // F0.11.04: busca de dados pelo ISBN (o servidor consulta BrasilAPI e Open Library)
   lookupIsbn: (isbn: string, signal?: AbortSignal) =>
     request<IsbnLookupResponse>(`/books/isbn/${encodeURIComponent(isbn.replace(/[\s.-]/g, ''))}`, { signal }),

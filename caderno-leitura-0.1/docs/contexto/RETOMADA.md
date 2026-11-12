@@ -1487,3 +1487,23 @@ Spec aprovada com as recomendações Q1 a Q5:
 - **Testes:** `test_concept_lexicon.py` (4) e `feature-108-lexico.test.mjs` (4); vizinhos passando; build ok. Navegador
   (dados fictícios): léxico, link do estudo para o conceito, página com definições e menções, autocompletar no
   editor, contraste nos 10 temas (mínimo 5,35:1), 375 e 1024 px sem rolagem lateral.
+
+## F0.11.07 — Validador de paráfrase (2026-11-12)
+
+- **Spec, plano e tarefas:** `specs/109-validador-parafrase/`. Segunda feature do lote 2 do 0.11. **Sem migração.**
+- **Cálculo no navegador** (`utils/paraphraseCheck.ts`): frases do Resumo, Explicação e Conceitos (6+ palavras, sem
+  Markdown, sem trechos entre aspas, `>` ou marcados como citação literal) contra janelas de 1 a 3 frases da fonte;
+  Jaccard de trigramas de palavras + maior sequência comum. **Cópia** (≥ 0,50 ou 12+ palavras seguidas), **Muito
+  próxima** (0,25 a 0,49). Índice invertido de trigramas (200 mil palavras: verificação < 300 ms no teste).
+  `markAsQuote` põe aspas e a chamada `(SOBRENOME, ano, p. )`.
+- **Fontes** (`services/paraphrase_sources.py`, `routers/paraphrase.py`): `GET /api/studies/{id}/paraphrase-sources`
+  e `GET /api/chapters/{id}/paraphrase-sources` — só **texto do livro**: capturas da Mesa do mesmo livro e citações
+  literais (`quote`) de outros estudos do mesmo livro; as `quote` do próprio estudo voltam como `declared_quotes`.
+  **O fichamento (`source_response`) não é fonte**: é o texto que vira as seções na importação ou a página manuscrita
+  na digitalização (correção feita na execução; registrada na spec).
+- **Tela:** `components/studies/ParaphrasePanel.vue` na edição do estudo e na importação (fechado por padrão;
+  atualiza 400 ms depois de parar de digitar; "Marcar como citação").
+- **Testes:** `test_paraphrase_sources.py` (3) e `feature-109-parafrase.test.mjs` (8); vizinhos passando; build ok.
+  Navegador (dados fictícios): edição e importação, cópia e "muito próxima", paráfrase real não sinalizada, citação
+  declarada fora, "Marcar como citação", contraste nos 10 temas (mínimo 5,19:1), 375 px sem rolagem lateral e botões
+  de 46 px.

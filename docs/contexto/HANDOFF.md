@@ -46,11 +46,12 @@ F0.10.09) fechou em 2026-11-07: `npm test` 749/749, `pytest` completo 788 aprova
 | F0.11.04 ISBN sob demanda (BrasilAPI → Open Library, pelo servidor), editora e local; referência ABNT completa | Concluída (migração `0036`) | `specs/106-isbn-sob-demanda/` |
 | F0.11.05 Referências em 3 escopos: ABNT, APA, BibTeX e CSL-JSON (obra, trecho, obras citadas; bibliografia do acervo) | Concluída (sem migração) | `specs/107-referencias-tres-escopos/` |
 | F0.11.06 Léxico de conceitos derivado das seções Conceitos; `[[conceito:Termo]]` no editor e na leitura | Concluída (sem migração) | `specs/108-lexico-conceitos/` |
+| F0.11.07 Validador de paráfrase (Jaccard de trigramas no navegador, contra capturas e citações literais do livro) | Concluída (sem migração) | `specs/109-validador-parafrase/` |
 
 Lote 1 do 0.11 fechado em 2026-11-09: `npm test` 774/774, `pytest` 825 aprovados e 4 pulados, build ok; correção da
 chave estrangeira da 0035 em commit próprio (`fd2c5fc`).
 
-Pendentes, na ordem do plano (lote 2): validador de paráfrase (Jaccard) · evolução da revisão (`difficulty_weight`, conceitos frágeis, cartões de conceito,
+Pendentes, na ordem do plano (lote 2): evolução da revisão (`difficulty_weight`, conceitos frágeis, cartões de conceito,
 Memória do Dia) · receptor KOReader/Readest · recorte de foto para a digitalização · cadernos de síntese com transclusão.
 
 ### Roadmap 1.0 (comunidade e ecossistema) — nada iniciado
@@ -64,7 +65,7 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **109**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **110**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,

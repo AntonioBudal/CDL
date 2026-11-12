@@ -7,6 +7,7 @@ import { useStudyEdit } from '../composables/useStudyEdit'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import { useStudyDraft } from '../composables/useStudyDraft'
 import StudyEditorFields from '../components/StudyEditorFields.vue'
+import ParaphrasePanel from '../components/studies/ParaphrasePanel.vue'
 import ConflictResolutionModal from '../components/sync/ConflictResolutionModal.vue'
 import StudyHistoryModal from '../components/StudyHistoryModal.vue'
 import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
@@ -230,6 +231,14 @@ onBeforeUnmount(() => { disposed = true; resource.cancel() })
             v-model:template-id="state.template_id"
             v-model:sections="state.sections"
             v-model:notes="state.notes"
+          />
+          <ParaphrasePanel
+            id-prefix="edit"
+            v-model:sections="state.sections"
+            :study-id="resourceState.context.study.id"
+            :author="resourceState.context.book.author"
+            :year="resourceState.context.book.year ?? null"
+            :book-title="resourceState.context.book.title"
           />
           <p v-if="!hasAnalysis" class="notice warning">Preencha ao menos uma das quatro seções para salvar.</p>
           <div v-if="state.error" class="notice error" role="alert" aria-live="assertive">
