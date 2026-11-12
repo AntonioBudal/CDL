@@ -28,6 +28,13 @@ let cleanupHighlights: (() => void) | null = null
 const rendered = computed(() => sanitizeHtml(renderMarkdown(props.content)))
 
 function handleContentClick(event: MouseEvent) {
+  // F0.11.06: menção a conceito leva à página do conceito
+  const concept = (event.target as HTMLElement).closest('.study-concept-mention') as HTMLElement | null
+  if (concept?.dataset.conceptKey) {
+    event.preventDefault()
+    router?.push(`/conceitos/${concept.dataset.conceptKey}`)
+    return
+  }
   const target = (event.target as HTMLElement).closest('.study-internal-mention') as HTMLElement | null
   if (!target) return
 
@@ -89,6 +96,13 @@ onBeforeUnmount(() => {
 <style scoped>
 .markdown-content:focus {
   outline: none;
+}
+
+:deep(.study-concept-mention) {
+  color: var(--color-link);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 
 :deep(.study-internal-mention) {

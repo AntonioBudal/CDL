@@ -176,6 +176,15 @@ onUnmounted(() => {
           </RouterLink>
 
           <RouterLink
+            to="/conceitos"
+            class="drawer-item"
+            @click="emit('close')"
+          >
+            <Icon name="book-open" :size="20" class="drawer-item-icon" />
+            <span class="drawer-item-label">Léxico</span>
+          </RouterLink>
+
+          <RouterLink
             to="/lixeira"
             class="drawer-item"
             @click="emit('close')"

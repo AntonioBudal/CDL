@@ -98,6 +98,12 @@ const secondaryNavItems = computed<SecondaryNavItem[]>(() => {
       icon: 'sliders',
     },
     {
+      to: '/conceitos',
+      label: 'Léxico',
+      routes: ['lexicon', 'concept'],
+      icon: 'book-open',
+    },
+    {
       to: '/lixeira',
       label: 'Lixeira',
       routes: ['trash'],

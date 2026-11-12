@@ -1469,3 +1469,21 @@ Spec aprovada com as recomendações Q1 a Q5:
   aplicada no banco ativo; os testes de migração da F0.11.02 (subir com captura fictícia e descer) continuam passando.
 - **Lição:** chave estrangeira em migração nova vai por `batch_alter_table` com nome da convenção; `ADD COLUMN` serve
   para colunas sem FK (como na 0034 e na 0036).
+
+## F0.11.06 — Léxico de conceitos e `[[conceito:…]]` (2026-11-12)
+
+- **Spec, plano e tarefas:** `specs/108-lexico-conceitos/`. Primeira feature do lote 2 do 0.11. **Sem migração.**
+- **Léxico derivado** (`services/concept_lexicon.py`): `parse_concepts` lê a seção Conceitos (`- **Termo**: def`,
+  `**Termo** — def`, `Termo: def`, `Termo – def`, `### Termo` + parágrafo; termo de até 80 caracteres e 8 palavras;
+  o resto é ignorado); `concept_key` sem acento/caixa (`mimese`); plural simples fundido só se a forma singular existe;
+  `extract_concept_mentions` com trecho legível (colchetes removidos). Só estudos do próprio leitor, fora da lixeira.
+- **API** (`routers/concepts.py`): `GET /api/concepts?q=&page=&per_page=`, `/api/concepts/candidates`,
+  `/api/concepts/{key}` (404 se não existir).
+- **Tela:** `views/LexiconView.vue` (`/conceitos`, rota `lexicon`) e `views/ConceptView.vue` (`/conceitos/:key`, rota
+  `concept`), com entradas "Léxico" na barra secundária, no menu "Mais" do celular e no menu do usuário; rotas nos
+  contratos 076/081. Markdown: `[[conceito:Termo]]` → `<a class="study-concept-mention">` (antes das menções a estudo,
+  fora de `code`); `MarkdownContent` navega para o conceito. Editor: `[[` sugere estudos e conceitos
+  (`[[conceito:` filtra só conceitos) e insere `[[conceito:Termo]]`.
+- **Testes:** `test_concept_lexicon.py` (4) e `feature-108-lexico.test.mjs` (4); vizinhos passando; build ok. Navegador
+  (dados fictícios): léxico, link do estudo para o conceito, página com definições e menções, autocompletar no
+  editor, contraste nos 10 temas (mínimo 5,35:1), 375 e 1024 px sem rolagem lateral.

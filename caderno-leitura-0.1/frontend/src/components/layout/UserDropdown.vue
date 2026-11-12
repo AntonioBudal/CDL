@@ -132,6 +132,16 @@ onBeforeUnmount(() => {
           </RouterLink>
 
           <RouterLink
+            to="/conceitos"
+            class="user-menu-item"
+            role="menuitem"
+            @click="closeDropdown"
+          >
+            <Icon name="book-open" :size="16" />
+            <span>Léxico de conceitos</span>
+          </RouterLink>
+
+          <RouterLink
             to="/minhas-imagens"
             class="user-menu-item"
             role="menuitem"

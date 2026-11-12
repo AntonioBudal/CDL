@@ -86,6 +86,9 @@ export const router = createRouter({
     { path: '/ajustes', name: 'settings', component: () => import('../views/SettingsView.vue'), meta: { title: 'Ajustes' } },
     { path: '/minhas-imagens', name: 'media-space', component: () => import('../views/MediaSpaceView.vue'), meta: { title: 'Minhas Imagens e Espaço' } },
     { path: '/lixeira', name: 'trash', component: () => import('../views/TrashView.vue'), meta: { title: 'Lixeira' } },
+    // F0.11.06: léxico de conceitos
+    { path: '/conceitos', name: 'lexicon', component: () => import('../views/LexiconView.vue'), meta: { title: 'Léxico' } },
+    { path: '/conceitos/:key', name: 'concept', component: () => import('../views/ConceptView.vue'), meta: { title: 'Conceito' } },
     { path: '/@:username', alias: ['/u/:username'], name: 'user-profile', component: () => import('../views/UserProfileView.vue'), meta: { title: 'Perfil do Leitor' } },
     { path: '/admin', name: 'admin', component: () => import('../views/AdminView.vue'), meta: { title: 'Administração', requiresAdmin: true } },
     {

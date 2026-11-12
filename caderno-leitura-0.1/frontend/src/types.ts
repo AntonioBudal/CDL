@@ -1717,3 +1717,42 @@ export interface IsbnLookupResponse {
   place: string
   existing_book: { id: number; title: string } | null
 }
+
+// --- Léxico de conceitos (F0.11.06, spec 108) ---
+export interface ConceptSummary {
+  key: string
+  term: string
+  definitions: number
+  mentions: number
+  books: number
+}
+
+export interface ConceptListResponse {
+  items: ConceptSummary[]
+  total: number
+  page: number
+  per_page: number
+}
+
+export interface ConceptOccurrence {
+  term: string
+  text: string
+  study_id: number
+  study_title: string
+  book_id: number
+  book_title: string
+  chapter_name: string
+}
+
+export interface ConceptDetail {
+  key: string
+  term: string
+  definitions: ConceptOccurrence[]
+  mentions: ConceptOccurrence[]
+}
+
+export interface ConceptCandidate {
+  key: string
+  term: string
+  definitions: number
+}

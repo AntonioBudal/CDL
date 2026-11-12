@@ -6,6 +6,7 @@ import {
   type AnalysisSections,
   type EditorSectionTabKey,
   type EditorViewMode,
+  type ConceptCandidate,
   type StudyCandidateOption,
   type StudyTemplateId,
 } from '../types'
@@ -13,7 +14,16 @@ import { getStudyTemplate } from '../constants/studyTemplates'
 import TemplateSelectorModal from './studies/TemplateSelectorModal.vue'
 import MarkdownToolbar from './MarkdownToolbar.vue'
 import MarkdownContent from './MarkdownContent.vue'
-import { searchStudyCandidates } from '../services/api'
+import { api, searchStudyCandidates } from '../services/api'
+
+// F0.11.06: o autocompletar de [[ oferece estudos e conceitos do léxico
+type MentionOption =
+  | ({ kind: 'study' } & StudyCandidateOption)
+  | ({ kind: 'concept' } & ConceptCandidate)
+const CONCEPT_PREFIX = /^conceito\s*:\s*/i
+function optionKey(option: MentionOption): string {
+  return option.kind === 'concept' ? `concept-${option.key}` : `study-${option.id}`
+}
 
 defineProps<{ idPrefix: string; showMetadata?: boolean }>()
 const title = defineModel<string>('title', { required: true })
@@ -33,7 +43,7 @@ interface MentionAutocompleteState {
   triggerIndex: number
   sectionKey: keyof AnalysisSections | 'notes' | ''
   textareaEl: HTMLTextAreaElement | null
-  candidates: StudyCandidateOption[]
+  candidates: MentionOption[]
   selectedIndex: number
   isLoading: boolean
 }
@@ -101,8 +111,17 @@ function checkMentionTrigger(key: keyof AnalysisSections | 'notes', textarea: HT
   mentionState.value.isLoading = true
   searchDebounceTimer = setTimeout(async () => {
     try {
-      const results = await searchStudyCandidates(mentionState.value.query, 8)
-      mentionState.value.candidates = results
+      const query = mentionState.value.query
+      const onlyConcepts = CONCEPT_PREFIX.test(query)
+      const conceptQuery = query.replace(CONCEPT_PREFIX, '')
+      const [studies, concepts] = await Promise.all([
+        onlyConcepts ? Promise.resolve([]) : searchStudyCandidates(query, 8),
+        api.getConceptCandidates(conceptQuery, onlyConcepts ? 10 : 4).catch(() => []),
+      ])
+      mentionState.value.candidates = [
+        ...studies.map((s): MentionOption => ({ kind: 'study', ...s })),
+        ...concepts.map((c): MentionOption => ({ kind: 'concept', ...c })),
+      ]
       mentionState.value.selectedIndex = 0
     } catch {
       mentionState.value.candidates = []
@@ -159,7 +178,7 @@ function handleTextareaBlur() {
   }, 200)
 }
 
-function selectMentionCandidate(candidate: StudyCandidateOption) {
+function selectMentionCandidate(candidate: MentionOption) {
   const textarea = mentionState.value.textareaEl
   if (!textarea) return
 
@@ -168,13 +187,17 @@ function selectMentionCandidate(candidate: StudyCandidateOption) {
   const cursor = textarea.selectionStart
 
   // Verifica se há estudos homônimos nos resultados para aplicar desambiguação por ID
-  const hasDuplicateTitle = mentionState.value.candidates.some(
-    (c) => c.id !== candidate.id && c.title.trim().toLowerCase() === candidate.title.trim().toLowerCase()
-  )
-
-  const mentionToken = hasDuplicateTitle
-    ? `[[${candidate.title}|${candidate.id}]]`
-    : `[[${candidate.title}]]`
+  let mentionToken: string
+  if (candidate.kind === 'concept') {
+    mentionToken = `[[conceito:${candidate.term}]]`
+  } else {
+    const hasDuplicateTitle = mentionState.value.candidates.some(
+      (c) => c.kind === 'study' && c.id !== candidate.id && c.title.trim().toLowerCase() === candidate.title.trim().toLowerCase()
+    )
+    mentionToken = hasDuplicateTitle
+      ? `[[${candidate.title}|${candidate.id}]]`
+      : `[[${candidate.title}]]`
+  }
 
   const currentVal = textarea.value
   const before = currentVal.slice(0, triggerIdx)
@@ -365,7 +388,7 @@ onUnmounted(() => {
   </div>
 
   <p :id="`${idPrefix}-format-hint`" class="field-hint">
-    Nas seções, use a barra de ferramentas ou digite Markdown para formatar títulos, listas, citações, links e digite <code>[[</code> para autocompletar menções a outros estudos.
+    Nas seções, use a barra de ferramentas ou digite Markdown para formatar títulos, listas, citações, links e digite <code>[[</code> para autocompletar menções a outros estudos e a conceitos do léxico.
   </p>
 
   <div class="analysis-grid" :class="{ 'is-focused-mode': viewMode === 'focused' }">
@@ -415,18 +438,18 @@ onUnmounted(() => {
               v-if="mentionState.isOpen && mentionState.sectionKey === section.key"
               class="study-mention-autocomplete-menu"
               role="listbox"
-              aria-label="Sugestões de estudos para menção"
+              aria-label="Sugestões de estudos e conceitos para menção"
             >
               <div v-if="mentionState.isLoading" class="mention-autocomplete-status">
-                Buscando estudos no acervo...
+                Buscando estudos e conceitos no acervo...
               </div>
               <div v-else-if="mentionState.candidates.length === 0" class="mention-autocomplete-empty">
-                Nenhum estudo encontrado para "{{ mentionState.query }}"
+                Nenhum estudo ou conceito encontrado para "{{ mentionState.query }}"
               </div>
               <div v-else class="mention-candidates-list">
                 <button
                   v-for="(candidate, idx) in mentionState.candidates"
-                  :key="candidate.id"
+                  :key="optionKey(candidate)"
                   type="button"
                   role="option"
                   :aria-selected="mentionState.selectedIndex === idx"
@@ -436,12 +459,22 @@ onUnmounted(() => {
                   @mousedown.prevent="selectMentionCandidate(candidate)"
                   @click="selectMentionCandidate(candidate)"
                 >
-                  <div class="mention-candidate-title">{{ candidate.title }}</div>
-                  <div class="mention-candidate-meta">
-                    <span class="mention-candidate-book">{{ candidate.book_title }}</span>
-                    <span v-if="candidate.chapter_name" class="mention-candidate-sep">·</span>
-                    <span v-if="candidate.chapter_name" class="mention-candidate-chapter">{{ candidate.chapter_name }}</span>
-                  </div>
+                  <template v-if="candidate.kind === 'concept'">
+                    <div class="mention-candidate-title">{{ candidate.term }}</div>
+                    <div class="mention-candidate-meta">
+                      <span class="mention-candidate-kind">Conceito</span>
+                      <span class="mention-candidate-sep">·</span>
+                      <span>{{ candidate.definitions === 1 ? '1 definição' : `${candidate.definitions} definições` }}</span>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <div class="mention-candidate-title">{{ candidate.title }}</div>
+                    <div class="mention-candidate-meta">
+                      <span class="mention-candidate-book">{{ candidate.book_title }}</span>
+                      <span v-if="candidate.chapter_name" class="mention-candidate-sep">·</span>
+                      <span v-if="candidate.chapter_name" class="mention-candidate-chapter">{{ candidate.chapter_name }}</span>
+                    </div>
+                  </template>
                 </button>
               </div>
             </div>
@@ -495,18 +528,18 @@ onUnmounted(() => {
           v-if="mentionState.isOpen && mentionState.sectionKey === 'notes'"
           class="study-mention-autocomplete-menu"
           role="listbox"
-          aria-label="Sugestões de estudos para menção em notas"
+          aria-label="Sugestões de estudos e conceitos para menção em notas"
         >
           <div v-if="mentionState.isLoading" class="mention-autocomplete-status">
-            Buscando estudos no acervo...
+            Buscando estudos e conceitos no acervo...
           </div>
           <div v-else-if="mentionState.candidates.length === 0" class="mention-autocomplete-empty">
-            Nenhum estudo encontrado para "{{ mentionState.query }}"
+            Nenhum estudo ou conceito encontrado para "{{ mentionState.query }}"
           </div>
           <div v-else class="mention-candidates-list">
             <button
               v-for="(candidate, idx) in mentionState.candidates"
-              :key="candidate.id"
+              :key="optionKey(candidate)"
               type="button"
               role="option"
               :aria-selected="mentionState.selectedIndex === idx"
@@ -516,12 +549,22 @@ onUnmounted(() => {
               @mousedown.prevent="selectMentionCandidate(candidate)"
               @click="selectMentionCandidate(candidate)"
             >
-              <div class="mention-candidate-title">{{ candidate.title }}</div>
-              <div class="mention-candidate-meta">
-                <span class="mention-candidate-book">{{ candidate.book_title }}</span>
-                <span v-if="candidate.chapter_name" class="mention-candidate-sep">·</span>
-                <span v-if="candidate.chapter_name" class="mention-candidate-chapter">{{ candidate.chapter_name }}</span>
-              </div>
+              <template v-if="candidate.kind === 'concept'">
+                <div class="mention-candidate-title">{{ candidate.term }}</div>
+                <div class="mention-candidate-meta">
+                  <span class="mention-candidate-kind">Conceito</span>
+                  <span class="mention-candidate-sep">·</span>
+                  <span>{{ candidate.definitions === 1 ? '1 definição' : `${candidate.definitions} definições` }}</span>
+                </div>
+              </template>
+              <template v-else>
+                <div class="mention-candidate-title">{{ candidate.title }}</div>
+                <div class="mention-candidate-meta">
+                  <span class="mention-candidate-book">{{ candidate.book_title }}</span>
+                  <span v-if="candidate.chapter_name" class="mention-candidate-sep">·</span>
+                  <span v-if="candidate.chapter_name" class="mention-candidate-chapter">{{ candidate.chapter_name }}</span>
+                </div>
+              </template>
             </button>
           </div>
         </div>

@@ -26,6 +26,16 @@ markdown.renderer.rules.link_open = (tokens, index, options, env, renderer) => {
     : renderer.renderToken(tokens, index, options)
 }
 
+/** Mesma chave do servidor (`concept_lexicon.concept_key`): sem acento, minúsculas, hífens. */
+export function conceptKey(term: string): string {
+  return term
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^0-9a-z]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
 export function replaceStudyMentions(html: string): string {
   if (!html) return ''
   const codeBlocks: string[] = []
@@ -34,7 +44,15 @@ export function replaceStudyMentions(html: string): string {
     return `__CODE_BLOCK_${codeBlocks.length - 1}__`
   })
 
-  const replaced = protectedHtml.replace(/\[\[([^\]|]+?)(?:\s*\|\s*([^\]]+?))?\]\]/g, (_match, rawTitle, rawId) => {
+  // F0.11.06: [[conceito:Termo]] vira link para a página do conceito (antes das menções a estudos).
+  const withConcepts = protectedHtml.replace(/\[\[\s*conceito\s*:\s*([^\]|]+?)\s*\]\]/gi, (_match, rawTerm) => {
+    const term = String(rawTerm).trim()
+    const key = conceptKey(term)
+    if (!key) return _match
+    return `<a href="/conceitos/${key}" class="study-concept-mention" data-concept-key="${key}" aria-label="conceito: ${term}">${term}</a>`
+  })
+
+  const replaced = withConcepts.replace(/\[\[([^\]|]+?)(?:\s*\|\s*([^\]]+?))?\]\]/g, (_match, rawTitle, rawId) => {
     const title = rawTitle.trim()
     const id = rawId && /^\d+$/.test(rawId.trim()) ? rawId.trim() : ''
     const dataIdAttr = id ? ` data-study-id="${id}"` : ''

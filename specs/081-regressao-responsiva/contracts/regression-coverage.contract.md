@@ -80,10 +80,13 @@ O sistema reconhece estritamente os seguintes limites canônicos de responsivida
 | 25 | `not-found` | Pass | Pass | Pass | Pass | Pass | Pass | Pass | Pass | Pass |
 | 26 | `media-space` | Pass | Pass | Pass | Pass | Pass | Pass | Pass | Pass | Pass |
 | 27 | `ereader-import` | Pass | Pass | — | — | — | Pass | Pass | Pass | — |
+| 28 | `lexicon` | — | Pass | — | — | — | — | Pass | — | — |
+| 29 | `concept` | — | Pass | — | — | — | — | Pass | — | — |
 
 A linha 26 (`/minhas-imagens`, feature 090-C) foi conferida pelo usuário em 28/10/2026 (tarefa C037).
 A linha 27 (`/inbox/importar-leitor`, F0.11.03) foi conferida por script no navegador em 09/11/2026 nas larguras
 marcadas "Pass" (sem rolagem lateral); "—" = não conferida.
+As linhas 28 e 29 (`/conceitos`, F0.11.06) foram conferidas por script no navegador em 12/11/2026 nas larguras marcadas.
 
 ---
 

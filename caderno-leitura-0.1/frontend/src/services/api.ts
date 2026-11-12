@@ -13,6 +13,7 @@ import type {
   ReviewBucket, ReviewItemRead, ReviewRating, ReviewStatsResponse,
   BacklinksResponse, StudyCandidateOption,
   EreaderChoice, EreaderImportResponse, EreaderPreviewResponse, IsbnLookupResponse, BookCreatePayload,
+  ConceptCandidate, ConceptDetail, ConceptListResponse,
   InboxBookTrayResponse, InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
   StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
 } from '../types.ts'
@@ -514,6 +515,19 @@ export const api = {
     const queryStr = searchParams.toString()
     return request<InboxCapture[]>(`/inbox${queryStr ? `?${queryStr}` : ''}`, { signal })
   },
+  // F0.11.06: léxico de conceitos
+  listConcepts: (params: { q?: string; page?: number; per_page?: number } = {}, signal?: AbortSignal) => {
+    const search = new URLSearchParams()
+    if (params.q?.trim()) search.set('q', params.q.trim())
+    if (params.page) search.set('page', String(params.page))
+    if (params.per_page) search.set('per_page', String(params.per_page))
+    const query = search.toString()
+    return request<ConceptListResponse>(`/concepts${query ? `?${query}` : ''}`, { signal })
+  },
+  getConcept: (key: string, signal?: AbortSignal) =>
+    request<ConceptDetail>(`/concepts/${encodeURIComponent(key)}`, { signal }),
+  getConceptCandidates: (q: string, limit = 6, signal?: AbortSignal) =>
+    request<ConceptCandidate[]>(`/concepts/candidates?q=${encodeURIComponent(q)}&limit=${limit}`, { signal }),
   // F0.11.04: busca de dados pelo ISBN (o servidor consulta BrasilAPI e Open Library)
   lookupIsbn: (isbn: string, signal?: AbortSignal) =>
     request<IsbnLookupResponse>(`/books/isbn/${encodeURIComponent(isbn.replace(/[\s.-]/g, ''))}`, { signal }),
