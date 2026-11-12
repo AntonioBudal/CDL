@@ -90,6 +90,7 @@ onBeforeUnmount(() => {
     <ul v-else class="lexicon-list">
       <li v-for="item in items" :key="item.key" class="lexicon-item">
         <RouterLink :to="`/conceitos/${item.key}`" class="lexicon-term">{{ item.term }}</RouterLink>
+        <span v-if="item.fragile" class="fragile-tag">Frágil</span>
         <span class="lexicon-meta">
           {{ item.definitions === 1 ? '1 definição' : `${item.definitions} definições` }}
           · {{ item.books === 1 ? '1 livro' : `${item.books} livros` }}<template v-if="item.mentions">
@@ -107,6 +108,15 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.fragile-tag {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--color-warning-border);
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
 .lexicon-view {
   max-width: 52rem;
   margin: 0 auto;

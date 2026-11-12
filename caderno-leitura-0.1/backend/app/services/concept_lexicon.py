@@ -107,6 +107,7 @@ class ConceptOccurrence:
     book_id: int
     book_title: str
     chapter_name: str
+    chapter_id: int = 0  # F0.11.08: filtro por capítulo dos cartões de conceito
 
 
 @dataclass
@@ -130,7 +131,7 @@ def _studies(session: Session, user_id: str):
     return session.execute(
         select(
             Study.id, Study.title, Study.summary, Study.explanation, Study.concepts, Study.references,
-            Study.notes, Book.id, Book.title, Chapter.name,
+            Study.notes, Book.id, Book.title, Chapter.name, Chapter.id,
         )
         .join(Chapter, Study.chapter_id == Chapter.id)
         .join(Book, Chapter.book_id == Book.id)
@@ -149,9 +150,9 @@ def build_lexicon(session: Session, user_id: str) -> dict[str, ConceptEntry]:
         return entry
 
     for (study_id, title, summary, explanation, concepts, references, notes, book_id, book_title,
-         chapter_name) in _studies(session, user_id):
+         chapter_name, chapter_id) in _studies(session, user_id):
         base = dict(study_id=study_id, study_title=title, book_id=book_id, book_title=book_title,
-                    chapter_name=chapter_name or "")
+                    chapter_name=chapter_name or "", chapter_id=chapter_id)
         for term, definition in parse_concepts(concepts):
             entry_for(term).definitions.append(ConceptOccurrence(term=term, text=definition, **base))
         for section in (summary, explanation, concepts, references, notes):

@@ -1235,7 +1235,7 @@ export interface ReviewItemRead {
   book_title: string
   chapter_id: number
   chapter_name: string
-  kind: 'question' | 'hidden'
+  kind: 'question' | 'hidden' | 'concept'
   section: string
   question_text: string
   expected_answer: string
@@ -1244,6 +1244,37 @@ export interface ReviewItemRead {
   last_reviewed_at: string | null
   review_count: number
   last_rating: ReviewRating | null
+  // F0.11.08
+  difficulty_weight?: number | null
+  concept_key?: string | null
+  definitions?: ConceptCardDefinition[]
+}
+
+// F0.11.08: cartões de conceito, conceitos frágeis e Memória do dia
+export interface ConceptCardDefinition {
+  text: string
+  study_id: number
+  study_title: string
+  book_title: string
+  chapter_name: string
+}
+
+export interface FragileConcept {
+  key: string
+  term: string
+  weight: number
+  reason: 'card' | 'questions'
+}
+
+export interface DailyMemory {
+  kind: 'highlight' | 'study'
+  text: string
+  study_id: number
+  study_title: string
+  book_id: number
+  book_title: string
+  created_at: string
+  reason: 'anniversary' | 'month' | 'random'
 }
 
 export interface ReviewRecordRequest {
@@ -1725,6 +1756,7 @@ export interface ConceptSummary {
   definitions: number
   mentions: number
   books: number
+  fragile?: boolean
 }
 
 export interface ConceptListResponse {
@@ -1747,6 +1779,7 @@ export interface ConceptOccurrence {
 export interface ConceptDetail {
   key: string
   term: string
+  fragile?: boolean
   definitions: ConceptOccurrence[]
   mentions: ConceptOccurrence[]
 }

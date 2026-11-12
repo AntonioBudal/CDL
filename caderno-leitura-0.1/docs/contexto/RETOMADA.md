@@ -1507,3 +1507,25 @@ Spec aprovada com as recomendações Q1 a Q5:
   Navegador (dados fictícios): edição e importação, cópia e "muito próxima", paráfrase real não sinalizada, citação
   declarada fora, "Marcar como citação", contraste nos 10 temas (mínimo 5,19:1), 375 px sem rolagem lateral e botões
   de 46 px.
+
+## F0.11.08 — Evolução da revisão (2026-11-12)
+
+- **Spec, plano e tarefas:** `specs/110-evolucao-revisao/`. Terceira feature do lote 2 do 0.11. **Migração `0037`**
+  (`study_highlights.difficulty_weight` preenchida pela última nota; tabela `concept_reviews`), **não aplicada ao
+  banco ativo**.
+- **Peso e fila** (`services/review_weights.py`): `peso = 0,5 × anterior + 0,5 × alvo` (difícil 1, médio 0,5, fácil 0);
+  intervalo 1/3/7/14 dias pelo peso; fila nunca revisados → vencidos → demais, do mais pesado. Sem peso guardado vale
+  o equivalente da última nota (`effective_weight`). Os baldes seguem pela última nota.
+- **Cartões de conceito** (`services/concept_review_service.py`): `GET /api/review/items?kind=concept` (livro,
+  capítulo, balde, `fragile=true`), `POST /api/review/concepts/{key}/record`; com `kind=concept`, `/review/stats`
+  devolve baldes e totais dos cartões. **Conceitos frágeis**: peso ≥ 0,6 pelo cartão ou pela média das perguntas dos
+  estudos que definem o conceito; `GET /api/review/fragile-concepts`; `fragile` no léxico.
+- **Memória do Dia** (`services/daily_memory.py`, `GET /api/dashboard/memory?tz_offset=`): 30+ dias; aniversário →
+  mesmo dia do mês → sorteio fixo do dia; `hidden` e lixeira fora.
+- **Tela:** filtro "Conceitos" e verso com definições (`ReviewStatsHeader`, `ReviewCard`, `useReviewSession` grava no
+  endpoint certo), `FragileConceptsPanel.vue` na Central, etiqueta "Frágil" no Léxico e no conceito,
+  `DailyMemoryCard.vue` no Painel (`utils/timeAgo.ts`).
+- **Testes:** `test_review_weights.py`, `test_concept_reviews.py`, `test_daily_memory.py`, `test_migration_0037.py`
+  (13) e `feature-110-revisao.test.mjs` (3); vizinhos (104 no backend, 85 no frontend) e build ok. Navegador (dados
+  fictícios): Memória do dia, prática de conceitos gravando em `/review/concepts/…`, bloco de frágeis, etiqueta;
+  contraste ≥ 4,83:1 nos 10 temas; 375 px sem rolagem lateral; alvos de 44–46 px.

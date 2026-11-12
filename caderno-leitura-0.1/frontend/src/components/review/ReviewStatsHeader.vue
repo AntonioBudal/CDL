@@ -217,6 +217,16 @@ function onStartPractice() {
         >
           Termos Ocultos
         </button>
+        <button
+          type="button"
+          class="filter-pill"
+          :class="{ active: selectedKind === 'concept', quiet: selectedKind !== 'concept' }"
+          role="radio"
+          :aria-checked="selectedKind === 'concept'"
+          @click="setKind('concept')"
+        >
+          Conceitos
+        </button>
       </div>
 
       <!-- Seletores de Livro e Capítulo -->

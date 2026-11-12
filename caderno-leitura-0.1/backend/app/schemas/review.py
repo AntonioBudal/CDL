@@ -23,6 +23,29 @@ class ReviewRecordResponse(OutputModel):
     last_rating: ReviewRating
 
 
+class ConceptCardDefinition(OutputModel):
+    text: str
+    study_id: RecordId
+    study_title: str
+    book_title: str
+    chapter_name: str
+
+
+class FragileConcept(OutputModel):
+    key: str
+    term: str
+    weight: float
+    reason: Literal["card", "questions"]
+
+
+class ConceptRecordResponse(OutputModel):
+    concept_key: str
+    last_reviewed_at: datetime
+    review_count: int
+    last_rating: ReviewRating
+    difficulty_weight: float
+
+
 class ReviewItemRead(OutputModel):
     id: RecordId
     study_id: RecordId
@@ -40,6 +63,10 @@ class ReviewItemRead(OutputModel):
     last_reviewed_at: datetime | None = None
     review_count: int = 0
     last_rating: ReviewRating | None = None
+    # F0.11.08
+    difficulty_weight: float | None = None
+    concept_key: str | None = None
+    definitions: list[ConceptCardDefinition] = Field(default_factory=list)
 
 
 class ReviewBookItem(OutputModel):

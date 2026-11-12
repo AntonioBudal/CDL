@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { api, startStudySession, getStudySessionsHistory } from '../services/api.ts'
 import { reviewApi } from '../api/review.ts'
 import { useReviewSession } from '../composables/useReviewSession.ts'
@@ -9,6 +9,7 @@ import ReviewStatsHeader from '../components/review/ReviewStatsHeader.vue'
 import ReviewCard from '../components/review/ReviewCard.vue'
 import ReviewPedagogicalEmpty from '../components/review/ReviewPedagogicalEmpty.vue'
 import ReviewSummaryModal from '../components/review/ReviewSummaryModal.vue'
+import FragileConceptsPanel from '../components/review/FragileConceptsPanel.vue'
 
 const router = useRouter()
 const session = useReviewSession()
@@ -113,8 +114,12 @@ watch(selectedBookId, (newBookId) => {
   }
 })
 
+const isConceptMode = computed(() => selectedKind.value === 'concept')
+const fragilePanel = ref<InstanceType<typeof FragileConceptsPanel> | null>(null)
+
 const eligibleCountForSelection = computed(() => {
   if (bucketFilter.value) return stats.value.buckets?.[bucketFilter.value] ?? 0
+  if (isConceptMode.value) return stats.value.total_eligible
   if (selectedBookId.value) {
     const found = stats.value.books.find((b) => b.book_id === selectedBookId.value)
     return found ? found.items_count : 0
@@ -138,11 +143,22 @@ async function startReview() {
   })
 }
 
+// F0.11.08: prática só dos conceitos frágeis (cartões de conceito com peso alto)
+async function practiceFragile() {
+  selectedKind.value = 'concept'
+  selectedBucket.value = 'all'
+  isSessionActive.value = true
+  startTimer()
+  const limit = sessionSize.value
+  await session.loadItems({ kind: 'concept', fragile: true, limit })
+}
+
 function exitSession() {
   stopTimer()
   session.reset()
   isSessionActive.value = false
   void fetchStats()
+  void fragilePanel.value?.reload()
 }
 
 async function handleReviewMore() {
@@ -283,9 +299,17 @@ onUnmounted(() => {
           @start-practice="startReview"
         />
 
+        <FragileConceptsPanel ref="fragilePanel" :busy="loadingStats" @practice="practiceFragile" />
+
+        <!-- F0.11.08: "Conceitos" sem nenhum conceito definido -->
+        <p v-if="isConceptMode && !loadingStats && stats.total_eligible === 0" class="concept-empty notice">
+          Ainda não há conceitos para praticar. Escreva na seção Conceitos de um estudo uma linha como
+          <code>**Termo**: definição</code>; cada conceito do <RouterLink to="/conceitos">Léxico</RouterLink> vira um cartão.
+        </p>
+
         <!-- ESTADO VAZIO PEDAGÓGICO: Nenhum item elegível no acervo -->
         <ReviewPedagogicalEmpty
-          v-if="!loadingStats && stats.total_eligible === 0"
+          v-else-if="!loadingStats && stats.total_eligible === 0"
           :has-eligible-items="false"
           @go-to-books="router.push('/livros')"
         />
@@ -300,7 +324,10 @@ onUnmounted(() => {
 
         <!-- F0.10.10: uma só ação secundária. "Praticar agora" (faixa acima) é a prática rápida no hub;
              a sessão registrada fica no histórico e pode ser retomada. -->
-        <div v-if="stats.pending_review > 0" class="start-session-bar">
+        <p v-if="isConceptMode" class="bucket-session-note muted">
+          Os cartões de conceito ficam fora da sessão registrada: pratique-os em "Praticar agora".
+        </p>
+        <div v-else-if="stats.pending_review > 0" class="start-session-bar">
           <button
             type="button"
             class="start-structured-btn quiet"

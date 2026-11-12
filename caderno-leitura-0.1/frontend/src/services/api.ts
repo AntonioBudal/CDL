@@ -13,7 +13,7 @@ import type {
   ReviewBucket, ReviewItemRead, ReviewRating, ReviewStatsResponse,
   BacklinksResponse, StudyCandidateOption,
   EreaderChoice, EreaderImportResponse, EreaderPreviewResponse, IsbnLookupResponse, BookCreatePayload,
-  ConceptCandidate, ConceptDetail, ConceptListResponse, ParaphraseSources,
+  ConceptCandidate, ConceptDetail, ConceptListResponse, DailyMemory, FragileConcept, ParaphraseSources,
   InboxBookTrayResponse, InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
   StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
 } from '../types.ts'
@@ -271,7 +271,7 @@ export const api = {
     return request<ReviewStatsResponse>(`/review/stats${parts.length ? `?${parts.join('&')}` : ''}`, { signal })
   },
   getReviewItems: (
-    params?: { book_id?: number; chapter_id?: number; kind?: string; limit?: number; bucket?: ReviewBucket },
+    params?: { book_id?: number; chapter_id?: number; kind?: string; limit?: number; bucket?: ReviewBucket; fragile?: boolean },
     signal?: AbortSignal,
   ) => {
     const queryParts: string[] = []
@@ -280,9 +280,20 @@ export const api = {
     if (params?.kind && params.kind !== 'all') queryParts.push(`kind=${encodeURIComponent(params.kind)}`)
     if (params?.limit !== undefined) queryParts.push(`limit=${params.limit}`)
     if (params?.bucket) queryParts.push(`bucket=${params.bucket}`)
+    if (params?.fragile) queryParts.push('fragile=true')
     const qs = queryParts.length ? `?${queryParts.join('&')}` : ''
     return request<ReviewItemRead[]>(`/review/items${qs}`, { signal })
   },
+  // F0.11.08: cartões de conceito, conceitos frágeis e Memória do dia
+  recordConceptRating: (key: string, rating: ReviewRating, signal?: AbortSignal) =>
+    request<{ concept_key: string; last_reviewed_at: string; review_count: number; last_rating: ReviewRating; difficulty_weight: number }>(
+      `/review/concepts/${encodeURIComponent(key)}/record`,
+      { method: 'POST', body: JSON.stringify({ rating }), signal },
+    ),
+  getFragileConcepts: (limit = 5, signal?: AbortSignal) =>
+    request<FragileConcept[]>(`/review/fragile-concepts?limit=${limit}`, { signal }),
+  getDailyMemory: (tzOffset: number, signal?: AbortSignal) =>
+    request<DailyMemory | null>(`/dashboard/memory?tz_offset=${tzOffset}`, { signal }),
   recordReviewRating: (
     highlightId: number,
     rating: ReviewRating,

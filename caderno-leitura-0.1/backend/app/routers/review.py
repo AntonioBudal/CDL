@@ -5,11 +5,20 @@ from fastapi import APIRouter, Query
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
 from app.schemas.review import (
+    ConceptRecordResponse,
+    FragileConcept,
     ReviewBucket,
+    ReviewBucketCounts,
     ReviewItemRead,
     ReviewRecordRequest,
     ReviewRecordResponse,
     ReviewStatsResponse,
+)
+from app.services.concept_review_service import (
+    concept_bucket_counts,
+    concept_cards,
+    fragile_concepts,
+    record_concept_rating,
 )
 from app.services.review_service import (
     get_review_items,
@@ -30,15 +39,23 @@ def get_stats(
     current_user: CurrentUser,
     book_id: int | None = Query(default=None, description="Filtra só a contagem dos baldes"),
     chapter_id: int | None = Query(default=None, description="Filtra só a contagem dos baldes"),
-    kind: str | None = Query(default=None, description="Filtra só a contagem dos baldes (question ou hidden)"),
+    kind: str | None = Query(default=None, description="Filtra só a contagem dos baldes (question, hidden ou concept)"),
 ):
-    return get_review_stats(
+    stats = get_review_stats(
         session=session,
         user_id=current_user.id,
         book_id=book_id,
         chapter_id=chapter_id,
-        kind=kind,
+        kind=None if kind == "concept" else kind,
     )
+    if kind == "concept":  # F0.11.08: com "Conceitos", baldes e totais são dos cartões de conceito
+        counts = concept_bucket_counts(session, current_user.id, book_id=book_id, chapter_id=chapter_id)
+        reviewed_today = counts.pop("reviewed_today")
+        stats.buckets = ReviewBucketCounts(**counts)
+        stats.total_eligible = sum(counts.values())
+        stats.reviewed_today = reviewed_today
+        stats.pending_review = max(0, stats.total_eligible - reviewed_today)
+    return stats
 
 
 @router.get(
@@ -51,10 +68,16 @@ def get_items(
     current_user: CurrentUser,
     book_id: int | None = Query(default=None, description="Filtrar por ID do livro"),
     chapter_id: int | None = Query(default=None, description="Filtrar por ID do capítulo"),
-    kind: str | None = Query(default=None, description="Filtrar por tipo (question ou hidden)"),
+    kind: str | None = Query(default=None, description="Filtrar por tipo (question, hidden ou concept)"),
     limit: int = Query(default=10, ge=1, le=50, description="Quantidade de itens no lote"),
     bucket: ReviewBucket | None = Query(default=None, description="Só itens de um balde: new, hard, medium ou easy"),
+    fragile: bool = Query(default=False, description="Só conceitos frágeis (com kind=concept)"),
 ):
+    if kind == "concept":  # F0.11.08: cartões de conceito
+        return concept_cards(
+            session, current_user.id, book_id=book_id, chapter_id=chapter_id, bucket=bucket, fragile=fragile,
+            limit=limit,
+        )
     return get_review_items(
         session=session,
         user_id=current_user.id,
@@ -83,3 +106,25 @@ def record_rating(
         highlight_id=highlight_id,
         rating=payload.rating,
     )
+
+
+@router.post(
+    "/concepts/{key}/record",
+    response_model=ConceptRecordResponse,
+    summary="Registrar avaliação de um cartão de conceito (F0.11.08)",
+)
+def record_concept(key: str, payload: ReviewRecordRequest, session: DatabaseSession, current_user: CurrentUser):
+    return record_concept_rating(session, current_user.id, key, payload.rating)
+
+
+@router.get(
+    "/fragile-concepts",
+    response_model=list[FragileConcept],
+    summary="Conceitos frágeis do leitor (F0.11.08)",
+)
+def list_fragile_concepts(
+    session: DatabaseSession,
+    current_user: CurrentUser,
+    limit: int = Query(default=5, ge=1, le=50),
+):
+    return fragile_concepts(session, current_user.id, limit)

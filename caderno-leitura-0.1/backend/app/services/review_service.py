@@ -20,6 +20,7 @@ from app.schemas.review import (
     ReviewStatsResponse,
 )
 from app.services.persistence import commit_changes
+from app.services.review_weights import effective_weight, next_weight, queue_key
 
 
 def _scope_filters(
@@ -155,7 +156,7 @@ def get_review_items(
     limit: int = 10,
     bucket: str | None = None,
 ) -> list[ReviewItemRead]:
-    """Retorna itens de estudo priorizados para a sessão de Active Recall; ``bucket`` só filtra, sem mudar a ordem."""
+    """Itens priorizados para a sessão de Active Recall (fila da F0.11.08); ``bucket`` só filtra, sem mudar a ordem."""
     safe_limit = min(max(1, limit), 50)
     filters = _scope_filters(user_id, book_id, chapter_id, kind, bucket)
 
@@ -172,16 +173,16 @@ def get_review_items(
         .join(Chapter, Study.chapter_id == Chapter.id)
         .join(Book, Chapter.book_id == Book.id)
         .where(*filters)
-        .order_by(
-            case((StudyHighlight.last_reviewed_at.is_(None), 0), else_=1).asc(),
-            case((StudyHighlight.last_rating == "hard", 0), else_=1).asc(),
-            StudyHighlight.last_reviewed_at.asc(),
-            StudyHighlight.id.asc(),
-        )
-        .limit(safe_limit)
     )
 
-    rows = session.execute(stmt).all()
+    # F0.11.08: fila pelo peso de dificuldade (nunca revisados → vencidos, do mais pesado → demais).
+    now = datetime.now(UTC)
+    rows = sorted(
+        session.execute(stmt).all(),
+        key=lambda r: queue_key(
+            effective_weight(r[0].difficulty_weight, r[0].last_rating), r[0].last_reviewed_at, now, r[0].id
+        ),
+    )[:safe_limit]
     items: list[ReviewItemRead] = []
 
     for row in rows:
@@ -222,6 +223,7 @@ def get_review_items(
                 last_reviewed_at=hl.last_reviewed_at,
                 review_count=hl.review_count or 0,
                 last_rating=hl.last_rating,
+                difficulty_weight=hl.difficulty_weight,
             )
         )
 
@@ -263,6 +265,7 @@ def record_review_rating(
 
     highlight.last_reviewed_at = utc_now()
     highlight.review_count = (highlight.review_count or 0) + 1
+    highlight.difficulty_weight = next_weight(effective_weight(highlight.difficulty_weight, highlight.last_rating), rating)
     highlight.last_rating = rating
     commit_changes(session)
     session.refresh(highlight)

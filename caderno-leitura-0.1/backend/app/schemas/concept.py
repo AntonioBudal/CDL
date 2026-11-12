@@ -12,6 +12,7 @@ class ConceptSummary(OutputModel):
     definitions: int = 0
     mentions: int = 0
     books: int = 0
+    fragile: bool = False  # F0.11.08
 
 
 class ConceptListResponse(OutputModel):
@@ -29,11 +30,13 @@ class ConceptOccurrenceRead(OutputModel):
     book_id: RecordId
     book_title: str
     chapter_name: str = ""
+    chapter_id: int = 0
 
 
 class ConceptDetail(OutputModel):
     key: str
     term: str
+    fragile: bool = False  # F0.11.08
     definitions: list[ConceptOccurrenceRead] = Field(default_factory=list)
     mentions: list[ConceptOccurrenceRead] = Field(default_factory=list)
 

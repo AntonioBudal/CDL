@@ -7,6 +7,8 @@ export interface ReviewFilterParams {
   kind?: string
   limit?: number
   bucket?: ReviewBucket
+  /** F0.11.08: só conceitos frágeis (com kind=concept) */
+  fragile?: boolean
 }
 
 export const reviewApi = {
@@ -22,6 +24,10 @@ export const reviewApi = {
     signal?: AbortSignal,
   ): Promise<{ id: number; last_reviewed_at: string; review_count: number; last_rating: ReviewRating }> =>
     api.recordReviewRating(highlightId, rating, signal),
+
+  /** F0.11.08: cartão de conceito, pela chave do léxico */
+  recordConceptRating: (key: string, rating: ReviewRating, signal?: AbortSignal) =>
+    api.recordConceptRating(key, rating, signal),
 }
 
 export default reviewApi

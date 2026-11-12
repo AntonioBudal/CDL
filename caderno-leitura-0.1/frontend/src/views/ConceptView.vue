@@ -50,6 +50,10 @@ function studyLink(studyId: number, bookId: number) {
       <header class="page-header">
         <p class="eyebrow">Conceito</p>
         <h1 id="concept-heading">{{ concept.term }}</h1>
+        <p v-if="concept.fragile" class="fragile-note">
+          <span class="fragile-tag">Frágil</span> Este conceito anda difícil na revisão. Pratique em
+          <RouterLink to="/revisao">Revisão</RouterLink>, filtro "Conceitos".
+        </p>
       </header>
 
       <section class="concept-block" aria-labelledby="concept-definitions-heading">
@@ -93,6 +97,23 @@ function studyLink(studyId: number, bookId: number) {
 </template>
 
 <style scoped>
+.fragile-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-muted);
+  margin: 4px 0 0;
+}
+.fragile-tag {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--color-warning-border);
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
 .concept-view {
   max-width: 52rem;
   margin: 0 auto;

@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_session
 from app.dependencies import CurrentUser
-from app.schemas.dashboard import DashboardResponse
+from app.schemas.dashboard import DailyMemoryRead, DashboardResponse
+from app.services.daily_memory import daily_memory
 from app.services.dashboard_service import get_dashboard_data
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
@@ -29,3 +30,12 @@ def get_dashboard(
         filter_date=date,
         limit=limit,
     )
+
+
+@router.get("/memory", response_model=DailyMemoryRead | None, summary="Memória do Dia (F0.11.08)")
+def get_daily_memory(
+    current_user: CurrentUser,
+    tz_offset: Annotated[int, Query(ge=-840, le=840, description="Deslocamento do fuso local em minutos")] = 0,
+    session: Session = Depends(get_session),
+) -> DailyMemoryRead | None:
+    return daily_memory(session, current_user.id, tz_offset=tz_offset)

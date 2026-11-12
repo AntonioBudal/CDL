@@ -3,6 +3,7 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import HeatmapCalendar from '../components/HeatmapCalendar.vue'
 import ResumeStudiesWidget from '../components/dashboard/ResumeStudiesWidget.vue'
+import DailyMemoryCard from '../components/dashboard/DailyMemoryCard.vue'
 import OrphanStudiesWidget from '../components/dashboard/OrphanStudiesWidget.vue'
 import RecentConnectionsWidget from '../components/dashboard/RecentConnectionsWidget.vue'
 import QuickNavChips from '../components/dashboard/QuickNavChips.vue'
@@ -248,6 +249,7 @@ onMounted(() => {
         <div class="cockpit-layout">
           <!-- Coluna Principal (Continuar Estudos) -->
           <div id="section-resume" class="cockpit-primary-col">
+            <DailyMemoryCard />
             <ResumeStudiesWidget
               v-show="blocksVisibility.resumeStudies"
               :studies="recentStudies"

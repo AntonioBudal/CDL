@@ -11,18 +11,20 @@ from app.schemas.concept import (
     ConceptOccurrenceRead,
     ConceptSummary,
 )
-from app.services.concept_lexicon import ConceptEntry, get_concept, list_concepts
+from app.services.concept_lexicon import ConceptEntry, build_lexicon, get_concept, list_concepts
+from app.services.concept_review_service import fragile_keys
 
 router = APIRouter(prefix="/concepts", tags=["Léxico de conceitos"])
 
 
-def _summary(entry: ConceptEntry) -> ConceptSummary:
+def _summary(entry: ConceptEntry, weak: set[str] | None = None) -> ConceptSummary:
     return ConceptSummary(
         key=entry.key,
         term=entry.term,
         definitions=len(entry.definitions),
         mentions=len(entry.mentions),
         books=len(entry.books),
+        fragile=bool(weak and entry.key in weak),
     )
 
 
@@ -36,8 +38,9 @@ def list_concepts_endpoint(
 ):
     entries = list_concepts(session, current_user.id, q)
     start = (page - 1) * per_page
+    weak = fragile_keys(session, current_user.id, build_lexicon(session, current_user.id))
     return ConceptListResponse(
-        items=[_summary(e) for e in entries[start:start + per_page]],
+        items=[_summary(e, weak) for e in entries[start:start + per_page]],
         total=len(entries),
         page=page,
         per_page=per_page,
@@ -63,6 +66,7 @@ def concept_detail_endpoint(key: str, session: DatabaseSession, current_user: Cu
     return ConceptDetail(
         key=entry.key,
         term=entry.term,
+        fragile=entry.key in fragile_keys(session, current_user.id, {entry.key: entry}),
         definitions=[ConceptOccurrenceRead(**o.__dict__) for o in entry.definitions],
         mentions=[ConceptOccurrenceRead(**o.__dict__) for o in entry.mentions],
     )

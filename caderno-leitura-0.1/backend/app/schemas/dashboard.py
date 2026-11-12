@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal
 
 from app.schemas.common import OutputModel
 
@@ -78,3 +79,15 @@ class DashboardResponse(OutputModel):
     unlinked_studies: list[UnlinkedStudyItem] = []
     latest_relations: list[RecentRelationItem] = []
 
+
+class DailyMemoryRead(OutputModel):
+    """F0.11.08: Memória do Dia (destaque ou estudo de 30+ dias atrás)."""
+
+    kind: Literal["highlight", "study"]
+    text: str
+    study_id: int
+    study_title: str
+    book_id: int
+    book_title: str
+    created_at: datetime
+    reason: Literal["anniversary", "month", "random"]

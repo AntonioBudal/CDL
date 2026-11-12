@@ -106,9 +106,9 @@ onUnmounted(() => {
       <div class="card-badges">
         <span
           class="kind-badge"
-          :class="item.kind === 'question' ? 'badge-question' : 'badge-hidden'"
+          :class="item.kind === 'question' ? 'badge-question' : item.kind === 'concept' ? 'badge-concept' : 'badge-hidden'"
         >
-          {{ item.kind === 'question' ? 'Pergunta' : 'Termo Oculto' }}
+          {{ item.kind === 'question' ? 'Pergunta' : item.kind === 'concept' ? 'Conceito' : 'Termo Oculto' }}
         </span>
         <span v-if="item.last_rating" class="history-badge">
           Última: {{ item.last_rating === 'easy' ? 'Fácil' : item.last_rating === 'medium' ? 'Médio' : 'Difícil' }}
@@ -121,7 +121,7 @@ onUnmounted(() => {
 
     <!-- Área Cognitiva da Pergunta / Cloze -->
     <div class="cognitive-body">
-      <div v-if="item.kind === 'question'" class="question-container">
+      <div v-if="item.kind === 'question' || item.kind === 'concept'" class="question-container">
         <p class="question-text">{{ item.question_text }}</p>
       </div>
 
@@ -137,6 +137,19 @@ onUnmounted(() => {
           <span v-if="item.context_suffix" class="cloze-suffix"> {{ item.context_suffix }}</span>
         </p>
       </div>
+
+      <!-- F0.11.08: verso do cartão de conceito (definições e origem) -->
+      <transition name="card-reveal">
+        <div v-if="isRevealed && item.kind === 'concept'" class="revealed-answer-box">
+          <span class="answer-label">{{ (item.definitions?.length ?? 0) > 1 ? 'Definições:' : 'Definição:' }}</span>
+          <ul class="concept-definitions">
+            <li v-for="(definition, index) in item.definitions ?? []" :key="index">
+              <p class="expected-answer">{{ definition.text }}</p>
+              <p class="concept-definition-source">{{ definition.book_title }} · {{ definition.study_title }}</p>
+            </li>
+          </ul>
+        </div>
+      </transition>
 
       <!-- Resposta Revelada (para tipo question) -->
       <transition name="card-reveal">
@@ -286,6 +299,25 @@ onUnmounted(() => {
 .badge-question {
   background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.12));
   color: var(--color-link, #3b82f6);
+}
+
+.badge-concept {
+  background-color: var(--color-selected-bg);
+  color: var(--color-selected-text);
+}
+
+.concept-definitions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.concept-definition-source {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  color: var(--color-muted);
 }
 
 .badge-hidden {

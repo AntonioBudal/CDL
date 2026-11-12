@@ -87,7 +87,8 @@ export function useReviewSession() {
     state.submitting = true
     state.error = null
     try {
-      await reviewApi.recordRating(item.id, rating)
+      if (item.kind === 'concept' && item.concept_key) await reviewApi.recordConceptRating(item.concept_key, rating)
+      else await reviewApi.recordRating(item.id, rating)
       state.ratings[item.id] = rating
 
       if (state.currentIndex + 1 >= state.items.length) {

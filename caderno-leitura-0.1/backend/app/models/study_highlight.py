@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, ForeignKey, Index, Integer, String, Text, text
+from sqlalchemy import CheckConstraint, Float, ForeignKey, Index, Integer, String, Text, text
 from sqlalchemy.orm import Mapped, backref, mapped_column, relationship
 
 from app.core.config import DEFAULT_OWNER_ID
@@ -65,6 +65,8 @@ class StudyHighlight(Base):
     last_reviewed_at: Mapped[datetime | None] = mapped_column(UTCDateTime(), nullable=True)
     review_count: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
     last_rating: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    # F0.11.08: média móvel das notas (0 fácil, 1 difícil); vazio = nunca avaliado.
+    difficulty_weight: Mapped[float | None] = mapped_column(Float, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         UTCDateTime(), default=utc_now, server_default=text("CURRENT_TIMESTAMP"), nullable=False
     )
