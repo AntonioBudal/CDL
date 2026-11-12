@@ -21,7 +21,7 @@ test('105: API envia o arquivo nas duas chamadas e as escolhas em JSON', () => {
 test('105: rota e botão na Mesa de Triagem', () => {
   assert.match(read('router/index.ts'), /path: '\/inbox\/importar-leitor', name: 'ereader-import'/)
   const inbox = read('views/InboxView.vue')
-  assert.match(inbox, /<RouterLink to="\/inbox\/importar-leitor" class="button quiet ereader-import-link">Importar do Kindle ou Kobo<\/RouterLink>/)
+  assert.match(inbox, /<RouterLink to="\/inbox\/importar-leitor" class="button quiet ereader-import-link">Importar de leitor digital<\/RouterLink>/) // nome desde a F0.11.09
 })
 
 test('105: tela em três passos com prévia, destino por livro e resultado', () => {

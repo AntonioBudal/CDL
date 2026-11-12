@@ -12,7 +12,8 @@ from app.schemas.account import (
     ReactivateAccountRequest,
 )
 from app.schemas.auth import AuthSuccessResponse
-from app.services import account_service, audit_service, export_service
+from app.schemas.receiver import ReceiverTokenIssued, ReceiverTokenStatus
+from app.services import account_service, audit_service, export_service, receiver_tokens
 from app.services.persistence import checkpoint_after_purge, commit_changes
 from app.services.session_service import clear_session_cookie, create_session, set_session_cookie
 
@@ -138,3 +139,20 @@ def export_account_endpoint(
         },
     )
 
+
+# F0.11.09 (spec 111): token de recepção de destaques (Readest).
+@router.get("/receiver-token", response_model=ReceiverTokenStatus, summary="Estado do token de recepção")
+def get_receiver_token(current_user: CurrentUser, session: DatabaseSession) -> ReceiverTokenStatus:
+    return receiver_tokens.token_status(session, current_user.id)
+
+
+@router.post("/receiver-token", response_model=ReceiverTokenIssued, summary="Gerar (ou substituir) o token de recepção")
+def issue_receiver_token(current_user: CurrentUser, session: DatabaseSession) -> ReceiverTokenIssued:
+    raw, token_state = receiver_tokens.issue_token(session, current_user.id)
+    return ReceiverTokenIssued(token=raw, status=token_state)
+
+
+@router.delete("/receiver-token", status_code=status.HTTP_204_NO_CONTENT, summary="Revogar o token de recepção")
+def revoke_receiver_token(current_user: CurrentUser, session: DatabaseSession) -> Response:
+    receiver_tokens.revoke_token(session, current_user.id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

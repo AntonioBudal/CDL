@@ -14,6 +14,7 @@ import type {
   BacklinksResponse, StudyCandidateOption,
   EreaderChoice, EreaderImportResponse, EreaderPreviewResponse, IsbnLookupResponse, BookCreatePayload,
   ConceptCandidate, ConceptDetail, ConceptListResponse, DailyMemory, FragileConcept, ParaphraseSources,
+  ReceiverTokenIssued, ReceiverTokenStatus,
   InboxBookTrayResponse, InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
   StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
 } from '../types.ts'
@@ -539,6 +540,10 @@ export const api = {
     request<ConceptDetail>(`/concepts/${encodeURIComponent(key)}`, { signal }),
   getConceptCandidates: (q: string, limit = 6, signal?: AbortSignal) =>
     request<ConceptCandidate[]>(`/concepts/candidates?q=${encodeURIComponent(q)}&limit=${limit}`, { signal }),
+  // F0.11.09: token de recepção de destaques (Readest)
+  getReceiverToken: (signal?: AbortSignal) => request<ReceiverTokenStatus>('/account/receiver-token', { signal }),
+  issueReceiverToken: () => request<ReceiverTokenIssued>('/account/receiver-token', { method: 'POST' }),
+  revokeReceiverToken: () => request<void>('/account/receiver-token', { method: 'DELETE' }),
   // F0.11.07: textos da fonte para o validador de paráfrase
   getStudyParaphraseSources: (studyId: number, signal?: AbortSignal) =>
     request<ParaphraseSources>(`/studies/${studyId}/paraphrase-sources`, { signal }),

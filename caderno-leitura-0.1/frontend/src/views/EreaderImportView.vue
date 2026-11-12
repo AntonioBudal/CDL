@@ -21,7 +21,8 @@ const myBooks = ref<Book[]>([])
 /** Por livro do arquivo: 'create', 'skip' ou o id do livro do acervo (texto, por causa do <select>). */
 const destinations = ref<Record<string, string>>({})
 
-const sourceLabel = computed(() => (preview.value?.source === 'kobo' ? 'Kobo' : 'Kindle'))
+const SOURCE_NAMES: Record<string, string> = { kindle: 'Kindle', kobo: 'Kobo', koreader: 'KOReader', readest: 'Readest' }
+const sourceLabel = computed(() => SOURCE_NAMES[preview.value?.source ?? 'kindle'] ?? 'leitor')
 const totalNew = computed(() =>
   (preview.value?.books ?? [])
     .filter((book) => destinations.value[book.key] !== 'skip')
@@ -57,7 +58,7 @@ async function sendPreview() {
       ]),
     )
     step.value = 'review'
-    liveMessage.value = `Encontrei ${data.books.length} ${data.books.length === 1 ? 'livro' : 'livros'} no arquivo do ${data.source === 'kobo' ? 'Kobo' : 'Kindle'}.`
+    liveMessage.value = `Encontrei ${data.books.length} ${data.books.length === 1 ? 'livro' : 'livros'} no arquivo do ${SOURCE_NAMES[data.source] ?? 'leitor'}.`
   } catch (err) {
     error.value = errorMessage(err)
     liveMessage.value = ''
@@ -105,7 +106,7 @@ function restart() {
   <section class="ereader-view wrap" aria-labelledby="ereader-heading">
     <header class="page-header">
       <p class="eyebrow">Mesa de Triagem</p>
-      <h1 id="ereader-heading">Importar do Kindle ou Kobo</h1>
+      <h1 id="ereader-heading">Importar de leitor digital</h1>
       <p class="ereader-lead">
         Os destaques entram na Mesa de Triagem como capturas do livro. Depois, na página do livro, a bandeja ajuda a
         levá-los para os capítulos e transformá-los em estudos.
@@ -121,10 +122,13 @@ function restart() {
       <ul class="ereader-help">
         <li><strong>Kindle:</strong> conecte pelo cabo USB e abra <code>documents/My Clippings.txt</code>.</li>
         <li><strong>Kobo:</strong> conecte pelo cabo USB e abra <code>.kobo/KoboReader.sqlite</code> (pasta oculta).</li>
+        <li><strong>KOReader:</strong> no menu de anotações, Exportar destaques → <strong>JSON</strong>; envie o
+          arquivo <code>.json</code> gerado.</li>
+        <li><strong>Readest:</strong> envia sozinho, sem arquivo: veja Configurações → Leitura → Receber destaques.</li>
       </ul>
       <label class="ereader-file">
         <span>Arquivo do leitor digital</span>
-        <input type="file" accept=".txt,.sqlite,text/plain,application/octet-stream" @change="onFileChange" />
+        <input type="file" accept=".txt,.sqlite,.json,text/plain,application/json,application/octet-stream" @change="onFileChange" />
       </label>
       <p class="ereader-muted">Nada é gravado nesta etapa, e o arquivo não fica guardado no servidor.</p>
       <div class="ereader-actions">

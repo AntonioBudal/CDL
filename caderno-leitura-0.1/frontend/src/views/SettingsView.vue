@@ -5,6 +5,7 @@ import AppearanceControls from '../components/AppearanceControls.vue'
 import AppearancePreview from '../components/AppearancePreview.vue'
 import DatabaseBackup from '../components/DatabaseBackup.vue'
 import SystemSovereigntyCard from '../components/settings/SystemSovereigntyCard.vue'
+import ReceiverTokenCard from '../components/settings/ReceiverTokenCard.vue'
 import ConfirmResetModal from '../components/ConfirmResetModal.vue'
 import RestoreModal from '../components/RestoreModal.vue'
 import SessionsManager from '../components/auth/SessionsManager.vue'
@@ -862,6 +863,9 @@ onBeforeUnmount(() => {
             tab="leitura"
             @change="update"
           />
+
+          <!-- F0.11.09: receber destaques do Readest e do KOReader -->
+          <ReceiverTokenCard />
 
           <p class="settings-status muted" role="status">
             {{ message }}

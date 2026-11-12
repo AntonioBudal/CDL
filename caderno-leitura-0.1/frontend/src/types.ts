@@ -1690,8 +1690,21 @@ export interface InCommonResponse {
   shared_with_me_total: number
 }
 
-// --- Kindle e Kobo (F0.11.03, spec 105) ---
-export type EreaderSource = 'kindle' | 'kobo'
+// --- Kindle e Kobo (F0.11.03, spec 105); KOReader e Readest (F0.11.09, spec 111) ---
+export type EreaderSource = 'kindle' | 'kobo' | 'koreader' | 'readest'
+
+// F0.11.09: token de recepção (Readest)
+export interface ReceiverTokenStatus {
+  active: boolean
+  hint?: string | null
+  created_at?: string | null
+  last_used_at?: string | null
+}
+
+export interface ReceiverTokenIssued {
+  token: string
+  status: ReceiverTokenStatus
+}
 
 export interface EreaderBookPreview {
   key: string

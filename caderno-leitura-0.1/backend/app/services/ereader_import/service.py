@@ -31,11 +31,12 @@ from app.services.ereader_import import (
 )
 from app.services.ereader_import.kindle import parse_kindle_clippings
 from app.services.ereader_import.kobo import parse_kobo_database
+from app.services.ereader_import.koreader import parse_koreader_json
 from app.services.in_common_service import first_author_surname_key, normalize_title_key
 
 KINDLE_MAX_BYTES = 20 * 1024 * 1024
 KOBO_MAX_BYTES = 200 * 1024 * 1024
-SOURCE_LABELS = {"kindle": "Kindle", "kobo": "Kobo"}
+SOURCE_LABELS = {"kindle": "Kindle", "kobo": "Kobo", "koreader": "KOReader", "readest": "Readest"}
 
 
 def parse_upload(data: bytes) -> EreaderParseResult:
@@ -47,6 +48,10 @@ def parse_upload(data: bytes) -> EreaderParseResult:
             if len(data) > KINDLE_MAX_BYTES:
                 raise HTTPException(status_code=413, detail="O My Clippings.txt passa de 20 MB.")
             return parse_kindle_clippings(data)
+        if kind == "koreader":
+            if len(data) > KINDLE_MAX_BYTES:
+                raise HTTPException(status_code=413, detail="O JSON do KOReader passa de 20 MB.")
+            return parse_koreader_json(data)
         if len(data) > KOBO_MAX_BYTES:
             raise HTTPException(status_code=413, detail="O KoboReader.sqlite passa de 200 MB.")
         return parse_kobo_database(data)
@@ -215,3 +220,17 @@ def run_import(
         result.duplicates += duplicates
     session.commit()
     return result
+
+
+def receive_parsed(session: Session, user_id: str, parsed: EreaderParseResult) -> EreaderImportResponse:
+    """F0.11.09: envio automático (sem prévia): livro sugerido pela regra de título/autor, senão livro novo."""
+    my_books = _my_books(session, user_id)
+    choices: list[EreaderChoice] = []
+    for index, book in enumerate(parsed.books):
+        suggestion = _suggest(book, my_books)
+        choices.append(
+            EreaderChoice(key=str(index), action="existing", book_id=suggestion.id)
+            if suggestion is not None
+            else EreaderChoice(key=str(index), action="create")
+        )
+    return run_import(session, user_id, parsed, choices)

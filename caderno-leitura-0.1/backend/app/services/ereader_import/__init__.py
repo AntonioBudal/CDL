@@ -1,5 +1,6 @@
 """Importação de destaques de leitores digitais (F0.11.03, spec 105): Kindle (``My Clippings.txt``) e Kobo
-(``KoboReader.sqlite``). Os parsers são puros: recebem bytes e devolvem livros com entradas."""
+(``KoboReader.sqlite``); F0.11.09 (spec 111): JSON do exportador do KOReader e envio do Readest (formato Readwise).
+Os parsers são puros: recebem bytes (ou o corpo já validado) e devolvem livros com entradas."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -29,21 +30,26 @@ class EreaderBook:
 
 @dataclass
 class EreaderParseResult:
-    source: str  # "kindle" ou "kobo"
+    source: str  # "kindle", "kobo", "koreader" ou "readest"
     books: list[EreaderBook]
     skipped: int = 0  # marcadores e blocos não reconhecidos
 
 
 class EreaderFormatError(ValueError):
-    """Arquivo que não é ``My Clippings.txt`` do Kindle nem ``KoboReader.sqlite``."""
+    """Arquivo que não é de nenhum dos formatos reconhecidos."""
 
 
 def detect_format(data: bytes) -> str:
     if data.startswith(SQLITE_MAGIC):
         return "kobo"
+    from app.services.ereader_import.koreader import looks_like_koreader_json
+
+    if looks_like_koreader_json(data):
+        return "koreader"
     head = data[:200_000].decode("utf-8-sig", errors="replace")
     if "==========" in head:
         return "kindle"
     raise EreaderFormatError(
-        "Não reconheci este arquivo como My Clippings.txt do Kindle nem como KoboReader.sqlite."
+        "Não reconheci este arquivo como My Clippings.txt do Kindle, KoboReader.sqlite do Kobo nem como o JSON "
+        "do exportador do KOReader."
     )

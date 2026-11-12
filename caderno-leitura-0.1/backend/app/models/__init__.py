@@ -13,6 +13,7 @@ from app.models.inbox_capture import InboxCapture
 from app.models.local_credential import LocalCredential
 from app.models.notification import Notification
 from app.models.organizer_feedback import OrganizerFeedback, OrganizerUserState
+from app.models.receiver_token import ReceiverToken
 from app.models.resource_permission import ResourcePermission
 from app.models.search_history import SearchHistory
 from app.models.study import Study
@@ -44,6 +45,7 @@ __all__ = [
     "Notification",
     "OrganizerFeedback",
     "OrganizerUserState",
+    "ReceiverToken",
     "ResourcePermission",
     "SearchHistory",
     "Study",

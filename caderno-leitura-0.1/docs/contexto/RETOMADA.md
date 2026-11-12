@@ -1529,3 +1529,24 @@ Spec aprovada com as recomendações Q1 a Q5:
   (13) e `feature-110-revisao.test.mjs` (3); vizinhos (104 no backend, 85 no frontend) e build ok. Navegador (dados
   fictícios): Memória do dia, prática de conceitos gravando em `/review/concepts/…`, bloco de frágeis, etiqueta;
   contraste ≥ 4,83:1 nos 10 temas; 375 px sem rolagem lateral; alvos de 44–46 px.
+
+## F0.11.09 — Receptor KOReader/Readest (2026-11-12)
+
+- **Spec, plano e tarefas:** `specs/111-receptor-koreader-readest/`. Quarta feature do lote 2 do 0.11. **Migração
+  `0038`** (tabela `receiver_tokens`: um token por leitor, só o SHA-256 e o começo), **não aplicada ao banco ativo**.
+- **Token** (`services/receiver_tokens.py`): `lt_` + 32 bytes; `GET/POST/DELETE /api/account/receiver-token`;
+  autenticação por `Authorization: Token …` (ou `Bearer`), recusa conta inativa, grava o último uso.
+- **Readest** (`routers/receiver.py`): API compatível com o Readwise v2 em `/api/receptor/readwise/v2`: `GET auth/`
+  (204) e `POST highlights/` (com e sem barra). `ereader_import/readwise.py` agrupa por título/autor e pula marcadores
+  de página; `service.receive_parsed` escolhe o livro pela regra da F0.11.03 (ou cria) e grava na Mesa sem duplicar.
+  Limites: 1000 destaques, 20 mil caracteres, 25 MB. `origin_guard` isenta só `/api/receptor/` (só token vale ali).
+  Log só com contagens.
+- **KOReader** (`ereader_import/koreader.py`): JSON do exportador (`version: "json/…"`, um livro ou `documents`),
+  reconhecido por `detect_format`; a tela virou "Importar de leitor digital" e aceita `.json`.
+- **Tela:** `components/settings/ReceiverTokenCard.vue` em Ajustes → Leitura (URL, token mostrado uma vez, gerar
+  outro, revogar, instruções do Readest e do KOReader).
+- **Testes:** `test_receiver.py` (5), `test_ereader_koreader.py` (4), `test_migration_0038.py` (1),
+  `feature-111-receptor.test.mjs` (2); o teste da F0.11.03 passou a esperar o rótulo novo do botão da Mesa. Vizinhos
+  (170 no backend, 69 no frontend) e build ok. Navegador (dados fictícios): gerar token, envio no formato do Readest
+  chegando à Mesa (livro existente e livro novo; marcador pulado), importação de JSON do KOReader; contraste ≥ 5,35:1
+  nos 10 temas; 375 px sem rolagem lateral depois de encurtar o rótulo "Gerar outro".

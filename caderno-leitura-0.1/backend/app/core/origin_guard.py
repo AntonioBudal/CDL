@@ -22,6 +22,9 @@ logger = logging.getLogger(__name__)
 PROTECTED_METHODS = frozenset({"POST", "PUT", "PATCH", "DELETE"})
 REJECTED_FETCH_SITES = frozenset({"cross-site", "same-site"})
 REJECTION = {"detail": "Origem do pedido não autorizada."}
+# F0.11.09 (prevista na spec 093): o receptor autentica só por token, nunca por cookie; por isso fica fora da
+# conferência de origem. Prefixo exato.
+EXEMPT_PREFIXES = ("/api/receptor/",)
 
 
 def _netloc(value: str) -> str:
@@ -50,7 +53,13 @@ def is_origin_allowed(request: Request) -> bool:
 
 class OriginGuardMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
-        if request.method in PROTECTED_METHODS and request.url.path.startswith("/api/") and not is_origin_allowed(request):
+        path = request.url.path
+        if (
+            request.method in PROTECTED_METHODS
+            and path.startswith("/api/")
+            and not path.startswith(EXEMPT_PREFIXES)
+            and not is_origin_allowed(request)
+        ):
             # Só método, caminho e origem: nunca corpo, cookies ou cabeçalhos de autenticação.
             logger.warning(
                 "Pedido recusado pela conferência de origem: %s %s (Origin=%r, Sec-Fetch-Site=%r)",

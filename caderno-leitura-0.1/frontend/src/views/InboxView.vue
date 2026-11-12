@@ -283,7 +283,7 @@ onUnmounted(() => {
 
       <div class="header-actions">
         <!-- F0.11.03 -->
-        <RouterLink to="/inbox/importar-leitor" class="button quiet ereader-import-link">Importar do Kindle ou Kobo</RouterLink>
+        <RouterLink to="/inbox/importar-leitor" class="button quiet ereader-import-link">Importar de leitor digital</RouterLink>
         <kbd class="shortcut-pill" title="Atalho global para focar captura">Ctrl+Shift+C</kbd>
       </div>
     </header>

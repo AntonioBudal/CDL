@@ -40,7 +40,7 @@ export const router = createRouter({
     },
     { path: '/dashboard', name: 'dashboard', component: () => import('../views/DashboardView.vue'), meta: { title: 'Dashboard' } },
     { path: '/inbox', alias: ['/caixa-de-entrada'], name: 'inbox', component: () => import('../views/InboxView.vue'), meta: { title: 'Caixa de Entrada' } },
-    { path: '/inbox/importar-leitor', name: 'ereader-import', component: () => import('../views/EreaderImportView.vue'), meta: { title: 'Importar do Kindle ou Kobo' } },
+    { path: '/inbox/importar-leitor', name: 'ereader-import', component: () => import('../views/EreaderImportView.vue'), meta: { title: 'Importar de leitor digital' } },
     { path: '/books', alias: ['/livros'], name: 'books', component: () => import('../views/BooksView.vue'), meta: { title: 'Livros' } },
     { path: '/highlights', alias: ['/destaques', '/anotacoes'], name: 'highlights', component: () => import('../views/HighlightsLibraryView.vue'), meta: { title: 'Destaques e Anotações' } },
     { path: '/review', alias: ['/revisao'], name: 'review', component: () => import('../views/ReviewHubView.vue'), meta: { title: 'Central de Revisão' } },
