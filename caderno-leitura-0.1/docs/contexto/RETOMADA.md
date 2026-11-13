@@ -1550,3 +1550,21 @@ Spec aprovada com as recomendações Q1 a Q5:
   (170 no backend, 69 no frontend) e build ok. Navegador (dados fictícios): gerar token, envio no formato do Readest
   chegando à Mesa (livro existente e livro novo; marcador pulado), importação de JSON do KOReader; contraste ≥ 5,35:1
   nos 10 temas; 375 px sem rolagem lateral depois de encurtar o rótulo "Gerar outro".
+
+## F0.11.10 — Recorte de foto na digitalização (2026-11-12) e fecho do lote 2 do 0.11
+
+- **Spec, plano e tarefas:** `specs/112-recorte-foto-digitalizacao/`. Quinta feature do lote 2. **Sem migração** e
+  sem mudança de API.
+- **Geometria pura** (`utils/photoCrop.ts`): recorte em frações da imagem girada; alças, mover, limites (mínimo 10%),
+  giro de 90° (o recorte acompanha), tamanho de saída com redução até 40 MP, transformação do `canvas`, descrição.
+- **Composable** (`useDigitizeDraft`): fase `adjust`; `prepare(file)` abre a etapa, `read(file)` lê o recortado (ou o
+  original), `discardAdjust()` volta; `choose(file)` continua lendo direto (testes da 086 intactos).
+- **Tela** (`components/digitize/PhotoCropper.vue`): "Ajustar a foto" com máscara, 8 alças de 44 px (ponteiro e
+  teclado; setas 1%, Shift 5%), giro, "Ler a página", "Usar a foto inteira", "Escolher outra foto"; EXIF por
+  `createImageBitmap(..., { imageOrientation: 'from-image' })`; foto com menos de 300 px no lado menor é lida direto.
+- **Testes:** `feature-112-recorte-foto.test.mjs` (5). Navegador (imagem fictícia gerada na página; servidor de
+  validação com leitura falsa): arraste, teclado, giro, envio de 1230×1240 px conferido no servidor e com a orientação
+  certa, "Usar a foto inteira" enviando a original; contraste ≥ 4,76:1 nos 10 temas; 375 px sem rolagem lateral.
+  Achado e corrigido: a seta numa alça também movia o recorte inteiro (evento subindo); agora para na alça.
+- **Fecho do lote 2 do 0.11 (F0.11.06 a .10):** `npm test` 796/796, `pytest` 854 aprovados e 4 pulados (banco
+  descartável), build ok; nenhuma falha de feature anterior.

@@ -49,11 +49,15 @@ F0.10.09) fechou em 2026-11-07: `npm test` 749/749, `pytest` completo 788 aprova
 | F0.11.07 Validador de paráfrase (Jaccard de trigramas no navegador, contra capturas e citações literais do livro) | Concluída (sem migração) | `specs/109-validador-parafrase/` |
 | F0.11.08 Evolução da revisão: `difficulty_weight` e fila, cartões de conceito, conceitos frágeis, Memória do Dia | Concluída (migração `0037`) | `specs/110-evolucao-revisao/` |
 | F0.11.09 Receptor: Readest pela API compatível com o Readwise (token de recepção); KOReader pelo JSON do exportador | Concluída (migração `0038`) | `specs/111-receptor-koreader-readest/` |
+| F0.11.10 Recorte e giro da foto antes da leitura na digitalização | Concluída (sem migração) | `specs/112-recorte-foto-digitalizacao/` |
 
 Lote 1 do 0.11 fechado em 2026-11-09: `npm test` 774/774, `pytest` 825 aprovados e 4 pulados, build ok; correção da
 chave estrangeira da 0035 em commit próprio (`fd2c5fc`).
 
-Pendentes, na ordem do plano (lote 2): recorte de foto para a digitalização · cadernos de síntese com transclusão.
+Lote 2 do 0.11 (F0.11.06 a .10) fechado em 2026-11-12: `npm test` 796/796, `pytest` 854 aprovados e 4 pulados,
+build ok; nenhuma falha de feature anterior.
+
+Pendente no 0.11: cadernos de síntese com transclusão (abre o lote 3).
 
 ### Roadmap 1.0 (comunidade e ecossistema) — nada iniciado
 
@@ -66,7 +70,7 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **112**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **113**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,

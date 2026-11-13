@@ -18,7 +18,8 @@ import type { OrganizerFeedbackRequest, OrganizeRequest, OrganizeResult } from '
 import type { StudyPhotoResult } from '../types/media.ts'
 import { useSectionOrganizer } from './useSectionOrganizer.ts'
 
-export type DigitizePhase = 'checking' | 'unavailable' | 'idle' | 'reading' | 'review' | 'saving' | 'saved' | 'error'
+// F0.11.10: 'adjust' = etapa de recorte e giro, entre escolher a foto e ler.
+export type DigitizePhase = 'checking' | 'unavailable' | 'idle' | 'adjust' | 'reading' | 'review' | 'saving' | 'saved' | 'error'
 
 interface DigitizeGateway {
   status: (signal?: AbortSignal) => Promise<DigitizeStatus>
@@ -131,8 +132,7 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
     }
   }
 
-  async function choose(file: File): Promise<boolean> {
-    if (busy.value || state.phase === 'unavailable') return false
+  function accept(file: File): boolean {
     releasePhoto()
     state.preview = null
     state.error = null
@@ -144,6 +144,37 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
       fail('too_large', 'A imagem passa de 20 MB. Envie uma foto menor.')
       return false
     }
+    return true
+  }
+
+  /** F0.11.10: valida a foto e abre a etapa de recorte (sem ler ainda). */
+  function prepare(file: File): boolean {
+    if (busy.value || state.phase === 'unavailable') return false
+    if (!accept(file)) return false
+    state.fileName = file.name
+    state.previewUrl = environment.createObjectURL(file)
+    photo = file
+    state.phase = 'adjust'
+    return true
+  }
+
+  /** F0.11.10: sai da etapa de recorte sem ler (escolher outra foto). */
+  function discardAdjust() {
+    if (state.phase !== 'adjust') return
+    releasePhoto()
+    state.phase = 'idle'
+  }
+
+  /** F0.11.10: lê o arquivo dado na etapa de recorte (o recortado, ou o original para "Usar a foto inteira"). */
+  async function read(file: File): Promise<boolean> {
+    if (state.phase !== 'adjust') return false
+    state.phase = 'idle'
+    return choose(file)
+  }
+
+  async function choose(file: File): Promise<boolean> {
+    if (busy.value || state.phase === 'unavailable') return false
+    if (!accept(file)) return false
     const controller = new AbortController()
     reading = controller
     state.fileName = file.name
@@ -282,6 +313,6 @@ export function useDigitizeDraft(gateway: DigitizeGateway, environment: Digitize
 
   return {
     state, busy, dirty, canSave, uncertainLines, organizer, checkStatus, choose, retry, cancel, save, reset, dispose,
-    organize, unorganize,
+    organize, unorganize, prepare, read, discardAdjust,
   }
 }

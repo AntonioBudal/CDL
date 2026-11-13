@@ -5,6 +5,7 @@ import { api, errorMessage } from '../services/api'
 import { isTransientDigitizeError, useDigitizeDraft, type UncertainLine } from '../composables/useDigitizeDraft'
 import { useUnsavedChanges } from '../composables/useUnsavedChanges'
 import EmptyState from '../components/ui/EmptyState.vue'
+import PhotoCropper from '../components/digitize/PhotoCropper.vue'
 import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
 import Icon from '../components/ui/Icon.vue'
 import OrganizedSectionsEditor from '../components/OrganizedSectionsEditor.vue'
@@ -123,13 +124,33 @@ function openPicker(input: HTMLInputElement | null) {
   input.click()
 }
 
+// F0.11.10: a foto escolhida passa pela etapa "Ajustar a foto" (recorte e giro) antes da leitura.
+const chosenFile = ref<File | null>(null)
+
 async function onFileChosen(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
-  const ok = await draft.choose(file)
+  chosenFile.value = file
+  const ok = draft.prepare(file)
+  await nextTick()
+  if (!ok && state.phase === 'error') resultHeading.value?.focus()
+}
+
+async function readPhoto(file: File) {
+  const ok = await draft.read(file)
+  chosenFile.value = null
   await nextTick()
   if (ok) reviewHeading.value?.focus()
   else if (state.phase === 'error') resultHeading.value?.focus()
+}
+
+function readWhole() {
+  if (chosenFile.value) void readPhoto(chosenFile.value)
+}
+
+function chooseAnother() {
+  draft.discardAdjust()
+  chosenFile.value = null
 }
 
 function selectLine(line: UncertainLine) {
@@ -269,6 +290,17 @@ onBeforeUnmount(() => {
       <input ref="cameraInput" class="file-picker" type="file" :accept="DIGITIZE_ACCEPT" capture="environment" hidden tabindex="-1" @change="onFileChosen" />
       <input ref="fileInput" class="file-picker" type="file" :accept="DIGITIZE_ACCEPT" hidden tabindex="-1" @change="onFileChosen" />
     </section>
+
+    <!-- F0.11.10: Ajustar a foto (recorte e giro) -->
+    <PhotoCropper
+      v-else-if="state.phase === 'adjust' && chosenFile"
+      :key="state.previewUrl"
+      :file="chosenFile"
+      :preview-url="state.previewUrl"
+      @confirm="readPhoto"
+      @whole="readWhole"
+      @another="chooseAnother"
+    />
 
     <!-- Lendo -->
     <section v-else-if="state.phase === 'reading'" class="panel reading-panel" aria-labelledby="reading-heading" aria-busy="true">
