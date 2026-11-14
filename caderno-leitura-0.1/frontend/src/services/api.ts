@@ -14,7 +14,7 @@ import type {
   BacklinksResponse, StudyCandidateOption,
   EreaderChoice, EreaderImportResponse, EreaderPreviewResponse, IsbnLookupResponse, BookCreatePayload,
   ConceptCandidate, ConceptDetail, ConceptListResponse, DailyMemory, FragileConcept, ParaphraseSources,
-  ReceiverTokenIssued, ReceiverTokenStatus,
+  ReceiverTokenIssued, ReceiverTokenStatus, SynthesisRead, SynthesisResolved, SynthesisSummary,
   InboxBookTrayResponse, InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
   StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
 } from '../types.ts'
@@ -540,6 +540,19 @@ export const api = {
     request<ConceptDetail>(`/concepts/${encodeURIComponent(key)}`, { signal }),
   getConceptCandidates: (q: string, limit = 6, signal?: AbortSignal) =>
     request<ConceptCandidate[]>(`/concepts/candidates?q=${encodeURIComponent(q)}&limit=${limit}`, { signal }),
+  // F0.11.11: cadernos de síntese com transclusão
+  listSyntheses: (signal?: AbortSignal) => request<SynthesisSummary[]>('/syntheses', { signal }),
+  listTrashedSyntheses: (signal?: AbortSignal) => request<SynthesisSummary[]>('/syntheses/trash', { signal }),
+  createSynthesis: (title: string, body = '') =>
+    request<SynthesisRead>('/syntheses', { method: 'POST', body: JSON.stringify({ title, body }) }),
+  getResolvedSynthesis: (id: number, signal?: AbortSignal) =>
+    request<SynthesisResolved>(`/syntheses/${id}/resolved`, { signal }),
+  updateSynthesis: (id: number, payload: { title?: string; body?: string; version?: number }) =>
+    request<SynthesisRead>(`/syntheses/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
+  trashSynthesis: (id: number) => request<void>(`/syntheses/${id}`, { method: 'DELETE' }),
+  restoreSynthesis: (id: number) => request<SynthesisRead>(`/syntheses/${id}/restore`, { method: 'POST' }),
+  deleteSynthesisPermanently: (id: number) => request<void>(`/syntheses/${id}/permanent`, { method: 'DELETE' }),
+  exportSynthesis: (id: number) => downloadExportFile(`/api/syntheses/${id}/export`, `sintese-${id}.md`),
   // F0.11.09: token de recepção de destaques (Readest)
   getReceiverToken: (signal?: AbortSignal) => request<ReceiverTokenStatus>('/account/receiver-token', { signal }),
   issueReceiverToken: () => request<ReceiverTokenIssued>('/account/receiver-token', { method: 'POST' }),

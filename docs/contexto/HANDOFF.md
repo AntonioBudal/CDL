@@ -13,8 +13,8 @@ de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/d
 - **`main`** está em dia com o trabalho até 2026-11-07: o lote 2 do 0.10 foi levado ao `main` por fast-forward a
   cada feature. **Push pendente** (o usuário faz) e, depois dele, `Restart-Service -Name Leitorum`.
 - **Roadmap 0.10 concluído.** **Roadmap 0.11:** lote 1 (F0.11.01 a .05) concluído e fechado em 2026-11-09 com as
-  suítes completas. **O banco ativo ainda não recebeu as migrações 0034 a 0038**: aplicar com o procedimento do §3
-  ("Migração no banco ativo") antes de reiniciar o serviço; um `upgrade head` aplica as cinco.
+  suítes completas. **O banco ativo ainda não recebeu as migrações 0034 a 0039**: aplicar com o procedimento do §3
+  ("Migração no banco ativo") antes de reiniciar o serviço; um `upgrade head` aplica as seis.
 
 ### Roadmap 0.10 (redesenho, segurança e ergonomia)
 
@@ -50,6 +50,7 @@ F0.10.09) fechou em 2026-11-07: `npm test` 749/749, `pytest` completo 788 aprova
 | F0.11.08 Evolução da revisão: `difficulty_weight` e fila, cartões de conceito, conceitos frágeis, Memória do Dia | Concluída (migração `0037`) | `specs/110-evolucao-revisao/` |
 | F0.11.09 Receptor: Readest pela API compatível com o Readwise (token de recepção); KOReader pelo JSON do exportador | Concluída (migração `0038`) | `specs/111-receptor-koreader-readest/` |
 | F0.11.10 Recorte e giro da foto antes da leitura na digitalização | Concluída (sem migração) | `specs/112-recorte-foto-digitalizacao/` |
+| F0.11.11 Cadernos de síntese com transclusão (`![[…]]` de estudo, seção e destaque; exportação; pacote da conta) | Concluída (migração `0039`) | `specs/113-cadernos-sintese/` |
 
 Lote 1 do 0.11 fechado em 2026-11-09: `npm test` 774/774, `pytest` 825 aprovados e 4 pulados, build ok; correção da
 chave estrangeira da 0035 em commit próprio (`fd2c5fc`).
@@ -57,7 +58,8 @@ chave estrangeira da 0035 em commit próprio (`fd2c5fc`).
 Lote 2 do 0.11 (F0.11.06 a .10) fechado em 2026-11-12: `npm test` 796/796, `pytest` 854 aprovados e 4 pulados,
 build ok; nenhuma falha de feature anterior.
 
-Pendente no 0.11: cadernos de síntese com transclusão (abre o lote 3).
+Roadmap 0.11: todos os itens do plano entregues; o lote 3 (só a F0.11.11) fecha com as suítes completas na
+próxima rodada de testes.
 
 ### Roadmap 1.0 (comunidade e ecossistema) — nada iniciado
 
@@ -70,7 +72,7 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **113**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **114**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,

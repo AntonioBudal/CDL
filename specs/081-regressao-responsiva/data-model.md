@@ -56,6 +56,8 @@ Representa o contrato de validação para cada uma das 25 rotas nomeadas de `rou
 | 26 | `media-space` | `/minhas-imagens` | `views/MediaSpaceView.vue` | 1 | Contido | $\ge 44\text{px}$ |
 | 28 | `lexicon` | `/conceitos` | `views/LexiconView.vue` | 1 | Contido | $\ge 44\text{px}$ |
 | 29 | `concept` | `/conceitos/:key` | `views/ConceptView.vue` | 1 | Contido | $\ge 44\text{px}$ |
+| 30 | `syntheses` | `/sinteses` | `views/SynthesesView.vue` | 1 | Contido | $\ge 44\text{px}$ |
+| 31 | `synthesis` | `/sinteses/:id` | `views/SynthesisView.vue` | 1 | Contido | $\ge 44\text{px}$ |
 | 27 | `ereader-import` | `/inbox/importar-leitor` | `views/EreaderImportView.vue` | 1 | Contido | $\ge 44\text{px}$ |
 
 ---

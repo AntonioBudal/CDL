@@ -89,6 +89,9 @@ export const router = createRouter({
     // F0.11.06: léxico de conceitos
     { path: '/conceitos', name: 'lexicon', component: () => import('../views/LexiconView.vue'), meta: { title: 'Léxico' } },
     { path: '/conceitos/:key', name: 'concept', component: () => import('../views/ConceptView.vue'), meta: { title: 'Conceito' } },
+    // F0.11.11: cadernos de síntese com transclusão
+    { path: '/sinteses', name: 'syntheses', component: () => import('../views/SynthesesView.vue'), meta: { title: 'Sínteses' } },
+    { path: '/sinteses/:id(\\d+)', name: 'synthesis', component: () => import('../views/SynthesisView.vue'), meta: { title: 'Caderno de síntese' } },
     { path: '/@:username', alias: ['/u/:username'], name: 'user-profile', component: () => import('../views/UserProfileView.vue'), meta: { title: 'Perfil do Leitor' } },
     { path: '/admin', name: 'admin', component: () => import('../views/AdminView.vue'), meta: { title: 'Administração', requiresAdmin: true } },
     {

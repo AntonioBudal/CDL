@@ -1568,3 +1568,26 @@ Spec aprovada com as recomendações Q1 a Q5:
   Achado e corrigido: a seta numa alça também movia o recorte inteiro (evento subindo); agora para na alça.
 - **Fecho do lote 2 do 0.11 (F0.11.06 a .10):** `npm test` 796/796, `pytest` 854 aprovados e 4 pulados (banco
   descartável), build ok; nenhuma falha de feature anterior.
+
+## F0.11.11 — Cadernos de síntese com transclusão (2026-11-14)
+
+- **Spec, plano e tarefas:** `specs/113-cadernos-sintese/`. Primeira feature do lote 3 do 0.11 (último item do
+  roadmap). **Migração `0039`** (tabela `synthesis_notebooks`, com `version` e `deleted_at`), **não aplicada ao banco
+  ativo**.
+- **Marcas** (cada uma sozinha na linha, fora de bloco de código): `![[Título|id]]` (estudo inteiro),
+  `![[Título|id#resumo|explicacao|conceitos|referencias]]` (seção), `![[destaque:id]]`. Mesmo analisador no servidor
+  (`services/synthesis_service.py`) e no navegador (`utils/synthesisEmbeds.ts`), com os mesmos casos nos testes.
+- **API** (`routers/syntheses.py`): lista, lixeira própria (30 dias, limpeza ao listar), criar, ler, `PATCH` com
+  versão (409), excluir/restaurar/excluir de vez, `GET /{id}/resolved` (resolve só conteúdo do próprio leitor e fora da
+  lixeira; senão "Trecho indisponível", sem vazar nada; limite de 200 trechos), `GET /{id}/export` (Markdown com os
+  trechos resolvidos em citação + origem, cercados de linhas em branco). O pacote da conta inclui `sinteses/`.
+- **Tela:** `views/SynthesesView.vue` (`/sinteses`, com "Excluídos"), `views/SynthesisView.vue` (`/sinteses/:id`, ler e
+  editar, aviso de alterações), `components/synthesis/EmbedBlock.vue` e `InsertEmbedDialog.vue` (`<dialog>`; o
+  fechamento avisa o pai na hora). Menus "Sínteses" (barra, "Mais", usuário); rotas nos contratos 076/081 (linhas 30 e
+  31).
+- **Testes:** `test_synthesis.py` (3), `test_migration_0039.py` (1), `feature-113-sinteses.test.mjs` (3); vizinhos (78
+  no backend, 112 no frontend) e build ok. Navegador (dados fictícios): criar, inserir 3 trechos pelo diálogo (na
+  posição do cursor, em linha própria), marca no meio do parágrafo avisada, trecho atualizado depois de editar o
+  estudo, origem na lixeira como indisponível, exportação, Excluídos; contraste ≥ 4,76:1 nos 10 temas; 375 e 1024 px sem
+  rolagem lateral. Achados e corrigidos: diálogo que não reabria (dependia do evento nativo `close`) e exportação que
+  colava a linha seguinte na citação.

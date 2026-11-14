@@ -1693,6 +1693,44 @@ export interface InCommonResponse {
 // --- Kindle e Kobo (F0.11.03, spec 105); KOReader e Readest (F0.11.09, spec 111) ---
 export type EreaderSource = 'kindle' | 'kobo' | 'koreader' | 'readest'
 
+// F0.11.11: cadernos de síntese com transclusão
+export interface SynthesisSummary {
+  id: number
+  title: string
+  embeds: number
+  created_at: string
+  updated_at: string
+  deleted_at?: string | null
+}
+
+export interface SynthesisRead {
+  id: number
+  title: string
+  body: string
+  version: number
+  created_at: string
+  updated_at: string
+}
+
+export interface EmbedResolved {
+  key: string
+  kind: 'study' | 'section' | 'highlight'
+  available: boolean
+  study_id?: number | null
+  book_id?: number | null
+  title: string
+  book_title: string
+  chapter_name: string
+  section_label: string
+  markdown: string
+  note: string
+}
+
+export interface SynthesisResolved {
+  synthesis: SynthesisRead
+  embeds: Record<string, EmbedResolved>
+}
+
 // F0.11.09: token de recepção (Readest)
 export interface ReceiverTokenStatus {
   active: boolean

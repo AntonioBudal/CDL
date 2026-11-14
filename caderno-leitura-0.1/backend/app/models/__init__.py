@@ -24,6 +24,7 @@ from app.models.study_relation import StudyRelation
 from app.models.study_session import StudySession, StudySessionItem
 from app.models.storage_settings import StorageSettings
 from app.models.study_version import StudyVersion
+from app.models.synthesis_notebook import SynthesisNotebook
 from app.models.support_setting import SupportSetting
 from app.models.user import User
 from app.models.user_preference import UserPreference
@@ -58,6 +59,7 @@ __all__ = [
     "StorageSettings",
     "StudyVersion",
     "SupportSetting",
+    "SynthesisNotebook",
     "User",
     "UserPreference",
     "UserProfile",

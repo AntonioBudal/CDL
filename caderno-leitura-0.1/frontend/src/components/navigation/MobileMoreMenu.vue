@@ -185,6 +185,15 @@ onUnmounted(() => {
           </RouterLink>
 
           <RouterLink
+            to="/sinteses"
+            class="drawer-item"
+            @click="emit('close')"
+          >
+            <Icon name="list" :size="20" class="drawer-item-icon" />
+            <span class="drawer-item-label">Sínteses</span>
+          </RouterLink>
+
+          <RouterLink
             to="/lixeira"
             class="drawer-item"
             @click="emit('close')"

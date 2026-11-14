@@ -39,6 +39,8 @@
 | `inbox` | `/inbox` | **1** | Mesa de triagem e capturas rápidas. Lista fluida com processamento individual e em lote. |
 | `lexicon` | `/conceitos` | **1** | Léxico de conceitos (F0.11.06): lista de uma coluna com busca e paginação; termos com alvo de 44 px. |
 | `concept` | `/conceitos/:key` | **1** | Página do conceito (F0.11.06): definições e menções em cartões empilhados. |
+| `syntheses` | `/sinteses` | **1** | Cadernos de síntese (F0.11.11): lista de uma coluna, criação e "Excluídos"; alvos de 44 px. |
+| `synthesis` | `/sinteses/:id` | **1** | Caderno de síntese (F0.11.11): texto e trechos transcluídos em blocos empilhados; editor em coluna única. |
 | `ereader-import` | `/inbox/importar-leitor` | **1** | Importar destaques do Kindle ou Kobo (F0.11.03): três passos em coluna única; a escolha de destino de cada livro quebra linha no celular, com campos e botões de 44 px. |
 | `friends` | `/amigos` | **1** | Gestão de conexões sociais e salão literário. Grids de amigos adaptados para `min(280px, 100%)`. |
 | `user-profile` | `/@:username` | **1** | Perfil público de leitor e lista de estudos compartilhados com alvos táteis acessíveis. |

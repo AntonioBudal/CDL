@@ -1362,6 +1362,11 @@ def generate_account_export_zip(
         zf.writestr("dados_acervo.json", json.dumps(acervo_data, ensure_ascii=False, indent=2))
         for rel_path, content in markdown_files:
             zf.writestr(rel_path, content)
+        # F0.11.11: cadernos de síntese, com os trechos resolvidos.
+        from app.services.synthesis_service import account_export_files
+
+        for rel_path, content in account_export_files(session, user.id):
+            zf.writestr(rel_path, content)
         # Feature 090-B: portabilidade (LGPD) exige formato aberto; as imagens vão decifradas.
         for rel_path, content in _decrypted_user_images(session, user.id):
             zf.writestr(rel_path, content)
