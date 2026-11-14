@@ -1591,3 +1591,13 @@ Spec aprovada com as recomendações Q1 a Q5:
   estudo, origem na lixeira como indisponível, exportação, Excluídos; contraste ≥ 4,76:1 nos 10 temas; 375 e 1024 px sem
   rolagem lateral. Achados e corrigidos: diálogo que não reabria (dependia do evento nativo `close`) e exportação que
   colava a linha seguinte na citação.
+
+## Fecho do Roadmap 0.11 (2026-11-14)
+
+- Suítes completas depois da F0.11.11: `npm test` 799/799; `pytest` 857 aprovados, 4 pulados e **1 falha
+  intermitente** de feature anterior (086, `test_client_disconnect_kills_engine_and_cleans`): a desconexão simulada
+  pela contagem de chamadas chegava antes de o motor falso subir quando a máquina estava carregada (a suíte levou 20
+  minutos, o dobro do normal). O produto estava certo; o teste passou a desconectar só depois que o motor gravou o
+  rastro. Commit próprio `9a93645`; conferido 8 vezes seguidas; arquivo de digitalização inteiro 37/37 duas vezes.
+- Roadmap 0.11 concluído: F0.11.01 a F0.11.11. Banco ativo ainda sem as migrações 0034 a 0039 (procedimento do
+  HANDOFF, pelo usuário).

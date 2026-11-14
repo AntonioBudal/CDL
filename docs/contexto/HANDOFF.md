@@ -58,8 +58,13 @@ chave estrangeira da 0035 em commit próprio (`fd2c5fc`).
 Lote 2 do 0.11 (F0.11.06 a .10) fechado em 2026-11-12: `npm test` 796/796, `pytest` 854 aprovados e 4 pulados,
 build ok; nenhuma falha de feature anterior.
 
-Roadmap 0.11: todos os itens do plano entregues; o lote 3 (só a F0.11.11) fecha com as suítes completas na
-próxima rodada de testes.
+Lote 3 do 0.11 (F0.11.11) fechado em 2026-11-14: `npm test` 799/799, `pytest` 858 aprovados e 4 pulados (depois
+da correção abaixo), build ok. A suíte completa acusou 1 falha intermitente de feature anterior (086):
+`test_client_disconnect_kills_engine_and_cleans` simulava a desconexão pela contagem de chamadas e, com a máquina
+carregada, ela chegava antes de o motor falso subir; corrigido só no teste, em commit próprio (`9a93645`), e conferido
+8 vezes seguidas sem falha.
+
+**Roadmap 0.11 concluído** (F0.11.01 a .11). Próximo: Roadmap 1.0 (abaixo), a começar pela spec 114.
 
 ### Roadmap 1.0 (comunidade e ecossistema) — nada iniciado
 
