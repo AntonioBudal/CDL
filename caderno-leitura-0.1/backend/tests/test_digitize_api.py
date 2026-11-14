@@ -410,12 +410,11 @@ def test_timeout_kills_engine_and_cleans(client, motor, monkeypatch, killed):
 
 def test_client_disconnect_kills_engine_and_cleans(motor, killed):
     trace = motor("slow")
-    calls = 0
 
     async def disconnected() -> bool:
-        nonlocal calls
-        calls += 1
-        return calls > 2
+        # Desconecta só depois que o motor falso começou (gravou o rastro): com a máquina carregada, contar
+        # chamadas fazia a desconexão chegar antes de o processo subir e o teste falhava por corrida.
+        return trace.is_file()
 
     upload = UploadFile(file=io.BytesIO(image_bytes()), filename="pagina.png")
     with pytest.raises(DigitizeError) as error:
