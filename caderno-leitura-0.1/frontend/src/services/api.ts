@@ -14,7 +14,7 @@ import type {
   BacklinksResponse, StudyCandidateOption,
   EreaderChoice, EreaderImportResponse, EreaderPreviewResponse, IsbnLookupResponse, BookCreatePayload,
   ConceptCandidate, ConceptDetail, ConceptListResponse, DailyMemory, FragileConcept, ParaphraseSources,
-  PublishedStudyItem, ReceiverTokenIssued, ReceiverTokenStatus, SynthesisRead, SynthesisResolved, SynthesisSummary,
+  LibraryAction, LibraryImportResponse, LibraryPreviewResponse, PublishedStudyItem, ReceiverTokenIssued, ReceiverTokenStatus, SynthesisRead, SynthesisResolved, SynthesisSummary,
   InboxBookTrayResponse, InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
   StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
 } from '../types.ts'
@@ -581,6 +581,19 @@ export const api = {
     formData.append('file', file)
     formData.append('choices', JSON.stringify(choices))
     return request<EreaderImportResponse>('/inbox/ereader/import', { method: 'POST', body: formData })
+  },
+  // F0.12.03: importar biblioteca (Goodreads, StoryGraph, BookWyrm)
+  previewLibraryImport: (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return request<LibraryPreviewResponse>('/books/import-library/preview', { method: 'POST', body: formData })
+  },
+  importLibrary: (file: File, choices: { key: string; action: LibraryAction }[], withReviews: boolean) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('choices', JSON.stringify(choices))
+    formData.append('with_reviews', withReviews ? 'true' : 'false')
+    return request<LibraryImportResponse>('/books/import-library/import', { method: 'POST', body: formData })
   },
   // F0.11.02: contagem da bandeja por capítulo
   getInboxBookTray: (bookId: number, signal?: AbortSignal) =>

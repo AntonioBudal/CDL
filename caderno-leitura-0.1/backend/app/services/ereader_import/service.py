@@ -32,11 +32,16 @@ from app.services.ereader_import import (
 from app.services.ereader_import.kindle import parse_kindle_clippings
 from app.services.ereader_import.kobo import parse_kobo_database
 from app.services.ereader_import.koreader import parse_koreader_json
+from app.services.ereader_import.omnivore import parse_omnivore_zip
+from app.services.ereader_import.readwise_csv import parse_readwise_csv
 from app.services.in_common_service import first_author_surname_key, normalize_title_key
 
 KINDLE_MAX_BYTES = 20 * 1024 * 1024
 KOBO_MAX_BYTES = 200 * 1024 * 1024
-SOURCE_LABELS = {"kindle": "Kindle", "kobo": "Kobo", "koreader": "KOReader", "readest": "Readest"}
+SOURCE_LABELS = {
+    "kindle": "Kindle", "kobo": "Kobo", "koreader": "KOReader", "readest": "Readest", "readwise": "Readwise",
+    "omnivore": "Omnivore",
+}
 
 
 def parse_upload(data: bytes) -> EreaderParseResult:
@@ -48,6 +53,12 @@ def parse_upload(data: bytes) -> EreaderParseResult:
             if len(data) > KINDLE_MAX_BYTES:
                 raise HTTPException(status_code=413, detail="O My Clippings.txt passa de 20 MB.")
             return parse_kindle_clippings(data)
+        if kind == "omnivore":
+            return parse_omnivore_zip(data)
+        if kind == "readwise":
+            if len(data) > KINDLE_MAX_BYTES:
+                raise HTTPException(status_code=413, detail="O CSV do Readwise passa de 20 MB.")
+            return parse_readwise_csv(data)
         if kind == "koreader":
             if len(data) > KINDLE_MAX_BYTES:
                 raise HTTPException(status_code=413, detail="O JSON do KOReader passa de 20 MB.")

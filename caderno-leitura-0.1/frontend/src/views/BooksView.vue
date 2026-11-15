@@ -176,6 +176,8 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
     <header class="page-header">
       <p class="eyebrow">Seu acervo</p>
       <h1>{{ activeTab === 'meus-livros' ? 'Meus livros' : 'Estudos Compartilhados' }}</h1>
+      <!-- F0.12.03: entrada discreta para importar a biblioteca de outro serviço -->
+      <RouterLink to="/livros/importar" class="books-import-link">Importar de outro serviço</RouterLink>
 
       <div class="tabs-scroll-wrapper">
         <nav class="library-tabs-nav tabs-scroll-content" role="tablist" aria-label="Abas da Biblioteca">
@@ -437,6 +439,14 @@ onBeforeUnmount(() => { disposed = true; request?.abort() })
 </template>
 
 <style scoped>
+.books-import-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--color-link);
+  font-size: 0.9rem;
+}
+
 /* Abas de Navegação da Biblioteca */
 .library-tabs-nav {
   display: flex;

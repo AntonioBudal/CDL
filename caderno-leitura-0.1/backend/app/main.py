@@ -42,6 +42,7 @@ from app.routers import (
     study_highlights,
     study_mentions,
     concepts,
+    library_import,
     paraphrase,
     public_studies,
     receiver,
@@ -173,6 +174,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(admin.router, prefix="/api")
     application.include_router(backups.router, prefix="/api")
     application.include_router(categories.router, prefix="/api")
+    application.include_router(library_import.router, prefix="/api")  # F0.12.03 (antes de books)
     application.include_router(books.router, prefix="/api")
     application.include_router(chapters.router, prefix="/api")
     application.include_router(inbox.router, prefix="/api")

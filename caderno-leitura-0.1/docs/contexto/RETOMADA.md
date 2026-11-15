@@ -1649,3 +1649,28 @@ Spec aprovada com as recomendações Q1 a Q5:
   despublicar pela lista de Ajustes. **Achados e corrigidos:** com `max-age=300` o navegador ainda mostrava a página
   despublicada por até 5 minutos (trocado por `no-cache`); a captura de erro da página pegava qualquer exceção como 404
   (estreitada para `HTTPException`).
+
+## F0.12.03 — Importadores (2026-11-15)
+
+- **Spec, plano e tarefas:** `specs/116-importadores/`. Terceira feature do 0.12. **Sem migração.** Versão
+  `0.12.0-alpha.3`.
+- **Formatos** conferidos no código aberto e nos arquivos de exemplo do BookWyrm (Goodreads, StoryGraph) e no código
+  do BookWyrm e do Omnivore. **Readwise sem conferência** (exportação exige login; sem exemplo público): leitor por nome
+  de coluna, tolerante; pedir ao usuário um teste com o arquivo real.
+- **Biblioteca** (`services/library_import/`, `routers/library_import.py` antes do roteador de livros):
+  `POST /api/books/import-library/preview|import`. Detecção pelo cabeçalho; ISBN sem `="…"`; datas `AAAA/MM/DD` e ISO;
+  estantes → estados (`to-read`→Quero ler, `currently-reading`/`reading`→Lendo, `read`→Lido,
+  `did-not-finish`/`stopped-reading`→Abandonado); autores juntados com "; "; CSV com BOM, `;` e CRLF; até 10 MB e 20
+  mil linhas. Casamento com o acervo por ISBN ou título+sobrenome; criar/atualizar/pular (padrão: pular os já
+  existentes); resenhas opcionais viram capturas ("Resenha do Goodreads · data"); estrelas não entram.
+- **Destaques:** `ereader_import/readwise_csv.py` e `omnivore.py` (ZIP só na memória: 50 MB, 5 mil arquivos, 200 MB
+  descompactados, 20 MB por arquivo; `highlights/<slug>.md` com `> trecho` + nota) na tela "Importar de leitor
+  digital", que passou a aceitar `.csv` e `.zip`.
+- **Tela:** `views/LibraryImportView.vue` (`/livros/importar`, rota `library-import`, contratos 076/081 linha 33) e
+  link "Importar de outro serviço" na página Livros.
+- **Testes:** `test_library_import.py` (5) e `test_ereader_readwise_omnivore.py` (4); `feature-116-importadores` (2);
+  vizinhos verdes; build ok. Navegador (arquivos fictícios): Goodreads com prévia (livro já existente casado por
+  título/autor, novo com ISBN), atualizar + criar + resenha; Readwise na tela de leitor digital; contraste ≥ 4,76:1 nos
+  10 temas; 375 px sem rolagem lateral, seletores de 46 px.
+- **Correção à parte** (`9f8d3ac`): a classe `visually-hidden` era usada sem definição em telas antigas
+  (`EreaderImportView`, `CaptureItemCard`) e o texto para leitor de tela aparecia; agora é global em `style.css`.

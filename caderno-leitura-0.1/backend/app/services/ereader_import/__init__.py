@@ -30,7 +30,7 @@ class EreaderBook:
 
 @dataclass
 class EreaderParseResult:
-    source: str  # "kindle", "kobo", "koreader" ou "readest"
+    source: str  # "kindle", "kobo", "koreader", "readest", "readwise" ou "omnivore"
     books: list[EreaderBook]
     skipped: int = 0  # marcadores e blocos não reconhecidos
 
@@ -43,13 +43,19 @@ def detect_format(data: bytes) -> str:
     if data.startswith(SQLITE_MAGIC):
         return "kobo"
     from app.services.ereader_import.koreader import looks_like_koreader_json
+    from app.services.ereader_import.omnivore import looks_like_omnivore
+    from app.services.ereader_import.readwise_csv import looks_like_readwise
 
+    if looks_like_omnivore(data):
+        return "omnivore"
     if looks_like_koreader_json(data):
         return "koreader"
+    if looks_like_readwise(data):
+        return "readwise"
     head = data[:200_000].decode("utf-8-sig", errors="replace")
     if "==========" in head:
         return "kindle"
     raise EreaderFormatError(
-        "Não reconheci este arquivo como My Clippings.txt do Kindle, KoboReader.sqlite do Kobo nem como o JSON "
-        "do exportador do KOReader."
+        "Não reconheci este arquivo. Aceitos: My Clippings.txt (Kindle), KoboReader.sqlite (Kobo), JSON do "
+        "exportador do KOReader, CSV do Readwise e ZIP do Omnivore."
     )

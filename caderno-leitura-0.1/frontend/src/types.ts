@@ -298,6 +298,41 @@ export interface Study extends StudySummary, AnalysisSections {
   published_at?: string | null
 }
 
+// F0.12.03: importar biblioteca de outro serviço
+export type LibraryAction = 'create' | 'update' | 'skip'
+
+export interface LibraryPreviewRow {
+  key: string
+  title: string
+  author: string | null
+  isbn: string | null
+  year: number | null
+  state: string | null
+  state_label: string
+  shelf: string | null
+  started_on: string | null
+  finished_on: string | null
+  has_review: boolean
+  existing_book_id: number | null
+  existing_book_title: string | null
+  suggested_action: 'create' | 'skip'
+}
+
+export interface LibraryPreviewResponse {
+  service: 'goodreads' | 'storygraph' | 'bookwyrm'
+  service_label: string
+  rows: LibraryPreviewRow[]
+  skipped: number
+}
+
+export interface LibraryImportResponse {
+  service: string
+  created: number
+  updated: number
+  skipped: number
+  reviews: number
+}
+
 // F0.12.02: estudos publicados na web
 export interface PublishedStudyItem {
   study_id: number
@@ -1703,7 +1738,7 @@ export interface InCommonResponse {
 }
 
 // --- Kindle e Kobo (F0.11.03, spec 105); KOReader e Readest (F0.11.09, spec 111) ---
-export type EreaderSource = 'kindle' | 'kobo' | 'koreader' | 'readest'
+export type EreaderSource = 'kindle' | 'kobo' | 'koreader' | 'readest' | 'readwise' | 'omnivore'
 
 // F0.11.11: cadernos de síntese com transclusão
 export interface SynthesisSummary {

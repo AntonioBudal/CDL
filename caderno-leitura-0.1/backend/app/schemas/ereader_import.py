@@ -7,7 +7,7 @@ from pydantic import Field
 
 from app.schemas.common import InputModel, OutputModel, RecordId
 
-EreaderSource = Literal["kindle", "kobo", "koreader", "readest"]
+EreaderSource = Literal["kindle", "kobo", "koreader", "readest", "readwise", "omnivore"]
 EreaderAction = Literal["existing", "create", "skip"]
 
 

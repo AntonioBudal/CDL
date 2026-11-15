@@ -53,6 +53,8 @@ export const router = createRouter({
       component: () => import('../views/StudySessionView.vue'),
       meta: { title: 'Sessão de Estudo', cleanScreen: true },
     },
+    // F0.12.03: importar biblioteca de outro serviço (Goodreads, StoryGraph, BookWyrm)
+    { path: '/livros/importar', name: 'library-import', component: () => import('../views/LibraryImportView.vue'), meta: { title: 'Importar biblioteca' } },
     { path: '/livros/:bookId', alias: ['/books/:bookId'], name: 'book', component: () => import('../views/BookView.vue'), meta: { title: 'Livro' } },
     { path: '/livros/:bookId/estudos/:studyId', alias: ['/books/:bookId/estudos/:studyId'], name: 'study', component: () => import('../views/StudyView.vue'), meta: { title: 'Ler estudo' } },
     {

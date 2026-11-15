@@ -75,8 +75,8 @@ feature, a versão no rodapé e a tela escondida "Evolução das versões". Deta
 (SemVer 2.0.0, `0.12.0-alpha.N`): **`docs/contexto/ROADMAP-0.12.md`**.
 
 F0.12.01 versão no rodapé e "Evolução das versões" (spec 114, **concluída**; versão `0.12.0-alpha.1`) · F0.12.02 estudos publicados na web,
-`/compartilhado/:id` (spec 115, **concluída**; versão `0.12.0-alpha.2`; migração `0040`) · importadores (Readwise, Goodreads,
-StoryGraph, Omnivore, BookWyrm) · feeds RSS/Atom/JSON · quadro espacial com exportação JSON Canvas · oclusão de imagem
+`/compartilhado/:id` (spec 115, **concluída**; versão `0.12.0-alpha.2`; migração `0040`) · F0.12.03 importadores (spec 116, **concluída**;
+versão `0.12.0-alpha.3`; Readwise sem conferência com arquivo real) · feeds RSS/Atom/JSON · quadro espacial com exportação JSON Canvas · oclusão de imagem
 em SVG · círculos de leitura com trava anti-spoiler · F0.12.08 simplificação de nomes (auditoria pronta no
 roadmap) · F0.12.09 seletor de idioma (**só a fundação**, decisão do usuário em 2026-11-14) · F0.12.10 pequenas melhorias de
 usabilidade (calendário do Painel, barra de ações fixa no estudo, menu de 3 pontos no celular, cabeçalho do estudo).
@@ -86,7 +86,7 @@ usabilidade (calendário do Painel, barra de ações fixa no estudo, menu de 3 p
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **116**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **117**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,

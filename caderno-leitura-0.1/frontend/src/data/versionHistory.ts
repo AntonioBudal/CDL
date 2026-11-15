@@ -46,7 +46,7 @@ export const VERSION_HISTORY: RoadmapEntry[] = [
     features: [
       { id: 'F0.12.01', title: 'Versão no rodapé e evolução das versões', done: true },
       { id: 'F0.12.02', title: 'Estudos publicados na web', done: true },
-      { id: 'F0.12.03', title: 'Importadores (Readwise, Goodreads, StoryGraph, Omnivore, BookWyrm)', done: false },
+      { id: 'F0.12.03', title: 'Importadores (Readwise, Goodreads, StoryGraph, Omnivore, BookWyrm)', done: true },
       { id: 'F0.12.04', title: 'Feeds RSS, Atom e JSON', done: false },
       { id: 'F0.12.05', title: 'Quadro espacial com exportação JSON Canvas', done: false },
       { id: 'F0.12.06', title: 'Oclusão de imagem para revisão', done: false },

@@ -21,7 +21,9 @@ const myBooks = ref<Book[]>([])
 /** Por livro do arquivo: 'create', 'skip' ou o id do livro do acervo (texto, por causa do <select>). */
 const destinations = ref<Record<string, string>>({})
 
-const SOURCE_NAMES: Record<string, string> = { kindle: 'Kindle', kobo: 'Kobo', koreader: 'KOReader', readest: 'Readest' }
+const SOURCE_NAMES: Record<string, string> = {
+  kindle: 'Kindle', kobo: 'Kobo', koreader: 'KOReader', readest: 'Readest', readwise: 'Readwise', omnivore: 'Omnivore',
+}
 const sourceLabel = computed(() => SOURCE_NAMES[preview.value?.source ?? 'kindle'] ?? 'leitor')
 const totalNew = computed(() =>
   (preview.value?.books ?? [])
@@ -124,11 +126,13 @@ function restart() {
         <li><strong>Kobo:</strong> conecte pelo cabo USB e abra <code>.kobo/KoboReader.sqlite</code> (pasta oculta).</li>
         <li><strong>KOReader:</strong> no menu de anotações, Exportar destaques → <strong>JSON</strong>; envie o
           arquivo <code>.json</code> gerado.</li>
+        <li><strong>Readwise:</strong> exporte os destaques em CSV e envie o arquivo <code>.csv</code>.</li>
+        <li><strong>Omnivore:</strong> envie o <code>.zip</code> da exportação (o serviço encerrou em 2024, mas o arquivo vale).</li>
         <li><strong>Readest:</strong> envia sozinho, sem arquivo: veja Configurações → Leitura → Receber destaques.</li>
       </ul>
       <label class="ereader-file">
         <span>Arquivo do leitor digital</span>
-        <input type="file" accept=".txt,.sqlite,.json,text/plain,application/json,application/octet-stream" @change="onFileChange" />
+        <input type="file" accept=".txt,.sqlite,.json,.csv,.zip,text/plain,text/csv,application/json,application/zip,application/octet-stream" @change="onFileChange" />
       </label>
       <p class="ereader-muted">Nada é gravado nesta etapa, e o arquivo não fica guardado no servidor.</p>
       <div class="ereader-actions">
