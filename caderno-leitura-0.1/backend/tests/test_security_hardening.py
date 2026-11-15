@@ -87,10 +87,18 @@ def test_referrer_policy_is_same_origin(hardening_client):
 # --- US3: X-Robots-Tag por lista de rotas públicas --------------------------------------------------------------
 
 
-@pytest.mark.parametrize("path", ["/", "/sobre", "/apoie", "/compartilhado/1", "/robots.txt", "/sitemap.xml", "/.well-known/security.txt"])
+@pytest.mark.parametrize("path", ["/", "/sobre", "/apoie", "/robots.txt", "/sitemap.xml", "/.well-known/security.txt"])
 def test_public_routes_are_indexable(hardening_client, path):
     response = hardening_client.get(path)
     assert "X-Robots-Tag" not in response.headers, path
+
+
+def test_unpublished_shared_study_is_noindex(hardening_client):
+    # F0.12.02: /compartilhado/{id} virou página do servidor; estudo não publicado (ou inexistente) é 404 com noindex.
+    # O publicado indexável é coberto em test_public_studies.py.
+    response = hardening_client.get("/compartilhado/1")
+    assert response.status_code == 404
+    assert "noindex" in response.headers.get("X-Robots-Tag", "")
 
 
 @pytest.mark.parametrize("path", ["/destaques", "/revisao", "/inbox", "/ajustes", "/login", "/@alguem", "/rota-que-nao-existe", "/api/health"])
