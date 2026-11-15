@@ -39,6 +39,9 @@ suítes completas a cada 5 features, commit em português, push só quando o usu
 | F0.12.05 | **Quadro espacial com exportação JSON Canvas** | O backend do canvas já existe. |
 | F0.12.06 | **Oclusão de imagem em SVG** | Cartões de revisão sobre imagens. |
 | F0.12.07 | **Círculos de leitura com trava anti-spoiler** | Depende de ISBN (F0.11.04) e estados de leitura (F0.11.01), já entregues. |
+| F0.12.08 | **Simplificação de nomes** | Pedido do usuário em 2026-11-14. Auditoria abaixo. |
+| F0.12.09 | **Seletor de idioma** | Pedido do usuário em 2026-11-14. **Transição grande** (ver avaliação abaixo): decidir antes da spec se entra, se entra só a fundação, ou se sai do 0.12. |
+| F0.12.10 | **Pequenas melhorias de usabilidade** | Pedido do usuário em 2026-11-14: calendário do Painel, barra de ações fixa no estudo, menu de 3 pontos no celular, espaçamento do cabeçalho do estudo. |
 
 ### F0.12.01 — Versão no rodapé e "Evolução das versões" (pedido do usuário em 2026-11-14)
 
@@ -51,6 +54,73 @@ suítes completas a cada 5 features, commit em português, push só quando o usu
    - Fonte: um arquivo de dados escrito à mão a partir de `docs/HISTORICO-ROADMAPS.md`, dos `ROADMAP-0.x.md` e do
      HANDOFF (texto do projeto, nada do acervo do usuário).
 3. A versão do backend (`/api/health`, Painel de Sistema) passa a ser a mesma do rodapé.
+
+### F0.12.08 — Simplificação de nomes (auditoria de 2026-11-14)
+
+**Regra:** nomes simples, descritivos e universais; **um nome por tela**, igual no menu, no título e nos avisos; letra
+maiúscula só no começo (padrão do português); subtítulo de uma frase que diga o que a tela faz. Metáforas
+("Bancada", "Ateliê", "Salão", "Cockpit", "Despejo") e termos em inglês na interface ("Dashboard", "Inbox",
+"Active Recall") saem. Comentários e nomes internos do código não mudam.
+
+O problema mais comum não é só o nome rebuscado: **a mesma tela tem 2 ou 3 nomes** em lugares diferentes.
+
+| Tela | Hoje (menu · título · rótulo acima do título · outros lugares) | Proposta |
+|---|---|---|
+| Painel (`/dashboard`) | "Dashboard" · "Dashboard 2.0" · "Cockpit de Estudos e Navegação" · Ajustes: "Dashboard 2.0 (Cockpit de Estudos e Retoma)" | **Painel**; subtítulo: "Seus estudos recentes, suas conexões e seu ritmo de leitura." |
+| Revisão (`/revisao`) | "Revisão" · "Central de Revisão" · subtítulo "Bancada de Fixação Cognitiva: pratique Active Recall…" · vazio: "Sua Bancada de Fixação Cognitiva está Pronta" · rótulo "Bancada de Prontidão" | **Revisão**; subtítulo: "Pratique lembrando: responda às perguntas e complete os trechos escondidos." ("Active Recall" → "lembrar sem olhar") |
+| Caixa de entrada (`/inbox`) | "Inbox" (barra) · "Caixa de Entrada" (celular) · "Mesa de Triagem" (título) · "Triagem e Captura" · "Área de Despejo de Pensamentos" · "Abrir na Mesa de Triagem" | **Caixa de entrada**; subtítulo: "Anote ideias rápidas e decida depois o que vira estudo." |
+| Importar (`/importar`) | "Importar" · "Importar Estudo" (celular) · "Importar Fichamento" · "Ateliê de Fichamento" | **Importar**; título "Importar fichamento" |
+| Digitalizar (`/digitalizar`) | "Digitalizar Caderno" · "Ateliê de Fichamento" | **Digitalizar caderno** (rótulo de cima "Importar") |
+| Amigos (`/amigos`) | "Amigos" · "Salão de Amigos" (celular) · "Salão Literário & Círculos de Estudo" · "correspondência intelectual" | **Amigos**; subtítulo: "Encontre leitores, veja leituras em comum e responda aos pedidos de amizade." |
+| Destaques (`/highlights`) | "Destaques" · "Destaques e Anotações" | **Destaques**; subtítulo: "Os trechos que você marcou e as notas que escreveu." |
+| Lixeira | "Lixeira" · "Gerenciamento de Acervo" · "expurgo automático permanente" | **Lixeira**; subtítulo: "Itens excluídos ficam aqui por 30 dias e depois são apagados de vez." |
+| Imagens | "Minhas Imagens e Espaço" | **Minhas imagens** |
+| Ajustes | "Ajustes" · "Ajustes & Preferências" (menu do usuário) · "Ajustes & Conexão" (celular) | **Ajustes** |
+| Perfil | "Meu Perfil" (celular) · "Perfil Público" (menu do usuário) | **Meu perfil** |
+| Conceitos (`/conceitos`) | "Léxico" · "Léxico de conceitos" · "Conceitos do acervo" | **Conceitos** (mais descritivo que "léxico") |
+| Sínteses | "Sínteses" · "Cadernos de síntese" | **Sínteses** |
+| Sair | "Encerrar Sessão (Sair)" · "Encerrar Sessão" | **Sair** |
+
+A spec revisa também os textos que não são títulos, mas usam os nomes antigos (avisos, botões "Voltar à Mesa de
+Triagem", mensagens de vazio, o painel de Ajustes), os **títulos da aba do navegador** (`meta.title` das rotas: ex.
+"Amigos e Leitores", "Central de Revisão") e os testes que conferem esses textos.
+
+### F0.12.09 — Seletor de idioma (avaliação de 2026-11-14)
+
+O usuário escolhe o idioma da interface, independentemente da região. **É uma transição grande** — o usuário pediu
+para ser avisado nesse caso:
+
+- Não há biblioteca de tradução no projeto; todo texto está escrito direto no código, em português.
+- Medição: cerca de **2.600 textos** em 155 telas e componentes, **~280** em arquivos de código e **~270** mensagens
+  de erro do servidor (que também aparecem na tela); **23** arquivos formatam datas fixas em `pt-BR`.
+- Partes presas ao português por natureza: citação ABNT, validador de paráfrase, leitura da seção Conceitos, o
+  organizador da digitalização (palavras-chave em português), a landing e os textos jurídicos/de apoio.
+
+Opções para decidir antes da spec:
+1. **Cortar do 0.12** e guardar para um roadmap próprio de internacionalização.
+2. **Só a fundação no 0.12:** biblioteca de tradução, seletor em Ajustes, idioma salvo na conta, datas pelo idioma,
+   e a tradução (inglês) do que aparece em toda tela (menus, cabeçalho, rodapé, avisos gerais); o resto da interface
+   segue em português e migra aos poucos.
+3. **Tradução completa no 0.12:** várias features (estimativa: 6 a 10 fatias), com revisão de texto em inglês.
+
+Fazer a F0.12.08 **antes** ajuda qualquer uma das opções: menos nomes e mais simples = menos para traduzir.
+
+### F0.12.10 — Pequenas melhorias de usabilidade (pedido de 2026-11-14)
+
+1. **Calendário do Painel** (`components/HeatmapCalendar.vue`, `views/DashboardView.vue`): hoje é fixo em 12 meses
+   (365 dias), embora a API já aceite de 30 a 730 dias. Rework: escolher o período (ex.: 1, 3, 6 e 12 meses, e ano
+   anterior); corrigir o defeito visual na coluna dos dias da semana, em que um dia muda o layout; repensar o filtro
+   por dia (clicar num dia hoje filtra a linha do tempo de um jeito pouco claro).
+2. **Barra de ações do estudo fixa** (`components/FloatingActionsToolbar.vue`, `views/StudyView.vue`): sai a barra
+   flutuante e entra uma barra fixa logo acima das abas das seções (Resumo, Explicação…), no estilo do Word e do
+   Google Docs, moderna e respeitando os 10 temas. No celular, ela deixa de aparecer na parte de baixo e fica fixa no
+   alto, como nesses editores.
+3. **Menu de 3 pontos do estudo no celular** (`DropdownMenu` com `align="right"` em `StudyView.vue`): abre para fora da
+   tela e corta boa parte do conteúdo; deve caber na tela (ou virar uma folha que sobe de baixo).
+4. **Cabeçalho do leitor de estudos** (`.reader-heading-main` em `StudyView.vue`): os elementos ficam espaçados demais
+   na vertical; compactar.
+
+A spec reproduz cada defeito no navegador (com dados fictícios) antes de corrigir e confere em 375, 768 e 1366 px.
 
 ---
 

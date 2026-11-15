@@ -35,12 +35,13 @@ export const VERSION_HISTORY: RoadmapEntry[] = [
     title: 'Comunidade, ecossistema e versões',
     started: '2026-11-14',
     status: 'in_progress',
-    featureCount: 7,
+    featureCount: 10,
     highlights: [
       'Versão no rodapé e esta linha do tempo',
       'Estudos publicados na web, em páginas que os buscadores encontram',
       'Importar de outros serviços de leitura e feeds para acompanhar publicações',
       'Quadro espacial exportável, revisão sobre imagens e círculos de leitura sem spoilers',
+      'Nomes de telas mais simples e ajustes de usabilidade',
     ],
     features: [
       { id: 'F0.12.01', title: 'Versão no rodapé e evolução das versões', done: true },
@@ -50,6 +51,9 @@ export const VERSION_HISTORY: RoadmapEntry[] = [
       { id: 'F0.12.05', title: 'Quadro espacial com exportação JSON Canvas', done: false },
       { id: 'F0.12.06', title: 'Oclusão de imagem para revisão', done: false },
       { id: 'F0.12.07', title: 'Círculos de leitura com trava anti-spoiler', done: false },
+      { id: 'F0.12.08', title: 'Nomes mais simples nas telas', done: false },
+      { id: 'F0.12.09', title: 'Seletor de idioma (em avaliação)', done: false },
+      { id: 'F0.12.10', title: 'Pequenas melhorias de usabilidade', done: false },
     ],
   },
   {
