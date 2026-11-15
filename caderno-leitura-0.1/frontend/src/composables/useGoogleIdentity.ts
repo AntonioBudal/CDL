@@ -1,3 +1,4 @@
+import { uiLocale } from '../i18n/format.ts'
 import { ref } from 'vue'
 import { useAuthStore } from '../stores/auth.ts'
 
@@ -90,7 +91,7 @@ export function useGoogleIdentity() {
         shape: 'rectangular',
         text: 'signin_with',
         logo_alignment: 'left',
-        locale: 'pt-BR',
+        locale: uiLocale(),
         ...options,
       }
       window.google.accounts.id.renderButton(container, config)

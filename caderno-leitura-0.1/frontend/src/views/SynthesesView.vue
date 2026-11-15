@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../i18n/format.ts'
 /** F0.11.11 (spec 113): lista dos cadernos de síntese e os excluídos (30 dias). */
 import { onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
@@ -15,7 +16,7 @@ const message = ref('')
 const newTitle = ref('')
 
 function when(value: string): string {
-  return new Date(value).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+  return new Date(value).toLocaleString(uiLocale(), { dateStyle: 'short', timeStyle: 'short' })
 }
 
 async function load() {

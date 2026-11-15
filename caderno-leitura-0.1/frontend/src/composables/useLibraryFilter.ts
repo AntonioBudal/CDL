@@ -1,3 +1,4 @@
+import { CONTENT_LOCALE } from '../i18n/content.ts'
 import { computed, ref, watch, type Ref } from 'vue'
 import type { Book, BookReadingState, BookSortOption, LibraryViewMode } from '../types.ts'
 import { useCategories } from './useCategories.ts'
@@ -5,7 +6,7 @@ import { useCategories } from './useCategories.ts'
 const STORAGE_KEY_VIEW_MODE = 'caderno_library_view_mode'
 const STORAGE_KEY_SORT = 'caderno_library_sort'
 
-const collator = new Intl.Collator('pt-BR', { sensitivity: 'base', numeric: true })
+const collator = new Intl.Collator(CONTENT_LOCALE, { sensitivity: 'base', numeric: true })
 
 /**
  * Remove acentos (diacríticos), pontuação excessiva e converte para caixa baixa.

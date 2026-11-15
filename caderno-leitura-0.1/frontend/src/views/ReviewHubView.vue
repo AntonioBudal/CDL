@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../i18n/format.ts'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { api, startStudySession, getStudySessionsHistory } from '../services/api.ts'
@@ -223,7 +224,7 @@ function formatDuration(totalSecs: number): string {
 function formatDate(isoStr: string): string {
   try {
     const date = new Date(isoStr)
-    return date.toLocaleDateString('pt-BR', {
+    return date.toLocaleDateString(uiLocale(), {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',

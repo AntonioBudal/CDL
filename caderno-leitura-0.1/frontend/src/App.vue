@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { routeTitle } from './i18n/index.ts'
 import GlobalSearchModal from './components/search/GlobalSearchModal.vue'
 import { usePreferences } from './composables/usePreferences.ts'
 import { useSync } from './composables/useSync.ts'
@@ -20,6 +22,13 @@ import { appVersion, buildCommit, fullVersion } from './utils/appVersion.ts'
 const appVersionText = appVersion()
 const appVersionDetail = fullVersion(appVersionText, buildCommit())
 const route = useRoute()
+const { t, locale } = useI18n() // F0.12.09
+// Trocar o idioma sem trocar de tela também atualiza o título da aba.
+watch(locale, () => {
+  if (route.meta.title || route.name) {
+    document.title = `${routeTitle(route.name, String(route.meta.title || 'Caderno de Leitura'))} — Leitorum`
+  }
+})
 const router = useRouter()
 const auth = useAuthStore()
 const profileService = useProfile()
@@ -134,14 +143,14 @@ const isMoreMenuOpen = ref(false)
     <div class="footer-inner">
       <span class="footer-brand">Leitorum</span>
       <span class="footer-sep" aria-hidden="true">·</span>
-      <RouterLink to="/sobre" class="footer-link">Sobre o Leitorum</RouterLink>
+      <RouterLink to="/sobre" class="footer-link">{{ t('footer.about') }}</RouterLink>
       <span class="footer-sep" aria-hidden="true">·</span>
-      <RouterLink to="/apoie" class="footer-support-link">Apoie o Leitorum</RouterLink>
+      <RouterLink to="/apoie" class="footer-support-link">{{ t('footer.support') }}</RouterLink>
       <span class="footer-sep" aria-hidden="true">·</span>
-      <a class="footer-license" href="https://github.com/AntonioBudal/CDL" target="_blank" rel="noopener noreferrer">Código-fonte público</a>
+      <a class="footer-license" href="https://github.com/AntonioBudal/CDL" target="_blank" rel="noopener noreferrer">{{ t('footer.source') }}</a>
       <span class="footer-sep" aria-hidden="true">·</span>
       <!-- F0.12.01: versão SemVer; o commit só na dica. Não é link: a tela de versões fica escondida no Sobre. -->
-      <span class="footer-version" :title="`Versão ${appVersionDetail}`" :aria-label="`Versão ${appVersionText}`" tabindex="0">v{{ appVersionText }}</span>
+      <span class="footer-version" :title="t('footer.version', { version: appVersionDetail })" :aria-label="t('footer.version', { version: appVersionText })" tabindex="0">v{{ appVersionText }}</span>
     </div>
   </footer>
   <GlobalSearchModal />

@@ -5,12 +5,14 @@ import Icon from '../ui/Icon.vue'
 import { useInboxCount } from '../../composables/useInboxCount.ts'
 import { useFriends } from '../../composables/useFriends.ts'
 import { useCircleInvites } from '../../composables/useCircleInvites.ts'
+import { useI18n } from 'vue-i18n'
 
 const emit = defineEmits<{
   (e: 'open-more'): void
 }>()
 
 const route = useRoute()
+const { t } = useI18n() // F0.12.09
 const inboxService = useInboxCount()
 const friendsService = useFriends()
 const circleInvites = useCircleInvites() // F0.12.07
@@ -27,7 +29,7 @@ const isReviewActive = computed(() => ['review', 'study-session'].includes(Strin
 </script>
 
 <template>
-  <nav class="mobile-tab-bar" aria-label="Navegação móvel principal">
+  <nav class="mobile-tab-bar" :aria-label="t('nav.mobileNav')">
     <!-- Início -->
     <RouterLink
       to="/dashboard"
@@ -36,7 +38,7 @@ const isReviewActive = computed(() => ['review', 'study-session'].includes(Strin
       :aria-current="isDashboardActive ? 'page' : undefined"
     >
       <Icon name="layout-dashboard" :size="20" class="mobile-tab-icon" />
-      <span class="mobile-tab-label">Painel</span>
+      <span class="mobile-tab-label">{{ t('nav.dashboard') }}</span>
     </RouterLink>
 
     <!-- Livros -->
@@ -47,7 +49,7 @@ const isReviewActive = computed(() => ['review', 'study-session'].includes(Strin
       :aria-current="isBooksActive ? 'page' : undefined"
     >
       <Icon name="book" :size="20" class="mobile-tab-icon" />
-      <span class="mobile-tab-label">Livros</span>
+      <span class="mobile-tab-label">{{ t('nav.books') }}</span>
     </RouterLink>
 
     <!-- Destaques -->
@@ -58,7 +60,7 @@ const isReviewActive = computed(() => ['review', 'study-session'].includes(Strin
       :aria-current="isHighlightsActive ? 'page' : undefined"
     >
       <Icon name="pencil" :size="20" class="mobile-tab-icon" />
-      <span class="mobile-tab-label">Destaques</span>
+      <span class="mobile-tab-label">{{ t('nav.highlights') }}</span>
     </RouterLink>
 
     <!-- Revisão -->
@@ -69,7 +71,7 @@ const isReviewActive = computed(() => ['review', 'study-session'].includes(Strin
       :aria-current="isReviewActive ? 'page' : undefined"
     >
       <Icon name="rotate-ccw" :size="20" class="mobile-tab-icon" />
-      <span class="mobile-tab-label">Revisão</span>
+      <span class="mobile-tab-label">{{ t('nav.review') }}</span>
     </RouterLink>
 
     <!-- Mais -->
@@ -77,7 +79,7 @@ const isReviewActive = computed(() => ['review', 'study-session'].includes(Strin
       type="button"
       class="mobile-tab-item mobile-tab-more-trigger mobile-more-trigger quiet"
       aria-haspopup="dialog"
-      aria-label="Mais opções de navegação"
+      :aria-label="t('nav.moreOptions')"
       @click="emit('open-more')"
     >
       <div class="mobile-tab-icon-wrap">
@@ -85,10 +87,10 @@ const isReviewActive = computed(() => ['review', 'study-session'].includes(Strin
         <span
           v-if="hasSecondaryBadge"
           class="mobile-tab-dot"
-          aria-label="Notificações pendentes"
+          :aria-label="t('nav.pendingDot')"
         />
       </div>
-      <span class="mobile-tab-label">Mais</span>
+      <span class="mobile-tab-label">{{ t('nav.more') }}</span>
     </button>
   </nav>
 </template>

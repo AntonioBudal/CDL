@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 /**
  * Desafio F12 (F0.10.08, spec 101): em vez de pedir confiança, mostra o dado cru — os endereços que este
  * navegador contatou (Resource Timing) e a política de segurança enviada pelo servidor (cabeçalho CSP).
@@ -39,7 +40,7 @@ function runCheck() {
   }
   const entries = [...perf.getEntriesByType('navigation'), ...perf.getEntriesByType('resource')]
   groups.value = groupEntriesByOrigin(entries, pageOrigin)
-  checkedAt.value = new Date().toLocaleTimeString('pt-BR')
+  checkedAt.value = new Date().toLocaleTimeString(uiLocale())
   const external = externalOrigins(groups.value)
   liveMessage.value = external.length
     ? `Conferido: ${external.length} outro(s) endereço(s) além deste servidor.`

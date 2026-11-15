@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 import type { AdminUserItem } from '../../types/admin.ts'
 import Icon from '../ui/Icon.vue'
 
@@ -19,7 +20,7 @@ function formatDate(dateStr?: string | null): string {
   if (!dateStr) return '—'
   try {
     const d = new Date(dateStr)
-    return d.toLocaleDateString('pt-BR', {
+    return d.toLocaleDateString(uiLocale(), {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',

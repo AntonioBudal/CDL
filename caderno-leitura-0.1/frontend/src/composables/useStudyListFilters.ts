@@ -1,3 +1,4 @@
+import { CONTENT_LOCALE } from '../i18n/content.ts'
 import { ref, computed, watch, isRef, type Ref, type ComputedRef } from 'vue'
 import type {
   StudySummary,
@@ -193,7 +194,7 @@ export function useStudyListFilters(
       result.sort((a, b) => {
         const titleA = a.title || ''
         const titleB = b.title || ''
-        const cmp = titleA.localeCompare(titleB, 'pt-BR', { sensitivity: 'base' })
+        const cmp = titleA.localeCompare(titleB, CONTENT_LOCALE, { sensitivity: 'base' })
         return sortDirection.value === 'asc' ? cmp : -cmp
       })
     } else if (sortColumn.value === 'status') {

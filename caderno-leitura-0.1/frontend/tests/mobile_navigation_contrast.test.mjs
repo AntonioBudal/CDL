@@ -60,7 +60,7 @@ test('validação de gaveta inferior MobileMoreMenu.vue', () => {
   assert.ok(content.includes('/lixeira'), 'Gaveta deve conter link para /lixeira')
   assert.ok(content.includes('/admin'), 'Gaveta deve conter link para /admin')
   assert.ok(content.includes('/ajustes'), 'Gaveta deve conter link para /ajustes')
-  assert.ok(content.includes('drawer-item-label">Sair<'), 'Gaveta deve conter opção de logout')
+  assert.ok(content.includes("drawer-item-label\">{{ t('nav.logout') }}<"), 'Gaveta deve conter opção de logout') // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
 
   // Fechamento tátil e por teclado
   assert.ok(content.includes("event.key === 'Escape'"), 'Gaveta deve fechar com Escape')

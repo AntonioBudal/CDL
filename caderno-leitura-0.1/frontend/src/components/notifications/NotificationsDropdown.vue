@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { useNotifications } from '../../composables/useNotifications.ts'
 import NotificationItem from './NotificationItem.vue'
 import Icon from '../ui/Icon.vue'
+import { useI18n } from 'vue-i18n'
 
 const {
   notifications,
@@ -16,6 +17,7 @@ const {
 } = useNotifications()
 
 const dropdownRef = ref<HTMLElement | null>(null)
+const { t } = useI18n() // F0.12.09
 const isMarkingAll = ref(false)
 
 function handleKeydown(event: KeyboardEvent) {
@@ -62,13 +64,13 @@ onUnmounted(() => {
     ref="dropdownRef"
     class="notifications-dropdown"
     role="region"
-    aria-label="Central de notificações e avisos"
+    :aria-label="t('notifications.center')"
     tabindex="-1"
   >
     <!-- Cabeçalho do Dropdown -->
     <header class="notifications-header">
       <div class="notifications-header-left">
-        <h3 class="notifications-title">Notificações</h3>
+        <h3 class="notifications-title">{{ t('notifications.title') }}</h3>
         <span v-if="unread > 0" class="unread-pill">{{ unread }} pendente(s)</span>
       </div>
 
@@ -78,18 +80,18 @@ onUnmounted(() => {
           type="button"
           class="btn-mark-all"
           :disabled="isMarkingAll"
-          title="Marcar todas como lidas"
-          aria-label="Marcar todas as notificações como lidas"
+          :title="t('notifications.markAllTitle')"
+          :aria-label="t('notifications.markAllAria')"
           @click="handleMarkAll"
         >
           <Icon name="check" :size="14" />
-          <span>Marcar lidas</span>
+          <span>{{ t('notifications.markRead') }}</span>
         </button>
       </div>
     </header>
 
     <!-- Filtros Rápidos (Todas / Não lidas) -->
-    <div class="notifications-filters" role="tablist" aria-label="Filtros de notificações">
+    <div class="notifications-filters" role="tablist" :aria-label="t('notifications.filters')">
       <button
         type="button"
         class="filter-tab"
@@ -98,7 +100,7 @@ onUnmounted(() => {
         :class="{ active: !filterUnread }"
         @click="setUnreadFilter(false)"
       >
-        Todas
+        {{ t('notifications.all') }}
       </button>
       <button
         type="button"
@@ -108,7 +110,7 @@ onUnmounted(() => {
         :class="{ active: filterUnread }"
         @click="setUnreadFilter(true)"
       >
-        Não lidas
+        {{ t('notifications.unread') }}
       </button>
     </div>
 
@@ -116,14 +118,14 @@ onUnmounted(() => {
     <div class="notifications-body" role="feed" :aria-busy="loading">
       <div v-if="loading && notifications.length === 0" class="notifications-loading">
         <Icon name="refresh-cw" :size="20" class="spinning" />
-        <span>Carregando notificações...</span>
+        <span>{{ t('notifications.loading') }}</span>
       </div>
 
       <div v-else-if="notifications.length === 0" class="notifications-empty">
         <Icon name="bell" :size="32" class="empty-icon" />
-        <p class="empty-title">Tudo tranquilo por aqui</p>
+        <p class="empty-title">{{ t('notifications.emptyTitle') }}</p>
         <p class="empty-subtitle">
-          {{ filterUnread ? 'Nenhuma notificação não lida.' : 'Você não possui notificações no momento.' }}
+          {{ filterUnread ? t('notifications.noUnread') : t('notifications.none') }}
         </p>
       </div>
 

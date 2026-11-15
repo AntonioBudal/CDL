@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import Icon from '../ui/Icon.vue'
 import NavigationTabs from './NavigationTabs.vue'
 import UserDropdown from './UserDropdown.vue'
@@ -10,7 +11,8 @@ import { useAuthStore } from '../../stores/auth'
 import { useGlobalSearch } from '../../composables/useGlobalSearch'
 import { useQuickCapture } from '../../composables/useQuickCapture'
 import { useNotifications } from '../../composables/useNotifications'
-
+
+const { t } = useI18n() // F0.12.09
 const props = defineProps<{
   homeViewPreference?: string
 }>()
@@ -52,7 +54,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
         <nav
           v-else-if="!isAuthPage && !isAuthenticated"
           class="public-nav"
-          aria-label="Navegação institucional"
+          :aria-label="t('nav.institutionalNav')"
         >
           <RouterLink
             to="/sobre"
@@ -60,7 +62,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
             :aria-current="route.name === 'about' ? 'page' : undefined"
           >
             <Icon name="book-open" :size="18" :stroke-width="1.8" class="nav-icon" />
-            <span>Sobre</span>
+            <span>{{ t('nav.about') }}</span>
           </RouterLink>
           <RouterLink
             to="/apoie"
@@ -68,7 +70,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
             :aria-current="route.name === 'support' ? 'page' : undefined"
           >
             <Icon name="sliders" :size="18" :stroke-width="1.8" class="nav-icon" />
-            <span>Apoie</span>
+            <span>{{ t('nav.supportShort') }}</span>
           </RouterLink>
         </nav>
       </div>
@@ -83,12 +85,12 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
           <button
             type="button"
             class="header-tool-btn search-trigger-btn quiet"
-            aria-label="Abrir busca global de estudos (Ctrl+K)"
-            title="Buscar (Ctrl+K)"
+            :aria-label="t('header.searchAria')"
+            :title="t('header.searchTitle')"
             @click="openSearch"
           >
             <Icon name="search" :size="16" />
-            <span class="search-label" aria-hidden="true">Buscar</span>
+            <span class="search-label" aria-hidden="true">{{ t('header.search') }}</span>
             <kbd class="search-kbd" aria-hidden="true">Ctrl K</kbd>
           </button>
 
@@ -96,8 +98,8 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
           <button
             type="button"
             class="header-tool-btn quick-capture-trigger-btn"
-            aria-label="Captura rápida na caixa de entrada (Ctrl+Shift+C)"
-            title="Captura rápida (Ctrl+Shift+C)"
+            :aria-label="t('header.quickCaptureAria')"
+            :title="t('header.quickCaptureTitle')"
             @click="quickCapture.open()"
           >
             <Icon name="plus" :size="18" :stroke-width="2.5" />
@@ -147,8 +149,8 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
 
         <!-- Ações para Visitantes (Público) -->
         <div v-else-if="!isAuthenticated && !isAuthPage" class="public-auth-actions">
-          <RouterLink to="/login" class="public-login-link">Entrar</RouterLink>
-          <RouterLink to="/registro" class="public-register-btn">Criar Conta</RouterLink>
+          <RouterLink to="/login" class="public-login-link">{{ t('nav.login') }}</RouterLink>
+          <RouterLink to="/registro" class="public-register-btn">{{ t('nav.register') }}</RouterLink>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 /**
  * F0.11.02 (spec 104): bandeja do capítulo — capturas pendentes (status "inbox") do capítulo escolhido, com
  * "Virar estudo" (Importar com a captura), "Arquivar" e "Abrir na caixa de entrada".
@@ -84,7 +85,7 @@ function toggleExpand(id: number) {
 
 function formatDate(iso: string): string {
   try {
-    return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
+    return new Date(iso).toLocaleDateString(uiLocale(), { day: '2-digit', month: 'short', year: 'numeric' })
   } catch {
     return ''
   }

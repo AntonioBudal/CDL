@@ -46,7 +46,7 @@ test('114: histórico ordenado, com a versão atual em andamento e o alpha.N bat
 
 test('114: rodapé com a versão (sem link) e tela só pelo Sobre', () => {
   const app = read('App.vue')
-  assert.match(app, /<span class="footer-version" :title="`Versão \$\{appVersionDetail\}`"/)
+  assert.match(app, /<span class="footer-version" :title="t\('footer\.version', \{ version: appVersionDetail \}\)"/) // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
   assert.doesNotMatch(app, /\/sobre\/versoes/, 'a versão do rodapé não leva à tela')
   assert.match(read('views/AboutView.vue'), /<RouterLink to="\/sobre\/versoes" class="button quiet versions-button">Evolução das versões<\/RouterLink>/)
   const router = read('router/index.ts')

@@ -40,7 +40,7 @@ suítes completas a cada 5 features, commit em português, push só quando o usu
 | F0.12.06 | **Oclusão de imagem em SVG** | **Concluída em 2026-11-15** (versão `0.12.0-alpha.6`, migração `0041`). Spec **119**. |
 | F0.12.07 | **Círculos de leitura com trava anti-spoiler** | **Concluída em 2026-11-15** (versão `0.12.0-alpha.7`, migração `0042`). Spec **120**. |
 | F0.12.08 | **Simplificação de nomes** | **Concluída em 2026-11-15** (versão `0.12.0-alpha.8`, sem migração). Spec **121**. |
-| F0.12.09 | **Seletor de idioma — só a fundação** | Pedido do usuário em 2026-11-14. Transição grande (avaliação abaixo); o usuário escolheu **só a fundação** no 0.12. |
+| F0.12.09 | **Seletor de idioma — só a fundação** | **Concluída em 2026-11-15** (versão `0.12.0-alpha.9`, migração `0043`). Spec **122**. O resto da interface segue em português e migra aos poucos. |
 | F0.12.10 | **Pequenas melhorias de usabilidade** | Pedido do usuário em 2026-11-14: calendário do Painel, barra de ações fixa no estudo, menu de 3 pontos no celular, espaçamento do cabeçalho do estudo. |
 
 ### F0.12.01 — Versão no rodapé e "Evolução das versões" (pedido do usuário em 2026-11-14)

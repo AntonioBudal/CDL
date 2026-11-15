@@ -64,6 +64,13 @@ class UserPreference(Base):
         server_default=text("'dark'"),
         nullable=False,
     )
+    # F0.12.09: idioma da interface ('pt-BR' ou 'en').
+    locale: Mapped[str] = mapped_column(
+        String(10),
+        default="pt-BR",
+        server_default=text("'pt-BR'"),
+        nullable=False,
+    )
     version: Mapped[int] = mapped_column(
         Integer,
         default=1,

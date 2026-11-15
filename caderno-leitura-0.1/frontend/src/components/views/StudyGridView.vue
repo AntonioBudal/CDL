@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { StudySummary, ReadingStatus } from '../../types'
@@ -48,7 +49,7 @@ function onStatusChange(study: StudySummary, newStatus: ReadingStatus) {
 
 function formatDate(isoStr: string): string {
   try {
-    return new Date(isoStr).toLocaleDateString('pt-BR')
+    return new Date(isoStr).toLocaleDateString(uiLocale())
   } catch {
     return isoStr
   }

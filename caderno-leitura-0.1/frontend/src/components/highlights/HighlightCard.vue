@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { HighlightKind, HighlightLibraryItem } from '../../types'
@@ -205,7 +206,7 @@ async function handleCopyCitation(format: CopyFormat = 'abnt') {
 function formatDate(isoDate: string): string {
   try {
     const d = new Date(isoDate)
-    return d.toLocaleDateString('pt-BR', {
+    return d.toLocaleDateString(uiLocale(), {
       day: '2-digit',
       month: 'short',
       year: 'numeric',

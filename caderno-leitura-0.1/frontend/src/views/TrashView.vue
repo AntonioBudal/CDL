@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../i18n/format.ts'
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import TrashConfirmModal from '../components/TrashConfirmModal.vue'
@@ -370,7 +371,7 @@ async function handleEmptyTrash() {
 
 function formatDate(dateStr: string) {
   try {
-    return new Date(dateStr).toLocaleDateString('pt-BR', {
+    return new Date(dateStr).toLocaleDateString(uiLocale(), {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',

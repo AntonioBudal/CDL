@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth.ts'
@@ -21,7 +22,7 @@ const isLoggingOutAll = ref(false)
 function formatDate(isoStr: string): string {
   try {
     const d = new Date(isoStr)
-    return d.toLocaleString('pt-BR', {
+    return d.toLocaleString(uiLocale(), {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',

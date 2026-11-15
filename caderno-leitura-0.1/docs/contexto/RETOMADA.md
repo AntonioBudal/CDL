@@ -1773,3 +1773,30 @@ Spec aprovada com as recomendações Q1 a Q5:
   nomes novos, os subtítulos e a faixa só com ícones); 8 testes antigos que conferiam textos passaram a conferir os
   novos; `npm test` 820/820; backend (exportação, cota, caixa de entrada) 52; build ok. Navegador: as 14 telas
   (título, aba, menus) e a barra de cima em 768, 800, 1259 e 1260 px; menu do celular a 375 px.
+
+## F0.12.09 — Seletor de idioma, só a fundação (2026-11-15)
+
+- **Spec, plano e tarefas:** `specs/122-seletor-de-idioma/`. Nona feature do 0.12. Versão `0.12.0-alpha.9`.
+  **Migração `0043`** (`user_preferences.locale`, padrão `'pt-BR'`); no banco ativo, pelo procedimento dos 4 comandos.
+- **Biblioteca:** `vue-i18n` **11.4.16, versão exata** (a 11.4.20 tinha 1 dia; ficou a mais recente com mais de duas
+  semanas). Composition API (`legacy: false`), JIT sem `eval` (flags no `vite.config.ts`); conferido no navegador com a
+  CSP real: nenhuma violação, e o pacote não tem `new Function`/`eval`.
+- **`src/i18n/`:** `index.ts` (instância, `setLocale` muda texto, `<html lang>` e `localStorage` `leitorum_locale`;
+  idioma inicial: navegador salvo → idioma do navegador se inglês → português; `routeTitle` para a aba),
+  `messages/pt-BR.ts` e `messages/en.ts` (mesmas chaves: `nav`, `header`, `sync`, `notifications`, `footer`, `common`,
+  `settings`, `titles`), `format.ts` (`uiLocale`, `formatDate`…) e `content.ts` (`CONTENT_LOCALE = 'pt-BR'` para
+  ordenar e pôr em maiúsculas o **conteúdo**: títulos, ABNT, citação).
+- **Por chave:** menus (computador, celular, barra, usuário, "Mais"), cabeçalho, sincronização, painel de
+  notificações, rodapé, títulos das abas (inglês em `titles`; sem tradução, o título da rota) e os três avisos
+  gerais do `api.ts`. As 31 ocorrências de `'pt-BR'` viraram `uiLocale()` (datas/números) ou `CONTENT_LOCALE`.
+- **Conta:** o seletor (Ajustes → Aparência, `LanguageSelector.vue`) salva em `/api/preferences` (`locale`); ao
+  carregar as preferências, o idioma da conta é aplicado. O resto da interface e as mensagens do servidor seguem em
+  português.
+- **Testes:** `feature-122-idioma` (5: mesmas chaves e nada vazio; títulos em português = rotas; menus e avisos por
+  chave; nenhum `'pt-BR'` fora de `src/i18n/`; instalação, seletor, preferências, versão exata) e `test_user_locale.py`
+  (2, com a migração); 15 testes antigos que conferiam textos dos menus passaram a conferir a chave; a guarda da
+  F0.12.08 ignora `messages/en.ts`. `npm test` 825/825; build ok. Navegador: troca ao vivo nos dois sentidos, recarga,
+  conta e navegador salvos, datas em inglês, menu do celular em inglês a 375 px. Não existe diálogo global de
+  atalhos (item da spec caiu).
+- **Pendência à parte:** `npm audit` aponta dois avisos antigos (`markdown-it` e `source-map-js`), sem relação com o
+  `vue-i18n`.

@@ -12,9 +12,9 @@ test('F082-US1: NavigationTabs.vue inclui Dashboard e Livros simultaneamente no 
 
   // Verifica que Dashboard e Livros são itens primários simultâneos
   assert.ok(content.includes("to: '/dashboard'"), 'Deve conter rota para /dashboard como item primário')
-  assert.ok(content.includes("label: 'Painel'"), 'Deve conter rótulo Painel (F0.12.08)')
+  assert.ok(content.includes("label: t('nav.dashboard')"), 'Deve conter rótulo Painel (F0.12.08)') // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
   assert.ok(content.includes("to: '/livros'"), 'Deve conter rota para /livros como item primário')
-  assert.ok(content.includes("label: 'Livros'"), 'Deve conter rótulo Livros')
+  assert.ok(content.includes("label: t('nav.books')"), 'Deve conter rótulo Livros') // F0.12.09: texto por chave
 
   // Verifica isolamento de rotas ativas: dashboard não deve marcar Livros e vice-versa
   assert.ok(content.includes("routes: ['dashboard']"), 'Dashboard deve ter escopo de rota isolado')

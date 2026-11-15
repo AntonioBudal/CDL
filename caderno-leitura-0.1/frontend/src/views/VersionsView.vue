@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../i18n/format.ts'
 /**
  * F0.12.01 (spec 114): "Evolução das versões" — tela escondida (sem menu; só um botão no fim do Sobre), pública como
  * o Sobre e fora dos buscadores. Conteúdo do projeto, nunca do acervo.
@@ -19,7 +20,7 @@ const stage = computed(() => {
 
 function formatDate(iso: string): string {
   const [y, m, d] = iso.split('-').map(Number)
-  return new Date(y!, (m ?? 1) - 1, d ?? 1).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' })
+  return new Date(y!, (m ?? 1) - 1, d ?? 1).toLocaleDateString(uiLocale(), { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
 function period(entry: RoadmapEntry): string {

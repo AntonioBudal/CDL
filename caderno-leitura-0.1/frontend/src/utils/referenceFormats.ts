@@ -2,6 +2,7 @@
  * Referências em 3 escopos (F0.11.05, spec 107): obra, trecho e obras citadas, em ABNT (NBR 6023), APA (7ª ed.),
  * BibTeX e CSL-JSON. Puro (sem Vue). Usa só os dados que o Leitorum guarda; nada é inventado.
  */
+import { CONTENT_LOCALE } from '../i18n/content.ts'
 import { abntAuthorCall, formatReferenceABNT, parsePersonName, splitAuthors } from './citationFormatter.ts'
 import { formatLocator, parseLocator, type Locator } from './referenceScopes.ts'
 
@@ -270,7 +271,7 @@ export function uniqueKeys(books: ReferenceBook[]): string[] {
 export function bibliography(books: ReferenceBook[], format: ReferenceFormat): string {
   if (format === 'abnt' || format === 'apa') {
     const texts = books.map((book) => (format === 'abnt' ? toABNT(book) : toAPA(book)).text)
-    return texts.sort((a, b) => a.localeCompare(b, 'pt-BR')).join('\n\n') + '\n'
+    return texts.sort((a, b) => a.localeCompare(b, CONTENT_LOCALE)).join('\n\n') + '\n'
   }
   const keys = uniqueKeys(books)
   if (format === 'bibtex') return books.map((book, i) => toBibTeX(book, undefined, keys[i])).join('\n\n') + '\n'

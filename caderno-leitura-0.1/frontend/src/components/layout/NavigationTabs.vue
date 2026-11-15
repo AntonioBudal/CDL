@@ -6,6 +6,7 @@ import Icon from '../ui/Icon.vue'
 import { useAuthStore } from '../../stores/auth'
 import { useFriends } from '../../composables/useFriends'
 import { useInboxCount } from '../../composables/useInboxCount'
+import { useI18n } from 'vue-i18n'
 import { useCircleInvites } from '../../composables/useCircleInvites'
 
 const props = defineProps<{
@@ -13,6 +14,7 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
+const { t } = useI18n() // F0.12.09
 const auth = useAuthStore()
 const friendsService = useFriends()
 const inboxService = useInboxCount()
@@ -47,31 +49,31 @@ const primaryNavItems = computed<PrimaryNavItem[]>(() => {
   return [
     {
       to: '/dashboard',
-      label: 'Painel',
+      label: t('nav.dashboard'),
       routes: ['dashboard'],
       icon: 'layout-dashboard',
     },
     {
       to: '/livros',
-      label: 'Livros',
+      label: t('nav.books'),
       routes: ['books', 'book', 'study', 'study-edit'],
       icon: 'book-open',
     },
     {
       to: '/highlights',
-      label: 'Destaques',
+      label: t('nav.highlights'),
       routes: ['highlights'],
       icon: 'pencil',
     },
     {
       to: '/review',
-      label: 'Revisão',
+      label: t('nav.review'),
       routes: ['review', 'study-session'],
       icon: 'rotate-ccw',
     },
     {
       to: '/inbox',
-      label: 'Caixa de entrada',
+      label: t('nav.inbox'),
       routes: ['inbox'],
       icon: 'inbox',
       badgeCount: () => inboxCount.value,
@@ -83,45 +85,45 @@ const secondaryNavItems = computed<SecondaryNavItem[]>(() => {
   const items: SecondaryNavItem[] = [
     {
       to: '/importar',
-      label: 'Importar',
+      label: t('nav.import'),
       routes: ['import'],
       icon: 'plus',
     },
     {
       to: '/amigos',
-      label: 'Amigos',
+      label: t('nav.friends'),
       routes: ['friends'],
       icon: 'users',
       badgeCount: () => pendingFriendsCount.value,
     },
     {
       to: '/circulos',
-      label: 'Círculos',
+      label: t('nav.circles'),
       routes: ['circles', 'circle'],
       icon: 'network',
       badgeCount: () => circleInviteCount.value,
     },
     {
       to: '/ajustes',
-      label: 'Ajustes',
+      label: t('nav.settings'),
       routes: ['settings', 'connection'],
       icon: 'sliders',
     },
     {
       to: '/conceitos',
-      label: 'Conceitos',
+      label: t('nav.concepts'),
       routes: ['lexicon', 'concept'],
       icon: 'book-open',
     },
     {
       to: '/sinteses',
-      label: 'Sínteses',
+      label: t('nav.syntheses'),
       routes: ['syntheses', 'synthesis'],
       icon: 'list',
     },
     {
       to: '/lixeira',
-      label: 'Lixeira',
+      label: t('nav.trash'),
       routes: ['trash'],
       icon: 'trash',
     },
@@ -130,7 +132,7 @@ const secondaryNavItems = computed<SecondaryNavItem[]>(() => {
   if (isAdmin.value) {
     items.push({
       to: '/admin',
-      label: 'Administração',
+      label: t('nav.admin'),
       routes: ['admin'],
       icon: 'shield',
       requiresAdmin: true,
@@ -184,7 +186,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <nav class="navigation-tabs" aria-label="Navegação principal">
+  <nav class="navigation-tabs" :aria-label="t('nav.mainNav')">
     <!-- 5 Abas Primárias do Ciclo Ativo de Leitura -->
     <RouterLink
       v-for="item in primaryNavItems"
@@ -206,7 +208,7 @@ onBeforeUnmount(() => {
       <span
         v-if="item.badgeCount && item.badgeCount() > 0"
         class="tab-badge"
-        :aria-label="`${item.label}: ${item.badgeCount()} pendentes`"
+        :aria-label="t('nav.pending', { label: item.label, count: item.badgeCount() })"
       >
         {{ item.badgeCount() > 99 ? '99+' : item.badgeCount() }}
       </span>
@@ -223,16 +225,16 @@ onBeforeUnmount(() => {
         }"
         aria-haspopup="menu"
         :aria-expanded="isMoreOpen"
-        aria-label="Mais opções de navegação"
+        :aria-label="t('nav.moreOptions')"
         @click="toggleMore"
       >
         <Icon name="more-horizontal" :size="18" :stroke-width="1.8" class="tab-icon" />
-        <span class="tab-label">Mais</span>
+        <span class="tab-label">{{ t('nav.more') }}</span>
         <Icon name="chevron-down" :size="14" :stroke-width="2" class="more-chevron" />
         <span
           v-if="hasMoreBadge && !isMoreOpen"
           class="tab-badge-dot"
-          aria-label="Novas notificações nas abas secundárias"
+          :aria-label="t('nav.secondaryDot')"
         />
       </button>
 
@@ -241,7 +243,7 @@ onBeforeUnmount(() => {
           v-if="isMoreOpen"
           class="more-dropdown-menu"
           role="menu"
-          aria-label="Navegação secundária"
+          :aria-label="t('nav.secondaryNav')"
         >
           <RouterLink
             v-for="item in secondaryNavItems"

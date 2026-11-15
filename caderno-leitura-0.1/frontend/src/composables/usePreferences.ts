@@ -1,3 +1,4 @@
+import { currentLocale, isAppLocale, setLocale } from '../i18n/index.ts'
 import { computed, reactive } from 'vue'
 import { preferencesApi } from '../api/preferences.ts'
 import type {
@@ -58,6 +59,8 @@ const state = reactive({
 })
 
 function applyPreferencesToDocument(prefs: Partial<UserPreferences>) {
+  // F0.12.09: o idioma salvo na conta vale em qualquer aparelho.
+  if (isAppLocale(prefs.locale) && prefs.locale !== currentLocale()) setLocale(prefs.locale)
   if (typeof document === 'undefined') return
 
   const root = document.documentElement

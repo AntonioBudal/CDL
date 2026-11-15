@@ -33,7 +33,7 @@ test('102.2: nenhum texto público afirma "software livre"', () => {
     assert.ok(!/software livre/i.test(content), rel)
     assert.ok(!/open source/i.test(content), rel)
   }
-  assert.ok(read('App.vue').includes('>Código-fonte público</a>'))
+  assert.ok(read('App.vue').includes(">{{ t('footer.source') }}</a>")) // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
   assert.ok(read('components/layout/AppFooter.vue').includes('>Código-fonte público</a>'))
   assert.ok(read('views/SupportView.vue').includes('com código-fonte público'))
 })

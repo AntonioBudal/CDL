@@ -1,3 +1,4 @@
+import type { AppLocale } from '../i18n/index.ts'
 import type { ThemeId } from '../appearance'
 
 export type SuperclassName = 'zero-g' | 'mecanica' | 'invisivel' | 'dimensional' | 'monolitica'
@@ -14,6 +15,8 @@ export interface UserPreferences {
   font_family: FontFamilyPreference
   font_scale: number
   theme_mode: ThemeModePreference
+  /** F0.12.09: idioma da interface. */
+  locale?: AppLocale
   version: number
   updated_at: string
 }
@@ -26,6 +29,7 @@ export interface UserPreferencesPatch {
   font_family?: FontFamilyPreference
   font_scale?: number
   theme_mode?: ThemeModePreference
+  locale?: AppLocale
   expected_version?: number
 }
 

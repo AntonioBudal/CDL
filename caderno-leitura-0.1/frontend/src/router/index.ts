@@ -8,6 +8,7 @@ import SupportView from '../views/SupportView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 import DigitizeNotebookView from '../views/DigitizeNotebookView.vue'
 import { updateSeoMeta } from '../composables/useSeoMeta'
+import { routeTitle } from '../i18n/index.ts'
 import { useAuthStore } from '../stores/auth.ts'
 import { resolveNavigation } from './guard.ts'
 import { api } from '../services/api'
@@ -152,7 +153,7 @@ router.beforeEach(async (to, _from, next) => {
 
 router.afterEach((to) => {
   const isPublic = to.meta.public === true
-  const title = String(to.meta.title || 'Caderno de Leitura')
+  const title = routeTitle(to.name, String(to.meta.title || 'Caderno de Leitura')) // F0.12.09
   const description = typeof to.meta.description === 'string' ? to.meta.description : ''
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://leitorum.com'
   const canonicalUrl = `${origin}${to.path}`

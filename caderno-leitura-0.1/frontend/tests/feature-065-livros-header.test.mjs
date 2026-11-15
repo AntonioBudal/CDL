@@ -52,16 +52,16 @@ test('F0.8.01 - NavigationTabs.vue expõe 4 abas primárias e menu retrátil Mai
 
   const content = fs.readFileSync(file, 'utf-8')
   // 4 Abas Primárias
-  assert.ok(content.includes('Destaques'), 'Deve conter aba Destaques')
-  assert.ok(content.includes('Revisão'), 'Deve conter aba Revisão')
-  assert.ok(content.includes('Inbox'), 'Deve conter aba Inbox')
+  assert.ok(content.includes("t('nav.highlights')"), 'Deve conter aba Destaques') // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
+  assert.ok(content.includes("t('nav.review')"), 'Deve conter aba Revisão') // F0.12.09: texto por chave
+  assert.ok(content.includes("t('nav.inbox')"), 'Deve conter aba Inbox') // F0.12.09: texto por chave
 
   // Menu Mais
   assert.ok(content.includes('more-dropdown-menu'), 'Deve conter dropdown menu Mais')
-  assert.ok(content.includes('Importar'), 'Menu Mais deve conter Importar')
-  assert.ok(content.includes('Amigos'), 'Menu Mais deve conter Amigos')
-  assert.ok(content.includes('Ajustes'), 'Menu Mais deve conter Ajustes')
-  assert.ok(content.includes('Lixeira'), 'Menu Mais deve conter Lixeira')
+  assert.ok(content.includes("t('nav.import')"), 'Menu Mais deve conter Importar') // F0.12.09: texto por chave
+  assert.ok(content.includes("t('nav.friends')"), 'Menu Mais deve conter Amigos') // F0.12.09: texto por chave
+  assert.ok(content.includes("t('nav.settings')"), 'Menu Mais deve conter Ajustes') // F0.12.09: texto por chave
+  assert.ok(content.includes("t('nav.trash')"), 'Menu Mais deve conter Lixeira') // F0.12.09: texto por chave
   assert.ok(content.includes('aria-expanded'), 'Menu Mais deve gerenciar aria-expanded')
   assert.ok(content.includes('.more-trigger-btn.active'), 'Gatilho Mais deve estilizar estado active de forma consistente')
 })
@@ -74,7 +74,7 @@ test('F0.8.01 - UserDropdown.vue encapsula botão Sair de forma segura e acessí
   assert.ok(content.includes('user-trigger-btn'), 'Deve conter gatilho com avatar/iniciais')
   assert.ok(content.includes('user-dropdown-menu'), 'Deve conter menu suspenso do usuário')
   assert.ok(content.includes('handleLogout'), 'Deve implementar ação handleLogout')
-  assert.ok(content.includes('Encerrar Sessão') || content.includes('Sair'), 'Deve conter texto de logout')
+  assert.ok(content.includes("t('nav.logout')"), 'Deve conter texto de logout') // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
   assert.ok(content.includes('aria-haspopup="menu"'), 'Deve possuir aria-haspopup="menu"')
 })
 

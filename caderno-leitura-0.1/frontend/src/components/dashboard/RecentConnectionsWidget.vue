@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 import { RouterLink } from 'vue-router'
 import type { RecentRelationItem, StudyRelationType } from '../../types.ts'
 import { RELATION_TYPE_LABELS } from '../../composables/useStudyRelations.ts'
@@ -38,7 +39,7 @@ function formatRelativeTime(isoStr: string): string {
     if (diffDays === 1) return 'Ontem'
     if (diffDays < 7) return `Há ${diffDays} dias`
 
-    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    return d.toLocaleDateString(uiLocale(), { day: '2-digit', month: '2-digit', year: 'numeric' })
   } catch {
     return isoStr
   }

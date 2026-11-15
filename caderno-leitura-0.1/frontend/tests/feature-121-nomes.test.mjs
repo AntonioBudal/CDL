@@ -8,7 +8,8 @@ import path from 'node:path'
 const SRC = path.resolve(process.cwd(), 'src')
 const read = (rel) => fs.readFileSync(path.join(SRC, rel), 'utf-8')
 // A linha do tempo é histórica (mantém os nomes da época); Icon.vue só importa ícones.
-const SKIP = new Set(['data/versionHistory.ts', 'components/ui/Icon.vue'])
+// F0.12.09: o arquivo em inglês usa os nomes em inglês (Dashboard, Inbox) de propósito.
+const SKIP = new Set(['data/versionHistory.ts', 'components/ui/Icon.vue', 'i18n/messages/en.ts'])
 
 function files(dir = SRC) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -55,19 +56,26 @@ test('121: nomes novos nos menus e nas abas do navegador', () => {
   ]) {
     assert.match(router, new RegExp(`name: '${name}'[^\\n]*meta: \\{ title: '${title}' \\}`), name)
   }
+  // F0.12.09: menus por chave; os nomes em português ficam em src/i18n/messages/pt-BR.ts.
+  const pt = read('i18n/messages/pt-BR.ts')
+  for (const [key, label] of [
+    ['dashboard', 'Painel'], ['inbox', 'Caixa de entrada'], ['concepts', 'Conceitos'], ['myProfile', 'Meu perfil'],
+    ['friends', 'Amigos'], ['import', 'Importar'], ['settings', 'Ajustes'], ['logout', 'Sair'], ['syntheses', 'Sínteses'],
+    ['myImages', 'Minhas imagens'],
+  ]) assert.match(pt, new RegExp(`    ${key}: '${label}',`), key)
   const nav = read('components/layout/NavigationTabs.vue')
-  for (const label of ['Painel', 'Caixa de entrada', 'Conceitos']) assert.match(nav, new RegExp(`label: '${label}'`))
+  for (const key of ['dashboard', 'inbox', 'concepts']) assert.match(nav, new RegExp(`label: t\\('nav\\.${key}'\\)`))
   // Entre 768 e 1259 px só os ícones (o nome fica para o leitor de tela e como dica).
   assert.match(nav, /@media \(min-width: 768px\) and \(max-width: 1259px\) \{\n\s+\.nav-tab-link \.tab-label \{\n\s+position: absolute;/)
   assert.match(nav, /:title="item\.label"/)
   const mobile = read('components/navigation/MobileMoreMenu.vue')
-  for (const label of ['Meu perfil', 'Caixa de entrada', 'Amigos', 'Importar', 'Conceitos', 'Ajustes', 'Sair']) {
-    assert.match(mobile, new RegExp(`drawer-item-label">${label}<`), label)
+  for (const key of ['myProfile', 'inbox', 'friends', 'import', 'concepts', 'settings', 'logout']) {
+    assert.match(mobile, new RegExp(`drawer-item-label">\\{\\{ t\\('nav\\.${key}'\\) \\}\\}<`), key)
   }
-  assert.match(read('components/layout/MobileTabBar.vue'), /mobile-tab-label">Painel</)
+  assert.match(read('components/layout/MobileTabBar.vue'), /mobile-tab-label">\{\{ t\('nav\.dashboard'\) \}\}</)
   const user = read('components/layout/UserDropdown.vue')
-  for (const label of ['Meu perfil', 'Conceitos', 'Sínteses', 'Minhas imagens', 'Sair']) {
-    assert.match(user, new RegExp(`<span>${label}</span>`), label)
+  for (const key of ['myProfile', 'concepts', 'syntheses', 'myImages', 'logout']) {
+    assert.match(user, new RegExp(`<span>\\{\\{ t\\('nav\\.${key}'\\) \\}\\}</span>`), key)
   }
 })
 

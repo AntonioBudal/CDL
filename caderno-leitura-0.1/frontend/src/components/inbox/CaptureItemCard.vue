@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 import { computed, ref } from 'vue'
 import { api, errorMessage } from '../../services/api.ts'
 import Icon from '../ui/Icon.vue'
@@ -50,7 +51,7 @@ const displayContent = computed(() => {
 const formattedDate = computed(() => {
   try {
     const d = new Date(props.capture.created_at)
-    return d.toLocaleDateString('pt-BR', {
+    return d.toLocaleDateString(uiLocale(), {
       day: '2-digit',
       month: 'short',
       hour: '2-digit',

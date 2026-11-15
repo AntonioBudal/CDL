@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CONTENT_LOCALE } from '../i18n/content.ts'
 /** F0.12.07 (spec 120): círculos de leitura — meus círculos, convites pendentes e criar um novo. */
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
@@ -20,7 +21,7 @@ const message = ref('')
 const bookId = ref<number | ''>('')
 const name = ref('')
 
-const sortedBooks = computed(() => [...books.value].sort((a, b) => a.title.localeCompare(b.title, 'pt-BR')))
+const sortedBooks = computed(() => [...books.value].sort((a, b) => a.title.localeCompare(b.title, CONTENT_LOCALE)))
 
 function progressText(item: CircleSummary): string {
   if (item.finished) return 'Você terminou'

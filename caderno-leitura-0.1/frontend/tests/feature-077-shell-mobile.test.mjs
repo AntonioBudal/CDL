@@ -13,7 +13,7 @@ test('F077-US1: MobileTabBar.vue possui 5 colunas simétricas, alvos táteis e s
 
   // Semântica e acessibilidade WAI-ARIA
   assert.ok(content.includes('class="mobile-tab-bar"'), 'Deve conter class="mobile-tab-bar"')
-  assert.ok(content.includes('aria-label="Navegação móvel principal"'), 'Deve conter aria-label descritivo')
+  assert.ok(content.includes(':aria-label="t(\'nav.mobileNav\')"'), 'Deve conter aria-label descritivo') // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
   assert.ok(content.includes('aria-haspopup="dialog"'), 'Botão Mais deve ter aria-haspopup="dialog"')
 
   // 5 colunas: Início, Livros, Destaques, Revisão e Mais

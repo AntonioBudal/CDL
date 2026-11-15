@@ -6,6 +6,7 @@
  * citações literais de outros estudos); trechos entre aspas, em `>` ou marcados como citação literal ficam de fora. Medida só lexical, de propósito: não entende sinônimos.
  * Tudo roda no navegador; nada é enviado a lugar nenhum.
  */
+import { CONTENT_LOCALE } from '../i18n/content.ts'
 import { abntAuthorCall } from './citationFormatter.ts'
 
 export const COPY_THRESHOLD = 0.5
@@ -347,7 +348,7 @@ export function checkParaphrase(
 
 export function abntQuoteCall(author: string | null | undefined, year: number | null | undefined, title?: string | null): string {
   const who = author?.trim()
-    ? abntAuthorCall(author, title).toLocaleUpperCase('pt-BR').replace(/ ET AL\.$/, ' et al.')
+    ? abntAuthorCall(author, title).toLocaleUpperCase(CONTENT_LOCALE).replace(/ ET AL\.$/, ' et al.')
     : abntAuthorCall(author, title)
   return `(${who}, ${year ? String(year) : '[s. d.]'}, p. )`
 }

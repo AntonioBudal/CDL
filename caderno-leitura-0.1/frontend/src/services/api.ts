@@ -1,3 +1,4 @@
+import { t } from '../i18n/index.ts'
 import type {
   Book, BookPatch, Category, CategorySuggestion, CategoryStats, Chapter, ChapterPatch, CoverResponse, DashboardParams, DashboardResponse, ExportConfig, ImportPreview, RestoreResult, Study, StudyCreate, StudyPatch, StudySummary,
   TrashSummary, TrashEmptyResponse, BookCanvasResponse, CanvasBatchUpdatePayload, CanvasBatchUpdateItem, StudyCanvasNode,
@@ -121,7 +122,7 @@ export class RateLimitApiError extends ApiError {
 }
 
 export function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : 'Não foi possível concluir. Tente novamente.'
+  return error instanceof Error ? error.message : t('common.genericError')
 }
 
 export function detailMessage(data: unknown, status: number): string {
@@ -206,14 +207,14 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   } catch (error) {
     if (options.signal?.aborted) throw error
-    throw new ApiError('Não foi possível acessar o caderno. Verifique se o servidor local está aberto.', 0)
+    throw new ApiError(t('common.serverUnreachable'), 0)
   }
   let data: unknown
   if (response.status === 204 || response.status === 205) {
     return null as T
   }
   try { data = await response.json() } catch {
-    throw new ApiError('O servidor não devolveu uma resposta válida. Verifique a conexão local.', response.ok ? 0 : response.status)
+    throw new ApiError(t('common.invalidResponse'), response.ok ? 0 : response.status)
   }
   if (!response.ok) {
     if (

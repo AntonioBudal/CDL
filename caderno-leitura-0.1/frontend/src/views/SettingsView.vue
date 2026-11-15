@@ -3,6 +3,7 @@ import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import AppearanceControls from '../components/AppearanceControls.vue'
 import AppearancePreview from '../components/AppearancePreview.vue'
+import LanguageSelector from '../components/settings/LanguageSelector.vue'
 import DatabaseBackup from '../components/DatabaseBackup.vue'
 import SystemSovereigntyCard from '../components/settings/SystemSovereigntyCard.vue'
 import ReceiverTokenCard from '../components/settings/ReceiverTokenCard.vue'
@@ -842,6 +843,9 @@ onBeforeUnmount(() => {
             tab="aparencia"
             @change="update"
           />
+
+          <!-- F0.12.09: idioma da interface -->
+          <LanguageSelector />
 
           <p class="settings-status muted" role="status">
             {{ message }}

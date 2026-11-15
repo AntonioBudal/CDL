@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import Icon from '../ui/Icon.vue'
 import { useAuthStore } from '../../stores/auth'
 import { useProfile } from '../../composables/useProfile'
 
 const router = useRouter()
+const { t } = useI18n() // F0.12.09
 const auth = useAuthStore()
 const profileService = useProfile()
 
@@ -69,8 +71,8 @@ onBeforeUnmount(() => {
       :class="{ active: isOpen }"
       aria-haspopup="menu"
       :aria-expanded="isOpen"
-      :aria-label="`Menu do usuário: ${displayName}`"
-      title="Conta e opções de perfil"
+      :aria-label="t('nav.userMenu', { name: displayName })"
+      :title="t('nav.accountTitle')"
       @click="toggleDropdown"
     >
       <img
@@ -94,7 +96,7 @@ onBeforeUnmount(() => {
         v-if="isOpen"
         class="user-dropdown-menu"
         role="menu"
-        aria-label="Opções da conta"
+        :aria-label="t('nav.accountOptions')"
       >
         <div class="user-menu-header">
           <div class="user-menu-header-avatar">
@@ -104,7 +106,7 @@ onBeforeUnmount(() => {
           <div class="user-menu-info">
             <span class="user-menu-name">{{ displayName }}</span>
             <span v-if="username" class="user-menu-handle">@{{ username }}</span>
-            <span v-if="isAdmin" class="user-menu-badge">Administrador</span>
+            <span v-if="isAdmin" class="user-menu-badge">{{ t('nav.adminRole') }}</span>
           </div>
         </div>
 
@@ -118,7 +120,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="user" :size="16" />
-            <span>Meu perfil</span>
+            <span>{{ t('nav.myProfile') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -128,7 +130,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="sliders" :size="16" />
-            <span>Ajustes</span>
+            <span>{{ t('nav.settings') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -138,7 +140,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="book-open" :size="16" />
-            <span>Conceitos</span>
+            <span>{{ t('nav.concepts') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -148,7 +150,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="list" :size="16" />
-            <span>Sínteses</span>
+            <span>{{ t('nav.syntheses') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -158,7 +160,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="image" :size="16" />
-            <span>Minhas imagens</span>
+            <span>{{ t('nav.myImages') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -169,7 +171,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="shield" :size="16" />
-            <span>Administração</span>
+            <span>{{ t('nav.admin') }}</span>
           </RouterLink>
         </div>
 
@@ -183,7 +185,7 @@ onBeforeUnmount(() => {
             @click="handleLogout"
           >
             <Icon name="log-out" :size="16" />
-            <span>Sair</span>
+            <span>{{ t('nav.logout') }}</span>
           </button>
         </div>
       </div>

@@ -11,7 +11,7 @@ test('App.vue inclui link discreto para /apoie no rodapé global', () => {
 
   assert.ok(content.includes('class="app-footer"'), 'Deve conter tag app-footer')
   assert.ok(content.includes('to="/apoie"'), 'Deve conter RouterLink apontando para /apoie')
-  assert.ok(content.includes('Apoie o Leitorum'), 'Deve conter texto canônico "Apoie o Leitorum"')
+  assert.ok(content.includes("t('footer.support')"), 'Deve conter texto canônico "Apoie o Leitorum"') // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
 })
 
 test('MobileMoreMenu.vue inclui item Apoie o Leitorum no menu lateral móvel', () => {
@@ -19,7 +19,7 @@ test('MobileMoreMenu.vue inclui item Apoie o Leitorum no menu lateral móvel', (
   const content = fs.readFileSync(mobileMenuPath, 'utf8')
 
   assert.ok(content.includes('to="/apoie"'), 'MobileMoreMenu deve apontar para /apoie')
-  assert.ok(content.includes('Apoie o Leitorum'), 'MobileMoreMenu deve conter rótulo Apoie o Leitorum')
+  assert.ok(content.includes("t('nav.support')"), 'MobileMoreMenu deve conter rótulo Apoie o Leitorum') // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
 })
 
 test('router/index.ts define rota /apoie com alias /apoiar e meta public', () => {

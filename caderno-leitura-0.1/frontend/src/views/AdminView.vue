@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../i18n/format.ts'
 import { computed, onMounted, ref, watch } from 'vue'
 import { adminApi } from '../api/admin.ts'
 import { categoriesApi } from '../api/categories.ts'
@@ -312,7 +313,7 @@ function formatSourceLabel(source: string): string {
 function formatDateTime(val: string | null): string {
   if (!val) return '—'
   try {
-    return new Date(val).toLocaleString('pt-BR')
+    return new Date(val).toLocaleString(uiLocale())
   } catch {
     return val
   }

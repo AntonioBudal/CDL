@@ -1,3 +1,4 @@
+import { CONTENT_LOCALE } from '../i18n/content.ts'
 import { ref, computed, watch, isRef, type Ref, type ComputedRef } from 'vue'
 import type { StudyGroupByCriteria, StudyGroup, ReadingStatus } from '../types.ts'
 
@@ -178,7 +179,7 @@ export function useStudyGrouping<T extends StudyGroupingItem = StudyGroupingItem
       }
 
       const result: StudyGroup<T>[] = []
-      const sortedKeys = Object.keys(categoryBuckets).sort((a, b) => a.localeCompare(b, 'pt-BR'))
+      const sortedKeys = Object.keys(categoryBuckets).sort((a, b) => a.localeCompare(b, CONTENT_LOCALE))
 
       for (const catName of sortedKeys) {
         const items = categoryBuckets[catName]

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 /**
  * F0.11.09 (spec 111): "Receber destaques". Token de recepção para o Readest (formato Readwise) e instruções para
  * o KOReader (arquivo JSON). O token aparece uma vez só; o servidor guarda apenas o hash.
@@ -18,7 +19,7 @@ const receiverUrl = computed(() => `${window.location.origin}/api/receptor/readw
 
 function formatDate(value: string | null | undefined): string {
   if (!value) return 'nunca'
-  return new Date(value).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+  return new Date(value).toLocaleString(uiLocale(), { dateStyle: 'short', timeStyle: 'short' })
 }
 
 async function load() {

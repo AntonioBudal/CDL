@@ -2,23 +2,25 @@
 import { computed } from 'vue'
 import { AlertCircle, AlertTriangle, Check, CloudOff, RefreshCw } from 'lucide-vue-next'
 import { useSync } from '../../composables/useSync.ts'
+import { useI18n } from 'vue-i18n'
 
 const { status, isOnline, isSyncing, syncNow } = useSync()
+const { t } = useI18n() // F0.12.09
 
 const label = computed(() => {
   if (!isOnline.value || status.value === 'offline') {
-    return 'Offline — dados retidos no dispositivo'
+    return t('sync.offline')
   }
   switch (status.value) {
     case 'syncing':
-      return 'Sincronizando…'
+      return t('sync.syncing')
     case 'conflict':
-      return 'Conflito de concorrência'
+      return t('sync.conflict')
     case 'error':
-      return 'Falha na conexão'
+      return t('sync.error')
     case 'idle':
     default:
-      return 'Sincronizado'
+      return t('sync.synced')
   }
 })
 
@@ -34,8 +36,8 @@ function handleManualSync() {
     type="button"
     class="sync-status-badge quiet"
     :class="[`status-${status}`, { 'is-offline': !isOnline }]"
-    :aria-label="`Status de sincronização: ${label}. Clique para sincronizar agora.`"
-    :title="`Status: ${label}. Clique para sincronizar agora.`"
+    :aria-label="t('sync.aria', { label })"
+    :title="t('sync.title', { label })"
     :disabled="isSyncing || !isOnline"
     @click="handleManualSync"
   >

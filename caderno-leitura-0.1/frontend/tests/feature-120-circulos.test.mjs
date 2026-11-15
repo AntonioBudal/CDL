@@ -13,7 +13,7 @@ test('120: rotas, menus e contador de convites', () => {
   const nav = read('components/layout/NavigationTabs.vue')
   assert.match(nav, /to: '\/circulos',[\s\S]*?badgeCount: \(\) => circleInviteCount\.value/)
   assert.match(nav, /pendingFriendsCount\.value > 0 \|\| circleInviteCount\.value > 0/)
-  assert.match(read('components/navigation/MobileMoreMenu.vue'), /to="\/circulos"[\s\S]*?Círculos de leitura/)
+  assert.match(read('components/navigation/MobileMoreMenu.vue'), /to="\/circulos"[\s\S]*?t\('nav\.circlesLong'\)/) // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
   assert.match(read('App.vue'), /void circleInvites\.refresh\(\)/)
   assert.match(read('composables/useCircleInvites.ts'), /api\.getCircleInviteCount\(signal\)/)
   const book = read('views/BookView.vue')

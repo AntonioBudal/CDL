@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../i18n/format.ts'
 import { computed, nextTick, ref, watch } from 'vue'
 import { api, errorMessage } from '../services/api'
 import Icon from './ui/Icon.vue'
@@ -45,7 +46,7 @@ function formatDate(isoString: string): string {
   if (!isoString) return ''
   try {
     const d = new Date(isoString)
-    return new Intl.DateTimeFormat('pt-BR', {
+    return new Intl.DateTimeFormat(uiLocale(), {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',

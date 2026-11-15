@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../i18n/format.ts'
 /**
  * F0.12.07 (spec 120): página do círculo de leitura. A trava anti-spoiler é do servidor: uma parte à frente do meu
  * progresso chega só com a contagem de mensagens, nunca com o texto.
@@ -139,7 +140,7 @@ function removePost(postId: number) {
 }
 
 function when(value: string): string {
-  return new Date(value).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+  return new Date(value).toLocaleString(uiLocale(), { dateStyle: 'short', timeStyle: 'short' })
 }
 
 async function loadInvitable() {

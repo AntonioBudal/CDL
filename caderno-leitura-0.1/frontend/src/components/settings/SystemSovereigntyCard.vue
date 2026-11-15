@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 import { computed, onMounted, ref } from 'vue'
 import { api } from '../../services/api'
 import { useAuthStore } from '../../stores/auth.ts'
@@ -34,7 +35,7 @@ const keepCount = computed(() => status.value?.backups?.keep ?? null)
 
 function formatDate(value: string | null | undefined): string {
   if (!value) return '—'
-  return new Date(value).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+  return new Date(value).toLocaleString(uiLocale(), { dateStyle: 'short', timeStyle: 'short' })
 }
 
 function formatHours(hours: number): string {

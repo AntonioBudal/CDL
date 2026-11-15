@@ -38,6 +38,12 @@ export default defineConfig({
   define: {
     __BUILD_COMMIT__: JSON.stringify(buildCommit()),
     __APP_VERSION__: JSON.stringify(appVersion()),
+    // F0.12.09: vue-i18n só com a Composition API, sem devtools em produção e com JIT (sem eval; CSP sem unsafe-eval).
+    __VUE_I18N_FULL_INSTALL__: true,
+    __VUE_I18N_LEGACY_API__: false,
+    __INTLIFY_PROD_DEVTOOLS__: false,
+    __INTLIFY_JIT_COMPILATION__: true,
+    __INTLIFY_DROP_MESSAGE_COMPILER__: false,
   },
   plugins: [
     {

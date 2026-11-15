@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { sharingApi } from '../../api/sharing.ts'
@@ -52,7 +53,7 @@ function clearFilters() {
 function formatDate(iso: string): string {
   try {
     const d = new Date(iso)
-    return new Intl.DateTimeFormat('pt-BR', {
+    return new Intl.DateTimeFormat(uiLocale(), {
       day: '2-digit',
       month: 'short',
       year: 'numeric',

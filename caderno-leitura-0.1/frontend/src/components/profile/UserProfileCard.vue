@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { UserProfilePublic } from '../../types.ts'
@@ -26,7 +27,7 @@ const formattedDate = computed(() => {
   if (!props.profile.created_at) return ''
   try {
     const d = new Date(props.profile.created_at)
-    return d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
+    return d.toLocaleDateString(uiLocale(), { month: 'long', year: 'numeric' })
   } catch {
     return ''
   }

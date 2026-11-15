@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../../i18n/format.ts'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { NotificationItem } from '../../types/notifications.ts'
@@ -64,7 +65,7 @@ const formattedTime = computed(() => {
     const diffDays = Math.floor(diffHours / 24)
     if (diffDays === 1) return 'ontem'
     if (diffDays < 7) return `há ${diffDays} dias`
-    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
+    return d.toLocaleDateString(uiLocale(), { day: '2-digit', month: 'short' })
   } catch {
     return ''
   }

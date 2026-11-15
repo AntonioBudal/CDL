@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Literal
+
 from pydantic import Field
 
 from app.schemas.common import InputModel, OutputModel
@@ -25,6 +27,7 @@ class UserPreferenceRead(OutputModel):
     font_family: str = "garamond"
     font_scale: float = 1.0
     theme_mode: str = "dark"
+    locale: str = "pt-BR"  # F0.12.09
     version: int = 1
     updated_at: datetime
 
@@ -50,4 +53,5 @@ class UserPreferenceUpdate(InputModel):
     font_family: str | None = Field(default=None, description="Fonte de leitura")
     font_scale: float | None = Field(default=None, ge=0.7, le=1.6, description="Escala de fonte")
     theme_mode: str | None = Field(default=None, description="Tema de interface")
+    locale: Literal["pt-BR", "en"] | None = Field(default=None, description="Idioma da interface (F0.12.09)")
     expected_version: int | None = Field(default=None, ge=1, description="Versão esperada para OCC")

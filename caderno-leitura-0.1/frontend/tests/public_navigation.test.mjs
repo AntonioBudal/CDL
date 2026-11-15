@@ -63,7 +63,7 @@ test('App.vue renderiza rodapé com links institucionais "Sobre o Leitorum" e "A
   const content = fs.readFileSync(appPath, 'utf8')
 
   assert.ok(content.includes('to="/sobre"'), 'Rodapé deve conter link para /sobre')
-  assert.ok(content.includes('Sobre o Leitorum'), 'Rodapé deve conter texto "Sobre o Leitorum"')
+  assert.ok(content.includes("t('footer.about')"), 'Rodapé deve conter texto "Sobre o Leitorum"') // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
   assert.ok(content.includes('to="/apoie"'), 'Rodapé deve conter link para /apoie')
-  assert.ok(content.includes('Apoie o Leitorum'), 'Rodapé deve conter texto "Apoie o Leitorum"')
+  assert.ok(content.includes("t('footer.support')"), 'Rodapé deve conter texto "Apoie o Leitorum"') // F0.12.09: texto por chave
 })

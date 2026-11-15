@@ -39,9 +39,9 @@ test('108: páginas, rotas, menus e API', () => {
   const router = read('router/index.ts')
   assert.match(router, /path: '\/conceitos', name: 'lexicon'/)
   assert.match(router, /path: '\/conceitos\/:key', name: 'concept'/)
-  assert.match(read('components/layout/NavigationTabs.vue'), /to: '\/conceitos',\n\s+label: 'Conceitos'/)
-  assert.ok(read('components/navigation/MobileMoreMenu.vue').includes('<span class="drawer-item-label">Conceitos</span>'))
-  assert.ok(read('components/layout/UserDropdown.vue').includes('<span>Conceitos</span>'))
+  assert.match(read('components/layout/NavigationTabs.vue'), /to: '\/conceitos',\n\s+label: t\('nav\.concepts'\)/) // F0.12.09: texto por chave (pt-BR em src/i18n/messages)
+  assert.ok(read('components/navigation/MobileMoreMenu.vue').includes("<span class=\"drawer-item-label\">{{ t('nav.concepts') }}</span>")) // F0.12.09: texto por chave
+  assert.ok(read('components/layout/UserDropdown.vue').includes("<span>{{ t('nav.concepts') }}</span>")) // F0.12.09: texto por chave
   const api = read('services/api.ts')
   assert.match(api, /listConcepts: \(params/)
   assert.match(api, /getConcept: \(key: string/)

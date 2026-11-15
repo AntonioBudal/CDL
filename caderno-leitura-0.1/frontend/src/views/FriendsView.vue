@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../i18n/format.ts'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useFriends } from '../composables/useFriends.ts'
@@ -93,7 +94,7 @@ function formatDate(dateString?: string | null): string {
   if (!dateString) return ''
   try {
     const d = new Date(dateString)
-    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
+    return d.toLocaleDateString(uiLocale(), { day: '2-digit', month: 'short', year: 'numeric' })
   } catch {
     return ''
   }

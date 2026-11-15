@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { uiLocale } from '../i18n/format.ts'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import HeatmapCalendar from '../components/HeatmapCalendar.vue'
@@ -108,7 +109,7 @@ function clearDateFilter() {
 function formatRelativeDate(isoStr: string): string {
   try {
     const d = new Date(isoStr)
-    return d.toLocaleString('pt-BR', {
+    return d.toLocaleString(uiLocale(), {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',

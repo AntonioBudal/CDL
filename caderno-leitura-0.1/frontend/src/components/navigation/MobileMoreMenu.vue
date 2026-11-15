@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 import Icon from '../ui/Icon.vue'
 import { useInboxCount } from '../../composables/useInboxCount.ts'
 import { useCircleInvites } from '../../composables/useCircleInvites.ts'
+import { useI18n } from 'vue-i18n'
 import { useFriends } from '../../composables/useFriends.ts'
 
 const props = withDefaults(
@@ -31,6 +32,7 @@ const emit = defineEmits<{
 }>()
 
 const inboxService = useInboxCount()
+const { t } = useI18n() // F0.12.09
 const friendsService = useFriends()
 
 const inboxCount = computed(() => inboxService.count.value)
@@ -105,19 +107,19 @@ onUnmounted(() => {
               <span v-if="username" class="drawer-user-handle">@{{ username }}</span>
             </div>
           </div>
-          <h2 id="mobile-more-title" v-else class="drawer-title">Mais Opções</h2>
+          <h2 id="mobile-more-title" v-else class="drawer-title">{{ t('nav.moreTitle') }}</h2>
 
           <button
             type="button"
             class="drawer-close-btn"
-            aria-label="Fechar menu"
+            :aria-label="t('nav.closeMenu')"
             @click="emit('close')"
           >
             <Icon name="x" :size="20" />
           </button>
         </div>
 
-        <nav class="drawer-nav" aria-label="Navegação secundária">
+        <nav class="drawer-nav" :aria-label="t('nav.secondaryNav')">
           <RouterLink
             v-if="username"
             :to="`/@${username}`"
@@ -125,7 +127,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="user" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Meu perfil</span>
+            <span class="drawer-item-label">{{ t('nav.myProfile') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -134,11 +136,11 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="inbox" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Caixa de entrada</span>
+            <span class="drawer-item-label">{{ t('nav.inbox') }}</span>
             <span
               v-if="inboxCount > 0"
               class="drawer-item-badge"
-              :aria-label="`Caixa de entrada: ${inboxCount} itens pendentes`"
+              :aria-label="t('nav.inboxPending', { count: inboxCount })"
             >
               {{ inboxCount > 99 ? '99+' : inboxCount }}
             </span>
@@ -150,11 +152,11 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="users" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Amigos</span>
+            <span class="drawer-item-label">{{ t('nav.friends') }}</span>
             <span
               v-if="pendingFriendsCount > 0"
               class="drawer-item-badge"
-              :aria-label="`Amigos: ${pendingFriendsCount} solicitações pendentes`"
+              :aria-label="t('nav.friendRequests', { count: pendingFriendsCount })"
             >
               {{ pendingFriendsCount > 99 ? '99+' : pendingFriendsCount }}
             </span>
@@ -166,11 +168,11 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="network" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Círculos de leitura</span>
+            <span class="drawer-item-label">{{ t('nav.circlesLong') }}</span>
             <span
               v-if="circleInviteCount > 0"
               class="drawer-item-badge"
-              :aria-label="`Círculos: ${circleInviteCount} ${circleInviteCount === 1 ? 'convite pendente' : 'convites pendentes'}`"
+              :aria-label="t('nav.circleInvites', { count: circleInviteCount }, circleInviteCount)"
             >
               {{ circleInviteCount > 99 ? '99+' : circleInviteCount }}
             </span>
@@ -182,7 +184,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="plus" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Importar</span>
+            <span class="drawer-item-label">{{ t('nav.import') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -191,7 +193,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="pencil" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Destaques</span>
+            <span class="drawer-item-label">{{ t('nav.highlights') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -200,7 +202,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="book-open" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Conceitos</span>
+            <span class="drawer-item-label">{{ t('nav.concepts') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -209,7 +211,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="list" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Sínteses</span>
+            <span class="drawer-item-label">{{ t('nav.syntheses') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -218,7 +220,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="trash" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Lixeira</span>
+            <span class="drawer-item-label">{{ t('nav.trash') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -228,7 +230,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="shield" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Administração</span>
+            <span class="drawer-item-label">{{ t('nav.admin') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -237,7 +239,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="sliders" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Ajustes</span>
+            <span class="drawer-item-label">{{ t('nav.settings') }}</span>
           </RouterLink>
 
           <RouterLink
@@ -246,7 +248,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="heart" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Apoie o Leitorum</span>
+            <span class="drawer-item-label">{{ t('nav.support') }}</span>
           </RouterLink>
 
           <div class="drawer-divider" role="separator" />
@@ -257,7 +259,7 @@ onUnmounted(() => {
             @click="emit('logout'); emit('close')"
           >
             <Icon name="log-out" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Sair</span>
+            <span class="drawer-item-label">{{ t('nav.logout') }}</span>
           </button>
         </nav>
       </div>
