@@ -77,7 +77,7 @@ F0.12.01 versão no rodapé e "Evolução das versões" (spec 114, **concluída*
 `/compartilhado/:id` (rascunho em `specs/115-estudos-publicados/`, não aprovado) · importadores (Readwise, Goodreads,
 StoryGraph, Omnivore, BookWyrm) · feeds RSS/Atom/JSON · quadro espacial com exportação JSON Canvas · oclusão de imagem
 em SVG · círculos de leitura com trava anti-spoiler · F0.12.08 simplificação de nomes (auditoria pronta no
-roadmap) · F0.12.09 seletor de idioma (**transição grande; decidir antes da spec**) · F0.12.10 pequenas melhorias de
+roadmap) · F0.12.09 seletor de idioma (**só a fundação**, decisão do usuário em 2026-11-14) · F0.12.10 pequenas melhorias de
 usabilidade (calendário do Painel, barra de ações fixa no estudo, menu de 3 pontos no celular, cabeçalho do estudo).
 
 ---

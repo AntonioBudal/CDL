@@ -40,7 +40,7 @@ suítes completas a cada 5 features, commit em português, push só quando o usu
 | F0.12.06 | **Oclusão de imagem em SVG** | Cartões de revisão sobre imagens. |
 | F0.12.07 | **Círculos de leitura com trava anti-spoiler** | Depende de ISBN (F0.11.04) e estados de leitura (F0.11.01), já entregues. |
 | F0.12.08 | **Simplificação de nomes** | Pedido do usuário em 2026-11-14. Auditoria abaixo. |
-| F0.12.09 | **Seletor de idioma** | Pedido do usuário em 2026-11-14. **Transição grande** (ver avaliação abaixo): decidir antes da spec se entra, se entra só a fundação, ou se sai do 0.12. |
+| F0.12.09 | **Seletor de idioma — só a fundação** | Pedido do usuário em 2026-11-14. Transição grande (avaliação abaixo); o usuário escolheu **só a fundação** no 0.12. |
 | F0.12.10 | **Pequenas melhorias de usabilidade** | Pedido do usuário em 2026-11-14: calendário do Painel, barra de ações fixa no estudo, menu de 3 pontos no celular, espaçamento do cabeçalho do estudo. |
 
 ### F0.12.01 — Versão no rodapé e "Evolução das versões" (pedido do usuário em 2026-11-14)
@@ -103,7 +103,10 @@ Opções para decidir antes da spec:
    segue em português e migra aos poucos.
 3. **Tradução completa no 0.12:** várias features (estimativa: 6 a 10 fatias), com revisão de texto em inglês.
 
-Fazer a F0.12.08 **antes** ajuda qualquer uma das opções: menos nomes e mais simples = menos para traduzir.
+**Decisão do usuário (2026-11-14): opção 2, só a fundação.** Escopo da F0.12.09: biblioteca de tradução, seletor
+em Ajustes, idioma salvo na conta (e lembrado no navegador antes do login), datas pelo idioma, e inglês nos textos de
+toda tela (menus, cabeçalho, rodapé, avisos gerais). O resto segue em português e migra aos poucos em roadmaps
+seguintes. A F0.12.08 (nomes) vem **antes**, para traduzir já os nomes novos.
 
 ### F0.12.10 — Pequenas melhorias de usabilidade (pedido de 2026-11-14)
 

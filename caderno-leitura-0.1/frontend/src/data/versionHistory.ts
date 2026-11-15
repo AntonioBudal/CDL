@@ -52,7 +52,7 @@ export const VERSION_HISTORY: RoadmapEntry[] = [
       { id: 'F0.12.06', title: 'Oclusão de imagem para revisão', done: false },
       { id: 'F0.12.07', title: 'Círculos de leitura com trava anti-spoiler', done: false },
       { id: 'F0.12.08', title: 'Nomes mais simples nas telas', done: false },
-      { id: 'F0.12.09', title: 'Seletor de idioma (em avaliação)', done: false },
+      { id: 'F0.12.09', title: 'Seletor de idioma (fundação)', done: false },
       { id: 'F0.12.10', title: 'Pequenas melhorias de usabilidade', done: false },
     ],
   },
