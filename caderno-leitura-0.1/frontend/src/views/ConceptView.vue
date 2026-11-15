@@ -39,7 +39,7 @@ function studyLink(studyId: number, bookId: number) {
 
 <template>
   <section class="concept-view wrap" aria-labelledby="concept-heading">
-    <RouterLink to="/conceitos" class="concept-back">← Léxico</RouterLink>
+    <RouterLink to="/conceitos" class="concept-back">← Conceitos</RouterLink>
 
     <p v-if="loading" class="concept-muted" role="status">Carregando o conceito…</p>
     <div v-else-if="error" class="notice error" role="alert">

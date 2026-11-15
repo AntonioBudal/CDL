@@ -107,10 +107,10 @@ function restart() {
 <template>
   <section class="ereader-view wrap" aria-labelledby="ereader-heading">
     <header class="page-header">
-      <p class="eyebrow">Mesa de Triagem</p>
+      <p class="eyebrow">Caixa de entrada</p>
       <h1 id="ereader-heading">Importar de leitor digital</h1>
       <p class="ereader-lead">
-        Os destaques entram na Mesa de Triagem como capturas do livro. Depois, na página do livro, a bandeja ajuda a
+        Os destaques entram na caixa de entrada como capturas do livro. Depois, na página do livro, a bandeja ajuda a
         levá-los para os capítulos e transformá-los em estudos.
       </p>
     </header>
@@ -139,7 +139,7 @@ function restart() {
         <button type="button" class="primary" :disabled="!file || busy" @click="sendPreview">
           {{ busy ? 'Lendo…' : 'Ver o que tem no arquivo' }}
         </button>
-        <RouterLink to="/inbox" class="ereader-link">Voltar à Mesa de Triagem</RouterLink>
+        <RouterLink to="/inbox" class="ereader-link">Voltar à caixa de entrada</RouterLink>
       </div>
     </section>
 

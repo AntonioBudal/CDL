@@ -77,7 +77,7 @@ async function handleSubmit() {
       textareaRef.value.blur()
     }
   } catch (err: unknown) {
-    submitError.value = err instanceof Error ? err.message : 'Falha ao salvar a captura no Inbox.'
+    submitError.value = err instanceof Error ? err.message : 'Falha ao salvar a captura na caixa de entrada.'
   } finally {
     isSubmitting.value = false
   }
@@ -100,7 +100,7 @@ defineExpose({
     class="quick-thought-drop"
     :class="{ 'is-expanded': isExpanded }"
     role="region"
-    aria-label="Campo de descarrego mental rápido para o Inbox"
+    aria-label="Ideia rápida para a caixa de entrada"
     @focusin="onFocus"
     @focusout="onBlur"
   >

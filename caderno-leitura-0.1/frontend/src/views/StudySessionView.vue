@@ -81,7 +81,7 @@ onUnmounted(() => {
       <h2>Não foi possível carregar a sessão</h2>
       <p>{{ studySession.error.value }}</p>
       <button type="button" class="btn-retry" @click="router.push('/revisao')">
-        Voltar à Central de Revisão
+        Voltar à Revisão
       </button>
     </div>
 

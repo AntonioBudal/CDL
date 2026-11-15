@@ -133,7 +133,7 @@ function handleLink() {
 
 async function handleDelete() {
   if (isDeleting.value) return
-  if (!confirm('Deseja realmente excluir esta captura do Inbox?')) return
+  if (!confirm('Deseja realmente excluir esta captura da caixa de entrada?')) return
   isDeleting.value = true
   actionError.value = null
   localExiting.value = true

@@ -244,8 +244,8 @@ onBeforeUnmount(() => {
 <template>
   <main class="digitize-view" role="main" aria-labelledby="digitize-main-title">
     <header class="page-header digitize-header">
-      <p class="eyebrow">Ateliê de Fichamento</p>
-      <h1 id="digitize-main-title">Digitalizar Caderno</h1>
+      <p class="eyebrow">Importar</p>
+      <h1 id="digitize-main-title">Digitalizar caderno</h1>
       <p class="digitize-lead">
         Fotografe uma página do seu caderno. O Leitorum lê o texto manuscrito, você revisa e salva como estudo.
       </p>
@@ -260,7 +260,7 @@ onBeforeUnmount(() => {
     <section v-else-if="state.phase === 'unavailable'" aria-labelledby="unavailable-heading">
       <EmptyState icon="camera" title="Digitalização indisponível nesta instalação" :description="unavailableDescription">
         <RouterLink class="button primary" to="/importar">Importar texto</RouterLink>
-        <RouterLink class="button secondary" to="/inbox">Anotar na Caixa de Entrada</RouterLink>
+        <RouterLink class="button secondary" to="/inbox">Anotar na caixa de entrada</RouterLink>
       </EmptyState>
       <h2 id="unavailable-heading" class="sr-only">Caminhos disponíveis</h2>
       <div class="exit-grid">
@@ -344,7 +344,7 @@ onBeforeUnmount(() => {
       </p>
       <p v-else-if="state.photoWarning" class="notice error" role="alert">
         A foto não foi guardada: {{ state.photoWarning }}
-        <RouterLink to="/minhas-imagens">Abrir Minhas Imagens e Espaço</RouterLink>
+        <RouterLink to="/minhas-imagens">Abrir Minhas imagens</RouterLink>
       </p>
       <div class="actions">
         <RouterLink class="button primary" :to="{ name: 'study', params: { bookId: state.bookId, studyId: state.saved.id } }">Abrir estudo</RouterLink>
@@ -534,7 +534,7 @@ onBeforeUnmount(() => {
             </label>
             <p id="keep-photo-help" class="muted-text small">
               <template v-if="photoBlocked">
-                {{ photoBlocked }} <RouterLink to="/minhas-imagens">Minhas Imagens e Espaço</RouterLink>
+                {{ photoBlocked }} <RouterLink to="/minhas-imagens">Minhas imagens</RouterLink>
               </template>
               <template v-else-if="mediaUsage">
                 Seu espaço: {{ usageText(mediaUsage.user.used_bytes, mediaUsage.user.quota_bytes) }}. A foto fica

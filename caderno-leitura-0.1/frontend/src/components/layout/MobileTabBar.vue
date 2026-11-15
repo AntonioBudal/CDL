@@ -36,7 +36,7 @@ const isReviewActive = computed(() => ['review', 'study-session'].includes(Strin
       :aria-current="isDashboardActive ? 'page' : undefined"
     >
       <Icon name="layout-dashboard" :size="20" class="mobile-tab-icon" />
-      <span class="mobile-tab-label">Início</span>
+      <span class="mobile-tab-label">Painel</span>
     </RouterLink>
 
     <!-- Livros -->

@@ -368,7 +368,7 @@ function setHomeViewPreference(val: HomeViewPreference) {
   try {
     window.localStorage?.setItem('caderno_home_view', val)
     window.dispatchEvent(new CustomEvent('caderno_home_view_changed', { detail: val }))
-    systemActionFeedback.value = `Tela inicial padrão definida como: ${val === 'dashboard' ? 'Dashboard 2.0' : 'Acervo de Livros'}.`
+    systemActionFeedback.value = `Tela inicial padrão definida como: ${val === 'dashboard' ? 'Painel' : 'Livros'}.`
   } catch {
     // ignore
   }
@@ -723,13 +723,13 @@ onBeforeUnmount(() => {
               <div class="privacy-section">
                 <h4 class="privacy-subheading">
                   <Icon name="layout-dashboard" :size="16" />
-                  <span>Visibilidade do Painel de Estudos (Dashboard)</span>
+                  <span>Visibilidade do Painel</span>
                 </h4>
                 <p class="muted">
                   Controla quem pode acessar a síntese dos seus hábitos de estudo e leituras recentes.
                 </p>
 
-                <div class="privacy-options" role="radiogroup" aria-label="Visibilidade do Dashboard">
+                <div class="privacy-options" role="radiogroup" aria-label="Visibilidade do Painel">
                   <label class="radio-option">
                     <input
                       type="radio"
@@ -915,7 +915,7 @@ onBeforeUnmount(() => {
                   @change="setHomeViewPreference('dashboard')"
                 />
                 <span class="radio-text">
-                  <strong>Dashboard 2.0</strong> (Cockpit de Estudos e Retoma)
+                  <strong>Painel</strong> (estudos recentes e ritmo de leitura)
                 </span>
               </label>
               <label class="radio-option">
@@ -989,7 +989,7 @@ onBeforeUnmount(() => {
             </p>
             <div class="actions wrap">
               <RouterLink class="button secondary text-link" to="/minhas-imagens">
-                Minhas Imagens e Espaço
+                Minhas imagens
               </RouterLink>
             </div>
           </article>

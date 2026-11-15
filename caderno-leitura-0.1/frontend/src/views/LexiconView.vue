@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
   <section class="lexicon-view wrap" aria-labelledby="lexicon-heading">
     <header class="page-header">
       <p class="eyebrow">Conceitos do acervo</p>
-      <h1 id="lexicon-heading">Léxico</h1>
+      <h1 id="lexicon-heading">Conceitos</h1>
       <p class="lexicon-lead">
         Montado a partir da seção Conceitos dos seus estudos (linhas como <code>**Termo**: definição</code> ou
         <code>Termo: definição</code>) e das menções <code>[[conceito:Termo]]</code>. Editar um estudo atualiza o léxico.

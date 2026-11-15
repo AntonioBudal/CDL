@@ -136,7 +136,7 @@ def test_routes_answer_507_with_code_and_usage(harness, monkeypatch):
         assert res.status_code == 507, res.text
         body = res.json()
         assert body["code"] == "user_quota"
-        assert "Minhas Imagens e Espaço" in body["detail"]
+        assert "Minhas imagens" in body["detail"]
         assert body["usage"]["user"]["quota_bytes"] == 1
         assert set(body["usage"]["server"]) == {"level"}
     with harness.factory() as session:

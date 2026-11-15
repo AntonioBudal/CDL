@@ -162,10 +162,9 @@ onMounted(() => {
     <!-- Cabeçalho -->
     <header class="page-header dashboard-header">
       <div class="title-area">
-        <p class="eyebrow">Cockpit de Estudos e Navegação</p>
-        <h1>Dashboard 2.0</h1>
+        <h1>Painel</h1>
         <p class="intro">
-          Retome seus estudos em 1 clique, acompanhe conexões conceituais recentes e monitore o pulso do seu acervo.
+          Seus estudos recentes, suas conexões e seu ritmo de leitura.
         </p>
       </div>
     </header>

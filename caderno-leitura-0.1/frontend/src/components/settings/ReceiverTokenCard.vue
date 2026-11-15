@@ -76,7 +76,7 @@ onMounted(load)
   <section class="receiver-card" aria-labelledby="receiver-heading">
     <h3 id="receiver-heading" class="receiver-title">Receber destaques</h3>
     <p class="receiver-muted">
-      Os destaques recebidos entram na Mesa de Triagem, no livro de mesmo título (ou num livro novo).
+      Os destaques recebidos entram na caixa de entrada, no livro de mesmo título (ou num livro novo).
     </p>
 
     <h4 class="receiver-subtitle">Readest (envio automático)</h4>

@@ -307,7 +307,7 @@ def link_inbox_capture(
         target_section = "references"
 
     source_desc = f" — Fonte: {capture.source_hint}" if capture.source_hint else ""
-    snippet = f"\n\n---\n> {capture.content}\n*Nota capturada do Inbox{source_desc}*\n"
+    snippet = f"\n\n---\n> {capture.content}\n*Nota capturada da caixa de entrada{source_desc}*\n"
 
     current_val = getattr(study, target_section) or ""
     new_val = f"{current_val.rstrip()}{snippet}" if current_val.strip() else snippet.strip()

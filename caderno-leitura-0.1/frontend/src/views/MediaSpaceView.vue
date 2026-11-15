@@ -94,7 +94,7 @@ onBeforeUnmount(() => space.dispose())
 <template>
   <main class="media-space" role="main" aria-labelledby="media-space-title">
     <header class="page-header">
-      <h1 id="media-space-title">Minhas Imagens e Espaço</h1>
+      <h1 id="media-space-title">Minhas imagens</h1>
       <p class="lead">
         Fotos de páginas guardadas para conferência, capas e foto de perfil. Todas ficam cifradas no servidor.
       </p>

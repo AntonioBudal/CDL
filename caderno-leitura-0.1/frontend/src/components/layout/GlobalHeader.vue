@@ -96,7 +96,7 @@ const isAuthPage = computed(() => ['login', 'register', 'setup-owner'].includes(
           <button
             type="button"
             class="header-tool-btn quick-capture-trigger-btn"
-            aria-label="Captura rápida no Inbox (Ctrl+Shift+C)"
+            aria-label="Captura rápida na caixa de entrada (Ctrl+Shift+C)"
             title="Captura rápida (Ctrl+Shift+C)"
             @click="quickCapture.open()"
           >

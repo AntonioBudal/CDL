@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="user" :size="16" />
-            <span>Perfil Público</span>
+            <span>Meu perfil</span>
           </RouterLink>
 
           <RouterLink
@@ -128,7 +128,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="sliders" :size="16" />
-            <span>Ajustes &amp; Preferências</span>
+            <span>Ajustes</span>
           </RouterLink>
 
           <RouterLink
@@ -138,7 +138,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="book-open" :size="16" />
-            <span>Léxico de conceitos</span>
+            <span>Conceitos</span>
           </RouterLink>
 
           <RouterLink
@@ -148,7 +148,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="list" :size="16" />
-            <span>Cadernos de síntese</span>
+            <span>Sínteses</span>
           </RouterLink>
 
           <RouterLink
@@ -158,7 +158,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="image" :size="16" />
-            <span>Minhas Imagens e Espaço</span>
+            <span>Minhas imagens</span>
           </RouterLink>
 
           <RouterLink
@@ -169,7 +169,7 @@ onBeforeUnmount(() => {
             @click="closeDropdown"
           >
             <Icon name="shield" :size="16" />
-            <span>Painel de Administração</span>
+            <span>Administração</span>
           </RouterLink>
         </div>
 
@@ -183,7 +183,7 @@ onBeforeUnmount(() => {
             @click="handleLogout"
           >
             <Icon name="log-out" :size="16" />
-            <span>Encerrar Sessão (Sair)</span>
+            <span>Sair</span>
           </button>
         </div>
       </div>

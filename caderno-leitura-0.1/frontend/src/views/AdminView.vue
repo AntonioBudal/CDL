@@ -333,7 +333,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="admin-view-container" aria-label="Painel de Administração">
+  <main class="admin-view-container" aria-label="Administração">
     <!-- Cabeçalho -->
     <header class="admin-header">
       <div class="header-titles">

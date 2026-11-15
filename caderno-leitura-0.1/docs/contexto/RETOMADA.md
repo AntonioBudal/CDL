@@ -1753,3 +1753,23 @@ Spec aprovada com as recomendações Q1 a Q5:
   lados, avanço que abre só a parte certa; 375 px sem rolagem lateral e alvos de 44 px; contraste nos 10 temas (a barra
   de progresso usa `--color-link`, ≥ 4,88:1; o acento ficava abaixo de 3:1 em grafite e noite-suave). Correção feita na
   conferência: `flex-basis` do campo virava altura numa coluna.
+
+## F0.12.08 — Simplificação de nomes (2026-11-15)
+
+- **Spec, plano e tarefas:** `specs/121-simplificacao-de-nomes/`. Oitava feature do 0.12. **Sem migração.** Versão
+  `0.12.0-alpha.8`.
+- **Uma tela, um nome** (menus do computador e do celular, barra do celular, menu do usuário, título, aba e avisos):
+  Painel, Revisão, Caixa de entrada, Importar ("Importar fichamento"), Digitalizar caderno, Amigos, Destaques, Lixeira,
+  Minhas imagens, Ajustes, Meu perfil, Conceitos, Sínteses, Administração, Sair. Subtítulos de uma frase da
+  auditoria. Saíram "Dashboard", "Inbox", "Cockpit", "Bancada", "Active Recall" (→ "lembrar sem olhar"), "Mesa de
+  Triagem", "Ateliê", "Salão", "Léxico" etc. Endereços e nomes internos não mudaram; a linha do tempo das versões
+  mantém os nomes da época.
+- **Backend** (textos que o leitor vê): nota da captura que vira estudo ("Nota capturada da caixa de entrada"; estudos
+  antigos não mudam), aviso de cota ("Libere espaço em Minhas imagens") e título das perguntas no arquivo exportado
+  ("Perguntas de retenção (para lembrar sem olhar)").
+- **Barra de cima:** os nomes não cabiam entre 768 e 1259 px (já sobrepunha com "Inbox" em 800 px; piorou com "Caixa de
+  entrada"); nessa faixa ficam só os ícones, com o nome escondido para o leitor de tela e como dica (`title`).
+- **Testes:** guarda `feature-121-nomes` (procura os nomes antigos em todo o `src/` sem comentários, e confere os
+  nomes novos, os subtítulos e a faixa só com ícones); 8 testes antigos que conferiam textos passaram a conferir os
+  novos; `npm test` 820/820; backend (exportação, cota, caixa de entrada) 52; build ok. Navegador: as 14 telas
+  (título, aba, menus) e a barra de cima em 768, 800, 1259 e 1260 px; menu do celular a 375 px.

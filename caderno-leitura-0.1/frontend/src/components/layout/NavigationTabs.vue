@@ -47,7 +47,7 @@ const primaryNavItems = computed<PrimaryNavItem[]>(() => {
   return [
     {
       to: '/dashboard',
-      label: 'Dashboard',
+      label: 'Painel',
       routes: ['dashboard'],
       icon: 'layout-dashboard',
     },
@@ -71,7 +71,7 @@ const primaryNavItems = computed<PrimaryNavItem[]>(() => {
     },
     {
       to: '/inbox',
-      label: 'Inbox',
+      label: 'Caixa de entrada',
       routes: ['inbox'],
       icon: 'inbox',
       badgeCount: () => inboxCount.value,
@@ -109,7 +109,7 @@ const secondaryNavItems = computed<SecondaryNavItem[]>(() => {
     },
     {
       to: '/conceitos',
-      label: 'Léxico',
+      label: 'Conceitos',
       routes: ['lexicon', 'concept'],
       icon: 'book-open',
     },
@@ -194,6 +194,7 @@ onBeforeUnmount(() => {
       :class="{
         selected: item.routes.includes(String(route.name)),
       }"
+      :title="item.label"
       :aria-current="
         item.routes.includes(String(route.name))
           ? (route.name === item.routes[0] ? 'page' : 'true')
@@ -437,6 +438,22 @@ onBeforeUnmount(() => {
 @media (max-width: 767px) {
   .navigation-tabs {
     display: none !important;
+  }
+}
+
+/* F0.12.08: entre 768 e 1259 px os nomes não cabem ao lado do logotipo e das ferramentas; ficam só os ícones.
+   O nome continua para o leitor de tela (texto escondido visualmente) e aparece como dica (title). */
+@media (min-width: 768px) and (max-width: 1259px) {
+  .nav-tab-link .tab-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 }
 

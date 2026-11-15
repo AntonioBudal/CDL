@@ -971,7 +971,7 @@ onBeforeUnmount(() => {
               />
               <p v-if="isOwnBook && trayCounts.without_chapter > 0" class="tray-without-chapter">
                 {{ trayCounts.without_chapter === 1 ? '1 captura' : `${trayCounts.without_chapter} capturas` }} do livro sem capítulo.
-                <RouterLink :to="{ path: '/inbox', query: { livro: String(book.id) } }">Abrir na Mesa de Triagem</RouterLink>
+                <RouterLink :to="{ path: '/inbox', query: { livro: String(book.id) } }">Abrir na caixa de entrada</RouterLink>
               </p>
               <p class="list-caption">{{ studies.length }} {{ studies.length === 1 ? 'estudo salvo' : 'estudos salvos' }}</p>
               <div class="studies-view-stage">

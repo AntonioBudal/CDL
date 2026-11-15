@@ -60,7 +60,7 @@ test('113: telas, rotas, menus e API', () => {
   assert.match(router, /path: '\/sinteses\/:id\(\\\\d\+\)', name: 'synthesis'/)
   assert.match(read('components/layout/NavigationTabs.vue'), /routes: \['syntheses', 'synthesis'\]/)
   assert.match(read('components/navigation/MobileMoreMenu.vue'), /to="\/sinteses"/)
-  assert.match(read('components/layout/UserDropdown.vue'), /Cadernos de síntese/)
+  assert.match(read('components/layout/UserDropdown.vue'), /<span>Sínteses<\/span>/)
   const view = read('views/SynthesisView.vue')
   assert.match(view, /<EmbedBlock v-else-if="segment\.type === 'embed'"/)
   assert.match(view, /Marca de trecho não reconhecida/)

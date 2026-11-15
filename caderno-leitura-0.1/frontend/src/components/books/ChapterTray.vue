@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * F0.11.02 (spec 104): bandeja do capítulo — capturas pendentes (status "inbox") do capítulo escolhido, com
- * "Virar estudo" (Importar com a captura), "Arquivar" e "Abrir na Mesa de Triagem".
+ * "Virar estudo" (Importar com a captura), "Arquivar" e "Abrir na caixa de entrada".
  */
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
@@ -145,7 +145,7 @@ function captureHere() {
               {{ archivingId === capture.id ? 'Arquivando…' : 'Arquivar' }}
             </button>
             <RouterLink :to="{ path: '/inbox', query: { livro: String(bookId) } }" class="chapter-tray-link">
-              Abrir na Mesa de Triagem
+              Abrir na caixa de entrada
             </RouterLink>
           </div>
         </li>

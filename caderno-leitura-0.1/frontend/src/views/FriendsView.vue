@@ -117,10 +117,10 @@ onMounted(async () => {
       <div class="header-titles">
         <h1 class="page-title">
           <Icon name="users" :size="28" />
-          <span>Salão Literário & Círculos de Estudo</span>
+          <span>Amigos</span>
         </h1>
         <p class="header-subtitle muted">
-          Conecte-se com outros leitores, acompanhe estudos mútuos e gerencie sua correspondência intelectual no Leitorum.
+          Encontre leitores, veja leituras em comum e responda aos pedidos de amizade.
         </p>
       </div>
 

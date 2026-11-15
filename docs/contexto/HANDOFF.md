@@ -78,8 +78,8 @@ F0.12.01 versão no rodapé e "Evolução das versões" (spec 114, **concluída*
 `/compartilhado/:id` (spec 115, **concluída**; versão `0.12.0-alpha.2`; migração `0040`) · F0.12.03 importadores (spec 116, **concluída**;
 versão `0.12.0-alpha.3`; Readwise sem conferência com arquivo real) · F0.12.04 feeds RSS/Atom/JSON (spec 117, **concluída**; versão `0.12.0-alpha.4`) · F0.12.05 exportar o livro em JSON Canvas (spec 118, **concluída**; versão `0.12.0-alpha.5`) · F0.12.06 oclusão de imagem
 (spec 119, **concluída**; versão `0.12.0-alpha.6`; migração `0041`, falta rodar no banco ativo) · F0.12.07 círculos de leitura com trava
-anti-spoiler (spec 120, **concluída**; versão `0.12.0-alpha.7`; migração `0042`, falta rodar no banco ativo; sem aviso no sininho) · F0.12.08 simplificação de nomes (auditoria pronta no
-roadmap) · F0.12.09 seletor de idioma (**só a fundação**, decisão do usuário em 2026-11-14) · F0.12.10 pequenas melhorias de
+anti-spoiler (spec 120, **concluída**; versão `0.12.0-alpha.7`; migração `0042`, falta rodar no banco ativo; sem aviso no sininho) · F0.12.08 simplificação de nomes (spec 121, **concluída**; versão
+`0.12.0-alpha.8`) · F0.12.09 seletor de idioma (**só a fundação**, decisão do usuário em 2026-11-14) · F0.12.10 pequenas melhorias de
 usabilidade (calendário do Painel, barra de ações fixa no estudo, menu de 3 pontos no celular, cabeçalho do estudo).
 
 **Lote 1 do 0.12 fechado (F0.12.01–05):** `npm test` 811/811 e `pytest` completo 884 passou, 4 pulados (teste antigo de
@@ -90,7 +90,7 @@ indexação de `/compartilhado/1` corrigido em commit próprio). Próximo lote: 
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **121**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **122**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,

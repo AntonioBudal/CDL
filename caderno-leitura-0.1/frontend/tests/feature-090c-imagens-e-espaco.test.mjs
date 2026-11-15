@@ -50,7 +50,7 @@ test('validade em texto: dias, hoje, mantida e não expira', () => {
   assert.match(shortDate('2026-10-27T12:00:00Z'), /^\d{2}\/\d{2}\/2026$/)
 })
 
-// --- Minhas Imagens e Espaço ------------------------------------------------------------------
+// --- Minhas imagens ------------------------------------------------------------------
 
 function spaceGateway(overrides = {}) {
   const calls = { bulk: [], remove: [], keep: [], list: 0 }
@@ -208,22 +208,22 @@ test('caixa marcada: a foto vai depois do estudo, para o estudo salvo', async ()
 
 test('falha ao guardar a foto vira aviso e o estudo continua salvo', async () => {
   const { draft } = await reviewDraft(async () => {
-    throw new ApiError('Seu espaço está cheio: 1 GB de 1 GB. Libere espaço em Minhas Imagens e Espaço.', 507, { code: 'user_quota' })
+    throw new ApiError('Seu espaço está cheio: 1 GB de 1 GB. Libere espaço em Minhas imagens.', 507, { code: 'user_quota' })
   }, true)
   const saved = await draft.save()
   assert.equal(saved.id, 77)
   assert.equal(draft.state.phase, 'saved')
-  assert.match(draft.state.photoWarning, /Minhas Imagens e Espaço/)
+  assert.match(draft.state.photoWarning, /Minhas imagens/)
   draft.reset()
   assert.equal(draft.state.keepPhoto, false, 'a próxima página volta desmarcada')
 })
 
 // --- Telas -------------------------------------------------------------------------------------
 
-test('rota e atalhos para Minhas Imagens e Espaço', () => {
+test('rota e atalhos para Minhas imagens', () => {
   const router = read('router/index.ts')
   assert.ok(router.includes("path: '/minhas-imagens'"))
-  assert.ok(router.includes("title: 'Minhas Imagens e Espaço'"))
+  assert.ok(router.includes("title: 'Minhas imagens'"))
   assert.ok(read('components/layout/UserDropdown.vue').includes('to="/minhas-imagens"'))
   assert.ok(read('views/SettingsView.vue').includes('to="/minhas-imagens"'))
 })
@@ -243,7 +243,7 @@ test('telas novas: textos, alvos de 44 px, foco visível e nenhum emoji', () => 
   ]
   for (const file of files) assert.ok(!emojiRegex.test(read(file)), `sem emoji: ${file}`)
   const view = read('views/MediaSpaceView.vue')
-  assert.ok(view.includes('Minhas Imagens e Espaço') && view.includes('Liberar espaço'))
+  assert.ok(view.includes('Minhas imagens') && view.includes('Liberar espaço'))
   assert.ok(view.includes('Digitalizar uma página'))
   const card = read('components/media/MediaCard.vue')
   assert.ok(card.includes('loading="lazy"') && card.includes(':aria-pressed="item.keep_forever"'))

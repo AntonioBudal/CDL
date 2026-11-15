@@ -259,12 +259,12 @@ onBeforeUnmount(() => {
   <div class="import-view">
     <div class="import-studio-view">
       <header class="page-header">
-        <p class="eyebrow">Ateliê de Fichamento</p>
-        <h1>Importar Fichamento</h1>
+        <p class="eyebrow">Importar</p>
+        <h1>Importar fichamento</h1>
       </header>
 
       <!-- Card Editorial de Convite: Digitalizar Caderno Manuscrito (feature 086) -->
-      <div class="digitize-invitation-card" role="region" aria-label="Digitalizar Caderno Manuscrito">
+      <div class="digitize-invitation-card" role="region" aria-label="Digitalizar caderno">
         <div class="invitation-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -272,7 +272,7 @@ onBeforeUnmount(() => {
         </div>
         <div class="invitation-content">
           <div class="invitation-headline">
-            <h2 class="invitation-title">Caderno Manuscrito</h2>
+            <h2 class="invitation-title">Digitalizar caderno</h2>
             <span class="invitation-badge">Rascunho a revisar</span>
           </div>
           <p class="invitation-desc">
@@ -293,10 +293,10 @@ onBeforeUnmount(() => {
     <!-- Banner de Promoção de Captura do Inbox -->
     <div v-if="promotingCapture" class="notice info promotion-banner" role="status">
       <p>
-        <strong>Promovendo Captura do Inbox:</strong>
+        <strong>Transformando em estudo uma captura da caixa de entrada:</strong>
         "{{ promotingCapture.content.length > 120 ? promotingCapture.content.slice(0, 120) + '...' : promotingCapture.content }}"
       </p>
-      <RouterLink to="/inbox" class="text-link">Cancelar promoção e voltar ao Inbox</RouterLink>
+      <RouterLink to="/inbox" class="text-link">Cancelar e voltar à caixa de entrada</RouterLink>
     </div>
 
     <!-- Tela de Salvamento Concluído -->
@@ -386,7 +386,7 @@ onBeforeUnmount(() => {
         <p v-if="state.saveError" class="notice error" role="alert">{{ state.saveError }}</p>
 
         <!-- Abas responsivas para telas intermediárias (< 1024px) -->
-        <div class="mobile-studio-tabs" role="tablist" aria-label="Abas do Ateliê">
+        <div class="mobile-studio-tabs" role="tablist" aria-label="Abas da importação">
           <button
             type="button"
             role="tab"

@@ -74,14 +74,14 @@ export interface ExitShortcut {
 export const DIGITIZE_EXIT_SHORTCUTS: readonly ExitShortcut[] = [
   {
     title: 'Importar fichamento digitado',
-    description: 'Cole trechos copiados do seu leitor de e-books ou digite anotações no Ateliê de Fichamento.',
+    description: 'Cole trechos copiados do seu leitor de e-books ou digite anotações na tela de importar.',
     routePath: '/importar',
-    actionLabel: 'Abrir Ateliê de Fichamento',
+    actionLabel: 'Abrir Importar',
   },
   {
-    title: 'Anotar na Caixa de Entrada',
-    description: 'Despeje ideias rápidas, citações soltas ou pensamentos sem necessidade de classificação prévia.',
+    title: 'Anotar na caixa de entrada',
+    description: 'Anote ideias rápidas, citações soltas ou pensamentos, sem precisar classificar antes.',
     routePath: '/inbox',
-    actionLabel: 'Ir para Caixa de Entrada',
+    actionLabel: 'Ir para a caixa de entrada',
   },
 ] as const

@@ -84,7 +84,7 @@ test('US1: HighlightsLibraryView.vue possui esqueleto de loading, modos de visã
   const content = fs.readFileSync(highlightsLibraryViewPath, 'utf-8')
 
   // Estrutura principal
-  assert.match(content, /Destaques e Anotações/)
+  assert.match(content, /<h1 class="page-title">Destaques<\/h1>/)
   assert.match(content, /HighlightFilterToolbar/)
   assert.match(content, /HighlightCard/)
 

@@ -629,7 +629,7 @@ def format_study_digest_markdown(
     if questions:
         lines.append("---")
         lines.append("")
-        lines.append("## 1. Perguntas de Retenção (Active Recall)")
+        lines.append("## 1. Perguntas de retenção (para lembrar sem olhar)")
         lines.append("")
         for idx, q in enumerate(questions, 1):
             q_text = q.note.strip() if q.note else "Pergunta sem enunciado"
@@ -875,7 +875,7 @@ def format_book_digest_markdown(
     if all_questions:
         lines.append("---")
         lines.append("")
-        lines.append("## 1. Perguntas de Retenção (Active Recall)")
+        lines.append("## 1. Perguntas de retenção (para lembrar sem olhar)")
         lines.append("")
         for idx, (ch, st, q) in enumerate(all_questions, 1):
             q_text = q.note.strip() if q.note else "Pergunta sem enunciado"

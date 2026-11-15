@@ -699,7 +699,7 @@ def test_export_study_digest_markdown_study_mode_success(client_and_db):
     assert "total_occlusions: 1" in body
     assert "total_notes: 2" in body
     assert "# Caderno de Revisão — Estudo de Leitura Ativa" in body
-    assert "## 1. Perguntas de Retenção (Active Recall)" in body
+    assert "## 1. Perguntas de retenção (para lembrar sem olhar)" in body
     assert "Por que o conhecimento formal é considerado limitado?" in body
     assert "**Resposta:** limitado" in body
     assert "## 2. Termos Ocluídos (Cloze Deletion)" in body
@@ -810,7 +810,7 @@ def test_export_study_digest_exercise_mode_markdown(client_and_db):
 
     assert 'mode: "exercise"' in body
     assert "*Resposta:* __________________________________________________" in body
-    assert "## 1. Perguntas de Retenção (Active Recall)" in body
+    assert "## 1. Perguntas de retenção (para lembrar sem olhar)" in body
     assert "[ _______ ]" in body
 
     assert "## Gabarito de Revisão" in body

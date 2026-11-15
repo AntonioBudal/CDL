@@ -60,14 +60,14 @@ function handleReviewAgain() {
       </div>
 
       <h2 v-if="!hasEligibleItems" class="hero-title">
-        Sua Bancada de Fixação Cognitiva está Pronta
+        Sua revisão está pronta
       </h2>
       <h2 v-else class="hero-title">
         Meta Diária Concluída com Constância
       </h2>
 
       <p v-if="!hasEligibleItems" class="hero-subtitle">
-        A Central de Revisão transforma o hábito passivo de reler em <strong>estudo ativo</strong>.
+        A Revisão transforma o hábito passivo de reler em <strong>estudo ativo</strong>.
         Experimente a mecânica de fixação abaixo:
       </p>
       <p v-else class="hero-subtitle">
@@ -105,7 +105,7 @@ function handleReviewAgain() {
             </svg>
           </div>
           <p class="feedback-text">
-            <strong>Isto é Active Recall:</strong> ao tentar preencher o vazio mental antes de conferir a resposta,
+            <strong>Isto é lembrar sem olhar:</strong> ao tentar preencher o vazio mental antes de conferir a resposta,
             seu cérebro consolida sinapses duradouras. No Leitorum, você cria esses cartões grifando passagens nos livros.
           </p>
           <button

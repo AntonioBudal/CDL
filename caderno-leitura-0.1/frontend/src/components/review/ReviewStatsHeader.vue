@@ -78,7 +78,7 @@ function onStartPractice() {
 </script>
 
 <template>
-  <header class="review-stats-header" role="region" aria-label="Bancada de Prontidão e Filtros de Revisão">
+  <header class="review-stats-header" role="region" aria-label="Prontidão e filtros da revisão">
     <!-- Barra Unificada de Prontidão Intelectual (Substitui os 5 cards isolados de estilo SaaS) -->
     <div class="readiness-banner">
       <div class="readiness-summary">

@@ -56,7 +56,7 @@ test('rota /digitalizar mantém alias, nome, título e componente', () => {
   assert.ok(router.includes("alias: ['/scan']"))
   assert.ok(router.includes("name: 'digitize-notebook'"))
   assert.ok(router.includes('component: DigitizeNotebookView'))
-  assert.ok(router.includes("title: 'Digitalizar Caderno'"))
+  assert.ok(router.includes("title: 'Digitalizar caderno'"))
 })
 
 test('tela oferece câmera e arquivo com formatos restritos, sem getUserMedia', () => {

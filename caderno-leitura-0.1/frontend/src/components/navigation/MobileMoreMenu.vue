@@ -125,7 +125,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="user" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Meu Perfil</span>
+            <span class="drawer-item-label">Meu perfil</span>
           </RouterLink>
 
           <RouterLink
@@ -134,11 +134,11 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="inbox" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Caixa de Entrada</span>
+            <span class="drawer-item-label">Caixa de entrada</span>
             <span
               v-if="inboxCount > 0"
               class="drawer-item-badge"
-              :aria-label="`Caixa de Entrada: ${inboxCount} itens pendentes`"
+              :aria-label="`Caixa de entrada: ${inboxCount} itens pendentes`"
             >
               {{ inboxCount > 99 ? '99+' : inboxCount }}
             </span>
@@ -150,7 +150,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="users" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Salão de Amigos</span>
+            <span class="drawer-item-label">Amigos</span>
             <span
               v-if="pendingFriendsCount > 0"
               class="drawer-item-badge"
@@ -182,7 +182,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="plus" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Importar Estudo</span>
+            <span class="drawer-item-label">Importar</span>
           </RouterLink>
 
           <RouterLink
@@ -200,7 +200,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="book-open" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Léxico</span>
+            <span class="drawer-item-label">Conceitos</span>
           </RouterLink>
 
           <RouterLink
@@ -237,7 +237,7 @@ onUnmounted(() => {
             @click="emit('close')"
           >
             <Icon name="sliders" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Ajustes & Conexão</span>
+            <span class="drawer-item-label">Ajustes</span>
           </RouterLink>
 
           <RouterLink
@@ -257,7 +257,7 @@ onUnmounted(() => {
             @click="emit('logout'); emit('close')"
           >
             <Icon name="log-out" :size="20" class="drawer-item-icon" />
-            <span class="drawer-item-label">Encerrar Sessão</span>
+            <span class="drawer-item-label">Sair</span>
           </button>
         </nav>
       </div>

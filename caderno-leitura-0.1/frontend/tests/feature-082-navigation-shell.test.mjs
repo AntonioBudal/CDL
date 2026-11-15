@@ -12,7 +12,7 @@ test('F082-US1: NavigationTabs.vue inclui Dashboard e Livros simultaneamente no 
 
   // Verifica que Dashboard e Livros são itens primários simultâneos
   assert.ok(content.includes("to: '/dashboard'"), 'Deve conter rota para /dashboard como item primário')
-  assert.ok(content.includes("label: 'Dashboard'"), 'Deve conter rótulo Dashboard')
+  assert.ok(content.includes("label: 'Painel'"), 'Deve conter rótulo Painel (F0.12.08)')
   assert.ok(content.includes("to: '/livros'"), 'Deve conter rota para /livros como item primário')
   assert.ok(content.includes("label: 'Livros'"), 'Deve conter rótulo Livros')
 

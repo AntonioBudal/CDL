@@ -121,7 +121,7 @@ def reserve(session: Session, user_id: str, media_id: str, nbytes: int) -> None:
             raise QuotaExceeded(
                 "user_quota",
                 f"Seu espaço está cheio: {human_bytes(user['used_bytes'])} de {human_bytes(user['quota_bytes'])}. "
-                "Libere espaço em Minhas Imagens e Espaço.",
+                "Libere espaço em Minhas imagens.",
                 view_for(current, is_admin=False),
             )
         free = server["disk_free_bytes"]
@@ -130,7 +130,7 @@ def reserve(session: Session, user_id: str, media_id: str, nbytes: int) -> None:
         ):
             raise QuotaExceeded(
                 "server_quota",
-                "O servidor está sem espaço para novas imagens. Libere espaço em Minhas Imagens e Espaço ou "
+                "O servidor está sem espaço para novas imagens. Libere espaço em Minhas imagens ou "
                 "avise o administrador.",
                 view_for(current, is_admin=False),
             )

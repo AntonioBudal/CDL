@@ -389,10 +389,9 @@ onMounted(loadTrash)
   <div class="trash-container wrap">
     <header class="page-header trash-header">
       <div class="title-area">
-        <p class="eyebrow">Gerenciamento de Acervo</p>
         <h1>Lixeira</h1>
         <p class="intro">
-          Itens descartados são mantidos por até 30 dias antes do expurgo automático permanente.
+          Itens excluídos ficam aqui por 30 dias e depois são apagados de vez.
         </p>
       </div>
       <div v-if="totalCount > 0" class="header-actions">

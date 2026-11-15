@@ -322,7 +322,7 @@ onBeforeUnmount(() => {
       v-if="canEdit"
       type="button"
       class="toolbar-btn"
-      title="Ocultar trecho (Active Recall)"
+      title="Ocultar trecho (para lembrar sem olhar)"
       aria-label="Ocultar trecho para estudo ativo"
       @click="triggerOcclude"
     >

@@ -117,7 +117,7 @@ const formattedDuration = computed(() => {
           class="btn-primary"
           @click="emit('close')"
         >
-          Retornar à Central de Revisão
+          Voltar à Revisão
         </button>
       </div>
     </div>

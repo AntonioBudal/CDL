@@ -73,7 +73,7 @@ export function useQuickCapture() {
       close()
       return created
     } catch (err: unknown) {
-      errorMessage.value = err instanceof Error ? err.message : 'Falha ao salvar captura no Inbox.'
+      errorMessage.value = err instanceof Error ? err.message : 'Falha ao salvar captura na caixa de entrada.'
       return null
     } finally {
       isSubmitting.value = false

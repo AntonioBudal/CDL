@@ -249,14 +249,14 @@ onUnmounted(() => {
     <!-- MODO 1: HUB CENTRAL E SELEÇÃO DE ESCOPO -->
     <div v-if="!isSessionActive" class="hub-container">
       <div class="hub-header">
-        <h1 class="page-title">Central de Revisão</h1>
+        <h1 class="page-title">Revisão</h1>
         <p class="page-subtitle">
-          Bancada de Fixação Cognitiva: pratique Active Recall com perguntas e termos ocultos.
+          Pratique lembrando: responda às perguntas e complete os trechos escondidos.
         </p>
       </div>
 
       <!-- Abas da Central de Revisão -->
-      <div class="hub-tabs-nav" role="tablist" aria-label="Navegação da Central de Revisão">
+      <div class="hub-tabs-nav" role="tablist" aria-label="Navegação da Revisão">
         <button
           type="button"
           role="tab"
@@ -305,7 +305,7 @@ onUnmounted(() => {
         <!-- F0.11.08: "Conceitos" sem nenhum conceito definido -->
         <p v-if="isConceptMode && !loadingStats && stats.total_eligible === 0" class="concept-empty notice">
           Ainda não há conceitos para praticar. Escreva na seção Conceitos de um estudo uma linha como
-          <code>**Termo**: definição</code>; cada conceito do <RouterLink to="/conceitos">Léxico</RouterLink> vira um cartão.
+          <code>**Termo**: definição</code>; cada conceito do <RouterLink to="/conceitos">Conceitos</RouterLink> vira um cartão.
         </p>
 
         <!-- F0.12.06: "Imagens" sem nenhum cartão de imagem -->
@@ -415,7 +415,7 @@ onUnmounted(() => {
         <button
           type="button"
           class="btn-exit-session"
-          aria-label="Voltar para a Central de Revisão"
+          aria-label="Voltar para a Revisão"
           @click="exitSession"
         >
           ← Voltar ao Hub

@@ -79,7 +79,7 @@ onMounted(load)
 <template>
   <section class="syntheses-view wrap" aria-labelledby="syntheses-heading">
     <header class="page-header">
-      <p class="eyebrow">Cadernos de síntese</p>
+      <p class="eyebrow">Seus textos</p>
       <h1 id="syntheses-heading">Sínteses</h1>
       <p class="syntheses-lead">
         Textos seus que atravessam livros e estudos. Trechos transcluídos mostram sempre o conteúdo atual do estudo,

@@ -124,7 +124,7 @@ async function handleSave() {
         <header class="quick-capture-header">
           <div class="header-titles">
             <span class="eyebrow">Captura Rápida</span>
-            <h2 id="quick-capture-title" class="title">Novo Pensamento no Inbox</h2>
+            <h2 id="quick-capture-title" class="title">Nova ideia na caixa de entrada</h2>
           </div>
           <button
             type="button"
@@ -226,7 +226,7 @@ async function handleSave() {
                 :disabled="submitting || !content.trim()"
               >
                 <Icon v-if="submitting" name="refresh-cw" size="sm" class="animate-spin" />
-                <span>{{ submitting ? 'Salvando...' : 'Salvar no Inbox' }}</span>
+                <span>{{ submitting ? 'Salvando...' : 'Salvar na caixa de entrada' }}</span>
               </button>
             </div>
           </footer>

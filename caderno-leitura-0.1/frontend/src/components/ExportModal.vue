@@ -223,7 +223,7 @@ async function handleDownload() {
                   type="checkbox"
                 />
                 <div class="checkbox-label">
-                  <strong>Destaques e Anotações no Texto</strong>
+                  <strong>Destaques e notas no texto</strong>
                   <span class="checkbox-desc">Preserva grifos visuais e notas de rodapé integradas ao texto.</span>
                 </div>
               </label>

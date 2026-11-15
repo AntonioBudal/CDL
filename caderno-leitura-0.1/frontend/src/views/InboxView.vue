@@ -274,10 +274,9 @@ onUnmounted(() => {
     <!-- Cabeçalho Editorial -->
     <header class="page-header">
       <div class="header-content">
-        <p class="eyebrow">Triagem e Captura</p>
-        <h1 class="page-title">Mesa de Triagem</h1>
+        <h1 class="page-title">Caixa de entrada</h1>
         <p class="page-subtitle">
-          Descarrego imediato e organização de pensamentos provisórios antes de formalizá-los em estudos.
+          Anote ideias rápidas e decida depois o que vira estudo.
         </p>
       </div>
 
@@ -289,7 +288,7 @@ onUnmounted(() => {
     </header>
 
     <!-- Campo Permanente Superior: Quick Thought Drop -->
-    <section class="quick-drop-section" aria-label="Área de Despejo de Pensamentos">
+    <section class="quick-drop-section" aria-label="Anotar uma ideia rápida">
       <QuickThoughtDrop
         ref="quickThoughtDropRef"
         @created="onCaptureCreated"

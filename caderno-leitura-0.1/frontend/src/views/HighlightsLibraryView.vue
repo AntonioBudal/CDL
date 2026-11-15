@@ -273,14 +273,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="highlights-library-view" aria-label="Biblioteca de Destaques e Anotações">
+  <main class="highlights-library-view" aria-label="Destaques">
     <div class="library-container">
       <!-- Cabeçalho Principal -->
       <header class="library-header">
         <div class="header-titles">
-          <h1 class="page-title">Destaques e Anotações</h1>
+          <h1 class="page-title">Destaques</h1>
           <p class="page-subtitle">
-            Explore, pesquise e organize todas as passagens marcadas e reflexões dos seus estudos.
+            Os trechos que você marcou e as notas que escreveu.
           </p>
         </div>
       </header>
