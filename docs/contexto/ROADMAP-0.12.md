@@ -20,9 +20,11 @@ suítes completas a cada 5 features, commit em português, push só quando o usu
 | Correção depois de fechado | `0.MINOR.PATCH` | `0.11.1` |
 | Compilação (só no Painel de Sistema e na dica do rodapé, não no texto) | `+<commit curto>` | `0.12.0-alpha.2+a1b2c3d` |
 
-- `MAJOR` fica em `0` até a 1.0. Fonte única da versão: um arquivo no repositório lido pelo backend (`__version__`) e
-  pelo build do frontend; hoje os dois estão parados em `0.2.0-alpha.1`.
-- Cada feature do 0.12, ao ser concluída, sobe o `alpha.N` no mesmo commit.
+- `MAJOR` fica em `0` até a 1.0. Fonte única: **`caderno-leitura-0.1/VERSION`**, lida pelo backend (`app.__version__`,
+  `/api/health`, Painel de Sistema) e pelo build (`__APP_VERSION__`); o `package.json`/`package-lock.json` acompanham.
+- Cada feature do 0.12, ao ser concluída, sobe o `alpha.N` em `VERSION`, `package.json` e `package-lock.json` e marca
+  `done: true` em `frontend/src/data/versionHistory.ts`, no mesmo commit (um teste confere que `alpha.N` = features
+  entregues). Ao fechar o roadmap: `0.12.0`, `status: 'closed'` e `closed` com a data.
 
 ---
 
@@ -30,7 +32,7 @@ suítes completas a cada 5 features, commit em português, push só quando o usu
 
 | # | Feature | Notas |
 |---|---|---|
-| F0.12.01 | **Versão no rodapé e "Evolução das versões"** | Ver abaixo. Spec **114**. |
+| F0.12.01 | **Versão no rodapé e "Evolução das versões"** | **Concluída em 2026-11-14** (versão `0.12.0-alpha.1`). Spec **114**. |
 | F0.12.02 | **Estudos publicados na web** (`/compartilhado/:id`, indexável) | O antigo item "cadernos públicos indexáveis". Rascunho de spec já escrito (spec **115**, ainda não aprovado); fecha a pendência do HANDOFF §5 sobre `/compartilhado/{id}`. |
 | F0.12.03 | **Importadores:** Readwise, Goodreads, StoryGraph, Omnivore, BookWyrm | Pode virar mais de uma feature (um formato por fatia), decidido na spec. |
 | F0.12.04 | **Feeds RSS, Atom e JSON** | Depende da F0.12.02 (só o que está publicado entra em feed). |

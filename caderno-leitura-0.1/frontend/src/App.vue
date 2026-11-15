@@ -14,7 +14,10 @@ import QuickCaptureModal from './components/inbox/QuickCaptureModal.vue'
 import MobileMoreMenu from './components/navigation/MobileMoreMenu.vue'
 import GlobalHeader from './components/layout/GlobalHeader.vue'
 import MobileTabBar from './components/layout/MobileTabBar.vue'
+import { appVersion, buildCommit, fullVersion } from './utils/appVersion.ts'
 
+const appVersionText = appVersion()
+const appVersionDetail = fullVersion(appVersionText, buildCommit())
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
@@ -132,6 +135,9 @@ const isMoreMenuOpen = ref(false)
       <RouterLink to="/apoie" class="footer-support-link">Apoie o Leitorum</RouterLink>
       <span class="footer-sep" aria-hidden="true">·</span>
       <a class="footer-license" href="https://github.com/AntonioBudal/CDL" target="_blank" rel="noopener noreferrer">Código-fonte público</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <!-- F0.12.01: versão SemVer; o commit só na dica. Não é link: a tela de versões fica escondida no Sobre. -->
+      <span class="footer-version" :title="`Versão ${appVersionDetail}`" :aria-label="`Versão ${appVersionText}`" tabindex="0">v{{ appVersionText }}</span>
     </div>
   </footer>
   <GlobalSearchModal />
@@ -184,6 +190,16 @@ const isMoreMenuOpen = ref(false)
 .footer-brand {
   font-weight: 600;
   color: var(--color-text);
+}
+
+.footer-version {
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.footer-version:focus-visible {
+  outline: 2px solid var(--ring-focus);
+  outline-offset: 2px;
 }
 
 .footer-sep {

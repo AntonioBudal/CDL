@@ -38,6 +38,8 @@ export const router = createRouter({
         description: 'Conheça o Leitorum, sua metodologia de leitura em 4 partes, princípios de privacidade e arquitetura local-first.',
       },
     },
+    // F0.12.01: "Evolução das versões" — escondida (sem menu; só o botão no fim do Sobre), pública e fora dos buscadores.
+    { path: '/sobre/versoes', name: 'versions', component: () => import('../views/VersionsView.vue'), meta: { title: 'Evolução das versões', public: true, noindex: true } },
     { path: '/dashboard', name: 'dashboard', component: () => import('../views/DashboardView.vue'), meta: { title: 'Dashboard' } },
     { path: '/inbox', alias: ['/caixa-de-entrada'], name: 'inbox', component: () => import('../views/InboxView.vue'), meta: { title: 'Caixa de Entrada' } },
     { path: '/inbox/importar-leitor', name: 'ereader-import', component: () => import('../views/EreaderImportView.vue'), meta: { title: 'Importar de leitor digital' } },
@@ -154,7 +156,7 @@ router.afterEach((to) => {
     title,
     description,
     canonicalUrl,
-    robots: isPublic ? 'index, follow' : 'noindex, nofollow',
+    robots: isPublic && to.meta.noindex !== true ? 'index, follow' : 'noindex, nofollow',
     ogType: 'website',
   })
 })

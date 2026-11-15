@@ -73,7 +73,7 @@ Em 2026-11-14 o usuário renomeou o Roadmap 1.0 para **0.12** (a 1.0 ainda está
 feature, a versão no rodapé e a tela escondida "Evolução das versões". Detalhes, ordem e convenção de versão
 (SemVer 2.0.0, `0.12.0-alpha.N`): **`docs/contexto/ROADMAP-0.12.md`**.
 
-F0.12.01 versão no rodapé e "Evolução das versões" (spec 114) · F0.12.02 estudos publicados na web,
+F0.12.01 versão no rodapé e "Evolução das versões" (spec 114, **concluída**; versão `0.12.0-alpha.1`) · F0.12.02 estudos publicados na web,
 `/compartilhado/:id` (rascunho em `specs/115-estudos-publicados/`, não aprovado) · importadores (Readwise, Goodreads,
 StoryGraph, Omnivore, BookWyrm) · feeds RSS/Atom/JSON · quadro espacial com exportação JSON Canvas · oclusão de imagem
 em SVG · círculos de leitura com trava anti-spoiler.
@@ -83,12 +83,18 @@ em SVG · círculos de leitura com trava anti-spoiler.
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **114**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **116** (a 115 está reservada ao rascunho dos
+  estudos publicados).
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,
   curta: `feature — …`, `correção — …`, `docs — …`, com a linha `Co-Authored-By` de sempre.
 - **Push** só quando o usuário pedir. Nunca commitar `query`, `stop` nem `.claude/`.
+- **Versão (desde a F0.12.01):** SemVer 2.0.0, fonte única em `caderno-leitura-0.1/VERSION`. Ao concluir cada feature
+  do roadmap em andamento, no mesmo commit: subir o `alpha.N` em `VERSION`, `frontend/package.json` e
+  `frontend/package-lock.json` (as duas entradas) e marcar `done: true` em `frontend/src/data/versionHistory.ts` (o
+  teste `feature-114-versoes` cobra). Ao fechar o roadmap: `0.MINOR.0` e a entrada `closed`. Detalhes em
+  `docs/contexto/ROADMAP-0.12.md`.
 - **Migração de banco:** só com pedido explícito e backup verificado (AGENTS.md §2).
 - **Dados reais:** nunca ler, nem para contar (AGENTS.md §1). Validação sempre com dados fictícios.
 
@@ -170,5 +176,7 @@ em SVG · círculos de leitura com trava anti-spoiler.
 - **Licença:** o repositório não tem arquivo de licença. Desde a F0.10.10 nenhum texto diz "software livre"; o
   rodapé diz "Código-fonte público". Escolher uma licença é decisão do dono.
 - **`ROADMAP-0.10.md`, `ROADMAP-0.11.md`:** ainda não escritos; este arquivo faz as vezes deles. O `ROADMAP-0.12.md`
-  existe desde 2026-11-14. A versão do app está parada em `0.2.0-alpha.1` (`package.json` e `app/__init__.py`) até
-  a F0.12.01.
+  existe desde 2026-11-14.
+- **`components/layout/AppFooter.vue`** não é usado (o rodapé real está no `App.vue`); remover ou adotar quando for
+  conveniente.
+- **Tags git** `v0.1.0` … `v0.11.0`: sugeridas na spec 114, só com pedido do usuário (o push das tags é público).

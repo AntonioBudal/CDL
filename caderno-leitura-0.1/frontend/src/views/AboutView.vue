@@ -167,6 +167,11 @@ const commitments: CommitmentItem[] = [
         <RouterLink to="/apoie" class="cta-btn secondary">Apoie o Leitorum</RouterLink>
       </div>
     </section>
+
+    <!-- F0.12.01: único caminho até a tela de versões (escondida; sem menu). -->
+    <p class="versions-entry-point">
+      <RouterLink to="/sobre/versoes" class="button quiet versions-button">Evolução das versões</RouterLink>
+    </p>
   </div>
 </template>
 
@@ -361,6 +366,19 @@ const commitments: CommitmentItem[] = [
   color: var(--color-muted);
   line-height: 1.5;
   margin: 0;
+}
+
+.versions-entry-point {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0 0;
+}
+
+.versions-button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
 }
 
 .cta-banner {

@@ -1603,3 +1603,23 @@ Spec aprovada com as recomendações Q1 a Q5:
   validado em `D:\Leitorum\backups\`, a raiz de armazenamento) e reiniciou o serviço, que funciona. (Antes: sem as
   migrações 0034 a 0039, procedimento do
   HANDOFF, pelo usuário).
+
+## F0.12.01 — Versão no rodapé e "Evolução das versões" (2026-11-14)
+
+- **Contexto:** o usuário renomeou o Roadmap 1.0 para **0.12** (`docs/contexto/ROADMAP-0.12.md`) e pediu a versão no
+  rodapé (por norma estabelecida) e uma tela escondida com a evolução de cada roadmap. Spec, plano e tarefas em
+  `specs/114-versao-evolucao/`. **Sem migração.** Os estudos publicados na web (antigo rascunho 114) viraram a spec
+  **115**, ainda não aprovada.
+- **Versão:** SemVer 2.0.0; fonte única `caderno-leitura-0.1/VERSION` = `0.12.0-alpha.1` (estava parada em
+  `0.2.0-alpha.1`). Backend lê o arquivo (`app/__init__.py`); Vite embute `__APP_VERSION__`; `package.json` e
+  `package-lock.json` acompanham. `utils/appVersion.ts` (`parseSemver` com a expressão oficial do semver.org,
+  `fullVersion` com o commit como metadado de build).
+- **Rodapé** (`App.vue`, o rodapé real; `AppFooter.vue` não é usado): `v0.12.0-alpha.1`, sem link, dica com
+  `+<commit>`. Painel de Sistema mostra a versão da interface ao lado da do servidor.
+- **Tela** `views/VersionsView.vue` em `/sobre/versoes` (rota `versions`, `public` e `noindex`; o servidor já manda
+  `X-Robots-Tag: noindex`), só por um botão `.quiet` no fim do Sobre. Linha do tempo de `data/versionHistory.ts`
+  (0.1 a 0.12, escrita à mão dos documentos do projeto, com fontes no cabeçalho do arquivo).
+- **Testes:** `test_app_version.py` (2) e `feature-114-versoes.test.mjs` (4: SemVer, utilitário, histórico ordenado com
+  `alpha.N` = entregas, rodapé sem link e nenhum menu apontando para a tela); vizinhos verdes; build ok. Navegador:
+  rodapé com dica `0.12.0-alpha.1+0c8658c`, botão de 46 px no Sobre, tela com 12 roadmaps, `noindex`, contraste ≥
+  5,11:1 nos 10 temas, 375 e 1024 px sem rolagem lateral.

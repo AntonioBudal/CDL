@@ -13,6 +13,8 @@ const isAdmin = computed(() => authStore.isAdmin.value)
 
 const UNKNOWN = 'desconhecido'
 const interfaceCommit = __BUILD_COMMIT__ || UNKNOWN
+// F0.12.01: versão da interface (mesma fonte do servidor, caderno-leitura-0.1/VERSION).
+const interfaceVersion = __APP_VERSION__
 
 const status = ref<SystemStatus | null>(null)
 const loadError = ref('')
@@ -78,7 +80,7 @@ onMounted(load)
       </div>
       <div>
         <dt>Interface</dt>
-        <dd><code>{{ interfaceCommit }}</code></dd>
+        <dd>v{{ interfaceVersion }} · <code>{{ interfaceCommit }}</code></dd>
       </div>
       <div>
         <dt>Banco</dt>

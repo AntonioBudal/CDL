@@ -13,6 +13,15 @@ function buildCommit(): string {
   }
 }
 
+// Versão do app (F0.12.01): fonte única em caderno-leitura-0.1/VERSION (SemVer 2.0.0), lida também pelo backend.
+function appVersion(): string {
+  try {
+    return readFileSync(new URL('../VERSION', import.meta.url), 'utf8').trim() || '0.0.0-desconhecida'
+  } catch {
+    return '0.0.0-desconhecida'
+  }
+}
+
 // Tema e fonte aplicados antes da primeira pintura (F0.10.02): no build, o bootstrap sai como arquivo clássico e
 // bloqueante (appearance-bootstrap.js), para a CSP não precisar de script inline; no dev, segue inline.
 const MARKER = '<!-- appearance-bootstrap -->'
@@ -28,6 +37,7 @@ function readBootstrap(): string {
 export default defineConfig({
   define: {
     __BUILD_COMMIT__: JSON.stringify(buildCommit()),
+    __APP_VERSION__: JSON.stringify(appVersion()),
   },
   plugins: [
     {
