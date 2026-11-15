@@ -13,8 +13,8 @@ de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/d
 - **`main`** está em dia com o trabalho até 2026-11-07: o lote 2 do 0.10 foi levado ao `main` por fast-forward a
   cada feature. **Push pendente** (o usuário faz) e, depois dele, `Restart-Service -Name Leitorum`.
 - **Roadmap 0.10 concluído.** **Roadmap 0.11:** lote 1 (F0.11.01 a .05) concluído e fechado em 2026-11-09 com as
-  suítes completas. **O banco ativo ainda não recebeu as migrações 0034 a 0039**: aplicar com o procedimento do §3
-  ("Migração no banco ativo") antes de reiniciar o serviço; um `upgrade head` aplica as seis.
+  suítes completas. O banco ativo foi migrado pelo usuário até a **0039** em 2026-11-14 (snapshot validado
+  `D:\Leitorum\backups\caderno-pre-migracao-20261115-004129.db`) e o serviço voltou a funcionar com o 0.11.
 
 ### Roadmap 0.10 (redesenho, segurança e ergonomia)
 
@@ -97,7 +97,9 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
   1. Parar o serviço (PowerShell como administrador): `Stop-Service -Name Leitorum`.
   2. Migrar, na pasta `caderno-leitura-0.1\backend` do checkout principal:
      `.\.venv\Scripts\python.exe -m alembic upgrade head`. Antes de mexer no banco, o Alembic cria e valida o
-     snapshot `backups\caderno-pre-migracao-AAAAMMDD-HHMMSS.db` (com cópia na segunda pasta de backups, se configurada)
+     snapshot `backups\caderno-pre-migracao-AAAAMMDD-HHMMSS.db` (hora em UTC) na pasta de backups da raiz de
+     armazenamento — nesta máquina, **`D:\Leitorum\backups\`**, não `backend\backups` (com cópia na segunda pasta de
+     backups, se configurada)
      e aborta a migração se o snapshot falhar.
   3. Conferir o snapshot: `.\.venv\Scripts\python.exe -m app.services.maintenance verificar-snapshot <caminho>`.
   4. Iniciar o serviço: `Start-Service -Name Leitorum` (ou `Restart-Service`).

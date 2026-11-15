@@ -1599,5 +1599,7 @@ Spec aprovada com as recomendações Q1 a Q5:
   pela contagem de chamadas chegava antes de o motor falso subir quando a máquina estava carregada (a suíte levou 20
   minutos, o dobro do normal). O produto estava certo; o teste passou a desconectar só depois que o motor gravou o
   rastro. Commit próprio `9a93645`; conferido 8 vezes seguidas; arquivo de digitalização inteiro 37/37 duas vezes.
-- Roadmap 0.11 concluído: F0.11.01 a F0.11.11. Banco ativo ainda sem as migrações 0034 a 0039 (procedimento do
+- Roadmap 0.11 concluído: F0.11.01 a F0.11.11. Em 2026-11-14 o usuário migrou o banco ativo até a 0039 (snapshot
+  validado em `D:\Leitorum\backups\`, a raiz de armazenamento) e reiniciou o serviço, que funciona. (Antes: sem as
+  migrações 0034 a 0039, procedimento do
   HANDOFF, pelo usuário).
