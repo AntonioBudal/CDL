@@ -1,7 +1,7 @@
 # HANDOFF — Leitorum (leia primeiro)
 
 **Atualizado em:** 2026-11-09, no fecho do lote 1 do 0.11 (conversa em worktree, levada ao `main`).
-**Para quem:** cada conversa nova de lote (0.10, 0.11, 1.0). Leia este arquivo, `AGENTS.md` e o roadmap do lote antes
+**Para quem:** cada conversa nova de lote (0.10, 0.11, 0.12). Leia este arquivo, `AGENTS.md` e o roadmap do lote antes
 de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/docs/contexto/RETOMADA.md`.
 
 ---
@@ -9,7 +9,8 @@ de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/d
 ## 1. Onde estamos
 
 - **Plano mestre** de 2026-11-01, renumerado para **0.10, 0.11 e 1.0** (os números 0.8 e 0.9 já eram roadmaps
-  entregues). **Prazo combinado:** terminar os três até **15/11/2026**, cerca de 2 features por dia.
+  entregues), com prazo de 15/11/2026. O 0.10 e o 0.11 foram entregues até 2026-11-14; nesse dia o usuário renomeou o
+  "1.0" para **0.12** (a 1.0 está longe). Prazo do 0.12: não definido.
 - **`main`** está em dia com o trabalho até 2026-11-07: o lote 2 do 0.10 foi levado ao `main` por fast-forward a
   cada feature. **Push pendente** (o usuário faz) e, depois dele, `Restart-Service -Name Leitorum`.
 - **Roadmap 0.10 concluído.** **Roadmap 0.11:** lote 1 (F0.11.01 a .05) concluído e fechado em 2026-11-09 com as
@@ -64,13 +65,18 @@ da correção abaixo), build ok. A suíte completa acusou 1 falha intermitente d
 carregada, ela chegava antes de o motor falso subir; corrigido só no teste, em commit próprio (`9a93645`), e conferido
 8 vezes seguidas sem falha.
 
-**Roadmap 0.11 concluído** (F0.11.01 a .11). Próximo: Roadmap 1.0 (abaixo), a começar pela spec 114.
+**Roadmap 0.11 concluído** (F0.11.01 a .11). Próximo: **Roadmap 0.12** (abaixo), a começar pela spec 114.
 
-### Roadmap 1.0 (comunidade e ecossistema) — nada iniciado
+### Roadmap 0.12 (antigo "1.0": comunidade, ecossistema e versões) — nada iniciado
 
-Cadernos públicos indexáveis (inclui criar a rota `/compartilhado/:id`, ver §5) · importadores (Readwise, Goodreads,
-StoryGraph, Omnivore, BookWyrm) · feeds RSS/Atom/JSON · quadro espacial com exportação JSON Canvas (o backend do canvas
-existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoiler (depende de ISBN e estados de leitura).
+Em 2026-11-14 o usuário renomeou o Roadmap 1.0 para **0.12** (a 1.0 ainda está longe) e acrescentou, como primeira
+feature, a versão no rodapé e a tela escondida "Evolução das versões". Detalhes, ordem e convenção de versão
+(SemVer 2.0.0, `0.12.0-alpha.N`): **`docs/contexto/ROADMAP-0.12.md`**.
+
+F0.12.01 versão no rodapé e "Evolução das versões" (spec 114) · F0.12.02 estudos publicados na web,
+`/compartilhado/:id` (rascunho em `specs/115-estudos-publicados/`, não aprovado) · importadores (Readwise, Goodreads,
+StoryGraph, Omnivore, BookWyrm) · feeds RSS/Atom/JSON · quadro espacial com exportação JSON Canvas · oclusão de imagem
+em SVG · círculos de leitura com trava anti-spoiler.
 
 ---
 
@@ -160,7 +166,9 @@ existe) · oclusão de imagem em SVG · círculos de leitura com trava anti-spoi
   `LEITORUM_TRUSTED_ORIGINS` (o log do serviço mostra qual foi recusada).
 - **Imagens externas** em estudos deixaram de carregar (CSP); caminho: enviar pela área de imagens.
 - **`/compartilhado/{id}`:** a rota não existe no frontend; desde a F0.10.10 o `robots.txt` e o sitemap não a
-  anunciam (`seo_service.PUBLIC_STUDY_PAGES_ENABLED = False`). Ligar quando os cadernos públicos do 1.0 criarem a rota.
+  anunciam (`seo_service.PUBLIC_STUDY_PAGES_ENABLED = False`). Ligar na F0.12.02 (estudos publicados, spec 115).
 - **Licença:** o repositório não tem arquivo de licença. Desde a F0.10.10 nenhum texto diz "software livre"; o
   rodapé diz "Código-fonte público". Escolher uma licença é decisão do dono.
-- **`ROADMAP-0.10.md`, `ROADMAP-0.11.md`, `ROADMAP-1.0.md`:** ainda não escritos; este arquivo faz as vezes deles até lá.
+- **`ROADMAP-0.10.md`, `ROADMAP-0.11.md`:** ainda não escritos; este arquivo faz as vezes deles. O `ROADMAP-0.12.md`
+  existe desde 2026-11-14. A versão do app está parada em `0.2.0-alpha.1` (`package.json` e `app/__init__.py`) até
+  a F0.12.01.
