@@ -22,7 +22,8 @@ const emit = defineEmits<{
 }>()
 
 const exportType = ref<ExportType>('full')
-const format = ref<ExportFormat>('markdown')
+// F0.12.05: 'canvas' = JSON Canvas (só no escopo livro; ignora as opções de documento)
+const format = ref<ExportFormat | 'canvas'>('markdown')
 const includeHighlights = ref(true)
 const exerciseMode = ref(false)
 const includeNotes = ref(true)
@@ -64,6 +65,18 @@ async function handleDownload() {
   if (downloading.value) return
   downloading.value = true
   downloadError.value = ''
+
+  if (format.value === 'canvas') {
+    try {
+      await api.exportBookCanvas(props.bookId)
+      emit('close')
+    } catch (error) {
+      downloadError.value = errorMessage(error)
+    } finally {
+      downloading.value = false
+    }
+    return
+  }
 
   const config: ExportConfig = {
     format: format.value,
@@ -186,10 +199,22 @@ async function handleDownload() {
                   <span class="format-desc">Texto simples legível com divisores ASCII, ideal para impressão rápida.</span>
                 </div>
               </label>
+              <label v-if="scope === 'book'" class="radio-card" :class="{ selected: format === 'canvas' }">
+                <input
+                  v-model="format"
+                  type="radio"
+                  name="export-format"
+                  value="canvas"
+                />
+                <div class="format-details">
+                  <strong class="format-name">JSON Canvas (Obsidian)</strong>
+                  <span class="format-desc">Quadro com um cartão por estudo (título e resumo), as relações como setas e um grupo por capítulo.</span>
+                </div>
+              </label>
             </div>
           </fieldset>
 
-          <fieldset v-if="exportType === 'full'" class="export-fieldset">
+          <fieldset v-if="exportType === 'full' && format !== 'canvas'" class="export-fieldset">
             <legend class="fieldset-legend">Opções do Documento</legend>
             <div class="content-options">
               <label class="checkbox-row">
@@ -250,7 +275,7 @@ async function handleDownload() {
             </div>
           </fieldset>
 
-          <fieldset v-else class="export-fieldset">
+          <fieldset v-else-if="format !== 'canvas'" class="export-fieldset">
             <legend class="fieldset-legend">Opções do Caderno de Revisão</legend>
             <div class="content-options">
               <label class="checkbox-row">

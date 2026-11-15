@@ -473,6 +473,8 @@ export const api = {
     const ext = config.format === 'markdown' ? 'md' : 'txt'
     return downloadExportFile(`/api/books/${id}/export?${qs}`, `livro-${id}.${ext}`)
   },
+  // F0.12.05: livro em JSON Canvas (.canvas)
+  exportBookCanvas: (id: number) => downloadExportFile(`/api/books/${id}/canvas/export`, `livro-${id}.canvas`),
   exportStudy: (id: number, config: ExportConfig) => {
     const qs = buildExportQuery(config)
     const ext = config.format === 'markdown' ? 'md' : 'txt'

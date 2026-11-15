@@ -1689,3 +1689,18 @@ Spec aprovada com as recomendações Q1 a Q5:
 - **Testes:** `test_feeds.py` (3: feed vazio válido; só publicados, ordem, escape de `<`, `&` e `]]>`, nada privado;
   ETag/304 e descoberta) e `feature-117-feeds` (1); vizinhos verdes; build ok. Navegador: feeds no servidor de
   validação; cartão em Ajustes em 375 px, botões de 46 px. Os links dos feeds usam `APP_BASE_URL`.
+
+## F0.12.05 — Exportar o livro em JSON Canvas (2026-11-15)
+
+- **Spec, plano e tarefas:** `specs/118-exportar-json-canvas/`. Quinta feature do 0.12. **Sem migração.** Versão
+  `0.12.0-alpha.5`. **Decisão do usuário:** só a exportação; o quadro na tela saiu na 0.9 e não volta.
+- **Exportação** (`services/json_canvas_export.py`, `GET /api/books/{id}/canvas/export`): arquivo `<título>.canvas` no
+  formato aberto JSON Canvas 1.0 (Obsidian). Cada estudo fora da lixeira vira nó de texto (`## Título` + Resumo ou a
+  primeira seção preenchida; nada de notas nem fichamento). Posições, tamanhos e cores salvos no quadro antigo são
+  mantidos; molduras viram grupos; relações viram setas com rótulo. Estudos sem posição entram numa coluna (grupo) por
+  capítulo, à direita do resto. Ids estáveis (`study-`, `frame-`, `chapter-`, `relation-`).
+- **Modal "Exportar anotações":** formato "JSON Canvas (Obsidian)" só no escopo livro; esconde as opções de documento.
+- **Testes:** `test_json_canvas_export.py` (3) e `feature-118-json-canvas` (2); build ok; navegador com dados fictícios.
+- **Fecho do lote 1 do 0.12:** `npm test` 811/811; `pytest` completo 884 passou, 4 pulados, depois de corrigir em
+  commit próprio o teste antigo de indexação de `/compartilhado/1` (desde a F0.12.02 o estudo não publicado é 404 com
+  `noindex`).

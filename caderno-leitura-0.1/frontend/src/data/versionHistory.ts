@@ -40,7 +40,7 @@ export const VERSION_HISTORY: RoadmapEntry[] = [
       'Versão no rodapé e esta linha do tempo',
       'Estudos publicados na web, em páginas que os buscadores encontram',
       'Importar de outros serviços de leitura e feeds para acompanhar publicações',
-      'Quadro espacial exportável, revisão sobre imagens e círculos de leitura sem spoilers',
+      'Livro exportável como quadro (JSON Canvas), revisão sobre imagens e círculos de leitura sem spoilers',
       'Nomes de telas mais simples e ajustes de usabilidade',
     ],
     features: [
@@ -48,7 +48,7 @@ export const VERSION_HISTORY: RoadmapEntry[] = [
       { id: 'F0.12.02', title: 'Estudos publicados na web', done: true },
       { id: 'F0.12.03', title: 'Importadores (Readwise, Goodreads, StoryGraph, Omnivore, BookWyrm)', done: true },
       { id: 'F0.12.04', title: 'Feeds RSS, Atom e JSON', done: true },
-      { id: 'F0.12.05', title: 'Quadro espacial com exportação JSON Canvas', done: false },
+      { id: 'F0.12.05', title: 'Exportar o livro em JSON Canvas', done: true },
       { id: 'F0.12.06', title: 'Oclusão de imagem para revisão', done: false },
       { id: 'F0.12.07', title: 'Círculos de leitura com trava anti-spoiler', done: false },
       { id: 'F0.12.08', title: 'Nomes mais simples nas telas', done: false },

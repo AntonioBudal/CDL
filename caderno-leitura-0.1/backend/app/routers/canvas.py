@@ -1,4 +1,7 @@
-from fastapi import APIRouter, status
+import json
+from urllib.parse import quote
+
+from fastapi import APIRouter, Response, status
 
 from app.dependencies import CurrentUser, DatabaseSession, Identifier
 from app.schemas.study_canvas_node import (
@@ -12,6 +15,8 @@ from app.schemas.study_grouping import (
     CanvasFrameItem,
     CanvasFrameUpdate,
 )
+from app.services.export_service import sanitize_filename
+from app.services.json_canvas_export import build_book_canvas
 from app.services.canvas_service import (
     batch_upsert_canvas_nodes,
     create_canvas_frame,
@@ -113,3 +118,15 @@ def delete_canvas_frame_endpoint(
 ):
     delete_canvas_frame(session, frame_id, user_id=current_user.id)
     return {"success": True, "message": "Moldura removida com sucesso."}
+
+
+# F0.12.05 (spec 118): exportar o livro em JSON Canvas 1.0 (só exportação; o quadro na tela saiu na 0.9).
+@router.get("/books/{book_id}/canvas/export", summary="Exportar o livro em JSON Canvas (.canvas)")
+def export_book_canvas(book_id: Identifier, session: DatabaseSession, current_user: CurrentUser):
+    book, canvas = build_book_canvas(session, current_user.id, book_id)
+    filename = sanitize_filename(book.title, "canvas")
+    return Response(
+        content=json.dumps(canvas, ensure_ascii=False, indent=2).encode("utf-8"),
+        media_type="application/json; charset=utf-8",
+        headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"},
+    )
