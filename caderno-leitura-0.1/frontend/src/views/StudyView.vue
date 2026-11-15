@@ -979,7 +979,9 @@ onBeforeUnmount(() => {
       :study-id="state.context.study.id"
       :book-id="state.context.book.id"
       :initial-visibility="state.context.study.visibility"
+      :published-at="state.context.study.published_at ?? null"
       @visibility-changed="handleVisibilityChanged"
+      @published-changed="state.context.study.published_at = $event"
     />
 
     <StudyHistoryModal

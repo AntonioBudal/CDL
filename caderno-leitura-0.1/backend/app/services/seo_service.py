@@ -1,17 +1,13 @@
 from __future__ import annotations
 
-from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from app.core.config import get_app_base_url
-from app.models.book import Book
-from app.models.chapter import Chapter
-from app.models.study import Study
 from app.schemas.seo import SitemapItem
 
-# F0.10.10: a rota pública /compartilhado/{id} ainda não existe no frontend (fica para os cadernos públicos do 1.0).
-# Enquanto estiver desligada, nem o robots.txt nem o sitemap anunciam essas páginas.
-PUBLIC_STUDY_PAGES_ENABLED = False
+# F0.12.02: /compartilhado/{id} existe (HTML do servidor). O sitemap lista só estudos **publicados** pelo dono e
+# disponíveis (fora da lixeira, conta ativa); "público" para a instalação não basta.
+PUBLIC_STUDY_PAGES_ENABLED = True
 
 
 def generate_robots_txt(base_url: str | None = None) -> str:
@@ -47,22 +43,9 @@ def get_public_sitemap_items(session: Session, base_url: str | None = None) -> l
     if not PUBLIC_STUDY_PAGES_ENABLED:
         return items
 
-    stmt = (
-        select(Study)
-        .join(Chapter, Study.chapter_id == Chapter.id, isouter=True)
-        .join(Book, Chapter.book_id == Book.id, isouter=True)
-        .where(
-            Study.deleted_at.is_(None),
-            or_(
-                Study.visibility == "public",
-                (Study.visibility == "inherit") & (Book.visibility == "public"),
-            ),
-            or_(Book.id.is_(None), Book.deleted_at.is_(None)),
-        )
-        .order_by(Study.updated_at.desc())
-    )
+    from app.services.public_study_service import list_available
 
-    public_studies = session.scalars(stmt).all()
+    public_studies = list_available(session)
     for study in public_studies:
         lastmod = study.updated_at.strftime("%Y-%m-%d") if study.updated_at else None
         items.append(

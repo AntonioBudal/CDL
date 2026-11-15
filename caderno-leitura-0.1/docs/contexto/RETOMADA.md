@@ -1623,3 +1623,29 @@ Spec aprovada com as recomendações Q1 a Q5:
   `alpha.N` = entregas, rodapé sem link e nenhum menu apontando para a tela); vizinhos verdes; build ok. Navegador:
   rodapé com dica `0.12.0-alpha.1+0c8658c`, botão de 46 px no Sobre, tela com 12 roadmaps, `noindex`, contraste ≥
   5,11:1 nos 10 temas, 375 e 1024 px sem rolagem lateral.
+
+## F0.12.02 — Estudos publicados na web (2026-11-14)
+
+- **Spec, plano e tarefas:** `specs/115-estudos-publicados/`. Segunda feature do 0.12. **Migração `0040`**
+  (`studies.published_at` + índice), **não aplicada ao banco ativo**. Versão `0.12.0-alpha.2`.
+- **Regra:** publicar é escolha explícita por estudo, à parte da visibilidade ("público" continua sendo da instalação).
+  `POST/DELETE /api/studies/{id}/publication` (só o dono), `GET /api/studies/published` (registrado antes do router de
+  estudos para não cair em `/studies/{id}`).
+- **Página** `GET /compartilhado/{id}` (`routers/public_studies.py`, `services/public_study_service.py`): HTML do
+  servidor, sem JavaScript, só título, 4 seções, referência ABNT simples e nome de exibição; `<title>`, description,
+  canonical (`APP_BASE_URL`), Open Graph, JSON-LD `Article`; claro/escuro pelo sistema. 404 igual para não publicado,
+  lixeira, livro na lixeira, conta inativa e id inexistente (`noindex`, `no-store`). `Cache-Control: public, no-cache`.
+- **Markdown restrito** (`services/public_markdown.py`): escape antes de tudo; títulos (rebaixados), parágrafos,
+  listas, citações, código, negrito, itálico, links só `http(s)` com `rel="nofollow ugc noopener noreferrer"`; imagens
+  fora; `[[conceito:X]]` → termo; `[[Título|id]]` → link só se o estudo citado também estiver publicado e disponível.
+- **SEO:** `PUBLIC_STUDY_PAGES_ENABLED = True`; `robots.txt` com `Allow: /compartilhado/`; sitemap só com publicados e
+  disponíveis. Os testes da F0.10.10 (`test_seo_public_pages_flag.py`) e do sitemap foram ajustados à regra nova.
+- **Tela:** `components/sharing/PublishToWebCard.vue` dentro do modal de compartilhar do estudo (o que sai e o que não
+  sai, copiar/abrir/despublicar, aviso sobre exposição); `components/settings/PublishedStudiesCard.vue` em Ajustes →
+  Perfil.
+- **Testes:** `test_public_markdown.py` (5), `test_public_studies.py` (3), `test_migration_0040.py` (1),
+  `feature-115-publicar.test.mjs` (2); vizinhos verdes; build ok. Navegador (dados fictícios): publicar pelo modal,
+  página pública só com os campos permitidos, contraste 8,11:1 no claro e no escuro, 375 px sem rolagem lateral,
+  despublicar pela lista de Ajustes. **Achados e corrigidos:** com `max-age=300` o navegador ainda mostrava a página
+  despublicada por até 5 minutos (trocado por `no-cache`); a captura de erro da página pegava qualquer exceção como 404
+  (estreitada para `HTTPException`).

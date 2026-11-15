@@ -16,6 +16,7 @@ de mexer em código. Ao encerrar, atualize este arquivo e `caderno-leitura-0.1/d
 - **Roadmap 0.10 concluído.** **Roadmap 0.11:** lote 1 (F0.11.01 a .05) concluído e fechado em 2026-11-09 com as
   suítes completas. O banco ativo foi migrado pelo usuário até a **0039** em 2026-11-14 (snapshot validado
   `D:\Leitorum\backups\caderno-pre-migracao-20261115-004129.db`) e o serviço voltou a funcionar com o 0.11.
+  **Pendente no banco ativo: migração `0040`** (F0.12.02), pelo procedimento do §3.
 
 ### Roadmap 0.10 (redesenho, segurança e ergonomia)
 
@@ -74,7 +75,7 @@ feature, a versão no rodapé e a tela escondida "Evolução das versões". Deta
 (SemVer 2.0.0, `0.12.0-alpha.N`): **`docs/contexto/ROADMAP-0.12.md`**.
 
 F0.12.01 versão no rodapé e "Evolução das versões" (spec 114, **concluída**; versão `0.12.0-alpha.1`) · F0.12.02 estudos publicados na web,
-`/compartilhado/:id` (rascunho em `specs/115-estudos-publicados/`, não aprovado) · importadores (Readwise, Goodreads,
+`/compartilhado/:id` (spec 115, **concluída**; versão `0.12.0-alpha.2`; migração `0040`) · importadores (Readwise, Goodreads,
 StoryGraph, Omnivore, BookWyrm) · feeds RSS/Atom/JSON · quadro espacial com exportação JSON Canvas · oclusão de imagem
 em SVG · círculos de leitura com trava anti-spoiler · F0.12.08 simplificação de nomes (auditoria pronta no
 roadmap) · F0.12.09 seletor de idioma (**só a fundação**, decisão do usuário em 2026-11-14) · F0.12.10 pequenas melhorias de
@@ -85,8 +86,7 @@ usabilidade (calendário do Painel, barra de ações fixa no estudo, menu de 3 p
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **116** (a 115 está reservada ao rascunho dos
-  estudos publicados).
+  fim sem parar em checkpoints. Próximo número livre de spec: **116**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,
@@ -173,8 +173,9 @@ usabilidade (calendário do Painel, barra de ações fixa no estudo, menu de 3 p
 - **Celular via Tailscale:** se salvar der "Origem do pedido não autorizada", acrescentar a origem em
   `LEITORUM_TRUSTED_ORIGINS` (o log do serviço mostra qual foi recusada).
 - **Imagens externas** em estudos deixaram de carregar (CSP); caminho: enviar pela área de imagens.
-- **`/compartilhado/{id}`:** a rota não existe no frontend; desde a F0.10.10 o `robots.txt` e o sitemap não a
-  anunciam (`seo_service.PUBLIC_STUDY_PAGES_ENABLED = False`). Ligar na F0.12.02 (estudos publicados, spec 115).
+- **`/compartilhado/{id}`:** existe desde a F0.12.02 (HTML do servidor). Só é alcançável fora da rede se o
+  Leitorum estiver exposto (domínio ou Tailscale Funnel); o endereço canônico e o do sitemap vêm de `APP_BASE_URL`
+  (padrão `https://leitorum.com`): configurar quando expor.
 - **Licença:** o repositório não tem arquivo de licença. Desde a F0.10.10 nenhum texto diz "software livre"; o
   rodapé diz "Código-fonte público". Escolher uma licença é decisão do dono.
 - **`ROADMAP-0.10.md`, `ROADMAP-0.11.md`:** ainda não escritos; este arquivo faz as vezes deles. O `ROADMAP-0.12.md`

@@ -14,7 +14,7 @@ import type {
   BacklinksResponse, StudyCandidateOption,
   EreaderChoice, EreaderImportResponse, EreaderPreviewResponse, IsbnLookupResponse, BookCreatePayload,
   ConceptCandidate, ConceptDetail, ConceptListResponse, DailyMemory, FragileConcept, ParaphraseSources,
-  ReceiverTokenIssued, ReceiverTokenStatus, SynthesisRead, SynthesisResolved, SynthesisSummary,
+  PublishedStudyItem, ReceiverTokenIssued, ReceiverTokenStatus, SynthesisRead, SynthesisResolved, SynthesisSummary,
   InboxBookTrayResponse, InboxCapture, InboxCaptureCreatePayload, InboxCapturePatchPayload, InboxCountResponse, InboxPromotePayload, InboxLinkPayload,
   StudySession, StudySessionDetail, StudySessionItem, StudySessionSummary, StudySessionStartPayload, StudySessionAnswerPayload, StudySessionCompletePayload,
 } from '../types.ts'
@@ -540,6 +540,11 @@ export const api = {
     request<ConceptDetail>(`/concepts/${encodeURIComponent(key)}`, { signal }),
   getConceptCandidates: (q: string, limit = 6, signal?: AbortSignal) =>
     request<ConceptCandidate[]>(`/concepts/candidates?q=${encodeURIComponent(q)}&limit=${limit}`, { signal }),
+  // F0.12.02: publicar estudos na web
+  publishStudy: (studyId: number) =>
+    request<{ study_id: number; published_at: string; path: string }>(`/studies/${studyId}/publication`, { method: 'POST' }),
+  unpublishStudy: (studyId: number) => request<void>(`/studies/${studyId}/publication`, { method: 'DELETE' }),
+  listPublishedStudies: (signal?: AbortSignal) => request<PublishedStudyItem[]>('/studies/published', { signal }),
   // F0.11.11: cadernos de síntese com transclusão
   listSyntheses: (signal?: AbortSignal) => request<SynthesisSummary[]>('/syntheses', { signal }),
   listTrashedSyntheses: (signal?: AbortSignal) => request<SynthesisSummary[]>('/syntheses/trash', { signal }),

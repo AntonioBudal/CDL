@@ -6,6 +6,7 @@ import AppearancePreview from '../components/AppearancePreview.vue'
 import DatabaseBackup from '../components/DatabaseBackup.vue'
 import SystemSovereigntyCard from '../components/settings/SystemSovereigntyCard.vue'
 import ReceiverTokenCard from '../components/settings/ReceiverTokenCard.vue'
+import PublishedStudiesCard from '../components/settings/PublishedStudiesCard.vue'
 import ConfirmResetModal from '../components/ConfirmResetModal.vue'
 import RestoreModal from '../components/RestoreModal.vue'
 import SessionsManager from '../components/auth/SessionsManager.vue'
@@ -817,6 +818,9 @@ onBeforeUnmount(() => {
               </button>
             </div>
           </form>
+
+          <!-- F0.12.02: estudos publicados na web -->
+          <PublishedStudiesCard />
         </section>
 
         <!-- Aba 1: Aparência -->

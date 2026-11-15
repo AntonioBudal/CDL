@@ -43,6 +43,7 @@ from app.routers import (
     study_mentions,
     concepts,
     paraphrase,
+    public_studies,
     receiver,
     syntheses,
     study_relations,
@@ -181,6 +182,8 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(receiver.router, prefix="/api")  # F0.11.09
     application.include_router(syntheses.router, prefix="/api")  # F0.11.11
     application.include_router(study_relations.router, prefix="/api")
+    # F0.12.02: antes de studies.router, para /studies/published não cair em /studies/{study_id}.
+    application.include_router(public_studies.api_router, prefix="/api")
     application.include_router(studies.router, prefix="/api")
     application.include_router(study_highlights.router, prefix="/api")
     application.include_router(study_versions.router, prefix="/api")
@@ -206,6 +209,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(review.router, prefix="/api")
     application.include_router(study_sessions.router, prefix="/api")
     application.include_router(seo.router)
+    application.include_router(public_studies.page_router)  # F0.12.02: /compartilhado/{id}
 
     # Registro de manipuladores de erro de banco e mascaramento global 500 (T007, T018)
     register_database_error_handlers(application)

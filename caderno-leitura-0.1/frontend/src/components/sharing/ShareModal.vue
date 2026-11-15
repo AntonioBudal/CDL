@@ -7,22 +7,27 @@ import type {
   ResourceVisibility,
 } from '../../types.ts'
 import Icon from '../ui/Icon.vue'
+import PublishToWebCard from './PublishToWebCard.vue'
 
 interface Props {
   modelValue: boolean
   studyId: number
   bookId?: number | null
   initialVisibility?: ResourceVisibility
+  /** F0.12.02: data de publicação na web (vazio = não publicado). */
+  publishedAt?: string | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
   bookId: null,
   initialVisibility: 'inherit',
+  publishedAt: null,
 })
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
   (e: 'visibility-changed', payload: { visibility: ResourceVisibility; effectiveVisibility: ResourceVisibility }): void
+  (e: 'published-changed', publishedAt: string | null): void
 }>()
 
 const loading = ref(false)
@@ -387,6 +392,13 @@ onUnmounted(() => {
             </ul>
           </div>
         </div>
+
+        <!-- F0.12.02: publicar na web (à parte da visibilidade) -->
+        <PublishToWebCard
+          :study-id="studyId"
+          :published-at="publishedAt"
+          @changed="emit('published-changed', $event)"
+        />
       </div>
 
       <!-- Modal Footer -->

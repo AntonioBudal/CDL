@@ -294,6 +294,18 @@ export interface AnalysisSections {
 export interface Study extends StudySummary, AnalysisSections {
   source_response: string
   notes: string
+  /** F0.12.02: publicado na web (/compartilhado/<id>); vazio = não publicado. */
+  published_at?: string | null
+}
+
+// F0.12.02: estudos publicados na web
+export interface PublishedStudyItem {
+  study_id: number
+  title: string
+  book_title: string
+  published_at: string
+  path: string
+  available: boolean
 }
 
 export type StudyPatch = Partial<AnalysisSections & Pick<Study, 'title' | 'location' | 'notes'>> & {

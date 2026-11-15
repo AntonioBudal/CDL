@@ -155,4 +155,5 @@ class StudyRead(StudySummary):
     concepts: str
     references: str
     notes: str
+    published_at: datetime | None = None  # F0.12.02
 

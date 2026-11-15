@@ -1,6 +1,6 @@
 # Implementation Plan: F0.12.02 — Estudos Publicados na Web
 
-**Spec**: [spec.md](spec.md) | **Date**: 2026-11-14 | **Status**: Aguardando aprovação
+**Spec**: [spec.md](spec.md) | **Date**: 2026-11-14 | **Status**: Executado em 2026-11-14
 
 ## Technical Context
 

@@ -62,10 +62,7 @@ def seo_client(tmp_path, monkeypatch) -> Generator[tuple[TestClient, sessionmake
 
 
 def test_robots_txt_spec_compliance(seo_client, monkeypatch):
-    """Com as páginas públicas de estudo ligadas (1.0); o padrão desligado está em test_seo_public_pages_flag.py.
-
-    Verifica se /robots.txt segue as regras de permissão de rotas públicas e bloqueio de rotas privadas."""
-    monkeypatch.setattr("app.services.seo_service.PUBLIC_STUDY_PAGES_ENABLED", True)
+    """Verifica se /robots.txt segue as regras de permissão de rotas públicas e bloqueio de rotas privadas."""
     client, _ = seo_client
     response = client.get("/robots.txt")
     assert response.status_code == 200
@@ -116,8 +113,6 @@ def test_x_robots_tag_middleware_protection(seo_client):
 
 
 def test_sitemap_xml_generation_and_strict_privacy(seo_client, monkeypatch):
-    # Com as páginas públicas de estudo ligadas (1.0); o padrão desligado está em test_seo_public_pages_flag.py.
-    monkeypatch.setattr("app.services.seo_service.PUBLIC_STUDY_PAGES_ENABLED", True)
     """Verifica a geração do sitemap.xml e a exclusão estrita de estudos privados ou excluídos."""
     client, session_maker = seo_client
 
@@ -148,6 +143,7 @@ def test_sitemap_xml_generation_and_strict_privacy(seo_client, monkeypatch):
             title="Estudo Público de Teste",
             summary="Resumo público",
             visibility="public",
+            published_at=utc_now(),  # F0.12.02: o sitemap lista só estudos publicados na web
         )
 
         # Estudo B: Estudo privado (ID 2)
@@ -168,6 +164,7 @@ def test_sitemap_xml_generation_and_strict_privacy(seo_client, monkeypatch):
             title="Estudo Herdado Público",
             summary="Resumo herdado",
             visibility="inherit",
+            published_at=utc_now(),  # F0.12.02: o sitemap lista só estudos publicados na web
         )
 
         # Estudo D: Estudo herdado de livro privado (ID 4)
@@ -188,6 +185,7 @@ def test_sitemap_xml_generation_and_strict_privacy(seo_client, monkeypatch):
             title="Estudo Deletado",
             summary="Resumo deletado",
             visibility="public",
+            published_at=utc_now(),  # F0.12.02: o sitemap lista só estudos publicados na web
             deleted_at=utc_now(),
         )
 

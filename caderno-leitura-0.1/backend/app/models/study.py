@@ -37,6 +37,7 @@ class Study(Base):
         Index("ix_studies_user_deleted", "user_id", "deleted_at"),
         Index("ix_studies_sync", "user_id", "updated_at"),
         Index("ix_studies_visibility", "visibility"),
+        Index("ix_studies_published_at", "published_at"),
         Index("ix_studies_template_id", "template_id"),
     )
 
@@ -77,6 +78,8 @@ class Study(Base):
     deleted_at: Mapped[datetime | None] = mapped_column(
         UTCDateTime(), default=None, server_default=None, nullable=True
     )
+    # F0.12.02: publicado na web (/compartilhado/{id}); vazio = não publicado. Escolha explícita, à parte da visibilidade.
+    published_at: Mapped[datetime | None] = mapped_column(UTCDateTime(), default=None, nullable=True)
 
     chapter: Mapped[Chapter] = relationship(back_populates="studies")
     parent: Mapped[Study | None] = relationship("Study", remote_side="Study.id", back_populates="children")

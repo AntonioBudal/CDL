@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-14
 
-**Status**: Aguardando aprovação
+**Status**: Concluída em 2026-11-14
 
 **Input**: Item "cadernos públicos indexáveis (inclui criar a rota `/compartilhado/:id`)" do Roadmap **0.12**
 (antigo 1.0; `docs/contexto/ROADMAP-0.12.md`) e HANDOFF §5. Segunda feature do 0.12, lote 1 (depois da F0.12.01,
@@ -52,7 +52,9 @@ visibilidade. Nada que hoje está "público" para a instalação passa a ser pú
    vira só o termo. Trechos de cadernos de síntese não existem em estudos.
 4. Metadados para buscadores e redes: `<title>`, `description` (começo do resumo), `canonical`, Open Graph e JSON-LD
    (`Article`); idioma `pt-BR`.
-5. Cabeçalhos: sem `noindex` (o prefixo já é indexável); CSP sem script; `Cache-Control: public, max-age=300`.
+5. Cabeçalhos: sem `noindex` (o prefixo já é indexável); CSP sem script; `Cache-Control: public, no-cache` (o
+   navegador sempre confere com o servidor; com `max-age=300`, previsto antes, uma página despublicada continuava
+   aparecendo por até 5 minutos — achado na execução).
 
 ### US3 — Buscadores (P2)
 
@@ -65,7 +67,8 @@ visibilidade. Nada que hoje está "público" para a instalação passa a ser pú
 ### Edge Cases
 
 - Despublicar e publicar de novo mantém o mesmo endereço (o id do estudo).
-- Estudo sem nenhuma seção preenchida não pode ser publicado (botão desativado com explicação).
+- Estudo sem nenhuma seção preenchida não pode ser publicado (422). Na prática não acontece: o banco já exige ao
+  menos uma seção (`ck_studies_analysis_not_blank`); a guarda fica como reserva.
 - Id inexistente, não publicado ou de conta bloqueada → mesma página 404 (não revela que existe).
 - Celular: página pública de uma coluna, fonte confortável, sem rolagem lateral.
 
@@ -96,7 +99,9 @@ visibilidade. Nada que hoje está "público" para a instalação passa a ser pú
 - **SC-003**: Migração: `test_migration_matches_models` e upgrade/downgrade em banco descartável.
 - **SC-004**: Navegador (dados fictícios): publicar pelo painel, abrir a página sem sessão (janela anônima simulada),
   despublicar e ver 404, lista em Ajustes; página pública em 375 e 1366 px; contraste da página e dos cartões.
-- **SC-005**: Build e testes novos e vizinhos; commit; levar ao `main`. Migração não aplicada ao banco ativo.
+- **SC-005**: Build e testes novos e vizinhos; versão sobe para **`0.12.0-alpha.2`** (`VERSION`, `package.json`,
+  `package-lock.json`) e a F0.12.02 fica marcada como entregue em `data/versionHistory.ts` (regra do HANDOFF §2);
+  commit; levar ao `main`. Migração não aplicada ao banco ativo.
 
 ## 5. Fora do escopo
 
