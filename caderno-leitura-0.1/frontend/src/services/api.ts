@@ -68,6 +68,12 @@ import type {
 } from '../types/notifications.ts'
 
 import type { DigitizePreview, DigitizeStatus } from '../types/digitize.ts'
+import type {
+  CircleDetail,
+  CircleListResponse,
+  CirclePartPosts,
+  InvitableFriend,
+} from '../types/circles.ts'
 import type { IntegrityResult, SystemStatus } from '../types/system.ts'
 import type {
   BulkDeleteRequest, BulkDeleteResult, MediaItem, MediaList, MediaListParams, MediaUsage, StudyPhotoResult,
@@ -393,6 +399,51 @@ export const api = {
   listStudyMedia: (studyId: number, signal?: AbortSignal) => request<{ items: MediaItem[] }>(
     `/studies/${studyId}/media`, { signal },
   ),
+  // F0.12.07: círculos de leitura com trava anti-spoiler
+  listCircles: (signal?: AbortSignal) => request<CircleListResponse>('/circles', { signal }),
+  getCircleInviteCount: (signal?: AbortSignal) => request<{ count: number }>('/circles/invites/count', { signal }),
+  createCircle: (bookId: number, name?: string) => request<CircleDetail>('/circles', {
+    method: 'POST', body: JSON.stringify({ book_id: bookId, ...(name ? { name } : {}) }),
+  }),
+  getCircle: (id: number, signal?: AbortSignal) => request<CircleDetail>(`/circles/${id}`, { signal }),
+  renameCircle: (id: number, name: string) => request<CircleDetail>(`/circles/${id}`, {
+    method: 'PATCH', body: JSON.stringify({ name }),
+  }),
+  deleteCircle: (id: number) => request<void>(`/circles/${id}`, { method: 'DELETE' }),
+  getInvitableFriends: (id: number) => request<InvitableFriend[]>(`/circles/${id}/invitable`),
+  inviteToCircle: (id: number, username: string) => request<CircleDetail>(`/circles/${id}/invites`, {
+    method: 'POST', body: JSON.stringify({ username }),
+  }),
+  acceptCircle: (id: number) => request<CircleDetail>(`/circles/${id}/accept`, { method: 'POST' }),
+  declineCircle: (id: number) => request<void>(`/circles/${id}/decline`, { method: 'POST' }),
+  leaveCircle: (id: number) => request<void>(`/circles/${id}/leave`, { method: 'POST' }),
+  removeCircleMember: (id: number, userId: string) => request<CircleDetail>(
+    `/circles/${id}/members/${encodeURIComponent(userId)}`, { method: 'DELETE' },
+  ),
+  setCircleProgress: (id: number, progress: number, finished = false) => request<CircleDetail>(
+    `/circles/${id}/progress`, { method: 'PUT', body: JSON.stringify({ progress, finished }) },
+  ),
+  addCirclePart: (id: number, name: string) => request<CircleDetail>(`/circles/${id}/parts`, {
+    method: 'POST', body: JSON.stringify({ name }),
+  }),
+  renameCirclePart: (id: number, partId: number, name: string) => request<CircleDetail>(
+    `/circles/${id}/parts/${partId}`, { method: 'PATCH', body: JSON.stringify({ name }) },
+  ),
+  deleteCirclePart: (id: number, partId: number) => request<CircleDetail>(`/circles/${id}/parts/${partId}`, {
+    method: 'DELETE',
+  }),
+  getCirclePosts: (id: number, partId: number, signal?: AbortSignal) => request<CirclePartPosts>(
+    `/circles/${id}/parts/${partId}/posts`, { signal },
+  ),
+  createCirclePost: (id: number, partId: number, body: string) => request<CirclePartPosts>(
+    `/circles/${id}/parts/${partId}/posts`, { method: 'POST', body: JSON.stringify({ body }) },
+  ),
+  editCirclePost: (id: number, postId: number, body: string) => request<CirclePartPosts>(
+    `/circles/${id}/posts/${postId}`, { method: 'PATCH', body: JSON.stringify({ body }) },
+  ),
+  deleteCirclePost: (id: number, postId: number) => request<CirclePartPosts>(`/circles/${id}/posts/${postId}`, {
+    method: 'DELETE',
+  }),
   // F0.12.06: oclusão de imagem
   getOcclusions: (studyId: number, mediaId: string, signal?: AbortSignal) => request<OcclusionView>(
     `/studies/${studyId}/media/${encodeURIComponent(mediaId)}/occlusions`, { signal },

@@ -7,6 +7,7 @@ from app.models.category import Category, book_categories
 from app.models.chapter import Chapter
 from app.models.concept_review import ConceptReview
 from app.models.image_occlusion_card import ImageOcclusionCard
+from app.models.reading_circle import ReadingCircle, ReadingCircleMember, ReadingCirclePart, ReadingCirclePost
 from app.models.encrypted_media import EncryptedMedia
 from app.models.external_identity import ExternalIdentity
 from app.models.friendship import Friendship
@@ -40,6 +41,10 @@ __all__ = [
     "Chapter",
     "ConceptReview",
     "ImageOcclusionCard",
+    "ReadingCircle",
+    "ReadingCircleMember",
+    "ReadingCirclePart",
+    "ReadingCirclePost",
     "EncryptedMedia",
     "ExternalIdentity",
     "Friendship",

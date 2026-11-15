@@ -1728,3 +1728,28 @@ Spec aprovada com as recomendações Q1 a Q5:
   110 passou a conferir o rótulo no mapa por tipo; `npm test` 814/814; vizinhos do backend 205; build ok. Navegador
   (imagem sintética, chave de cofre fictícia): desenhar 3 áreas, Delete e desfazer, salvar, revisar e avaliar; 375 px
   por toque; área perguntada × cobertas ≥ 3,63:1 nos 10 temas.
+
+## F0.12.07 — Círculos de leitura com trava anti-spoiler (2026-11-15)
+
+- **Spec, plano e tarefas:** `specs/120-circulos-de-leitura/`. Sétima feature do 0.12. Versão `0.12.0-alpha.7`.
+  **Migração `0042`** (só cria `reading_circles`, `reading_circle_parts`, `reading_circle_members` e
+  `reading_circle_posts`); no banco ativo, pelo procedimento dos 4 comandos.
+- **Regra central:** os capítulos de cada leitor não se comparam, então o círculo tem **partes próprias** (começam
+  iguais aos capítulos do livro de quem criou). Progresso = parte atual (0 = não comecei) ou `finished`. A trava fica
+  em `reading_circle_service._visible`: parte à frente responde só `{"locked": true, "count": N, "posts": []}`.
+  Só escreve em partes até a sua; voltar o progresso tranca de novo.
+- **Social:** só amigos são convidados (nunca com bloqueio), até 20 membros e 50 círculos por leitor; convidado não vê
+  o círculo até aceitar; bloqueio entre membros esconde as mensagens de um para o outro; dono modera, renomeia,
+  acrescenta partes no fim, apaga só a última sem mensagens, tira membros e apaga o círculo; membro sai (mensagens
+  ficam). "Abrir meu exemplar" casa por ISBN ou título + sobrenome do autor (funções de `in_common_service`).
+- **Rotas:** `/api/circles…` (`routers/reading_circles.py`, registrado depois de `friends`). Telas `/circulos`
+  (`CirclesView.vue`: convites, meus círculos, novo círculo, `?livro=ID` já escolhe o livro) e `/circulos/:id`
+  (`CircleView.vue`); contratos de rota (076 e 081, linhas 34 e 35). "Círculos" no menu "Mais" (desktop e celular) com
+  contador de convites (`useCircleInvites`, atualizado com o Inbox no `App.vue`) e ponto na barra do celular; "Criar
+  círculo" no livro. **Sem sininho:** os tipos de notificação estão travados por restrição no banco.
+- **Testes:** `test_reading_circles.py` (5, incluindo "o texto à frente nunca aparece em nenhuma resposta" e a
+  migração subindo e descendo) e `feature-120-circulos` (3); `npm test` 817/817; vizinhos do backend 186; build ok.
+  Navegador com dois leitores fictícios (o segundo pela API com `X-User-Id`): convite, aceite, mensagens, trava dos dois
+  lados, avanço que abre só a parte certa; 375 px sem rolagem lateral e alvos de 44 px; contraste nos 10 temas (a barra
+  de progresso usa `--color-link`, ≥ 4,88:1; o acento ficava abaixo de 3:1 em grafite e noite-suave). Correção feita na
+  conferência: `flex-basis` do campo virava altura numa coluna.

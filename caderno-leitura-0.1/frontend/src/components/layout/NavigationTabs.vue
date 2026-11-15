@@ -6,6 +6,7 @@ import Icon from '../ui/Icon.vue'
 import { useAuthStore } from '../../stores/auth'
 import { useFriends } from '../../composables/useFriends'
 import { useInboxCount } from '../../composables/useInboxCount'
+import { useCircleInvites } from '../../composables/useCircleInvites'
 
 const props = defineProps<{
   homeViewPreference?: string
@@ -15,12 +16,14 @@ const route = useRoute()
 const auth = useAuthStore()
 const friendsService = useFriends()
 const inboxService = useInboxCount()
+const circleInvites = useCircleInvites()
 
 const isMoreOpen = ref(false)
 const moreContainerRef = ref<HTMLElement | null>(null)
 
 const pendingFriendsCount = computed(() => friendsService.pendingReceivedCount.value)
 const inboxCount = computed(() => inboxService.count.value)
+const circleInviteCount = computed(() => circleInvites.count.value)
 const isAdmin = computed(() => auth.isAdmin.value)
 
 interface PrimaryNavItem {
@@ -92,6 +95,13 @@ const secondaryNavItems = computed<SecondaryNavItem[]>(() => {
       badgeCount: () => pendingFriendsCount.value,
     },
     {
+      to: '/circulos',
+      label: 'Círculos',
+      routes: ['circles', 'circle'],
+      icon: 'network',
+      badgeCount: () => circleInviteCount.value,
+    },
+    {
       to: '/ajustes',
       label: 'Ajustes',
       routes: ['settings', 'connection'],
@@ -136,7 +146,7 @@ const isMoreRouteActive = computed(() => {
 })
 
 const hasMoreBadge = computed(() => {
-  return pendingFriendsCount.value > 0
+  return pendingFriendsCount.value > 0 || circleInviteCount.value > 0
 })
 
 function toggleMore() {

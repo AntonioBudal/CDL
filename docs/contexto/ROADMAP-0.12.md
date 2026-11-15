@@ -38,7 +38,7 @@ suítes completas a cada 5 features, commit em português, push só quando o usu
 | F0.12.04 | **Feeds RSS, Atom e JSON** | **Concluída em 2026-11-15** (versão `0.12.0-alpha.4`, sem migração). Spec **117**. |
 | F0.12.05 | **Exportar o livro em JSON Canvas** | **Concluída em 2026-11-15** (versão `0.12.0-alpha.5`, sem migração; item redefinido: só exportação, sem quadro na tela). Spec **118**. |
 | F0.12.06 | **Oclusão de imagem em SVG** | **Concluída em 2026-11-15** (versão `0.12.0-alpha.6`, migração `0041`). Spec **119**. |
-| F0.12.07 | **Círculos de leitura com trava anti-spoiler** | Depende de ISBN (F0.11.04) e estados de leitura (F0.11.01), já entregues. |
+| F0.12.07 | **Círculos de leitura com trava anti-spoiler** | **Concluída em 2026-11-15** (versão `0.12.0-alpha.7`, migração `0042`). Spec **120**. |
 | F0.12.08 | **Simplificação de nomes** | Pedido do usuário em 2026-11-14. Auditoria abaixo. |
 | F0.12.09 | **Seletor de idioma — só a fundação** | Pedido do usuário em 2026-11-14. Transição grande (avaliação abaixo); o usuário escolheu **só a fundação** no 0.12. |
 | F0.12.10 | **Pequenas melhorias de usabilidade** | Pedido do usuário em 2026-11-14: calendário do Painel, barra de ações fixa no estudo, menu de 3 pontos no celular, espaçamento do cabeçalho do estudo. |

@@ -10,6 +10,7 @@ import { useFriends } from './composables/useFriends.ts'
 import { useNotifications } from './composables/useNotifications.ts'
 import { useQuickCapture } from './composables/useQuickCapture.ts'
 import { useInboxCount } from './composables/useInboxCount.ts'
+import { useCircleInvites } from './composables/useCircleInvites.ts'
 import QuickCaptureModal from './components/inbox/QuickCaptureModal.vue'
 import MobileMoreMenu from './components/navigation/MobileMoreMenu.vue'
 import GlobalHeader from './components/layout/GlobalHeader.vue'
@@ -28,6 +29,7 @@ const sync = useSync()
 const preferences = usePreferences()
 const quickCapture = useQuickCapture()
 const inboxService = useInboxCount()
+const circleInvites = useCircleInvites() // F0.12.07
 
 function handleGlobalShortcut(e: KeyboardEvent) {
   if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
@@ -76,6 +78,7 @@ onMounted(() => {
     void profileService.fetchProfile()
     void friendsService.fetchSummary()
     void inboxService.refreshCount()
+    void circleInvites.refresh()
     notificationsService.startPolling(45000)
   }
 })
@@ -87,6 +90,7 @@ watch(
       void profileService.fetchProfile()
       void friendsService.fetchSummary()
       void inboxService.refreshCount()
+      void circleInvites.refresh()
       notificationsService.startPolling(45000)
     } else {
       notificationsService.stopPolling()

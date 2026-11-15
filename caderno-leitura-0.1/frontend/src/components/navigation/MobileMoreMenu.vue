@@ -3,6 +3,7 @@ import { computed, onMounted, onUnmounted, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import Icon from '../ui/Icon.vue'
 import { useInboxCount } from '../../composables/useInboxCount.ts'
+import { useCircleInvites } from '../../composables/useCircleInvites.ts'
 import { useFriends } from '../../composables/useFriends.ts'
 
 const props = withDefaults(
@@ -34,6 +35,8 @@ const friendsService = useFriends()
 
 const inboxCount = computed(() => inboxService.count.value)
 const pendingFriendsCount = computed(() => friendsService.pendingReceivedCount.value)
+const circleInvites = useCircleInvites()
+const circleInviteCount = computed(() => circleInvites.count.value)
 
 function handleKeydown(event: KeyboardEvent) {
   if (props.open && event.key === 'Escape') {
@@ -154,6 +157,22 @@ onUnmounted(() => {
               :aria-label="`Amigos: ${pendingFriendsCount} solicitações pendentes`"
             >
               {{ pendingFriendsCount > 99 ? '99+' : pendingFriendsCount }}
+            </span>
+          </RouterLink>
+
+          <RouterLink
+            to="/circulos"
+            class="drawer-item"
+            @click="emit('close')"
+          >
+            <Icon name="network" :size="20" class="drawer-item-icon" />
+            <span class="drawer-item-label">Círculos de leitura</span>
+            <span
+              v-if="circleInviteCount > 0"
+              class="drawer-item-badge"
+              :aria-label="`Círculos: ${circleInviteCount} ${circleInviteCount === 1 ? 'convite pendente' : 'convites pendentes'}`"
+            >
+              {{ circleInviteCount > 99 ? '99+' : circleInviteCount }}
             </span>
           </RouterLink>
 

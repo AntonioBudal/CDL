@@ -86,6 +86,8 @@ O sistema reconhece estritamente os seguintes limites canônicos de responsivida
 | 31 | `synthesis` | — | Pass | — | — | — | — | Pass | — | — |
 | 32 | `versions` | — | Pass | — | — | — | — | Pass | — | — |
 | 33 | `library-import` | — | Pass | — | — | — | — | Pass | — | — |
+| 34 | `circles` | — | Pass | — | — | — | — | Pass | — | — |
+| 35 | `circle` | — | Pass | — | — | — | — | Pass | — | — |
 
 A linha 26 (`/minhas-imagens`, feature 090-C) foi conferida pelo usuário em 28/10/2026 (tarefa C037).
 A linha 27 (`/inbox/importar-leitor`, F0.11.03) foi conferida por script no navegador em 09/11/2026 nas larguras
@@ -94,6 +96,7 @@ As linhas 28 e 29 (`/conceitos`, F0.11.06) foram conferidas por script no navega
 As linhas 30 e 31 (`/sinteses`, F0.11.11) foram conferidas por script no navegador em 14/11/2026 nas larguras marcadas.
 A linha 32 (`/sobre/versoes`, F0.12.01) foi conferida por script no navegador em 14/11/2026 nas larguras marcadas.
 A linha 33 (`/livros/importar`, F0.12.03) foi conferida por script no navegador em 15/11/2026 nas larguras marcadas.
+As linhas 34 e 35 (`/circulos`, F0.12.07) foram conferidas por script no navegador em 15/11/2026 nas larguras marcadas.
 
 ---
 

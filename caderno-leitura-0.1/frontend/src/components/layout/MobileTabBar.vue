@@ -4,6 +4,7 @@ import { RouterLink, useRoute } from 'vue-router'
 import Icon from '../ui/Icon.vue'
 import { useInboxCount } from '../../composables/useInboxCount.ts'
 import { useFriends } from '../../composables/useFriends.ts'
+import { useCircleInvites } from '../../composables/useCircleInvites.ts'
 
 const emit = defineEmits<{
   (e: 'open-more'): void
@@ -12,9 +13,11 @@ const emit = defineEmits<{
 const route = useRoute()
 const inboxService = useInboxCount()
 const friendsService = useFriends()
+const circleInvites = useCircleInvites() // F0.12.07
 
 const hasSecondaryBadge = computed(() => {
   return (inboxService.count.value > 0) || (friendsService.pendingReceivedCount.value > 0)
+    || (circleInvites.count.value > 0)
 })
 
 const isDashboardActive = computed(() => route.name === 'dashboard')

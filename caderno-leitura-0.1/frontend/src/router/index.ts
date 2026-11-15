@@ -85,6 +85,9 @@ export const router = createRouter({
       component: DigitizeNotebookView,
       meta: { title: 'Digitalizar Caderno' },
     },
+    // F0.12.07: círculos de leitura com trava anti-spoiler
+    { path: '/circulos', name: 'circles', component: () => import('../views/CirclesView.vue'), meta: { title: 'Círculos de leitura' } },
+    { path: '/circulos/:id', name: 'circle', component: () => import('../views/CircleView.vue'), meta: { title: 'Círculo de leitura' } },
     { path: '/amigos', alias: ['/friends'], name: 'friends', component: () => import('../views/FriendsView.vue'), meta: { title: 'Amigos e Leitores' } },
     { path: '/conexao', name: 'connection', component: () => import('../views/ConnectionView.vue'), meta: { title: 'Conexão' } },
     { path: '/ajustes', name: 'settings', component: () => import('../views/SettingsView.vue'), meta: { title: 'Ajustes' } },

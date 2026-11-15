@@ -25,6 +25,11 @@ import { useViewPreference, loadStoredViewPreference } from '../composables/useV
 
 const route = useRoute()
 const router = useRouter()
+
+// F0.12.07: abre "Círculos de leitura" com este livro já escolhido para um círculo novo.
+function startCircle() {
+  if (book.value) void router.push({ name: 'circles', query: { livro: String(book.value.id) } })
+}
 const book = ref<Book | null>(null)
 const exportModalOpen = ref(false)
 const chapters = ref<Chapter[]>([])
@@ -531,6 +536,15 @@ onBeforeUnmount(() => {
                         type="button"
                         class="dropdown-item"
                         role="menuitem"
+                        @click="startCircle(); close()"
+                      >
+                        <Icon name="network" :size="16" />
+                        <span>Criar círculo deste livro</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="dropdown-item"
+                        role="menuitem"
                         @click="isEditingBook = true; close()"
                       >
                         <Icon name="pencil" :size="16" />
@@ -590,6 +604,18 @@ onBeforeUnmount(() => {
           >
             <Icon name="book-open" :size="16" />
             <span class="btn-pill-label">Referência</span>
+          </button>
+
+          <!-- F0.12.07: círculo de leitura com este livro -->
+          <button
+            class="secondary icon-action-btn"
+            type="button"
+            title="Criar círculo de leitura deste livro"
+            aria-label="Criar círculo deste livro"
+            @click="startCircle"
+          >
+            <Icon name="network" :size="16" />
+            <span class="btn-pill-label">Criar círculo</span>
           </button>
 
           <!-- Editar Livro -->

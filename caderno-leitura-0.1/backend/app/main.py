@@ -46,6 +46,7 @@ from app.routers import (
     library_import,
     paraphrase,
     public_studies,
+    reading_circles,
     receiver,
     syntheses,
     study_relations,
@@ -206,6 +207,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(profile.avatars_router, prefix="/api")
     application.include_router(users.router, prefix="/api")
     application.include_router(friends.router, prefix="/api")
+    application.include_router(reading_circles.router, prefix="/api")  # F0.12.07
     application.include_router(sharing.router, prefix="/api")
     application.include_router(notifications.router, prefix="/api")
     application.include_router(support.router, prefix="/api")

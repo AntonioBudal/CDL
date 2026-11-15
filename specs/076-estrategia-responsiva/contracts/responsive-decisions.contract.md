@@ -44,6 +44,8 @@
 | `versions` | `/sobre/versoes` | **1** | Evolução das versões (F0.12.01): tela escondida, linha do tempo de uma coluna; link de volta com 44 px. |
 | `synthesis` | `/sinteses/:id` | **1** | Caderno de síntese (F0.11.11): texto e trechos transcluídos em blocos empilhados; editor em coluna única. |
 | `ereader-import` | `/inbox/importar-leitor` | **1** | Importar destaques do Kindle ou Kobo (F0.11.03): três passos em coluna única; a escolha de destino de cada livro quebra linha no celular, com campos e botões de 44 px. |
+| `circles` | `/circulos` | **1** | Círculos de leitura (F0.12.07): convites, meus círculos e criação em coluna única; alvos de 44 px. |
+| `circle` | `/circulos/:id` | **1** | Círculo de leitura (F0.12.07): progresso, partes em blocos recolhíveis (trancadas à frente), membros e gestão em coluna única; alvos de 44 px. |
 | `friends` | `/amigos` | **1** | Gestão de conexões sociais e salão literário. Grids de amigos adaptados para `min(280px, 100%)`. |
 | `user-profile` | `/@:username` | **1** | Perfil público de leitor e lista de estudos compartilhados com alvos táteis acessíveis. |
 | `settings` | `/ajustes` | **2** | Central de ajustes com abas roláveis horizontalmente e botão flutuante (FAB) de preview posicionado acima da barra inferior. |

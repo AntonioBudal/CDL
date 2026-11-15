@@ -60,6 +60,8 @@ Representa o contrato de validação para cada uma das 25 rotas nomeadas de `rou
 | 31 | `synthesis` | `/sinteses/:id` | `views/SynthesisView.vue` | 1 | Contido | $\ge 44\text{px}$ |
 | 32 | `versions` | `/sobre/versoes` | `views/VersionsView.vue` | 1 | Contido | $\ge 44\text{px}$ |
 | 33 | `library-import` | `/livros/importar` | `views/LibraryImportView.vue` | 1 | Contido | $\ge 44\text{px}$ |
+| 34 | `circles` | `/circulos` | `views/CirclesView.vue` | 1 | Contido | $\ge 44\text{px}$ |
+| 35 | `circle` | `/circulos/:id` | `views/CircleView.vue` | 1 | Contido | $\ge 44\text{px}$ |
 | 27 | `ereader-import` | `/inbox/importar-leitor` | `views/EreaderImportView.vue` | 1 | Contido | $\ge 44\text{px}$ |
 
 ---
