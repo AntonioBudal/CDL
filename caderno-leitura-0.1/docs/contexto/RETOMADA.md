@@ -1800,3 +1800,29 @@ Spec aprovada com as recomendações Q1 a Q5:
   atalhos (item da spec caiu).
 - **Pendência à parte:** `npm audit` aponta dois avisos antigos (`markdown-it` e `source-map-js`), sem relação com o
   `vue-i18n`.
+
+## F0.12.10 — Pequenas melhorias de usabilidade (2026-11-15)
+
+- **Spec, plano e tarefas:** `specs/123-melhorias-de-usabilidade/`. Décima e última feature do 0.12; fecha o lote 2.
+  **Sem migração**, só frontend. Versão `0.12.0-alpha.10`.
+- **Defeitos reproduzidos antes (dados fictícios):** (1) as células do calendário são botões e herdavam a altura mínima
+  global de 46 px (`:root :is(button, .button):not(…)`), desalinhando a coluna dos dias (14 px) e esticando a grade;
+  (2) a regra global `.reader-heading > div { flex: 1 1 20rem }` virava altura no cabeçalho do estudo em coluna (bloco
+  de ações com 320 px para botões de 46 px; cabeçalho 412 → 138 px no celular); (3) o menu de 3 pontos ficava atrás da
+  barra de baixo do celular.
+- **Calendário** (`HeatmapCalendar.vue`, `utils/heatmapPeriods.ts`): períodos 1, 3, 6, 12 meses e "Ano passado (2025)"
+  (730 dias da API, filtrados na tela), lembrado em `leitorum_heatmap_period`; dias da semana como primeira coluna da
+  própria grade; regra de maior especificidade para as células. Painel: título "Atividades em 14 de novembro de
+  2026", contagem e "Ver todas"; no celular rola até a lista (a animação suave não anda no painel oculto do navegador
+  de teste, mas a chamada acontece).
+- **Barra de ações** (`StudyActionsBar.vue`, ex-`FloatingActionsToolbar.vue`): fixa acima das abas, `position: sticky`
+  no alto ao rolar, desativada sem seleção ("Selecione um trecho do texto…"), `mousedown` preserva a seleção, mesmos
+  eventos; só ícones no celular e quando a coluna do texto é estreita (consulta de contêiner ≤ 600 px, ex.: 768 px);
+  saiu `computeToolbarPosition` e os manipuladores `handleAnnotate`/`handleAskQuestion`, que nunca eram chamados.
+- **Menu** (`DropdownMenu.vue`, `utils/menuPlacement.ts`): mede depois de abrir e encaixa na tela (margem de 8 px,
+  desconta a barra de baixo do celular, abre para cima ou rola por dentro); vale para os 3 menus que usam o componente.
+- **Testes:** `feature-123-usabilidade` (6); testes antigos da barra flutuante passaram a ler a barra nova (saíram os
+  de posição junto da seleção e um que conferia CSS sem uso); `npm test` 825/825; `pytest` completo 896 passou, 4 pulados, nenhuma falha; build
+  ok. Navegador em 1366, 768 e 375 px: calendário alinhado, períodos, filtro por dia, barra presa no alto e destaque
+  salvo pela barra (destaque de teste apagado depois), menu cabendo (inclusive abrindo para cima), dica da barra com
+  contraste ≥ 5,23:1 nos 10 temas.

@@ -81,17 +81,20 @@ versão `0.12.0-alpha.3`; Readwise sem conferência com arquivo real) · F0.12.0
 anti-spoiler (spec 120, **concluída**; versão `0.12.0-alpha.7`; migração `0042`, falta rodar no banco ativo; sem aviso no sininho) · F0.12.08 simplificação de nomes (spec 121, **concluída**; versão
 `0.12.0-alpha.8`) · F0.12.09 seletor de idioma, só a fundação (spec 122, **concluída**; versão `0.12.0-alpha.9`;
 migração `0043`, falta rodar no banco ativo) · F0.12.10 pequenas melhorias de
-usabilidade (calendário do Painel, barra de ações fixa no estudo, menu de 3 pontos no celular, cabeçalho do estudo).
+usabilidade (spec 123, **concluída**; versão `0.12.0-alpha.10`). **As 10 features do 0.12 estão entregues**; fechar o
+roadmap (versão `0.12.0` e "Fechado" na linha do tempo) fica para o usuário decidir.
 
 **Lote 1 do 0.12 fechado (F0.12.01–05):** `npm test` 811/811 e `pytest` completo 884 passou, 4 pulados (teste antigo de
 indexação de `/compartilhado/1` corrigido em commit próprio). Próximo lote: F0.12.06–10.
+
+**Lote 2 do 0.12 fechado (F0.12.06–10):** `npm test` 825/825 e `pytest` completo 896 passou, 4 pulados, nenhuma falha.
 
 ---
 
 ## 2. Como trabalhamos (decisões do usuário em vigor)
 
 - **Spec Kit:** spec, plano e tarefas **juntos** em `specs/NNN-*/`, uma aprovação por feature; depois, executar até o
-  fim sem parar em checkpoints. Próximo número livre de spec: **123**.
+  fim sem parar em checkpoints. Próximo número livre de spec: **124**.
 - **Testes:** suítes completas (`npm test` e `pytest` inteiro) **a cada 5 features**; entre elas, `npm run build` e os
   testes novos da feature. Falha de feature anterior vai em **commit próprio**.
 - **Commit** logo depois do build (vale mesmo contra o AGENTS.md §6, por decisão do usuário). Mensagem em português,

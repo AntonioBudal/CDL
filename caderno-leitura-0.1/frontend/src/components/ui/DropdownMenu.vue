@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import type { DropdownMenuAlign } from '../../types/dropdown'
+import { placeMenu } from '../../utils/menuPlacement.ts'
 
 const props = withDefaults(
   defineProps<{
@@ -24,6 +25,37 @@ const isOpen = ref(false)
 const containerRef = ref<HTMLElement | null>(null)
 const menuRef = ref<HTMLElement | null>(null)
 const defaultTriggerRef = ref<HTMLButtonElement | null>(null)
+// F0.12.10: posição medida para o menu caber na tela (inclusive acima da barra de baixo do celular)
+const placementStyle = ref<Record<string, string>>({})
+
+function bottomInset(): number {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue('--mobile-nav-offset')
+  const fromVar = parseFloat(raw)
+  if (Number.isFinite(fromVar) && fromVar > 0) return fromVar
+  const bar = document.querySelector<HTMLElement>('.mobile-tab-bar')
+  return bar && bar.offsetParent !== null ? bar.getBoundingClientRect().height : 0
+}
+
+function updatePlacement() {
+  if (!isOpen.value || !containerRef.value || !menuRef.value) return
+  const trigger = containerRef.value.getBoundingClientRect()
+  const menu = menuRef.value
+  const place = placeMenu({
+    trigger,
+    menu: { width: menu.offsetWidth, height: menu.scrollHeight },
+    viewport: { width: window.innerWidth, height: window.innerHeight },
+    align: props.align === 'left' ? 'left' : 'right',
+    bottomInset: bottomInset(),
+  })
+  placementStyle.value = {
+    position: 'fixed',
+    left: `${Math.round(place.left)}px`,
+    top: `${Math.round(place.top)}px`,
+    right: 'auto',
+    maxHeight: `${Math.round(place.maxHeight)}px`,
+    overflowY: place.maxHeight < menu.scrollHeight ? 'auto' : 'visible',
+  }
+}
 
 const menuAlignClass = computed(() => {
   return props.align === 'left' ? 'align-left' : 'align-right'
@@ -40,9 +72,11 @@ function getFocusableItems(): HTMLElement[] {
 
 function open() {
   if (props.disabled || isOpen.value) return
+  placementStyle.value = { visibility: 'hidden' }
   isOpen.value = true
   emit('open')
   nextTick(() => {
+    updatePlacement()
     const items = getFocusableItems()
     if (items.length > 0) {
       items[0].focus()
@@ -140,10 +174,14 @@ function handlePointerDownOutside(event: PointerEvent) {
 
 onMounted(() => {
   document.addEventListener('pointerdown', handlePointerDownOutside)
+  window.addEventListener('resize', updatePlacement)
+  window.addEventListener('scroll', updatePlacement, true)
 })
 
 onBeforeUnmount(() => {
   document.removeEventListener('pointerdown', handlePointerDownOutside)
+  window.removeEventListener('resize', updatePlacement)
+  window.removeEventListener('scroll', updatePlacement, true)
 })
 
 defineExpose({
@@ -192,6 +230,7 @@ defineExpose({
         role="menu"
         class="dropdown-menu-popover"
         :class="menuAlignClass"
+        :style="placementStyle"
         aria-orientation="vertical"
         tabindex="-1"
         @keydown="onMenuKeydown"

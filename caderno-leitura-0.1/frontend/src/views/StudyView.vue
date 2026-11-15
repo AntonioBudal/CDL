@@ -16,7 +16,7 @@ import CreateRelationModal from '../components/relations/CreateRelationModal.vue
 import StudyStatusBadge from '../components/StudyStatusBadge.vue'
 import ShareModal from '../components/sharing/ShareModal.vue'
 import StudyHistoryModal from '../components/StudyHistoryModal.vue'
-import FloatingActionsToolbar from '../components/FloatingActionsToolbar.vue'
+import StudyActionsBar from '../components/StudyActionsBar.vue'
 import NoteQuestionPopover from '../components/NoteQuestionPopover.vue'
 import HighlightActionPopover from '../components/HighlightActionPopover.vue'
 import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
@@ -292,30 +292,6 @@ async function handleHighlight(payload: { color: HighlightColor; selection?: Tex
   clearSelection()
 }
 
-async function handleAnnotate(payload: { note: string; color: HighlightColor; selection?: TextSelectionContext }) {
-  const sel = payload.selection || selectionContext.value
-  if (!sel || !state.context) return
-  const result = await addHighlight({
-    section: sel.section,
-    start_offset: sel.start_offset,
-    end_offset: sel.end_offset,
-    selected_text: sel.selected_text,
-    prefix: sel.prefix,
-    suffix: sel.suffix,
-    color: payload.color,
-    kind: 'note',
-    note: payload.note,
-  })
-  if (result) {
-    floatingToast.showToast({
-      message: 'Anotação salva',
-    })
-  } else {
-    showToast('Não foi possível salvar a anotação.')
-  }
-  clearSelection()
-}
-
 async function handleCopyQuote(payload?: { selection?: TextSelectionContext }) {
   const sel = payload?.selection || selectionContext.value
   if (!sel || !state.context) return
@@ -367,30 +343,6 @@ async function handleOcclude(payload?: { selection?: TextSelectionContext }) {
     })
   } else {
     showToast('Não foi possível ocultar o trecho.')
-  }
-  clearSelection()
-}
-
-async function handleAskQuestion(payload: { question: string; selection?: TextSelectionContext }) {
-  const sel = payload.selection || selectionContext.value
-  if (!sel || !state.context) return
-  const result = await addHighlight({
-    section: sel.section,
-    start_offset: sel.start_offset,
-    end_offset: sel.end_offset,
-    selected_text: sel.selected_text,
-    prefix: sel.prefix,
-    suffix: sel.suffix,
-    color: 'yellow',
-    kind: 'question',
-    note: payload.question,
-  })
-  if (result) {
-    floatingToast.showToast({
-      message: 'Pergunta cadastrada',
-    })
-  } else {
-    showToast('Não foi possível criar a pergunta.')
   }
   clearSelection()
 }
@@ -907,6 +859,22 @@ onBeforeUnmount(() => {
       @study-active-toggle="handleActiveToggle"
     >
       <div class="reader-content-column">
+        <!-- F0.12.10: barra de ações fixa acima das abas (sai a barra flutuante) -->
+        <StudyActionsBar
+          :active="Boolean(selectionContext) && !isNotePopoverOpen"
+          :selection="selectionContext"
+          :study-title="state.context.study.title"
+          :book-title="state.context.book.title"
+          :chapter-name="state.context.chapter.name"
+          :can-edit="canEdit"
+          @highlight="handleHighlight"
+          @copy-quote="handleCopyQuote"
+          @occlude="handleOcclude"
+          @open-note="handleOpenNote"
+          @open-question="handleOpenQuestion"
+          @tool-selected="handleToolSelected"
+          @close="clearSelection"
+        />
         <StudyTabs
           ref="studyTabsRef"
           :key="state.context.study.id"
@@ -1067,23 +1035,6 @@ onBeforeUnmount(() => {
 
 
     <!-- Barra Flutuante Contextual de Ações (F0.6.2 / F0.7.3) -->
-    <FloatingActionsToolbar
-      :visible="Boolean(selectionContext) && !isNotePopoverOpen"
-      :selection="selectionContext"
-      :study-title="state.context.study.title"
-      :book-title="state.context.book.title"
-      :chapter-name="state.context.chapter.name"
-      :can-edit="canEdit"
-      @highlight="handleHighlight"
-      @annotate="handleAnnotate"
-      @copy-quote="handleCopyQuote"
-      @occlude="handleOcclude"
-      @ask-question="handleAskQuestion"
-      @open-note="handleOpenNote"
-      @open-question="handleOpenQuestion"
-      @tool-selected="handleToolSelected"
-      @close="clearSelection"
-    />
 
     <!-- Popover Desacoplado de Anotação e Pergunta (F 0.7.3) -->
     <NoteQuestionPopover
@@ -1443,6 +1394,12 @@ onBeforeUnmount(() => {
     justify-content: flex-start;
     gap: 0.5rem;
     margin-bottom: 0.875rem;
+  }
+
+  /* F0.12.10: a regra global ".reader-heading > div { flex: 1 1 20rem }" vira altura quando o cabeçalho empilha em
+     coluna (o bloco de ações ficava com 320 px para botões de 46 px). */
+  .page-header.reader-heading > div {
+    flex: 0 0 auto;
   }
 
   .reader-heading-main {

@@ -83,35 +83,6 @@ test('T003: useHighlightColorPreference gerencia estado reativo e sincroniza com
   assert.equal(pref3.activeColor.value, 'yellow')
 })
 
-test('T004: computeToolbarPosition mantém compatibilidade para a régua flutuante', async () => {
-  const { computeToolbarPosition } = await import('../src/utils/toolbarPosition.ts')
-
-  // Desktop
-  const posDesktop = computeToolbarPosition({
-    selectionRect: { top: 200, bottom: 230, left: 100, right: 300, width: 200, height: 30 },
-    toolbarWidth: 320,
-    toolbarHeight: 48,
-    viewportWidth: 1024,
-    viewportHeight: 768,
-    isMobile: false,
-  })
-  assert.equal(posDesktop.isBottomDocked, false)
-  assert.equal(posDesktop.top, '142px') // 200 - 48 - 10 = 142
-  assert.equal(posDesktop.left, '40px') // Center: 200. Ideal: 200 - 160 = 40
-
-  // Mobile
-  const posMobile = computeToolbarPosition({
-    selectionRect: { top: 200, bottom: 230, left: 100, right: 300, width: 200, height: 30 },
-    toolbarWidth: 320,
-    toolbarHeight: 48,
-    viewportWidth: 390,
-    viewportHeight: 844,
-    isMobile: true,
-  })
-  assert.equal(posMobile.isBottomDocked, true)
-  assert.equal(posMobile.bottom, '0px')
-})
-
 test('T004 / T013: computePopoverPosition ancora adequadamente no desktop e adapta no mobile com visualViewport', async () => {
   const { computePopoverPosition } = await import('../src/utils/toolbarPosition.ts')
 
@@ -168,7 +139,7 @@ test('T004 / T013: computePopoverPosition ancora adequadamente no desktop e adap
 })
 
 test('T005 / T006 / T007: Split Button possui 5 cores e ações diretas de 1 clique', async () => {
-  const toolbarPath = path.resolve('src/components/FloatingActionsToolbar.vue')
+  const toolbarPath = path.resolve('src/components/StudyActionsBar.vue')
   const content = fs.readFileSync(toolbarPath, 'utf-8')
 
   // Split button
@@ -223,7 +194,7 @@ test('T009 / T010: NoteQuestionPopover.vue valida campo vazio, atalhos de teclad
 })
 
 test('T014 / T015: Ergonomia móvel garante alvos de 44x44px e visualViewport', async () => {
-  const toolbarPath = path.resolve('src/components/FloatingActionsToolbar.vue')
+  const toolbarPath = path.resolve('src/components/StudyActionsBar.vue')
   const toolbarContent = fs.readFileSync(toolbarPath, 'utf-8')
   assert.ok(toolbarContent.includes('min-height: 44px;'), 'Toolbar móvel deve garantir altura mínima de 44px')
   assert.ok(toolbarContent.includes('min-width: 44px;'), 'Toolbar móvel deve garantir largura mínima de 44px')

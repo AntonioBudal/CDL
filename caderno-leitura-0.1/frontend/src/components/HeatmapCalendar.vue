@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import type { HeatmapPoint } from '../types'
+import { HEATMAP_PERIODS, periodLabel } from '../utils/heatmapPeriods.ts'
 
 const props = defineProps<{
   points: HeatmapPoint[]
   selectedDate: string | null
+  /** F0.12.10: período escolhido (1, 3, 6, 12 meses ou o ano passado). */
+  period: string
 }>()
 
 const emit = defineEmits<{
   (e: 'select-date', date: string | null): void
+  (e: 'update:period', period: string): void
 }>()
 
-const mobileExpanded = ref(false)
 const scrollAreaRef = ref<HTMLElement | null>(null)
 
 function scrollToRecent(): void {
@@ -55,16 +58,7 @@ interface CalendarWeek {
   monthLabel?: string
 }
 
-// Recorte adaptativo: no mobile compacto exibe cerca de 17 semanas (~120 dias)
-const activePoints = computed(() => {
-  if (!props.points || props.points.length === 0) return []
-  if (!mobileExpanded.value) {
-    // Por padrão no mobile mostramos os últimos 120 dias (~4 meses)
-    // No desktop via CSS o container mostra todas as colunas
-    return props.points
-  }
-  return props.points
-})
+const activePoints = computed(() => props.points ?? [])
 
 const weeks = computed<CalendarWeek[]>(() => {
   const pts = activePoints.value
@@ -142,36 +136,39 @@ function handleCellClick(point: HeatmapPoint) {
 </script>
 
 <template>
-  <div class="heatmap-card" :class="{ 'mobile-expanded': mobileExpanded }">
+  <div class="heatmap-card">
     <div class="heatmap-header">
       <div class="heatmap-title-group">
-        <h3 class="heatmap-heading">Frequência em Calendário</h3>
-        <p class="heatmap-sub">Últimos 12 meses de atividades diárias</p>
+        <h3 class="heatmap-heading">Frequência em calendário</h3>
+        <p class="heatmap-sub">{{ periodLabel(period) }} de atividades diárias</p>
       </div>
-      <button
-        type="button"
-        class="secondary mobile-toggle-btn"
-        @click="mobileExpanded = !mobileExpanded"
-      >
-        {{ mobileExpanded ? 'Ver período compacto' : 'Ver ano completo' }}
-      </button>
+      <!-- F0.12.10: escolha do período -->
+      <div class="heatmap-periods" role="radiogroup" aria-label="Período do calendário">
+        <button
+          v-for="period in HEATMAP_PERIODS"
+          :key="period.id"
+          type="button"
+          class="heatmap-period"
+          :class="{ active: props.period === period.id, quiet: props.period !== period.id }"
+          role="radio"
+          :aria-checked="props.period === period.id"
+          @click="emit('update:period', period.id)"
+        >
+          {{ period.id === 'last-year' ? periodLabel(period.id) : period.label }}
+        </button>
+      </div>
     </div>
 
     <div ref="scrollAreaRef" class="heatmap-scroll-area">
       <div class="heatmap-grid-wrapper">
-        <!-- Rótulos dos dias da semana -->
-        <div class="day-labels" aria-hidden="true">
-          <span
-            v-for="(day, idx) in DAY_LABELS"
-            :key="idx"
-            class="day-label"
-          >
-            {{ day.label }}
-          </span>
-        </div>
-
-        <!-- Grade de semanas -->
+        <!-- Grade de semanas; a primeira coluna são os dias da semana, com o mesmo tamanho das células (F0.12.10) -->
         <div class="weeks-container" role="grid" aria-label="Mapa de calor de atividades de leitura">
+          <div class="week-column day-label-column" aria-hidden="true">
+            <span class="month-label" />
+            <div class="days-column">
+              <span v-for="(day, idx) in DAY_LABELS" :key="idx" class="day-label">{{ day.label }}</span>
+            </div>
+          </div>
           <div
             v-for="(week, wIdx) in weeks"
             :key="wIdx"
@@ -254,15 +251,28 @@ function handleCellClick(point: HeatmapPoint) {
   color: var(--color-muted, #64748b);
 }
 
-.mobile-toggle-btn {
-  display: none;
-  font-size: 0.8rem;
-  padding: 0.35rem 0.75rem;
+.heatmap-periods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
 }
 
-@media (max-width: 768px) {
-  .mobile-toggle-btn {
-    display: inline-flex;
+.heatmap-period {
+  min-height: 36px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.82rem;
+  border-radius: 999px;
+}
+
+.heatmap-period.active {
+  background: var(--color-selected-bg);
+  color: var(--color-selected-text);
+  border-color: var(--color-accent);
+}
+
+@media (pointer: coarse) {
+  .heatmap-period {
+    min-height: 44px;
   }
 }
 
@@ -278,22 +288,21 @@ function handleCellClick(point: HeatmapPoint) {
   min-width: max-content;
 }
 
-.day-labels {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  margin-top: 1.3rem; /* Espaço alinhado ao rótulo do mês */
+/* A coluna dos dias da semana usa a mesma altura e o mesmo espaçamento das células (F0.12.10). */
+.week-column.day-label-column {
+  width: 26px;
   user-select: none;
 }
 
 .day-label {
+  display: block;
   height: 14px;
   line-height: 14px;
   font-size: 0.68rem;
   color: var(--color-muted, #64748b);
-  width: 24px;
   text-align: right;
   padding-right: 4px;
+  white-space: nowrap;
 }
 
 .weeks-container {
@@ -325,6 +334,9 @@ function handleCellClick(point: HeatmapPoint) {
 .heatmap-cell {
   width: 14px;
   height: 14px;
+  /* F0.12.10: as células são botões; sem isto herdam a altura mínima de 44 px dos botões e desalinham a grade. */
+  min-height: 0;
+  min-width: 0;
   padding: 0;
   margin: 0;
   border-radius: var(--radius-small, 3px);
@@ -332,6 +344,12 @@ function handleCellClick(point: HeatmapPoint) {
   cursor: pointer;
   transition: transform 0.12s ease, outline-color 0.12s ease;
   box-sizing: border-box;
+}
+
+/* A regra global dos botões (":root :is(button, .button):not(...)") tem especificidade maior; esta a vence. */
+:root .heatmap-card button.heatmap-cell {
+  min-height: 0;
+  min-width: 0;
 }
 
 .heatmap-cell:focus-visible {

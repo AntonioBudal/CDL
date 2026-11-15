@@ -111,14 +111,15 @@ test('StudyEditorFields.vue integra MarkdownToolbar nos campos de seções e not
   assert.ok(content.includes('<MarkdownToolbar :target-id="`${idPrefix}-notes`" />'), 'Deve integrar toolbar nas anotações')
 })
 
-test('FloatingActionsToolbar.vue emite payload com selection e previne perda de foco no mousedown', async () => {
+// F0.12.10: a barra flutuante virou a barra fixa StudyActionsBar.vue.
+test('StudyActionsBar.vue emite payload com selection e previne perda de foco no mousedown', async () => {
   const fs = await import('node:fs')
   const path = await import('node:path')
-  const toolbarPath = path.resolve('src/components/FloatingActionsToolbar.vue')
+  const toolbarPath = path.resolve('src/components/StudyActionsBar.vue')
   const content = fs.readFileSync(toolbarPath, 'utf-8')
 
   assert.ok(content.includes('selection: TextSelectionContext'), 'Deve definir tipagem de selection nos emits')
-  assert.ok(content.includes('@mousedown="handleToolbarMouseDown"'), 'Deve prevenir perda de foco na toolbar')
+  assert.ok(content.includes('@mousedown="keepSelection"'), 'Deve prevenir perda de foco na toolbar')
   assert.ok(content.includes('currentSelection'), 'Deve preservar seleção capturada localmente')
 })
 

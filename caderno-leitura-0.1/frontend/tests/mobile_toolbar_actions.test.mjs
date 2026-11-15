@@ -3,8 +3,8 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import path from 'node:path'
 
-test('FloatingActionsToolbar.vue oculta legendas e adota ícones de 44x44px no mobile (US2)', () => {
-  const filePath = path.resolve('src/components/FloatingActionsToolbar.vue')
+test('StudyActionsBar.vue oculta legendas e adota ícones de 44x44px no mobile (US2)', () => {
+  const filePath = path.resolve('src/components/StudyActionsBar.vue')
   const content = fs.readFileSync(filePath, 'utf-8')
 
   // Envolve legendas em tags identificáveis
@@ -29,8 +29,8 @@ test('FloatingActionsToolbar.vue oculta legendas e adota ícones de 44x44px no m
   assert.ok(content.includes("emit('tool-selected'"), 'Toolbar deve emitir tool-selected para feedback')
 })
 
-test('FloatingActionsToolbar.vue amplia a paleta de cores no mobile para alvos confortáveis (FR-010)', () => {
-  const filePath = path.resolve('src/components/FloatingActionsToolbar.vue')
+test('StudyActionsBar.vue amplia a paleta de cores no mobile para alvos confortáveis (FR-010)', () => {
+  const filePath = path.resolve('src/components/StudyActionsBar.vue')
   const content = fs.readFileSync(filePath, 'utf-8')
 
   assert.ok(content.includes('.is-mobile .color-choice-btn'), 'Deve estilizar botões de escolha de cor no mobile')
@@ -38,16 +38,7 @@ test('FloatingActionsToolbar.vue amplia a paleta de cores no mobile para alvos c
   assert.ok(content.includes('height: 36px;'), 'Círculo de cor deve ter 36px no mobile')
 })
 
-test('FloatingActionsToolbar.vue adapta prompts móveis de anotação e pergunta (US4 / FR-004)', () => {
-  const filePath = path.resolve('src/components/FloatingActionsToolbar.vue')
-  const content = fs.readFileSync(filePath, 'utf-8')
-
-  assert.ok(content.includes('.is-mobile .prompt-container'), 'Deve conter container móvel de prompt')
-  assert.ok(content.includes('.is-mobile .prompt-textarea'), 'Deve conter estilização mobile para textarea')
-  assert.ok(content.includes('.is-mobile .prompt-input'), 'Deve conter estilização mobile para input')
-  assert.ok(content.includes('.is-mobile .prompt-actions'), 'Deve conter ações móveis de prompt')
-})
-
+// F0.12.10: o teste dos prompts móveis saiu: a barra nunca teve esses campos (o CSS era resto sem uso).
 test('StudyView.vue integra o micro-toast flutuante com acessibilidade e posicionamento no topo (US3)', () => {
   const filePath = path.resolve('src/views/StudyView.vue')
   const content = fs.readFileSync(filePath, 'utf-8')

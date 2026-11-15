@@ -12,12 +12,37 @@ import Icon from '../components/ui/Icon.vue'
 import EmptyState from '../components/ui/EmptyState.vue'
 import LoadingSkeleton from '../components/ui/LoadingSkeleton.vue'
 import { api, errorMessage } from '../services/api'
+import { DEFAULT_PERIOD, PERIOD_STORAGE_KEY, isPeriodId, periodDays, pointsForPeriod } from '../utils/heatmapPeriods.ts'
 import type { DashboardBlockVisibility, DashboardResponse, TimelineItem } from '../types'
 
 const loading = ref(true)
 const loadError = ref('')
 const dashboardData = ref<DashboardResponse | null>(null)
 const selectedDate = ref<string | null>(null)
+// F0.12.10: período do calendário, lembrado no navegador
+const period = ref<string>(readPeriod())
+const timelineSectionRef = ref<HTMLElement | null>(null)
+
+function readPeriod(): string {
+  try {
+    const saved = localStorage.getItem(PERIOD_STORAGE_KEY)
+    if (isPeriodId(saved)) return saved
+  } catch {
+    // sem armazenamento local
+  }
+  return DEFAULT_PERIOD
+}
+
+async function changePeriod(value: string) {
+  if (!isPeriodId(value) || value === period.value) return
+  period.value = value
+  try {
+    localStorage.setItem(PERIOD_STORAGE_KEY, value)
+  } catch {
+    // sem armazenamento local: vale só nesta visita
+  }
+  await loadDashboard(selectedDate.value)
+}
 const filteringTimeline = ref(false)
 
 const activeNavSection = ref('resume')
@@ -41,7 +66,7 @@ const summary = computed(() => dashboardData.value?.summary || {
   unlinked_studies_count: 0,
 })
 
-const heatmapPoints = computed(() => dashboardData.value?.heatmap || [])
+const heatmapPoints = computed(() => pointsForPeriod(dashboardData.value?.heatmap || [], period.value))
 const timelineItems = computed(() => dashboardData.value?.timeline || [])
 const recentStudies = computed(() => dashboardData.value?.recent_studies || [])
 const unlinkedStudies = computed(() => dashboardData.value?.unlinked_studies || [])
@@ -84,7 +109,7 @@ async function loadDashboard(dateFilter?: string | null) {
     const tzOffset = -new Date().getTimezoneOffset()
     const data = await api.getDashboard({
       tz_offset: tzOffset,
-      days: 365,
+      days: periodDays(period.value),
       date: dateFilter ?? selectedDate.value,
       limit: 30,
     })
@@ -100,6 +125,10 @@ async function loadDashboard(dateFilter?: string | null) {
 async function handleSelectDate(date: string | null) {
   selectedDate.value = date
   await loadDashboard(date)
+  // F0.12.10: no celular, a linha do tempo fica abaixo do calendário; leva o leitor até ela.
+  if (date && typeof window !== 'undefined' && window.innerWidth < 768) {
+    timelineSectionRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 }
 
 function clearDateFilter() {
@@ -123,7 +152,7 @@ function formatRelativeDate(isoStr: string): string {
 
 function formatSelectedDate(dateStr: string): string {
   const [y, m, d] = dateStr.split('-').map(Number)
-  return `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`
+  return new Date(y, m - 1, d).toLocaleDateString(uiLocale(), { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 function actionBadgeLabel(item: TimelineItem): string {
@@ -336,32 +365,37 @@ onMounted(() => {
             <HeatmapCalendar
               :points="heatmapPoints"
               :selected-date="selectedDate"
+              :period="period"
               @select-date="handleSelectDate"
+              @update:period="changePeriod"
             />
           </section>
 
           <!-- Seção da Linha do Tempo -->
-          <section class="timeline-section" aria-label="Linha do tempo de atividades">
+          <section ref="timelineSectionRef" class="timeline-section" aria-label="Linha do tempo de atividades">
             <div class="timeline-header">
-              <div class="timeline-title-area">
-                <h2 class="timeline-heading">Atividades Recentes</h2>
+              <!-- F0.12.10: com um dia escolhido no calendário, o título diz qual é e quantas atividades houve -->
+              <div v-if="selectedDate" class="timeline-title-area" role="status">
+                <h2 class="timeline-heading">Atividades em {{ formatSelectedDate(selectedDate) }}</h2>
                 <p class="timeline-sub">
-                  Histórico cronológico de criações e revisões no caderno.
+                  {{ filteringTimeline ? 'Carregando…' : (timelineItems.length === 1 ? '1 atividade neste dia' : `${timelineItems.length} atividades neste dia`) }}
+                </p>
+              </div>
+              <div v-else class="timeline-title-area">
+                <h2 class="timeline-heading">Atividades recentes</h2>
+                <p class="timeline-sub">
+                  Histórico cronológico de criações e revisões no caderno. Clique num dia do calendário para ver só ele.
                 </p>
               </div>
 
-              <!-- Chip de filtro ativo -->
-              <div v-if="selectedDate" class="filter-chip" role="status">
-                <span>Filtrando por: <strong>{{ formatSelectedDate(selectedDate) }}</strong></span>
-                <button
-                  type="button"
-                  class="clear-filter-btn"
-                  aria-label="Limpar filtro de data"
-                  @click="clearDateFilter"
-                >
-                  <Icon name="x" :size="13" /> Limpar
-                </button>
-              </div>
+              <button
+                v-if="selectedDate"
+                type="button"
+                class="secondary clear-filter-btn"
+                @click="clearDateFilter"
+              >
+                <Icon name="x" :size="14" /> Ver todas
+              </button>
             </div>
 
             <!-- Carregando filtro -->
@@ -640,36 +674,12 @@ onMounted(() => {
   color: var(--color-muted, #64748b);
 }
 
-.filter-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.4rem 0.85rem;
-  background: var(--color-selected-bg, #eaf0ff);
-  color: var(--color-selected-text, #163ba6);
-  border: 1px solid var(--color-accent);
-  border-radius: var(--radius-badge, 4px);
-  font-size: 0.85rem;
-}
-
 .clear-filter-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  color: inherit;
   min-height: 44px;
-  min-width: 44px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-small, 3px);
-  touch-action: manipulation;
-}
-
-.clear-filter-btn:hover {
-  background: rgba(0, 0, 0, 0.08);
+  gap: 0.35rem;
+  flex-shrink: 0;
 }
 
 .timeline-list {
