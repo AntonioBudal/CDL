@@ -21,6 +21,23 @@ async function load() {
   }
 }
 
+// F0.12.04: feeds públicos dos estudos publicados
+const FEEDS = [
+  { label: 'RSS', path: '/feed.xml' },
+  { label: 'Atom', path: '/feed.atom' },
+  { label: 'JSON Feed', path: '/feed.json' },
+]
+
+async function copyFeed(path: string) {
+  const url = `${window.location.origin}${path}`
+  try {
+    await navigator.clipboard.writeText(url)
+    message.value = `Endereço do feed copiado: ${url}`
+  } catch {
+    message.value = 'Não consegui copiar; selecione o endereço e copie à mão.'
+  }
+}
+
 async function unpublish(item: PublishedStudyItem) {
   busy.value = true
   error.value = ''
@@ -53,6 +70,16 @@ onMounted(load)
         <button type="button" class="quiet published-button" :disabled="busy" @click="unpublish(item)">Despublicar</button>
       </li>
     </ul>
+    <div class="published-feeds">
+      <p class="published-muted">Feeds para leitores de notícias (os 50 publicados mais recentes):</p>
+      <ul class="published-feed-list">
+        <li v-for="feed in FEEDS" :key="feed.path" class="published-item">
+          <a :href="feed.path" target="_blank" rel="noopener" class="published-link">{{ feed.label }}</a>
+          <code class="published-muted">{{ feed.path }}</code>
+          <button type="button" class="quiet published-button" @click="copyFeed(feed.path)">Copiar</button>
+        </li>
+      </ul>
+    </div>
     <p v-if="error" class="published-error" role="alert">{{ error }}</p>
     <p class="published-muted" role="status" aria-live="polite">{{ message }}</p>
   </section>
@@ -102,6 +129,18 @@ onMounted(load)
 }
 .published-button {
   min-height: 44px;
+}
+.published-feeds {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border);
+}
+.published-feed-list {
+  list-style: none;
+  margin: 4px 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
 }
 .published-error {
   color: var(--color-danger-text);

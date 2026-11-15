@@ -42,6 +42,7 @@ from app.routers import (
     study_highlights,
     study_mentions,
     concepts,
+    feeds,
     library_import,
     paraphrase,
     public_studies,
@@ -212,6 +213,7 @@ def create_app(*, frontend_dist: Path | None = None) -> FastAPI:
     application.include_router(study_sessions.router, prefix="/api")
     application.include_router(seo.router)
     application.include_router(public_studies.page_router)  # F0.12.02: /compartilhado/{id}
+    application.include_router(feeds.router)  # F0.12.04: /feed.xml, /feed.atom, /feed.json
 
     # Registro de manipuladores de erro de banco e mascaramento global 500 (T007, T018)
     register_database_error_handlers(application)

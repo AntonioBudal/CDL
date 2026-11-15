@@ -13,7 +13,10 @@ PUBLIC_STUDY_PAGES_ENABLED = True
 def generate_robots_txt(base_url: str | None = None) -> str:
     """Gera o conteúdo de texto puro do arquivo robots.txt com regras estritas de rastreamento."""
     base = (base_url or get_app_base_url()).rstrip("/")
-    shared_rule = "Allow: /compartilhado/\n" if PUBLIC_STUDY_PAGES_ENABLED else ""
+    shared_rule = (
+        "Allow: /compartilhado/\nAllow: /feed.xml\nAllow: /feed.atom\nAllow: /feed.json\n"  # F0.12.04
+        if PUBLIC_STUDY_PAGES_ENABLED else ""
+    )
     return f"""User-agent: *
 Allow: /
 Allow: /sobre

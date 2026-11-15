@@ -1674,3 +1674,18 @@ Spec aprovada com as recomendações Q1 a Q5:
   10 temas; 375 px sem rolagem lateral, seletores de 46 px.
 - **Correção à parte** (`9f8d3ac`): a classe `visually-hidden` era usada sem definição em telas antigas
   (`EreaderImportView`, `CaptureItemCard`) e o texto para leitor de tela aparecia; agora é global em `style.css`.
+
+## F0.12.04 — Feeds RSS, Atom e JSON (2026-11-15)
+
+- **Spec, plano e tarefas:** `specs/117-feeds/`. Quarta feature do 0.12. **Sem migração.** Versão `0.12.0-alpha.4`.
+- **Feeds da instalação** (`services/feed_service.py`, `routers/feeds.py`): `/feed.xml` (RSS 2.0, com
+  `content:encoded`, `dc:creator`, `atom:link` self), `/feed.atom` (Atom 1.0) e `/feed.json` (JSON Feed 1.1), com os 50
+  estudos publicados e disponíveis mais recentes (mesma regra e mesmos campos da página pública; nada de feed por
+  usuário). XML pelo `ElementTree` (escape garantido); o Atom usa nomes simples com `xmlns` na raiz para não registrar
+  espaço de nomes padrão no processo (isso quebraria o RSS). `Cache-Control: public, no-cache` + `ETag` → 304.
+- **Página pública:** HTML das seções extraído para `render_sections` (página e feeds; links absolutos nos feeds) e
+  `<link rel="alternate">` dos três feeds no `<head>`. `robots.txt` permite os feeds.
+- **Ajustes → Publicados na web:** os três endereços com "Copiar".
+- **Testes:** `test_feeds.py` (3: feed vazio válido; só publicados, ordem, escape de `<`, `&` e `]]>`, nada privado;
+  ETag/304 e descoberta) e `feature-117-feeds` (1); vizinhos verdes; build ok. Navegador: feeds no servidor de
+  validação; cartão em Ajustes em 375 px, botões de 46 px. Os links dos feeds usam `APP_BASE_URL`.

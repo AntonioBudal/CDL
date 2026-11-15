@@ -35,7 +35,7 @@ suítes completas a cada 5 features, commit em português, push só quando o usu
 | F0.12.01 | **Versão no rodapé e "Evolução das versões"** | **Concluída em 2026-11-14** (versão `0.12.0-alpha.1`). Spec **114**. |
 | F0.12.02 | **Estudos publicados na web** (`/compartilhado/:id`, indexável) | **Concluída em 2026-11-14** (versão `0.12.0-alpha.2`, migração `0040`). Spec **115**. Fechou a pendência do HANDOFF §5 sobre `/compartilhado/{id}`. |
 | F0.12.03 | **Importadores:** Readwise, Goodreads, StoryGraph, Omnivore, BookWyrm | **Concluída em 2026-11-15** (versão `0.12.0-alpha.3`, sem migração). Spec **116**. Formato do Readwise ainda **sem conferência com arquivo real** (pedir teste ao usuário). |
-| F0.12.04 | **Feeds RSS, Atom e JSON** | Depende da F0.12.02 (só o que está publicado entra em feed). |
+| F0.12.04 | **Feeds RSS, Atom e JSON** | **Concluída em 2026-11-15** (versão `0.12.0-alpha.4`, sem migração). Spec **117**. |
 | F0.12.05 | **Quadro espacial com exportação JSON Canvas** | O backend do canvas já existe. |
 | F0.12.06 | **Oclusão de imagem em SVG** | Cartões de revisão sobre imagens. |
 | F0.12.07 | **Círculos de leitura com trava anti-spoiler** | Depende de ISBN (F0.11.04) e estados de leitura (F0.11.01), já entregues. |

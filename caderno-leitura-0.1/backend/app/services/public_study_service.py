@@ -150,22 +150,43 @@ pre{overflow:auto;padding:.75rem;background:var(--quote);font-size:15px}code{fon
 """
 
 
-def render_page(session: Session, study: Study, chapter: Chapter, book: Book, author: User) -> PublicPage:
-    base = get_app_base_url()
-    canonical = f"{base}{public_path(study.id)}"
+def render_sections(session: Session, study: Study, *, base: str = "") -> list[str]:
+    """HTML seguro das seções preenchidas (página pública e feeds, F0.12.04); `base` torna os links absolutos."""
     mention_ids: set[int] = set()
     for attr, _ in SECTIONS:
         mention_ids.update(int(m) for m in re.findall(r"\[\[[^\]|]+\|\s*(\d+)\s*\]\]", getattr(study, attr) or ""))
     published = available_published_ids(session, mention_ids)
 
     def link_for(study_id: int) -> str | None:
-        return public_path(study_id) if study_id in published else None
+        return f"{base}{public_path(study_id)}" if study_id in published else None
 
     sections_html = []
     for attr, label in SECTIONS:
         text = (getattr(study, attr) or "").strip()
         if text:
             sections_html.append(f"<section><h2>{label}</h2>\n{render_public_markdown(text, link_for)}</section>")
+    return sections_html
+
+
+def list_feed_rows(session: Session, limit: int = 50) -> list[tuple[Study, Chapter, Book, User]]:
+    """Estudos publicados e disponíveis, do mais recentemente publicado (F0.12.04)."""
+    rows = session.execute(
+        _available_query().order_by(Study.published_at.desc(), Study.id.desc()).limit(limit)
+    ).all()
+    return [(r[0], r[1], r[2], r[3]) for r in rows]
+
+
+FEED_LINKS = (
+    '<link rel="alternate" type="application/rss+xml" title="Leitorum — estudos publicados (RSS)" href="/feed.xml">\n'
+    '<link rel="alternate" type="application/atom+xml" title="Leitorum — estudos publicados (Atom)" href="/feed.atom">\n'
+    '<link rel="alternate" type="application/feed+json" title="Leitorum — estudos publicados (JSON Feed)" href="/feed.json">'
+)
+
+
+def render_page(session: Session, study: Study, chapter: Chapter, book: Book, author: User) -> PublicPage:
+    base = get_app_base_url()
+    canonical = f"{base}{public_path(study.id)}"
+    sections_html = render_sections(session, study)
 
     title = html.escape(study.title)
     author_name = html.escape(author.display_name)
@@ -195,6 +216,7 @@ def render_page(session: Session, study: Study, chapter: Chapter, book: Book, au
 <title>{title} — Leitorum</title>
 <meta name="description" content="{desc_attr}">
 <link rel="canonical" href="{html.escape(canonical, quote=True)}">
+{FEED_LINKS}
 <meta property="og:type" content="article">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc_attr}">
