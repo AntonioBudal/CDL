@@ -46,6 +46,15 @@ class ConceptRecordResponse(OutputModel):
     difficulty_weight: float
 
 
+class OcclusionRegion(OutputModel):
+    """F0.12.06: retângulo de um cartão de imagem, em coordenadas relativas (0–1)."""
+    id: RecordId
+    x: float
+    y: float
+    width: float
+    height: float
+
+
 class ReviewItemRead(OutputModel):
     id: RecordId
     study_id: RecordId
@@ -67,6 +76,10 @@ class ReviewItemRead(OutputModel):
     difficulty_weight: float | None = None
     concept_key: str | None = None
     definitions: list[ConceptCardDefinition] = Field(default_factory=list)
+    # F0.12.06: cartão de imagem (kind "image"): a imagem, o retângulo perguntado e todos os da mesma imagem
+    media_id: str | None = None
+    occlusion_id: RecordId | None = None
+    regions: list[OcclusionRegion] = Field(default_factory=list)
 
 
 class ReviewBookItem(OutputModel):
@@ -86,6 +99,7 @@ class ReviewStatsResponse(OutputModel):
     total_eligible: int
     total_questions: int
     total_hidden: int
+    total_images: int = 0  # F0.12.06
     reviewed_today: int
     pending_review: int
     books: list[ReviewBookItem] = Field(default_factory=list)

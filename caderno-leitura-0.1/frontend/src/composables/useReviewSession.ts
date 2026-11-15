@@ -7,7 +7,8 @@ export interface ReviewSessionState {
   currentIndex: number
   isRevealed: boolean
   isCompleted: boolean
-  ratings: Record<number, ReviewRating>
+  /** Chave `tipo:id` (F0.12.06): em "Todos", um cartão de imagem e um destaque podem ter o mesmo id. */
+  ratings: Record<string, ReviewRating>
   loading: boolean
   submitting: boolean
   error: string | null
@@ -88,8 +89,9 @@ export function useReviewSession() {
     state.error = null
     try {
       if (item.kind === 'concept' && item.concept_key) await reviewApi.recordConceptRating(item.concept_key, rating)
+      else if (item.kind === 'image') await reviewApi.recordImageRating(item.id, rating)
       else await reviewApi.recordRating(item.id, rating)
-      state.ratings[item.id] = rating
+      state.ratings[`${item.kind}:${item.id}`] = rating
 
       if (state.currentIndex + 1 >= state.items.length) {
         state.isCompleted = true

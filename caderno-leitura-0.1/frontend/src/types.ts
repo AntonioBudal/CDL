@@ -1246,6 +1246,7 @@ export interface ReviewStatsResponse {
   total_eligible: number
   total_questions: number
   total_hidden: number
+  total_images?: number
   reviewed_today: number
   pending_review: number
   books: ReviewBookItem[]
@@ -1282,7 +1283,7 @@ export interface ReviewItemRead {
   book_title: string
   chapter_id: number
   chapter_name: string
-  kind: 'question' | 'hidden' | 'concept'
+  kind: 'question' | 'hidden' | 'concept' | 'image'
   section: string
   question_text: string
   expected_answer: string
@@ -1295,6 +1296,40 @@ export interface ReviewItemRead {
   difficulty_weight?: number | null
   concept_key?: string | null
   definitions?: ConceptCardDefinition[]
+  // F0.12.06: cartão de imagem
+  media_id?: string | null
+  occlusion_id?: number | null
+  regions?: OcclusionRegion[]
+}
+
+// F0.12.06: oclusão de imagem (coordenadas relativas 0–1)
+export interface OcclusionRegion {
+  id: number
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+export interface OcclusionCard extends OcclusionRegion {
+  label: string
+  position: number
+  review_count: number
+  last_rating: ReviewRating | null
+}
+
+export interface OcclusionView {
+  media: { id: string; width: number; height: number; keep_forever: boolean }
+  cards: OcclusionCard[]
+}
+
+export interface OcclusionBoxInput {
+  id?: number
+  x: number
+  y: number
+  width: number
+  height: number
+  label: string
 }
 
 // F0.11.08: cartões de conceito, conceitos frágeis e Memória do dia

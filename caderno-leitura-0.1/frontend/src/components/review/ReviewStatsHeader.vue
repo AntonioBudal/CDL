@@ -227,6 +227,16 @@ function onStartPractice() {
         >
           Conceitos
         </button>
+        <button
+          type="button"
+          class="filter-pill"
+          :class="{ active: selectedKind === 'image', quiet: selectedKind !== 'image' }"
+          role="radio"
+          :aria-checked="selectedKind === 'image'"
+          @click="setKind('image')"
+        >
+          Imagens
+        </button>
       </div>
 
       <!-- Seletores de Livro e Capítulo -->

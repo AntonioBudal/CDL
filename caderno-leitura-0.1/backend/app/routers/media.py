@@ -23,7 +23,7 @@ from app.models.chapter import Chapter
 from app.models.encrypted_media import EncryptedMedia
 from app.models.study import Study
 from app.models.user_profile import UserProfile
-from app.services import media_quota, media_service
+from app.services import image_occlusion_service, media_quota, media_service
 
 router = APIRouter(prefix="/media", tags=["Mídia"])
 
@@ -76,6 +76,7 @@ def media_items(session, rows: list[EncryptedMedia]) -> list[dict]:
     studies = (
         {study.id: study for study in session.query(Study).filter(Study.id.in_(study_ids)).all()} if study_ids else {}
     )
+    occlusions = image_occlusion_service.count_by_media(session, [row.id for row in rows])  # F0.12.06
     grace = get_media_completed_grace_days()
     on_completed = get_media_delete_on_completed()
     now = utc_now()
@@ -97,6 +98,7 @@ def media_items(session, rows: list[EncryptedMedia]) -> list[dict]:
             "width": row.width,
             "height": row.height,
             "keep_forever": row.keep_forever,
+            "occlusion_count": occlusions.get(row.id, 0),
             "created_at": row.created_at.isoformat(),
             "expires_at": expiry.isoformat() if expiry else None,
             "days_left": max(0, math.ceil((expiry - now).total_seconds() / 86400)) if expiry else None,
@@ -188,6 +190,10 @@ class KeepRequest(BaseModel):
 @router.patch("/{media_id}", summary="Manter uma foto de página permanentemente, ou voltar a expirar")
 def set_keep_forever(media_id: str, payload: KeepRequest, current_user: CurrentUser, session: DatabaseSession):
     row = own_page_or_404(session, current_user, media_id)
+    # F0.12.06: foto com cartões de imagem não volta a expirar (o cartão perderia a imagem).
+    if not payload.keep_forever and image_occlusion_service.count_by_media(session, [row.id]).get(row.id):
+        return error_response(409, "has_occlusion_cards",
+                              "Esta imagem tem cartões de revisão. Apague os cartões antes de deixá-la expirar.")
     row.keep_forever = payload.keep_forever
     row.completed_seen_at = None
     row.expires_at = None if payload.keep_forever else utc_now() + timedelta(days=get_media_retention_days())
@@ -284,3 +290,32 @@ def list_study_photos(study_id: int, current_user: CurrentUser, session: Databas
         .all()
     )
     return no_store({"items": media_items(session, rows)})
+
+
+# --- Oclusão de imagem (F0.12.06, spec 119) -------------------------------------------------------------------
+
+
+class OcclusionBox(BaseModel):
+    id: int | None = None
+    x: float
+    y: float
+    width: float
+    height: float
+    label: str = Field(default="", max_length=200)
+
+
+class OcclusionSaveRequest(BaseModel):
+    cards: list[OcclusionBox] = Field(default_factory=list, max_length=image_occlusion_service.MAX_CARDS)
+
+
+@study_router.get("/{study_id}/media/{media_id}/occlusions", summary="Áreas de oclusão (cartões) de uma imagem do estudo")
+def list_occlusions(study_id: int, media_id: str, current_user: CurrentUser, session: DatabaseSession):
+    return no_store(image_occlusion_service.get_occlusions(session, current_user.id, study_id, media_id))
+
+
+@study_router.put("/{study_id}/media/{media_id}/occlusions", summary="Salvar as áreas de oclusão de uma imagem do estudo")
+def save_occlusions(
+    study_id: int, media_id: str, payload: OcclusionSaveRequest, current_user: CurrentUser, session: DatabaseSession
+):
+    boxes = [box.model_dump() for box in payload.cards]
+    return no_store(image_occlusion_service.save_occlusions(session, current_user.id, study_id, media_id, boxes))

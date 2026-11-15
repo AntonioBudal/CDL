@@ -2,6 +2,14 @@
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import type { ReviewItemRead, ReviewRating } from '../../types.ts'
 import StudyContextDrawer from './StudyContextDrawer.vue'
+import OcclusionImage from './OcclusionImage.vue'
+
+const KIND_LABELS: Record<string, string> = {
+  question: 'Pergunta', concept: 'Conceito', image: 'Imagem', hidden: 'Termo Oculto',
+}
+const KIND_CLASSES: Record<string, string> = {
+  question: 'badge-question', concept: 'badge-concept', image: 'badge-image', hidden: 'badge-hidden',
+}
 
 const props = withDefaults(
   defineProps<{
@@ -29,7 +37,9 @@ watch(
   () => props.isRevealed,
   (revealed) => {
     if (revealed) {
-      liveAnnouncement.value = `Resposta revelada: ${props.item.expected_answer}`
+      liveAnnouncement.value = props.item.kind === 'image' && !props.item.expected_answer
+        ? 'Área revelada na imagem.'
+        : `Resposta revelada: ${props.item.expected_answer}`
     } else {
       liveAnnouncement.value = ''
     }
@@ -106,9 +116,9 @@ onUnmounted(() => {
       <div class="card-badges">
         <span
           class="kind-badge"
-          :class="item.kind === 'question' ? 'badge-question' : item.kind === 'concept' ? 'badge-concept' : 'badge-hidden'"
+          :class="KIND_CLASSES[item.kind] ?? 'badge-hidden'"
         >
-          {{ item.kind === 'question' ? 'Pergunta' : item.kind === 'concept' ? 'Conceito' : 'Termo Oculto' }}
+          {{ KIND_LABELS[item.kind] ?? 'Termo Oculto' }}
         </span>
         <span v-if="item.last_rating" class="history-badge">
           Última: {{ item.last_rating === 'easy' ? 'Fácil' : item.last_rating === 'medium' ? 'Médio' : 'Difícil' }}
@@ -123,6 +133,18 @@ onUnmounted(() => {
     <div class="cognitive-body">
       <div v-if="item.kind === 'question' || item.kind === 'concept'" class="question-container">
         <p class="question-text">{{ item.question_text }}</p>
+      </div>
+
+      <!-- F0.12.06: cartão de imagem (oclusão) -->
+      <div v-else-if="item.kind === 'image' && item.media_id" class="question-container image-container">
+        <p class="question-text">{{ item.question_text }}</p>
+        <OcclusionImage
+          :media-id="item.media_id"
+          :regions="item.regions ?? []"
+          :target-id="item.occlusion_id ?? item.id"
+          :revealed="isRevealed"
+          :label="item.expected_answer"
+        />
       </div>
 
       <div v-else class="cloze-container">
@@ -299,6 +321,12 @@ onUnmounted(() => {
 .badge-question {
   background-color: var(--color-accent-subtle, rgba(59, 130, 246, 0.12));
   color: var(--color-link, #3b82f6);
+}
+
+.badge-image {
+  background: var(--color-surface-soft);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-subtle);
 }
 
 .badge-concept {

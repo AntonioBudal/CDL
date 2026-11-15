@@ -42,6 +42,8 @@ import type {
   SharedStudiesResponse,
   SharedBooksResponse,
   InCommonResponse,
+  OcclusionBoxInput,
+  OcclusionView,
 } from '../types.ts'
 
 import type {
@@ -391,6 +393,18 @@ export const api = {
   listStudyMedia: (studyId: number, signal?: AbortSignal) => request<{ items: MediaItem[] }>(
     `/studies/${studyId}/media`, { signal },
   ),
+  // F0.12.06: oclusão de imagem
+  getOcclusions: (studyId: number, mediaId: string, signal?: AbortSignal) => request<OcclusionView>(
+    `/studies/${studyId}/media/${encodeURIComponent(mediaId)}/occlusions`, { signal },
+  ),
+  saveOcclusions: (studyId: number, mediaId: string, cards: OcclusionBoxInput[]) => request<OcclusionView>(
+    `/studies/${studyId}/media/${encodeURIComponent(mediaId)}/occlusions`,
+    { method: 'PUT', body: JSON.stringify({ cards }) },
+  ),
+  recordImageRating: (cardId: number, rating: ReviewRating, signal?: AbortSignal) =>
+    request<{ id: number; last_reviewed_at: string; review_count: number; last_rating: ReviewRating }>(
+      `/review/images/${cardId}/record`, { method: 'POST', body: JSON.stringify({ rating }), signal },
+    ),
   storeStudyPhoto: (studyId: number, file: File) => {
     const formData = new FormData()
     formData.append('file', file)

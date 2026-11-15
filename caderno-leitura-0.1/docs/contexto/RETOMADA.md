@@ -1704,3 +1704,27 @@ Spec aprovada com as recomendações Q1 a Q5:
 - **Fecho do lote 1 do 0.12:** `npm test` 811/811; `pytest` completo 884 passou, 4 pulados, depois de corrigir em
   commit próprio o teste antigo de indexação de `/compartilhado/1` (desde a F0.12.02 o estudo não publicado é 404 com
   `noindex`).
+
+## F0.12.06 — Oclusão de imagem (2026-11-15)
+
+- **Spec, plano e tarefas:** `specs/119-oclusao-de-imagem/`. Sexta feature do 0.12 (abre o lote 2). Versão
+  `0.12.0-alpha.6`. **Migração `0041`** (só cria `image_occlusion_cards`); no banco ativo, pelo procedimento dos 4
+  comandos.
+- **Cartões sobre imagens** (`models/image_occlusion_card.py`, `services/image_occlusion_service.py`): retângulos em
+  coordenadas relativas (0–1) sobre uma foto do estudo (`notebook_page`, no cofre); cada um é um cartão com os mesmos
+  campos de revisão dos conceitos. Salvar é em lote (`PUT /api/studies/{id}/media/{media_id}/occlusions`): com id
+  atualiza e mantém o histórico, sem id cria, o que sumiu é apagado; recorte aos limites, lado mínimo de 1%, até 50.
+  Foto com cartões passa a "manter para sempre" e não pode voltar a expirar (409); apagar a foto apaga os cartões
+  (CASCADE). A lista de fotos traz `occlusion_count`.
+- **Revisão:** tipo `image` em `/review/stats` e `/review/items` (filtro "Imagens"); em "Todos" os cartões de imagem
+  entram na mesma fila (ordem de prioridade única) e nos totais e baldes; nota em `POST /review/images/{id}/record`.
+  `ReviewCard` mostra `OcclusionImage.vue` (todas as áreas cobertas, a perguntada destacada; "Revelar" abre só ela).
+  A sessão guarda as notas por `tipo:id`.
+- **Editor** (`components/ImageOcclusionEditor.vue`): SVG sobre a imagem; arrastar desenha, arrastar a área move, o
+  canto redimensiona; Delete apaga, setas movem, Ctrl+Z desfaz (um clique só seleciona, sem entrar no histórico);
+  resposta opcional por área. Entrada pelo painel "Folha original" ("Criar cartões nesta imagem" / "Cartões nesta
+  imagem (N)") e por "Adicionar imagem para cartões" no menu do estudo. Tela cheia no celular, `touch-action: none`.
+- **Testes:** `test_image_occlusion.py` (5, com a migração subindo e descendo) e `feature-119-oclusao` (3); o teste da
+  110 passou a conferir o rótulo no mapa por tipo; `npm test` 814/814; vizinhos do backend 205; build ok. Navegador
+  (imagem sintética, chave de cofre fictícia): desenhar 3 áreas, Delete e desfazer, salvar, revisar e avaliar; 375 px
+  por toque; área perguntada × cobertas ≥ 3,63:1 nos 10 temas.

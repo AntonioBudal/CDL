@@ -23,6 +23,8 @@ import AppBreadcrumb from '../components/ui/AppBreadcrumb.vue'
 import DropdownMenu from '../components/ui/DropdownMenu.vue'
 import Icon from '../components/ui/Icon.vue'
 import OriginalPageViewer from '../components/media/OriginalPageViewer.vue'
+import ImageOcclusionEditor from '../components/ImageOcclusionEditor.vue'
+import { DIGITIZE_ACCEPT } from '../types/digitize'
 import { useStudyHighlights } from '../composables/useStudyHighlights'
 import { useOriginalPage } from '../composables/useOriginalPage'
 import { useActiveReadingSession } from '../composables/useActiveReadingSession'
@@ -540,6 +542,46 @@ watch(() => (canEdit.value ? state.context?.study.id : null), (studyId) => {
 }, { immediate: true })
 watch(() => originalPage.count.value, (count) => { if (count === 0) closeOriginalPage() })
 
+// F0.12.06: oclusão de imagem — cartões desenhados sobre uma foto do estudo
+const occlusionMediaId = ref<string | null>(null)
+const occlusionFileInput = ref<HTMLInputElement | null>(null)
+const occlusionUploading = ref(false)
+function showOcclusionToast(message: string) {
+  floatingToast.showToast({ message, duration: 3000 })
+}
+
+function openOcclusion(mediaId: string) {
+  occlusionMediaId.value = mediaId
+}
+
+async function onOcclusionSaved(count: number) {
+  const id = state.context?.study.id
+  if (id) await originalPage.load(id)
+  showOcclusionToast(count === 1 ? '1 cartão de imagem salvo.' : `${count} cartões de imagem salvos.`)
+}
+
+function pickOcclusionImage() {
+  occlusionFileInput.value?.click()
+}
+
+async function onOcclusionFile(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  const id = state.context?.study.id
+  if (!file || !id) return
+  occlusionUploading.value = true
+  try {
+    const result = await api.storeStudyPhoto(id, file)
+    await originalPage.load(id)
+    occlusionMediaId.value = result.item.id
+  } catch (error) {
+    showOcclusionToast(errorMessage(error))
+  } finally {
+    occlusionUploading.value = false
+  }
+}
+
 watch(activeSection, async () => {
   clearSelection()
   await nextTick()
@@ -765,6 +807,18 @@ onBeforeUnmount(() => {
                 </button>
               </div>
 
+              <!-- F0.12.06: imagem para cartões de oclusão -->
+              <button
+                v-if="canEdit"
+                type="button"
+                class="secondary occlusion-add-action header-icon-btn"
+                :disabled="occlusionUploading"
+                @click="pickOcclusionImage"
+              >
+                <Icon name="image" :size="16" />
+                <span>{{ occlusionUploading ? 'Enviando a imagem…' : 'Adicionar imagem para cartões' }}</span>
+              </button>
+
               <!-- Mudar de capítulo (F0.10.02.5) -->
               <button
                 v-if="canEdit"
@@ -906,9 +960,28 @@ onBeforeUnmount(() => {
         :viewer="originalPage"
         :study-title="state.context.study.title"
         @close="closeOriginalPage"
+        @occlude="openOcclusion"
       />
     </aside>
     </div>
+    <input
+      v-if="canEdit"
+      ref="occlusionFileInput"
+      type="file"
+      :accept="DIGITIZE_ACCEPT"
+      class="visually-hidden"
+      tabindex="-1"
+      aria-hidden="true"
+      @change="onOcclusionFile"
+    >
+    <ImageOcclusionEditor
+      v-if="occlusionMediaId"
+      :open="Boolean(occlusionMediaId)"
+      :study-id="state.context.study.id"
+      :media-id="occlusionMediaId"
+      @close="occlusionMediaId = null"
+      @saved="onOcclusionSaved"
+    />
     <details class="original-response"><summary>Consultar Fichamento da Fonte</summary><pre>{{ state.context.study.source_response }}</pre></details>
 
     <StudyBacklinksList

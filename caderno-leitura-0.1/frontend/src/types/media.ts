@@ -16,6 +16,8 @@ export interface MediaItem {
   width: number
   height: number
   keep_forever: boolean
+  /** F0.12.06: cartões de oclusão desenhados sobre esta imagem. */
+  occlusion_count?: number
   created_at: string
   expires_at: string | null
   days_left: number | null

@@ -11,7 +11,7 @@ const props = defineProps<{
   studyTitle: string
 }>()
 
-const emit = defineEmits<{ (event: 'close'): void }>()
+const emit = defineEmits<{ (event: 'close'): void; (event: 'occlude', mediaId: string): void }>()
 
 const state = props.viewer.state
 const current = props.viewer.current
@@ -49,6 +49,15 @@ function moveDrag(event: PointerEvent) {
 function endDrag() {
   drag = null
 }
+
+// F0.12.06: cartões de oclusão desenhados nesta foto
+const occlusions = computed(() => current.value?.occlusion_count ?? 0)
+const removeMessage = computed(() => {
+  const base = 'A foto da página será apagada. O estudo e seus textos não serão alterados.'
+  if (!occlusions.value) return base
+  const cards = occlusions.value === 1 ? '1 cartão de revisão' : `${occlusions.value} cartões de revisão`
+  return `${base} Os ${cards} desenhados nela também serão apagados.`
+})
 
 async function confirmRemove() {
   if (await props.viewer.removeCurrent()) confirmOpen.value = false
@@ -115,10 +124,21 @@ async function confirmRemove() {
         <p class="validity">{{ validity }}</p>
         <div class="footer-actions">
           <button
+            v-if="current.status !== 'missing'"
+            type="button"
+            class="secondary occlude-action"
+            :disabled="state.working"
+            @click="emit('occlude', current.id)"
+          >
+            <Icon name="image" :size="16" aria-hidden="true" />
+            {{ occlusions ? `Cartões nesta imagem (${occlusions})` : 'Criar cartões nesta imagem' }}
+          </button>
+          <button
             type="button"
             class="secondary"
             :aria-pressed="current.keep_forever"
-            :disabled="state.working"
+            :disabled="state.working || (current.keep_forever && occlusions > 0)"
+            :title="current.keep_forever && occlusions > 0 ? 'Foto com cartões de revisão: fica mantida' : undefined"
             @click="viewer.toggleKeep"
           >
             <Icon :name="current.keep_forever ? 'lock' : 'unlock'" :size="16" aria-hidden="true" />
@@ -134,7 +154,7 @@ async function confirmRemove() {
     <TrashConfirmModal
       :open="confirmOpen"
       title="Apagar esta foto?"
-      message="A foto da página será apagada. O estudo e seus textos não serão alterados."
+      :message="removeMessage"
       confirm-label="Apagar foto"
       danger
       :loading="state.working"

@@ -22,7 +22,7 @@ test('110: filtro "Conceitos", verso do cartão e gravação pelo endpoint certo
   assert.match(header, /@click="setKind\('concept'\)"/)
   assert.match(header, />\s*Conceitos\s*</)
   const card = read('components/review/ReviewCard.vue')
-  assert.match(card, /item\.kind === 'concept' \? 'Conceito'/)
+  assert.match(card, /concept: 'Conceito'/) // F0.12.06: rótulos num mapa por tipo
   assert.match(card, /v-for="\(definition, index\) in item\.definitions \?\? \[\]"/)
   const session = read('composables/useReviewSession.ts')
   assert.match(session, /if \(item\.kind === 'concept' && item\.concept_key\) await reviewApi\.recordConceptRating\(item\.concept_key, rating\)/)

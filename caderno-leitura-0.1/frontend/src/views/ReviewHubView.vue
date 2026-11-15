@@ -115,11 +115,12 @@ watch(selectedBookId, (newBookId) => {
 })
 
 const isConceptMode = computed(() => selectedKind.value === 'concept')
+const isImageMode = computed(() => selectedKind.value === 'image') // F0.12.06
 const fragilePanel = ref<InstanceType<typeof FragileConceptsPanel> | null>(null)
 
 const eligibleCountForSelection = computed(() => {
   if (bucketFilter.value) return stats.value.buckets?.[bucketFilter.value] ?? 0
-  if (isConceptMode.value) return stats.value.total_eligible
+  if (isConceptMode.value || isImageMode.value) return stats.value.total_eligible
   if (selectedBookId.value) {
     const found = stats.value.books.find((b) => b.book_id === selectedBookId.value)
     return found ? found.items_count : 0
@@ -305,6 +306,12 @@ onUnmounted(() => {
         <p v-if="isConceptMode && !loadingStats && stats.total_eligible === 0" class="concept-empty notice">
           Ainda não há conceitos para praticar. Escreva na seção Conceitos de um estudo uma linha como
           <code>**Termo**: definição</code>; cada conceito do <RouterLink to="/conceitos">Léxico</RouterLink> vira um cartão.
+        </p>
+
+        <!-- F0.12.06: "Imagens" sem nenhum cartão de imagem -->
+        <p v-else-if="isImageMode && !loadingStats && stats.total_eligible === 0" class="concept-empty notice">
+          Ainda não há cartões de imagem. Num estudo, abra a <strong>Folha original</strong> (ou "Adicionar imagem para
+          cartões" no menu do estudo) e cubra partes da imagem; cada área vira um cartão.
         </p>
 
         <!-- ESTADO VAZIO PEDAGÓGICO: Nenhum item elegível no acervo -->

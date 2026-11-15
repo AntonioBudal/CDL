@@ -28,6 +28,8 @@ export const reviewApi = {
   /** F0.11.08: cartão de conceito, pela chave do léxico */
   recordConceptRating: (key: string, rating: ReviewRating, signal?: AbortSignal) =>
     api.recordConceptRating(key, rating, signal),
+  recordImageRating: (cardId: number, rating: ReviewRating, signal?: AbortSignal) =>
+    api.recordImageRating(cardId, rating, signal),
 }
 
 export default reviewApi
