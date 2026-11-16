@@ -13,7 +13,22 @@ Tudo que toca dados reais fica fora do Git (`dataset/raw/exp-027`, `dataset/proc
 - Variáveis: `EXP027_DATA_ROOT` (raiz `dataset/` com os dados; padrão: a do próprio checkout) e
   `EXP027_MOTOR_DIR` (pasta `motor/` com `.venv`; padrão: a do próprio checkout).
 
-## Passos
+## Modo só texto (sem fotos)
+
+Com a exportação Markdown do livro (opção **"Fichamento da Fonte"** ligada no Leitorum, que inclui o texto bruto do
+motor) dá para medir CER/WER, palavras quase certas e léxico sem nenhuma foto:
+
+```powershell
+python -s parse_export.py --expect 50        # texto bruto → motor/pNN.json; revisado → referência provisória
+python -s transcribe_server.py               # corrigir a referência a partir do caderno de papel (sem foto)
+python -s split.py --size 20
+python -s score.py --system motor --benchmark
+```
+
+O que **exige** fotos: classificação da foto, quebra por detecção de linhas com caixas, exemplos com recorte e o
+baseline VLM.
+
+## Passos (com fotos)
 
 ```powershell
 # a partir de document-intelligence/experiments/EXP-027-analise-50-paginas/harness
