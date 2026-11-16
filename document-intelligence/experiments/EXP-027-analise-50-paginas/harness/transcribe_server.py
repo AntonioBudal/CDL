@@ -102,7 +102,13 @@ def save_page(pid: str, payload: dict) -> dict:
     REFERENCE.mkdir(parents=True, exist_ok=True)
     CLASSIFICATION.mkdir(parents=True, exist_ok=True)
     text = payload.get("reference")
-    if isinstance(text, str):
+    detail = page_detail(pid) or {}
+    unchanged_draft = (
+        isinstance(text, str)
+        and detail.get("reference") is None
+        and " ".join(text.split()) == " ".join(str(detail.get("draft_text", "")).split())
+    )
+    if isinstance(text, str) and not unchanged_draft:  # rascunho intocado não vira referência
         normalized = "\n".join(line.rstrip() for line in text.replace("\r\n", "\n").split("\n"))
         (REFERENCE / f"{pid}.txt").write_text(normalized.strip("\n") + "\n", encoding="utf-8")
     classification = {key: payload.get(key) for key in CLASSES if payload.get(key) in CLASSES[key]}

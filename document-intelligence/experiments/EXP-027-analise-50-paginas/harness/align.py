@@ -329,10 +329,16 @@ class PageScore:
         }
 
 
-def score_page(ref_lines: list[RefLine], hyp_lines: list[str]) -> PageScore:
+def score_page(ref_lines: list[RefLine], hyp_lines: list[str], single: bool = False) -> PageScore:
+    """``single``: página inteira como um só par (modo de página, sem correspondência de linhas)."""
     refs = [line.text for line in ref_lines]
     hyps = [page_text(h) for h in hyp_lines]
-    matching = match_lines(refs, hyps)
+    if single:
+        if len(refs) != 1 or len(hyps) != 1:
+            raise ValueError("modo de página exige uma referência e uma leitura")
+        matching = Matching(groups=[([0], [0])])
+    else:
+        matching = match_lines(refs, hyps)
     ref_page = page_text(" ".join(refs))
     hyp_page = page_text(" ".join(hyps))
     distance_total = levenshtein(ref_page, hyp_page)

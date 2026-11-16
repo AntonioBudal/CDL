@@ -50,7 +50,14 @@ def parse_ref_line(raw: str) -> RefLine:
     out: list[str] = []
     mask: list[bool] = []
     inside = False
-    for char in line:
+    chars = iter(range(len(line)))
+    for index in chars:
+        char = line[index]
+        if char == "\\" and index + 1 < len(line) and line[index + 1] == "$":
+            out.append("$")  # ``\$`` é um cifrão literal (dinheiro), não delimitador
+            mask.append(inside)
+            next(chars, None)
+            continue
         if char == "$":
             inside = not inside
             continue

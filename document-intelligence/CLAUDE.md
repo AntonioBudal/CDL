@@ -91,6 +91,14 @@ uv run python -m leitorum_di
     experimento com os registros reais.
 - **Registros reais de feedback (contagem de 2026-10-29, só números):** 1 registro revisado, de 30 necessários para
   o EXP-026 que decide ligar o adaptador ([STATE do EXP-024](./experiments/EXP-024/STATE.md), "Revisão do usuário").
+- **EXP-027 concluído com ressalvas em 2026-11-16** ([report](./experiments/EXP-027-analise-50-paginas/report.md);
+  diretriz nova do usuário: [modelos próprios](./docs/objetivo-modelos-proprios.md)): 51 páginas reais do caderno
+  do usuário, lidas pelo motor do produto; 20 de teste congeladas (`splits/test-manifest.json` v2), referência de
+  um professor externo (Gemini) declarada "praticamente perfeita" pelo usuário, medida em nível de página.
+  **CER 56 %, WER 90 %**; fórmulas respondem por 12–16 % do erro (H1 refutada); cursiva 50 % contra mista 63 %
+  (H2 refutada); palavras a 1–2 letras são 18 % das erradas, dicionário corrige 4 % (H3 refutada); 28 % das
+  palavras não aparecem na saída (H4 com apoio parcial). Pendente, por falta das fotos no projeto: quebra por
+  origem com caixas, exemplos e baseline Qwen3-VL local (cópia exata em `models/exp-027/`, hashes conferidos).
 - **Tarefa Atual**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).

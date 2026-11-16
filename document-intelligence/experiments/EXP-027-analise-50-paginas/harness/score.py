@@ -20,6 +20,7 @@ from pathlib import Path
 
 import align
 import textnorm
+from delatex import delatex_ref
 from lexicon import Lexicon
 from paths import CLASSIFICATION, DI_ROOT, MANIFEST, PROCESSED, REFERENCE, SPLITS
 
@@ -194,6 +195,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Pontuação do EXP-027")
     parser.add_argument("--system", default="motor")
     parser.add_argument("--benchmark", action="store_true", help="grava o JSON versionado")
+    parser.add_argument(
+        "--page-level",
+        action="store_true",
+        help="referência sem quebras de linha fiéis: mede só em nível de página (sem origens)",
+    )
     args = parser.parse_args(argv)
     sys.stdout.reconfigure(encoding="utf-8")
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
@@ -228,7 +234,19 @@ def main(argv: list[str] | None = None) -> int:
         if hyp_lines is None:
             skipped["no_reading"].append(pid)
             continue
-        score = align.score_page(ref_lines, hyp_lines)
+        if args.page_level:
+            merged = align.merge_ref(ref_lines, list(range(len(ref_lines))))
+            ref_lines = [merged]
+            hyp_lines = [" ".join(hyp_lines)]
+        score = align.score_page(ref_lines, hyp_lines, single=args.page_level)
+        if args.page_level:
+            plain_text, plain_mask = delatex_ref(ref_lines[0].text, ref_lines[0].formula)
+            plain = align.score_page(
+                [textnorm.RefLine(plain_text, plain_mask)], hyp_lines, single=True
+            )
+            plain.words += lexicon.judge(plain.word_pairs)
+            plain.wer = align.wer(plain_text, hyp_lines[0])  # type: ignore[attr-defined]
+            score.plain = plain  # type: ignore[attr-defined]
         score.wer = align.wer(  # type: ignore[attr-defined]
             " ".join(line.text for line in ref_lines), " ".join(hyp_lines)
         )
@@ -254,14 +272,30 @@ def main(argv: list[str] | None = None) -> int:
             },
             "formula_chars": s.recognition_detail["chars_formula"],
             "formula_errors": s.recognition_detail["errors_formula"],
+            "plain": {
+                "cer": round(s.plain.cer_total, 4),
+                "formula_chars": s.plain.recognition_detail["chars_formula"],
+                "formula_errors": s.plain.recognition_detail["errors_formula"],
+                "text_errors": s.plain.recognition_detail["errors_text"],
+            }
+            if hasattr(s, "plain")
+            else None,
             "split": "test" if pid in test_ids else "dev",
             "classes": classes.get(pid),
             "quality": quality.get(pid),
         }
         for pid, s in scores.items()
     }
+    plain_scores = {pid: s.plain for pid, s in scores.items() if hasattr(s, "plain")}
     result = {
         "schema": "exp-027-score/1",
+        "page_level": args.page_level,
+        "plain_formulas": {
+            "all": aggregate(plain_scores, ids),
+            "test": aggregate(plain_scores, test_ids),
+        }
+        if plain_scores
+        else None,
         "created_at": datetime.now(UTC).isoformat(),
         "system": args.system,
         "git": git_state(),

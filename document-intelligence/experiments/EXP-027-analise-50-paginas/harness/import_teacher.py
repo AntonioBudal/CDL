@@ -20,7 +20,7 @@ from datetime import UTC, datetime
 
 from paths import PROCESSED, RAW
 
-HEADER = re.compile(r"^\s*(?:=+\s*)?(p\d{2})\s*(?:=+\s*)?$", re.IGNORECASE)
+HEADER = re.compile(r"^\s*(?:=+\s*)?(p\d{2})\s*(?:=+\s*)?(.*)$", re.IGNORECASE)
 NUMBERED = re.compile(r"^\s*\d{1,3}\s*[:.)\-]\s?")
 FENCE = re.compile(r"^\s*```")
 
@@ -32,9 +32,12 @@ def parse_blocks(text: str) -> dict[str, list[str]]:
         if FENCE.match(raw):
             continue
         header = HEADER.match(raw)
-        if header:
+        if header and (header.group(2).strip() == "" or raw.lstrip().startswith("=")):
             current = header.group(1).lower()
             pages[current] = []
+            rest = header.group(2).strip()
+            if rest:
+                pages[current].append(rest)
             continue
         if current is None:
             continue
