@@ -1,5 +1,5 @@
 """Importa transcrições de um "professor" externo (ex.: respostas do Gemini coladas em ``.txt``)
-como sistema ``processed/exp-027/<system>/pNN.json``, no mesmo formato de linhas do motor. A resposta
+como sistema ``processed/exp-027/<system>/pNN.json``, no formato de linhas do motor. A resposta
 original fica intocada em ``raw/exp-027/<system>/``; a ferramenta de transcrição pode usá-la como
 rascunho (``--teacher <system>``) e o ``score.py --system <system>`` a pontua contra a referência
 corrigida à mão.
