@@ -9,6 +9,7 @@ Tudo que toca dados reais fica fora do Git (`dataset/raw/exp-027`, `dataset/proc
   Usado por `inventory.py`, `run_motor.py`, `prepare_tool.py`, `examples.py`, `synthetic_pages.py`.
 - **Python puro** (qualquer Python ≥ 3.11): `transcribe_server.py`, `split.py`, `score.py`,
   `vlm_reference.py` (este último usa PIL).
+- Cópia exata do VLM e do runtime: `models/exp-027/` (fora do Git), ficha em `qwen3-vl-4b/MODEL.json`.
 - Variáveis: `EXP027_DATA_ROOT` (raiz `dataset/` com os dados; padrão: a do próprio checkout) e
   `EXP027_MOTOR_DIR` (pasta `motor/` com `.venv`; padrão: a do próprio checkout).
 
@@ -24,7 +25,8 @@ python -s transcribe_server.py               # T003b: http://127.0.0.1:8765/ par
 python -s split.py --size 20                 # T002: congela o teste (uma vez; exige classificação)
 python -s score.py --system motor --benchmark  # T004: métricas e quebra por origem
 & $motor -s examples.py --per-kind 2         # T004b: exemplos de falha (fora do Git)
-python -s vlm_reference.py --system qwen3-vl-4b  # T005: com um llama-server local no ar
+python -s vlm_server.py                      # T005a: llama-server local (confere SHA-256 da cópia exata)
+python -s vlm_reference.py --system qwen3-vl-4b  # T005b: baseline nas 50 páginas (outro terminal)
 python -s score.py --system qwen3-vl-4b --benchmark
 ```
 

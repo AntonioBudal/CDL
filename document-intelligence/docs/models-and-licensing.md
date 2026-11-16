@@ -108,3 +108,15 @@ Revisões completas e SHA-256: `experiments/EXP-002/candidates.json`.
 
 - É proibida a inclusão de SDKs ou chamadas diretas a provedores de nuvem que cobrem por requisição ou uso (ex.: pacotes da OpenAI, Google Cloud Vision, Azure Cognitive, Anthropic API externa para transcrição em tempo de execução de produto).
 - O produto final deve ser 100% executável na máquina local do usuário sem faturas ou chaves de API obrigatórias de terceiros.
+
+### EXP-027 — baseline VLM local e runtime (consulta em 2026-11-16)
+
+Diretriz de modelos próprios ([`objetivo-modelos-proprios.md`](./objetivo-modelos-proprios.md)): modelos de pesos
+abertos entram só como **baseline** e **professor**; cada um tem cópia exata guardada fora do Git com
+`MODEL.json` (fonte, revisão, SHA-256 por arquivo, texto integral da licença, data).
+
+| Identificador | Versão | Licença do código | Licença dos pesos | Local-First? | Status |
+| :--- | :--- | :--- | :--- | :---: | :--- |
+| `Qwen/Qwen3-VL-4B-Instruct-GGUF` (`Qwen3VL-4B-Instruct-Q4_K_M.gguf` + `mmproj-Qwen3VL-4B-Instruct-F16.gguf`) | rev. `1cd86afb` (2025-11-01); SHA-256 `66358cb1…30a0a` / `256f3a43…85331` | — (só pesos) | Apache-2.0 (declarada nos cards do GGUF e do modelo-base; sem arquivo LICENSE no repositório; texto da licença guardado) | Sim (CPU, ~4–5 GB de RAM) | `LICENSE STATUS: VERIFIED` (declarada) — **baseline/professor do EXP-027, nunca produto**; cópia em `models/exp-027/qwen3-vl-4b/MODEL.json` |
+| llama.cpp (`llama-server`, `mtmd`) | b12444, commit `47fe1333`, `llama-b12444-bin-win-cpu-x64.zip` SHA-256 `d17f8251…437bd` | MIT (cópia do commit guardada) | — | Sim | `LICENSE STATUS: VERIFIED` — runtime do baseline do EXP-027 |
+
