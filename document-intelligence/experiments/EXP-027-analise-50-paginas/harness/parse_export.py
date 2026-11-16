@@ -3,9 +3,10 @@
 exportado com a opção de incluir a resposta original) e o texto **revisado** (Resumo, Explicação,
 Conceitos Principais, Referências e Conexões, Minhas Anotações). Grava, fora do Git:
 
-- ``processed/exp-027/motor/pNN.json`` — linhas do motor no formato do ``run_motor.py`` (sem caixas);
-- ``raw/exp-027/referencia/pNN.txt`` — texto revisado como referência **provisória** (só se ainda não
-  existir um ``pNN.txt`` escrito à mão), com ``draft_source: export`` na classificação;
+- ``processed/exp-027/motor/pNN.json`` — linhas do motor no formato do ``run_motor.py`` (sem
+  caixas);
+- ``raw/exp-027/referencia/pNN.txt`` — texto revisado como referência **provisória** (só se ainda
+  não existir um ``pNN.txt`` escrito à mão), com ``draft_source: export`` na classificação;
 - ``processed/exp-027/manifest.json`` — ids, hash do texto bruto, contagens.
 
 Nenhum texto sai no console: só contagens. A ordem ``pNN`` é a ordem dos estudos no arquivo.
@@ -20,7 +21,6 @@ import re
 import sys
 import zipfile
 from datetime import UTC, datetime
-from pathlib import Path
 
 from paths import CLASSIFICATION, EXPORT, MANIFEST, MOTOR_OUT, REFERENCE, page_id
 
@@ -50,7 +50,7 @@ def load_markdown() -> tuple[str, str]:
 
 
 def split_studies(markdown: str) -> list[dict[str, str]]:
-    """Estudos (``### título``) com as seções (``#### nome``) de cada um; títulos não são guardados."""
+    """Estudos (``### título``) com as seções (``#### nome``) de cada um; títulos não guardados."""
     studies: list[dict[str, str]] = []
     current: dict[str, str] | None = None
     section: str | None = None
