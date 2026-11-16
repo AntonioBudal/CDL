@@ -73,7 +73,8 @@ def main(argv: list[str] | None = None) -> int:
         "--temp",
         "0",
     ]
-    print(f"{meta['name']} ({meta['source']['revision'][:8]}) em http://127.0.0.1:{args.port}/", flush=True)
+    revision = meta["source"]["revision"][:8]
+    print(f"{meta['name']} ({revision}) em http://127.0.0.1:{args.port}/", flush=True)
     return subprocess.call(command, cwd=str(server.parent))
 
 
