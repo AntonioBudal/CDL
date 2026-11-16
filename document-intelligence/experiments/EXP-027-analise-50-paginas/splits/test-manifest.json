@@ -1,0 +1,231 @@
+{
+  "schema": "exp-027-test-split/1",
+  "created_at": "2026-11-16T20:38:07.890061+00:00",
+  "seed": "exp-027",
+  "strata": [
+    "escrita",
+    "formulas"
+  ],
+  "size": 20,
+  "pages": {
+    "p10": {
+      "sha256": "32cbb5212df94ab900bef5cd8ea07f8edc0518f75e6e447e3799c4b7dd746bcc",
+      "escrita": "cursiva",
+      "formulas": "poucas",
+      "foto": "media",
+      "papel": "pautado",
+      "layout": "notas_laterais"
+    },
+    "p11": {
+      "sha256": "48561fbab8718b1db47b81e029611352109e802c2ad1dcf280dcb3e9d7330fea",
+      "escrita": "mista",
+      "formulas": "poucas",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p14": {
+      "sha256": "bcdf3be713a709ccda047e31cbf81e20bbba28b8795c87f71aa4d6ca31104303",
+      "escrita": "cursiva",
+      "formulas": "poucas",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p15": {
+      "sha256": "19cddbfd55c9b6c348a34f0b4430ba5e3dbe58f06bf9ee7f3e92c72df8b969c6",
+      "escrita": "mista",
+      "formulas": "poucas",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p18": {
+      "sha256": "2ab998b44c887fa031e95b9d7ed78a9bb582df3f69c4e60ddd654c115f685802",
+      "escrita": "cursiva",
+      "formulas": "poucas",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p20": {
+      "sha256": "f8c91d66563a6d7813b5c83a6b37be2193a951b1a604a54e185663b9e7b94375",
+      "escrita": "cursiva",
+      "formulas": "poucas",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p21": {
+      "sha256": "b46c78ff6ace4831ee4649a35efc2a4898d380ca664c69e6e8d7181db7c98a84",
+      "escrita": "forma",
+      "formulas": "poucas",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p22": {
+      "sha256": "a86eb850615a25c1b6214d93bf9439e49c1a7ed63c8cb4e3d7acceedeab690ba",
+      "escrita": "forma",
+      "formulas": "poucas",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p26": {
+      "sha256": "1c71c9cedfd7400154b44cea723c8eb82fc655e7cade1ff741294e89ed871b46",
+      "escrita": "cursiva",
+      "formulas": "nenhuma",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p27": {
+      "sha256": "a87035b79ad08fe5e5888d4b592d504a085caf5cf9cd0d0574b1021774a92452",
+      "escrita": "cursiva",
+      "formulas": "nenhuma",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p30": {
+      "sha256": "d5e4973d24d6791205f13cafd9ef44e2ea10676837a271c58171e2dff745247e",
+      "escrita": "cursiva",
+      "formulas": "nenhuma",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p31": {
+      "sha256": "583c567e6cc818cdcbfc86ab1f683fde9814e736e29cdf401381449374b9339b",
+      "escrita": "cursiva",
+      "formulas": "nenhuma",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p35": {
+      "sha256": "a8f6ea5c5a856f859c8b4a9a066f966ed6f53a26646f311c701622a84320d725",
+      "escrita": "cursiva",
+      "formulas": "nenhuma",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p36": {
+      "sha256": "630f7f4249d637bcf6e59e114ebedc86ac4cc31af09c1bb88b8d2b80976ec89e",
+      "escrita": "mista",
+      "formulas": "nenhuma",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p37": {
+      "sha256": "22a9f9034f8edb428a5d30ea4bb99f4d05c6c2456f39c480792c5c947ccafe17",
+      "escrita": "mista",
+      "formulas": "muitas",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p38": {
+      "sha256": "9d4fa044b961331bada8668c4db7352df2a6a6958e4706b24b461456778e2cf9",
+      "escrita": "mista",
+      "formulas": "poucas",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p41": {
+      "sha256": "8491697b0464c3a9c8cdec1267b144c29da3fd12dc75c11c4a48393ffd1fc623",
+      "escrita": "mista",
+      "formulas": "poucas",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p44": {
+      "sha256": "b65547ca73a3cf7cd8bcfb3ab6de29520f7b1ffb58edc65facc235ab275fe03a",
+      "escrita": "mista",
+      "formulas": "muitas",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p45": {
+      "sha256": "1850c84455cbecf563d4e2be99c1615d0acdd49f40bff14a287d67faa9e849cf",
+      "escrita": "cursiva",
+      "formulas": "nenhuma",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    },
+    "p46": {
+      "sha256": "c779dcca576273c0ed48da54147d386886193516a3c65cd594325b57c957649e",
+      "escrita": "mista",
+      "formulas": "nenhuma",
+      "foto": "boa",
+      "papel": "pautado",
+      "layout": "uma_coluna"
+    }
+  },
+  "dev_pages": [
+    "p01",
+    "p02",
+    "p03",
+    "p04",
+    "p05",
+    "p06",
+    "p07",
+    "p08",
+    "p09",
+    "p12",
+    "p13",
+    "p16",
+    "p17",
+    "p19",
+    "p23",
+    "p24",
+    "p25",
+    "p28",
+    "p29",
+    "p32",
+    "p33",
+    "p34",
+    "p39",
+    "p40",
+    "p42",
+    "p43",
+    "p47",
+    "p48",
+    "p49",
+    "p50",
+    "p51"
+  ],
+  "strata_counts": {
+    "cursiva × nenhuma": {
+      "total": 18,
+      "test": 6
+    },
+    "cursiva × poucas": {
+      "total": 10,
+      "test": 4
+    },
+    "forma × poucas": {
+      "total": 5,
+      "test": 2
+    },
+    "mista × muitas": {
+      "total": 4,
+      "test": 2
+    },
+    "mista × nenhuma": {
+      "total": 3,
+      "test": 2
+    },
+    "mista × poucas": {
+      "total": 11,
+      "test": 4
+    }
+  }
+}

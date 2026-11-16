@@ -29,7 +29,7 @@ def load_classes(pages: dict, strata: tuple[str, ...] = STRATA) -> dict[str, dic
         data = json.loads(path.read_text(encoding="utf-8"))
         if all(data.get(key) for key in strata):
             out[pid] = {
-                key: data[key] for key in ("escrita", "formulas", "foto", "papel", "layout")
+                key: data.get(key) for key in ("escrita", "formulas", "foto", "papel", "layout")
             }
     return out
 
