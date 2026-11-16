@@ -27,7 +27,7 @@ def load_classes(pages: dict, strata: tuple[str, ...] = STRATA) -> dict[str, dic
         if not path.is_file():
             continue
         data = json.loads(path.read_text(encoding="utf-8"))
-        if all(data.get(key) for key in STRATA):
+        if all(data.get(key) for key in strata):
             out[pid] = {
                 key: data[key] for key in ("escrita", "formulas", "foto", "papel", "layout")
             }
@@ -92,7 +92,12 @@ def main(argv: list[str] | None = None) -> int:
         "strata": list(strata),
         "size": len(chosen),
         "pages": {
-            pid: {"sha256": manifest["pages"][pid]["sha256"], **classes[pid]} for pid in chosen
+            pid: {
+                "sha256": manifest["pages"][pid].get("sha256")
+                or manifest["pages"][pid].get("source_sha256"),
+                **classes[pid],
+            }
+            for pid in chosen
         },
         "dev_pages": sorted(set(manifest["pages"]) - set(chosen)),
         "strata_counts": {
