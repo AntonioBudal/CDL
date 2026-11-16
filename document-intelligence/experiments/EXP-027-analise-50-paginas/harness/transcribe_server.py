@@ -19,7 +19,10 @@ from urllib.parse import urlparse
 from paths import CLASSIFICATION, MANIFEST, MOTOR_OUT, PROCESSED, REFERENCE, SPLITS, TOOL
 
 STATIC = Path(__file__).resolve().parent / "tool"
-TEACHER: dict[str, str | None] = {"system": None}  # --teacher: rascunho de outro sistema (só dev)
+TEACHER: dict[str, object] = {
+    "system": None,
+    "on_test": False,
+}  # --teacher: rascunho de outro sistema
 CLASSES = {
     "escrita": ["cursiva", "forma", "mista"],
     "formulas": ["nenhuma", "poucas", "muitas"],
@@ -71,7 +74,7 @@ def page_detail(pid: str) -> dict | None:
     is_test = pid in test_ids()
     draft_source, draft_text = "motor", "\n".join(line["text"] for line in motor["lines"])
     teacher = TEACHER["system"]
-    if teacher and not is_test:  # páginas de teste nunca veem o rascunho do professor
+    if teacher and (not is_test or TEACHER["on_test"]):  # teste só com --teacher-on-test
         taught = read_json(PROCESSED / teacher / f"{pid}.json", None)
         if taught:
             draft_source = f"teacher:{teacher}"
@@ -174,11 +177,15 @@ class Handler(SimpleHTTPRequestHandler):
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Ferramenta local de transcrição do EXP-027")
     parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--teacher", default=None, help="sistema cujo rascunho preenche as páginas")
     parser.add_argument(
-        "--teacher", default=None, help="sistema cujo rascunho preenche as páginas de dev"
+        "--teacher-on-test",
+        action="store_true",
+        help="também nas páginas de teste (decisão do usuário; exige revisão humana e 2ª passada)",
     )
     args = parser.parse_args(argv)
     TEACHER["system"] = args.teacher
+    TEACHER["on_test"] = args.teacher_on_test
     sys.stdout.reconfigure(encoding="utf-8")
     server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
     print(f"Transcrição: http://127.0.0.1:{args.port}/  (Ctrl+C para parar)", flush=True)
