@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transcrição EXP-027</title>
+<style>
+  :root { --bg:#f6f4ee; --ink:#222; --muted:#666; --line:#d8d3c7; --accent:#2a5d9f; --ok:#2e7d32; --warn:#b26a00; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.4 system-ui, sans-serif; color:var(--ink); background:var(--bg); }
+  header { display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; padding:8px 14px; border-bottom:1px solid var(--line); background:#fff; position:sticky; top:0; z-index:2; }
+  header select, header button, header input { font:inherit; padding:5px 9px; }
+  button.primary { background:var(--accent); color:#fff; border:0; border-radius:4px; cursor:pointer; }
+  button.quiet { background:#fff; border:1px solid var(--line); border-radius:4px; cursor:pointer; }
+  #status { color:var(--muted); min-width:220px; }
+  #status.ok { color:var(--ok); } #status.warn { color:var(--warn); }
+  main { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:12px; height:calc(100vh - 54px); }
+  #left { overflow:auto; border:1px solid var(--line); background:#fff; position:relative; }
+  #left img { display:block; transform-origin: top left; }
+  #zoombar { position:sticky; top:0; left:0; background:rgba(255,255,255,.92); padding:6px 10px; border-bottom:1px solid var(--line); display:flex; gap:10px; align-items:center; z-index:1; }
+  #right { display:flex; flex-direction:column; gap:10px; overflow:auto; }
+  textarea { width:100%; min-height:46vh; font:15px/1.5 ui-monospace, Consolas, monospace; padding:10px; border:1px solid var(--line); border-radius:4px; resize:vertical; }
+  fieldset { border:1px solid var(--line); border-radius:4px; padding:8px 12px; }
+  fieldset legend { color:var(--muted); font-size:13px; }
+  .row { display:flex; flex-wrap:wrap; gap:6px 14px; margin:4px 0; align-items:center; }
+  .row b { min-width:80px; display:inline-block; }
+  label { cursor:pointer; }
+  details { border:1px solid var(--line); border-radius:4px; padding:6px 12px; background:#fff; }
+  details summary { cursor:pointer; color:var(--accent); }
+  #crops { display:flex; flex-direction:column; gap:6px; }
+  .crop { display:grid; grid-template-columns: 1fr 1fr; gap:10px; align-items:center; border:1px solid var(--line); background:#fff; padding:4px 8px; border-radius:4px; }
+  .crop img { max-width:100%; max-height:64px; }
+  .crop .t { font: 14px ui-monospace, Consolas, monospace; white-space:pre-wrap; word-break:break-word; }
+  .crop .c { color:var(--muted); font-size:12px; }
+  .low { border-left:4px solid var(--warn); }
+  .tag { font-size:12px; padding:2px 6px; border-radius:10px; background:#eee; color:var(--muted); }
+  .tag.test { background:#e3ecf9; color:var(--accent); }
+  kbd { font-family:inherit; border:1px solid var(--line); border-radius:3px; padding:0 4px; background:#fff; }
+</style>
+</head>
+<body>
+<header>
+  <button class="quiet" id="prev" title="Alt+←">← Anterior</button>
+  <select id="page"></select>
+  <button class="quiet" id="next" title="Alt+→">Próxima →</button>
+  <span id="progress" class="tag"></span>
+  <span id="testtag" class="tag test" hidden>teste congelado</span>
+  <label><input type="checkbox" id="done"> concluída</label>
+  <label><input type="checkbox" id="second_pass"> 2ª passada</label>
+  <button class="primary" id="save" title="Ctrl+S">Salvar</button>
+  <span id="status"></span>
+</header>
+<main>
+  <div id="left">
+    <div id="zoombar">
+      <span>Zoom</span>
+      <input type="range" id="zoom" min="0.3" max="3" step="0.1" value="1">
+      <span id="zoomv">100 %</span>
+      <button class="quiet" id="fit">Ajustar à largura</button>
+    </div>
+    <img id="photo" alt="página">
+  </div>
+  <div id="right">
+    <details>
+      <summary>Como transcrever (formato da referência)</summary>
+      <ul>
+        <li><b>Uma linha do arquivo por linha física do caderno</b>, na ordem natural de leitura. Quebre, junte ou reordene as linhas do texto do motor à vontade.</li>
+        <li>Acentos, maiúsculas e pontuação <b>fiéis ao que está escrito</b> (inclusive erros seus de ortografia no caderno).</li>
+        <li>Fórmulas e símbolos matemáticos entre cifrões, em LaTeX simples: <code>$x^2 + 1$</code>, <code>$\frac{a}{b}$</code>, <code>$\int_0^1 f(x)\,dx$</code>. Se não souber o LaTeX, escreva o mais próximo que conseguir, sempre entre <code>$…$</code>.</li>
+        <li><code>[figura]</code> numa linha sozinha para desenho, diagrama ou tabela que não é texto. <code>[?]</code> no lugar de um trecho que nem você consegue ler.</li>
+        <li>Notas de margem, setas e riscos: transcreva o texto se for legível, na posição em que o leria; ignore o resto.</li>
+        <li><b>Leia a foto primeiro</b> e só depois corrija o texto do motor: o texto preenchido tende a esconder erros. Nas páginas marcadas como <i>teste congelado</i>, faça uma 2ª passada em outro momento.</li>
+        <li><kbd>Ctrl</kbd>+<kbd>S</kbd> salva; <kbd>Alt</kbd>+<kbd>←</kbd>/<kbd>→</kbd> muda de página. Salvar grava o texto e a classificação.</li>
+      </ul>
+    </details>
+    <textarea id="text" spellcheck="false" placeholder="Transcrição da página, uma linha por linha do caderno"></textarea>
+    <fieldset id="classes"><legend>Classificação da página (como você vê a página)</legend></fieldset>
+    <details open>
+      <summary>Linhas lidas pelo motor (recorte e texto, na ordem do motor)</summary>
+      <div id="crops"></div>
+    </details>
+  </div>
+</main>
+<script>
+const LABELS = {
+  escrita: ["Escrita", {cursiva:"cursiva", forma:"letra de forma", mista:"mista"}],
+  formulas: ["Fórmulas", {nenhuma:"nenhuma", poucas:"poucas", muitas:"muitas"}],
+  foto: ["Foto", {boa:"boa (nítida, luz uniforme, reta)", media:"média", ruim:"ruim (sombra, desfoque, inclinada)"}],
+  papel: ["Papel", {branco:"branco", pautado:"pautado", quadriculado:"quadriculado", outro:"outro"}],
+  layout: ["Layout", {uma_coluna:"uma coluna", notas_laterais:"notas laterais", diagramas_tabelas:"diagramas/tabelas", misto:"misto"}],
+};
+let pages = [], current = null, dirty = false;
+const $ = id => document.getElementById(id);
+
+async function api(path, options) {
+  const r = await fetch(path, options);
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+function setStatus(text, klass) { $("status").textContent = text; $("status").className = klass || ""; }
+
+async function loadList(keep) {
+  pages = await api("/api/pages");
+  const sel = $("page");
+  sel.innerHTML = "";
+  for (const p of pages) {
+    const o = document.createElement("option");
+    o.value = p.id;
+    o.textContent = `${p.id} ${p.has_reference ? "✓" : "·"}${p.done ? " concluída" : ""}${p.second_pass ? " 2ª" : ""}${p.is_test ? " [teste]" : ""}`;
+    sel.appendChild(o);
+  }
+  const saved = pages.filter(p => p.has_reference).length, done = pages.filter(p => p.done).length;
+  $("progress").textContent = `${saved}/${pages.length} salvas · ${done} concluídas`;
+  if (keep) sel.value = keep;
+}
+
+function buildClasses(classes, values) {
+  const box = $("classes");
+  box.innerHTML = "<legend>Classificação da página (como você vê a página)</legend>";
+  for (const key of Object.keys(classes)) {
+    const [title, names] = LABELS[key];
+    const row = document.createElement("div");
+    row.className = "row";
+    row.innerHTML = `<b>${title}</b>`;
+    for (const value of classes[key]) {
+      const id = `${key}-${value}`;
+      const l = document.createElement("label");
+      l.innerHTML = `<input type="radio" name="${key}" value="${value}" id="${id}"> ${names[value] || value}`;
+      row.appendChild(l);
+    }
+    box.appendChild(row);
+    if (values[key]) { const el = document.getElementById(`${key}-${values[key]}`); if (el) el.checked = true; }
+  }
+  box.querySelectorAll("input").forEach(i => i.addEventListener("change", () => { dirty = true; }));
+}
+
+async function loadPage(pid) {
+  if (dirty && !confirm("Há alterações não salvas. Trocar de página mesmo assim?")) { $("page").value = current.id; return; }
+  current = await api(`/api/page/${pid}`);
+  $("page").value = pid;
+  $("photo").src = current.image + "?t=" + Date.now();
+  $("text").value = current.reference ?? current.motor_text;
+  $("done").checked = !!current.classification.done;
+  $("second_pass").checked = !!current.classification.second_pass;
+  $("testtag").hidden = !current.is_test;
+  buildClasses(current.classes, current.classification);
+  const crops = $("crops");
+  crops.innerHTML = "";
+  current.lines.forEach((line, i) => {
+    const d = document.createElement("div");
+    d.className = "crop" + (line.confidence < 0.75 ? " low" : "");
+    d.innerHTML = `<img src="/crops/${pid}/${String(i).padStart(3, "0")}.jpg" alt="linha ${i + 1}" loading="lazy"><div><div class="t"></div><div class="c">linha ${i + 1} · confiança ${(line.confidence * 100).toFixed(0)} %</div></div>`;
+    d.querySelector(".t").textContent = line.text;
+    crops.appendChild(d);
+  });
+  dirty = false;
+  setStatus(current.reference ? "referência carregada" : "texto do motor (ainda não salvo)");
+  fitWidth();
+}
+
+async function save() {
+  if (!current) return;
+  const payload = { reference: $("text").value, done: $("done").checked, second_pass: $("second_pass").checked };
+  for (const key of Object.keys(current.classes)) {
+    const el = document.querySelector(`input[name="${key}"]:checked`);
+    if (el) payload[key] = el.value;
+  }
+  try {
+    const r = await api(`/api/page/${current.id}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    dirty = false;
+    current.reference = payload.reference;
+    setStatus("salvo " + new Date(r.saved_at).toLocaleTimeString(), "ok");
+    await loadList(current.id);
+  } catch (e) { setStatus("erro ao salvar: " + e.message, "warn"); }
+}
+
+function move(delta) {
+  const i = pages.findIndex(p => p.id === current?.id);
+  const next = pages[i + delta];
+  if (next) loadPage(next.id);
+}
+function applyZoom(v) { $("photo").style.transform = `scale(${v})`; $("zoom").value = v; $("zoomv").textContent = Math.round(v * 100) + " %"; }
+function fitWidth() {
+  const img = $("photo");
+  const go = () => { const v = Math.max(0.3, Math.min(3, ($("left").clientWidth - 24) / img.naturalWidth)); applyZoom(v); };
+  if (img.complete && img.naturalWidth) go(); else img.onload = go;
+}
+
+$("page").addEventListener("change", e => loadPage(e.target.value));
+$("prev").addEventListener("click", () => move(-1));
+$("next").addEventListener("click", () => move(1));
+$("save").addEventListener("click", save);
+$("text").addEventListener("input", () => { dirty = true; });
+$("done").addEventListener("change", () => { dirty = true; });
+$("second_pass").addEventListener("change", () => { dirty = true; });
+$("zoom").addEventListener("input", e => applyZoom(parseFloat(e.target.value)));
+$("fit").addEventListener("click", fitWidth);
+document.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(); }
+  if (e.altKey && e.key === "ArrowLeft") { e.preventDefault(); move(-1); }
+  if (e.altKey && e.key === "ArrowRight") { e.preventDefault(); move(1); }
+});
+window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+loadList().then(() => { const first = pages.find(p => !p.has_reference) || pages[0]; if (first) loadPage(first.id); });
+</script>
+</body>
+</html>
