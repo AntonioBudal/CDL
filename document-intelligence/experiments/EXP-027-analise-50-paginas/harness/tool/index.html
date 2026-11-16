@@ -139,7 +139,8 @@ async function loadPage(pid) {
   current = await api(`/api/page/${pid}`);
   $("page").value = pid;
   $("photo").src = current.image + "?t=" + Date.now();
-  $("text").value = current.reference ?? current.motor_text;
+  $("text").value = current.reference ?? current.draft_text;
+  current.draft_used = current.reference ? (current.classification.draft_source || "motor") : current.draft_source;
   $("done").checked = !!current.classification.done;
   $("second_pass").checked = !!current.classification.second_pass;
   $("testtag").hidden = !current.is_test;
@@ -154,13 +155,13 @@ async function loadPage(pid) {
     crops.appendChild(d);
   });
   dirty = false;
-  setStatus(current.reference ? "referência carregada" : "texto do motor (ainda não salvo)");
+  setStatus(current.reference ? "referência carregada" : `rascunho de ${current.draft_source} (ainda não salvo)`);
   fitWidth();
 }
 
 async function save() {
   if (!current) return;
-  const payload = { reference: $("text").value, done: $("done").checked, second_pass: $("second_pass").checked };
+  const payload = { reference: $("text").value, done: $("done").checked, second_pass: $("second_pass").checked, draft_source: current.draft_used };
   for (const key of Object.keys(current.classes)) {
     const el = document.querySelector(`input[name="${key}"]:checked`);
     if (el) payload[key] = el.value;

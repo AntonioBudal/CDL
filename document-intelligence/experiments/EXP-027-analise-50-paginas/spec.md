@@ -12,7 +12,8 @@ adaptador de referência, à espera de 30 registros de feedback); por isso este 
 Leitorum (feature 086, motor `caderno-leitura-0.1/motor`, pipeline do ADR-008 com o leitor original PP-OCRv6
 small, sem correção lexical). "Nenhum resultado ficou minimamente aceitável." Muitas páginas têm cursiva e
 fórmulas. Objetivo de longo prazo: qualidade próxima à dos grandes modelos multimodais, 100 % local, sem custo
-por uso. Este experimento é a **Etapa 1** do replanejamento a partir do Roadmap 0.13: medir onde está o erro
+por uso; objetivo final de **modelos próprios** (ver
+[docs/objetivo-modelos-proprios.md](../../docs/objetivo-modelos-proprios.md)). Este experimento é a **Etapa 1** do replanejamento a partir do Roadmap 0.13: medir onde está o erro
 antes de decidir o que construir.
 
 ## Pergunta
@@ -33,9 +34,12 @@ sobre as três hipóteses do usuário?
 - **H4 — alternativa: a perda é antes da leitura.** Linhas não detectadas, fragmentadas ou unidas respondem
   por mais erro de página do que a leitura dentro das linhas bem detectadas. Se H4 se confirmar, a prioridade
   é detecção/foto, mesmo contradizendo H1 e H2.
-- **H5 — referência local.** Um modelo visão-linguagem (VLM) local quantizado, em CPU, lê as mesmas páginas
-  com CER de página pelo menos 10 pontos menor que o motor. Só referência do que já é possível localmente; não
-  é adoção.
+- **H5 — baseline local.** Um modelo visão-linguagem (VLM) de pesos abertos, quantizado, em CPU, lê as mesmas
+  páginas com CER de página pelo menos 10 pontos menor que o motor. É **baseline** (quanto já é possível
+  localmente) e candidato a **professor** (rascunho que o usuário corrige e que vira dado de treino), nunca
+  adoção: a diretriz de modelos próprios
+  ([docs/objetivo-modelos-proprios.md](../../docs/objetivo-modelos-proprios.md)) manda substituí-lo por um
+  modelo nosso quando este igualar ou superar o baseline no teste congelado.
 
 ## Material, privacidade e conjunto congelado
 
@@ -89,9 +93,14 @@ como referência linha a linha (vai para seções e pode ter sido reorganizado),
 6. **Palavras quase certas (H3):** entre as palavras erradas das linhas correspondidas, fração a distância 1 e
    2 da palavra de referência; quantas dessas um dicionário de português resolve sem ambiguidade; ganho máximo
    de WER se todas fossem corrigidas.
-7. **Referência VLM local (H5):** `llama.cpp` (MIT) com um Qwen3-VL quantizado (Apache-2.0), em CPU, nas
+7. **Baseline VLM local (H5):** `llama.cpp` (MIT) com um Qwen3-VL quantizado (Apache-2.0), em CPU, nas
    mesmas páginas, com um só prompt fixo definido **antes** de ver as páginas de teste; CER/WER de página e
-   tempo por página. Gemma só se houver tempo e RAM. Registro no registry de modelos com licença.
+   tempo por página. Gemma só se houver tempo e RAM. **Cópia exata guardada:** pesos em `models/exp-027/`
+   (fora do Git) com `MODEL.json` (fonte, revisão, SHA-256 de cada arquivo, texto integral da licença, data)
+   e linha na tabela de rastreabilidade. As transcrições do VLM nas páginas de **teste** servem só para
+   pontuar; a ferramenta de transcrição nunca as mostra ao usuário, para a referência não herdar os erros
+   do baseline. Nas páginas de desenvolvimento, o VLM pode servir de professor (rascunho a corrigir), e cada
+   referência registra de qual rascunho partiu.
 8. **Exemplos:** 5 a 10 falhas representativas (uma por origem de erro pelo menos), fora do Git.
 9. **Relatório:** `report.md` com tabelas, veredito de H1 a H5 e a conclusão: onde está o maior ganho possível.
 
@@ -110,5 +119,5 @@ como referência linha a linha (vai para seções e pode ter sido reorganizado),
 - [ ] **T002** Classificação manual das páginas e sorteio estratificado do conjunto de teste congelado; hashes.
 - [ ] **T003** Ferramenta local de transcrição; (usuário) transcrever ao menos as 20 páginas de teste.
 - [ ] **T004** Métricas, quebra por origem, palavras quase certas, exemplos.
-- [ ] **T005** Referência VLM local.
+- [ ] **T005** Baseline VLM local, com cópia exata guardada e registrada.
 - [ ] **T006** `report.md` e benchmark JSON em `evaluation/benchmarks/`.

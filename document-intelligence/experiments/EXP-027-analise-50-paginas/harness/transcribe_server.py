@@ -19,6 +19,7 @@ from urllib.parse import urlparse
 from paths import CLASSIFICATION, MANIFEST, MOTOR_OUT, PROCESSED, REFERENCE, SPLITS, TOOL
 
 STATIC = Path(__file__).resolve().parent / "tool"
+TEACHER: dict[str, str | None] = {"system": None}  # --teacher: rascunho de outro sistema (só dev)
 CLASSES = {
     "escrita": ["cursiva", "forma", "mista"],
     "formulas": ["nenhuma", "poucas", "muitas"],
@@ -67,6 +68,14 @@ def page_detail(pid: str) -> dict | None:
     motor = read_json(MOTOR_OUT / f"{pid}.json", {"lines": []})
     quality = read_json(PROCESSED / "quality.json", {}).get(pid, {})
     reference_file = REFERENCE / f"{pid}.txt"
+    is_test = pid in test_ids()
+    draft_source, draft_text = "motor", "\n".join(line["text"] for line in motor["lines"])
+    teacher = TEACHER["system"]
+    if teacher and not is_test:  # páginas de teste nunca veem o rascunho do professor
+        taught = read_json(PROCESSED / teacher / f"{pid}.json", None)
+        if taught:
+            draft_source = f"teacher:{teacher}"
+            draft_text = "\n".join(line["text"] for line in taught["lines"])
     return {
         "id": pid,
         "image": f"/pages/{pid}.jpg",
@@ -75,13 +84,14 @@ def page_detail(pid: str) -> dict | None:
             {"text": line["text"], "bbox": line["bbox"], "confidence": line["confidence"]}
             for line in motor["lines"]
         ],
-        "motor_text": "\n".join(line["text"] for line in motor["lines"]),
+        "draft_text": draft_text,
+        "draft_source": draft_source,
         "reference": reference_file.read_text(encoding="utf-8")
         if reference_file.is_file()
         else None,
         "classification": read_json(CLASSIFICATION / f"{pid}.json", {}),
         "classes": CLASSES,
-        "is_test": pid in test_ids(),
+        "is_test": is_test,
     }
 
 
@@ -93,6 +103,7 @@ def save_page(pid: str, payload: dict) -> dict:
         normalized = "\n".join(line.rstrip() for line in text.replace("\r\n", "\n").split("\n"))
         (REFERENCE / f"{pid}.txt").write_text(normalized.strip("\n") + "\n", encoding="utf-8")
     classification = {key: payload.get(key) for key in CLASSES if payload.get(key) in CLASSES[key]}
+    classification["draft_source"] = str(payload.get("draft_source") or "")
     classification["done"] = bool(payload.get("done"))
     classification["second_pass"] = bool(payload.get("second_pass"))
     classification["saved_at"] = datetime.now(UTC).isoformat()
@@ -163,7 +174,11 @@ class Handler(SimpleHTTPRequestHandler):
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Ferramenta local de transcrição do EXP-027")
     parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument(
+        "--teacher", default=None, help="sistema cujo rascunho preenche as páginas de dev"
+    )
     args = parser.parse_args(argv)
+    TEACHER["system"] = args.teacher
     sys.stdout.reconfigure(encoding="utf-8")
     server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
     print(f"Transcrição: http://127.0.0.1:{args.port}/  (Ctrl+C para parar)", flush=True)
