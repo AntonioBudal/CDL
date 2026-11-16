@@ -17,10 +17,10 @@ from datetime import UTC, datetime
 
 from paths import CLASSIFICATION, MANIFEST, SPLITS
 
-STRATA = ("escrita", "formulas", "foto")
+STRATA = ("escrita", "formulas", "foto")  # padrão; --strata muda (ex.: sem foto)
 
 
-def load_classes(pages: dict) -> dict[str, dict]:
+def load_classes(pages: dict, strata: tuple[str, ...] = STRATA) -> dict[str, dict]:
     out = {}
     for pid in pages:
         path = CLASSIFICATION / f"{pid}.json"
@@ -67,27 +67,29 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--size", type=int, default=20)
     parser.add_argument("--seed", default="exp-027")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument("--strata", default=",".join(STRATA), help="chaves de estratificação")
     args = parser.parse_args(argv)
+    strata = tuple(key for key in args.strata.split(",") if key)
     sys.stdout.reconfigure(encoding="utf-8")
     target = SPLITS / "test-manifest.json"
     if target.is_file() and not args.force:
         print("o conjunto de teste já está congelado; nada feito")
         return 0
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    classes = load_classes(manifest["pages"])
+    classes = load_classes(manifest["pages"], strata)
     if len(classes) < len(manifest["pages"]):
         print(f"faltam classificações: {len(classes)} de {len(manifest['pages'])}")
         return 1
     groups: dict[tuple, list[str]] = defaultdict(list)
     for pid, data in classes.items():
-        groups[tuple(data[key] for key in STRATA)].append(pid)
+        groups[tuple(data[key] for key in strata)].append(pid)
     rng = random.Random(args.seed)
     chosen = allocate(groups, args.size, rng)
     split = {
         "schema": "exp-027-test-split/1",
         "created_at": datetime.now(UTC).isoformat(),
         "seed": args.seed,
-        "strata": list(STRATA),
+        "strata": list(strata),
         "size": len(chosen),
         "pages": {
             pid: {"sha256": manifest["pages"][pid]["sha256"], **classes[pid]} for pid in chosen

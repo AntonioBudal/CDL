@@ -5,8 +5,9 @@ Conceitos Principais, Referências e Conexões, Minhas Anotações). Grava, fora
 
 - ``processed/exp-027/motor/pNN.json`` — linhas do motor no formato do ``run_motor.py`` (sem
   caixas);
-- ``raw/exp-027/referencia/pNN.txt`` — texto revisado como referência **provisória** (só se ainda
-  não existir um ``pNN.txt`` escrito à mão), com ``draft_source: export`` na classificação;
+- com ``--write-reference``, ``raw/exp-027/referencia/pNN.txt`` — texto revisado como referência
+  **provisória** (só se ainda não existir um ``pNN.txt`` à mão), ``draft_source: export``. Na
+  exportação de 2026-11-16 o revisado era o bruto reorganizado (96 % do CER era ordem): não serve;
 - ``processed/exp-027/manifest.json`` — ids, hash do texto bruto, contagens.
 
 Nenhum texto sai no console: só contagens. A ordem ``pNN`` é a ordem dos estudos no arquivo.
@@ -89,6 +90,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Parser da exportação Markdown do Leitorum")
     parser.add_argument("--expect", type=int, default=50)
     parser.add_argument(
+        "--write-reference",
+        action="store_true",
+        help="grava o texto revisado como referência provisória (só se ele for de fato corrigido)",
+    )
+    parser.add_argument(
         "--force-reference", action="store_true", help="sobrescreve pNN.txt existentes"
     )
     args = parser.parse_args(argv)
@@ -134,7 +140,11 @@ def main(argv: list[str] | None = None) -> int:
             status = "revised_differs"
         counts[status] += 1
         reference = REFERENCE / f"{pid}.txt"
-        if status == "revised_differs" and (args.force_reference or not reference.is_file()):
+        if (
+            args.write_reference
+            and status == "revised_differs"
+            and (args.force_reference or not reference.is_file())
+        ):
             reference.write_text(revised + "\n", encoding="utf-8")
             cls_path = CLASSIFICATION / f"{pid}.json"
             cls = json.loads(cls_path.read_text(encoding="utf-8")) if cls_path.is_file() else {}
