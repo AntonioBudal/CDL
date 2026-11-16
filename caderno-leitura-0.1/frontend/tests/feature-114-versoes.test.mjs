@@ -28,16 +28,22 @@ test('114: utilitário de versão', () => {
   assert.equal(fullVersion('0.12.0-alpha.1', ''), '0.12.0-alpha.1')
 })
 
-test('114: histórico ordenado, com a versão atual em andamento e o alpha.N batendo com as entregas', () => {
+test('114: histórico ordenado; em andamento, alpha.N bate com as entregas; fechado, versão sem pré-lançamento', () => {
   const minors = VERSION_HISTORY.map((e) => parseSemver(e.version).minor)
   assert.deepEqual(minors, [...minors].sort((a, b) => b - a), 'do mais recente ao mais antigo')
   assert.equal(minors.length, new Set(minors).size)
   const current = VERSION_HISTORY.find((e) => e.roadmap === roadmapOf(VERSION))
   assert.ok(current, 'o roadmap da versão atual está no histórico')
-  assert.equal(current.status, 'in_progress')
-  assert.equal(VERSION_HISTORY.filter((e) => e.status === 'in_progress').length, 1)
-  const done = current.features.filter((f) => f.done).length
-  assert.equal(parseSemver(VERSION).prerelease, `alpha.${done}`, 'alpha.N = features entregues do roadmap')
+  assert.ok(VERSION_HISTORY.filter((e) => e.status === 'in_progress').length <= 1)
+  if (current.status === 'in_progress') {
+    const done = current.features.filter((f) => f.done).length
+    assert.equal(parseSemver(VERSION).prerelease, `alpha.${done}`, 'alpha.N = features entregues do roadmap')
+  } else {
+    assert.equal(current.status, 'closed')
+    assert.match(current.closed, /^\d{4}-\d{2}-\d{2}$/)
+    assert.ok(!parseSemver(VERSION).prerelease, 'roadmap fechado: 0.MINOR.0, sem alpha')
+    assert.equal(VERSION, current.version)
+  }
   for (const entry of VERSION_HISTORY) {
     assert.ok(isValidSemver(entry.version) && entry.highlights.length > 0, entry.version)
     assert.match(entry.started, /^\d{4}-\d{2}-\d{2}$/)

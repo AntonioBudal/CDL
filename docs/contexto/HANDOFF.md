@@ -82,12 +82,15 @@ anti-spoiler (spec 120, **concluída**; versão `0.12.0-alpha.7`; migração `00
 `0.12.0-alpha.8`) · F0.12.09 seletor de idioma, só a fundação (spec 122, **concluída**; versão `0.12.0-alpha.9`;
 migração `0043`, falta rodar no banco ativo) · F0.12.10 pequenas melhorias de
 usabilidade (spec 123, **concluída**; versão `0.12.0-alpha.10`). **As 10 features do 0.12 estão entregues**; fechar o
-roadmap (versão `0.12.0` e "Fechado" na linha do tempo) fica para o usuário decidir.
+roadmap foi decidido pelo usuário em 2026-11-16.
 
 **Lote 1 do 0.12 fechado (F0.12.01–05):** `npm test` 811/811 e `pytest` completo 884 passou, 4 pulados (teste antigo de
 indexação de `/compartilhado/1` corrigido em commit próprio). Próximo lote: F0.12.06–10.
 
 **Lote 2 do 0.12 fechado (F0.12.06–10):** `npm test` 825/825 e `pytest` completo 896 passou, 4 pulados, nenhuma falha.
+
+**Roadmap 0.12 concluído e fechado em 2026-11-16** (versão `0.12.0`, "Fechado" na linha do tempo). Banco ativo
+ainda sem as migrações `0041` a `0043` (procedimento do §3). Próximo roadmap: a definir pelo usuário.
 
 ---
 

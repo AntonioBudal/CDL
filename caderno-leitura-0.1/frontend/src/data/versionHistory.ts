@@ -34,7 +34,8 @@ export const VERSION_HISTORY: RoadmapEntry[] = [
     roadmap: '0.12',
     title: 'Comunidade, ecossistema e versões',
     started: '2026-11-14',
-    status: 'in_progress',
+    closed: '2026-11-16',
+    status: 'closed',
     featureCount: 10,
     highlights: [
       'Versão no rodapé e esta linha do tempo',
@@ -42,18 +43,6 @@ export const VERSION_HISTORY: RoadmapEntry[] = [
       'Importar de outros serviços de leitura e feeds para acompanhar publicações',
       'Livro exportável como quadro (JSON Canvas), revisão sobre imagens e círculos de leitura sem spoilers',
       'Nomes de telas mais simples e ajustes de usabilidade',
-    ],
-    features: [
-      { id: 'F0.12.01', title: 'Versão no rodapé e evolução das versões', done: true },
-      { id: 'F0.12.02', title: 'Estudos publicados na web', done: true },
-      { id: 'F0.12.03', title: 'Importadores (Readwise, Goodreads, StoryGraph, Omnivore, BookWyrm)', done: true },
-      { id: 'F0.12.04', title: 'Feeds RSS, Atom e JSON', done: true },
-      { id: 'F0.12.05', title: 'Exportar o livro em JSON Canvas', done: true },
-      { id: 'F0.12.06', title: 'Oclusão de imagem para revisão', done: true },
-      { id: 'F0.12.07', title: 'Círculos de leitura com trava anti-spoiler', done: true },
-      { id: 'F0.12.08', title: 'Nomes mais simples nas telas', done: true },
-      { id: 'F0.12.09', title: 'Seletor de idioma (fundação)', done: true },
-      { id: 'F0.12.10', title: 'Pequenas melhorias de usabilidade', done: true },
     ],
   },
   {

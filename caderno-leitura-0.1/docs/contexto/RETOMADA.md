@@ -1826,3 +1826,11 @@ Spec aprovada com as recomendações Q1 a Q5:
   ok. Navegador em 1366, 768 e 375 px: calendário alinhado, períodos, filtro por dia, barra presa no alto e destaque
   salvo pela barra (destaque de teste apagado depois), menu cabendo (inclusive abrindo para cima), dica da barra com
   contraste ≥ 5,23:1 nos 10 temas.
+
+## Fecho do Roadmap 0.12 (2026-11-16)
+
+- Por decisão do usuário: versão `0.12.0` em `VERSION`, `package.json` e `package-lock.json`; na linha do tempo, o 0.12
+  passou a "Fechado" (`closed: '2026-11-16'`) e perdeu a lista de features, como os roadmaps anteriores. O teste 114
+  passou a aceitar o roadmap atual fechado (versão sem `alpha`, igual à da entrada).
+- Lotes: 1 (F0.12.01–05) com `npm test` 811/811 e `pytest` 884 passou; 2 (F0.12.06–10) com `npm test` 825/825 e
+  `pytest` 896 passou, 4 pulados. Banco ativo ainda sem as migrações 0041 a 0043.

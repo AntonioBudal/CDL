@@ -1,5 +1,7 @@
 # Roadmap 0.12 — Comunidade, ecossistema e versões
 
+**Fechado em 2026-11-16** (versão `0.12.0`): as 10 features entregues e os dois lotes fechados com as suítes completas.
+
 **Criado em:** 2026-11-14, por decisão do usuário: o antigo "Roadmap 1.0" passou a ser o **0.12**, porque a 1.0 ainda
 está longe. Os itens de comunidade e ecossistema do plano mestre de 2026-11-01 continuam aqui, na mesma ordem,
 depois de uma feature nova de versionamento, que vem primeiro porque as seguintes passam a se registrar nela.
