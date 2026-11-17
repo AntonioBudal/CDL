@@ -99,7 +99,14 @@ uv run python -m leitorum_di
   (H2 refutada); palavras a 1–2 letras são 18 % das erradas, dicionário corrige 4 % (H3 refutada); 28 % das
   palavras não aparecem na saída (H4 com apoio parcial). Pendente, por falta das fotos no projeto: quebra por
   origem com caixas, exemplos e baseline Qwen3-VL local (cópia exata em `models/exp-027/`, hashes conferidos).
-- **Tarefa Atual**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
+- **Replanejamento a partir do Roadmap 0.13 (2026-11-16):** quatro etapas entregues em
+  [`docs/replanejamento-0.13/`](./docs/replanejamento-0.13/) — prompt de pesquisa, resultado trazido pelo usuário,
+  [plano](./docs/replanejamento-0.13/04-plano.md) (aprovado pelo usuário) e
+  [roadmaps](./docs/replanejamento-0.13/05-roadmaps.md) (0.13 cobertura e dados → 0.14 leitor ajustado v1 →
+  0.15 leitor v2, léxico e ordem → 0.16 fórmulas; roadmap MP paralelo de modelos próprios). Próximo passo: specs
+  do EXP-028 (quebra por origem com as fotos de teste) e do EXP-029 (baseline/professor VLM local). O
+  `ROADMAP-0.13.md` da raiz é change request do usuário.
+- **Tarefa Atual (histórico)**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).
   - **Regra de workflow (usuário, 2026-09-30):** todo experimento segue o ciclo Spec Kit adaptado — Specify → Plan → Tasks — e a especificação/plano é apresentada **antes** de qualquer código de avaliação, script de inferência ou download de pesos.
