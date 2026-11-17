@@ -1,7 +1,7 @@
 # Etapa 4 — Roadmaps v2: 0.13 a 0.16 e trajetória de modelos próprios
 
 **Data:** 2026-11-16 (v1 entregue; **v2** incorpora a [revisão crítica externa](./07-plano-revisado.md) conforme o
-[plano v2](./04-plano.md) §0) · **Status:** `RASCUNHO v2` para revisão do usuário.
+[plano v2](./04-plano.md) §0) · **Status:** `APROVADO` pelo usuário em 2026-11-16 (v2).
 
 **Regras herdadas.** Cada item é uma spec própria do Spec Kit, um commit por item quando aprovado; experimento
 ≠ feature; nada vira produto sem medição no `frozen-test-v3` e ADR; LDF 2.0 só muda por versão MINOR com CR e

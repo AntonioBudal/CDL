@@ -1,7 +1,7 @@
 # Etapa 3 — Plano v2: estratégia, arquitetura-alvo, régua de medição, dados e metas
 
 **Data:** 2026-11-16 (v1 aprovada pelo usuário; **v2** incorpora a [revisão crítica externa](./07-plano-revisado.md))
-· **Status:** `RASCUNHO v2` para revisão do usuário · **Base:** [EXP-027](../../experiments/EXP-027-analise-50-paginas/report.md),
+· **Status:** `APROVADO` pelo usuário em 2026-11-16 (v2) · **Base:** [EXP-027](../../experiments/EXP-027-analise-50-paginas/report.md),
 [pesquisa](./03-resultado-pesquisa.md), [diretriz de modelos próprios](../objetivo-modelos-proprios.md), histórico EXP-008 a EXP-024.
 
 **Marcas.** **[medido]** = número do projeto; **[pesquisa]** / **[revisão]** = afirmação do relatório da Etapa 2 ou
