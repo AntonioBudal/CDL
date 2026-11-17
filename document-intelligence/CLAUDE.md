@@ -102,9 +102,11 @@ uv run python -m leitorum_di
 - **Replanejamento a partir do Roadmap 0.13 (2026-11-16):** quatro etapas entregues em
   [`docs/replanejamento-0.13/`](./docs/replanejamento-0.13/) — prompt de pesquisa, resultado trazido pelo usuário,
   [plano](./docs/replanejamento-0.13/04-plano.md) (aprovado pelo usuário) e
-  [roadmaps](./docs/replanejamento-0.13/05-roadmaps.md) (0.13 cobertura e dados → 0.14 leitor ajustado v1 →
-  0.15 leitor v2, léxico e ordem → 0.16 fórmulas; roadmap MP paralelo de modelos próprios). Próximo passo: specs
-  do EXP-028 (quebra por origem com as fotos de teste) e do EXP-029 (baseline/professor VLM local). O
+  [roadmaps](./docs/replanejamento-0.13/05-roadmaps.md), ambos em **v2** após a
+  [revisão crítica externa](./docs/replanejamento-0.13/07-plano-revisado.md) (0.13 com épico 0 bloqueante de régua
+  limpa e `dev-val` → 0.14 leitor ajustado v1 → 0.14.5 consolidação → 0.15 leitor v2, léxico e ordem → 0.16
+  fórmulas 2D; roadmap MP paralelo só para leitor e decodificador próprios). Próximo passo: specs da F-DI-13.01
+  (ferramenta de caixas e linhas) e do EXP-028A (caixas + 2ª passada nas 20 de teste e 10 de `dev-val`). O
   `ROADMAP-0.13.md` da raiz é change request do usuário.
 - **Tarefa Atual (histórico)**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.

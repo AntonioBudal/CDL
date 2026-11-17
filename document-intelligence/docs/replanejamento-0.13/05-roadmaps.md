@@ -1,163 +1,191 @@
-# Etapa 4 — Roadmaps a partir do 0.13: qualidade da digitalização e trajetória de modelos próprios
+# Etapa 4 — Roadmaps v2: 0.13 a 0.16 e trajetória de modelos próprios
 
-**Data:** 2026-11-16 · **Status:** `RASCUNHO` para revisão do usuário · **Base:** [plano aprovado](./04-plano.md)
-(Etapa 3), [EXP-027](../../experiments/EXP-027-analise-50-paginas/report.md), [pesquisa](./03-resultado-pesquisa.md).
+**Data:** 2026-11-16 (v1 entregue; **v2** incorpora a [revisão crítica externa](./07-plano-revisado.md) conforme o
+[plano v2](./04-plano.md) §0) · **Status:** `RASCUNHO v2` para revisão do usuário.
 
-**Regras herdadas.** Cada item abaixo é uma spec própria do Spec Kit (experimento ou feature), um commit por
-item quando aprovado; experimento ≠ feature, nada vira código de produto sem experimento medido e ADR; o
-contrato LDF 2.0 só muda por versão MINOR com change request e ADR; o motor do produto fica local, em CPU, sem
-custo por uso; modelos externos só com cópia exata guardada (revisão, hash, licença). Numeração: EXP-026 está
-reservado (adaptador de referência); os experimentos aqui começam em EXP-028. **Itens fora de
-`document-intelligence/` (motor, backend, frontend do Leitorum, arquivos da raiz) são change requests (CR) para o
-usuário aprovar**, inclusive a criação de `ROADMAP-0.13.md` na raiz, que hoje é onde os roadmaps do Leitorum
-vivem.
+**Regras herdadas.** Cada item é uma spec própria do Spec Kit, um commit por item quando aprovado; experimento
+≠ feature; nada vira produto sem medição no `frozen-test-v3` e ADR; LDF 2.0 só muda por versão MINOR com CR e
+ADR; motor local, em CPU, sem custo por uso; modelo externo só com cópia exata guardada. Numeração: EXP-026
+reservado; aqui a partir de EXP-028. Itens fora de `document-intelligence/` são **change requests (CR)** para o
+usuário, inclusive `ROADMAP-0.13.md` na raiz. **Toda calibração, limiar, época e escolha de modelo se decide no
+`dev-val`; o `frozen-test-v3` é lido uma vez, no fechamento de cada versão.**
 
-**Por que quatro versões mais um roadmap paralelo.** A divisão sai dos marcos do plano: cada versão fecha um
-marco medido no teste congelado (M1 cobertura, M2 leitura v1, M3 leitura v2 + polimento, M4 fórmulas) e a
-trajetória de modelos próprios corre ao lado, com portões próprios (M5), porque depende do banco de páginas
-crescer e não deve atrasar as versões.
+**Convenção dos critérios.** Alvos numéricos são hipóteses a confirmar (**[revisão]** quando vieram da revisão
+externa). Cada item tem critério de aceite e de abandono; cada versão tem plano B.
 
 ---
 
 ## Visão geral
 
-| Versão | Tema | Métrica-alvo no teste congelado v2 | Critério de saída |
+| Versão | Tema | Métrica-alvo principal (`frozen-test-v3`) | Critério de saída |
 | :--- | :--- | :--- | :--- |
-| **0.13** | Ver a página inteira, e ter dados | cobertura: 0 páginas com saída < 85 % do tamanho (hoje 7 de 20); palavras omitidas ≤ 10 % (hoje 28 %) | M1 atingido **e** banco com ≥ 50 páginas de desenvolvimento transcritas linha a linha, com caixas |
-| **0.14** | Ler certo: leitor ajustado v1 (pesos nossos) | CER ≤ 30 %, WER ≤ 65 % (hoje 56 % / 90 %) | M2 atingido com o leitor no motor do produto, ≤ 10 s e ≤ 1,5 GB por página |
-| **0.15** | Ler certo e polir: leitor v2, léxico, ordem | CER ≤ 15–20 %, WER ≤ 45 % | M3 atingido; decodificação com léxico só se melhorar o teste sem piorar fórmulas e siglas |
-| **0.16** | Fórmulas e layout de caderno | CER em fórmulas ≤ 40 % (hoje 73–77 %) sem piorar o texto; ordem de leitura medida | M4 atingido; LDF 2.1 com trechos de fórmula e zonas |
-| **MP** (paralelo) | Modelos próprios | leitor próprio ≥ leitor ajustado no teste v2 e no teste de deriva | M5: substituição quando igualar ou superar |
+| **0.13** | Régua limpa (épico 0, bloqueante) + enxergar a página inteira + Degrau 1 de dados | recall de linhas IoU ≥ 0,5 ≥ 92 % [revisão]; caixas falsas ≤ 5 %; palavras omitidas ≤ 10 %; 0 páginas < 85 % | M1 no teste v3, calibrado só no `dev-val`; 21 `dev-train` + 10 `dev-val` prontos com caixas |
+| **0.14** | Ler certo v1: primeiro leitor nosso em CPU | CER ≤ 30 %, WER ≤ 65 %; CER com caixas perfeitas ≤ 22 % [revisão] | M2 com o leitor no motor, ≤ 10 s e ≤ 1,5 GB; banco em 50 `dev-train` |
+| **0.14.5** | Consolidação I: coleta vinculada pelo produto, treino em 1 comando, dívida técnica | zero regressão de CER e custo; pacote exportado sem vazamento (teste automatizado) | pipeline de coleta → treino → ONNX → relatório sem intervenção manual |
+| **0.15** | Ler certo v2 + léxico seguro + ordem de leitura | CER ≤ 15–20 %, WER ≤ 45 %; dano léxico ≤ 1 %; teste × deriva ≤ 5 p.p. | M3 no teste v3 e estável no `drift-test-1` (100–150 `dev-train`) |
+| **0.16** | Fórmulas 2D e zonas de caderno; LDF 2.1 | CER em fórmulas ≤ 35–40 %; LaTeX válido ≥ 85 %; texto comum piora ≤ 1 p.p. | M4; LDF 2.1 por CR e ADR |
+| **MP** (paralelo) | Modelos próprios do zero: leitor e decodificador | CER(a) ≤ CER(b) + 0,5 p.p. no teste **e** ≤ CER(b) na deriva | M5: substituição dos pesos herdados |
 
-Depois do 0.16, o que sobrar (segundo autor, outros cadernos, diagramas) entra num roadmap novo com a mesma
-regra: tema por marco medido.
-
----
-
-## 0.13 — Ver a página inteira, e ter dados
-
-**Por quê primeiro.** 28 % das palavras não chegam ao leitor; sem cobertura, qualquer ganho de leitura fica
-limitado. E nenhum treino acontece sem páginas transcritas com caixas de linha: o 0.13 constrói o banco.
-
-### Épico 0.13-A — Medir o que falta medir (fecha a Etapa 1 sem ressalvas)
-
-| Item | O quê | Depende de | GPU? | Dados que ainda não existem |
-| :--- | :--- | :--- | :---: | :--- |
-| **EXP-028** | Quebra do erro por origem nas 20 páginas de teste com as fotos: motor com caixas, recall de linhas contra a referência, ordem, leitura; exemplos de falha em arquivo local; separa quanto dos 28 % é detecção, fusão, escala ou leitura | as 20 fotos de teste em `dataset/raw/exp-027/fotos/` | não | as fotos (o usuário tem) |
-| **EXP-029** | Baseline VLM local no teste: Qwen3-VL-4B (guardado), GLM-OCR 0,9 B e Gemma 4 E2B se couberem na RAM; CER, WER, s/página, RAM de pico, com prompt fixo; registra o teto local e escolhe o **professor** | EXP-028 (fotos); cópia exata + licença de cada modelo no registry | não (CPU, em segundo plano, com espera de RAM) | — |
-| **EXP-030** | Preparação leve e escala nas páginas de pior cobertura: OpenCV (perspectiva, iluminação) e variação da regra de escala; ganho isolado de cobertura e CER; UVDoc só se o ganho do OpenCV for pequeno | EXP-028 | não | — |
-
-**Saída do épico:** ADR com a origem do erro (quanto é detecção, quanto é leitura) e a escolha do professor local.
-
-### Épico 0.13-B — Banco de páginas (produto + ferramenta)
-
-| Item | O quê | Depende de | GPU? | Dados que ainda não existem |
-| :--- | :--- | :--- | :---: | :--- |
-| **CR-F13.1** (Leitorum) | Pacote de treino na digitalização: guardar, com consentimento explícito e opção de desligar, a foto recortada, as caixas das linhas lidas e o texto corrigido pelo usuário (`human_corrections` do LDF 2.0), ligados por hash à página | spec de produto; feature 086/090 existentes | não | — |
-| **CR-F13.2** (Leitorum) | Exportador do pacote de treino: por página, foto + caixas + linhas corrigidas + origem do rascunho (motor ou professor) + hashes, para uma pasta fora do Git; recusa páginas do teste congelado por hash | CR-F13.1; `splits/test-manifest.json` | não | — |
-| **F-DI-13.3** | Ferramenta de transcrição linha a linha do DI (hoje em `EXP-027/harness`) promovida a utilitário do subprojeto: recortes por caixa, rascunho do professor nas páginas de desenvolvimento, 2ª passada, marcação `$…$`; exporta no mesmo formato do CR-F13.2 | EXP-029 (professor) | não | — |
-| **EXP-031** | Revisão das 20 referências de teste (2ª passada do usuário contra o caderno) e medição do quanto a referência mudou; recongela o teste como v3 se mudar | F-DI-13.3 | não | tempo do usuário (~20 páginas) |
-| **Dados-13.4** | 50 páginas de desenvolvimento transcritas linha a linha com caixas (professor local + correção do usuário); 31 já têm texto bruto; manifesto com hashes e origem do rascunho | F-DI-13.3, EXP-029 | não | **as transcrições** (5–15 min por página pré-transcrita, estimativa da pesquisa) |
-
-### Épico 0.13-C — Cobertura
-
-| Item | O quê | Depende de | GPU? | Dados que ainda não existem |
-| :--- | :--- | :--- | :---: | :--- |
-| **EXP-032** | Detector de linhas ajustado: PP-OCRv6 DB small com GNHK (CC-BY-4.0, atribuição) + as 50 páginas de desenvolvimento com caixas; medir recall de linhas e cobertura no teste; comparar com ajuste de fusão/escala sem treino | EXP-028, Dados-13.4 | **opcional**: CPU 4–12 h (apertado) ou GPU emprestada 0,5–2 h, que implica enviar as suas páginas à nuvem (decisão sua) | caixas de linha das 50 páginas (vêm do Dados-13.4) |
-| **CR-F13.5** (motor) | Trocar o detector no motor do produto quando o EXP-032 atingir M1: `config.json`, hash, licença, pesos nossos registrados | EXP-032, ADR | não | — |
-
-**Critério de saída do 0.13:** M1 no teste congelado (0 páginas < 85 %; omitidas ≤ 10 %) **e** Dados-13.4 pronto.
-Se M1 vier só da regra de escala e fusão (EXP-030), o detector ajustado fica para o 0.14 e o 0.13 fecha antes.
+Por que esta divisão: cada versão fecha um marco medido; a 0.14.5 existe porque, sem coleta vinculada e treino
+reprodutível, o 0.15 exigiria esforço manual insustentável; o MP corre ao lado porque depende do banco crescer.
 
 ---
 
-## 0.14 — Ler certo: leitor ajustado v1
+## 0.13 — Régua limpa, página inteira e Degrau 1 de dados
 
-| Item | O quê | Depende de | GPU? | Dados que ainda não existem |
-| :--- | :--- | :--- | :---: | :--- |
-| **EXP-033** | Ajuste fino do leitor PP-OCRv6 rec small com 30 e com 50 páginas de desenvolvimento, em CPU (mesmo procedimento do EXP-014/018), avaliado no teste v2/v3: primeiro número real de M2; curva com 30 → 50 | Dados-13.4 | não (CPU, horas, retomável) | — |
-| **EXP-034** | Mesmo treino com PyLaia (MIT) e PP-OCRv6 rec medium: qual arquitetura pequena rende mais por página sua; custo por página no motor | EXP-033 | não | — |
-| **EXP-035** | Sintético PT-BR como suplemento: linhas renderizadas com fontes cursivas livres, pauta, sombra e perspectiva, misturadas às reais; ganho medido (o EXP-021 mostrou que degradar digitalizações não ajuda; aqui o sintético é texto novo, não degradação) | EXP-033 | não | corpus de texto PT-BR livre + fontes OFL |
-| **CR-F14.1** (motor) | Trocar o leitor no motor pelo ajustado (pesos nossos, Apache-2.0 de origem): `config.json`, hash, licença, limiar de confiança recalibrado | EXP-033/034, ADR | não | — |
-| **CR-F14.2** (Leitorum) | Indicador de versão do leitor na tela de digitalização e no estudo (qual modelo leu), para o teste de deriva e para o usuário saber o que mudou | CR-F14.1 | não | — |
+### Épico 0.13-0 — Régua limpa (bloqueante: nada roda antes)
 
-**Critério de saída do 0.14:** M2 (CER ≤ 30 %, WER ≤ 65 %) com o leitor no produto, ≤ 10 s e ≤ 1,5 GB por
-página. Se o EXP-033 ficar acima de 30 % com 50 páginas, a versão não fecha com arquitetura nova: fecha com
-mais páginas (Dados-13.4 estendido a 100) e cobertura revista.
+| Item | O quê e hipótese | Aceite | Abandono | Depende de | GPU | Dados novos |
+| :--- | :--- | :--- | :--- | :--- | :---: | :--- |
+| **F-DI-13.01** | Ferramenta de anotação (evolução do harness do EXP-027): caixas de linha ajustáveis/criáveis sobre a foto, texto por `line_id`, marcação `$…$`, 2ª passada, exportação JSON com hash | 1 página completa exportada em ≤ 10 min [revisão], schema validado | — | 20 fotos de teste + 31 de dev em `dataset/raw/exp-027/fotos/` | não | as fotos (o usuário tem) |
+| **EXP-028A** | Caixas reais + 2ª passada humana nas 20 páginas de teste e nas 10 `dev-val` (sorteio único, estratificado); mede o piso de ruído humano (1ª × 2ª passada). *Hipótese:* a referência v2 tinha ≥ 2 % de divergência e perda de quebras que distorciam o CER | `splits/test-manifest-v3.json` (20) e `splits/dev-val-manifest.json` (10) com 100 % das linhas com caixa e texto conferido duas vezes | — | F-DI-13.01 | não | ~3–4 h do autor [revisão] |
+| **F-DI-13.02** | Harness gatekeeper: os 8 indicadores do plano §3.2, trava por hash entre treino e teste/val/deriva, relatório reproduzível | relatório das 20 + 10 páginas em < 3 min com semente fixa; teste automatizado do bloqueio de hashes | — | EXP-028A | não | — |
+| **EXP-028B** | Decomposição exata do erro nas 20 (v3) e 10 (`dev-val`): motor com caixas vs caixas perfeitas. *Hipótese:* ≥ 10 p.p. do CER de página vêm de caixas perdidas/cortadas e ordem, não do leitor | tabela: % detecção, % corte de caixa, % ordem, % leitor puro; exemplos de falha em arquivo local | — | F-DI-13.02 | não | — |
+| **EXP-029** | Professores locais no `dev-val`: Qwen3-VL-4B (guardado), GLM-OCR 0,9 B e Gemma 4 E2B se licença e cópia exata conferirem; dois modos: página inteira × recortes de 1–3 linhas (absorve o micro-experimento A4). *Hipótese:* recortes reduzem omissões/alucinações ≥ 30 % e RAM de pico | escolher o professor com menor CER no `dev-val` cabendo em ≤ 5,0 GB de RAM | descartar o que passar de 5,2 GB, > 120 s/página ou degenerar em > 5 % das linhas | F-DI-13.02; registry | não (CPU, noite, espera de RAM) | — |
 
----
+**Saída do épico 0 / portão DG-1:** ADR com a decomposição real dos 56 %, teste v3 trancado, `dev-val` pronto,
+professor escolhido. **Plano B:** se nenhum VLM local servir, o rascunho das páginas de treino vem do próprio
+motor e, a partir do 0.14, do leitor v1 em ciclo iterativo (a cada 5 páginas corrigidas, retreina).
 
-## 0.15 — Ler certo e polir: leitor v2, léxico e ordem
+### Épico 0.13-1 — Cobertura sem treino (calibração no `dev-val`)
 
-| Item | O quê | Depende de | GPU? | Dados que ainda não existem |
-| :--- | :--- | :--- | :---: | :--- |
-| **Dados-15.1** | Banco com 100–150 páginas de desenvolvimento (produto + ferramenta), primeiro **teste de deriva** congelado (10 páginas novas) | CR-F13.1/13.2 em uso | não | ~50–100 páginas a mais, transcritas |
-| **EXP-036** | Leitor v2: ajuste com 100–150 páginas (+ sintético se o EXP-035 valeu); curva 50 → 100 → 150; avaliação no teste v2/v3 e no teste de deriva | Dados-15.1 | não (CPU; GPU opcional para reduzir horas) | — |
-| **EXP-037** | Decodificação com léxico dentro do CTC: KenLM (LGPL) de corpus PT-BR + vocabulário dos seus estudos, em beam search; ligado só se CER < 20 %; mede ganho líquido e dano em fórmulas, siglas e abreviações | EXP-036 | não | corpus PT-BR livre; vocabulário do usuário (dos próprios estudos, local) |
-| **EXP-038** | Ordem de leitura e zonas em caderno: regras geométricas sobre as caixas (colunas, margem, listas), medidas com a referência linha a linha; classes de zona só se as regras não bastarem | EXP-028 | não | anotação de ordem nas 20 páginas de teste (sai da referência linha a linha) |
-| **CR-LDF-2.1** | Change request + ADR: campos para trechos de fórmula e zonas (margem, lista, figura) no LDF, versão MINOR | EXP-038, decisão do 0.16 | não | — |
-| **CR-F15.1** (motor) | Leitor v2 + decodificação no motor; CR-F15.2 (Leitorum): mostrar a ordem/zonas no editor de revisão | EXP-036/037/038 | não | — |
+| Item | O quê e hipótese | Aceite | Abandono | Depende de | GPU | Dados novos |
+| :--- | :--- | :--- | :--- | :--- | :---: | :--- |
+| **EXP-030A** | Ablação dos limiares e da resolução do detector DB sem treino (absorve A3): resolução máxima, `thresh`, `box_thresh`, `unclip_ratio`, fusão de fragmentos. *Hipótese:* metade das linhas perdidas está no mapa de probabilidade e é descartada por limiar de impresso | recall de linhas ≥ 90 % no `dev-val` com caixas falsas ≤ 5 % e detecção ≤ 2,5 s/página | caixas falsas > 10 % ou CER final piora | EXP-028B | não | — |
+| **EXP-030B** | Preparação leve e escala (absorve A1, reformulado): iluminação suave por divisão morfológica; escala de **detecção** (alvo 64/80/96 px, EXP-013 mediu 80) e resolução do recorte de origem; padding vertical que preserva acentos e descendentes; filtro de rejeição de pautas vazias. *Hipótese:* ≥ 3 p.p. de CER de linha pareada. UVDoc só se a curvatura for causa provada no EXP-028B | ≥ 3 p.p. no `dev-val` com custo ≤ 0,3 s/página | qualquer filtro que apague traço fraco em ≥ 1 página | EXP-028B | não | — |
+| **Dados-13.1** | Degrau 1: caixas + revisão linha a linha das **21 páginas restantes** de desenvolvimento, com rascunho do professor | 21 `dev-train` completas (51 páginas 100 % estruturadas) | — | EXP-029, F-DI-13.01 | não | ~2,5–3,5 h do autor [revisão], sem páginas novas |
+| **DG-2** | Portão: a calibração fechou M1 no `dev-val`? | se recall ≥ 92 %: segue para CR-F13.5; senão: EXP-032 (GPU com GNHK, sem dado pessoal) ou plano B em CPU | — | EXP-030A/B | — | — |
+| **EXP-032** (condicional) | Detector DB small ajustado com GNHK (CC-BY-4.0, atribuição) + 21 `dev-train`, validado no `dev-val`; fase com GNHK pode ir à GPU sem dado pessoal; fase com suas páginas em casa se couber | recall ≥ 92 % e omissões ≤ 10 % no `dev-val` | > 2 h de GPU ou ganho < 3 p.p. sobre o EXP-030A | DG-2, Dados-13.1 | **opcional** | — |
+| **CR-F13.5** (motor) | Parâmetros (e pesos, se houver) vencedores no `config.json`, hash, licença; uma leitura do teste v3 | M1 no teste v3 em ≤ 8 s e ≤ 1 GB | — | EXP-030A/B (032), ADR | não | — |
 
-**Critério de saída do 0.15:** M3 (CER ≤ 15–20 %, WER ≤ 45 %) no teste v2/v3 **e** sem queda no teste de
-deriva maior que 5 pontos.
+**Plano B do 0.13** (se a calibração não bastar e você recusar GPU): detecção em duas escalas (fatiamento
+horizontal com sobreposição) + resgate por perfil de tinta (caixa candidata onde há tinta num vão maior que 1,6×
+a altura mediana), 100 % em CPU [revisão; a medir].
 
----
-
-## 0.16 — Fórmulas e layout de caderno
-
-| Item | O quê | Depende de | GPU? | Dados que ainda não existem |
-| :--- | :--- | :--- | :---: | :--- |
-| **EXP-039** | Fórmulas: (1) VLM pontual (professor local) nos trechos marcados; (2) detector de fórmula (Pix2Text MFD, MIT, ou PP-DocLayout, Apache-2.0) + TexTeller (CC BY 4.0, ~1 GB) em ONNX; medir CER em fórmulas (máscara `$…$`), falsos positivos em texto e custo | 0.15; cópias exatas no registry | não para inferência; **sim** para ajustar o TexTeller (2–6 h, opcional) | 500+ recortes de fórmulas manuscritas suas, se for ajustar |
-| **EXP-040** | Detecção de "isto é fórmula" nas suas páginas (inline e em bloco), com as 20 páginas de teste marcadas | EXP-039 | não | marcação `$…$` já existe na referência |
-| **CR-F16.1** (motor + Leitorum) | Fórmulas em LaTeX no LDF 2.1 e no editor (prévia renderizada, edição do LaTeX) | EXP-039/040, CR-LDF-2.1 | não | — |
-
-**Critério de saída do 0.16:** M4 (CER em fórmulas ≤ 40 %) sem piorar o CER do texto comum em mais de 1 ponto.
+**Critério de saída do 0.13:** M1 no teste v3 (recall ≥ 92 %, omissões ≤ 10 %, 0 páginas < 85 %, caixas falsas
+≤ 5 %) **e** Degrau 1 pronto.
 
 ---
 
-## Roadmap MP — Modelos próprios (paralelo, com portões próprios)
+## 0.14 — Ler certo v1: primeiro leitor nosso em CPU
 
-**Princípio.** Nenhum item do MP atrasa 0.13–0.16; ele consome o banco de páginas que as versões criam e só
-substitui um modelo do produto quando iguala ou supera no teste congelado e no teste de deriva.
+| Item | O quê e hipótese | Aceite | Abandono | Depende de | GPU | Dados novos |
+| :--- | :--- | :--- | :--- | :--- | :---: | :--- |
+| **EXP-A2** (micro) | Auditoria do dicionário de caracteres do leitor (metadados do ONNX) e da normalização NFC contra os caracteres do `dev-val`. *Hipótese:* 2–5 % do CER vêm de caracteres ausentes ou mal mapeados [revisão] | cobertura de caracteres 100 % ou plano de expansão da camada de saída | — | EXP-028A | não | — |
+| **EXP-033A** | Ajuste fino imediato do PP-OCRv6 rec small com as 21 páginas (~400 linhas) em CPU, procedimento do EXP-014/018, melhor checkpoint pelo `dev-val`. *Hipótese:* ≥ 15 p.p. de queda no CER com caixas perfeitas [revisão] | CER no `dev-val` ≤ 35 % em ≤ 4 h de CPU [revisão] | queda < 10 p.p. (indica bug de dicionário, normalização ou camadas congeladas erradas) | Dados-13.1, 0.13 | não (CPU 1–4 h) | **nenhum** |
+| **EXP-A6** (micro) | Variância entre 3 sementes e congelamento dos 2 primeiros estágios convolucionais. *Hipótese:* variância < 0,8 p.p. e treino ~35 % mais rápido [revisão] | receita estável fixada para EXP-033B e EXP-036 | — | EXP-033A | não (2–3 h CPU) | — |
+| **Dados-14.1** | Degrau 2: +29 páginas novas, pré-preenchidas pelo leitor do EXP-033A ou pelo professor | 50 `dev-train` (~950 linhas) com manifesto | — | EXP-033A | não | +29 páginas do autor |
+| **EXP-033B** | Curva 21 → 35 → 50 páginas; vencedor lido uma vez no teste v3. *Hipótese:* 50 páginas atingem M2 | M2 (CER ≤ 30 %, WER ≤ 65 %) no teste v3 | — | Dados-14.1 | não (CPU 2–6 h) | — |
+| **EXP-034** | Disputa de arquitetura leve: PP-OCRv6 small × Kraken × PyLaia (timebox de 4 h para build no Windows/WSL2); `rec medium` **fora** do caminho em CPU | só troca se o desafiante reduzir ≥ 2,5 p.p. no `dev-val` com ONNX ≤ 5 s/página | build ou exportação frágil | EXP-033B | não | — |
+| **EXP-035** | Sintético PT-BR sobre papel real do caderno (20 mil linhas, fontes OFL): pré-ajuste → real, ou 80/20 por época. *Hipótese:* ≥ 1,5 p.p. de CER e ≥ 3 p.p. em diacríticos | ganho líquido no `dev-val` contra EXP-033B | empate ou piora: desligar para o ajustado, guardar para o MP-2 | EXP-033B | não (1 h geração; 3–8 h treino) | corpus PT-BR livre + fontes OFL |
+| **EXP-A7** (micro) | Sensibilidade à quantização INT8 no ONNX. *Hipótese:* FP32 já basta (< 3 s/página) e INT8 degrada 1–3 p.p. [pesquisa] | decisão de exportação | — | EXP-033B | não (30 min) | — |
+| **DG-3 / CR-F14.1, 14.2** | Promoção do leitor v1 ao motor (hash, licença, limiar recalibrado no `dev-val`) + indicador de versão do leitor na tela e no estudo | M2 no teste v3, ≤ 10 s, ≤ 1,5 GB; regra: promover se ganho ≥ 20 p.p. mesmo em 31–33 % | — | EXP-033B/034/035, ADR | não | — |
 
-| Degrau | O quê | Portão de entrada | GPU? | Dados que ainda não existem |
-| :--- | :--- | :--- | :---: | :--- |
-| **MP-1 Coleta** | Banco próprio: 150+ páginas suas transcritas com caixas (vem do 0.13–0.15); corpus sintético PT-BR; testes congelados v2/v3 + deriva; manifestos com hashes e origem dos rascunhos | — | não | as páginas (produto + ferramenta) |
-| **MP-2 Primeiro modelo próprio** (EXP-041) | Leitor CTC próprio **do zero** (arquitetura pequena, CRNN/PyLaia-like, código nosso), treinado com o banco + sintético; variante "ajustado" como controle | MP-1 com ≥ 150 páginas reais (a pesquisa aponta colapso abaixo de ~110, **a confirmar**) | **sim** (10–40 h estimadas) ou CPU em muitos dias, retomável | 100k–500k linhas sintéticas (gerar localmente) |
-| **MP-3 Comparação** (EXP-042) | Próprio × ajustado × baseline VLM no teste v2/v3 e no teste de deriva: CER, WER, cobertura, s/página, RAM | MP-2 | não | — |
-| **MP-4 Substituição** (CR) | Entra no motor o que ganhar (critério M5); o modelo externo sai do produto; registro no registry com os hashes dos pesos nossos | MP-3 | não | — |
-| **MP-5 Detector próprio** (opcional) | Só se o layout de caderno exigir zonas que o DB ajustado não dá; mesmo portão M5 | 0.15/0.16 | sim | 500+ páginas com caixas |
-| **MP-6 Outros autores** | Repetir MP-1 → MP-4 com páginas de outros leitores do produto, com consentimento; teste congelado por autor | produto com CR-F13.1 em uso | — | páginas de outros autores |
-
-**Honestidade sobre o degrau MP-2.** Treinar um leitor do zero competitivo não cabe na máquina de
-referência; cabe em horas de GPU emprestada, o que significa enviar as suas páginas (ou linhas recortadas e
-anonimizadas) para a nuvem de terceiros. A alternativa 100 % em casa é um treino de dias em CPU, retomável.
-O plano deixa a escolha por degrau, e o portão M5 garante que nada entra no produto por ideologia: entra o
-que ler melhor no teste. Fórmulas nunca entram no MP (inviável do zero); o detector só se precisar.
+**Plano B do 0.14:** com CER entre 30 e 35 %, promover mesmo assim (ganho real > 20 p.p.) e abrir **EXP-033C**:
+análise das 100 linhas de maior erro no `dev-val` (letra miúda, contraste, vocabulário, linhas mistas com
+fórmula) para dirigir o 0.15.
 
 ---
 
-## Dependências entre tudo (resumo)
+## 0.14.5 — Consolidação I: coleta vinculada, reprodutibilidade, dívida técnica
+
+| Item | O quê | Aceite | Depende de | GPU |
+| :--- | :--- | :--- | :--- | :---: |
+| **CR-F13.1** (Leitorum) | Modo "conferência linha a linha" na revisão da digitalização, com `line_id` e caixa por linha, antes do texto livre; `human_corrections` vinculadas; consentimento e opção de desligar | 100 % das linhas corrigidas nesse modo preservam o par caixa ↔ texto | 0.14 | não |
+| **CR-F13.2** (Leitorum) | Exportador seguro: pacote por página (foto recortada, caixas, linhas corrigidas, origem do rascunho, hashes) para pasta fora do Git; recusa hashes de teste, `dev-val` e deriva; alinhador para texto livre (só linhas ≥ 90 %) | teste automatizado: 0 linhas de teste/val e 0 linhas desalinhadas no pacote | CR-F13.1 | não |
+| **F-DI-14.5** | Pipeline de 1 comando: pacote → treino retomável (checkpoint a cada 15 min) → ONNX → relatório gatekeeper, com semente determinística | duas execuções com a mesma semente: variância 0,0 % | 0.14 | não |
+| **F-DI-14.6** | Dívida técnica: consolidar os harness dos EXP-027 a 035 num utilitário do subprojeto, testes, lint, registry de modelos com `NOTICE` de atribuições | suíte verde; registry com lista negra de licenças | 0.14 | não |
+
+---
+
+## 0.15 — Ler certo v2, léxico seguro e ordem de leitura
+
+| Item | O quê e hipótese | Aceite | Abandono | Depende de | GPU | Dados novos |
+| :--- | :--- | :--- | :--- | :--- | :---: | :--- |
+| **Dados-15.1** | Degrau 3: 100–150 `dev-train` pelo produto e pela ferramenta; **antes** de usar, sortear 10 páginas novas como `drift-test-1` | manifestos com hashes | — | 0.14.5 | não | +60 a 110 páginas do uso normal |
+| **EXP-036** | Leitor v2: curva 50 → 100 → 150 no `dev-val`, teste v3 e deriva. *Hipótese:* CER com caixas perfeitas ≤ 15 % | queda contínua sem distância > 5 p.p. entre teste e deriva | — | Dados-15.1 | não (CPU 4–10 h; GPU opcional) | — |
+| **EXP-037** | Decodificação com léxico dentro do CTC: ARPA (KenLM fora do produto; decodificação `pyctcdecode` Apache-2.0 ou própria) de corpus PT-BR livre + notas dos seus estudos (sem páginas de teste) + gate de proteção (confiança > 0,92, dígitos, símbolos, siglas, abreviações do glossário não são tocados). *Hipótese:* WER −8 p.p., CER −1,5 p.p., dano léxico ≤ 1 % [revisão] | ganho líquido no `dev-val` **e** dano léxico ≤ 1 % | dano > 2 % ou ganho < 0,5 p.p.: desligar | EXP-036, só se CER óptico < 22 % | não (5 min; +0,3 s/página) | notas de estudo (já existem, locais) |
+| **EXP-038** | Ordem de leitura e zonas por regras geométricas sobre caixas (colunas, indentação de listas, notas curtas nas bordas), medidas pela diferença WER de página × WER de saco de palavras. *Hipótese:* −50 % da penalidade de ordem | ≥ 50 % no `dev-val` sem piorar páginas de coluna única | regras falham em margem: manter top-down, adiar zonas | EXP-028B | não | — |
+| **CR-F15.1, 15.2** | Leitor v2 + decodificador + ordenador no motor; ordem e zonas visíveis no editor | M3 no teste v3 e deriva ≤ 5 p.p. | — | EXP-036/037/038, ADR | não | — |
+
+**Plano B do 0.15:** deriva > 5 p.p. → aumento fotométrico forte (contraste, espessura morfológica, inclinação),
+20 % sintético, 20 páginas recentes no `dev-train`.
+
+---
+
+## 0.16 — Fórmulas 2D, zonas e LDF 2.1
+
+| Item | O quê e hipótese | Aceite | Abandono | Depende de | GPU | Dados novos |
+| :--- | :--- | :--- | :--- | :--- | :---: | :--- |
+| **EXP-040** (antes do 039) | Roteador "fórmula 2D × texto (incl. matemática linear simples)": detector MFD pronto (Pix2Text MFD MIT / PP-DocLayout Apache-2.0) × gatilho pós-CTC por densidade de símbolos e entropia. *Hipótese:* gatilho + layout ≤ 2 % de texto comum enviado por engano | precisão ≥ 90 %, recall ≥ 80 % nos trechos `$…$` do `dev-val`, ≤ 2 % de falso envio | > 5 % de texto comum enviado ao módulo de LaTeX | 0.15 | não | marcações `$…$` já existentes |
+| **EXP-039** | Motores de fórmula em CPU nos recortes 2D do `dev-val`: TexTeller ONNX INT8 × UniMERNet × professor VLM pontual; métricas: CER em fórmulas, acerto exato, **LaTeX válido** (compila no KaTeX). Ajuste fino opcional com HME100K (Apache-2.0) + seus ~150–250 recortes (a conta da revisão: 1,5–2,5 fórmulas por página) | CER ≤ 35–40 % **e** LaTeX válido ≥ 85 %, ≤ +2,5 s nas páginas com fórmula, ≤ 700 MB extras carregados sob demanda | estourar 1,5 GB ou piorar texto comum > 1 p.p.: fórmulas só sob demanda no editor | EXP-040; registry | inferência não; ajuste opcional sim (2–4 h) | recortes de fórmulas das páginas de treino |
+| **CR-LDF-2.1** | Change request + ADR: `math_spans` (latex, compile_valid, bbox) e `zone_type` (body, margin_note, list_item), opcionais e retrocompatíveis | só depois de EXP-038/040/039 provarem ganho | — | EXP-038/039/040 | não | — |
+| **DG-4 / CR-F16.1** | Integração no motor (carga sob demanda) + renderização KaTeX no editor; automático na digitalização ou botão sob demanda | M4 no teste v3 | — | CR-LDF-2.1 | não | — |
+
+---
+
+## Roadmap MP — Modelos próprios (paralelo, portões próprios)
+
+**Escopo após os cortes:** o MP concentra-se no **leitor óptico de linha [D1]** e no **decodificador [D2]**, onde
+estão a sua letra e a sua língua. Detector próprio (MP-5) e modelos para outros autores (MP-6) saem do roadmap
+até existir motivo medido; fórmulas nunca entram no caminho do zero.
+
+| Degrau | O quê | Portão de entrada | GPU | Dados novos |
+| :--- | :--- | :--- | :---: | :--- |
+| **MP-1 Coleta** | 150+ páginas com caixas (vem do 0.13–0.15), corpus sintético PT-BR, testes v3 e deriva, manifestos | — | não | as páginas |
+| **MP-0 Léxico próprio** (já no 0.15) | ARPA + léxico do autor + gate: primeiro componente 100 % nosso | EXP-037 | não | — |
+| **MP-2 Leitor próprio do zero** (EXP-041) | CRNN/CTC compacto (~3–6 M parâmetros) em PyTorch puro, no repositório, em **duas fases**: (1) pré-treino em ~200 mil linhas sintéticas PT-BR + GNHK/READ (CC-BY-4.0), **sem dado pessoal** — GPU emprestada 4–10 h [revisão] ou CPU 80–150 h retomável; (2) ajuste fino nas suas 150 páginas **em casa**, CPU 3–8 h [revisão]; congelar primeiras camadas; 20 % sintético | Degrau 4 (150 `dev-train`); DG-5 | fase 1 opcional | sintético (gerar) |
+| **MP-3 Comparação** (EXP-042) | próprio × ajustado × baseline VLM no teste v3 e na deriva: CER, WER, cobertura, s/página, RAM, 3 sementes | MP-2 | não | — |
+| **MP-4 Substituição** (CR) | entra no motor o que vencer pelo critério M5; registry com hashes dos pesos nossos; o peso herdado sai do produto | MP-3 | não | — |
+
+---
+
+## Micro-experimentos de baixo custo (30 min a 3 h de CPU, sem dados novos)
+
+| ID | Pergunta | Onde entra | Custo | O que decide |
+| :--- | :--- | :--- | :--- | :--- |
+| A1 | escala de detecção (64/80/96 px) e resolução do recorte; padding vertical | EXP-030B | 20 min | escala e recorte padrão antes de exportar pacotes de treino |
+| A2 | dicionário de caracteres e NFC cobrem o português do `dev-val`? | 0.14 (antes do EXP-033A) | 30 min | expansão da camada de saída |
+| A3 | `box_thresh`/`unclip_ratio` recuperam ≥ 50 % das linhas omitidas? | EXP-030A | 30 min | pode dispensar o EXP-032 e a GPU |
+| A4 | professor em página inteira × tiras de 1–3 linhas | EXP-029 | 1,5 h | modo de pré-anotação |
+| A5 | piso de ruído humano: 1 × 2 passadas | EXP-028A | 1 h | regime de passadas no `dev-train` |
+| A6 | variância entre sementes; congelar estágios | 0.14 | 2–3 h | receita estável de ajuste |
+| A7 | INT8 × FP32 no ONNX | 0.14 | 30 min | exportação |
+
+## O que foi cortado ou adiado
+
+1. **MP-5** detector próprio do zero e **leitor de fórmulas do zero**: fora de escopo (geometria sem viés de
+   fornecedor; fórmulas exigem centenas de milhares de pares).
+2. **MP-6** outros autores: adiado até existir um segundo usuário real com 50 páginas; o exportador limpo é o
+   único pré-requisito.
+3. **`rec medium` em CPU** e insistência em **PyLaia** além de 4 h de build.
+4. **Esperar 50 páginas** para o primeiro ajuste: o Degrau 1 usa as 21 que existem.
+5. **Classificador neural de zonas**: regras geométricas primeiro.
+6. **Fórmulas lineares simples** não vão ao módulo de LaTeX: ficam no leitor de texto, com o dicionário auditado.
+
+## Ordem de execução (sem datas; condições de passagem)
 
 ```
-fotos de teste ─► EXP-028 ─► EXP-030 ─► EXP-032 ─► CR-F13.5 (detector)            } 0.13
-             └─► EXP-029 (professor) ─► F-DI-13.3 ─► Dados-13.4 ─► EXP-033/034/035 ─► CR-F14.1 } 0.14
-CR-F13.1/13.2 (produto) ─► Dados-15.1 ─► EXP-036 ─► EXP-037 ─► CR-F15.1                       } 0.15
-EXP-028 ─► EXP-038 ─► CR-LDF-2.1 ─► EXP-039/040 ─► CR-F16.1                                   } 0.16
-Dados-15.1 ─► MP-1 ─► MP-2 ─► MP-3 ─► MP-4                                                     } MP
+FASE 1 (bloqueante)      F-DI-13.01 → EXP-028A (+A5) → F-DI-13.02 → { EXP-028B ‖ EXP-029 (+A4) } → DG-1 (ADR)
+FASE 2 (51 páginas)      { EXP-030A (+A3) + EXP-030B (+A1) ‖ Dados-13.1 } → DG-2 → [EXP-032?] → CR-F13.5 (M1)
+                         → EXP-A2 → EXP-033A → EXP-A6 → { Dados-14.1 ‖ CR-F13.1 + CR-F13.2 + F-DI-14.5 + 14.6 }
+                         → EXP-033B + 034 + 035 + A7 → DG-3 → CR-F14.1/14.2 (M2) → 0.14.5 fecha
+FASE 3 (escala orgânica) Dados-15.1 (+drift-test-1) → { EXP-036 + 037 ‖ EXP-038 } → CR-F15.1/15.2 (M3)
+                         → trilhas independentes: { MP: DG-5 → EXP-041 → EXP-042 → MP-4 } ‖ { 0.16: EXP-040 → 039 → DG-4 → CR-LDF-2.1 → CR-F16.1 (M4) }
 ```
 
-## O que exige GPU ou treino, e o que precisa de dados que não existem
+## Contagem
 
-* **Sem GPU, só CPU:** EXP-028 a 031, 033, 034, 035, 036 (horas), 037, 038, 039 (inferência), 040; todas as
-  CR do motor e do Leitorum.
-* **GPU opcional (horas emprestadas; envia páginas à nuvem):** EXP-032 (detector), EXP-039 (ajustar TexTeller),
-  MP-2 (do zero), MP-5.
-* **Dados que ainda não existem:** fotos das 20 páginas de teste no projeto (o usuário tem); transcrições
-  linha a linha com caixas de 50 → 150 páginas (o produto e a ferramenta produzem); 2ª passada das referências de
-  teste; recortes de fórmulas (só para o 0.16); corpus e fontes livres para o sintético (gerar).
+| Tipo | Quantidade | Quais |
+| :--- | ---: | :--- |
+| Experimentos | 19 | EXP-028A, 028B, 029, 030A, 030B, 032, 033A, 033B, 033C (plano B), 034, 035, 036, 037, 038, 039, 040, 041, 042 + micro A1–A7 dentro das specs dos pais |
+| Features do DI | 5 | F-DI-13.01, 13.02, 14.5, 14.6 e a promoção dos harness |
+| Change requests do Leitorum, motor e LDF | 10 | CR-F13.1, 13.2, 13.5, 14.1, 14.2, 15.1, 15.2, LDF-2.1, 16.1, MP-4 |
+| Itens de dados | 4 | Dados-13.1, 14.1, 15.1, MP-1 |
+| Portões de decisão | 5 | DG-1 a DG-5 |
 
 ## Primeiro passo concreto
 
-EXP-028 e EXP-029 (épico 0.13-A): dependem só das 20 fotos de teste e do que já está guardado. Spec de cada
-um apresentada para aprovação antes de qualquer código, no ritmo fatiado do projeto.
+F-DI-13.01 e EXP-028A: precisam das 20 fotos de teste e das 31 de desenvolvimento em
+`dataset/raw/exp-027/fotos/`, processadas por script (nenhuma imagem passa pelo chat), e de ~3–4 h suas para
+caixas e 2ª passada. Spec apresentada para aprovação antes de qualquer código, no ritmo fatiado do projeto.
