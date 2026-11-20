@@ -396,3 +396,14 @@ def test_register_by_mtime_and_remove(tmp_path):
                  "--source", "teste"])
     assert wrong.returncode != 0 and "3 fotos" in wrong.stderr + wrong.stdout
 
+
+
+def test_second_pass_flag_and_last_pass1(paths):
+    (paths.splits / "second-pass.json").write_text(json.dumps({"pages": {"p02": {}}}), "utf-8")
+    doc = store.load_page(paths, "p02")
+    doc["lines"][0]["pass1"] = {"text": "texto fictício", "at": "2026-11-20T12:00:00Z"}
+    store.save_page(paths, "p02", doc, expected_version=0)
+    pages = {page["id"]: page for page in store.list_pages(paths)}
+    assert pages["p02"]["second_pass"] == "cego" and pages["p01"]["second_pass"] is None
+    assert pages["p02"]["last_pass1_at"] == "2026-11-20T12:00:00Z"
+    assert pages["p01"]["last_pass1_at"] is None

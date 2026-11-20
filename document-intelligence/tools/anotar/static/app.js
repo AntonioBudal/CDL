@@ -160,6 +160,11 @@ async function openPage(pageId) {
   }
   state.pageId = pageId;
   state.doc = body;
+  const info = state.pages.find((p) => p.id === pageId);
+  if (info?.second_pass) {
+    state.pass2Mode = info.second_pass;
+    $('pass2-mode').value = info.second_pass;
+  }
   state.dirty = false;
   state.pending = { boxes: 0, pass1: 0, pass2: 0 };
   state.selected = sortedLines()[0]?.line_id || null;
@@ -672,6 +677,13 @@ function renderPages() {
       const total = page.seconds.boxes + page.seconds.pass1 + page.seconds.pass2;
       steps.append(` ${fmtTime(total)}`);
     }
+    if (page.second_pass) {
+      const tag = document.createElement('span');
+      tag.className = 'badge blind';
+      tag.textContent = '2ª cega';
+      tag.title = 'Sorteada para a 2ª passada cega (EXP-028A), pelo menos 2 dias depois da 1ª';
+      steps.append(' ', tag);
+    }
     if (!page.hash_ok) button.title = 'Foto sem hash conferido com o EXP-027: bloqueada';
     button.append(id, badge, steps);
     button.addEventListener('click', () => openPage(page.id));
@@ -681,6 +693,8 @@ function renderPages() {
 }
 
 function renderBoxesPanel() {
+  const lowRes = state.pages.find((p) => p.id === state.pageId)?.low_resolution;
+  $('quick-boxes').hidden = !lowRes;
   const list = $('line-list');
   list.replaceChildren();
   $('boxes-done').checked = Boolean(state.doc?.status.boxes_done);
@@ -764,6 +778,13 @@ function renderText() {
   if (pendingBox) notes.push('A etapa 1 ainda não foi marcada como "Caixas prontas".');
   // Depois de chegar ao fim da página, lembra quantas linhas ficaram para trás.
   if (pendingLines && lines[lines.length - 1]?.[field]) notes.push(`Faltam ${pendingLines} linha(s) nesta passada.`);
+  const info = state.pages.find((p) => p.id === state.pageId);
+  if (field === 'pass2' && info?.second_pass && info.last_pass1_at) {
+    const ready = new Date(Date.parse(info.last_pass1_at) + 2 * 86_400_000);
+    if (Date.now() < ready.getTime()) {
+      notes.push(`2ª passada cega: espere até ${ready.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} (2 dias depois da 1ª), para a memória não ajudar.`);
+    }
+  }
   $('page-pending').hidden = !notes.length;
   $('page-pending').textContent = notes.join(' ');
   input.disabled = !line;

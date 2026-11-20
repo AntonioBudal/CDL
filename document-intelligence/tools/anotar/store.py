@@ -157,6 +157,7 @@ def list_pages(paths: Paths) -> list[dict]:
     splits = _splits(paths)
     has_dev_val = (paths.splits / "dev-val-manifest.json").is_file()
     registered = _registered(paths)
+    second_pass = (_read_json(paths.splits / "second-pass.json", {}) or {}).get("pages", {})
     pages = []
     for pid in sorted(_index(paths)):
         saved = _read_json(paths.annotations / f"{pid}.json")
@@ -167,6 +168,13 @@ def list_pages(paths: Paths) -> list[dict]:
                 "split": split,
                 "hash_ok": hash_ok(paths, pid),
                 "low_resolution": bool(registered.get(pid, {}).get("low_resolution")),
+                "second_pass": "cego" if pid in second_pass else None,
+                "last_pass1_at": max(
+                    (line["pass1"]["at"] for line in saved["lines"] if line["pass1"]),
+                    default=None,
+                )
+                if saved
+                else None,
                 "lines": len(saved["lines"]) if saved else None,
                 "status": saved["status"] if saved else None,
                 "seconds": saved["seconds"] if saved else None,

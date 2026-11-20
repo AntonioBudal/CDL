@@ -116,6 +116,7 @@ button.primary kbd { background: transparent; border-color: currentColor; color:
 .page-id { font-weight: 600; }
 .badge { font-size: 11px; padding: 0 5px; border-radius: 8px; background: var(--bg); color: var(--muted); }
 .badge.test { background: var(--test-bg); color: var(--test-text); }
+.badge.blind { background: var(--warn-bg); color: var(--warn-text); }
 .steps { grid-column: 1 / -1; font-size: 11.5px; color: var(--muted); }
 .steps .on { color: var(--criada); font-weight: 600; }
 

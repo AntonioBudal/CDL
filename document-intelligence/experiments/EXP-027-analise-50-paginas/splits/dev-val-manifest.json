@@ -1,0 +1,57 @@
+{
+  "schema": "exp-028a-dev-val/1",
+  "created_at": "2026-11-20T16:08:57Z",
+  "created_by": "EXP-028A",
+  "seed": "exp-028a-dev-val",
+  "strata": [
+    "escrita",
+    "formulas"
+  ],
+  "pool": 31,
+  "size": 10,
+  "ids_sha256": "aaf312f893578f0773a63477266fbc8e8a8354f11926f920ab3dcc5fb82d8c59",
+  "pages": {
+    "p03": {
+      "escrita": "mista",
+      "formulas": "poucas"
+    },
+    "p09": {
+      "escrita": "cursiva",
+      "formulas": "nenhuma"
+    },
+    "p12": {
+      "escrita": "mista",
+      "formulas": "nenhuma"
+    },
+    "p13": {
+      "escrita": "cursiva",
+      "formulas": "poucas"
+    },
+    "p29": {
+      "escrita": "cursiva",
+      "formulas": "nenhuma"
+    },
+    "p34": {
+      "escrita": "cursiva",
+      "formulas": "nenhuma"
+    },
+    "p39": {
+      "escrita": "forma",
+      "formulas": "poucas"
+    },
+    "p42": {
+      "escrita": "mista",
+      "formulas": "muitas"
+    },
+    "p47": {
+      "escrita": "mista",
+      "formulas": "poucas"
+    },
+    "p50": {
+      "escrita": "cursiva",
+      "formulas": "poucas"
+    }
+  },
+  "annotation": "pendente: sem imagens das páginas de desenvolvimento",
+  "rule": "nunca entra em treino, limiar, dicionário ou ajuste de rascunho"
+}
