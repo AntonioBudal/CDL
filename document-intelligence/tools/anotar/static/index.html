@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Caixas e linhas</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <h1>Caixas e linhas</h1>
+    <span id="page-title" class="page-title">—</span>
+    <nav class="modes" role="tablist" aria-label="Etapa">
+      <button type="button" role="tab" data-mode="boxes" id="tab-boxes" aria-selected="true">1. Caixas</button>
+      <button type="button" role="tab" data-mode="pass1" id="tab-pass1" aria-selected="false">2. 1ª passada</button>
+      <button type="button" role="tab" data-mode="pass2" id="tab-pass2" aria-selected="false">3. 2ª passada</button>
+    </nav>
+    <label class="pass2-mode" id="pass2-mode-wrap" hidden>
+      Modo
+      <select id="pass2-mode">
+        <option value="revisao">revisão (vê a 1ª)</option>
+        <option value="cego">cego (campo vazio)</option>
+      </select>
+    </label>
+    <span class="spacer"></span>
+    <span id="timer" class="timer" title="Tempo ativo nesta etapa (pausa após 60 s parado)">00:00</span>
+    <button type="button" id="save" class="primary" disabled>Gravar <kbd>Ctrl+S</kbd></button>
+    <span id="save-state" class="save-state" role="status" aria-live="polite"></span>
+  </header>
+
+  <div id="banner" class="banner" hidden></div>
+  <div id="errors" class="errors" role="alert" hidden></div>
+
+  <main class="layout">
+    <aside class="pages" aria-label="Páginas">
+      <h2>Páginas</h2>
+      <ul id="page-list"></ul>
+      <p id="pages-empty" class="muted" hidden>
+        Nenhuma página preparada. Coloque as fotos em <code>dataset/raw/exp-027/fotos/</code> e rode a
+        preparação (veja o README da ferramenta).
+      </p>
+    </aside>
+
+    <section class="viewer" aria-label="Foto da página">
+      <canvas id="canvas"></canvas>
+      <div class="viewer-help" id="viewer-help"></div>
+    </section>
+
+    <aside class="panel" aria-label="Painel">
+      <div id="panel-boxes">
+        <h2>Caixas de linha</h2>
+        <p class="muted small">
+          Arraste na foto para <b>criar</b>; arraste um canto para <b>ajustar</b>; arraste dentro para
+          <b>mover</b>; <kbd>Delete</kbd> apaga a selecionada. Roda do mouse: zoom. Espaço + arrastar ou
+          botão do meio: mover a foto.
+        </p>
+        <div class="row">
+          <button type="button" id="sort-top">Ordenar de cima para baixo</button>
+          <label class="check"><input type="checkbox" id="boxes-done"> Caixas prontas</label>
+        </div>
+        <p class="legend small">
+          <span class="swatch motor"></span> motor
+          <span class="swatch ajustada"></span> ajustada
+          <span class="swatch criada"></span> criada
+        </p>
+        <ol id="line-list" class="line-list"></ol>
+      </div>
+
+      <div id="panel-text" hidden>
+        <h2 id="text-heading">Texto da linha</h2>
+        <p class="progress"><span id="line-pos">—</span> <span id="line-meta" class="muted small"></span></p>
+        <canvas id="crop" class="crop" aria-label="Recorte da linha"></canvas>
+        <label for="line-input" class="sr-only">Texto da linha</label>
+        <input id="line-input" class="line-input" type="text" autocomplete="off" spellcheck="false">
+        <p class="small muted">
+          <kbd>Enter</kbd> confirma e vai para a próxima · <kbd>Shift+Enter</kbd> volta ·
+          <kbd>Ctrl+M</kbd> envolve a seleção em <code>$…$</code> · <kbd>Esc</kbd> desfaz a edição
+        </p>
+        <p id="line-warning" class="warning small" hidden></p>
+        <div id="diff" class="diff" hidden>
+          <p class="small"><b>Rascunho:</b> <span id="diff-draft"></span></p>
+          <p class="small"><b>Motor:</b> <span id="diff-motor"></span></p>
+          <p class="small muted">Em destaque: onde o motor e o rascunho discordam. Confira na foto.</p>
+        </div>
+        <details class="rule" open>
+          <summary>Regra de transcrição</summary>
+          <ul class="small">
+            <li><b>Escreva o que está no papel</b>, não o que deveria estar: abreviações como estão
+              (<code>p/</code>, <code>qdo</code>), sem corrigir ortografia nem completar palavras.</li>
+            <li>Trecho riscado: ignore. Letra ilegível: <code>[?]</code>.</li>
+            <li>Fórmula ou símbolo matemático: entre <code>$…$</code>. <code>\$</code> é um cifrão comum.</li>
+            <li>Linha que não é texto (pauta vazia): apague a caixa na etapa 1.</li>
+          </ul>
+        </details>
+        <details class="draft-import">
+          <summary>Importar rascunho de página</summary>
+          <p class="small muted">Uma linha do papel por linha de texto. Distribuído na ordem das caixas;
+            o que sobrar aparece abaixo. Não muda o que já foi confirmado.</p>
+          <label class="small">Rótulo <input id="draft-label" type="text" value="professor" maxlength="80"></label>
+          <textarea id="draft-text" rows="6" spellcheck="false"></textarea>
+          <button type="button" id="draft-import">Distribuir pelas caixas</button>
+        </details>
+        <div id="leftover" class="leftover" hidden>
+          <h3>Sobras do rascunho</h3>
+          <ul id="leftover-list" class="small"></ul>
+        </div>
+      </div>
+    </aside>
+  </main>
+</body>
+</html>

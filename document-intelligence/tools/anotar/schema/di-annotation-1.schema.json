@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leitorum.local/schemas/di-annotation-1.schema.json",
+  "title": "di-annotation/1 — caixas e texto por linha de uma página de caderno",
+  "description": "Uma página anotada pela ferramenta F-DI-13.01. Coordenadas em pixels da imagem de trabalho (foto orientada pelo EXIF; reduzida só quando o lado maior passa de 6000 px, com o fator em image.scale). Polígono de 4 pontos em sentido horário a partir do canto superior esquerdo.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "page_id", "image", "split", "draft_source", "next_line_id", "lines",
+    "draft_leftover", "status", "seconds", "version", "updated_at", "content_sha256"
+  ],
+  "properties": {
+    "schema": { "const": "di-annotation/1" },
+    "page_id": { "type": "string", "pattern": "^p[0-9]{2,3}$" },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256", "width", "height", "scale"],
+      "properties": {
+        "sha256": { "$ref": "#/$defs/sha256", "description": "SHA-256 da foto original, como registrado pelo EXP-027" },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "scale": { "type": "number", "exclusiveMinimum": 0, "maximum": 1, "description": "imagem de trabalho = foto orientada × scale" }
+      }
+    },
+    "split": { "enum": ["test", "dev-val", "dev-train", "sem-split"] },
+    "draft_source": { "type": "string", "pattern": "^(motor|importado:[^\\n]{1,80})$" },
+    "next_line_id": { "type": "integer", "minimum": 1 },
+    "lines": { "type": "array", "items": { "$ref": "#/$defs/line" } },
+    "draft_leftover": { "type": "array", "items": { "type": "string" } },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["boxes_done", "pass1_done", "pass2_done"],
+      "properties": {
+        "boxes_done": { "type": "boolean" },
+        "pass1_done": { "type": "boolean" },
+        "pass2_done": { "type": "boolean" }
+      }
+    },
+    "seconds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["boxes", "pass1", "pass2"],
+      "properties": {
+        "boxes": { "type": "number", "minimum": 0 },
+        "pass1": { "type": "number", "minimum": 0 },
+        "pass2": { "type": "number", "minimum": 0 }
+      }
+    },
+    "version": { "type": "integer", "minimum": 1 },
+    "updated_at": { "$ref": "#/$defs/timestamp" },
+    "content_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$" },
+    "point": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number" }
+    },
+    "pass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "at"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1, "pattern": "\\S" },
+        "at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "line": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["line_id", "order", "polygon", "box_origin", "motor_text", "draft", "pass1", "pass2"],
+      "properties": {
+        "line_id": { "type": "string", "pattern": "^L[0-9]{3,}$" },
+        "order": { "type": "integer", "minimum": 1 },
+        "polygon": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "$ref": "#/$defs/point" } },
+        "box_origin": { "enum": ["motor", "ajustada", "criada"] },
+        "motor_text": { "type": ["string", "null"] },
+        "draft": { "type": ["string", "null"] },
+        "pass1": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/pass" }] },
+        "pass2": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["text", "at", "mode"],
+              "properties": {
+                "text": { "type": "string", "minLength": 1, "pattern": "\\S" },
+                "at": { "$ref": "#/$defs/timestamp" },
+                "mode": { "enum": ["revisao", "cego"] }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
