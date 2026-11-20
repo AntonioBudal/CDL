@@ -160,11 +160,10 @@ async function openPage(pageId) {
   }
   state.pageId = pageId;
   state.doc = body;
+  // Modo da 2ª passada por página: cego nas sorteadas, revisão nas outras (não fica de uma página para outra).
   const info = state.pages.find((p) => p.id === pageId);
-  if (info?.second_pass) {
-    state.pass2Mode = info.second_pass;
-    $('pass2-mode').value = info.second_pass;
-  }
+  state.pass2Mode = info?.second_pass || 'revisao';
+  $('pass2-mode').value = state.pass2Mode;
   state.dirty = false;
   state.pending = { boxes: 0, pass1: 0, pass2: 0 };
   state.selected = sortedLines()[0]?.line_id || null;
@@ -530,7 +529,8 @@ function sortTopDown() {
 const input = $('line-input');
 
 function passValue(line) {
-  if (state.mode === 'pass1') return line.pass1?.text ?? line.draft ?? '';
+  // 1ª passada: o que já foi confirmado; senão, o que o autor escreveu na 2ª; senão, o rascunho.
+  if (state.mode === 'pass1') return line.pass1?.text ?? line.pass2?.text ?? line.draft ?? '';
   if (line.pass2) return line.pass2.text;
   return state.pass2Mode === 'revisao' ? line.pass1?.text ?? '' : '';
 }
@@ -667,10 +667,12 @@ function renderPages() {
     const steps = document.createElement('span');
     steps.className = 'steps';
     const s = page.status || {};
+    const partial = { pass1_done: page.pass1_lines, pass2_done: page.pass2_lines };
     for (const [key, label] of [['boxes_done', 'caixas'], ['pass1_done', '1ª'], ['pass2_done', '2ª']]) {
       const span = document.createElement('span');
       span.className = s[key] ? 'on' : '';
-      span.textContent = `${s[key] ? '✓' : '·'} ${label} `;
+      const count = !s[key] && partial[key] ? ` ${partial[key]}/${page.lines}` : '';
+      span.textContent = `${s[key] ? '✓' : '·'} ${label}${count} `;
       steps.append(span);
     }
     if (page.seconds) {
@@ -776,9 +778,13 @@ function renderText() {
   const pendingLines = lines.length - done;
   const notes = [];
   if (pendingBox) notes.push('A etapa 1 ainda não foi marcada como "Caixas prontas".');
-  // Depois de chegar ao fim da página, lembra quantas linhas ficaram para trás.
-  if (pendingLines && lines[lines.length - 1]?.[field]) notes.push(`Faltam ${pendingLines} linha(s) nesta passada.`);
+  if (pendingLines) {
+    notes.push(`Faltam ${pendingLines} linha(s) sem confirmar nesta passada (as sem fundo verde na foto). Só conta como confirmada a linha em que você aperta Enter.`);
+  }
   const info = state.pages.find((p) => p.id === state.pageId);
+  if (field === 'pass2' && info && !info.second_pass && info.split === 'test') {
+    notes.push('Esta página não foi sorteada para a 2ª passada: não precisa fazê-la (só as marcadas "2ª cega").');
+  }
   if (field === 'pass2' && info?.second_pass && info.last_pass1_at) {
     const ready = new Date(Date.parse(info.last_pass1_at) + 2 * 86_400_000);
     if (Date.now() < ready.getTime()) {

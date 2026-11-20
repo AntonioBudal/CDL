@@ -176,6 +176,8 @@ def list_pages(paths: Paths) -> list[dict]:
                 if saved
                 else None,
                 "lines": len(saved["lines"]) if saved else None,
+                "pass1_lines": sum(1 for line in saved["lines"] if line["pass1"]) if saved else 0,
+                "pass2_lines": sum(1 for line in saved["lines"] if line["pass2"]) if saved else 0,
                 "status": saved["status"] if saved else None,
                 "seconds": saved["seconds"] if saved else None,
                 "version": saved["version"] if saved else 0,

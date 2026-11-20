@@ -43,3 +43,16 @@
   dias depois da 1ª, e o aviso de modo rápido de caixas nas páginas de imagem reduzida (+1 teste). Conferido no
   navegador só por estado da página (sem olhar imagem nem texto); a p14 não mudou.
 
+**Ponto de controle da fase 2 (2026-11-20, 5 primeiras páginas, só números):**
+
+* Tempo ativo (caixas + 1ª passada): p10 5,0 min, p11 10,9, p14 12,1 (rascunho do motor), p15 6,8, p16 1,8 —
+  nenhuma acima do limite de abandono (15 min); seguir.
+* Linhas sem confirmar na 1ª passada: p10 3 de 10, p11 2 de 20, p15 2 de 12 (estas 2 escritas só na 2ª
+  passada). p15 e p16 receberam 2ª passada sem terem sido sorteadas (descartada da H2, que usa só as 5
+  sorteadas).
+* Três defeitos da ferramenta explicam isso, corrigidos: (1) a linha só conta com `Enter`, mas a tela só
+  avisava das que faltavam depois de chegar ao fim — agora avisa sempre e a lista mostra `1ª 7/10`; (2) o modo
+  da 2ª passada passava de uma página para outra (ficava "cego" depois de abrir uma sorteada) — agora é por
+  página; (3) nada dizia que a 2ª passada era só para as sorteadas — agora há aviso. Na 1ª passada, uma linha
+  sem 1ª mas com texto na 2ª abre com esse texto, para o autor confirmar.
+

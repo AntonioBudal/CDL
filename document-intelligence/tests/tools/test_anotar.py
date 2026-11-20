@@ -407,3 +407,5 @@ def test_second_pass_flag_and_last_pass1(paths):
     assert pages["p02"]["second_pass"] == "cego" and pages["p01"]["second_pass"] is None
     assert pages["p02"]["last_pass1_at"] == "2026-11-20T12:00:00Z"
     assert pages["p01"]["last_pass1_at"] is None
+    assert (pages["p02"]["pass1_lines"], pages["p02"]["pass2_lines"]) == (1, 0)
+    assert pages["p01"]["pass1_lines"] == 0
