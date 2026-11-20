@@ -1,5 +1,9 @@
 # Roadmaps v3 — leitor geral (várias letras)
 
+> **Revisado em 2026-11-20 pela [estratégia de dados v2](./09-estrategia-de-aquisicao-de-dados.md)** (aprovada): os
+> dados vêm só da internet, a custo zero; saem o kit de amigos (F-DI-13.03 vira catálogo de procedência), a
+> F-DI-13.04 e a Dados-13.G; o teste usa as divisões oficiais por escritor das bases públicas (§10 da estratégia).
+
 **Data:** 2026-11-20 · **Status:** `APROVADO` pelo usuário em 2026-11-20 · **Substitui:** as partes
 do [roadmap v2](./05-roadmaps.md) que ajustam o leitor à letra do autor. O que não é citado aqui continua como no v2.
 

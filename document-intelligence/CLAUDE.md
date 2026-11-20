@@ -138,7 +138,13 @@ uv run python -m leitorum_di
   o usuário não quer o leitor ajustado à própria letra; o alvo é um leitor geral, com fotos de amigos (termo de
   consentimento, ids anônimos `w01`…, separação treino/validação/teste **por pessoa**, CER da pior pessoa). Saem
   EXP-033A/B e o léxico do autor; entram F-DI-13.03 (kit de coleta), F-DI-13.04 (transcrição pela pessoa),
-  Dados-13.G (≥ 8 pessoas × 8–10 páginas) e EXP-033G. Primeiro passo: F-DI-13.03.
+  Dados-13.G (≥ 8 pessoas × 8–10 páginas) e EXP-033G.
+- **Estratégia de dados v2 (aprovada em 2026-11-20)** ([doc](./docs/replanejamento-0.13/09-estrategia-de-aquisicao-de-dados.md)):
+  dados só da internet, custo zero, até **100 GB no D:** (`D:\Leitorum-DI\`); o Leitorum nunca será comercial
+  (licenças NC avaliadas uma a uma; "só pesquisa" = `EXPERIMENT_ONLY`); status `APPROVED`, `EXPERIMENT_ONLY`,
+  `PENDING_REVIEW` (só metadados, fora do treino, revisão mensal), `REJECTED` (apagado com derivados e
+  bloqueado), `BLOCKED`; manifesto por ciclo de treino e retreino quando um item é rejeitado. Ordem: E1
+  amostragem das fontes → E2 catálogo mínimo → E3 EXP-031P (quais fontes ajudam) → E4 coletor.
 - **Tarefa Atual (histórico)**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).
