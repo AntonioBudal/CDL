@@ -145,6 +145,11 @@ def test_export_refuses_incomplete_then_exports(env):
     seed_drafts.main([])
     _confirm(env, "p01")
     assert export_v3.main([]) == 1
+    assert export_v3.main(["--partial"]) == 0
+    partial = json.loads((env.splits / "test-manifest-v3-parcial.json").read_text(encoding="utf-8"))
+    assert partial["status"] == "parcial" and list(partial["pages"]) == ["p01"]
+    assert not (env.splits / "test-manifest-v3.json").exists()
+    assert store.load_page(env, "p02")["split"] == "test"  # a parcial não tira páginas do teste
     _confirm(env, "p02")
     assert export_v3.main([]) == 0
     manifest = json.loads((env.splits / "test-manifest-v3.json").read_text(encoding="utf-8"))

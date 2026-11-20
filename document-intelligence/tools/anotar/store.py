@@ -109,11 +109,10 @@ def _splits(paths: Paths) -> dict[str, str]:
     """Divisão de cada página: teste congelado, ``dev-val`` e ``dev-train`` (quando o EXP-028A
     tiver criado o manifesto de validação); antes disso, as de desenvolvimento ficam sem divisão."""
     out: dict[str, str] = {}
-    test = _read_json(paths.splits / "test-manifest-v3.json") or _read_json(
-        paths.splits / "test-manifest.json", {}
-    )
-    for pid in (test or {}).get("pages", {}):
-        out[pid] = "test"
+    # União das versões do manifesto: nenhuma página sai do teste congelado.
+    for name in ("test-manifest.json", "test-manifest-v3.json"):
+        for pid in (_read_json(paths.splits / name, {}) or {}).get("pages", {}):
+            out[pid] = "test"
     dev_val = _read_json(paths.splits / "dev-val-manifest.json")
     if dev_val:
         for pid in dev_val.get("pages", {}):

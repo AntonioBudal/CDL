@@ -15,15 +15,15 @@
 
 ## Fase 2 — anotação (o usuário, ~2,5 h)
 
-- [ ] T005 1ª passada nas 19 páginas, com o caderno ao lado; conferir o tempo nas 5 primeiras (abandono se
+- [~] T005 1ª passada nas 19 páginas, com o caderno ao lado; conferir o tempo nas 5 primeiras (abandono se
   > 15 min/página).
-- [ ] T006 2ª passada cega nas 5 páginas sorteadas, ≥ 2 dias depois da 1ª.
+- [-] T006 2ª passada cega nas 5 páginas sorteadas, ≥ 2 dias depois da 1ª.
 
 ## Fase 3 — medir e registrar
 
-- [ ] T007 `export_v3.py`: `referencia-v3/` e `splits/test-manifest-v3.json` (hashes).
-- [ ] T008 `measure.py` (funções do `score.py` do EXP-027) contra a v3: H1–H4; `report.md` só com números.
-- [ ] T009 Registrar no `CLAUDE.md` e no roadmap; commit `EXP-028A(document-inteligence) …`.
+- [x] T007 `export_v3.py`: `referencia-v3/` e `splits/test-manifest-v3.json` (hashes).
+- [x] T008 `measure.py` (funções do `score.py` do EXP-027) contra a v3: H1–H4; `report.md` só com números.
+- [x] T009 Registrar no `CLAUDE.md` e no roadmap; commit `EXP-028A(document-inteligence) …`.
 
 ## Registro da execução
 
@@ -55,4 +55,16 @@
   da 2ª passada passava de uma página para outra (ficava "cego" depois de abrir uma sorteada) — agora é por
   página; (3) nada dizia que a 2ª passada era só para as sorteadas — agora há aviso. Na 1ª passada, uma linha
   sem 1ª mas com texto na 2ª abre com esse texto, para o autor confirmar.
+
+**Decisões do usuário e medida parcial (2026-11-20):**
+
+* Sem 2ª passada ("desnecessário, já consegui escrever tudo na primeira"): T006 cancelada, H2 não medida.
+* Medir com o que há: 1ª passada completa em p10, p11, p14, p15 e p16 (as 7 linhas que faltavam foram
+  confirmadas pelo autor). `export_v3.py --partial` grava `test-manifest-v3-parcial.json` — nunca o oficial,
+  porque a ferramenta passou a usar a união dos manifestos de teste e um manifesto com 5 páginas tiraria as
+  outras 15 do teste (corrigido antes de exportar, com teste).
+* p16 excluída da medida (`--exclude p16`): a imagem dela é uma faixa de 512 × 250 px, e a v3 cobre só as 6
+  linhas visíveis.
+* Resultado em [report.md](./report.md): H1 8,9 % (confirmada), H3 69,8 % × 69,3 % nas mesmas páginas
+  (confirmada), H4 100 % das quebras perdidas (confirmada). As 15 páginas restantes seguem com rascunho pronto.
 

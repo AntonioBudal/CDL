@@ -5,8 +5,9 @@
 * ``splits/test-manifest-v3.json`` (versionado): só hashes e contagens — hash da imagem (marcada
   ``low_resolution`` quando for o caso), hash do texto exportado, número de linhas e as classes.
 
-Recusa exportar se alguma das 20 páginas não tiver a 1ª passada completa (``--partial`` só para
-testes). Uso: ``python export_v3.py``
+Recusa exportar se alguma das 20 páginas não tiver a 1ª passada completa. Com ``--partial``
+exporta só as completas e grava ``test-manifest-v3-parcial.json`` (nunca o manifesto oficial, que
+a ferramenta usa para saber quais páginas são de teste). Uso: ``python export_v3.py [--partial]``
 """
 
 from __future__ import annotations
@@ -29,7 +30,7 @@ def main(argv: list[str] | None = None) -> int:
     from tools.anotar import store
 
     parser = argparse.ArgumentParser(description="Exportar a referência v3")
-    parser.add_argument("--partial", action="store_true", help="só para testes")
+    parser.add_argument("--partial", action="store_true", help="só as páginas completas")
     args = parser.parse_args(argv)
     sys.stdout.reconfigure(encoding="utf-8")
     paths = common.anotar_paths()
@@ -68,12 +69,14 @@ def main(argv: list[str] | None = None) -> int:
         "created_by": "EXP-028A",
         "based_on": "test-manifest.json v2 (mesmas 20 páginas)",
         "reference": "referência v3: 1ª passada do autor, linha a linha, conferida no caderno",
+        "status": "parcial" if missing else "completo",
         "size": len(pages),
         "pages": pages,
         "incomplete": missing,
         "rule": "só para medir; nunca treino, limiar, dicionário ou ajuste de rascunho",
     }
-    (common.SPLITS / "test-manifest-v3.json").write_text(
+    name = "test-manifest-v3-parcial.json" if missing else "test-manifest-v3.json"
+    (common.SPLITS / name).write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", "utf-8"
     )
     print(json.dumps({"exported": len(pages), "incomplete": missing,

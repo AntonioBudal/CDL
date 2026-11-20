@@ -122,7 +122,11 @@ uv run python -m leitorum_di
   alinhado às caixas), piso de ruído humano (2ª passada cega em 5 páginas, ≥ 2 dias depois) e o CER do produto
   refeito com a régua nova; nada sobre detecção. A referência do Gemini não tem quebras (50 linhas contra 389
   caixas do motor). Fase 1 pronta: sorteios (2ª cega `p14 p22 p27 p36 p38`; `dev-val` com 10 páginas, anotação
-  pendente até haver imagens) e rascunho em 19 páginas. Fase 2: anotação pelo autor (~2,5 h).
+  pendente até haver imagens) e rascunho em 19 páginas. **Resultado parcial** ([report](./experiments/EXP-028A-referencia-v3/report.md),
+  4 páginas, sem 2ª passada por decisão do usuário; p16 excluída por ser uma faixa da página): a referência do
+  Gemini difere 8,9 % da do autor e não tem nenhuma quebra de linha; o CER do produto quase não muda (69,8 % ×
+  69,3 % nas mesmas páginas) — o diagnóstico do EXP-027 vale, mas treino e decomposição precisam de texto por
+  linha. Sem imagens de verdade, EXP-028B e EXP-029 não medem o que o produto lê.
 - **Tarefa Atual (histórico)**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).

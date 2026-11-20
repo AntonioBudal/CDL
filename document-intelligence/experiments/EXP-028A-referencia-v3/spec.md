@@ -1,7 +1,8 @@
 # EXP-028A — Referência v3 linha a linha e piso de ruído humano
 
 * **Criado em:** 2026-11-20
-* **Status:** `IN PROGRESS` (aprovado pelo usuário em 2026-11-20; fase 1 pronta, fase 2 com o autor)
+* **Status:** `PARTIAL` (aprovado em 2026-11-20; medido em 4 de 20 páginas, sem 2ª passada, por decisão do
+  usuário — ver [report](./report.md))
 * **Roadmap:** épico 0.13-0 "Régua limpa", item **EXP-028A** (absorve o micro-experimento **A5**) do
   [roadmap 0.13](../../docs/replanejamento-0.13/05-roadmaps.md)
 * **Depende de:** F-DI-13.01 (ferramenta de caixas e linhas, [spec 002](../../specs/002-ferramenta-caixas-linhas/spec.md))

@@ -21,13 +21,14 @@ import json
 import sys
 from datetime import UTC, datetime
 
+import common  # isort: skip — põe o harness do EXP-027 no caminho antes das importações abaixo
 import align
-import common
 import textnorm
 from delatex import delatex_ref
 from seed_drafts import align_words
 
 EXP027_PAGE_CER_TEST = 0.5634  # benchmark 2026-11-16, modo de página, referência v2
+EXP027_BENCHMARK = "BENCHMARK-20261116-exp-027-motor.json"
 
 
 def ref_lines(content: str) -> list[textnorm.RefLine]:
@@ -127,8 +128,21 @@ def h3(v3: dict[str, list], readings: dict[str, list[str]]) -> dict:
         }
     error = sum(origins.values()) or 1
     cer = micro(page_pairs)
+    # A mesma leitura do produto contra a referência v2 (Gemini), nas mesmas páginas (EXP-027)
+    bench_path = common.DI_ROOT / "evaluation" / "benchmarks" / EXP027_BENCHMARK
+    v2 = {}
+    if bench_path.is_file():
+        v2 = json.loads(bench_path.read_text(encoding="utf-8"))["per_page"]
+    v2_pairs = [
+        (round(v2[pid]["cer"] * v2[pid]["ref_chars"]), v2[pid]["ref_chars"])
+        for pid in per_page
+        if pid in v2
+    ]
+    for pid in per_page:
+        per_page[pid]["cer_v2"] = v2.get(pid, {}).get("cer")
     return {
         "cer_micro": cer,
+        "cer_v2_same_pages": micro(v2_pairs),
         "wer_page_mean": round(sum(words) / len(words), 4) if words else None,
         "exp027_cer_v2": EXP027_PAGE_CER_TEST,
         "delta_points": round((cer - EXP027_PAGE_CER_TEST) * 100, 1) if cer is not None else None,
@@ -194,10 +208,13 @@ def load_texts(folder, ids) -> dict[str, str]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Medidas do EXP-028A")
     parser.add_argument("--benchmark", action="store_true")
+    parser.add_argument("--manifest", default="test-manifest-v3.json")
+    parser.add_argument("--exclude", default="", help="pNN fora da medida (motivo no relatório)")
     args = parser.parse_args(argv)
     sys.stdout.reconfigure(encoding="utf-8")
-    manifest = json.loads((common.SPLITS / "test-manifest-v3.json").read_text(encoding="utf-8"))
-    ids = sorted(manifest["pages"])
+    manifest = json.loads((common.SPLITS / args.manifest).read_text(encoding="utf-8"))
+    excluded = sorted({p.strip() for p in args.exclude.split(",") if p.strip()})
+    ids = sorted(set(manifest["pages"]) - set(excluded))
     v3_text = load_texts(common.REFERENCE_V3, ids)
     gemini_text = load_texts(common.GEMINI_REFERENCE, ids)
     v3 = {pid: ref_lines(text) for pid, text in v3_text.items()}
@@ -219,6 +236,9 @@ def main(argv: list[str] | None = None) -> int:
         "schema": "exp-028a-results/1",
         "created_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "pages": len(v3),
+        "manifest": args.manifest,
+        "status": manifest.get("status", "completo"),
+        "excluded": excluded,
         "h1_gemini_vs_v3": h1(v3, gemini),
         "h2_human_noise": h2(docs, sorted(second["pages"])),
         "h3_product_vs_v3": h3(v3, readings),
@@ -243,6 +263,7 @@ def main(argv: list[str] | None = None) -> int:
         "h1_cer": result["h1_gemini_vs_v3"]["cer_micro"],
         "h2_cer": result["h2_human_noise"]["cer_micro"],
         "h3_cer": result["h3_product_vs_v3"]["cer_micro"],
+        "h3_cer_v2_same_pages": result["h3_product_vs_v3"]["cer_v2_same_pages"],
         "h4_breaks_lost": result["h4_line_breaks"]["breaks_lost_share"],
     }, ensure_ascii=False))
     return 0

@@ -1,0 +1,85 @@
+{
+  "schema": "exp-028a-test-split/3",
+  "version": 3,
+  "created_at": "2026-11-20T17:21:07Z",
+  "created_by": "EXP-028A",
+  "based_on": "test-manifest.json v2 (mesmas 20 páginas)",
+  "reference": "referência v3: 1ª passada do autor, linha a linha, conferida no caderno",
+  "status": "parcial",
+  "size": 5,
+  "pages": {
+    "p10": {
+      "image_sha256": "7ace30fef39d671bc89226ddc11810c4179f682f19d5e09d48954a63a60d603b",
+      "low_resolution": true,
+      "reference_sha256": "54b20aab5d71071a9cf8b71eba9506e9f4b71e9639e23ea0b5bc331bf2dbd829",
+      "annotation_sha256": "fe16b43a43925647dc5374c01f876e9bd2f6e557d678c7e6567c12414505cd75",
+      "lines": 10,
+      "draft_source": "importado:gemini-alinhado",
+      "escrita": "cursiva",
+      "formulas": "poucas",
+      "foto": "media"
+    },
+    "p11": {
+      "image_sha256": "e02a54e994eff3e25c166cc6013dd026d62be0c968ca8db49ab7ce67e06ea384",
+      "low_resolution": true,
+      "reference_sha256": "34af535b1a827206fd41ff93d4464a204c55ae0a82fe96587e11e755c54bedaa",
+      "annotation_sha256": "4e4e3e1ab574b4ee4eca0c45047b652e2b3a6808eaf0e6f98facc291114382b2",
+      "lines": 20,
+      "draft_source": "importado:gemini-alinhado",
+      "escrita": "mista",
+      "formulas": "poucas",
+      "foto": "boa"
+    },
+    "p14": {
+      "image_sha256": "aea8e35a2ace2265d5c36bf3fe493b4894a45b2731c4327a0064d156fc1e7482",
+      "low_resolution": true,
+      "reference_sha256": "cd70a4fd38746ebf118bc263df062afa76272ce8a3b18aa146cb21b3ad31dcfb",
+      "annotation_sha256": "f749d678cd7230f22e7b7679a12c2003824cf898bede6045be55f43a146b9e1a",
+      "lines": 20,
+      "draft_source": "motor",
+      "escrita": "cursiva",
+      "formulas": "poucas",
+      "foto": "boa"
+    },
+    "p15": {
+      "image_sha256": "c668f25a2e407422157858e3f5e263c5af923ead7af440c7468b728f712729e7",
+      "low_resolution": true,
+      "reference_sha256": "13954e014c180b6e8198660a58c3bc39b930d5ed99682c81a11bd7ae6988a97c",
+      "annotation_sha256": "abb28106415757344f7e92389700e1436dab177bcf83d766d18b9fdd01da636e",
+      "lines": 12,
+      "draft_source": "importado:gemini-alinhado",
+      "escrita": "mista",
+      "formulas": "poucas",
+      "foto": "boa"
+    },
+    "p16": {
+      "image_sha256": "310f1e7f4ec0df5af6d6c6616e2399baf3839d30f54d38d56ca3dd1fd91a251d",
+      "low_resolution": true,
+      "reference_sha256": "f1b5da1fbe5ab5ec7cea15ed5fbf3c2d78376e4ad6dc179cfa3beee07afa83a8",
+      "annotation_sha256": "b13e0fdbff0e9e053ff192c01ab01af1501ae2b58c73f2cd21528e4950edcb95",
+      "lines": 6,
+      "draft_source": "importado:gemini-alinhado",
+      "escrita": "mista",
+      "formulas": "poucas",
+      "foto": "boa"
+    }
+  },
+  "incomplete": [
+    "p18",
+    "p21",
+    "p22",
+    "p26",
+    "p27",
+    "p30",
+    "p31",
+    "p35",
+    "p36",
+    "p37",
+    "p38",
+    "p41",
+    "p43",
+    "p45",
+    "p46"
+  ],
+  "rule": "só para medir; nunca treino, limiar, dicionário ou ajuste de rascunho"
+}
