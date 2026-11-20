@@ -127,6 +127,13 @@ uv run python -m leitorum_di
   Gemini difere 8,9 % da do autor e não tem nenhuma quebra de linha; o CER do produto quase não muda (69,8 % ×
   69,3 % nas mesmas páginas) — o diagnóstico do EXP-027 vale, mas treino e decomposição precisam de texto por
   linha. Sem imagens de verdade, EXP-028B e EXP-029 não medem o que o produto lê.
+- **Fotos originais perdidas (usuário, 2026-11-20):** seguir com as imagens de 512 px; todo resultado leva a
+  marca "512 px". F-DI-13.02 adiada para antes do primeiro treino (EXP-033A), aprovado pelo usuário.
+- **EXP-028B concluído em 2026-11-20** ([report](./experiments/EXP-028B-decomposicao-512/report.md), 4 páginas,
+  62 linhas, 512 px): o mesmo leitor do produto com as caixas do autor erra **50,9 %**; o produto inteiro, 64,3 %.
+  Leitor ≈ 4/5 do erro, detecção 10,9 pontos (5 a 23 por página), ordem 2,5. Só 1 de 62 linhas sai quase certa
+  (mediana 45,7 % por linha). Surpresa: em 512 px o produto errou menos que nas fotos originais (69,8 %), cuja
+  leitura exportada tem bem menos texto — causa não verificável sem as fotos. Prioridade: o leitor (EXP-033A).
 - **Tarefa Atual (histórico)**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).

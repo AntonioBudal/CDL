@@ -1,0 +1,63 @@
+{
+  "schema": "exp-028b-results/1",
+  "created_at": "2026-11-20T17:30:27Z",
+  "images": "512 px (low_resolution)",
+  "page_ids": [
+    "p10",
+    "p11",
+    "p14",
+    "p15"
+  ],
+  "cer": {
+    "a_produto": 0.6429,
+    "b_caixas_autor": 0.5088,
+    "c_caixas_autor_ordem_produto": 0.5341
+  },
+  "parts": {
+    "deteccao_pontos": 10.9,
+    "ordem_pontos": 2.5,
+    "leitor_pontos": 50.9,
+    "caixas_e_ordem_pontos": 13.4
+  },
+  "lines_b": {
+    "count": 62,
+    "median_cer": 0.4565,
+    "distribution": {
+      "ate_10": 1,
+      "10_a_30": 10,
+      "30_a_60": 36,
+      "acima_60": 15
+    }
+  },
+  "resolution": {
+    "a_512": 0.6429,
+    "original_photos": 0.698,
+    "cost_points": -5.5
+  },
+  "pages": {
+    "p10": {
+      "a": 0.5128,
+      "b": 0.3367,
+      "c": 0.4668,
+      "original": 0.6556
+    },
+    "p11": {
+      "a": 0.6811,
+      "b": 0.5843,
+      "c": 0.6048,
+      "original": 0.7639
+    },
+    "p14": {
+      "a": 0.7209,
+      "b": 0.4854,
+      "c": 0.4903,
+      "original": 0.6723
+    },
+    "p15": {
+      "a": 0.5499,
+      "b": 0.4858,
+      "c": 0.4858,
+      "original": 0.6239
+    }
+  }
+}
