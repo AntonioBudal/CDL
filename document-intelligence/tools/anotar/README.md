@@ -4,26 +4,34 @@ Ferramenta local para anotar páginas de caderno: caixas de linha sobre a foto, 
 fórmulas entre `$…$` e 2ª passada. Spec: [`specs/002-ferramenta-caixas-linhas`](../../specs/002-ferramenta-caixas-linhas/spec.md).
 Roda só no seu computador (`127.0.0.1`); fotos, imagens e anotações ficam em `dataset/`, fora do Git.
 
-## Uso em 4 passos (a partir de `document-intelligence/`)
+## Uso em 5 passos (a partir de `document-intelligence/`)
 
 1. **Fotos:** coloque as fotos originais do celular em `dataset/raw/exp-027/fotos/` (qualquer nome, sem converter
    nem recortar). Só abre a foto cujo SHA-256 bate com o registrado pelo EXP-027
    (`experiments/EXP-027-analise-50-paginas/splits/pages-sha256.json`).
-2. **Preparar** (ambiente do motor do produto; cria a imagem de trabalho e as caixas iniciais do motor; retomável):
+2. **Registrar** as fotos novas (uma vez; associa cada foto a um `pNN` pela ordem de horário do arquivo e grava só
+   hashes e tamanhos no `pages-sha256.json` do EXP-027):
+
+   ```powershell
+   ..\caderno-leitura-0.1\motor\.venv\Scripts\python.exe -m tools.anotar.register --order p10,p11,... --source "origem das fotos"
+   ```
+
+   Use `--low-resolution` quando não forem as fotos originais (a ferramenta avisa na página).
+3. **Preparar** (ambiente do motor do produto; cria a imagem de trabalho e as caixas iniciais do motor; retomável):
 
    ```powershell
    ..\caderno-leitura-0.1\motor\.venv\Scripts\python.exe -m tools.anotar.prepare
    ```
 
    No fim aparece um resumo: fotos encontradas, registradas, não registradas e páginas que faltam.
-3. **Abrir a ferramenta:**
+4. **Abrir a ferramenta:**
 
    ```powershell
    uv run python -m tools.anotar.server
    ```
 
    e abrir http://127.0.0.1:8766/ no navegador.
-4. **Anotar** cada página em três etapas (abas no alto):
+5. **Anotar** cada página em três etapas (abas no alto):
    1. **Caixas:** apague as falsas (`Delete`), ajuste as cortadas (arraste um canto), desenhe as que faltam
       (arraste na foto), confira a ordem e marque **Caixas prontas**.
    2. **1ª passada:** corrija o rascunho de cada linha olhando o recorte e aperte `Enter`. `Ctrl+M` envolve a

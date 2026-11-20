@@ -788,8 +788,12 @@ function renderAll() {
   $('save').disabled = !state.dirty;
   const banner = $('banner');
   const test = hasDoc && state.doc.split === 'test';
-  banner.hidden = !test;
-  banner.textContent = test ? 'Página do teste congelado: anotar só para medir (EXP-028A). Nunca usar em treino, ajuste de limiar ou dicionário.' : '';
+  const lowRes = hasDoc && state.pages.find((p) => p.id === state.pageId)?.low_resolution;
+  const notes = [];
+  if (test) notes.push('Página do teste congelado: anotar só para medir (EXP-028A). Nunca usar em treino, ajuste de limiar ou dicionário.');
+  if (lowRes) notes.push(`Imagem reduzida (${state.doc.image.width}×${state.doc.image.height} px), não a foto original: serve para treinar a anotação e medir o tempo, não como referência nem treino.`);
+  banner.hidden = !notes.length;
+  banner.textContent = notes.join(' ');
   $('viewer-help').textContent = state.mode === 'boxes'
     ? 'Arraste: criar · canto: ajustar · dentro: mover · Delete: apagar · roda: zoom · espaço+arrastar: mover a foto'
     : 'Clique numa caixa para ir à linha · roda: zoom · espaço+arrastar: mover a foto';

@@ -1,16 +1,220 @@
 {
-  "schema": "exp-027-pages/1",
-  "count": 2,
+  "schema": "exp-027-pages/2",
+  "count": 20,
   "pages": {
-    "p01": {
-      "sha256": "27a96a1068e541a8b92b29a394311f4ad0e123119777921d06ed1009a9645720",
-      "width": 1600,
-      "height": 2200
+    "p10": {
+      "sha256": "7ace30fef39d671bc89226ddc11810c4179f682f19d5e09d48954a63a60d603b",
+      "width": 512,
+      "height": 384,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
     },
-    "p02": {
-      "sha256": "ff485c6e0b647b9218fe91504c1c214773907da71768da14f94ee20496508570",
-      "width": 1600,
-      "height": 2200
+    "p11": {
+      "sha256": "e02a54e994eff3e25c166cc6013dd026d62be0c968ca8db49ab7ce67e06ea384",
+      "width": 377,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p14": {
+      "sha256": "aea8e35a2ace2265d5c36bf3fe493b4894a45b2731c4327a0064d156fc1e7482",
+      "width": 438,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p15": {
+      "sha256": "c668f25a2e407422157858e3f5e263c5af923ead7af440c7468b728f712729e7",
+      "width": 512,
+      "height": 429,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p16": {
+      "sha256": "310f1e7f4ec0df5af6d6c6616e2399baf3839d30f54d38d56ca3dd1fd91a251d",
+      "width": 512,
+      "height": 250,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p18": {
+      "sha256": "032785ae0eb39c3729af950c19d7b809ad628554736cb9027cef4632a5afbc1f",
+      "width": 512,
+      "height": 467,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p21": {
+      "sha256": "f82ebab761f1799e045b06b4c26ea610ca37dff77847e5ce4c73ba60116ee7e1",
+      "width": 437,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p22": {
+      "sha256": "8518f034198f299a79c2c3aa21b052ac5e1fff6548cedfdf45e0f2b1161cc097",
+      "width": 384,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p26": {
+      "sha256": "c39ca56a270c39e444ecb7bb0ed5b7cb5966ef294200c52f078db372e9a92a07",
+      "width": 408,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p27": {
+      "sha256": "be6e8102449cc2a5e07133a7fe57ede4295192e9f1aad0b108b2c75a0751d3f3",
+      "width": 431,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p30": {
+      "sha256": "fdb7f3c1883264f87472b8853a6b111f632b790b8618b628a0003d2d76cbe022",
+      "width": 371,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p31": {
+      "sha256": "09088265f999f9d9707f196ee2092373510f91817c8f327224a572a54e527423",
+      "width": 384,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p35": {
+      "sha256": "56c6f920a5b64ecd782262a8ee87e0fe2f54c8b925a8d0250e9cb2d2df1c4b12",
+      "width": 384,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p36": {
+      "sha256": "fa4b28779737cd04e2d40f148d86c1eb9bab986656b6721882a0f37cf7f2d941",
+      "width": 379,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p37": {
+      "sha256": "667fda874cd4ddbcd6f8c99d17f4776f55fa2f71a92ad2d719849374c346b1ca",
+      "width": 384,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p38": {
+      "sha256": "caca18f989b3b903dab2de5d007954c21b088bf1d63c6136ee4c90cd376a32ce",
+      "width": 386,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p41": {
+      "sha256": "c6ca4240be736b37b692442b7229e335566b833bbb6e6265103378bb0da6ada4",
+      "width": 512,
+      "height": 384,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p43": {
+      "sha256": "04288cb717d15e92c117aeaf982109175979698195bcb364ee2348b8df0993fb",
+      "width": 384,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p45": {
+      "sha256": "c4d55425f8a08af9420fce286a11bc25cac1ef990b541c427094ca6960f0d61b",
+      "width": 416,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
+    },
+    "p46": {
+      "sha256": "2bf283ff5540974b95a5595fca3f1fff8b650ee4ca7fe1f334533fc6020ebad4",
+      "width": 414,
+      "height": 512,
+      "format": "png",
+      "low_resolution": true,
+      "source": "PNG reduzido a 512 px no lado maior, fornecido pelo usuário em 2026-11-20 (as fotos originais não estão no projeto)",
+      "registered_at": "2026-11-20T15:26:52Z"
     }
-  }
+  },
+  "amendments": [
+    {
+      "at": "2026-11-20T15:26:52Z",
+      "pages": [
+        "p10",
+        "p11",
+        "p14",
+        "p15",
+        "p16",
+        "p18",
+        "p21",
+        "p22",
+        "p26",
+        "p27",
+        "p30",
+        "p31",
+        "p35",
+        "p36",
+        "p37",
+        "p38",
+        "p41",
+        "p43",
+        "p45",
+        "p46"
+      ],
+      "replaced": [],
+      "by": "mtime",
+      "reason": "fotos do teste congelado associadas pela ordem de horário informada pelo usuário em 2026-11-20; usadas só para treinar a anotação e medir tempo, por decisão do usuário",
+      "removed": [
+        "p01",
+        "p02"
+      ]
+    }
+  ]
 }

@@ -111,8 +111,11 @@ uv run python -m leitorum_di
 - **F-DI-13.01 implementada em 2026-11-20** ([spec 002](./specs/002-ferramenta-caixas-linhas/spec.md),
   [`tools/anotar/`](./tools/anotar/README.md)): ferramenta local de caixas e linhas (caixas de 4 cantos criáveis e
   ajustáveis, texto por `line_id` estável, `$…$`, 1ª e 2ª passada revisão/cega, `di-annotation/1` validado com hash
-  da foto e do conteúdo). Conferida com páginas fictícias; a meta de ≤ 10 min por página real (SC-001) espera as
-  fotos originais de volta em `dataset/raw/exp-027/fotos/` (a pasta está vazia). Próximo: EXP-028A.
+  da foto e do conteúdo). Conferida com páginas fictícias. **Fotos (2026-11-20):** as 20 do teste congelado
+  vieram como PNG de até 512 px (originais indisponíveis); por decisão do usuário, registradas com
+  `low_resolution` (`register.py`, pela ordem de horário informada) e usadas só para treinar a anotação e medir
+  tempo — não como referência nem treino. O registro antigo do EXP-027 não tinha fotos reais (2 entradas
+  sintéticas, retiradas). Próximo: SC-001 (1 página) e EXP-028A, que precisa decidir o que fazer sem as originais.
 - **Tarefa Atual (histórico)**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).

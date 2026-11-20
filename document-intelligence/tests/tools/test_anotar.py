@@ -195,6 +195,14 @@ def test_client_cannot_change_image_identity(paths):
     assert saved["image"]["sha256"] == registered["sha256"]
 
 
+def test_low_resolution_flag_in_page_list(paths):
+    data = json.loads(paths.registered.read_text(encoding="utf-8"))
+    data["pages"]["p02"]["low_resolution"] = True
+    paths.registered.write_text(json.dumps(data), encoding="utf-8")
+    flags = {page["id"]: page["low_resolution"] for page in store.list_pages(paths)}
+    assert flags == {"p01": False, "p02": True}
+
+
 def test_page_with_wrong_hash_is_blocked(paths):
     (paths.images / "p02.jpg").write_bytes(b"outra imagem")
     pages = {page["id"]: page for page in store.list_pages(paths)}
@@ -355,3 +363,36 @@ def test_prepare_maps_by_hash_orients_and_resumes(tmp_path):
 
     again = run([str(MOTOR_PYTHON), "-m", "tools.anotar.prepare", "--no-motor"])
     assert json.loads(again.stdout.strip().splitlines()[-1])["prepared"] == 0
+
+
+@pytest.mark.skipif(not MOTOR_PYTHON.is_file(), reason="ambiente do motor ausente")
+def test_register_by_mtime_and_remove(tmp_path):
+    root = tmp_path / "dataset"
+    photos = root / "raw" / "exp-027" / "fotos"
+    splits = tmp_path / "splits"
+    splits.mkdir()
+    (splits / "pages-sha256.json").write_text(
+        json.dumps({"pages": {"p01": {"sha256": "a" * 64, "width": 1, "height": 1}}}), "utf-8"
+    )
+    env = {**os.environ, "ANOTAR_DATA_ROOT": str(root), "ANOTAR_SPLITS_DIR": str(splits)}
+    run = functools.partial(
+        subprocess.run, cwd=DI_ROOT, env=env, capture_output=True, text=True, timeout=300
+    )
+    made = run([str(MOTOR_PYTHON), "-m", "tests.tools.make_photos", str(photos), "3"])
+    assert made.returncode == 0
+    files = sorted(photos.iterdir())
+    for offset, path in enumerate(reversed(files)):  # horário inverso ao nome
+        os.utime(path, (1_700_000_000 + offset, 1_700_000_000 + offset))
+    args = [str(MOTOR_PYTHON), "-m", "tools.anotar.register", "--order", "p10,p11,p14",
+            "--source", "teste", "--low-resolution"]
+    done = run([*args, "--remove", "p01"])
+    assert done.returncode == 0, done.stderr
+    data = json.loads((splits / "pages-sha256.json").read_text(encoding="utf-8"))
+    assert sorted(data["pages"]) == ["p10", "p11", "p14"]
+    assert data["pages"]["p10"]["sha256"] == store.file_sha256(files[-1])  # o mais antigo
+    assert data["pages"]["p10"]["low_resolution"] is True
+    assert data["amendments"][-1]["removed"] == ["p01"]
+    wrong = run([str(MOTOR_PYTHON), "-m", "tools.anotar.register", "--order", "p10,p11",
+                 "--source", "teste"])
+    assert wrong.returncode != 0 and "3 fotos" in wrong.stderr + wrong.stdout
+

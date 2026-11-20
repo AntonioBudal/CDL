@@ -37,3 +37,11 @@ de `document-intelligence/`.
   gravação em andamento (agora regrava em seguida) e área de rascunho visível na 2ª passada.
   `uv run pytest`: 273 passaram; `uv run ruff check .`: limpo.
 * **T009** fica aberta até as fotos voltarem para `dataset/raw/exp-027/fotos/`.
+
+## Fotos do teste congelado (2026-11-20)
+
+* As 20 fotos do teste congelado chegaram como PNG de até 512 px (as originais não estão disponíveis); o usuário
+  decidiu usá-las assim. O registro de hashes do EXP-027 não tinha as fotos reais (só 2 entradas sintéticas, agora
+  retiradas): `register.py` registrou as 20 pela ordem de horário informada pelo usuário, com `low_resolution` e a
+  origem, e a ferramenta mostra o aviso. +2 testes (`register`, aviso): 36 na ferramenta.
+

@@ -169,7 +169,14 @@ guarda também o rascunho usado (`draft`), para medir depois quanto a revisão h
 
 ## 8. O que depende do usuário
 
-* **Para a SC-001 (e para todo o épico 0):** as fotos originais das páginas de volta em
-  `dataset/raw/exp-027/fotos/`. A pasta está vazia hoje; o EXP-027 registrou os hashes das fotos que usou, e a
-  ferramenta só abre a foto cujo hash bate. Pode ser feito em paralelo à construção.
+* **Para a SC-001 (e para todo o épico 0):** as fotos das páginas em `dataset/raw/exp-027/fotos/`.
+* **Correção (2026-11-20):** ao contrário do que esta spec dizia, o EXP-027 **não** registrou os hashes das fotos
+  reais: as fotos nunca estiveram no projeto (o EXP-027 trabalhou com o texto exportado do Leitorum) e o
+  `splits/pages-sha256.json` só tinha 2 entradas das páginas sintéticas do harness. Entrou o passo
+  `tools/anotar/register.py`, que registra os hashes associando cada foto a um `pNN` pela ordem informada pelo
+  usuário (horário do arquivo), com a origem e uma marca de resolução baixa.
+* **Decisão do usuário (2026-11-20):** as 20 fotos do teste congelado vieram como PNG reduzido a 512 px no lado
+  maior (as originais não estão disponíveis), e o usuário decidiu usá-las assim. Registradas com
+  `low_resolution: true`; a ferramenta avisa na página. Servem para treinar a anotação e medir o tempo; não servem
+  como referência de teste nem como dado de treino, e a medida da SC-001 nelas é uma estimativa (página pequena).
 * Uma página de cerca de 10 minutos de anotação no fim, para medir a SC-001.

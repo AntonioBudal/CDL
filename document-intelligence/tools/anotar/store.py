@@ -156,6 +156,7 @@ def hash_ok(paths: Paths, page_id: str) -> bool:
 def list_pages(paths: Paths) -> list[dict]:
     splits = _splits(paths)
     has_dev_val = (paths.splits / "dev-val-manifest.json").is_file()
+    registered = _registered(paths)
     pages = []
     for pid in sorted(_index(paths)):
         saved = _read_json(paths.annotations / f"{pid}.json")
@@ -165,6 +166,7 @@ def list_pages(paths: Paths) -> list[dict]:
                 "id": pid,
                 "split": split,
                 "hash_ok": hash_ok(paths, pid),
+                "low_resolution": bool(registered.get(pid, {}).get("low_resolution")),
                 "lines": len(saved["lines"]) if saved else None,
                 "status": saved["status"] if saved else None,
                 "seconds": saved["seconds"] if saved else None,
