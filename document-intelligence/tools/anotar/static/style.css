@@ -144,6 +144,7 @@ button.primary kbd { background: transparent; border-color: currentColor; color:
 .line-input { width: 100%; margin: 8px 0 4px; padding: 8px; font-size: 17px; font-family: ui-monospace, Consolas, monospace; }
 .line-input.invalid { border-color: var(--danger); outline-color: var(--danger); }
 .warning { color: var(--danger); margin: 2px 0; }
+.pending { background: var(--warn-bg); color: var(--warn-text); border-radius: 4px; padding: 3px 8px; margin: 0 0 6px; }
 .diff { border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; margin: 6px 0; }
 .diff p { margin: 3px 0; }
 .diff mark { background: var(--diff); color: var(--diff-text); border-radius: 2px; padding: 0 1px; }

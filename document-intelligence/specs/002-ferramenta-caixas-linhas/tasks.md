@@ -17,7 +17,7 @@ de `document-intelligence/`.
   (SC-002, SC-003); `README.md` da ferramenta.
 - [x] T008 Registrar no `CLAUDE.md` do subprojeto e no roadmap; commit
   `F-DI-13.01(document-inteligence) ferramenta de caixas e linhas`.
-- [ ] T009 (com o usuário, quando as fotos voltarem) anotar 1 página real e medir a SC-001 (≤ 10 min);
+- [x] T009 (com o usuário, quando as fotos voltarem) anotar 1 página real e medir a SC-001 (≤ 10 min);
   só o tempo e o resultado do schema vão para o registro, nunca o conteúdo.
 
 ## Registro da execução (2026-11-20)
@@ -44,4 +44,26 @@ de `document-intelligence/`.
   decidiu usá-las assim. O registro de hashes do EXP-027 não tinha as fotos reais (só 2 entradas sintéticas, agora
   retiradas): `register.py` registrou as 20 pela ordem de horário informada pelo usuário, com `low_resolution` e a
   origem, e a ferramenta mostra o aviso. +2 testes (`register`, aviso): 36 na ferramenta.
+
+## SC-001 — primeira página real (2026-11-20)
+
+Página `p14` (a mais típica das 20 pelas categorias do EXP-027: cursiva, poucas fórmulas, foto boa, pautado, uma
+coluna; 20 caixas do motor, perto da mediana de 21), anotada pelo usuário. Lidos do arquivo só números:
+
+| Medida | Valor |
+| :--- | ---: |
+| Tempo ativo nas caixas | 5,2 min |
+| Tempo ativo na 1ª passada | 6,9 min |
+| **Total (caixas + 1ª passada)** | **12,1 min** (meta ≤ 10) |
+| Caixas do motor / ajustadas / criadas / apagadas | 20 / 20 / 0 / 0 |
+| Linhas corrigidas em relação ao rascunho do motor | 19 de 20 |
+| Validação do schema e hash do conteúdo | ok |
+
+**SC-001 não atingida** (12,1 min contra 10), com três ressalvas: primeiro uso da ferramenta; imagem de 512 px
+(linhas pequenas para ajustar e ler); e a página ficou com uma linha e o "Caixas prontas" esquecidos na primeira
+volta. Isso levou a dois avisos novos na 1ª/2ª passada: o `Enter` da última linha volta para a primeira linha que
+falta (em vez de só gravar), e o painel lembra quantas linhas faltam e quando "Caixas prontas" não foi marcado.
+Conferidos no navegador com a página fictícia. Achado útil para o EXP-028A: o motor achou todas as 20 linhas, mas
+nenhuma caixa serviu sem ajuste, e o rascunho acertou só 1 linha inteira — o tempo está mais no texto (57 %) que
+nas caixas (43 %). A medida se repete numa foto original quando houver.
 

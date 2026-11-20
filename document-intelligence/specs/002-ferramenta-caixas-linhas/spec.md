@@ -2,8 +2,8 @@
 
 * **Feature:** `002-ferramenta-caixas-linhas` (item **F-DI-13.01** do [roadmap 0.13](../../docs/replanejamento-0.13/05-roadmaps.md))
 * **Criada em:** 2026-11-20
-* **Status:** `IMPLEMENTED` (aprovada pelo usuário em 2026-11-20; SC-002 a SC-004 conferidas; SC-001 espera as
-  fotos reais)
+* **Status:** `IMPLEMENTED` (aprovada pelo usuário em 2026-11-20; SC-002 a SC-004 conferidas; SC-001 medida numa
+  imagem de 512 px: 12,1 min, acima da meta de 10 — ver [tasks](./tasks.md))
 * **Tipo:** feature utilitária do Document Intelligence (não é experimento; não baixa modelos; não entra no produto)
 * **Origem:** épico 0.13-0 "Régua limpa"; evolução da ferramenta de transcrição do
   [EXP-027](../../experiments/EXP-027-analise-50-paginas/report.md) (`harness/transcribe_server.py`)

@@ -602,7 +602,17 @@ input.addEventListener('keydown', (event) => {
     if (commitInput(true)) {
       const lines = sortedLines();
       const last = lines[lines.length - 1]?.line_id === state.selected;
-      if (last) { renderAll(); save(); } else { step(1); }
+      if (!last) { step(1); return; }
+      // Na última linha: volta para a primeira que ainda falta, ou grava a página completa.
+      const pending = lines.find((l) => !l[state.mode]);
+      if (pending) {
+        focusLine(pending.line_id, true);
+        renderAll();
+        setSaveState(`falta(m) ${lines.filter((l) => !l[state.mode]).length} linha(s)`);
+      } else {
+        renderAll();
+        save();
+      }
     }
   } else if (event.key === 'Escape') {
     input.value = input.dataset.original || '';
@@ -748,6 +758,14 @@ function renderText() {
   $('text-heading').textContent = field === 'pass1' ? '1ª passada' : `2ª passada (${state.pass2Mode === 'cego' ? 'cega' : 'revisão'})`;
   $('line-pos').textContent = line ? `Linha ${i + 1} de ${lines.length}` : 'Sem linhas';
   $('line-meta').textContent = line ? `${line.line_id} · ${done}/${lines.length} confirmadas${line[field] ? ' · esta já confirmada' : ''}` : '';
+  const pendingBox = !state.doc.status.boxes_done;
+  const pendingLines = lines.length - done;
+  const notes = [];
+  if (pendingBox) notes.push('A etapa 1 ainda não foi marcada como "Caixas prontas".');
+  // Depois de chegar ao fim da página, lembra quantas linhas ficaram para trás.
+  if (pendingLines && lines[lines.length - 1]?.[field]) notes.push(`Faltam ${pendingLines} linha(s) nesta passada.`);
+  $('page-pending').hidden = !notes.length;
+  $('page-pending').textContent = notes.join(' ');
   input.disabled = !line;
   renderCrop(line);
   const imported = state.doc.draft_source !== 'motor';
