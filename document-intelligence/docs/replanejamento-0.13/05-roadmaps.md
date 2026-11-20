@@ -1,5 +1,9 @@
 # Etapa 4 — Roadmaps v2: 0.13 a 0.16 e trajetória de modelos próprios
 
+> **Revisado em 2026-11-20 pelo [roadmap v3 — leitor geral](./08-roadmaps-v3-leitor-geral.md)** (aprovado): o
+> ajuste à letra do autor sai; entram coleta com amigos, separação por pessoa e o teste `test-geral`. O que o v3
+> não cita continua valendo como está aqui.
+
 **Data:** 2026-11-16 (v1 entregue; **v2** incorpora a [revisão crítica externa](./07-plano-revisado.md) conforme o
 [plano v2](./04-plano.md) §0) · **Status:** `APROVADO` pelo usuário em 2026-11-16 (v2).
 
