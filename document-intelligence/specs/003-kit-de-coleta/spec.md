@@ -2,7 +2,8 @@
 
 * **Feature:** `003-kit-de-coleta` (item **F-DI-13.03** do [roadmap v3](../../docs/replanejamento-0.13/08-roadmaps-v3-leitor-geral.md))
 * **Criada em:** 2026-11-20
-* **Status:** `DRAFT` (aguarda aprovação, junto com o [plano](./plan.md) e as [tarefas](./tasks.md))
+* **Status:** `SUPERSEDED` (aprovada em 2026-11-20 e não executada; substituída pela [estratégia de dados v2](../../docs/replanejamento-0.13/09-estrategia-de-aquisicao-de-dados.md):
+  sem coleta com amigos; a F-DI-13.03 passa a ser o catálogo de procedência, com spec própria)
 * **Tipo:** feature de dados e governança do Document Intelligence (não é experimento; não treina nem baixa nada)
 * **Próximos que dependem dela:** F-DI-13.04 (transcrição pela própria pessoa), F-DI-13.02 (trava por pessoa),
   Dados-13.G (primeira coleta)

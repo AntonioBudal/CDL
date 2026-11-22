@@ -145,6 +145,14 @@ uv run python -m leitorum_di
   `PENDING_REVIEW` (só metadados, fora do treino, revisão mensal), `REJECTED` (apagado com derivados e
   bloqueado), `BLOCKED`; manifesto por ciclo de treino e retreino quando um item é rejeitado. Ordem: E1
   amostragem das fontes → E2 catálogo mínimo → E3 EXP-031P (quais fontes ajudam) → E4 coletor.
+- **EXP-043 concluído em 2026-11-22** (E1; [report](./experiments/EXP-043-amostragem-de-fontes/report.md)):
+  ~350 mil linhas transcritas `APPROVED` nas fontes amostradas (Teklia no Hugging Face pela API de linhas +
+  8 conjuntos do HTR-United; catálogo com ~1,5 milhão de linhas de manuscrito); ~7 KB por linha no formato com
+  perda leve (espaço sobra). Falta o domínio: quase tudo é histórico e em francês/latim/norueguês; português
+  manuscrito só o iForal (medieval). Library of Congress bloqueia automação (403, Cloudflare). O leitor do
+  produto erra 8,3 % no IAM (contaminado, fora da medida) e 8,7 % no sintético (fácil demais). Próximo: E2
+  catálogo mínimo, depois EXP-031P com grupos A (latino moderno, ~216 mil linhas), B (histórico, ~109 mil) e C
+  (sintético PT), medido no teste do BRESSAY, do GNHK e nas 4 páginas do autor.
 - **Tarefa Atual (histórico)**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).
