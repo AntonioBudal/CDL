@@ -153,6 +153,11 @@ uv run python -m leitorum_di
   produto erra 8,3 % no IAM (contaminado, fora da medida) e 8,7 % no sintético (fácil demais). Próximo: E2
   catálogo mínimo, depois EXP-031P com grupos A (latino moderno, ~216 mil linhas), B (histórico, ~109 mil) e C
   (sintético PT), medido no teste do BRESSAY, do GNHK e nas 4 páginas do autor.
+- **F-DI-13.03 catálogo de procedência implementado em 2026-11-22** (E2; [spec 004](./specs/004-catalogo-de-procedencia/spec.md),
+  [`tools/catalogo/`](./tools/catalogo/README.md)): SQLite + objetos por SHA-256 em `D:\Leitorum-DI\`; situações,
+  revisão por fonte, rejeição que apaga/bloqueia/contamina ciclos, ciclos de treino com lista exata e portão de
+  promoção, resumo do conteúdo de treino, tetos. Linha padrão: PNG cinza 64 px (~51 KB/linha na prática). As
+  7.709 linhas aprovadas do EXP-043 já estão no catálogo. Dependência nova: Pillow. Próximo: E3 (EXP-031P).
 - **Tarefa Atual (histórico)**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).

@@ -180,7 +180,7 @@ treino, não armazenado (só um conjunto fixo pequeno de validação).
 | Etapa | O quê | Entrega | Por que nesta ordem |
 | :---: | :--- | :--- | :--- |
 | **E1 — Amostragem das fontes** ✅ ([EXP-043](../../experiments/EXP-043-amostragem-de-fontes/report.md)) | para as fontes 1, 2, 3 e 10 (e 5, 8 se houver tempo): baixar **amostras pequenas** (~200 itens cada), guardar a evidência de licença, medir idioma, época, tipo de transcrição, qualidade da imagem, linhas por página, espaço por linha | tabela "quanto rende cada fonte" com números; < 5 GB | evita construir conectores para fontes que não servem |
-| **E2 — Catálogo mínimo** | SQLite + armazenamento por conteúdo + status (§5) + manifesto por ciclo (§6) + lista de bloqueio; sem interface | `F-DI-13.03` (redefinida) | é o que garante procedência desde o primeiro arquivo |
+| **E2 — Catálogo mínimo** ✅ ([spec 004](../../specs/004-catalogo-de-procedencia/spec.md)) | SQLite + armazenamento por conteúdo + status (§5) + manifesto por ciclo (§6) + lista de bloqueio; sem interface | `F-DI-13.03` (redefinida) | é o que garante procedência desde o primeiro arquivo |
 | **E3 — EXP-031P: quais fontes ajudam?** | ajuste do leitor com cada fonte amostrada (e combinações), medido em pessoas não vistas: BRESSAY teste, GNHK teste, as 20 páginas do autor (512 px) | relatório; decisão de escala | a regra do projeto: medir antes; histórico/inglês pode não ajudar a letra moderna |
 | **E4 — Escala do que ajudou** | conectores completos só para as fontes vencedoras, dentro do teto de 100 GB; ingestão automática com filtros e deduplicação | `F-DI-13.05` (conectores), `F-DI-13.06` (ingestão) | só depois da evidência |
 | **E5 — Leitor geral v1** | EXP-033G com o acervo aprovado + sintético | 0.14 | — |

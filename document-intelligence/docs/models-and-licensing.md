@@ -91,6 +91,7 @@ Revisões completas e SHA-256: `experiments/EXP-002/candidates.json`.
 | Identificador | Versão | Licença | Uso | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | `jsonschema` | 4.26.0 | MIT (campo `License-Expression` dos metadados do pacote instalado, consultado em 2026-10-12) | validação do LDF 2.0 contra a fonte normativa; autorizada pelo usuário em 2026-10-12 | `LICENSE STATUS: VERIFIED` |
+| `pillow` | 13.0.0 (publicada em 2026-10-16) | MIT-CMU (campo `license_expression` do PyPI, consultado em 2026-11-22) | catálogo de procedência (F-DI-13.03): recodificar linhas, dimensões e hash perceptivo; sem modelo nem pesos; aprovada pelo usuário em 2026-11-22 (spec 004) | `LICENSE STATUS: VERIFIED` |
 
 ### Datasets e fontes
 

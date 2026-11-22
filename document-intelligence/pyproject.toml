@@ -29,6 +29,9 @@ classifiers = [
 # suas inclusoes dependem dos resultados formais de cada experimento.
 dependencies = [
     "jsonschema>=4.21",
+    # F-DI-13.03 (catálogo de procedência): recodificar linhas, dimensões e hash perceptivo.
+    # Biblioteca de imagem, sem modelo nem pesos; licença MIT-CMU (HPND).
+    "pillow>=11.0",
     "pydantic>=2.7.0",
 ]
 
