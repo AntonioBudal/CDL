@@ -158,6 +158,13 @@ uv run python -m leitorum_di
   revisão por fonte, rejeição que apaga/bloqueia/contamina ciclos, ciclos de treino com lista exata e portão de
   promoção, resumo do conteúdo de treino, tetos. Linha padrão: PNG cinza 64 px (~51 KB/linha na prática). As
   7.709 linhas aprovadas do EXP-043 já estão no catálogo. Dependência nova: Pillow. Próximo: E3 (EXP-031P).
+- **EXP-031P concluído em 2026-11-23** (E3; [report](./experiments/EXP-031P-quais-fontes-ajudam/report.md)):
+  ajuste do leitor com 8 mil linhas por condição, orçamento do EXP-014, medido no BRESSAY teste (2.000 linhas),
+  GNHK teste e 62 linhas do autor (512 px). **Nenhuma fonte aberta ajuda:** sem treino 29,9 %; latino moderno
+  28,9 % e 30,3 % (duas sementes); histórico 46,9 %; sintético 38,1 %; moderno + sintético 29,4 %; os três 32,1 %
+  (referência BRESSAY treino: 13,6 %). O sintético ensina acentos (76 % → 59–61 %); todo treino piora o GNHK.
+  H1 e H4 refutadas, H2 e H3 confirmadas. **E4 suspensa**; a estratégia de dados será revista (domínio pesa mais
+  que volume). Catálogo: `timeout` de 600 s, gravação por tempo e ciclos com lista explícita de itens.
 - **Tarefa Atual (histórico)**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).

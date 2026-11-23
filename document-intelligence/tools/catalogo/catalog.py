@@ -12,6 +12,7 @@ import hashlib
 import json
 import os
 import sqlite3
+import time
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -110,13 +111,20 @@ def default_root() -> Path:
 
 
 class Catalog:
-    def __init__(self, root: Path | str | None = None, budgets: dict[str, int] | None = None):
+    def __init__(
+        self,
+        root: Path | str | None = None,
+        budgets: dict[str, int] | None = None,
+        wait_seconds: float = 600,
+    ):
+        """``wait_seconds``: quanto esperar quando outro processo está gravando (SQLite permite um
+        gravador por vez; a espera evita "database is locked")."""
         self.root = Path(root) if root else default_root()
         self.objects = self.root / "objetos"
         (self.root / "catalogo").mkdir(parents=True, exist_ok=True)
         self.objects.mkdir(parents=True, exist_ok=True)
         self.budgets = {**DEFAULT_BUDGETS, **(budgets or {})}
-        self.db = sqlite3.connect(self.root / "catalogo" / "catalogo.sqlite")
+        self.db = sqlite3.connect(self.root / "catalogo" / "catalogo.sqlite", timeout=wait_seconds)
         self.db.row_factory = sqlite3.Row
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.execute("PRAGMA foreign_keys=ON")
@@ -125,16 +133,19 @@ class Catalog:
             self.db.execute("INSERT INTO schema_version VALUES (?)", (SCHEMA_VERSION,))
         self.db.commit()
         self._pending_writes = 0
+        self._last_flush = time.monotonic()
         self._kind_totals = {
             row[0]: row[1]
             for row in self.db.execute("SELECT kind, SUM(bytes) FROM files GROUP BY kind")
         }
 
     BATCH = 500  # itens ingeridos por transação (um commit por item é lento num HD)
+    BATCH_SECONDS = 5.0  # e no máximo 5 s de transação aberta (outros processos esperam a vez)
 
     def flush(self) -> None:
         self.db.commit()
         self._pending_writes = 0
+        self._last_flush = time.monotonic()
 
     def close(self) -> None:
         self.flush()
@@ -336,7 +347,10 @@ class Catalog:
                 (item_id, sha, "linha" if kind == "line" else "pagina"),
             )
         self._pending_writes += 1
-        if self._pending_writes >= self.BATCH:
+        if (
+            self._pending_writes >= self.BATCH
+            or time.monotonic() - self._last_flush >= self.BATCH_SECONDS
+        ):
             self.flush()
         return IngestResult(item_id, True, stored, sha, reason, near)
 
@@ -469,23 +483,37 @@ class Catalog:
         self,
         purpose: str,
         *,
-        sources: list[str],
+        sources: list[str] | None = None,
+        item_ids: list[str] | None = None,
         splits: list[str] | None = None,
         recipe: str,
         commit: str,
         seed: int,
         notes: str | None = None,
     ) -> str:
+        """Registra um ciclo de treino: todos os itens com arquivo das ``sources`` (opcionalmente
+        filtrados por divisão) **ou** exatamente os ``item_ids`` dados (ex.: cotas por fonte). Um
+        ciclo só com dados gerados (sintético) tem lista vazia e a receita em ``notes``."""
         if purpose not in RUN_ALLOWED:
             raise CatalogError(f"finalidade desconhecida: {purpose}")
+        if sources and item_ids:
+            raise CatalogError("use sources ou item_ids, não os dois")
         allowed = RUN_ALLOWED[purpose]
-        marks = ",".join("?" * len(sources))
-        query = f"SELECT * FROM items WHERE source_id IN ({marks}) AND sha256 IS NOT NULL"
-        params: list = list(sources)
-        if splits:
-            query += f" AND split IN ({','.join('?' * len(splits))})"
-            params += splits
-        rows = [dict(r) for r in self.db.execute(query + " ORDER BY item_id", params)]
+        rows: list[dict] = []
+        if item_ids:
+            for item_id in sorted(set(item_ids)):
+                row = self.item(item_id)
+                if not row["sha256"]:
+                    raise CatalogError(f"{item_id} não tem arquivo (situação {row['status']})")
+                rows.append(row)
+        elif sources:
+            marks = ",".join("?" * len(sources))
+            query = f"SELECT * FROM items WHERE source_id IN ({marks}) AND sha256 IS NOT NULL"
+            params: list = list(sources)
+            if splits:
+                query += f" AND split IN ({','.join('?' * len(splits))})"
+                params += splits
+            rows = [dict(r) for r in self.db.execute(query + " ORDER BY item_id", params)]
         bad = sorted({r["status"] for r in rows} - allowed)
         if bad:
             raise CatalogError(f"ciclo de {purpose} não aceita itens {bad}")

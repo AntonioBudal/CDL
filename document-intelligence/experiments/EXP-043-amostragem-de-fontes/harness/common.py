@@ -5,6 +5,7 @@ Roda no ambiente do motor do produto (Pillow, NumPy)."""
 from __future__ import annotations
 
 import hashlib
+import http.client
 import io
 import json
 import os
@@ -40,7 +41,7 @@ def fetch(url: str, *, accept: str | None = None, timeout: int = 90, tries: int 
         except urllib.error.HTTPError as error:
             if error.code < 500 or attempt == tries - 1:
                 raise
-        except (urllib.error.URLError, TimeoutError):
+        except (urllib.error.URLError, TimeoutError, http.client.HTTPException, ConnectionError):
             if attempt == tries - 1:
                 raise
         time.sleep(5 * (attempt + 1))

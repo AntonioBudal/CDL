@@ -309,3 +309,25 @@ def test_import_samples_is_idempotent(tmp_path):
     assert second["teklia-ficticio"]["created"] == 0 and catalog.counts()["items"] == 3
     assert catalog.source("teklia-ficticio")["terms_sha256"]
     catalog.close()
+
+
+def test_run_with_explicit_items_and_generated_only(cat):
+    a = cat.ingest_line("fonte-a", "1", image=line_png(1), text="a")
+    cat.ingest_line("fonte-a", "2", image=line_png(2), text="b")
+    run = cat.start_run("experimento", item_ids=[a.item_id], recipe="r", commit="c", seed=0)
+    assert [i["item_id"] for i in cat.run_items(run)] == [a.item_id]
+    synthetic = cat.start_run(
+        "experimento",
+        recipe="r",
+        commit="c",
+        seed=0,
+        notes="sintético: gerador X, semente 1, 8000 linhas",
+    )
+    assert cat.run_items(synthetic) == [] and "sintético" in cat.run(synthetic)["notes"]
+    pending = cat.ingest_line("fonte-p", "1", image=None, text="p")
+    with pytest.raises(CatalogError):
+        cat.start_run("experimento", item_ids=[pending.item_id], recipe="r", commit="c", seed=0)
+    with pytest.raises(CatalogError):
+        cat.start_run(
+            "experimento", sources=["fonte-a"], item_ids=[a.item_id], recipe="r", commit="c", seed=0
+        )

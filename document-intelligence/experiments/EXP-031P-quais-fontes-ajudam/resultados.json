@@ -1,0 +1,326 @@
+{
+ "experimento": "EXP-031P",
+ "data": "2026-11-22/23",
+ "nota": "só medidas; sem texto. autor = 62 linhas, imagens de 512 px",
+ "medida": {
+  "bressay": "2000 linhas sorteadas do teste (semente exp-031p-bressay)",
+  "gnhk": "teste completo (1918 linhas)",
+  "autor": "p10,p11,p14,p15 (512 px)"
+ },
+ "referencia_exp014": {
+  "bressay_teste_completo_cer": 0.136,
+  "nota": "citada, não retreinada; C0 no teste completo = 0.297"
+ },
+ "condicoes": {
+  "C0": {
+   "medidas": {
+    "bressay": {
+     "lines": 2000,
+     "cer": 0.2991,
+     "wer": 0.7309,
+     "accent_error": 0.76,
+     "accented_chars": 5753
+    },
+    "gnhk": {
+     "lines": 1918,
+     "cer": 0.1513,
+     "wer": 0.5266,
+     "accent_error": null,
+     "accented_chars": 0
+    },
+    "autor": {
+     "lines": 62,
+     "cer": 0.6582,
+     "wer": 0.958,
+     "accent_error": 1.0,
+     "accented_chars": 80
+    }
+   }
+  },
+  "C3": {
+   "medidas": {
+    "bressay": {
+     "lines": 2000,
+     "cer": 0.3809,
+     "wer": 0.8518,
+     "accent_error": 0.6075,
+     "accented_chars": 5753
+    },
+    "gnhk": {
+     "lines": 1918,
+     "cer": 0.2741,
+     "wer": 0.9034,
+     "accent_error": null,
+     "accented_chars": 0
+    },
+    "autor": {
+     "lines": 62,
+     "cer": 0.7066,
+     "wer": 1.0256,
+     "accent_error": 0.9625,
+     "accented_chars": 80
+    }
+   },
+   "treino": {
+    "linhas": 8000,
+    "descartadas": 0,
+    "passos": 392,
+    "semente": 1234,
+    "perda_final": 0.3062,
+    "ciclo": "run-0001-20261122"
+   },
+   "composicao": {
+    "catalogo": 0,
+    "sintetico": 8000,
+    "cotas": {}
+   }
+  },
+  "C1": {
+   "medidas": {
+    "bressay": {
+     "lines": 2000,
+     "cer": 0.2892,
+     "wer": 0.717,
+     "accent_error": 0.6598,
+     "accented_chars": 5753
+    },
+    "gnhk": {
+     "lines": 1918,
+     "cer": 0.1868,
+     "wer": 0.583,
+     "accent_error": null,
+     "accented_chars": 0
+    },
+    "autor": {
+     "lines": 62,
+     "cer": 0.6545,
+     "wer": 0.9653,
+     "accent_error": 0.9375,
+     "accented_chars": 80
+    }
+   },
+   "treino": {
+    "linhas": 8000,
+    "descartadas": 0,
+    "passos": 392,
+    "semente": 1234,
+    "perda_final": 1.1108,
+    "ciclo": "run-0002-20261122"
+   },
+   "composicao": {
+    "catalogo": 8000,
+    "sintetico": 0,
+    "cotas": {
+     "A": {
+      "teklia-rimes-2011": 1321,
+      "htru-moonshines": 1027,
+      "htru-cremma-mss-20": 224,
+      "htru-dataset-celestine-doniau-danest": 143,
+      "htru-lectaurep-repertoires": 1322,
+      "teklia-belfort": 1321,
+      "teklia-popp": 1321,
+      "teklia-norhand-v2": 1321
+     }
+    }
+   }
+  },
+  "C2": {
+   "medidas": {
+    "bressay": {
+     "lines": 2000,
+     "cer": 0.4689,
+     "wer": 0.9013,
+     "accent_error": 0.944,
+     "accented_chars": 5753
+    },
+    "gnhk": {
+     "lines": 1918,
+     "cer": 0.317,
+     "wer": 0.8181,
+     "accent_error": null,
+     "accented_chars": 0
+    },
+    "autor": {
+     "lines": 62,
+     "cer": 0.8781,
+     "wer": 0.9945,
+     "accent_error": 1.0,
+     "accented_chars": 80
+    }
+   },
+   "treino": {
+    "linhas": 8000,
+    "descartadas": 0,
+    "passos": 392,
+    "semente": 1234,
+    "perda_final": 1.9339,
+    "ciclo": "run-0003-20261122"
+   },
+   "composicao": {
+    "catalogo": 8000,
+    "sintetico": 0,
+    "cotas": {
+     "B": {
+      "teklia-home-alcar": 2000,
+      "teklia-himanis": 2000,
+      "htru-cremma-medieval": 2000,
+      "htru-iforal-dataset": 2000
+     }
+    }
+   }
+  },
+  "C4": {
+   "medidas": {
+    "bressay": {
+     "lines": 2000,
+     "cer": 0.2941,
+     "wer": 0.7158,
+     "accent_error": 0.5922,
+     "accented_chars": 5753
+    },
+    "gnhk": {
+     "lines": 1918,
+     "cer": 0.1828,
+     "wer": 0.5753,
+     "accent_error": null,
+     "accented_chars": 0
+    },
+    "autor": {
+     "lines": 62,
+     "cer": 0.6551,
+     "wer": 0.9744,
+     "accent_error": 0.9625,
+     "accented_chars": 80
+    }
+   },
+   "treino": {
+    "linhas": 8000,
+    "descartadas": 0,
+    "passos": 392,
+    "semente": 1234,
+    "perda_final": 0.9185,
+    "ciclo": "run-0004-20261122"
+   },
+   "composicao": {
+    "catalogo": 4000,
+    "sintetico": 4000,
+    "cotas": {
+     "A": {
+      "teklia-rimes-2011": 606,
+      "htru-moonshines": 605,
+      "htru-cremma-mss-20": 224,
+      "htru-dataset-celestine-doniau-danest": 143,
+      "htru-lectaurep-repertoires": 606,
+      "teklia-belfort": 605,
+      "teklia-popp": 606,
+      "teklia-norhand-v2": 605
+     }
+    }
+   }
+  },
+  "C5": {
+   "medidas": {
+    "bressay": {
+     "lines": 2000,
+     "cer": 0.3205,
+     "wer": 0.75,
+     "accent_error": 0.6868,
+     "accented_chars": 5753
+    },
+    "gnhk": {
+     "lines": 1918,
+     "cer": 0.1711,
+     "wer": 0.5552,
+     "accent_error": null,
+     "accented_chars": 0
+    },
+    "autor": {
+     "lines": 62,
+     "cer": 0.6839,
+     "wer": 1.0037,
+     "accent_error": 1.0,
+     "accented_chars": 80
+    }
+   },
+   "treino": {
+    "linhas": 8000,
+    "descartadas": 0,
+    "passos": 392,
+    "semente": 1234,
+    "perda_final": 1.8657,
+    "ciclo": "run-0005-20261122"
+   },
+   "composicao": {
+    "catalogo": 5334,
+    "sintetico": 2666,
+    "cotas": {
+     "A": {
+      "teklia-rimes-2011": 384,
+      "htru-moonshines": 383,
+      "htru-cremma-mss-20": 224,
+      "htru-dataset-celestine-doniau-danest": 143,
+      "htru-lectaurep-repertoires": 384,
+      "teklia-belfort": 383,
+      "teklia-popp": 383,
+      "teklia-norhand-v2": 383
+     },
+     "B": {
+      "teklia-home-alcar": 667,
+      "teklia-himanis": 667,
+      "htru-cremma-medieval": 667,
+      "htru-iforal-dataset": 666
+     }
+    }
+   }
+  },
+  "C1-s4321": {
+   "medidas": {
+    "bressay": {
+     "lines": 2000,
+     "cer": 0.3034,
+     "wer": 0.7332,
+     "accent_error": 0.6145,
+     "accented_chars": 5753
+    },
+    "gnhk": {
+     "lines": 1918,
+     "cer": 0.1807,
+     "wer": 0.5819,
+     "accent_error": null,
+     "accented_chars": 0
+    },
+    "autor": {
+     "lines": 62,
+     "cer": 0.6355,
+     "wer": 0.9561,
+     "accent_error": 0.95,
+     "accented_chars": 80
+    }
+   },
+   "treino": {
+    "linhas": 8000,
+    "descartadas": 0,
+    "passos": 392,
+    "semente": 4321,
+    "perda_final": 1.4202,
+    "ciclo": "run-0006-20261123"
+   },
+   "composicao": {
+    "catalogo": 8000,
+    "sintetico": 0,
+    "cotas": {
+     "A": {
+      "teklia-rimes-2011": 1321,
+      "htru-moonshines": 1027,
+      "htru-cremma-mss-20": 224,
+      "htru-dataset-celestine-doniau-danest": 143,
+      "htru-lectaurep-repertoires": 1322,
+      "teklia-belfort": 1321,
+      "teklia-popp": 1321,
+      "teklia-norhand-v2": 1321
+     }
+    }
+   }
+  }
+ }
+}
