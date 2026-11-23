@@ -7,6 +7,8 @@
 > **EXP-031P (2026-11-23):** nenhuma fonte aberta liberada (latino moderno, histórico, sintético) melhora o
 > português moderno com o orçamento do EXP-014; a E4 (coleta em escala) está suspensa e a estratégia de dados
 > será revista ([report](../../experiments/EXP-031P-quais-fontes-ajudam/report.md)).
+> Revista em 2026-11-23 ([v3](./10-revisao-da-estrategia-de-dados.md), aprovada): próximo é o EXP-044 (fontes em
+> português: TraPrInq, BFL alinhada, treino longo).
 
 **Data:** 2026-11-20 · **Status:** `APROVADO` pelo usuário em 2026-11-20 · **Substitui:** as partes
 do [roadmap v2](./05-roadmaps.md) que ajustam o leitor à letra do autor. O que não é citado aqui continua como no v2.

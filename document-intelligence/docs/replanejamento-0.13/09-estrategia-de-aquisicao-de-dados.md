@@ -3,6 +3,9 @@
 **Data:** 2026-11-20 · **Status:** `APROVADO v2` pelo usuário em 2026-11-20 · **Complementa:** o
 [roadmap v3 — leitor geral](./08-roadmaps-v3-leitor-geral.md) e o revisa onde indicado (§10).
 
+> **Revisada em 2026-11-23 pela [v3](./10-revisao-da-estrategia-de-dados.md)** (aprovada), depois do EXP-031P: o
+> plano E3–E5 da §8 foi substituído (busca dirigida ao português, EXP-044, E4' condicionada); o resto continua valendo.
+
 > **Aviso.** Análise técnica com fontes, não parecer jurídico. Onde a lei ou a licença é incerta, o texto diz.
 
 ---
