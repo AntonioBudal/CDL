@@ -171,6 +171,14 @@ uv run python -m leitorum_di
   `EXPERIMENT_ONLY`, texto conhecido → alinhamento forçado), BRESSAY segue `EXPERIMENT_ONLY`. Pergunta de licença
   aos autores do BRESSAY e da BFL fica com o usuário (rascunho no Apêndice A). Próximo: spec do EXP-044 (D1
   TraPrInq, D2 BFL, D3 mistura, D4 treino 4× mais longo), mesma régua do EXP-031P.
+- **EXP-044 concluído em 2026-11-24** (E3.1; [report](./experiments/EXP-044-portugues-perto-do-dominio/report.md)):
+  mesma régua do EXP-031P. **A BFL alinhada (8 mil linhas, `EXPERIMENT_ONLY`) leva o BRESSAY de 29,9 % a 23,0 %**
+  (acentos 76 % → 32 %, autor 65,8 % → 53,1 %), mas piora o GNHK de 15,1 % para 20,5 %. TraPrInq 32,8 % (português
+  histórico não ajuda); mistura 26,6 %; latino moderno + sintético com 4× os passos 29,4 % (= C4, H4 refutada, latino
+  moderno sai). H2 confirmada; H1, H3, H4 refutadas. **E4' não disparada** (regra do GNHK). Catálogo: 9.234 linhas
+  TraPrInq (`APPROVED`) e 11.923 BFL de 309 pessoas (alinhamento forçado; linhas com palavra partida descartadas;
+  ~2 % de rótulos errados na conferência). Próximo proposto: BFL misturada com inglês e foto para proteger o GNHK;
+  licença da BFL depende da resposta dos autores (mensagem com o usuário).
 - **Tarefa Atual (histórico)**: o caminho para o português está medido de ponta a ponta; falta manuscrito em português **com licença para produto** para repetir o ajuste. Pedido recomendado: mínimo ~50 páginas, alvo ~150 (EXP-018), **fotos de caderno com celular** transcritas linha a linha (EXP-021: digitalizações degradadas artificialmente não substituem fotos). Próximo passo: com essas fotos, repetir o ajuste e validar o pipeline em caderno; sem elas, o trabalho de leitura está bloqueado em dados.
   - **Dados do EXP-007:** GNHK em `dataset/raw/exp-007/gnhk/` e imagens de trabalho em `dataset/processed/exp-007/`, fora do Git. Nenhuma imagem, recorte ou transcrição desses datasets vai para o Git, para relatórios ou para o chat.
   - **Congelados:** `docs/schemas/ldf-1.0.schema.json` e os diretórios `experiments/EXP-001` a `EXP-003` não podem ser alterados (`tests/ldf/test_frozen.py` confere). Saídas novas usam `leitorum_di.contracts.ldf.build_document`. Ao rodar algo nos ambientes dos EXP-001/002, use `uv run --frozen --project …` (sem `--frozen` o `uv` reescreve o `uv.lock` do ambiente).

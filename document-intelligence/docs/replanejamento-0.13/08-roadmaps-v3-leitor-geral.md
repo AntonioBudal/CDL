@@ -9,6 +9,9 @@
 > será revista ([report](../../experiments/EXP-031P-quais-fontes-ajudam/report.md)).
 > Revista em 2026-11-23 ([v3](./10-revisao-da-estrategia-de-dados.md), aprovada): próximo é o EXP-044 (fontes em
 > português: TraPrInq, BFL alinhada, treino longo).
+> **EXP-044 (2026-11-24):** só a BFL (`EXPERIMENT_ONLY`) ajuda: BRESSAY 29,9 % → 23,0 %, autor 65,8 % → 53,1 %,
+> GNHK 15,1 % → 20,5 %; TraPrInq, mistura e treino 4× mais longo não passam na régua
+> ([report](../../experiments/EXP-044-portugues-perto-do-dominio/report.md)).
 
 **Data:** 2026-11-20 · **Status:** `APROVADO` pelo usuário em 2026-11-20 · **Substitui:** as partes
 do [roadmap v2](./05-roadmaps.md) que ajustam o leitor à letra do autor. O que não é citado aqui continua como no v2.

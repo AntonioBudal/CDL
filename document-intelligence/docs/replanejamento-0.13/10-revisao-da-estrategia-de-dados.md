@@ -4,6 +4,10 @@
 [estratégia de dados v2](./09-estrategia-de-aquisicao-de-dados.md), §8 (plano E1–E6) · **Motivo:** o
 [EXP-031P](../../experiments/EXP-031P-quais-fontes-ajudam/report.md) suspendeu a E4.
 
+> **EXP-044 (2026-11-24):** a BFL é a primeira fonte da internet que ensina o domínio (BRESSAY 29,9 % → 23,0 %,
+> acentos 76 % → 32 %), mas piora o GNHK em 5,4 pontos; a E4' não é disparada. Próximo passo proposto: misturar a
+> BFL com inglês e foto para proteger o GNHK ([report](../../experiments/EXP-044-portugues-perto-do-dominio/report.md), §6).
+
 > **Aviso.** Análise técnica com fontes, não parecer jurídico. Onde a licença é incerta, o texto diz.
 
 ---
@@ -78,9 +82,9 @@ permitido?". O rascunho está no Apêndice A.
 | Etapa | O quê | Entrega | Situação dos dados |
 | :---: | :--- | :--- | :--- |
 | **E3** ✅ | EXP-031P: quais fontes abertas ajudam | nenhuma; E4 suspensa | — |
-| **E3.1** | **EXP-044 — português perto do domínio**, mesma régua e mesmo orçamento do EXP-031P (§4.1) | relatório; decisão de escala | TraPrInq `APPROVED`; BFL `EXPERIMENT_ONLY` |
+| **E3.1** ✅ | **EXP-044 — português perto do domínio**, mesma régua e mesmo orçamento do EXP-031P (§4.1) ([report](../../experiments/EXP-044-portugues-perto-do-dominio/report.md): a BFL leva o BRESSAY de 29,9 % a 23,0 %, mas piora o GNHK em 5,4; TraPrInq e treino longo não ajudam) | relatório; decisão de escala | TraPrInq `APPROVED`; BFL `EXPERIMENT_ONLY` |
 | **E3.2** | pergunta aos autores (§3), em paralelo, sem bloquear nada | resposta guardada como evidência | — |
-| **E4'** | escala **só** do que passar na régua: TraPrInq inteira (6,7 GB) e/ou BFL alinhada inteira | ingestão pelo catálogo | conforme a situação |
+| **E4'** ⏸ | escala **só** do que passar na régua: TraPrInq inteira (6,7 GB) e/ou BFL alinhada inteira. *Não disparada pelo EXP-044:* nenhuma condição passa na regra completa (GNHK); a BFL já está inteira no catálogo e a TraPrInq não ajuda | ingestão pelo catálogo | conforme a situação |
 | **E5** | leitor geral v1 (EXP-033G) | 0.14 | **só `APPROVED`** no modelo promovido |
 
 ### 4.1 EXP-044 — condições propostas

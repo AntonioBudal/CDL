@@ -1,0 +1,298 @@
+{
+ "experimento": "EXP-044",
+ "data": "2026-11-23/24",
+ "nota": "só medidas; sem texto. autor = 62 linhas, imagens de 512 px. Medidas iguais às do EXP-031P.",
+ "medida": {
+  "bressay": "2000 linhas sorteadas do teste (semente exp-031p-bressay)",
+  "gnhk": "teste completo (1918 linhas)",
+  "autor": "p10,p11,p14,p15 (512 px)"
+ },
+ "referencia_exp014": {
+  "bressay_teste_completo_cer": 0.136,
+  "nota": "citada, não retreinada; C0 no teste completo = 0.297"
+ },
+ "referencias_exp031p": {
+  "C0": {
+   "bressay": {
+    "lines": 2000,
+    "cer": 0.2991,
+    "wer": 0.7309,
+    "accent_error": 0.76,
+    "accented_chars": 5753
+   },
+   "gnhk": {
+    "lines": 1918,
+    "cer": 0.1513,
+    "wer": 0.5266,
+    "accent_error": null,
+    "accented_chars": 0
+   },
+   "autor": {
+    "lines": 62,
+    "cer": 0.6582,
+    "wer": 0.958,
+    "accent_error": 1.0,
+    "accented_chars": 80
+   }
+  },
+  "C2": {
+   "bressay": {
+    "lines": 2000,
+    "cer": 0.4689,
+    "wer": 0.9013,
+    "accent_error": 0.944,
+    "accented_chars": 5753
+   },
+   "gnhk": {
+    "lines": 1918,
+    "cer": 0.317,
+    "wer": 0.8181,
+    "accent_error": null,
+    "accented_chars": 0
+   },
+   "autor": {
+    "lines": 62,
+    "cer": 0.8781,
+    "wer": 0.9945,
+    "accent_error": 1.0,
+    "accented_chars": 80
+   }
+  },
+  "C4": {
+   "bressay": {
+    "lines": 2000,
+    "cer": 0.2941,
+    "wer": 0.7158,
+    "accent_error": 0.5922,
+    "accented_chars": 5753
+   },
+   "gnhk": {
+    "lines": 1918,
+    "cer": 0.1828,
+    "wer": 0.5753,
+    "accent_error": null,
+    "accented_chars": 0
+   },
+   "autor": {
+    "lines": 62,
+    "cer": 0.6551,
+    "wer": 0.9744,
+    "accent_error": 0.9625,
+    "accented_chars": 80
+   }
+  }
+ },
+ "fontes": {
+  "zenodo-traprinq": {
+   "status": "APPROVED",
+   "ingestao": {
+    "Training_Set_Model9.zip:inspecao": {
+     "zip": "Training_Set_Model9.zip",
+     "pages": 500,
+     "documents": 49,
+     "lines": 12717,
+     "reasons": {
+      "fora_do_dicionario": 3416,
+      "aceita": 9234,
+      "duvida_ou_riscado": 67
+     },
+     "added": 0
+    },
+    "Training_Set_Model9.zip": {
+     "zip": "Training_Set_Model9.zip",
+     "pages": 500,
+     "documents": 49,
+     "lines": 12717,
+     "reasons": {
+      "fora_do_dicionario": 3416,
+      "aceita": 9234,
+      "duvida_ou_riscado": 67
+     },
+     "added": 9234
+    }
+   }
+  },
+  "ufpr-bfl": {
+   "status": "EXPERIMENT_ONLY",
+   "alinhamento": {
+    "contagem": {
+     "paginas": 945,
+     "linhas": 18215,
+     "palavra_partida": 1801,
+     "paginas_fora": 33,
+     "linhas_pagina_fora": 1243,
+     "aceitas": 11923
+    },
+    "pessoas_com_linhas": 309,
+    "linhas_por_pessoa_min_med_max": [
+     2,
+     41,
+     58
+    ],
+    "cer_aceitas": {
+     "0.0": 2624,
+     "0.1": 4333,
+     "0.2": 3075,
+     "0.3": 1498,
+     "0.4": 393
+    },
+    "cer_descartadas": {
+     "0.0": 1239,
+     "0.1": 351,
+     "0.2": 656,
+     "0.3": 243,
+     "0.4": 368,
+     "0.5": 629,
+     "0.6": 190,
+     "0.7": 282,
+     "0.8": 168,
+     "0.9": 39,
+     "1.0": 326
+    },
+    "maiusculas": 1015
+   }
+  }
+ },
+ "leitor_atual_nas_amostras": {
+  "ufpr-bfl": {
+   "lines": 200,
+   "cer": 0.3004,
+   "wer": 0.7645,
+   "accent_error": 0.8897,
+   "accented_chars": 290
+  },
+  "zenodo-traprinq": {
+   "lines": 200,
+   "cer": 0.5503,
+   "wer": 0.9229,
+   "accent_error": 0.988,
+   "accented_chars": 83
+  }
+ },
+ "ciclos": {
+  "D1": "run-0007-20261124",
+  "D2": "run-0008-20261124",
+  "D3": "run-0009-20261124",
+  "D4": "run-0010-20261124"
+ },
+ "condicoes": {
+  "D1": {
+   "partes": {
+    "zenodo-traprinq": 8000
+   },
+   "passos": 392,
+   "medidas": {
+    "bressay": {
+     "lines": 2000,
+     "cer": 0.3275,
+     "wer": 0.7671,
+     "accent_error": 0.6252,
+     "accented_chars": 5753
+    },
+    "gnhk": {
+     "lines": 1918,
+     "cer": 0.2308,
+     "wer": 0.6736,
+     "accent_error": null,
+     "accented_chars": 0
+    },
+    "autor": {
+     "lines": 62,
+     "cer": 0.6445,
+     "wer": 1.0219,
+     "accent_error": 0.925,
+     "accented_chars": 80
+    }
+   }
+  },
+  "D2": {
+   "partes": {
+    "ufpr-bfl": 8000
+   },
+   "passos": 392,
+   "medidas": {
+    "bressay": {
+     "lines": 2000,
+     "cer": 0.2297,
+     "wer": 0.635,
+     "accent_error": 0.3209,
+     "accented_chars": 5753
+    },
+    "gnhk": {
+     "lines": 1918,
+     "cer": 0.2051,
+     "wer": 0.624,
+     "accent_error": null,
+     "accented_chars": 0
+    },
+    "autor": {
+     "lines": 62,
+     "cer": 0.5313,
+     "wer": 0.894,
+     "accent_error": 0.7875,
+     "accented_chars": 80
+    }
+   }
+  },
+  "D3": {
+   "partes": {
+    "zenodo-traprinq": 3000,
+    "ufpr-bfl": 3000,
+    "S": 2000
+   },
+   "passos": 392,
+   "medidas": {
+    "bressay": {
+     "lines": 2000,
+     "cer": 0.266,
+     "wer": 0.67,
+     "accent_error": 0.4255,
+     "accented_chars": 5753
+    },
+    "gnhk": {
+     "lines": 1918,
+     "cer": 0.1849,
+     "wer": 0.5821,
+     "accent_error": null,
+     "accented_chars": 0
+    },
+    "autor": {
+     "lines": 62,
+     "cer": 0.5943,
+     "wer": 0.936,
+     "accent_error": 0.8,
+     "accented_chars": 80
+    }
+   }
+  },
+  "D4": {
+   "partes": {
+    "C4": 8000
+   },
+   "passos": 1568,
+   "medidas": {
+    "bressay": {
+     "lines": 2000,
+     "cer": 0.2938,
+     "wer": 0.7239,
+     "accent_error": 0.5952,
+     "accented_chars": 5753
+    },
+    "gnhk": {
+     "lines": 1918,
+     "cer": 0.2053,
+     "wer": 0.6254,
+     "accent_error": null,
+     "accented_chars": 0
+    },
+    "autor": {
+     "lines": 62,
+     "cer": 0.7165,
+     "wer": 1.0274,
+     "accent_error": 1.0,
+     "accented_chars": 80
+    }
+   }
+  }
+ }
+}
